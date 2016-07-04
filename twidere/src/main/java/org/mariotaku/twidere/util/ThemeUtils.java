@@ -52,6 +52,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.afollestad.appthemeengine.Config;
+import com.afollestad.appthemeengine.util.ATEUtil;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -188,12 +189,12 @@ public class ThemeUtils implements Constants {
     }
 
     public static int getColorFromAttribute(Context context, int attr, int def) {
-        final TypedValue outValue = new TypedValue();
-        if (!context.getTheme().resolveAttribute(attr, outValue, true))
-            return def;
-        if (outValue.type == TypedValue.TYPE_REFERENCE)
-            return ContextCompat.getColor(context, attr);
-        return outValue.data;
+        final TypedArray a = context.obtainStyledAttributes(new int[]{attr});
+        try {
+            return a.getColor(0, def);
+        } finally {
+            a.recycle();
+        }
     }
 
 
@@ -625,5 +626,9 @@ public class ThemeUtils implements Constants {
     public static int getOptimalAccentColor(int themeColor) {
         return getOptimalAccentColor(themeColor, getContrastColor(themeColor, Color.BLACK,
                 Color.WHITE));
+    }
+
+    public static int computeDarkColor(int color) {
+        return ATEUtil.darkenColor(color);
     }
 }

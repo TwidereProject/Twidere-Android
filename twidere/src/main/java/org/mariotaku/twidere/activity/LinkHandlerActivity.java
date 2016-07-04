@@ -74,6 +74,7 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
     private boolean mFinishOnly;
     private int mActionBarHeight;
     private CharSequence mSubtitle;
+    private boolean mHideOffsetNotSupported;
 
 
     @Override
@@ -268,8 +269,13 @@ public class LinkHandlerActivity extends BaseActivity implements SystemWindowsIn
         ActionBar actionBar = getSupportActionBar();
         if (fragment instanceof IToolBarSupportFragment) {
             ((IToolBarSupportFragment) fragment).setControlBarOffset(offset);
-        } else if (actionBar != null) {
-            actionBar.setHideOffset((int) (getControlBarHeight() * offset));
+        } else if (actionBar != null && !mHideOffsetNotSupported) {
+            try {
+                actionBar.setHideOffset((int) (getControlBarHeight() * offset));
+            } catch (UnsupportedOperationException e) {
+                // Some device will throw this exception
+                mHideOffsetNotSupported = true;
+            }
         }
         notifyControlBarOffsetChanged();
     }

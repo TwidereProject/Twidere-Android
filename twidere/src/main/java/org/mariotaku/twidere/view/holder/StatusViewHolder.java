@@ -3,14 +3,16 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -31,6 +33,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.TwitterCardUtils;
 import org.mariotaku.twidere.util.UnitConvertUtils;
@@ -52,7 +55,7 @@ import static org.mariotaku.twidere.util.Utils.getUserTypeIconRes;
 
 /**
  * IDE gives me warning if I don't change default comment, so I wrote this XD
- * <p/>
+ * <p>
  * Created by mariotaku on 14/11/19.
  */
 public class StatusViewHolder extends ViewHolder implements Constants, IStatusViewHolder {
@@ -71,6 +74,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final TextView statusInfoLabel;
     private final ShortTimeView timeView;
     private final CardMediaContainer mediaPreview, quoteMediaPreview;
+    private final View mediaLabel, quoteMediaLabel;
+    private final TextView mediaLabelText, quoteMediaLabelText;
     private final IconActionView replyIconView, retweetIconView, favoriteIconView;
     private final TextView replyCountView, retweetCountView, favoriteCountView;
     private final View replyView, retweetView, favoriteView;
@@ -79,11 +84,9 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
     private final View actionButtons;
     private final View itemMenu;
     private final View profileImageSpace;
-    private final View statusInfoSpace;
-    @Nullable
     private final View statusContentUpperSpace, statusContentLowerSpace;
-    @Nullable
-    private final View textMediaSpace, quotedTextMediaSpace;
+    private final View mediaLabelSpace = null, quotedMediaLabelSpace = null;
+    private final View quoteIndicatorAnchorTop, quoteIndicatorAnchorBottom;
     private final EventListener eventListener;
 
     private StatusClickListener statusClickListener;
@@ -104,10 +107,13 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         statusInfoLabel = (TextView) itemView.findViewById(R.id.status_info_label);
         timeView = (ShortTimeView) itemView.findViewById(R.id.time);
         profileImageSpace = itemView.findViewById(R.id.profile_image_space);
-        statusInfoSpace = itemView.findViewById(R.id.status_info_space);
 
         mediaPreview = (CardMediaContainer) itemView.findViewById(R.id.media_preview);
         quoteMediaPreview = (CardMediaContainer) itemView.findViewById(R.id.quoted_media_preview);
+        mediaLabel = itemView.findViewById(R.id.media_label);
+        quoteMediaLabel = itemView.findViewById(R.id.quoted_media_label);
+        mediaLabelText = (TextView) itemView.findViewById(R.id.media_label_text);
+        quoteMediaLabelText = (TextView) itemView.findViewById(R.id.quoted_media_label_text);
 
         quoteIndicator = (ForegroundColorView) itemView.findViewById(R.id.quote_indicator);
 
@@ -128,8 +134,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
         statusContentUpperSpace = itemView.findViewById(R.id.status_content_upper_space);
         statusContentLowerSpace = itemView.findViewById(R.id.status_content_lower_space);
-        textMediaSpace = itemView.findViewById(R.id.text_media_space);
-        quotedTextMediaSpace = itemView.findViewById(R.id.quoted_text_media_space);
+
+        quoteIndicatorAnchorTop = itemView.findViewById(R.id.quote_indicator_anchor_top);
+        quoteIndicatorAnchorBottom = itemView.findViewById(R.id.quote_indicator_anchor_bottom);
+
         //TODO
         // profileImageView.setSelectorColor(ThemeUtils.getUserHighlightColor(itemView.getContext()));
 
@@ -144,9 +152,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         profileImageView.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
         if (profileImageSpace != null) {
             profileImageSpace.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
-        }
-        if (statusInfoSpace != null) {
-            statusInfoSpace.setVisibility(profileImageEnabled ? View.VISIBLE : View.GONE);
         }
         if (statusContentUpperSpace != null) {
             statusContentUpperSpace.setVisibility(View.VISIBLE);
@@ -168,24 +173,18 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         final boolean showCardActions = isCardActionsShown();
         if (adapter.isMediaPreviewEnabled()) {
             mediaPreview.setVisibility(View.VISIBLE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(View.GONE);
-            }
+            mediaLabel.setVisibility(View.GONE);
         } else {
             mediaPreview.setVisibility(View.GONE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
-            }
+            mediaLabel.setVisibility(View.VISIBLE);
         }
+        quoteMediaLabel.setVisibility(View.GONE);
         actionButtons.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
         itemMenu.setVisibility(showCardActions ? View.VISIBLE : View.GONE);
         if (statusContentLowerSpace != null) {
             statusContentLowerSpace.setVisibility(showCardActions ? View.GONE : View.VISIBLE);
         }
         quoteMediaPreview.setVisibility(View.GONE);
-        if (quotedTextMediaSpace != null) {
-            quotedTextMediaSpace.setVisibility(View.GONE);
-        }
         mediaPreview.displayMedia(R.drawable.nyan_stars_background);
         extraTypeView.setImageResource(R.drawable.ic_action_gallery);
     }
@@ -260,30 +259,68 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         boolean skipLinksInText = status.extras != null && status.extras.support_entities;
         if (status.is_quote) {
 
-            quotedNameView.setVisibility(View.VISIBLE);
-            quotedTextView.setVisibility(View.VISIBLE);
             quoteIndicator.setVisibility(View.VISIBLE);
+            quoteIndicatorAnchorTop.setVisibility(View.VISIBLE);
+            quoteIndicatorAnchorBottom.setVisibility(View.VISIBLE);
 
-            quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
-                    status.quoted_user_name));
-            quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
+            boolean quoteContentAvailable = status.quoted_text_plain != null
+                    && status.quoted_text_unescaped != null;
+            if (quoteContentAvailable) {
 
-            if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-                final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
-                ParcelableStatusUtils.applySpans(text, status.quoted_spans);
-                linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
-                        status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
-                        skipLinksInText);
-                quotedTextView.setText(text);
+                quotedNameView.setVisibility(View.VISIBLE);
+                quotedTextView.setVisibility(View.VISIBLE);
+
+                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                        status.quoted_user_name));
+                quotedNameView.setScreenName("@" + status.quoted_user_screen_name);
+
+                int quotedDisplayEnd = -1;
+                if (status.extras.quoted_display_text_range != null) {
+                    quotedDisplayEnd = status.extras.quoted_display_text_range[1];
+                }
+                final CharSequence quotedText;
+                if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+                    quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped);
+                    ParcelableStatusUtils.applySpans((Spannable) quotedText, status.quoted_spans);
+                    linkify.applyAllLinks((Spannable) quotedText, status.account_key, getLayoutPosition(),
+                            status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
+                            skipLinksInText);
+                } else {
+                    quotedText = status.quoted_text_unescaped;
+                }
+                if (quotedDisplayEnd != -1 && quotedDisplayEnd <= quotedText.length()) {
+                    quotedTextView.setText(quotedText.subSequence(0, quotedDisplayEnd));
+                } else {
+                    quotedTextView.setText(quotedText);
+                }
+
+                if (quotedTextView.length() == 0) {
+                    // No text
+                    quotedTextView.setVisibility(View.GONE);
+                } else {
+                    quotedTextView.setVisibility(View.VISIBLE);
+                }
+
+                quoteIndicator.setColor(status.quoted_user_color);
             } else {
-                final String text = status.quoted_text_unescaped;
-                quotedTextView.setText(text);
+                quotedNameView.setVisibility(View.GONE);
+                quotedTextView.setVisibility(View.VISIBLE);
+
+                // Not available
+                final SpannableString string = SpannableString.valueOf(context.getString(R.string.status_not_available_text));
+                string.setSpan(new ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                        android.R.attr.textColorTertiary, textView.getCurrentTextColor())), 0,
+                        string.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                quotedTextView.setText(string);
+
+                quoteIndicator.setColor(0);
             }
 
-            quoteIndicator.setColor(status.quoted_user_color);
             itemContent.drawStart(status.user_color);
         } else {
 
+            quoteIndicatorAnchorTop.setVisibility(View.GONE);
+            quoteIndicatorAnchorBottom.setVisibility(View.GONE);
             quotedNameView.setVisibility(View.GONE);
             quotedTextView.setVisibility(View.GONE);
             quoteIndicator.setVisibility(View.GONE);
@@ -310,10 +347,6 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         }
         nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name));
         nameView.setScreenName("@" + status.user_screen_name);
-
-        if (statusInfoSpace != null) {
-            statusInfoSpace.setVisibility(View.VISIBLE);
-        }
 
         if (adapter.isProfileImageEnabled()) {
             profileImageView.setVisibility(View.VISIBLE);
@@ -343,48 +376,80 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             itemContent.drawEnd();
         }
 
-        if (adapter.isMediaPreviewEnabled() && (adapter.isSensitiveContentEnabled() || !status.is_possibly_sensitive)) {
-            mediaPreview.setStyle(adapter.getMediaPreviewStyle());
-            quoteMediaPreview.setStyle(adapter.getMediaPreviewStyle());
+        final boolean hasQuotedMedia = !ArrayUtils.isEmpty(status.quoted_media);
+        final boolean hasPrimaryMedia = !hasQuotedMedia && !ArrayUtils.isEmpty(status.media);
 
-            final boolean showQuotedMedia = !ArrayUtils.isEmpty(status.quoted_media);
-            final boolean showMedia = !showQuotedMedia && !ArrayUtils.isEmpty(status.media);
 
-            mediaPreview.setVisibility(showMedia ? View.VISIBLE : View.GONE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(!status.is_quote && (showMedia || showCardActions) ?
-                        View.GONE : View.VISIBLE);
-            }
-            quoteMediaPreview.setVisibility(showQuotedMedia ? View.VISIBLE : View.GONE);
-            if (quotedTextMediaSpace != null) {
-                quotedTextMediaSpace.setVisibility(!status.is_quote || showQuotedMedia ?
-                        View.GONE : View.VISIBLE);
-            }
-
-            mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
-                    adapter.getMediaLoadingHandler());
-            quoteMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
-                    adapter.getMediaLoadingHandler());
-        } else {
+        if (!hasPrimaryMedia && !hasQuotedMedia) {
+            // No media, hide all related views
+            mediaLabel.setVisibility(View.GONE);
+            quoteMediaLabel.setVisibility(View.GONE);
             mediaPreview.setVisibility(View.GONE);
             quoteMediaPreview.setVisibility(View.GONE);
-            if (textMediaSpace != null) {
-                textMediaSpace.setVisibility(showCardActions && !status.is_quote ? View.GONE : View.VISIBLE);
-            }
-            if (quotedTextMediaSpace != null) {
-                quotedTextMediaSpace.setVisibility(status.is_quote ? View.VISIBLE : View.GONE);
+
+        } else {
+
+            if (!adapter.isSensitiveContentEnabled() && status.is_possibly_sensitive) {
+                // Sensitive content, show label instead of media view
+                mediaLabel.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaLabel.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                mediaPreview.setVisibility(View.GONE);
+                quoteMediaPreview.setVisibility(View.GONE);
+
+            } else if (!adapter.isMediaPreviewEnabled()) {
+                // Media preview disabled, just show label
+                mediaLabel.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaLabel.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                mediaPreview.setVisibility(View.GONE);
+                quoteMediaPreview.setVisibility(View.GONE);
+
+            } else {
+                // Show media
+
+                mediaLabel.setVisibility(View.GONE);
+                quoteMediaLabel.setVisibility(View.GONE);
+
+                mediaPreview.setStyle(adapter.getMediaPreviewStyle());
+                quoteMediaPreview.setStyle(adapter.getMediaPreviewStyle());
+
+                mediaPreview.setVisibility(hasPrimaryMedia ? View.VISIBLE : View.GONE);
+                quoteMediaPreview.setVisibility(hasQuotedMedia ? View.VISIBLE : View.GONE);
+
+                mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
+                        adapter.getMediaLoadingHandler());
+                quoteMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
+                        adapter.getMediaLoadingHandler());
             }
         }
 
+        int displayEnd = -1;
+        if (status.extras.display_text_range != null) {
+            displayEnd = status.extras.display_text_range[1];
+        }
+
+        final CharSequence text;
         if (adapter.getLinkHighlightingStyle() != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-            final SpannableStringBuilder text = SpannableStringBuilder.valueOf(status.text_unescaped);
-            ParcelableStatusUtils.applySpans(text, status.spans);
-            linkify.applyAllLinks(text, status.account_key, getLayoutPosition(),
+            text = SpannableStringBuilder.valueOf(status.text_unescaped);
+            ParcelableStatusUtils.applySpans((Spannable) text, status.spans);
+            linkify.applyAllLinks((Spannable) text, status.account_key, getLayoutPosition(),
                     status.is_possibly_sensitive, adapter.getLinkHighlightingStyle(),
                     skipLinksInText);
-            textView.setText(text);
         } else {
-            textView.setText(status.text_unescaped);
+            text = status.text_unescaped;
+        }
+
+        if (displayEnd != -1 && displayEnd <= text.length()) {
+            textView.setText(text.subSequence(0, displayEnd));
+        } else {
+            textView.setText(text);
+        }
+        if (textView.length() == 0) {
+            // No text
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setVisibility(View.VISIBLE);
         }
 
         if (replyCount > 0) {
@@ -485,6 +550,10 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         quotedNameView.setSecondaryTextSize(textSize * 0.85f);
         timeView.setTextSize(textSize * 0.85f);
         statusInfoLabel.setTextSize(textSize * 0.75f);
+
+        mediaLabelText.setTextSize(textSize * 0.95f);
+        quoteMediaLabelText.setTextSize(textSize * 0.95f);
+
         replyCountView.setTextSize(textSize);
         retweetCountView.setTextSize(textSize);
         favoriteCountView.setTextSize(textSize);

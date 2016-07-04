@@ -36,22 +36,28 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.UploaderMediaItem;
+import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
+
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
 
 public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUploader> {
     protected MediaUploaderInterface(Context context, String uploaderName, Bundle metaData) {
         super(context, uploaderName, metaData);
     }
 
-    public MediaUploadResult upload(final ParcelableStatusUpdate status, final UploaderMediaItem[] media)
-            throws RemoteException {
+    public MediaUploadResult upload(final ParcelableStatusUpdate status,
+                                    final UserKey currentAccountKey,
+                                    final UploaderMediaItem[] media) {
         final IMediaUploader iface = getInterface();
         if (iface == null) return null;
         try {
             final String statusJson = JsonSerializer.serialize(status, ParcelableStatusUpdate.class);
             final String mediaJson = JsonSerializer.serialize(media, UploaderMediaItem.class);
-            return JsonSerializer.parse(iface.upload(statusJson, mediaJson), MediaUploadResult.class);
+            return JsonSerializer.parse(iface.upload(statusJson, currentAccountKey.toString(),
+                    mediaJson), MediaUploadResult.class);
         } catch (final RemoteException e) {
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);

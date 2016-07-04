@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,10 +47,9 @@ import org.mariotaku.twidere.util.RecyclerViewScrollHandler;
 import org.mariotaku.twidere.util.SimpleDrawerCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereColorUtils;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 import org.mariotaku.twidere.view.HeaderDrawerLayout;
 import org.mariotaku.twidere.view.iface.IExtendedView;
-import org.mariotaku.twidere.view.ExtendedSwipeRefreshLayout;
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -68,11 +68,13 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     @SuppressWarnings("NullableProblems")
     @NonNull
     private A mAdapter;
+    @Nullable
+    private ItemDecoration mItemDecoration;
 
     // Callbacks and listeners
     private SimpleDrawerCallback mDrawerCallback;
-    protected RecyclerViewScrollHandler mScrollListener;
 
+    protected RecyclerViewScrollHandler mScrollListener;
     // Data fields
     private Rect mSystemWindowsInsets = new Rect();
 
@@ -215,13 +217,12 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         final View view = getView();
         assert view != null;
         final Context context = view.getContext();
-        final boolean compact = Utils.isCompactCards(context);
         final int backgroundColor = ThemeUtils.getThemeBackgroundColor(context);
         final int colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(colorRes);
-        mAdapter = onCreateAdapter(context, compact);
+        mAdapter = onCreateAdapter(context);
         mLayoutManager = onCreateLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -247,7 +248,7 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
 
             });
         }
-        setupRecyclerView(context, compact);
+        setupRecyclerView(context, mRecyclerView);
         mRecyclerView.setAdapter(mAdapter);
 
         mScrollListener = new RecyclerViewScrollHandler(this, new RecyclerViewScrollHandler.RecyclerViewCallback(mRecyclerView));
@@ -255,7 +256,12 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
         mRecyclerView.setOnTouchListener(mScrollListener.getOnTouchListener());
     }
 
-    protected abstract void setupRecyclerView(Context context, boolean compact);
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+        mItemDecoration = createItemDecoration(context, recyclerView, getLayoutManager());
+        if (mItemDecoration != null) {
+            recyclerView.addItemDecoration(mItemDecoration);
+        }
+    }
 
     @NonNull
     protected abstract L onCreateLayoutManager(Context context);
@@ -320,7 +326,20 @@ public abstract class AbsContentRecyclerViewFragment<A extends LoadMoreSupportAd
     }
 
     @NonNull
-    protected abstract A onCreateAdapter(Context context, boolean compact);
+    protected abstract A onCreateAdapter(Context context);
+
+
+    @Nullable
+    protected ItemDecoration createItemDecoration(Context context,
+                                                  RecyclerView recyclerView,
+                                                  L layoutManager) {
+        return null;
+    }
+
+    @Nullable
+    public final ItemDecoration getItemDecoration() {
+        return mItemDecoration;
+    }
 
     protected final void showContent() {
         mErrorContainer.setVisibility(View.GONE);

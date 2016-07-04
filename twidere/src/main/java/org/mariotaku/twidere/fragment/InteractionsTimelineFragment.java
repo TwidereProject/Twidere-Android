@@ -26,10 +26,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.microblog.library.twitter.model.Activity;
+import org.mariotaku.twidere.model.ParameterizedExpression;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -79,13 +80,13 @@ public class InteractionsTimelineFragment extends CursorActivitiesFragment {
 
     @Override
     @NonNull
-    protected Where processWhere(@NonNull Expression where, @NonNull String[] whereArgs) {
+    protected ParameterizedExpression processWhere(@NonNull Expression where, @NonNull String[] whereArgs) {
         final Bundle arguments = getArguments();
         if (arguments != null) {
             final InteractionsTabExtras extras = arguments.getParcelable(EXTRA_EXTRAS);
             if (extras != null && extras.isMentionsOnly()) {
                 final Expression expression = Expression.and(where, Expression.inArgs(Activities.ACTION, 3));
-                return new Where(expression, ArrayUtils.addAll(whereArgs, Activity.Action.MENTION,
+                return new ParameterizedExpression(expression, ArrayUtils.addAll(whereArgs, Activity.Action.MENTION,
                         Activity.Action.REPLY, Activity.Action.QUOTE));
             }
         }
@@ -94,8 +95,8 @@ public class InteractionsTimelineFragment extends CursorActivitiesFragment {
 
     @NonNull
     @Override
-    protected ParcelableActivitiesAdapter onCreateAdapter(Context context, boolean compact) {
-        final ParcelableActivitiesAdapter adapter = new ParcelableActivitiesAdapter(context, compact, false);
+    protected ParcelableActivitiesAdapter onCreateAdapter(Context context) {
+        final ParcelableActivitiesAdapter adapter = new ParcelableActivitiesAdapter(context, false);
         final Bundle arguments = getArguments();
         if (arguments != null) {
             final InteractionsTabExtras extras = arguments.getParcelable(EXTRA_EXTRAS);

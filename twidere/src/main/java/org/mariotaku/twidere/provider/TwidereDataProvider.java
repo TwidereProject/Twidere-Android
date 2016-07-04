@@ -66,6 +66,7 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -81,7 +82,6 @@ import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.NotificationType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage;
@@ -162,8 +162,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
-        LazyLoadCallback {
+public final class TwidereDataProvider extends ContentProvider implements Constants,
+        OnSharedPreferenceChangeListener, LazyLoadCallback {
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");
@@ -1382,6 +1382,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 new OrderBy(Activities.TIMESTAMP, false).getSQL());
         if (c == null) return;
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        final StringBuilder pebbleNotificationStringBuilder = new StringBuilder();
         try {
             final int count = c.getCount();
             if (count == 0) return;
@@ -1404,6 +1405,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             while (c.moveToNext()) {
                 if (messageLines == 5) {
                     style.addLine(resources.getString(R.string.and_N_more, count - c.getPosition()));
+                    pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, count - c.getPosition()));
                     break;
                 }
                 final ParcelableActivity activity = ci.newObject(c);
@@ -1434,9 +1436,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final CharSequence summary = message.getSummary();
                     if (TextUtils.isEmpty(summary)) {
                         style.addLine(message.getTitle());
+                        pebbleNotificationStringBuilder.append(message.getTitle());
+                        pebbleNotificationStringBuilder.append("\n");
                     } else {
                         style.addLine(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
                                 message.getTitle(), summary));
+                        pebbleNotificationStringBuilder.append(message.getTitle());
+                        pebbleNotificationStringBuilder.append(": ");
+                        pebbleNotificationStringBuilder.append(message.getSummary());
+                        pebbleNotificationStringBuilder.append("\n");
                     }
                     messageLines++;
                 }
@@ -1460,6 +1468,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final int notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE,
                 accountKey);
         mNotificationManager.notify("interactions", notificationId, builder.build());
+
+        Utils.sendPebbleNotification(context, context.getResources().getString(R.string.interactions), pebbleNotificationStringBuilder.toString());
+
     }
 
     private PendingIntent getContentIntent(final Context context, @CustomTabType final String type,
@@ -1562,6 +1573,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Cursor userCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
                 userProjection, filteredSelection, selectionArgs, DirectMessages.SENDER_ID, null,
                 DirectMessages.DEFAULT_SORT_ORDER);
+
+        final StringBuilder pebbleNotificationBuilder = new StringBuilder();
+
         //noinspection TryFinallyCanBeTryWithResources
         try {
             final int usersCount = userCursor.getCount();
@@ -1609,6 +1623,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     sb.append(' ');
                     sb.append(messageCursor.getString(messageIndices.text_unescaped));
                     style.addLine(sb);
+                    pebbleNotificationBuilder.append(mUserColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
+                            mNameFirst ? messageCursor.getString(messageIndices.sender_name) :
+                                    messageCursor.getString(messageIndices.sender_screen_name)));
+                    pebbleNotificationBuilder.append(": ");
+                    pebbleNotificationBuilder.append(messageCursor.getString(messageIndices.text_unescaped));
+                    pebbleNotificationBuilder.append("\n");
                 }
                 final long userId = messageCursor.getLong(messageIndices.sender_id);
                 final long messageId = messageCursor.getLong(messageIndices.id);
@@ -1643,7 +1663,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getDirectMessagesNotificationType());
             try {
                 nm.notify("messages_" + accountKey, NOTIFICATION_ID_DIRECT_MESSAGES, builder.build());
-                Utils.sendPebbleNotification(context, notificationContent);
+
+                //TODO: Pebble notification - Only notify about recently added DMs, not previous ones?
+                Utils.sendPebbleNotification(context, "DM", pebbleNotificationBuilder.toString());
             } catch (SecurityException e) {
                 // Silently ignore
             }

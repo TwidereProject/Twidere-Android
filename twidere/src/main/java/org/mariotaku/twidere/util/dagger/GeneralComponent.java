@@ -33,10 +33,10 @@ import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
+import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseFiltersFragment;
 import org.mariotaku.twidere.fragment.BaseListFragment;
 import org.mariotaku.twidere.fragment.BasePreferenceFragment;
-import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.MessagesConversationFragment;
 import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader;
@@ -56,6 +56,7 @@ import org.mariotaku.twidere.task.UpdateProfileBackgroundImageTask;
 import org.mariotaku.twidere.task.UpdateProfileBannerImageTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -71,7 +72,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = ApplicationModule.class)
 public interface GeneralComponent {
-    void inject(DummyItemAdapter object);
+    void inject(DummyItemAdapter adapter);
 
     void inject(BaseSupportFragment object);
 
@@ -150,4 +151,6 @@ public interface GeneralComponent {
     void inject(AsyncTwitterWrapper.UpdateProfileImageTask<Object> task);
 
     void inject(APIEditorActivity.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader loader);
+
+    void inject(UpdateStatusTask task);
 }

@@ -24,11 +24,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
 
-public class HiddenSettingsActivity extends BaseActivity implements Constants {
+public class HiddenSettingsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

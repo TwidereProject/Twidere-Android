@@ -24,11 +24,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
-public class UnreadCountUtils implements Constants {
+public class UnreadCountUtils {
 	private UnreadCountUtils() {
 	}
 

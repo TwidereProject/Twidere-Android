@@ -21,10 +21,9 @@ package org.mariotaku.twidere.adapter.iface;
 
 import android.widget.ListAdapter;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 
-public interface IBaseAdapter extends Constants, ListAdapter {
+public interface IBaseAdapter extends ListAdapter {
 
     MediaLoaderWrapper getImageLoader();
 

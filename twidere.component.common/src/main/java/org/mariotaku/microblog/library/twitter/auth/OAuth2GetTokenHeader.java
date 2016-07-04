@@ -3,6 +3,7 @@ package org.mariotaku.microblog.library.twitter.auth;
 import android.util.Base64;
 
 import org.mariotaku.restfu.http.HeaderValue;
+import org.mariotaku.restfu.oauth.OAuthToken;
 
 /**
  * Created by mariotaku on 16/1/4.

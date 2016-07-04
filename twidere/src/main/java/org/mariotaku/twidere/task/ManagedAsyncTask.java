@@ -24,7 +24,6 @@ import android.os.AsyncTask;
 
 import com.squareup.otto.Bus;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.util.AsyncTaskManager;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
@@ -34,8 +33,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
-public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> implements
-        Constants {
+public abstract class ManagedAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
     @Inject
     protected AsyncTaskManager manager;

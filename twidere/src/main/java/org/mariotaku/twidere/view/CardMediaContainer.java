@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.TextView;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.twidere.Constants;
@@ -94,15 +93,12 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                              final UserKey accountId, final long extraId,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
-        displayMedia(mediaArray, loader, accountId, extraId, false, mediaClickListener,
-                loadingHandler);
+        displayMedia(loader, mediaClickListener, loadingHandler, mediaArray, accountId, extraId, false
+        );
     }
 
-    public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
-                             @NonNull final MediaLoaderWrapper loader,
-                             final UserKey accountId, final long extraId, boolean withCredentials,
-                             final OnMediaClickListener mediaClickListener,
-                             final MediaLoadingHandler loadingHandler) {
+    public void displayMedia(@NonNull final MediaLoaderWrapper loader, final OnMediaClickListener mediaClickListener, final MediaLoadingHandler loadingHandler, @Nullable final ParcelableMedia[] mediaArray,
+                             final UserKey accountId, final long extraId, boolean withCredentials) {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
             for (int i = 0, j = getChildCount(); i < j; i++) {
                 final View child = getChildAt(i);
@@ -148,17 +144,6 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                 }
                 child.setTag(media);
                 child.setVisibility(VISIBLE);
-                if (i == j - 1) {
-                    final TextView moreIndicator = (TextView) child.findViewById(R.id.more_media);
-                    moreIndicator.setVisibility(j < k ? VISIBLE : GONE);
-                    if (k > j) {
-                        final int extraMediaCount = k - j;
-                        moreIndicator.setText(getResources().getQuantityString(R.plurals.N_media,
-                                extraMediaCount, extraMediaCount));
-                    } else {
-                        moreIndicator.setText(null);
-                    }
-                }
             } else {
                 loader.cancelDisplayTask(imageView);
                 imageView.setTag(null);

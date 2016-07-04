@@ -2,7 +2,6 @@ package org.mariotaku.twidere.util;
 
 
 import org.junit.Test;
-import org.mariotaku.twidere.util.UriUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;

@@ -7,6 +7,7 @@ import android.text.style.URLSpan;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
@@ -40,12 +41,19 @@ public class SpanItem implements Parcelable {
     @ParcelableThisPlease
     public String link;
 
+    @ParcelableNoThanks
+    public int orig_start = -1;
+    @ParcelableNoThanks
+    public int orig_end = -1;
+
     @Override
     public String toString() {
         return "SpanItem{" +
                 "start=" + start +
                 ", end=" + end +
                 ", link='" + link + '\'' +
+                ", orig_start=" + orig_start +
+                ", orig_end=" + orig_end +
                 '}';
     }
 

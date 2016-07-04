@@ -41,7 +41,6 @@ import android.widget.EditText;
 
 import com.twitter.Validator;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.model.Draft;
@@ -65,9 +64,10 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import static org.mariotaku.twidere.util.Utils.isMyRetweet;
 
-public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Constants {
+public class RetweetQuoteDialogFragment extends BaseDialogFragment {
 
     public static final String FRAGMENT_TAG = "retweet_quote";
+    private static final boolean SHOW_PROTECTED_CONFIRM = Boolean.parseBoolean("false");
     private PopupMenu mPopupMenu;
 
     @NonNull
@@ -141,7 +141,7 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Co
                     public boolean onHitEnter() {
                         final ParcelableStatus status = getStatus();
                         if (status == null) return false;
-                        if (retweetOrQuote(credentials, status, true)) {
+                        if (retweetOrQuote(credentials, status, SHOW_PROTECTED_CONFIRM)) {
                             dismiss();
                             return true;
                         }
@@ -194,12 +194,12 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Co
                     public void onClick(View v) {
                         boolean dismissDialog = false;
                         if (editComment.length() > 0) {
-                            dismissDialog = retweetOrQuote(credentials, status, true);
+                            dismissDialog = retweetOrQuote(credentials, status, SHOW_PROTECTED_CONFIRM);
                         } else if (isMyRetweet(status)) {
                             mTwitterWrapper.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id);
                             dismissDialog = true;
                         } else if (useQuote(!status.user_is_protected, credentials)) {
-                            dismissDialog = retweetOrQuote(credentials, status, true);
+                            dismissDialog = retweetOrQuote(credentials, status, SHOW_PROTECTED_CONFIRM);
                         } else {
                             TwidereBugReporter.logException(new IllegalStateException(status.toString()));
                         }
@@ -233,10 +233,9 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Co
             positiveButton.setText(R.string.retweet);
             positiveButton.setEnabled(!status.user_is_protected);
         }
-        final String statusLink = LinkCreator.getStatusWebLink(status).toString();
         final StatusTextCountView textCountView = (StatusTextCountView) alertDialog.findViewById(R.id.comment_text_count);
         assert textCountView != null;
-        textCountView.setTextCount(mValidator.getTweetLength(s + " " + statusLink));
+        textCountView.setTextCount(mValidator.getTweetLength(s.toString()));
     }
 
     private ParcelableStatus getStatus() {
@@ -292,7 +291,8 @@ public class RetweetQuoteDialogFragment extends BaseDialogFragment implements Co
                     } else {
                         statusLink = LinkCreator.getQuotedStatusWebLink(status);
                     }
-                    commentText = editingComment + " " + statusLink;
+                    update.attachment_url = statusLink.toString();
+                    commentText = editingComment;
                     break;
                 }
             }

@@ -25,12 +25,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.DataExportActivity;
@@ -70,7 +69,7 @@ public class SettingsImportExportPreference extends DialogPreference implements 
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             final Context context = getContext();
             final String[] entries = new String[2];
             final Intent[] values = new Intent[2];

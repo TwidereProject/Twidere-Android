@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -19,9 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SeekBar;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -156,7 +154,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             final ThemeBackgroundPreference preference = (ThemeBackgroundPreference) getPreference();
             final SharedPreferences preferences = preference.getSharedPreferences();
             preference.setValue(preference.getPersistedString(null));
@@ -175,7 +173,7 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
                 @Override
                 public void onShow(DialogInterface dialog) {
                     if (preferences != null) {
-                        final MaterialDialog materialDialog = (MaterialDialog) dialog;
+                        final AlertDialog materialDialog = (AlertDialog) dialog;
                         final LayoutInflater inflater = materialDialog.getLayoutInflater();
                         final ListView listView = materialDialog.getListView();
                         assert listView != null;
@@ -190,7 +188,6 @@ public class ThemeBackgroundPreference extends DialogPreference implements Const
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                materialDialog.onItemClick(parent, view, position, id);
                                 preference.setSelectedOption(position);
                                 updateAlphaVisibility();
                             }

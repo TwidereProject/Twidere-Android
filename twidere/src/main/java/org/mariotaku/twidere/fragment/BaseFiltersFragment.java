@@ -245,7 +245,7 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
 
     @NonNull
     @Override
-    protected SimpleCursorAdapter onCreateAdapter(Context context, boolean compact) {
+    protected SimpleCursorAdapter onCreateAdapter(Context context) {
         return new FilterListAdapter(context);
     }
 
@@ -442,8 +442,8 @@ public abstract class BaseFiltersFragment extends AbsContentListViewFragment<Sim
 
         @NonNull
         @Override
-        protected SimpleCursorAdapter onCreateAdapter(Context context, boolean isCompact) {
-            return new FilterUsersListAdapter(getActivity());
+        protected SimpleCursorAdapter onCreateAdapter(Context context) {
+            return new FilterUsersListAdapter(context);
         }
 
         public static final class FilterUsersListAdapter extends SimpleCursorAdapter {

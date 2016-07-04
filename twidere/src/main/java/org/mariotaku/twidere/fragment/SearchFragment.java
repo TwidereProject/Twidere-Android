@@ -78,19 +78,24 @@ public class SearchFragment extends AbsToolbarTabPagesFragment implements Refres
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        final String query = getQuery();
         switch (item.getItemId()) {
             case R.id.save: {
                 final AsyncTwitterWrapper twitter = mTwitterWrapper;
                 final Bundle args = getArguments();
                 if (twitter != null && args != null) {
-                    twitter.createSavedSearchAsync(getAccountKey(), getQuery());
+                    twitter.createSavedSearchAsync(getAccountKey(), query);
                 }
                 return true;
             }
             case R.id.compose: {
                 final Intent intent = new Intent(getActivity(), ComposeActivity.class);
                 intent.setAction(INTENT_ACTION_COMPOSE);
-                intent.putExtra(Intent.EXTRA_TEXT, String.format("#%s ", getQuery()));
+                if (query.startsWith("@") || query.startsWith("\uff20")) {
+                    intent.putExtra(Intent.EXTRA_TEXT, query);
+                } else {
+                    intent.putExtra(Intent.EXTRA_TEXT, String.format("#%s ", query));
+                }
                 intent.putExtra(EXTRA_ACCOUNT_KEY, getAccountKey());
                 startActivity(intent);
                 break;

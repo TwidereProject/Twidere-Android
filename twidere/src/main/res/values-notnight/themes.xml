@@ -11,12 +11,13 @@
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">#f8f8f8</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="mediaLabelBackground">#dddddd</item>
 
         <!-- ATE attributes -->
         <item name="ateThemeKey">light</item>
@@ -39,7 +40,7 @@
         <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
         <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
         <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">#f8f8f8</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
 
         <!-- Twidere specific styles -->
         <item name="menuIconColor">@color/action_icon_dark</item>

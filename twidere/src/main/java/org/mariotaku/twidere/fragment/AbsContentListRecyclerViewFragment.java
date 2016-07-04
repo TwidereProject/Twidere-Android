@@ -21,8 +21,10 @@ package org.mariotaku.twidere.fragment;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.FixedLinearLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter;
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
@@ -35,21 +37,21 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 public abstract class AbsContentListRecyclerViewFragment<A extends LoadMoreSupportAdapter>
         extends AbsContentRecyclerViewFragment<A, LinearLayoutManager> {
 
-    private DividerItemDecoration mItemDecoration;
-
-    @Override
-    protected void setupRecyclerView(Context context, boolean compact) {
-        if (compact) {
-            mItemDecoration = new DividerItemDecoration(context, getLayoutManager().getOrientation());
-            getRecyclerView().addItemDecoration(mItemDecoration);
-        }
+    @Nullable
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context,
+                                                               RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+        return new DividerItemDecoration(context, layoutManager.getOrientation());
     }
+
 
     @Override
     public void setLoadMoreIndicatorPosition(@IndicatorPosition int position) {
-        if (mItemDecoration != null) {
-            mItemDecoration.setDecorationStart((position & IndicatorPosition.START) != 0 ? 1 : 0);
-            mItemDecoration.setDecorationEndOffset((position & IndicatorPosition.END) != 0 ? 1 : 0);
+        RecyclerView.ItemDecoration decor = getItemDecoration();
+        if (decor != null) {
+            if (decor instanceof DividerItemDecoration) {
+                ((DividerItemDecoration) decor).setDecorationStart((position & IndicatorPosition.START) != 0 ? 1 : 0);
+                ((DividerItemDecoration) decor).setDecorationEndOffset((position & IndicatorPosition.END) != 0 ? 1 : 0);
+            }
         }
         super.setLoadMoreIndicatorPosition(position);
     }

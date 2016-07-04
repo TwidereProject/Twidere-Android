@@ -21,14 +21,14 @@ package org.mariotaku.twidere.util;
 
 import android.net.Uri;
 
-import org.mariotaku.twidere.Constants;
-
 import java.util.List;
+
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_EXTRA;
 
 /**
  * Created by mariotaku on 15/10/20.
  */
-public class UriExtraUtils implements Constants {
+public class UriExtraUtils {
     private UriExtraUtils() {
     }
 

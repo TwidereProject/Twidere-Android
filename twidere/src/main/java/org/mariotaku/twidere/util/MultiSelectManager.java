@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -28,7 +27,7 @@ import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiSelectManager implements Constants {
+public class MultiSelectManager {
 
     private final NoDuplicatesArrayList<String> mSelectedStatusIds = new NoDuplicatesArrayList<>();
     private final NoDuplicatesArrayList<UserKey> mSelectedUserIds = new NoDuplicatesArrayList<>();

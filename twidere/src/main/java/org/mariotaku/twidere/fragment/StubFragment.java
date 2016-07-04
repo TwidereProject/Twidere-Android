@@ -27,13 +27,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
+
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_TAB_POSITION;
 
 /**
  * Created by mariotaku on 15/7/4.
  */
-public class StubFragment extends Fragment implements Constants {
+public class StubFragment extends Fragment {
     private TextView mTextView;
 
     @Override

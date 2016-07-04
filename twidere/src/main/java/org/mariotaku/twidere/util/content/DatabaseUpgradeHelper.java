@@ -21,13 +21,10 @@ package org.mariotaku.twidere.util.content;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Columns;
-import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Constraint;
-import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.NewColumn;
 import org.mariotaku.sqliteqb.library.OnConflict;
 import org.mariotaku.sqliteqb.library.Tables;
@@ -36,8 +33,6 @@ import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

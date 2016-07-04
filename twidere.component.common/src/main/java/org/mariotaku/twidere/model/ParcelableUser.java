@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
@@ -34,12 +35,15 @@ import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
+
+import java.util.Arrays;
 
 
 @ParcelablePlease(allFields = false)
 @JsonObject
-@CursorObject(valuesCreator = true)
+@CursorObject(valuesCreator = true, tableInfo = true)
 public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     @ParcelableThisPlease
@@ -48,6 +52,10 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
 
     @ParcelableThisPlease
     public int account_color;
+
+    @ParcelableThisPlease
+    @CursorField(value = CachedUsers._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
+    public long _id;
 
     @ParcelableThisPlease
     @JsonField(name = "id", typeConverter = UserKeyConverter.class)
@@ -114,17 +122,14 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @CursorField(CachedUsers.URL_EXPANDED)
     public String url_expanded;
     @ParcelableThisPlease
-    @JsonField(name = "description_html")
-    @CursorField(CachedUsers.DESCRIPTION_HTML)
-    public String description_html;
-    @ParcelableThisPlease
     @JsonField(name = "description_unescaped")
     @CursorField(CachedUsers.DESCRIPTION_UNESCAPED)
     public String description_unescaped;
+
     @ParcelableThisPlease
-    @JsonField(name = "description_expanded")
-    @CursorField(CachedUsers.DESCRIPTION_EXPANDED)
-    public String description_expanded;
+    @JsonField(name = "description_spans")
+    @CursorField(value = CachedUsers.DESCRIPTION_SPANS, converter = LoganSquareCursorFieldConverter.class)
+    public SpanItem[] description_spans;
 
     @ParcelableThisPlease
     @JsonField(name = "followers_count")
@@ -175,6 +180,14 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @JsonField(name = "extras")
     @CursorField(value = CachedUsers.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
     public Extras extras;
+
+    @ParcelableNoThanks
+    @CursorField(CachedUsers.LAST_SEEN)
+    public long last_seen;
+
+    @ParcelableNoThanks
+    @CursorField(value = CachedUsers.SCORE, excludeWrite = true)
+    public int score;
 
     @ParcelableThisPlease
     public int color;
@@ -272,9 +285,8 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                 ", profile_background_url='" + profile_background_url + '\'' +
                 ", url='" + url + '\'' +
                 ", url_expanded='" + url_expanded + '\'' +
-                ", description_html='" + description_html + '\'' +
                 ", description_unescaped='" + description_unescaped + '\'' +
-                ", description_expanded='" + description_expanded + '\'' +
+                ", description_spans=" + Arrays.toString(description_spans) +
                 ", followers_count=" + followers_count +
                 ", friends_count=" + friends_count +
                 ", statuses_count=" + statuses_count +

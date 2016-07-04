@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment;
 import android.animation.ArgbEvaluator;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,10 +57,9 @@ import android.support.v4.view.WindowCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.util.Linkify;
-import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -82,7 +80,6 @@ import android.widget.TextView;
 
 import com.afollestad.appthemeengine.ATEActivity;
 import com.afollestad.appthemeengine.Config;
-import com.afollestad.appthemeengine.util.ATEUtil;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -126,6 +123,7 @@ import org.mariotaku.twidere.model.message.TaskStateChangedEvent;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -134,7 +132,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.HtmlSpanBuilder;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
@@ -392,7 +389,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         mFollowButton.setCompoundDrawablePadding(Math.round(mFollowButton.getTextSize() * 0.25f));
         mFollowingYouIndicator.setVisibility(userRelationship.followed_by ? View.VISIBLE : View.GONE);
 
-        final CacheUserInfoRunnable task = new CacheUserInfoRunnable(getContext().getApplicationContext());
+        final CacheUserInfoTask task = new CacheUserInfoTask(getContext().getApplicationContext());
         task.setParams(Pair.create(user, userRelationship));
         TaskStarter.execute(task);
         mFollowButton.setVisibility(View.VISIBLE);
@@ -554,16 +551,17 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
             mProfileTypeView.setVisibility(View.GONE);
         }
         mScreenNameView.setText(String.format("@%s", user.screen_name));
-        mDescriptionContainer.setVisibility(TextUtils.isEmpty(user.description_html) ? View.GONE : View.VISIBLE);
         final TwidereLinkify linkify = new TwidereLinkify(this);
-        if (user.description_html != null) {
-            final Spannable text = HtmlSpanBuilder.fromHtml(user.description_html);
+        if (user.description_unescaped != null) {
+            final SpannableStringBuilder text = SpannableStringBuilder.valueOf(user.description_unescaped);
+            ParcelableStatusUtils.applySpans(text, user.description_spans);
             linkify.applyAllLinks(text, user.account_key, false, false);
             mDescriptionView.setText(text);
         } else {
             mDescriptionView.setText(user.description_plain);
             Linkify.addLinks(mDescriptionView, Linkify.WEB_URLS);
         }
+        mDescriptionContainer.setVisibility(mDescriptionView.length() > 0 ? View.VISIBLE : View.GONE);
 
         mLocationContainer.setVisibility(TextUtils.isEmpty(user.location) ? View.GONE : View.VISIBLE);
         mLocationView.setText(user.location);
@@ -969,6 +967,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        final Context context = getContext();
         final AsyncTwitterWrapper twitter = mTwitterWrapper;
         final ParcelableUser user = getUser();
         final UserRelationship userRelationship = mRelationship;
@@ -1099,33 +1098,31 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                 return true;
             }
             case R.id.user_mentions: {
-                IntentUtils.openUserMentions(getActivity(), user.account_key, user.screen_name);
+                IntentUtils.openUserMentions(context, user.account_key, user.screen_name);
                 return true;
             }
             case R.id.saved_searches: {
-                IntentUtils.openSavedSearches(getActivity(), user.account_key);
+                IntentUtils.openSavedSearches(context, user.account_key);
                 return true;
             }
             case R.id.scheduled_statuses: {
-                IntentUtils.openScheduledStatuses(getActivity(), user.account_key);
+                IntentUtils.openScheduledStatuses(context, user.account_key);
                 return true;
             }
             case R.id.open_in_browser: {
                 final Uri uri = LinkCreator.getUserWebLink(user);
                 final Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                intent.setPackage(IntentUtils.getDefaultBrowserPackage(getContext(), uri, true));
-                startActivity(intent);
+                intent.setPackage(IntentUtils.getDefaultBrowserPackage(context, uri, true));
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    startActivity(intent);
+                }
                 return true;
             }
             default: {
-                if (item.getIntent() != null) {
-                    try {
-                        startActivity(item.getIntent());
-                    } catch (final ActivityNotFoundException e) {
-                        Log.w(LOGTAG, e);
-                        return false;
-                    }
+                final Intent intent = item.getIntent();
+                if (intent != null && intent.resolveActivity(context.getPackageManager()) != null) {
+                    startActivity(intent);
                 }
                 break;
             }
@@ -1482,7 +1479,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         final BaseActivity activity = (BaseActivity) getActivity();
         if (Config.coloredActionBar(activity, activity.getATEKey())) {
             mPrimaryColor = color;
-            mPrimaryColorDark = ATEUtil.darkenColor(color);
+            mPrimaryColorDark = ThemeUtils.computeDarkColor(color);
         } else {
             mPrimaryColor = Config.primaryColor(activity, activity.getATEKey());
             mPrimaryColorDark = Color.BLACK;
@@ -1574,7 +1571,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
 
         final int statusBarColor = (int) sArgbEvaluator.evaluate(factor, 0xA0000000,
-                ATEUtil.darkenColor(mPrimaryColorDark));
+                ThemeUtils.computeDarkColor(mPrimaryColorDark));
         final Window window = activity.getWindow();
         mTintedStatusFrameLayout.setStatusBarColor(statusBarColor);
         ThemeUtils.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor));
@@ -1788,7 +1785,7 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
                     return SingleResponse.getInstance(new UserRelationship(mUser, isFiltering));
                 }
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false);
             if (twitter == null) {
                 return SingleResponse.getInstance(new MicroBlogException("No Account"));
             }
@@ -1849,11 +1846,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
 
     }
 
-    private static class CacheUserInfoRunnable extends AbstractTask<Pair<ParcelableUser,
+    private static class CacheUserInfoTask extends AbstractTask<Pair<ParcelableUser,
             ? extends CachedRelationship>, Object, Object> {
         private final Context context;
 
-        public CacheUserInfoRunnable(Context context) {
+        public CacheUserInfoTask(Context context) {
             this.context = context;
         }
 

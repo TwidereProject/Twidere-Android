@@ -27,22 +27,22 @@ import org.mariotaku.twidere.R;
 
 public class StatusShortenerPreference extends ServicePickerPreference implements Constants {
 
-	public StatusShortenerPreference(final Context context) {
-		this(context, null);
-	}
+    public StatusShortenerPreference(final Context context) {
+        this(context, null);
+    }
 
-	public StatusShortenerPreference(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public StatusShortenerPreference(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	@Override
-	protected String getIntentAction() {
-		return INTENT_ACTION_EXTENSION_SHORTEN_STATUS;
-	}
+    @Override
+    protected String getIntentAction() {
+        return INTENT_ACTION_EXTENSION_SHORTEN_STATUS;
+    }
 
-	@Override
-	protected String getNoneEntry() {
-		return getContext().getString(R.string.status_shortener_default);
-	}
+    @Override
+    protected String getNoneEntry() {
+        return getContext().getString(R.string.status_shortener_default);
+    }
 
 }

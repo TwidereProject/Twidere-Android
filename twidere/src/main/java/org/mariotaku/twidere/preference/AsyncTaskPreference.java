@@ -26,10 +26,9 @@ import android.os.AsyncTask.Status;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public abstract class AsyncTaskPreference extends Preference implements Constants {
+public abstract class AsyncTaskPreference extends Preference {
 
     private Task mTask;
 

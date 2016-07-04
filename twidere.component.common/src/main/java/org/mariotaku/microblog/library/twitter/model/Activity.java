@@ -33,7 +33,6 @@ import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.logansquare.JsonStringConverter;
-import org.mariotaku.microblog.library.annotation.NoObfuscate;
 import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
@@ -247,25 +246,28 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         }
     }
 
-    public static Activity fromMention(String twitterId, Status status) {
+    public static Activity fromMention(String accountId, Status status) {
         final Activity activity = new Activity();
 
         activity.maxPosition = activity.minPosition = status.getId();
         activity.maxSortPosition = activity.minSortPosition = status.getSortId();
         activity.createdAt = status.getCreatedAt();
 
-        if (TextUtils.equals(status.getInReplyToUserId(), twitterId)) {
+        if (TextUtils.equals(status.getInReplyToUserId(), accountId)) {
             activity.action = Action.REPLY;
             activity.targetStatuses = new Status[]{status};
 
             //TODO set target statuses (in reply to status)
             activity.targetObjectStatuses = new Status[0];
+        } else if (status.quotedStatus != null && TextUtils.equals(status.quotedStatus.user.getId(),
+                accountId)) {
+            activity.action = Action.QUOTE;
+            activity.targetStatuses = new Status[]{status};
+            activity.targetObjectStatuses = new Status[0];
         } else {
             activity.action = Action.MENTION;
+            activity.targetUsers = new User[0];
             activity.targetObjectStatuses = new Status[]{status};
-
-            // TODO set target users (mentioned users)
-            activity.targetUsers = null;
         }
         activity.sourcesSize = 1;
         activity.sources = new User[]{status.getUser()};

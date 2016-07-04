@@ -29,6 +29,8 @@ import org.attoparser.markup.MarkupAttoParser;
 import org.attoparser.markup.html.AbstractStandardNonValidatingHtmlAttoHandler;
 import org.attoparser.markup.html.HtmlParsingConfiguration;
 import org.attoparser.markup.html.elements.IHtmlElement;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestClient;
 import org.mariotaku.restfu.annotation.method.GET;
@@ -40,11 +42,8 @@ import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.FormBody;
 import org.mariotaku.restfu.http.mime.SimpleBody;
+import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth;
-import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
 import org.mariotaku.twidere.util.net.SimpleCookieJar;
 
 import java.io.IOException;
@@ -57,7 +56,9 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
-public class OAuthPasswordAuthenticator implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.OAUTH_CALLBACK_OOB;
+
+public class OAuthPasswordAuthenticator {
 
     private static final IAttoParser PARSER = new MarkupAttoParser();
 

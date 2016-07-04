@@ -7,11 +7,11 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
@@ -54,8 +54,8 @@ public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTas
     }
 
     @Override
-    protected void afterExecute(SingleResponse<ParcelableUser> result) {
-        super.afterExecute(result);
+    protected void afterExecute(ResultHandler callback, SingleResponse<ParcelableUser> result) {
+        super.afterExecute(callback, result);
         if (result.hasData()) {
             Utils.showOkMessage(mContext, R.string.profile_banner_image_updated, false);
             mBus.post(new ProfileUpdatedEvent(result.getData()));
@@ -69,7 +69,7 @@ public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTas
     @Override
     protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
         try {
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mContext, mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey,
                     true);
             TwitterWrapper.updateProfileBackgroundImage(mContext, twitter, mImageUri, mTile,
                     mDeleteImage);

@@ -47,11 +47,11 @@ import android.widget.TextView;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.TwitterCaps;
 import org.mariotaku.microblog.library.twitter.model.CardDataMap;
 import org.mariotaku.microblog.library.twitter.model.CardEntity;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.model.ParcelableCardEntity;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -179,7 +179,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                             public ParcelableCardEntity doLongOperation(CardDataMap cardDataMap) {
                                 final Context context = getContext();
                                 if (context == null) return null;
-                                final TwitterCaps caps = MicroBlogAPIFactory.getTwitterInstance(context,
+                                final TwitterCaps caps = MicroBlogAPIFactory.getInstance(context,
                                         card.account_key, true, true, TwitterCaps.class);
                                 if (caps == null) return null;
                                 try {
@@ -347,7 +347,7 @@ public class CardPollFragment extends BaseSupportFragment implements
 
         @Override
         public ParcelableCardEntity loadInBackground() {
-            final TwitterCaps caps = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+            final TwitterCaps caps = MicroBlogAPIFactory.getInstance(getContext(), mAccountKey,
                     true, true, TwitterCaps.class);
             if (caps == null) return null;
             try {

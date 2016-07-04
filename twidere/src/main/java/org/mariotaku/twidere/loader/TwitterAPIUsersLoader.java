@@ -59,7 +59,7 @@ public abstract class TwitterAPIUsersLoader extends ParcelableUsersLoader {
         if (credentials == null) {
             return ListResponse.getListInstance(new MicroBlogException("No Account"));
         }
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), credentials, true,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), credentials, true,
                 true);
         if (twitter == null)
             return ListResponse.getListInstance(new MicroBlogException("No Account"));

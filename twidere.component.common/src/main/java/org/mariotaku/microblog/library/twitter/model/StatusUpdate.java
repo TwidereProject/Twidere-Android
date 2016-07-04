@@ -55,6 +55,10 @@ public class StatusUpdate extends SimpleValueMap {
         put("media_ids", RestFuUtils.toString(mediaIds, ','));
     }
 
+    public void setAttachmentUrl(final String attachmentUrl) {
+        put("attachment_url", attachmentUrl);
+    }
+
     public void setPlaceId(final String placeId) {
         put("place_id", placeId);
     }
@@ -86,6 +90,11 @@ public class StatusUpdate extends SimpleValueMap {
 
     public StatusUpdate placeId(final String placeId) {
         setPlaceId(placeId);
+        return this;
+    }
+
+    public StatusUpdate attachmentUrl(final String attachmentUrl) {
+        setAttachmentUrl(attachmentUrl);
         return this;
     }
 

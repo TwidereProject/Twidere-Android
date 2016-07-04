@@ -66,10 +66,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.SuperToast.Duration;
-import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -198,6 +196,13 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
     private ParcelableUser mRecipient;
     private boolean mTextChanged, mQueryTextChanged;
     private View mInputPanel;
+
+    private final Runnable mBackTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mNavigateBackPressed = false;
+        }
+    };
 
     @Subscribe
     public void notifyTaskStateChanged(TaskStateChangedEvent event) {
@@ -585,14 +590,9 @@ public class MessagesConversationFragment extends BaseSupportFragment implements
             if (editText.length() == 0 && !textChanged) {
                 final FragmentActivity activity = getActivity();
                 if (!mNavigateBackPressed) {
-                    final SuperToast toast = SuperToast.create(activity, getString(R.string.press_again_to_close), Duration.SHORT);
-                    toast.setOnDismissListener(new OnDismissListener() {
-                        @Override
-                        public void onDismiss(View view) {
-                            mNavigateBackPressed = false;
-                        }
-                    });
-                    toast.show();
+                    Toast.makeText(activity, R.string.press_again_to_close, Toast.LENGTH_SHORT).show();
+                    editText.removeCallbacks(mBackTimeoutRunnable);
+                    editText.postDelayed(mBackTimeoutRunnable, 2000);
                     mNavigateBackPressed = true;
                 } else {
                     activity.onBackPressed();

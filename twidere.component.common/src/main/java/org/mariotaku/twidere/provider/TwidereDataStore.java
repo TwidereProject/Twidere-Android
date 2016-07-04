@@ -23,8 +23,11 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import org.mariotaku.twidere.model.DraftTableInfo;
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
+import org.mariotaku.twidere.model.ParcelableDirectMessageTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
+import org.mariotaku.twidere.model.ParcelableUserTableInfo;
 
 @SuppressWarnings("unused")
 public interface TwidereDataStore {
@@ -252,11 +255,9 @@ public interface TwidereDataStore {
 
         String DESCRIPTION_PLAIN = "description_plain";
 
-        String DESCRIPTION_HTML = "description_html";
-
         String DESCRIPTION_UNESCAPED = "description_unescaped";
 
-        String DESCRIPTION_EXPANDED = "description_expanded";
+        String DESCRIPTION_SPANS = "description_spans";
 
         String LOCATION = "location";
 
@@ -303,20 +304,11 @@ public interface TwidereDataStore {
 
         String EXTRAS = "extras";
 
-        String[] COLUMNS = {_ID, USER_KEY, CREATED_AT, NAME, SCREEN_NAME, DESCRIPTION_PLAIN, LOCATION,
-                URL, PROFILE_IMAGE_URL, PROFILE_BANNER_URL, PROFILE_BACKGROUND_URL, IS_PROTECTED,
-                IS_VERIFIED, IS_FOLLOWING, FOLLOWERS_COUNT, FRIENDS_COUNT, STATUSES_COUNT,
-                FAVORITES_COUNT, LISTED_COUNT, MEDIA_COUNT, DESCRIPTION_HTML, DESCRIPTION_EXPANDED,
-                URL_EXPANDED, BACKGROUND_COLOR, LINK_COLOR, TEXT_COLOR, LAST_SEEN,
-                DESCRIPTION_UNESCAPED, EXTRAS};
+        String[] COLUMNS = ParcelableUserTableInfo.COLUMNS;
 
         String[] BASIC_COLUMNS = {_ID, USER_KEY, NAME, SCREEN_NAME, PROFILE_IMAGE_URL};
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_BOOLEAN,
-                TYPE_BOOLEAN, TYPE_BOOLEAN, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_INT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT,
-                TYPE_TEXT, TYPE_TEXT};
+        String[] TYPES = ParcelableUserTableInfo.TYPES;
 
     }
 
@@ -382,10 +374,15 @@ public interface TwidereDataStore {
 
     interface Messages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
 
-        interface Entries extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
+        interface Conversations extends BaseColumns, AccountSupportColumns {
             String CONVERSATION_ID = "conversation_id";
-            String UPDATED_AT = "updated_at";
-            String TEXT_CONTENT = "text_content";
+            String TEXT_UNESCAPED = "text_unescaped";
+            String LAST_SEND_AT = "last_send_at";
+            String MEDIA_JSON = "media_json";
+            String PARTICIPANTS = "participants";
+            String SENDER_KEY = "sender_key";
+            String RECIPIENT_KEY = "recipient_key";
+            String REQUEST_CURSOR = "request_cursor";
         }
     }
 
@@ -404,9 +401,9 @@ public interface TwidereDataStore {
 
         String IS_OUTGOING = "is_outgoing";
 
-        String TEXT_HTML = "text_html";
         String TEXT_PLAIN = "text_plain";
         String TEXT_UNESCAPED = "text_unescaped";
+        String SPANS = "spans";
         String SENDER_NAME = "sender_name";
         String RECIPIENT_NAME = "recipient_name";
         String SENDER_SCREEN_NAME = "sender_screen_name";
@@ -416,13 +413,8 @@ public interface TwidereDataStore {
 
         String MEDIA_JSON = "media_json";
 
-        String[] COLUMNS = {_ID, ACCOUNT_KEY, MESSAGE_ID, MESSAGE_TIMESTAMP,
-                SENDER_ID, RECIPIENT_ID, CONVERSATION_ID, IS_OUTGOING, TEXT_HTML, TEXT_PLAIN, TEXT_UNESCAPED,
-                SENDER_NAME, RECIPIENT_NAME, SENDER_SCREEN_NAME, RECIPIENT_SCREEN_NAME, SENDER_PROFILE_IMAGE_URL,
-                RECIPIENT_PROFILE_IMAGE_URL, MEDIA_JSON, INSERTED_DATE};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT,
-                TYPE_TEXT_NOT_NULL, TYPE_TEXT_NOT_NULL, TYPE_INT, TYPE_BOOLEAN, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT, INSERTED_DATE_TYPE};
+        String[] COLUMNS = ParcelableDirectMessageTableInfo.COLUMNS;
+        String[] TYPES = ParcelableDirectMessageTableInfo.TYPES;
 
         String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
 
@@ -460,7 +452,7 @@ public interface TwidereDataStore {
             String NAME = "name";
             String SCREEN_NAME = "screen_name";
             String PROFILE_IMAGE_URL = "profile_image_url";
-            String TEXT_HTML = DirectMessages.TEXT_HTML;
+            String TEXT_UNESCAPED = "text_unescaped";
             String CONVERSATION_ID = "conversation_id";
 
             int IDX__ID = 0;
@@ -471,7 +463,7 @@ public interface TwidereDataStore {
             int IDX_NAME = 5;
             int IDX_SCREEN_NAME = 6;
             int IDX_PROFILE_IMAGE_URL = 7;
-            int IDX_TEXT = 8;
+            int IDX_TEXT_UNESCAPED = 8;
             int IDX_CONVERSATION_ID = 9;
         }
 
@@ -571,9 +563,7 @@ public interface TwidereDataStore {
          * Account IDs of unsent status.<br>
          * Type: TEXT
          */
-        String ACCOUNT_IDS = "account_ids";
-
-        String ACCOUNT_KEYS = "account_keys";
+        String ACCOUNT_KEYS = "account_ids";
 
         String LOCATION = "location";
 
@@ -589,11 +579,9 @@ public interface TwidereDataStore {
 
         String ACTION_EXTRAS = "action_extras";
 
-        String[] COLUMNS = {_ID, TEXT, ACCOUNT_IDS, LOCATION, MEDIA,
-                IN_REPLY_TO_STATUS_ID, IS_POSSIBLY_SENSITIVE, TIMESTAMP, ACTION_TYPE, ACTION_EXTRAS};
+        String[] COLUMNS = DraftTableInfo.COLUMNS;
 
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_TEXT, TYPE_TEXT,
-                TYPE_INT, TYPE_INT, TYPE_BOOLEAN, TYPE_INT, TYPE_TEXT, TYPE_TEXT};
+        String[] TYPES = DraftTableInfo.TYPES;
 
     }
 

@@ -54,7 +54,8 @@ import java.util.TreeSet;
 import javax.inject.Inject;
 
 @SuppressLint("Registered")
-public class MultiSelectEventHandler implements Constants, ActionMode.Callback, MultiSelectManager.Callback {
+public class MultiSelectEventHandler implements Constants, ActionMode.Callback,
+        MultiSelectManager.Callback {
 
     @Inject
     AsyncTwitterWrapper mTwitterWrapper;

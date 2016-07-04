@@ -28,12 +28,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.util.support.WebSettingsSupport;
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient;
 
 @SuppressLint("SetJavaScriptEnabled")
-public class BaseSupportWebViewFragment extends BaseSupportFragment implements Constants {
+public class BaseSupportWebViewFragment extends BaseSupportFragment {
 
     private WebView mWebView;
     private boolean mIsWebViewAvailable;

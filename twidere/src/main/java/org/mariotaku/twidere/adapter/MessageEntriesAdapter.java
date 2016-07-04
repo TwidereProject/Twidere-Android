@@ -41,8 +41,8 @@ import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder;
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder;
 
-public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> implements Constants,
-        IContentCardAdapter, OnClickListener, OnReadStateChangeListener {
+public class MessageEntriesAdapter extends LoadMoreSupportAdapter<ViewHolder> implements
+        Constants, IContentCardAdapter, OnClickListener, OnReadStateChangeListener {
 
     public static final int ITEM_VIEW_TYPE_MESSAGE = 0;
     public static final int ITEM_VIEW_TYPE_LOAD_INDICATOR = 1;

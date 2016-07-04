@@ -105,6 +105,12 @@ import android.widget.Toast;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.GeoLocation;
+import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
+import org.mariotaku.microblog.library.twitter.model.Relationship;
+import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -119,12 +125,6 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.adapter.iface.IBaseCardAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.GeoLocation;
-import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
-import org.mariotaku.microblog.library.twitter.model.Relationship;
-import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.twidere.fragment.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.DraftsFragment;
@@ -213,8 +213,6 @@ import javax.net.ssl.SSLException;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
 
-import static android.text.TextUtils.isEmpty;
-import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
@@ -535,7 +533,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_MEDIA_TIMELINE: {
@@ -548,7 +546,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_FAVORITES: {
@@ -575,7 +573,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_FRIENDS: {
@@ -588,7 +586,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_BLOCKS: {
@@ -629,8 +627,8 @@ public final class Utils implements Constants {
                 final UserKey paramUserKey = UserKey.valueOf(getUserKeyParam(uri));
                 final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if ((isEmpty(paramListName) || isEmpty(paramScreenName) && paramUserKey == null)
-                        && isEmpty(paramListId)) {
+                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null)
+                        && TextUtils.isEmpty(paramListId)) {
                     return null;
                 }
                 args.putString(EXTRA_LIST_ID, paramListId);
@@ -643,7 +641,8 @@ public final class Utils implements Constants {
                 fragment = new GroupFragment();
                 final String paramGroupId = uri.getQueryParameter(QUERY_PARAM_GROUP_ID);
                 final String paramGroupName = uri.getQueryParameter(QUERY_PARAM_GROUP_NAME);
-                if (isEmpty(paramGroupId) && isEmpty(paramGroupName)) return null;
+                if (TextUtils.isEmpty(paramGroupId) && TextUtils.isEmpty(paramGroupName))
+                    return null;
                 args.putString(EXTRA_GROUP_ID, paramGroupId);
                 args.putString(EXTRA_GROUP_NAME, paramGroupName);
                 break;
@@ -658,7 +657,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_GROUPS: {
@@ -671,7 +670,7 @@ public final class Utils implements Constants {
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey);
                 }
-                if (isEmpty(paramScreenName) && paramUserKey == null) return null;
+                if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null;
                 break;
             }
             case LINK_ID_USER_LIST_TIMELINE: {
@@ -680,8 +679,8 @@ public final class Utils implements Constants {
                 final UserKey paramUserKey = UserKey.valueOf(getUserKeyParam(uri));
                 final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if ((isEmpty(paramListName) || isEmpty(paramScreenName) && paramUserKey == null)
-                        && isEmpty(paramListId)) {
+                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null)
+                        && TextUtils.isEmpty(paramListId)) {
                     return null;
                 }
                 args.putString(EXTRA_LIST_ID, paramListId);
@@ -696,8 +695,8 @@ public final class Utils implements Constants {
                 final UserKey paramUserKey = UserKey.valueOf(getUserKeyParam(uri));
                 final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if ((isEmpty(paramListName) || isEmpty(paramScreenName) && paramUserKey == null)
-                        && isEmpty(paramListId))
+                if ((TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null)
+                        && TextUtils.isEmpty(paramListId))
                     return null;
                 args.putString(EXTRA_LIST_ID, paramListId);
                 args.putParcelable(EXTRA_USER_KEY, paramUserKey);
@@ -711,8 +710,8 @@ public final class Utils implements Constants {
                 final UserKey paramUserKey = UserKey.valueOf(getUserKeyParam(uri));
                 final String paramListId = uri.getQueryParameter(QUERY_PARAM_LIST_ID);
                 final String paramListName = uri.getQueryParameter(QUERY_PARAM_LIST_NAME);
-                if (isEmpty(paramListId)
-                        && (isEmpty(paramListName) || isEmpty(paramScreenName) && paramUserKey == null))
+                if (TextUtils.isEmpty(paramListId)
+                        && (TextUtils.isEmpty(paramListName) || TextUtils.isEmpty(paramScreenName) && paramUserKey == null))
                     return null;
                 args.putString(EXTRA_LIST_ID, paramListId);
                 args.putParcelable(EXTRA_USER_KEY, paramUserKey);
@@ -727,10 +726,10 @@ public final class Utils implements Constants {
             case LINK_ID_USER_MENTIONS: {
                 fragment = new UserMentionsFragment();
                 final String paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME);
-                if (!args.containsKey(EXTRA_SCREEN_NAME) && !isEmpty(paramScreenName)) {
+                if (!args.containsKey(EXTRA_SCREEN_NAME) && !TextUtils.isEmpty(paramScreenName)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName);
                 }
-                if (isEmpty(args.getString(EXTRA_SCREEN_NAME))) return null;
+                if (TextUtils.isEmpty(args.getString(EXTRA_SCREEN_NAME))) return null;
                 break;
             }
             case LINK_ID_INCOMING_FRIENDSHIPS: {
@@ -760,7 +759,7 @@ public final class Utils implements Constants {
             }
             case LINK_ID_SEARCH: {
                 final String paramQuery = uri.getQueryParameter(QUERY_PARAM_QUERY);
-                if (!args.containsKey(EXTRA_QUERY) && !isEmpty(paramQuery)) {
+                if (!args.containsKey(EXTRA_QUERY) && !TextUtils.isEmpty(paramQuery)) {
                     args.putString(EXTRA_QUERY, paramQuery);
                 }
                 if (!args.containsKey(EXTRA_QUERY)) {
@@ -925,7 +924,7 @@ public final class Utils implements Constants {
             throws MicroBlogException {
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
         if (twitter == null) throw new MicroBlogException("Account does not exist");
         final Status status = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
@@ -1130,24 +1129,6 @@ public final class Utils implements Constants {
         return Color.TRANSPARENT;
     }
 
-    public static String getCardHighlightOption(final Context context) {
-        if (context == null) return null;
-        final String defaultOption = context.getString(R.string.default_tab_display_option);
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs.getString(KEY_TAB_DISPLAY_OPTION, defaultOption);
-    }
-
-    public static int getCardHighlightOptionInt(final Context context) {
-        return getCardHighlightOptionInt(getCardHighlightOption(context));
-    }
-
-    public static int getCardHighlightOptionInt(final String option) {
-        if (VALUE_CARD_HIGHLIGHT_OPTION_NONE.equals(option))
-            return VALUE_CARD_HIGHLIGHT_OPTION_CODE_NONE;
-        else if (VALUE_CARD_HIGHLIGHT_OPTION_LINE.equals(option))
-            return VALUE_CARD_HIGHLIGHT_OPTION_CODE_LINE;
-        return VALUE_CARD_HIGHLIGHT_OPTION_CODE_BACKGROUND;
-    }
 
     public static Selectable getColumnsFromProjection(final String... projection) {
         if (projection == null) return new AllColumns();
@@ -1189,13 +1170,13 @@ public final class Utils implements Constants {
 
     public static String getErrorMessage(final Context context, final CharSequence message) {
         if (context == null) return ParseUtils.parseString(message);
-        if (isEmpty(message)) return context.getString(R.string.error_unknown_error);
+        if (TextUtils.isEmpty(message)) return context.getString(R.string.error_unknown_error);
         return context.getString(R.string.error_message, message);
     }
 
     public static String getErrorMessage(final Context context, final CharSequence action, final CharSequence message) {
-        if (context == null || isEmpty(action)) return ParseUtils.parseString(message);
-        if (isEmpty(message)) return context.getString(R.string.error_unknown_error);
+        if (context == null || TextUtils.isEmpty(action)) return ParseUtils.parseString(message);
+        if (TextUtils.isEmpty(message)) return context.getString(R.string.error_unknown_error);
         return context.getString(R.string.error_message_with_action, action, message);
     }
 
@@ -1284,7 +1265,7 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static String getImageUploadStatus(@NonNull final Context context,
+    public static String getMediaUploadStatus(@NonNull final Context context,
                                               @Nullable final CharSequence[] links,
                                               @Nullable final CharSequence text) {
         if (ArrayUtils.isEmpty(links) || text == null) return ParseUtils.parseString(text);
@@ -1340,12 +1321,12 @@ public final class Utils implements Constants {
 
     @NonNull
     public static String[] getMatchedNicknameKeys(final String str, UserColorNameManager manager) {
-        if (isEmpty(str)) return new String[0];
+        if (TextUtils.isEmpty(str)) return new String[0];
         final List<String> list = new ArrayList<>();
         for (final Entry<String, ?> entry : manager.getNameEntries()) {
             final String value = ParseUtils.parseString(entry.getValue());
             final String key = entry.getKey();
-            if (isEmpty(key) || isEmpty(value)) {
+            if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
                 continue;
             }
             if (TwidereStringUtils.startsWithIgnoreCase(value, str)) {
@@ -1359,7 +1340,7 @@ public final class Utils implements Constants {
     public static String getNonEmptyString(final SharedPreferences pref, final String key, final String def) {
         if (pref == null) return def;
         final String val = pref.getString(key, def);
-        return isEmpty(val) ? def : val;
+        return TextUtils.isEmpty(val) ? def : val;
     }
 
     public static String getNormalTwitterProfileImage(final String url) {
@@ -1417,7 +1398,7 @@ public final class Utils implements Constants {
         if (context == null) return null;
         String quoteFormat = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
                 KEY_QUOTE_FORMAT, DEFAULT_QUOTE_FORMAT);
-        if (isEmpty(quoteFormat)) {
+        if (TextUtils.isEmpty(quoteFormat)) {
             quoteFormat = DEFAULT_QUOTE_FORMAT;
         }
         String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getStatusWebLink(status).toString());
@@ -1452,10 +1433,10 @@ public final class Utils implements Constants {
         if (context == null) return null;
         String share_format = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE).getString(
                 KEY_SHARE_FORMAT, DEFAULT_SHARE_FORMAT);
-        if (isEmpty(share_format)) {
+        if (TextUtils.isEmpty(share_format)) {
             share_format = DEFAULT_SHARE_FORMAT;
         }
-        if (isEmpty(title)) return ParseUtils.parseString(text);
+        if (TextUtils.isEmpty(title)) return ParseUtils.parseString(text);
         return share_format.replace(FORMAT_PATTERN_TITLE, title).replace(FORMAT_PATTERN_TEXT, text != null ? text : "");
     }
 
@@ -1503,9 +1484,9 @@ public final class Utils implements Constants {
         if (te.exceededRateLimitation()) {
             final RateLimitStatus status = te.getRateLimitStatus();
             final long secUntilReset = status.getSecondsUntilReset() * 1000;
-            final String nextResetTime = ParseUtils.parseString(getRelativeTimeSpanString(System.currentTimeMillis()
+            final String nextResetTime = ParseUtils.parseString(DateUtils.getRelativeTimeSpanString(System.currentTimeMillis()
                     + secUntilReset));
-            if (isEmpty(action))
+            if (TextUtils.isEmpty(action))
                 return context.getString(R.string.error_message_rate_limit, nextResetTime.trim());
             return context.getString(R.string.error_message_rate_limit_with_action, action, nextResetTime.trim());
         } else if (te.getErrorCode() > 0) {
@@ -1606,11 +1587,6 @@ public final class Utils implements Constants {
         final float level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
         final float scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
         return plugged || level / scale > 0.15f;
-    }
-
-    public static boolean isCompactCards(final Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return prefs != null && prefs.getBoolean(KEY_COMPACT_CARDS, false);
     }
 
     public static boolean isDatabaseReady(final Context context) {
@@ -1857,7 +1833,7 @@ public final class Utils implements Constants {
     }
 
     public static void showInfoMessage(final Context context, final CharSequence message, final boolean long_message) {
-        if (context == null || isEmpty(message)) return;
+        if (context == null || TextUtils.isEmpty(message)) return;
         final Toast toast = Toast.makeText(context, message, long_message ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -1897,7 +1873,7 @@ public final class Utils implements Constants {
     }
 
     public static void showOkMessage(final Context context, final CharSequence message, final boolean longMessage) {
-        if (context == null || isEmpty(message)) return;
+        if (context == null || TextUtils.isEmpty(message)) return;
         final Toast toast = Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -1916,7 +1892,7 @@ public final class Utils implements Constants {
                 final RateLimitStatus status = te.getRateLimitStatus();
                 if (te.exceededRateLimitation() && status != null) {
                     final long secUntilReset = status.getSecondsUntilReset() * 1000;
-                    final String nextResetTime = ParseUtils.parseString(getRelativeTimeSpanString(System
+                    final String nextResetTime = ParseUtils.parseString(DateUtils.getRelativeTimeSpanString(System
                             .currentTimeMillis() + secUntilReset));
                     message = context.getString(R.string.error_message_rate_limit_with_action, action,
                             nextResetTime.trim());
@@ -1954,7 +1930,7 @@ public final class Utils implements Constants {
     }
 
     public static void showWarnMessage(final Context context, final CharSequence message, final boolean longMessage) {
-        if (context == null || isEmpty(message)) return;
+        if (context == null || TextUtils.isEmpty(message)) return;
         final Toast toast = Toast.makeText(context, message, longMessage ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -2251,12 +2227,33 @@ public final class Utils implements Constants {
      * @param message String
      */
     public static void sendPebbleNotification(final Context context, final String message) {
+        sendPebbleNotification(context, null, message);
+    }
+
+    /**
+     * Send Notifications to Pebble smartwatches
+     *
+     * @param context Context
+     * @param title String
+     * @param message String
+     */
+    public static void sendPebbleNotification(final Context context, final String title, final String message)
+    {
+        String appName;
+
+        if ( title == null)
+        {
+            appName = context.getString(R.string.app_name);
+        }
+        else
+        {
+            appName = context.getString(R.string.app_name) + " - " + title;
+        }
+
         if (context == null || TextUtils.isEmpty(message)) return;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
         if (prefs.getBoolean(KEY_PEBBLE_NOTIFICATIONS, false)) {
-
-            final String appName = context.getString(R.string.app_name);
 
             final List<PebbleMessage> messages = new ArrayList<>();
             messages.add(new PebbleMessage(appName, message));
@@ -2268,6 +2265,7 @@ public final class Utils implements Constants {
 
             context.getApplicationContext().sendBroadcast(intent);
         }
+
     }
 
     @Nullable

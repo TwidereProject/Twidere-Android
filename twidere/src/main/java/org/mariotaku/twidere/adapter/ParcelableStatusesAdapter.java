@@ -38,7 +38,6 @@ import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.MediaLoadingHandler;
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler;
-import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
@@ -60,7 +59,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final TwidereLinkify mLinkify;
-    private final int mCardBackgroundColor;
     private final int mTextSize;
     @ShapedImageView.ShapeStyle
     private final int mProfileImageStyle;
@@ -68,7 +66,6 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private final int mMediaPreviewStyle;
     @TwidereLinkify.HighlightStyle
     private final int mLinkHighlightingStyle;
-    private final boolean mCompactCards;
     private final boolean mNameFirst;
     private final boolean mDisplayMediaPreview;
     private final boolean mDisplayProfileImage;
@@ -81,17 +78,14 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     private boolean mShowInReplyTo;
     private boolean mShowAccountsColor;
     private List<ParcelableStatus> mData;
-    private int mShowingActionCardPosition = RecyclerView.NO_POSITION;
+    private long mShowingActionCardId = RecyclerView.NO_ID;
     private boolean mLastItemFiltered;
 
-    public ParcelableStatusesAdapter(Context context, boolean compact) {
+    public ParcelableStatusesAdapter(Context context) {
         super(context);
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context, ThemeUtils.getThemeBackgroundOption(context),
-                ThemeUtils.getUserThemeBackgroundAlpha(context));
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(getProgressViewIds());
         mTextSize = mPreferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mCompactCards = compact;
         mProfileImageStyle = Utils.getProfileImageStyle(mPreferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(mPreferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mLinkHighlightingStyle = Utils.getLinkHighlightingStyleInt(mPreferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null));
@@ -302,15 +296,19 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     @Override
     public boolean isCardActionsShown(int position) {
         if (position == RecyclerView.NO_POSITION) return mShowCardActions;
-        return mShowCardActions || mShowingActionCardPosition == position;
+        return mShowCardActions || mShowingActionCardId == getItemId(position);
     }
 
     @Override
     public void showCardActions(int position) {
-        if (mShowingActionCardPosition != RecyclerView.NO_POSITION) {
-            notifyItemChanged(mShowingActionCardPosition);
+        if (mShowingActionCardId != RecyclerView.NO_ID) {
+            final int pos = findPositionByItemId(mShowingActionCardId);
+            if (pos != RecyclerView.NO_POSITION) {
+                notifyItemChanged(pos);
+            }
+
         }
-        mShowingActionCardPosition = position;
+        mShowingActionCardId = getItemId(position);
         if (position != RecyclerView.NO_POSITION) {
             notifyItemChanged(position);
         }
@@ -344,7 +342,7 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                return (RecyclerView.ViewHolder) onCreateStatusViewHolder(parent, mCompactCards);
+                return (RecyclerView.ViewHolder) onCreateStatusViewHolder(parent);
             }
             case ITEM_VIEW_TYPE_GAP: {
                 final View view = mInflater.inflate(R.layout.card_item_gap, parent, false);
@@ -365,12 +363,8 @@ public abstract class ParcelableStatusesAdapter extends LoadMoreSupportAdapter<R
         return mInflater;
     }
 
-    protected int getCardBackgroundColor() {
-        return mCardBackgroundColor;
-    }
-
     @NonNull
-    protected abstract IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact);
+    protected abstract IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent);
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {

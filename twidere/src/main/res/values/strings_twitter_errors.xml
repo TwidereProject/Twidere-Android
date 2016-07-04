@@ -34,5 +34,6 @@
     <string name="error_twitter_193">The photo you upload is too large.</string>
     <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
     <string name="error_twitter_215">You may need to sign in again.</string>
+    <string name="error_twitter_326">Your account was suspended, please visit https://twitter.com/ for details.</string>
 
 </resources>

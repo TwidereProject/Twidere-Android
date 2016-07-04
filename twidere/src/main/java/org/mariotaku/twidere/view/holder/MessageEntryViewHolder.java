@@ -81,7 +81,7 @@ public class MessageEntryViewHolder extends ViewHolder implements OnClickListene
         nameView.setName(manager.getUserNickname(conversationId, name));
         nameView.setScreenName("@" + screenName);
         nameView.updateText(adapter.getBidiFormatter());
-        textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT)));
+        textView.setText(toPlainText(cursor.getString(ConversationEntries.IDX_TEXT_UNESCAPED)));
         timeView.setTime(timestamp);
         if (isOutgoing) {
             timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_indicator_sent, 0);

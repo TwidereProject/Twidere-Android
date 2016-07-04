@@ -24,7 +24,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo;
 import org.mariotaku.twidere.util.PermissionsManager;
@@ -32,7 +31,7 @@ import org.mariotaku.twidere.view.holder.CheckableTwoLineWithIconViewHolder;
 
 import java.util.List;
 
-public class ExtensionsAdapter extends ArrayAdapter<ExtensionInfo> implements Constants {
+public class ExtensionsAdapter extends ArrayAdapter<ExtensionInfo> {
 
 	private final PermissionsManager mPermissionsManager;
 

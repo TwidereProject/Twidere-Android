@@ -59,7 +59,7 @@ public class TrendsSuggestionsFragment extends AbsContentListViewFragment<Trends
 
     @NonNull
     @Override
-    protected TrendsAdapter onCreateAdapter(Context context, boolean compact) {
+    protected TrendsAdapter onCreateAdapter(Context context) {
         return new TrendsAdapter(getActivity());
     }
 

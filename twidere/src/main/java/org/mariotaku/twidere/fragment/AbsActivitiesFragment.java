@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -213,8 +214,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final ParcelableStatus status = ParcelableActivityUtils.getActivityStatus(activity);
         if (status != null) {
             IntentUtils.openStatus(getContext(), status, null);
-        } else {
-
         }
     }
 
@@ -546,16 +545,12 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         return new StatusesBusCallback();
     }
 
+    @NonNull
     protected abstract UserKey[] getAccountKeys();
 
     protected List<ParcelableActivity> getAdapterData() {
         final ParcelableActivitiesAdapter adapter = getAdapter();
         return adapter.getData();
-    }
-
-    protected void setAdapterData(List<ParcelableActivity> data) {
-        final ParcelableActivitiesAdapter adapter = getAdapter();
-        adapter.setData(data);
     }
 
     @ReadPositionTag
@@ -572,23 +567,26 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     protected abstract void onLoadingFinished();
 
     protected void saveReadPosition(int position) {
+        if (getContext() == null) return;
         final String readPositionTag = getReadPositionTagWithAccounts();
         if (readPositionTag == null) return;
         if (position == RecyclerView.NO_POSITION) return;
         final ParcelableActivitiesAdapter adapter = getAdapter();
-        final ParcelableActivity activity = adapter.getActivity(position);
-        if (activity == null) return;
-        if (mReadStateManager.setPosition(readPositionTag, activity.timestamp)) {
-            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(getAccountKeys(), activity.timestamp);
+        final ParcelableActivity item = adapter.getActivity(position);
+        if (item == null) return;
+        final UserKey[] accountKeys = getAccountKeys();
+        assert accountKeys != null;
+        if (mReadStateManager.setPosition(readPositionTag, item.timestamp)) {
+            mTwitterWrapper.setActivitiesAboutMeUnreadAsync(accountKeys, item.timestamp);
         }
 
-        for (UserKey accountKey : getAccountKeys()) {
+        for (UserKey accountKey : accountKeys) {
             final String tag = Utils.getReadPositionTagWithAccounts(getReadPositionTag(),
                     accountKey);
-            mReadStateManager.setPosition(tag, activity.timestamp);
+            mReadStateManager.setPosition(tag, item.timestamp);
         }
 
-        mReadStateManager.setPosition(getCurrentReadPositionTag(), activity.timestamp, true);
+        mReadStateManager.setPosition(getCurrentReadPositionTag(), item.timestamp, true);
     }
 
     @NonNull
@@ -596,43 +594,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
     protected Rect getExtraContentPadding() {
         final int paddingVertical = getResources().getDimensionPixelSize(R.dimen.element_spacing_small);
         return new Rect(0, paddingVertical, 0, paddingVertical);
-    }
-
-    @Override
-    protected void setupRecyclerView(Context context, final boolean compact) {
-        final RecyclerView recyclerView = getRecyclerView();
-        final ParcelableActivitiesAdapter adapter = getAdapter();
-        // Dividers are drawn on bottom of view
-        recyclerView.addItemDecoration(new DividerItemDecoration(context, getLayoutManager().getOrientation()) {
-
-            @Override
-            protected boolean isDividerEnabled(int childPos) {
-                // Don't draw for last item
-                if (childPos == RecyclerView.NO_POSITION || childPos == adapter.getItemCount() - 1) {
-                    return false;
-                }
-                final int itemViewType = adapter.getItemViewType(childPos);
-                if (compact) {
-                    return itemViewType != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY;
-                }
-                if (shouldUseDividerFor(itemViewType)) {
-                    if (shouldUseDividerFor(adapter.getItemViewType(childPos + 1))) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-
-            private boolean shouldUseDividerFor(int itemViewType) {
-                switch (itemViewType) {
-                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_TITLE_SUMMARY:
-                    case ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_GAP:
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
     }
 
     @Override
@@ -680,6 +641,39 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         }
         return false;
     }
+
+
+    @Nullable
+    @Override
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, final RecyclerView recyclerView, final LinearLayoutManager layoutManager) {
+        final ParcelableActivitiesAdapter adapter = getAdapter();
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        if (adapter.isProfileImageEnabled()) {
+            final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
+                    + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+            itemDecoration.setPadding(new DividerItemDecoration.Padding() {
+                @Override
+                public boolean get(int position, Rect rect) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    boolean nextItemIsStatus = false;
+                    if (position < adapter.getItemCount() - 1) {
+                        nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS;
+                    }
+                    if (nextItemIsStatus && itemViewType == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                        rect.left = decorPaddingLeft;
+                    } else {
+                        rect.left = 0;
+                    }
+                    return true;
+                }
+            });
+        }
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
+    }
+
 
     private String getCurrentReadPositionTag() {
         final String tag = getReadPositionTagWithAccounts();

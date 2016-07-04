@@ -21,6 +21,7 @@ package edu.tsinghua.hotmobi.model;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -77,7 +78,7 @@ public abstract class BaseEvent implements Parcelable, LogModel {
         this.location = location;
     }
 
-    public void markStart(Context context) {
+    public void markStart(@NonNull Context context) {
         setStartTime(System.currentTimeMillis());
         setTimeOffset(TimeZone.getDefault().getOffset(startTime));
         setLocation(LocationUtils.getCachedLatLng(context));

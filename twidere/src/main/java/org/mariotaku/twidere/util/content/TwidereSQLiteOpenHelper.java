@@ -122,6 +122,9 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
     }
 
     private void createViews(SQLiteDatabase db) {
+        db.execSQL(SQLQueryBuilder.dropView(true, DirectMessages.TABLE_NAME).getSQL());
+        db.execSQL(SQLQueryBuilder.dropView(true, DirectMessages.ConversationEntries.TABLE_NAME).getSQL());
+
         db.execSQL(SQLQueryBuilder.createView(true, DirectMessages.TABLE_NAME)
                 .as(DirectMessagesQueryBuilder.build()).buildSQL());
         db.execSQL(SQLQueryBuilder.createView(true, DirectMessages.ConversationEntries.TABLE_NAME)

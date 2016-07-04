@@ -17,15 +17,22 @@ public class MediaUploadResult implements Parcelable {
     @ParcelableThisPlease
     @JsonField(name = "media_uris")
     public String[] media_uris;
+
     @ParcelableThisPlease
     @JsonField(name = "error_code")
     public int error_code;
+
     @ParcelableThisPlease
     @JsonField(name = "error_message")
     public String error_message;
+
     @ParcelableThisPlease
     @JsonField(name = "extras")
     public String extras;
+
+    @ParcelableThisPlease
+    @JsonField(name = "shared_owners")
+    public UserKey[] shared_owners;
 
     public static final Creator<MediaUploadResult> CREATOR = new Creator<MediaUploadResult>() {
         @Override

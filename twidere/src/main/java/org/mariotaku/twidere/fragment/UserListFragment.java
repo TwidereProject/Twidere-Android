@@ -50,14 +50,14 @@ import android.widget.CheckBox;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.AccountSelectorActivity;
-import org.mariotaku.twidere.activity.UserListSelectorActivity;
-import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.activity.AccountSelectorActivity;
+import org.mariotaku.twidere.activity.UserListSelectorActivity;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback;
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -72,8 +72,8 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.IntentUtils;
 import org.mariotaku.twidere.util.LinkCreator;
 import org.mariotaku.twidere.util.MenuUtils;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
 
 public class UserListFragment extends AbsToolbarTabPagesFragment implements OnClickListener,
@@ -477,7 +477,7 @@ public class UserListFragment extends AbsToolbarTabPagesFragment implements OnCl
                 final ParcelableUserList cache = mExtras.getParcelable(EXTRA_USER_LIST);
                 if (cache != null) return SingleResponse.getInstance(cache);
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountKey,
                     true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

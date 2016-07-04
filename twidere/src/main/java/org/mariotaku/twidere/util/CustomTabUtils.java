@@ -60,6 +60,7 @@ import org.mariotaku.twidere.model.tab.argument.TabArguments;
 import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
 import org.mariotaku.twidere.model.tab.argument.UserArguments;
 import org.mariotaku.twidere.model.tab.argument.UserListArguments;
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -78,7 +79,10 @@ public class CustomTabUtils implements Constants {
     static {
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.HOME_TIMELINE, new CustomTabConfiguration(
                 HomeTimelineFragment.class, R.string.home, R.drawable.ic_action_home,
-                CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false));
+                CustomTabConfiguration.ACCOUNT_OPTIONAL, CustomTabConfiguration.FIELD_TYPE_NONE, 0, false,
+                ExtraConfiguration.newBoolean(EXTRA_HIDE_RETWEETS, R.string.hide_retweets, false),
+                ExtraConfiguration.newBoolean(EXTRA_HIDE_QUOTES, R.string.hide_quotes, false),
+                ExtraConfiguration.newBoolean(EXTRA_HIDE_REPLIES, R.string.hide_replies, false)));
 
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.NOTIFICATIONS_TIMELINE, new CustomTabConfiguration(
                 InteractionsTimelineFragment.class, R.string.interactions, R.drawable.ic_action_notification,
@@ -232,6 +236,9 @@ public class CustomTabUtils implements Constants {
         switch (type) {
             case CustomTabType.NOTIFICATIONS_TIMELINE: {
                 return JsonSerializer.parse(json, InteractionsTabExtras.class);
+            }
+            case CustomTabType.HOME_TIMELINE: {
+                return JsonSerializer.parse(json, HomeTabExtras.class);
             }
         }
         return null;

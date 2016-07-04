@@ -42,6 +42,7 @@ public class MediaPreviewImageView extends ImageView {
     }
 
     protected void updatePlayIcon() {
+        if (mForegroundViewHelper == null) return;
         if (mHasPlayIcon && getDrawable() != null) {
             mForegroundViewHelper.setForeground(ContextCompat.getDrawable(getContext(), R.drawable.ic_card_media_play));
         } else {

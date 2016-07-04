@@ -32,8 +32,6 @@ import android.widget.TextView;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OrderBy;
-import org.mariotaku.sqliteqb.library.RawItemArray;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -45,8 +43,10 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_PROFILE_IMAGE;
 
-public class UserAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
+
+public class UserAutoCompleteAdapter extends SimpleCursorAdapter {
 
     private static final String[] FROM = new String[0];
     private static final int[] TO = new int[0];

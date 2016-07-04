@@ -23,7 +23,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.Space;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +31,9 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.library.objectcursor.ObjectCursor;
-import org.mariotaku.twidere.Constants;
+import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter;
-import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableActivity;
@@ -59,11 +57,13 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API;
+
 /**
  * Created by mariotaku on 15/1/3.
  */
 public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<RecyclerView.ViewHolder>
-        implements Constants, IActivitiesAdapter<List<ParcelableActivity>> {
+        implements IActivitiesAdapter<List<ParcelableActivity>> {
 
     public static final int ITEM_VIEW_TYPE_STUB = 0;
     public static final int ITEM_VIEW_TYPE_GAP = 1;
@@ -74,7 +74,6 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mLoadingHandler;
     private final int mCardBackgroundColor;
-    private final boolean mCompactCards;
     private final DummyItemAdapter mStatusAdapterDelegate;
     private final EventListener mEventListener;
     private List<ParcelableActivity> mData;
@@ -84,7 +83,7 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     private boolean mFollowingOnly;
     private boolean mMentionsOnly;
 
-    public ParcelableActivitiesAdapter(Context context, boolean compact, boolean byFriends) {
+    public ParcelableActivitiesAdapter(Context context, boolean byFriends) {
         super(context);
         mStatusAdapterDelegate = new DummyItemAdapter(context,
                 new TwidereLinkify(new OnLinkClickHandler(context, null, mPreferences)), this);
@@ -94,7 +93,6 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
         mInflater = LayoutInflater.from(context);
         mLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mEventListener = new EventListener(this);
-        mCompactCards = compact;
         mStatusAdapterDelegate.updateOptions();
         mIsByFriends = byFriends;
     }
@@ -253,30 +251,15 @@ public class ParcelableActivitiesAdapter extends LoadMoreSupportAdapter<Recycler
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case ITEM_VIEW_TYPE_STATUS: {
-                final View view;
-                if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_status_compact, parent, false);
-                    final View itemContent = view.findViewById(R.id.item_content);
-                    itemContent.setBackgroundColor(mCardBackgroundColor);
-                } else {
-                    view = mInflater.inflate(R.layout.card_item_status, parent, false);
-                    final CardView cardView = (CardView) view.findViewById(R.id.card);
-                    cardView.setCardBackgroundColor(mCardBackgroundColor);
-                }
-                final StatusViewHolder holder = new StatusViewHolder(mStatusAdapterDelegate, view);
-                holder.setupViewOptions();
+                final StatusViewHolder holder = ListParcelableStatusesAdapter.createStatusViewHolder(mStatusAdapterDelegate,
+                        mInflater, parent);
                 holder.setStatusClickListener(mEventListener);
                 return holder;
             }
             case ITEM_VIEW_TYPE_TITLE_SUMMARY: {
-                final View view;
-                if (mCompactCards) {
-                    view = mInflater.inflate(R.layout.card_item_activity_summary_compact, parent, false);
-                } else {
-                    view = mInflater.inflate(R.layout.card_item_activity_summary, parent, false);
-                }
+                final View view = mInflater.inflate(R.layout.card_item_activity_summary_compact, parent, false);
                 final ActivityTitleSummaryViewHolder holder = new ActivityTitleSummaryViewHolder(this,
-                        view, mCompactCards);
+                        view);
                 holder.setOnClickListeners();
                 holder.setTextSize(getTextSize());
                 return holder;

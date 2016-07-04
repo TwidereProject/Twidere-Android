@@ -88,6 +88,10 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
         return errors;
     }
 
+    public void setErrors(ErrorInfo[] errors) {
+        this.errors = errors;
+    }
+
     /**
      * Tests if the exception is caused by rate limitation exceed
      *

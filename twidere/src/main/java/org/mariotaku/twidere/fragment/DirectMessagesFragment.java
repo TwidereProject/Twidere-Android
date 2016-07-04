@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -95,7 +96,7 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
     @NonNull
     @Override
-    protected MessageEntriesAdapter onCreateAdapter(Context context, boolean compact) {
+    protected MessageEntriesAdapter onCreateAdapter(Context context) {
         return new MessageEntriesAdapter(context);
     }
 
@@ -281,13 +282,6 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
 
         adapter.setListener(this);
 
-        final DividerItemDecoration itemDecoration = new DividerItemDecoration(viewContext, layoutManager.getOrientation());
-        final Resources res = viewContext.getResources();
-        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
-                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
-        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
-        itemDecoration.setDecorationEndOffset(1);
-        recyclerView.addItemDecoration(itemDecoration);
         getLoaderManager().initLoader(0, null, this);
         showProgress();
     }
@@ -335,13 +329,26 @@ public class DirectMessagesFragment extends AbsContentListRecyclerViewFragment<M
     @Override
     public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        final FragmentActivity activity = getActivity();
-        if (isVisibleToUser && activity != null) {
+        final Context context = getContext();
+        if (isVisibleToUser && context != null) {
             for (UserKey accountKey : getAccountKeys()) {
                 final String tag = "messages_" + accountKey;
                 mNotificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, RecyclerView recyclerView, LinearLayoutManager layoutManager) {
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 3
+                + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+        itemDecoration.setPadding(decorPaddingLeft, 0, 0, 0);
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
     }
 
     @NonNull

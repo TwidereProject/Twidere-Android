@@ -26,7 +26,6 @@ import org.mariotaku.twidere.model.SpanItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import static android.text.TextUtils.isEmpty;
@@ -35,22 +34,25 @@ import static org.mariotaku.twidere.util.HtmlEscapeHelper.unescape;
 
 public class HtmlBuilder {
 
-    private final String source;
-    private final CodePointArray codePoints;
-    private final int codePointsLength;
+    private final CodePointArray source;
+    private final int sourceLength;
     private final boolean throwExceptions, sourceIsEscaped, shouldReEscape;
 
-    private final ArrayList<LinkSpec> links = new ArrayList<>();
+    private final ArrayList<SpanSpec> spanSpecs = new ArrayList<>();
 
     public HtmlBuilder(final String source, final boolean strict, final boolean sourceIsEscaped,
                        final boolean shouldReEscape) {
+        this(new CodePointArray(source), strict, sourceIsEscaped, shouldReEscape);
+    }
+
+    public HtmlBuilder(final CodePointArray source, final boolean strict, final boolean sourceIsEscaped,
+                       final boolean shouldReEscape) {
         if (source == null) throw new NullPointerException();
         this.source = source;
-        this.codePoints = new CodePointArray(source);
+        this.sourceLength = source.length();
         this.throwExceptions = strict;
         this.sourceIsEscaped = sourceIsEscaped;
         this.shouldReEscape = shouldReEscape;
-        this.codePointsLength = codePoints.length();
     }
 
     public boolean addLink(final String link, final String display, final int start, final int end) {
@@ -58,10 +60,10 @@ public class HtmlBuilder {
     }
 
     public boolean addLink(final String link, final String display, final int start, final int end,
-                           final boolean display_is_html) {
-        if (start < 0 || end < 0 || start > end || end > codePointsLength) {
+                           final boolean displayIsHtml) {
+        if (start < 0 || end < 0 || start > end || end > sourceLength) {
             final String message = String.format(Locale.US, "text:%s, length:%d, start:%d, end:%d", source,
-                    codePointsLength, start, end);
+                    sourceLength, start, end);
             if (throwExceptions) throw new StringIndexOutOfBoundsException(message);
             return false;
         }
@@ -72,94 +74,54 @@ public class HtmlBuilder {
             if (throwExceptions) throw new IllegalArgumentException(message);
             return false;
         }
-        return links.add(new LinkSpec(link, display, start, end, display_is_html));
+        return spanSpecs.add(new LinkSpec(link, display, start, end, displayIsHtml));
     }
 
-    public String build() {
-        if (links.isEmpty()) return escapeSource(source);
-        Collections.sort(links);
+    public Pair<String, SpanItem[]> buildWithIndices() {
+        if (spanSpecs.isEmpty()) return Pair.create(escapeSource(), new SpanItem[0]);
+        Collections.sort(spanSpecs);
         final StringBuilder sb = new StringBuilder();
-        final int linksSize = links.size();
+        final int linksSize = spanSpecs.size();
+        SpanItem[] items = new SpanItem[linksSize];
         for (int i = 0; i < linksSize; i++) {
-            final LinkSpec spec = links.get(i);
-            if (spec == null) {
-                continue;
-            }
-            final int start = spec.start, end = spec.end;
+            final SpanSpec spec = spanSpecs.get(i);
+            final int start = spec.getStart(), end = spec.getEnd();
             if (i == 0) {
-                if (start >= 0 && start <= codePointsLength) {
-                    appendSource(sb, 0, start, shouldReEscape, sourceIsEscaped);
-                }
-            } else if (i > 0) {
-                final int lastEnd = links.get(i - 1).end;
-                if (lastEnd >= 0 && lastEnd <= start && start <= codePointsLength) {
-                    appendSource(sb, lastEnd, start, shouldReEscape, sourceIsEscaped);
-                }
-            }
-            sb.append("<a href=\"");
-            sb.append(spec.link);
-            sb.append("\">");
-            if (start >= 0 && start <= end && end <= codePointsLength) {
-                if (isEmpty(spec.display)) {
-                    append(sb, spec.link, shouldReEscape, false);
-                } else {
-                    append(sb, spec.display, shouldReEscape, spec.displayIsHtml);
-                }
-            }
-            sb.append("</a>");
-            if (i == linksSize - 1 && end >= 0 && end <= codePointsLength) {
-                appendSource(sb, end, codePointsLength, shouldReEscape, sourceIsEscaped);
-            }
-        }
-        return sb.toString();
-    }
-
-    public Pair<String, List<SpanItem>> buildWithIndices() {
-        List<SpanItem> items = new ArrayList<>();
-        if (links.isEmpty()) return Pair.create(escapeSource(source), items);
-        Collections.sort(links);
-        final StringBuilder sb = new StringBuilder();
-        final int linksSize = links.size();
-        for (int i = 0; i < linksSize; i++) {
-            final LinkSpec spec = links.get(i);
-            if (spec == null) {
-                continue;
-            }
-            final int start = spec.start, end = spec.end;
-            if (i == 0) {
-                if (start >= 0 && start <= codePointsLength) {
+                if (start >= 0 && start <= sourceLength) {
                     appendSource(sb, 0, start, false, sourceIsEscaped);
                 }
             } else if (i > 0) {
-                final int lastEnd = links.get(i - 1).end;
-                if (lastEnd >= 0 && lastEnd <= start && start <= codePointsLength) {
+                final int lastEnd = spanSpecs.get(i - 1).end;
+                if (lastEnd >= 0 && lastEnd <= start && start <= sourceLength) {
                     appendSource(sb, lastEnd, start, false, sourceIsEscaped);
                 }
             }
             int spanStart = sb.length();
-            if (start >= 0 && start <= end && end <= codePointsLength) {
-                if (isEmpty(spec.display)) {
-                    append(sb, spec.link, false, false);
-                } else {
-                    append(sb, spec.display, false, spec.displayIsHtml);
-                }
+            if (start >= 0 && start <= end && end <= sourceLength) {
+                spec.appendTo(sb);
             }
             final SpanItem item = new SpanItem();
             item.start = spanStart;
             item.end = sb.length();
-            item.link = spec.link;
-            items.add(item);
-            if (i == linksSize - 1 && end >= 0 && end <= codePointsLength) {
-                appendSource(sb, end, codePointsLength, false, sourceIsEscaped);
+            item.orig_start = start;
+            item.orig_end = end;
+            if (spec instanceof LinkSpec) {
+                item.link = ((LinkSpec) spec).link;
+            }
+            items[i] = item;
+            if (i == linksSize - 1 && end >= 0 && end <= sourceLength) {
+                appendSource(sb, end, sourceLength, false, sourceIsEscaped);
             }
         }
         return Pair.create(sb.toString(), items);
     }
 
     public boolean hasLink(final int start, final int end) {
-        for (final LinkSpec spec : links) {
-            if (start >= spec.start && start <= spec.end || end >= spec.start && end <= spec.end)
+        for (final SpanSpec spec : spanSpecs) {
+            final int specStart = spec.getStart(), specEnd = spec.getEnd();
+            if (start >= specStart && start <= specEnd || end >= specStart && end <= specEnd) {
                 return true;
+            }
         }
         return false;
     }
@@ -167,27 +129,26 @@ public class HtmlBuilder {
     @Override
     public String toString() {
         return "HtmlBuilder{" +
-                "source='" + source + '\'' +
-                ", codePoints=" + codePoints +
-                ", codePointsLength=" + codePointsLength +
+                ", codePoints=" + source +
+                ", codePointsLength=" + sourceLength +
                 ", throwExceptions=" + throwExceptions +
                 ", sourceIsEscaped=" + sourceIsEscaped +
                 ", shouldReEscape=" + shouldReEscape +
-                ", links=" + links +
+                ", links=" + spanSpecs +
                 '}';
     }
 
     private void appendSource(final StringBuilder builder, final int start, final int end, boolean escapeSource, boolean sourceEscaped) {
         if (sourceEscaped == escapeSource) {
-            append(builder, codePoints.substring(start, end), escapeSource, sourceEscaped);
+            append(builder, source.substring(start, end), escapeSource, sourceEscaped);
         } else if (escapeSource) {
-            append(builder, escape(codePoints.substring(start, end)), true, sourceEscaped);
+            append(builder, escape(source.substring(start, end)), true, sourceEscaped);
         } else {
-            append(builder, unescape(codePoints.substring(start, end)), false, sourceEscaped);
+            append(builder, unescape(source.substring(start, end)), false, sourceEscaped);
         }
     }
 
-    private void append(final StringBuilder builder, final String text, boolean escapeText, boolean textEscaped) {
+    private static void append(final StringBuilder builder, final String text, boolean escapeText, boolean textEscaped) {
         if (textEscaped == escapeText) {
             builder.append(text);
         } else if (escapeText) {
@@ -197,57 +158,107 @@ public class HtmlBuilder {
         }
     }
 
-    private String escapeSource(final String source) {
+    private String escapeSource() {
+        final String source = this.source.substring(0, this.source.length());
         if (sourceIsEscaped == shouldReEscape) return source;
         return shouldReEscape ? escape(source) : unescape(source);
     }
 
-    static final class LinkSpec implements Comparable<LinkSpec> {
+    static abstract class SpanSpec implements Comparable<SpanSpec> {
 
-        final String link, display;
         final int start, end;
-        final boolean displayIsHtml;
 
-        LinkSpec(final String link, final String display, final int start, final int end, final boolean displayIsHtml) {
-            this.link = link;
-            this.display = display;
+        public final int getStart() {
+            return start;
+        }
+
+        public final int getEnd() {
+            return end;
+        }
+
+        public SpanSpec(int start, int end) {
             this.start = start;
             this.end = end;
-            this.displayIsHtml = displayIsHtml;
         }
 
         @Override
-        public int compareTo(@NonNull final LinkSpec that) {
+        public int compareTo(@NonNull final SpanSpec that) {
             return start - that.start;
         }
 
         @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) return true;
-            if (obj == null) return false;
-            if (!(obj instanceof LinkSpec)) return false;
-            final LinkSpec other = (LinkSpec) obj;
-            if (display == null) {
-                if (other.display != null) return false;
-            } else if (!display.equals(other.display)) return false;
-            if (displayIsHtml != other.displayIsHtml) return false;
-            if (end != other.end) return false;
-            if (link == null) {
-                if (other.link != null) return false;
-            } else if (!link.equals(other.link)) return false;
-            if (start != other.start) return false;
-            return true;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            SpanSpec spanSpec = (SpanSpec) o;
+
+            if (start != spanSpec.start) return false;
+            return end == spanSpec.end;
+
         }
 
         @Override
         public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + (display == null ? 0 : display.hashCode());
-            result = prime * result + (displayIsHtml ? 1231 : 1237);
-            result = prime * result + end;
-            result = prime * result + (link == null ? 0 : link.hashCode());
-            result = prime * result + start;
+            int result = start;
+            result = 31 * result + end;
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "SpanSpec{" +
+                    "start=" + start +
+                    ", end=" + end +
+                    '}';
+        }
+
+        public abstract void appendTo(StringBuilder sb);
+    }
+
+    static final class LinkSpec extends SpanSpec {
+
+        final String link, display;
+
+        final boolean displayIsHtml;
+
+        LinkSpec(final String link, final String display, final int start, final int end, final boolean displayIsHtml) {
+            super(start, end);
+            this.link = link;
+            this.display = display;
+            this.displayIsHtml = displayIsHtml;
+        }
+
+
+        @Override
+        public void appendTo(StringBuilder sb) {
+            if (isEmpty(display)) {
+                append(sb, link, false, false);
+            } else {
+                append(sb, display, false, displayIsHtml);
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+
+            LinkSpec linkSpec = (LinkSpec) o;
+
+            if (displayIsHtml != linkSpec.displayIsHtml) return false;
+            if (link != null ? !link.equals(linkSpec.link) : linkSpec.link != null) return false;
+            return display != null ? display.equals(linkSpec.display) : linkSpec.display == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = super.hashCode();
+            result = 31 * result + (link != null ? link.hashCode() : 0);
+            result = 31 * result + (display != null ? display.hashCode() : 0);
+            result = 31 * result + (displayIsHtml ? 1 : 0);
             return result;
         }
 
@@ -256,10 +267,8 @@ public class HtmlBuilder {
             return "LinkSpec{" +
                     "link='" + link + '\'' +
                     ", display='" + display + '\'' +
-                    ", start=" + start +
-                    ", end=" + end +
                     ", displayIsHtml=" + displayIsHtml +
-                    '}';
+                    "} " + super.toString();
         }
     }
 

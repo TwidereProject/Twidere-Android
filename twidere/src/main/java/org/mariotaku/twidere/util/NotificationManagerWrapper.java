@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.util;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;

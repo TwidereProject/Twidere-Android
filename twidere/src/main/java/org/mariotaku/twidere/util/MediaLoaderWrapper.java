@@ -31,7 +31,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -45,7 +44,7 @@ import javax.inject.Singleton;
 import static org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl;
 
 @Singleton
-public class MediaLoaderWrapper implements Constants {
+public class MediaLoaderWrapper {
 
     private final ImageLoader mImageLoader;
     private final DisplayImageOptions mProfileImageDisplayOptions;

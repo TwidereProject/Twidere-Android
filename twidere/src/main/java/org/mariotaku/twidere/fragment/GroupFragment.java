@@ -12,11 +12,11 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.SupportTabsAdapter;
-import org.mariotaku.microblog.library.statusnet.model.Group;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.statusnet.model.Group;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
@@ -136,7 +136,7 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
                 final ParcelableGroup cache = mExtras.getParcelable(EXTRA_GROUP);
                 if (cache != null) return SingleResponse.getInstance(cache);
             }
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(getContext(), mAccountKey,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountKey,
                     true);
             if (twitter == null) return SingleResponse.getInstance();
             try {

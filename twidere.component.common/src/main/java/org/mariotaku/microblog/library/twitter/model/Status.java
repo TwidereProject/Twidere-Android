@@ -61,6 +61,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "text")
     String text;
 
+    /**
+     * https://dev.twitter.com/overview/api/upcoming-changes-to-tweets
+     */
+    @JsonField(name = "full_text")
+    String fullText;
+
     @JsonField(name = "statusnet_html")
     String statusnetHtml;
 
@@ -129,8 +135,17 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "quoted_status")
     Status quotedStatus;
 
+    @JsonField(name = "is_quote_status")
+    boolean isQuoteStatus;
+
+    @JsonField(name = "quoted_status_id_str")
+    String quotedStatusId;
+
     @JsonField(name = "repost_status")
     Status repostStatus;
+
+    @JsonField(name = "repost_status_id")
+    String repostStatusId;
 
     @JsonField(name = "card")
     CardEntity card;
@@ -175,6 +190,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "location")
     String location;
 
+    @JsonField(name = "display_text_range")
+    int[] displayTextRange;
+
     @ParcelableNoThanks
     private transient long sortId = -1;
 
@@ -204,13 +222,22 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return truncated;
     }
 
-
     public String getText() {
+        return text;
+    }
+
+    public String getFullText() {
+        return fullText;
+    }
+
+    public String getExtendedText() {
+        if (fullText != null) return fullText;
         return text;
     }
 
     public String getHtmlText() {
         if (statusnetHtml != null) return statusnetHtml;
+        if (fullText != null) return fullText;
         return text;
     }
 
@@ -255,12 +282,6 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     public boolean isRetweet() {
         return retweetedStatus != null;
     }
-
-
-    public boolean isQuote() {
-        return quotedStatus != null;
-    }
-
 
     public boolean isRetweetedByMe() {
         return currentUserRetweet != null;
@@ -414,6 +435,18 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         return location;
     }
 
+    public int[] getDisplayTextRange() {
+        return displayTextRange;
+    }
+
+    public boolean isQuoteStatus() {
+        return isQuoteStatus;
+    }
+
+    public String getQuotedStatusId() {
+        return quotedStatusId;
+    }
+
     @Override
     public int compareTo(@NonNull final Status that) {
         final long diff = getSortId() - that.getSortId();
@@ -479,7 +512,12 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @OnJsonParseComplete
     void afterStatusParsed() throws IOException {
-        if (id == null || text == null) throw new IOException("Malformed Status object");
+        if (id == null) {
+            throw new IOException("Malformed Status object (no id)");
+        }
+        if (text == null && fullText == null) {
+            throw new IOException("Malformed Status object (no text)");
+        }
         fixStatus();
     }
 
@@ -492,12 +530,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
         }
         if (quotedStatus == null && repostStatus != null) {
             quotedStatus = repostStatus;
+            quotedStatusId = repostStatusId;
+            isQuoteStatus = true;
         }
-    }
-
-    public static void setQuotedStatus(Status status, Status quoted) {
-        if (status == null) return;
-        status.quotedStatus = quoted;
     }
 
 

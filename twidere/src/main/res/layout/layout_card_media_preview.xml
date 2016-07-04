@@ -23,36 +23,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/card_item_status_common">
+    tools:showIn="@layout/card_item_status_compact">
 
-    <FrameLayout
+    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
         android:id="@+id/media_preview_item_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground">
 
         <include layout="@layout/layout_card_media_preview_item"/>
-    </FrameLayout>
+    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 
-    <FrameLayout
+    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
         android:id="@+id/media_preview_item_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground">
 
         <include layout="@layout/layout_card_media_preview_item"/>
-    </FrameLayout>
+    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 
-    <FrameLayout
+    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
         android:id="@+id/media_preview_item_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground">
 
         <include layout="@layout/layout_card_media_preview_item"/>
-    </FrameLayout>
+    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 
-    <FrameLayout
+    <com.commonsware.cwac.layouts.AspectLockedFrameLayout
         android:id="@+id/media_preview_item_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,14 +60,5 @@
 
         <include layout="@layout/layout_card_media_preview_item"/>
 
-        <TextView
-            android:id="@+id/more_media"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="#A0000000"
-            android:gravity="center"
-            android:textColor="#ffffff"/>
-
-    </FrameLayout>
+    </com.commonsware.cwac.layouts.AspectLockedFrameLayout>
 </merge>

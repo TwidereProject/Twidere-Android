@@ -13,15 +13,15 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
-import org.mariotaku.sqliteqb.library.Columns;
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
@@ -36,9 +36,8 @@ import org.mariotaku.twidere.task.CacheUsersStatusesTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
-import org.mariotaku.twidere.util.InternalTwitterContentUtils;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
@@ -70,6 +69,8 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     protected ErrorInfoStore errorInfoStore;
     @Inject
     protected UserColorNameManager manager;
+    @Inject
+    protected AsyncTwitterWrapper wrapper;
 
     public GetStatusesTask(Context context) {
         this.context = context;
@@ -87,7 +88,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
     protected abstract String getTimelineType();
 
     @Override
-    public void afterExecute(List<TwitterWrapper.StatusListResponse> result) {
+    public void afterExecute(Object handler, List<TwitterWrapper.StatusListResponse> result) {
         context.getContentResolver().notifyChange(getContentUri(), null);
         bus.post(new GetStatusesTaskEvent(getContentUri(), false, AsyncTwitterWrapper.getException(result)));
     }
@@ -112,7 +113,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials,
                     true, true);
             if (twitter == null) continue;
             try {
@@ -149,7 +150,6 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                     sinceId = null;
                 }
                 final List<Status> statuses = getStatuses(twitter, paging);
-                InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
                 storeStatus(accountKey, credentials, statuses, sinceId, maxId, sinceSortId,
                         maxSortId, loadItemLimit, false);
                 // TODO cache related data and preload
@@ -224,7 +224,7 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
         deleteWhereArgs[0] = accountKey.toString();
         int olderCount = -1;
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getStatusesCount(context, uri, minPositionKey,
+            olderCount = DataStoreUtils.getStatusesCount(context, uri, null, minPositionKey,
                     Statuses.POSITION_KEY, false, accountKey);
         }
         final int rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs);

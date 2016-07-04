@@ -71,16 +71,6 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
-        android:key="compact_cards"
-        android:order="32"
-        android:summary="@string/compact_cards_summary"
-        android:title="@string/compact_cards">
-        <extra
-            android:name="notify_change"
-            android:value="true"/>
-    </SwitchPreferenceCompat>
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
         android:key="hide_card_actions"
         android:order="33"
         android:title="@string/hide_card_actions">

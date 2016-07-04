@@ -30,11 +30,12 @@ import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.utils.IoUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -42,14 +43,11 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
-import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UserColorNameManager;
-import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
@@ -64,6 +62,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
@@ -72,11 +71,13 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
     @Nullable
     private final UserKey mAccountKey;
     private final String mMaxId, mSinceId;
+    private final int mPage;
     @Nullable
     private final Object[] mSavedStatusesFileArgs;
     private final boolean mLoadingMore;
     // Statuses sorted descending by default
     private Comparator<ParcelableStatus> mComparator = ParcelableStatus.REVERSE_COMPARATOR;
+    private AtomicReference<MicroBlogException> mException = new AtomicReference<>();
 
     @Inject
     protected DiskCache mFileCache;
@@ -88,7 +89,7 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
     public MicroBlogAPIStatusesLoader(@NonNull final Context context,
                                       @Nullable final UserKey accountKey,
                                       final String sinceId, final String maxId,
-                                      @Nullable final List<ParcelableStatus> data,
+                                      int page, @Nullable final List<ParcelableStatus> data,
                                       @Nullable final String[] savedStatusesArgs,
                                       final int tabPosition, final boolean fromUser, boolean loadingMore) {
         super(context, data, tabPosition, fromUser);
@@ -96,6 +97,7 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
         mAccountKey = accountKey;
         mMaxId = maxId;
         mSinceId = sinceId;
+        mPage = page;
         mSavedStatusesFileArgs = savedStatusesArgs;
         mLoadingMore = loadingMore;
     }
@@ -130,7 +132,7 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
             }
         }
         if (!isFromUser()) return ListResponse.getListInstance(data);
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
                 true);
         if (twitter == null) {
             return ListResponse.getListInstance(new MicroBlogException("No Account"));
@@ -142,12 +144,9 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
             final Paging paging = new Paging();
             processPaging(credentials, loadItemLimit, paging);
             statuses = getStatuses(twitter, credentials, paging);
-            if (MicroBlogAPIFactory.isTwitterCredentials(credentials) &&
-                    !Utils.isOfficialCredentials(context, credentials)) {
-                InternalTwitterContentUtils.getStatusesWithQuoteData(twitter, statuses);
-            }
         } catch (final MicroBlogException e) {
             // mHandler.post(new ShowErrorRunnable(e));
+            mException.set(e);
             if (BuildConfig.DEBUG) {
                 Log.w(LOGTAG, e);
             }
@@ -215,6 +214,10 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
         return mMaxId;
     }
 
+    public int getPage() {
+        return mPage;
+    }
+
     @Nullable
     public UserKey getAccountKey() {
         return mAccountKey;
@@ -228,9 +231,18 @@ public abstract class MicroBlogAPIStatusesLoader extends ParcelableStatusesLoade
     @WorkerThread
     protected abstract boolean shouldFilterStatus(final SQLiteDatabase database, final ParcelableStatus status);
 
+    @Nullable
+    public MicroBlogException getException() {
+        return mException.get();
+    }
+
+    @Override
+    protected void onStartLoading() {
+        mException.set(null);
+        super.onStartLoading();
+    }
+
     protected void processPaging(@NonNull ParcelableCredentials credentials, int loadItemLimit, @NonNull final Paging paging) {
-
-
         paging.setCount(loadItemLimit);
         if (mMaxId != null) {
             paging.setMaxId(mMaxId);

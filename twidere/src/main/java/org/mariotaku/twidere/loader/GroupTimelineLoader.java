@@ -45,7 +45,7 @@ public class GroupTimelineLoader extends MicroBlogAPIStatusesLoader {
                                final String groupName, final String sinceId, final String maxId,
                                final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                final int tabPosition, boolean fromUser, boolean loadingMore) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
+        super(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
         mGroupId = groupId;
         mGroupName = groupName;
     }

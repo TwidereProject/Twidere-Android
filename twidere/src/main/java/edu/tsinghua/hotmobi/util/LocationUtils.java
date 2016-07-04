@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
@@ -23,7 +24,7 @@ public class LocationUtils implements HotMobiConstants, Constants {
     private LocationUtils() {
     }
 
-    public static LatLng getCachedLatLng(final Context context) {
+    public static LatLng getCachedLatLng(@NonNull final Context context) {
         final Context appContext = context.getApplicationContext();
         final SharedPreferences prefs = DependencyHolder.get(context).getPreferences();
         if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return null;

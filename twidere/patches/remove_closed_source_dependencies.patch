@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1463193773000)
+--- twidere/build.gradle	(date 1467162711000)
 +++ twidere/build.gradle	(revision )
 @@ -5,19 +5,19 @@
  apply plugin: 'androidsvgdrawable'
@@ -28,7 +28,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
      }
  }
-@@ -49,7 +49,7 @@
+@@ -47,7 +47,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -37,7 +37,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -79,7 +79,7 @@
+@@ -77,7 +77,7 @@
  repositories {
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -46,26 +46,24 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -105,12 +105,12 @@
+@@ -100,11 +100,11 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
--    googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
--    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
--    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
+-    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
+-    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
-+//    googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
-+//    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
-+//    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
++//    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
++//    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
 +//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 +//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
-@@ -204,5 +204,5 @@
+@@ -199,5 +199,5 @@
  }
  
  // START Non-FOSS component

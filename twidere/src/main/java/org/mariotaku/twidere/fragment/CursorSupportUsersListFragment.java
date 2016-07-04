@@ -27,7 +27,6 @@ import android.support.v4.content.Loader;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.view.holder.UserViewHolder;
 
 import java.util.List;
 

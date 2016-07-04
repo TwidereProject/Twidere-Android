@@ -28,14 +28,15 @@ import android.text.TextUtils;
 import com.nostra13.universalimageloader.cache.disc.DiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.mariotaku.twidere.Constants;
-
 import java.io.File;
+
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_PRELOAD_WIFI_ONLY;
 
 /**
  * @author mariotaku
  */
-public class ImagePreloader implements Constants {
+public class ImagePreloader {
 
     public static final String LOGTAG = "ImagePreloader";
 

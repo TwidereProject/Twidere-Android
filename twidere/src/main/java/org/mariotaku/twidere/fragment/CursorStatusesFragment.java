@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.Loader;
 
 import com.squareup.otto.Subscribe;
@@ -41,6 +40,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader;
+import org.mariotaku.twidere.model.ParameterizedExpression;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam;
@@ -70,22 +70,8 @@ import static org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri;
 public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     @Override
-    protected void onLoadingFinished() {
-        final UserKey[] accountKeys = getAccountKeys();
-        final ParcelableStatusesAdapter adapter = getAdapter();
-        if (adapter.getItemCount() > 0) {
-            showContent();
-        } else if (accountKeys.length > 0) {
-            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
-                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
-            if (errorInfo != null) {
-                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
-            } else {
-                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
-            }
-        } else {
-            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
-        }
+    protected void onStatusesLoaded(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data) {
+        showContentOrError();
     }
 
     private ContentObserver mContentObserver;
@@ -111,19 +97,38 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
         } else {
             where = accountWhere;
         }
-        final String selection = processWhere(where).getSQL();
         final ParcelableStatusesAdapter adapter = getAdapter();
         adapter.setShowAccountsColor(accountKeys.length > 1);
         final String[] projection = Statuses.COLUMNS;
         final String[] selectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
                 accountKeys.length);
+        final ParameterizedExpression expression = processWhere(where, selectionArgs);
         return new ExtendedObjectCursorLoader<>(context, ParcelableStatusCursorIndices.class, uri,
-                projection, selection, selectionArgs, sortOrder, fromUser);
+                projection, expression.getSQL(), expression.getParameters(),
+                sortOrder, fromUser);
     }
 
     @Override
     protected Object createMessageBusCallback() {
         return new CursorStatusesBusCallback();
+    }
+
+    private void showContentOrError() {
+        final UserKey[] accountKeys = getAccountKeys();
+        final ParcelableStatusesAdapter adapter = getAdapter();
+        if (adapter.getItemCount() > 0) {
+            showContent();
+        } else if (accountKeys.length > 0) {
+            final ErrorInfoStore.DisplayErrorInfo errorInfo = ErrorInfoStore.getErrorInfo(getContext(),
+                    mErrorInfoStore.get(getErrorInfoKey(), accountKeys[0]));
+            if (errorInfo != null) {
+                showEmpty(errorInfo.getIcon(), errorInfo.getMessage());
+            } else {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh));
+            }
+        } else {
+            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected));
+        }
     }
 
 
@@ -136,7 +141,7 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
             if (!event.running) {
                 setLoadMoreIndicatorPosition(IndicatorPosition.NONE);
                 setRefreshEnabled(true);
-                onLoadingFinished();
+                showContentOrError();
             }
         }
 
@@ -185,15 +190,15 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
     @Override
     protected UserKey[] getAccountKeys() {
         final Bundle args = getArguments();
-        final UserKey[] accountKeys = Utils.getAccountKeys(getContext(), args);
+        final Context context = getContext();
+        final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {
             return accountKeys;
         }
-        final FragmentActivity activity = getActivity();
-        if (activity instanceof HomeActivity) {
-            return ((HomeActivity) activity).getActivatedAccountKeys();
+        if (context instanceof HomeActivity) {
+            return ((HomeActivity) context).getActivatedAccountKeys();
         }
-        return DataStoreUtils.getActivatedAccountKeys(getActivity());
+        return DataStoreUtils.getActivatedAccountKeys(context);
     }
 
     @Override
@@ -236,8 +241,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     @NonNull
     @Override
-    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context, final boolean compact) {
-        return new ListParcelableStatusesAdapter(context, compact);
+    protected ListParcelableStatusesAdapter onCreateAdapter(final Context context) {
+        return new ListParcelableStatusesAdapter(context);
     }
 
     @Override
@@ -339,7 +344,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        final Context context = getContext();
+        if (context != null && isVisibleToUser) {
             for (UserKey accountId : getAccountKeys()) {
                 mTwitterWrapper.clearNotificationAsync(getNotificationType(), accountId);
             }
@@ -354,8 +360,8 @@ public abstract class CursorStatusesFragment extends AbsStatusesFragment {
 
     protected abstract boolean isFilterEnabled();
 
-    protected Expression processWhere(final Expression where) {
-        return where;
+    protected ParameterizedExpression processWhere(@NonNull final Expression where, @NonNull final String[] whereArgs) {
+        return new ParameterizedExpression(where, whereArgs);
     }
 
     protected abstract void updateRefreshState();

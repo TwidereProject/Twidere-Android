@@ -27,6 +27,7 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -40,13 +41,13 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
-import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 
 /**
  * Created by mariotaku on 14/12/5.
  */
-public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<ParcelableStatus>> {
+public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<ParcelableStatus>>
+        implements Constants {
 
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
