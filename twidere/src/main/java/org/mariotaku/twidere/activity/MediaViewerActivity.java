@@ -171,13 +171,13 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
             CacheDownloadMediaViewerFragment f = (CacheDownloadMediaViewerFragment) object;
             final boolean running = f.getLoaderManager().hasRunningLoaders();
             final boolean downloaded = f.hasDownloadedData();
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.refresh, !running && !downloaded);
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.share, !running && downloaded);
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.save, !running && downloaded);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.refresh, !running && !downloaded);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.share, !running && downloaded);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.save, !running && downloaded);
         } else {
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.refresh, false);
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.share, true);
-            MenuUtils.Companion.setMenuItemAvailability(menu, R.id.save, false);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.refresh, false);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.share, true);
+            MenuUtils.INSTANCE.setItemAvailability(menu, R.id.save, false);
         }
         return true;
     }

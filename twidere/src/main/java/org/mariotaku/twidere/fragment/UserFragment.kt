@@ -743,22 +743,22 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     user.name, user.screen_name, mNameFirst)
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
-        MenuUtils.setMenuItemAvailability(menu, R.id.mention, !isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.incoming_friendships, isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.saved_searches, isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.scheduled_statuses, isMyself && MicroBlogAPIFactory.getOfficialKeyType(activity, user.account_key) == ConsumerKeyType.TWEETDECK)
-        MenuUtils.setMenuItemAvailability(menu, R.id.muted_users, isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.blocked_users, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.scheduled_statuses, isMyself && MicroBlogAPIFactory.getOfficialKeyType(activity, user.account_key) == ConsumerKeyType.TWEETDECK)
+        MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.blocked_users, isMyself)
 
-        MenuUtils.setMenuItemAvailability(menu, R.id.block, !isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.mute_user, !isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.report_spam, !isMyself)
-        MenuUtils.setMenuItemAvailability(menu, R.id.enable_retweets, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.block, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself)
         if (mAccount != null) {
-            MenuUtils.setMenuItemAvailability(menu, R.id.add_to_list, TextUtils.equals(ParcelableAccount.Type.TWITTER,
+            MenuUtils.setItemAvailability(menu, R.id.add_to_list, TextUtils.equals(ParcelableAccount.Type.TWITTER,
                     ParcelableAccountUtils.getAccountType(mAccount!!)))
         } else {
-            MenuUtils.setMenuItemAvailability(menu, R.id.add_to_list, false)
+            MenuUtils.setItemAvailability(menu, R.id.add_to_list, false)
         }
 
         val userRelationship = mRelationship
@@ -769,10 +769,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 filterItem.isChecked = userRelationship.filtering
             }
             if (isMyself) {
-                MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, false)
+                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
             } else {
-                MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm)
-                MenuUtils.setMenuItemAvailability(menu, R.id.block, true)
+                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm)
+                MenuUtils.setItemAvailability(menu, R.id.block, true)
                 val blockItem = menu.findItem(R.id.block)
                 if (blockItem != null) {
                     ActionIconDrawable.setMenuHighlight(blockItem, TwidereMenuInfo(userRelationship.blocking))
@@ -788,7 +788,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 }
             }
         } else {
-            MenuUtils.setMenuItemAvailability(menu, R.id.send_direct_message, false)
+            MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
         }
         val intent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER)
         val extras = Bundle()

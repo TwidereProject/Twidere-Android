@@ -519,7 +519,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     }
                 }
             }
-        }.setResultHandler(bus));
+        }.setCallback(bus));
     }
 
     public void getActivitiesAboutMeAsync(final RefreshTaskParam param) {

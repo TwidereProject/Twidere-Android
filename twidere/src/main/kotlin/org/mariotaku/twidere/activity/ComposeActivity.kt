@@ -65,6 +65,7 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
+import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -112,15 +113,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     // Adapters
     private var mMediaPreviewAdapter: MediaPreviewAdapter? = null
-    private var mAccountsAdapter: AccountIconsAdapter? = null
+    private var accountsAdapter: AccountIconsAdapter? = null
 
     // Data fields
     private var mRecentLocation: ParcelableLocation? = null
     private var mInReplyToStatus: ParcelableStatus? = null
     private var mMentionUser: ParcelableUser? = null
     private var mOriginalText: String? = null
-    private var mIsPossiblySensitive: Boolean = false
-    private var mShouldSaveAccounts: Boolean = false
+    private var possiblySensitive: Boolean = false
+    private var shouldSaveAccounts: Boolean = false
     private var mImageUploaderUsed: Boolean = false
     private var mStatusShortenerUsed: Boolean = false
     private var mNavigateBackPressed: Boolean = false
@@ -194,13 +195,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, mAccountsAdapter!!.selectedAccountKeys)
+        outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter!!.selectedAccountKeys)
         outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList<Parcelable>(mediaList))
-        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, mIsPossiblySensitive)
+        outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, possiblySensitive)
         outState.putParcelable(EXTRA_STATUS, mInReplyToStatus)
         outState.putParcelable(EXTRA_USER, mMentionUser)
         outState.putParcelable(EXTRA_DRAFT, mDraft)
-        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, mShouldSaveAccounts)
+        outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, shouldSaveAccounts)
         outState.putString(EXTRA_ORIGINAL_TEXT, mOriginalText)
         super.onSaveInstanceState(outState)
     }
@@ -310,7 +311,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             R.id.toggle_sensitive -> {
                 if (!hasMedia()) return false
-                mIsPossiblySensitive = !mIsPossiblySensitive
+                possiblySensitive = !possiblySensitive
                 setMenu()
                 updateTextCount()
             }
@@ -320,7 +321,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     try {
                         val action = intent.action
                         if (INTENT_ACTION_EXTENSION_COMPOSE == action) {
-                            val accountKeys = mAccountsAdapter!!.selectedAccountKeys
+                            val accountKeys = accountsAdapter!!.selectedAccountKeys
                             intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
                             intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
                             if (accountKeys.size > 0) {
@@ -420,11 +421,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val draft = Draft()
 
         draft.action_type = getDraftAction(intent.action)
-        draft.account_keys = mAccountsAdapter!!.selectedAccountKeys
+        draft.account_keys = accountsAdapter!!.selectedAccountKeys
         draft.text = text
         val extra = UpdateStatusActionExtra()
         extra.inReplyToStatus = mInReplyToStatus
-        extra.setIsPossiblySensitive(mIsPossiblySensitive)
+        extra.setIsPossiblySensitive(possiblySensitive)
         draft.action_extras = extra
         draft.media = media
         draft.location = mRecentLocation
@@ -529,9 +530,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         linearLayoutManager.stackFromEnd = true
         accountSelector!!.layoutManager = linearLayoutManager
         accountSelector!!.itemAnimator = DefaultItemAnimator()
-        mAccountsAdapter = AccountIconsAdapter(this)
-        accountSelector!!.adapter = mAccountsAdapter
-        mAccountsAdapter!!.setAccounts(accounts)
+        accountsAdapter = AccountIconsAdapter(this)
+        accountSelector!!.adapter = accountsAdapter
+        accountsAdapter!!.setAccounts(accounts)
 
 
         val adapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
@@ -551,8 +552,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (savedInstanceState != null) {
             // Restore from previous saved state
             val selected = Utils.newParcelableArray(savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS), UserKey.CREATOR)
-            mAccountsAdapter!!.setSelectedAccountIds(*selected)
-            mIsPossiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
+            accountsAdapter!!.setSelectedAccountIds(*selected)
+            possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
             if (mediaList != null) {
                 addMedia(mediaList)
@@ -560,7 +561,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             mInReplyToStatus = savedInstanceState.getParcelable<ParcelableStatus>(EXTRA_STATUS)
             mMentionUser = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)
             mDraft = savedInstanceState.getParcelable<Draft>(EXTRA_DRAFT)
-            mShouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS)
+            shouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS)
             mOriginalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
             setLabel(intent)
         } else {
@@ -574,15 +575,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 handleDefaultIntent(intent)
             }
             setLabel(intent)
-            val selectedAccountIds = mAccountsAdapter!!.selectedAccountKeys
+            val selectedAccountIds = accountsAdapter!!.selectedAccountKeys
             if (ArrayUtils.isEmpty(selectedAccountIds)) {
                 val idsInPrefs: Array<UserKey> = UserKey.arrayOf(preferences.getString(KEY_COMPOSE_ACCOUNTS, null)) ?: emptyArray()
                 val intersection: Array<UserKey> = defaultAccountIds.intersect(listOf(*idsInPrefs)).toTypedArray()
 
                 if (intersection.isEmpty()) {
-                    mAccountsAdapter!!.setSelectedAccountIds(*defaultAccountIds)
+                    accountsAdapter!!.setSelectedAccountIds(*defaultAccountIds)
                 } else {
-                    mAccountsAdapter!!.setSelectedAccountIds(*intersection)
+                    accountsAdapter!!.setSelectedAccountIds(*intersection)
                 }
             }
             mOriginalText = ParseUtils.parseString(editText.text)
@@ -776,17 +777,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
             val accountKeys = Utils.newParcelableArray(
                     intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS), UserKey.CREATOR)
-            mAccountsAdapter!!.setSelectedAccountIds(*accountKeys)
+            accountsAdapter!!.setSelectedAccountIds(*accountKeys)
             hasAccountIds = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
             val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            mAccountsAdapter!!.setSelectedAccountIds(accountKey)
+            accountsAdapter!!.setSelectedAccountIds(accountKey)
             hasAccountIds = true
         } else {
             hasAccountIds = false
         }
         if (Intent.ACTION_SEND == action) {
-            mShouldSaveAccounts = false
+            shouldSaveAccounts = false
             val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             if (stream != null) {
                 val src = arrayOf(stream)
@@ -795,7 +796,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         ParcelableMedia.Type.IMAGE), false))
             }
         } else if (Intent.ACTION_SEND_MULTIPLE == action) {
-            mShouldSaveAccounts = false
+            shouldSaveAccounts = false
             val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
             if (extraStream != null) {
                 val src = extraStream.toTypedArray()
@@ -804,7 +805,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         ParcelableMedia.Type.IMAGE), false))
             }
         } else {
-            mShouldSaveAccounts = !hasAccountIds
+            shouldSaveAccounts = !hasAccountIds
             val data = intent.data
             if (data != null) {
                 val src = arrayOf(data)
@@ -831,14 +832,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(draft.text)
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        mAccountsAdapter!!.setSelectedAccountIds(*draft.account_keys ?: emptyArray())
+        accountsAdapter!!.setSelectedAccountIds(*draft.account_keys ?: emptyArray())
         if (draft.media != null) {
             addMedia(Arrays.asList(*draft.media))
         }
         mRecentLocation = draft.location
         if (draft.action_extras is UpdateStatusActionExtra) {
             val extra = draft.action_extras as UpdateStatusActionExtra?
-            mIsPossiblySensitive = extra!!.isPossiblySensitive
+            possiblySensitive = extra!!.isPossiblySensitive
             mInReplyToStatus = extra.inReplyToStatus
         }
         return true
@@ -899,7 +900,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleIntent(intent: Intent): Boolean {
         val action = intent.action ?: return false
-        mShouldSaveAccounts = false
+        shouldSaveAccounts = false
         mMentionUser = intent.getParcelableExtra<ParcelableUser>(EXTRA_USER)
         mInReplyToStatus = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
         when (action) {
@@ -940,7 +941,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(String.format("@%s ", user.screen_name))
         val selection_end = editText.length()
         editText.setSelection(selection_end)
-        mAccountsAdapter!!.setSelectedAccountIds(user.account_key)
+        accountsAdapter!!.setSelectedAccountIds(user.account_key)
         return true
     }
 
@@ -948,7 +949,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status == null) return false
         editText.setText(Utils.getQuoteStatus(this, status))
         editText.setSelection(0)
-        mAccountsAdapter!!.setSelectedAccountIds(status.account_key)
+        accountsAdapter!!.setSelectedAccountIds(status.account_key)
         showQuoteLabel(status)
         return true
     }
@@ -1003,16 +1004,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
                 mentions.add(mention.screen_name)
             }
-            mentions.addAll(extractor!!.extractMentionedScreennames(status.quoted_text_plain))
+            mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
         } else if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
             if (status.is_quote) {
                 addFanfouHtmlToMentions(status.quoted_text_unescaped, status.quoted_spans, mentions)
             }
         } else {
-            mentions.addAll(extractor!!.extractMentionedScreennames(status.text_plain))
+            mentions.addAll(extractor.extractMentionedScreennames(status.text_plain))
             if (status.is_quote) {
-                mentions.addAll(extractor!!.extractMentionedScreennames(status.quoted_text_plain))
+                mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
             }
         }
 
@@ -1024,7 +1025,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
-        mAccountsAdapter!!.setSelectedAccountIds(status.account_key)
+        accountsAdapter!!.setSelectedAccountIds(status.account_key)
         showReplyLabel(status)
         return true
     }
@@ -1054,7 +1055,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editText.append("@$screenName ")
         }
         editText.setSelection(editText.length())
-        mAccountsAdapter!!.setSelectedAccountIds(accountId)
+        accountsAdapter!!.setSelectedAccountIds(accountId)
         mInReplyToStatus = inReplyToStatus
         return true
     }
@@ -1081,7 +1082,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun notifyAccountSelectionChanged() {
-        val accounts = mAccountsAdapter!!.selectedAccounts
+        val accounts = accountsAdapter!!.selectedAccounts
         setSelectedAccounts(*accounts)
         if (ArrayUtils.isEmpty(accounts)) {
             editText.setAccountKey(Utils.getDefaultAccountKey(this))
@@ -1099,9 +1100,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun saveAccountSelection() {
-        if (!mShouldSaveAccounts) return
+        if (!shouldSaveAccounts) return
         val editor = preferences.edit()
-        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(mAccountsAdapter!!.selectedAccountKeys, ',', false))
+        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(accountsAdapter!!.selectedAccountKeys, ',', false))
         editor.apply()
     }
 
@@ -1115,21 +1116,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
          * Has media & Not reply: [Take photo][Media menu][Attach location][Drafts]
          * Is reply: [Media menu][View status][Attach location][Drafts]
          */
-        MenuUtils.setMenuItemAvailability(menu, R.id.add_image, !hasMedia)
-        MenuUtils.setMenuItemAvailability(menu, R.id.media_menu, hasMedia)
-        MenuUtils.setMenuItemAvailability(menu, R.id.toggle_sensitive, hasMedia)
-        MenuUtils.setMenuItemAvailability(menu, R.id.schedule, isScheduleSupported)
+        MenuUtils.setItemAvailability(menu, R.id.add_image, !hasMedia)
+        MenuUtils.setItemAvailability(menu, R.id.media_menu, hasMedia)
+        MenuUtils.setItemAvailability(menu, R.id.toggle_sensitive, hasMedia)
+        MenuUtils.setItemAvailability(menu, R.id.schedule, scheduleSupported)
 
         menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
         menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
-        MenuUtils.setMenuItemChecked(menu, R.id.toggle_sensitive, hasMedia && mIsPossiblySensitive)
+        menu.setItemChecked(R.id.toggle_sensitive, hasMedia && possiblySensitive)
         ThemeUtils.resetCheatSheet(menuBar)
         //        mMenuBar.show();
     }
 
-    private val isScheduleSupported: Boolean
+    private val scheduleSupported: Boolean
         get() {
-            val accounts = mAccountsAdapter!!.selectedAccounts
+            val accounts = accountsAdapter!!.selectedAccounts
             if (ArrayUtils.isEmpty(accounts)) return false
             for (account in accounts) {
                 if (TwitterContentUtils.getOfficialKeyType(this, account.consumer_key, account.consumer_secret) != ConsumerKeyType.TWEETDECK) {
@@ -1173,8 +1174,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             } else {
                 if (locationText!!.tag == null || location != mRecentLocation) {
                     val task = DisplayPlaceNameTask(this)
-                    task.setParams(location)
-                    task.setResultHandler(locationText)
+                    task.params = location
+                    task.setCallback(locationText)
                     TaskStarter.execute(task)
                 }
             }
@@ -1256,7 +1257,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val text = if (editText != null) ParseUtils.parseString(editText.text) else null
         val tweetLength = validator!!.getTweetLength(text)
         val maxLength = statusTextCount.maxLength
-        if (mAccountsAdapter!!.isSelectionEmpty) {
+        if (accountsAdapter!!.isSelectionEmpty) {
             editText.error = getString(R.string.no_account_selected)
             return
         } else if (!hasMedia && (TextUtils.isEmpty(text) || noReplyContent(text))) {
@@ -1270,8 +1271,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
         val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
-        val accountKeys = mAccountsAdapter!!.selectedAccountKeys
-        val isPossiblySensitive = hasMedia && mIsPossiblySensitive
+        val accountKeys = accountsAdapter!!.selectedAccountKeys
+        val isPossiblySensitive = hasMedia && possiblySensitive
         val update = ParcelableStatusUpdate()
         @Draft.Action val action: String
         if (mDraft != null) {
@@ -1290,8 +1291,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.is_possibly_sensitive = isPossiblySensitive
         BackgroundOperationService.updateStatusesAsync(this, action, update)
         if (preferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false) && mInReplyToStatus == null) {
-            mIsPossiblySensitive = false
-            mShouldSaveAccounts = true
+            possiblySensitive = false
+            shouldSaveAccounts = true
             mInReplyToStatus = null
             mMentionUser = null
             mDraft = null
@@ -1312,7 +1313,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateTextCount() {
         val text = ParseUtils.parseString(editText.text)
-        val validatedCount = if (text != null) validator!!.getTweetLength(text) else 0
+        val validatedCount = if (text != null) validator.getTweetLength(text) else 0
         statusTextCount.textCount = validatedCount
     }
 
@@ -1326,14 +1327,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
 
-        val mActivityRef: WeakReference<ComposeActivity>
+        val activityRef: WeakReference<ComposeActivity>
 
         init {
-            mActivityRef = WeakReference(activity)
+            activityRef = WeakReference(activity)
         }
 
         override fun onLocationChanged(location: Location) {
-            val activity = mActivityRef.get() ?: return
+            val activity = activityRef.get() ?: return
             activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
         }
 

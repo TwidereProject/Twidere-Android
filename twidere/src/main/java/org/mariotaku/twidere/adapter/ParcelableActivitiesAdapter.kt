@@ -37,7 +37,6 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment
-import org.mariotaku.twidere.fragment.UserFragment
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -55,7 +54,10 @@ import java.lang.ref.WeakReference
 /**
  * Created by mariotaku on 15/1/3.
  */
-class ParcelableActivitiesAdapter(context: Context, private val mIsByFriends: Boolean) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IActivitiesAdapter<List<ParcelableActivity>> {
+class ParcelableActivitiesAdapter(
+        context: Context,
+        private val byFriends: Boolean
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IActivitiesAdapter<List<ParcelableActivity>> {
 
     private val inflater: LayoutInflater
     override val mediaLoadingHandler: MediaLoadingHandler
@@ -155,7 +157,7 @@ class ParcelableActivitiesAdapter(context: Context, private val mIsByFriends: Bo
         }
 
     protected fun bindTitleSummaryViewHolder(holder: ActivityTitleSummaryViewHolder, position: Int) {
-        holder.displayActivity(getActivity(position)!!, mIsByFriends)
+        holder.displayActivity(getActivity(position)!!, byFriends)
     }
 
     fun getData(): List<ParcelableActivity>? {

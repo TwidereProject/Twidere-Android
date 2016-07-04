@@ -192,7 +192,7 @@ public class CardPollFragment extends BaseSupportFragment implements
                                 return null;
                             }
                         };
-                        task.setResultHandler(CardPollFragment.this);
+                        task.setCallback(CardPollFragment.this);
                         task.setParams(cardData);
                         TaskStarter.execute(task);
                     }

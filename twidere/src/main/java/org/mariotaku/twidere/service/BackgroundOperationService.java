@@ -386,7 +386,7 @@ public class BackgroundOperationService extends IntentService implements Constan
 
                 }
             });
-            task.setResultHandler(this);
+            task.setCallback(this);
             task.setParams(Pair.create(actionType, item));
             mHandler.post(new Runnable() {
                 @Override

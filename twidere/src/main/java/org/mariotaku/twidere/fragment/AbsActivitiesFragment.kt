@@ -44,6 +44,9 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_GAP
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_TITLE_SUMMARY
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
@@ -361,7 +364,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         if (activity == null) return
         val lm = layoutManager ?: return
         val view = lm.findViewByPosition(position) ?: return
-        if (lm.getItemViewType(view) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+        if (lm.getItemViewType(view) != ITEM_VIEW_TYPE_STATUS) {
             return
         }
         recyclerView.showContextMenuForChild(view)
@@ -397,7 +400,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
                 }
             }
         }
-        task.setResultHandler(recyclerView)
+        task.setCallback(recyclerView)
         TaskStarter.execute(task)
         bus.register(mStatusesBusCallback)
     }
@@ -519,7 +522,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
         when (adapter!!.getItemViewType(position)) {
-            ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS -> {
+            ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
                 MenuUtils.setupForStatus(context, preferences, menu, status,
@@ -535,7 +538,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         val position = contextMenuInfo.position
 
         when (adapter!!.getItemViewType(position)) {
-            ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS -> {
+            ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return false
                 if (item.itemId == R.id.share) {
                     val shareIntent = Utils.createStatusShareIntent(activity, status)
@@ -552,20 +555,32 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val adapter = adapter
-        val itemDecoration = DividerItemDecoration(context,
-                (recyclerView.layoutManager as LinearLayoutManager).orientation)
+    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+                                      layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+        val adapter = adapter!!
+        val itemDecoration = object : DividerItemDecoration(context,
+                (recyclerView.layoutManager as LinearLayoutManager).orientation) {
+            override fun isDividerEnabled(childPos: Int): Boolean {
+                when (adapter.getItemViewType(childPos)) {
+                    ITEM_VIEW_TYPE_STATUS, ITEM_VIEW_TYPE_TITLE_SUMMARY, ITEM_VIEW_TYPE_GAP -> {
+                        return true
+                    }
+                    else -> {
+                        return false
+                    }
+                }
+            }
+        }
         val res = context.resources
-        if (adapter!!.profileImageEnabled) {
+        if (adapter.profileImageEnabled) {
             val decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image)
             itemDecoration.setPadding { position, rect ->
                 val itemViewType = adapter.getItemViewType(position)
                 var nextItemIsStatus = false
                 if (position < adapter.itemCount - 1) {
-                    nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS
+                    nextItemIsStatus = adapter.getItemViewType(position + 1) == ITEM_VIEW_TYPE_STATUS
                 }
-                if (nextItemIsStatus && itemViewType == ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                if (nextItemIsStatus && itemViewType == ITEM_VIEW_TYPE_STATUS) {
                     rect.left = decorPaddingLeft
                 } else {
                     rect.left = 0

@@ -73,9 +73,9 @@ class UserListsFragment : ParcelableUserListsFragment() {
         val accountId = accountKey
         if (accountId == null || item == null) return
         if (accountId == userId) {
-            MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, true)
+            MenuUtils.setItemAvailability(menu, R.id.new_user_list, true)
         } else {
-            MenuUtils.setMenuItemAvailability(menu, R.id.new_user_list, Utils.isMyAccount(activity, screenName))
+            MenuUtils.setItemAvailability(menu, R.id.new_user_list, Utils.isMyAccount(activity, screenName))
         }
     }
 

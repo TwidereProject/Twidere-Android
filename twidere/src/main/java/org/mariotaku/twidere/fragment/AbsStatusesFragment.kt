@@ -410,7 +410,7 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
                 }
             }
         }
-        task.setResultHandler(recyclerView)
+        task.setCallback(recyclerView)
         TaskStarter.execute(task)
         bus.register(statusesBusCallback)
     }

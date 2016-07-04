@@ -324,7 +324,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
-        MenuUtils.setMenuItemAvailability(menu, R.id.delete_all, recipient != null && Utils.isOfficialCredentials(activity, account!!))
+        MenuUtils.setItemAvailability(menu, R.id.delete_all, recipient != null && Utils.isOfficialCredentials(activity, account!!))
         updateRecipientInfo()
     }
 

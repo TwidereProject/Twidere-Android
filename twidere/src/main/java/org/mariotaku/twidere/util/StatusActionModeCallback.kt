@@ -48,8 +48,8 @@ class StatusActionModeCallback(private val textView: TextView, private val conte
         val string = SpannableString.valueOf(textView.text)
         val spans = string.getSpans(start, end, URLSpan::class.java)
         val selectingLink = spans.size == 1 && URLUtil.isValidUrl(spans[0].url)
-        MenuUtils.setMenuItemAvailability(menu, R.id.copy_url, selectingLink)
-        MenuUtils.setMenuItemAvailability(menu, R.id.share_url, selectingLink)
+        MenuUtils.setItemAvailability(menu, R.id.copy_url, selectingLink)
+        MenuUtils.setItemAvailability(menu, R.id.share_url, selectingLink)
         return true
     }
 
