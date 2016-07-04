@@ -1,6 +1,7 @@
 package org.mariotaku.microblog.library.statusnet.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;
@@ -19,4 +20,5 @@ public interface StatusNetResources {
 
     @GET("/statusnet/conversation/{id}.json")
     ResponseList<Status> getStatusNetConversation(@Path("id") String statusId, @Query Paging paging) throws MicroBlogException;
+
 }

@@ -21,111 +21,80 @@ package org.mariotaku.twidere.service;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.mariotaku.restfu.http.ContentType;
-import org.mariotaku.restfu.http.mime.FileBody;
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.MainActivity;
-import org.mariotaku.twidere.activity.MainHondaJOJOActivity;
-import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate;
+import org.mariotaku.abstask.library.ManualTaskStarter;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.TwitterUpload;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse;
-import org.mariotaku.microblog.library.twitter.model.NewMediaMetadata;
-import org.mariotaku.microblog.library.twitter.model.Status;
-import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
-import org.mariotaku.twidere.app.TwidereApplication;
+import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo;
+import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.http.mime.FileBody;
+import org.mariotaku.restfu.http.mime.SimpleBody;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.DraftCursorIndices;
-import org.mariotaku.twidere.model.DraftValuesCreator;
-import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
-import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
-import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.SingleResponse;
-import org.mariotaku.twidere.model.StatusShortenResult;
-import org.mariotaku.twidere.model.UploaderMediaItem;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
-import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
-import org.mariotaku.twidere.model.util.ParcelableLocationUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils;
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
-import org.mariotaku.twidere.preference.ServicePickerPreference;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
-import org.mariotaku.twidere.util.AbsServiceInterface;
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.ContentValuesCreator;
-import org.mariotaku.twidere.util.MediaUploaderInterface;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.StatusShortenerInterface;
-import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereValidator;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.io.ContentLengthInputStream;
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.TimelineType;
 import edu.tsinghua.hotmobi.model.TweetEvent;
-
-import static org.mariotaku.twidere.util.ContentValuesCreator.createMessageDraft;
-import static org.mariotaku.twidere.util.Utils.getImagePathFromUri;
-import static org.mariotaku.twidere.util.Utils.getImageUploadStatus;
 
 public class BackgroundOperationService extends IntentService implements Constants {
 
@@ -141,6 +110,7 @@ public class BackgroundOperationService extends IntentService implements Constan
     TwidereValidator mValidator;
     @Inject
     Extractor mExtractor;
+    private static final long BULK_SIZE = 128 * 1024; // 128KiB
 
 
     public BackgroundOperationService() {
@@ -268,10 +238,10 @@ public class BackgroundOperationService extends IntentService implements Constan
                 if (item.action_extras instanceof SendDirectMessageActionExtra) {
                     recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
                 }
-                if (ArrayUtils.isEmpty(item.account_ids) || recipientId == null) {
+                if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
                     return;
                 }
-                final UserKey accountKey = item.account_ids[0];
+                final UserKey accountKey = item.account_keys[0];
                 final String imageUri = ArrayUtils.isEmpty(item.media) ? null : item.media[0].uri;
                 sendMessage(accountKey, recipientId, item.text, imageUri);
                 break;
@@ -326,7 +296,7 @@ public class BackgroundOperationService extends IntentService implements Constan
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values);
             showOkMessage(R.string.direct_message_sent, false);
         } else {
-            final ContentValues values = createMessageDraft(accountId, recipientId, text, imageUri);
+            final ContentValues values = ContentValuesCreator.createMessageDraft(accountId, recipientId, text, imageUri);
             resolver.insert(Drafts.CONTENT_URI, values);
             showErrorMessage(R.string.action_sending_direct_message, result.getException(), true);
         }
@@ -354,96 +324,101 @@ public class BackgroundOperationService extends IntentService implements Constan
     }
 
     private void updateStatuses(@Draft.Action final String actionType, final ParcelableStatusUpdate... statuses) {
-        final Builder builder = new Builder(this);
-        startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(this, builder, 0, null));
+        final BackgroundOperationService context = this;
+        final Builder builder = new Builder(context);
+        startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
+                builder, 0, null));
         for (final ParcelableStatusUpdate item : statuses) {
-            mNotificationManager.notify(NOTIFICATION_ID_UPDATE_STATUS,
-                    updateUpdateStatusNotification(this, builder, 0, item));
-            final Draft draft = new Draft();
-            draft.account_ids = ParcelableAccountUtils.getAccountKeys(item.accounts);
-            if (actionType != null) {
-                draft.action_type = actionType;
-            } else {
-                draft.action_type = Draft.Action.UPDATE_STATUS;
-            }
-            draft.text = item.text;
-            draft.location = item.location;
-            draft.media = item.media;
-            final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
-            extra.setInReplyToStatus(item.in_reply_to_status);
-            extra.setIsPossiblySensitive(item.is_possibly_sensitive);
-            extra.setRepostStatusId(item.repost_status_id);
-            extra.setDisplayCoordinates(item.display_coordinates);
-            draft.action_extras = extra;
-            final ContentResolver resolver = getContentResolver();
-            final Uri draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft));
-            final long def = -1;
-            final long draftId = draftUri != null ? NumberUtils.toLong(draftUri.getLastPathSegment(), def) : -1;
-            mTwitter.addSendingDraftId(draftId);
-            final List<SingleResponse<ParcelableStatus>> result = updateStatus(builder, item);
-            boolean failed = false;
-            Exception exception = null;
-            final Expression where = Expression.equals(Drafts._ID, draftId);
-            final List<UserKey> failedAccountIds = new ArrayList<>();
-            Collections.addAll(failedAccountIds, ParcelableAccountUtils.getAccountKeys(item.accounts));
+            final UpdateStatusTask task = new UpdateStatusTask(context, new UpdateStatusTask.StateCallback() {
 
-            for (final SingleResponse<ParcelableStatus> response : result) {
-                final ParcelableStatus data = response.getData();
-                if (data == null) {
-                    failed = true;
-                    if (exception == null) {
-                        exception = response.getException();
-                    }
-                } else {
-                    failedAccountIds.remove(data.account_key);
-                    // BEGIN HotMobi
-                    final TweetEvent event = TweetEvent.create(this, data, TimelineType.OTHER);
-                    event.setAction(TweetEvent.Action.TWEET);
-                    HotMobiLogger.getInstance(this).log(data.account_key, event);
-                    // END HotMobi
+                @WorkerThread
+                @Override
+                public void onStartUploadingMedia() {
+                    startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
+                            builder, 0, item));
                 }
-            }
 
-            if (result.isEmpty()) {
-                showErrorMessage(R.string.action_updating_status, getString(R.string.no_account_selected), false);
-            } else if (failed) {
-                // If the status is a duplicate, there's no need to save it to
-                // drafts.
-                if (exception instanceof MicroBlogException
-                        && ((MicroBlogException) exception).getErrorCode() == ErrorInfo.STATUS_IS_DUPLICATE) {
-                    showErrorMessage(getString(R.string.status_is_duplicate), false);
-                } else {
-                    final ContentValues accountIdsValues = new ContentValues();
-                    accountIdsValues.put(Drafts.ACCOUNT_IDS, TwidereListUtils.toString(failedAccountIds, ',', false));
-                    resolver.update(Drafts.CONTENT_URI, accountIdsValues, where.getSQL(), null);
-                    showErrorMessage(R.string.action_updating_status, exception, true);
-                    final ContentValues notifValues = new ContentValues();
-                    notifValues.put(BaseColumns._ID, draftId);
-                    resolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, notifValues);
+                @WorkerThread
+                @Override
+                public void onUploadingProgressChanged(int index, long current, long total) {
+                    int progress = (int) (current * 100 / total);
+                    startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
+                            builder, progress, item));
                 }
-            } else {
-                showOkMessage(R.string.status_updated, false);
-                resolver.delete(Drafts.CONTENT_URI, where.getSQL(), null);
-                if (item.media != null) {
-                    for (final ParcelableMediaUpdate media : item.media) {
-                        final String path = getImagePathFromUri(this, Uri.parse(media.uri));
-                        if (path != null) {
-                            if (!new File(path).delete()) {
-                                Log.d(LOGTAG, String.format("unable to delete %s", path));
-                            }
+
+                @WorkerThread
+                @Override
+                public void onShorteningStatus() {
+                    startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
+                            builder, 0, item));
+                }
+
+                @WorkerThread
+                @Override
+                public void onUpdatingStatus() {
+                    startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
+                            builder, 0, item));
+                }
+
+                @Override
+                public void afterExecute(Context handler, UpdateStatusTask.UpdateStatusResult result) {
+                    boolean failed = false;
+                    if (result.exception != null) {
+                        Toast.makeText(context, result.exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        failed = true;
+                    } else for (MicroBlogException e : result.exceptions) {
+                        if (e != null) {
+                            // Show error
+                            Toast.makeText(context, R.string.status_not_updated, Toast.LENGTH_SHORT).show();
+                            failed = true;
+                            break;
                         }
                     }
-                }
-            }
-            mTwitter.removeSendingDraftId(draftId);
-            if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET, false)) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mTwitter.refreshAll();
+                    if (failed) {
+                        // TODO show draft notification
+                    } else {
+                        Toast.makeText(context, R.string.status_updated, Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+
+                @Override
+                public void beforeExecute() {
+
+                }
+            });
+            task.setResultHandler(this);
+            task.setParams(Pair.create(actionType, item));
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ManualTaskStarter.invokeBeforeExecute(task);
+                }
+            });
+
+            final UpdateStatusTask.UpdateStatusResult result = ManualTaskStarter.invokeExecute(task);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    ManualTaskStarter.invokeAfterExecute(task, result);
+                }
+            });
+
+            if (result.exception != null) {
+                Log.w(LOGTAG, result.exception);
+            } else for (ParcelableStatus status : result.statuses) {
+                if (status == null) continue;
+                final TweetEvent event = TweetEvent.create(context, status, TimelineType.OTHER);
+                event.setAction(TweetEvent.Action.TWEET);
+                HotMobiLogger.getInstance(context).log(status.account_key, event);
             }
+        }
+        if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET)) {
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mTwitter.refreshAll();
+                }
+            });
         }
         stopForeground(false);
         mNotificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS);
@@ -458,8 +433,8 @@ public class BackgroundOperationService extends IntentService implements Constan
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
                 accountKey);
         if (credentials == null) return SingleResponse.getInstance();
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(this, credentials, true, true);
-        final TwitterUpload twitterUpload = MicroBlogAPIFactory.getTwitterInstance(this, credentials,
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(this, credentials, true, true);
+        final TwitterUpload twitterUpload = MicroBlogAPIFactory.getInstance(this, credentials,
                 true, true, TwitterUpload.class);
         if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
         try {
@@ -475,32 +450,26 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
                 default: {
                     if (imageUri != null) {
-                        final String path = getImagePathFromUri(this, Uri.parse(imageUri));
-                        if (path == null) throw new FileNotFoundException();
-                        final BitmapFactory.Options o = new BitmapFactory.Options();
-                        o.inJustDecodeBounds = true;
-                        BitmapFactory.decodeFile(path, o);
-                        final File file = new File(path);
-                        BitmapUtils.downscaleImageIfNeeded(file, 100);
-                        ContentLengthInputStream is = null;
+                        final Uri mediaUri = Uri.parse(imageUri);
                         FileBody body = null;
                         try {
-                            is = new ContentLengthInputStream(file);
-                            is.setReadListener(new MessageMediaUploadListener(this, mNotificationManager,
-                                    builder, text));
-                            body = new FileBody(is, file.getName(), file.length(),
-                                    ContentType.parse(o.outMimeType));
-                            final MediaUploadResponse uploadResp = twitterUpload.uploadMedia(body);
+                            body = UpdateStatusTask.getBodyFromMedia(getContentResolver(), mediaUri,
+                                    new MessageMediaUploadListener(this, mNotificationManager,
+                                            builder, text));
+                            final MediaUploadResponse uploadResp = uploadMedia(twitterUpload, body);
                             final DirectMessage response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.getId());
                             directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
                                     accountKey, true);
                         } finally {
-                            Utils.closeSilently(is);
                             Utils.closeSilently(body);
                         }
-                        if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("unable to delete %s", path));
+                        final String path = Utils.getImagePathFromUri(this, mediaUri);
+                        if (path != null) {
+                            final File file = new File(path);
+                            if (!file.delete()) {
+                                Log.d(LOGTAG, String.format("unable to delete %s", path));
+                            }
                         }
                     } else {
                         final DirectMessage response = twitter.sendDirectMessage(recipientId, text);
@@ -521,348 +490,52 @@ public class BackgroundOperationService extends IntentService implements Constan
         }
     }
 
-    private void showToast(final int resId, final int duration) {
-        mHandler.post(new ToastRunnable(this, resId, duration));
-    }
 
-    private List<SingleResponse<ParcelableStatus>> updateStatus(final Builder builder,
-                                                                final ParcelableStatusUpdate statusUpdate) {
-        final ArrayList<ContentValues> hashTagValues = new ArrayList<>();
-        final Collection<String> hashTags = mExtractor.extractHashtags(statusUpdate.text);
-        for (final String hashTag : hashTags) {
-            final ContentValues values = new ContentValues();
-            values.put(CachedHashtags.NAME, hashTag);
-            hashTagValues.add(values);
+    private MediaUploadResponse uploadMedia(final TwitterUpload upload, Body body) throws IOException, MicroBlogException {
+        final String mediaType = body.contentType().getContentType();
+        final long length = body.length();
+        final InputStream stream = body.stream();
+        MediaUploadResponse response = upload.initUploadMedia(mediaType, length, null);
+        final int segments = length == 0 ? 0 : (int) (length / BULK_SIZE + 1);
+        for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
+            final int currentBulkSize = (int) Math.min(BULK_SIZE, length - segmentIndex * BULK_SIZE);
+            final SimpleBody bulk = new SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize,
+                    stream);
+            upload.appendUploadMedia(response.getId(), segmentIndex, bulk);
         }
-        final boolean hasEasterEggTriggerText = statusUpdate.text.contains(EASTER_EGG_TRIGGER_TEXT);
-        final boolean hasEasterEggRestoreText = statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART1)
-                && statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART2)
-                && statusUpdate.text.contains(EASTER_EGG_RESTORE_TEXT_PART3);
-        boolean mentionedHondaJOJO = false, notReplyToOther = false;
-        final ContentResolver resolver = getContentResolver();
-        resolver.bulkInsert(CachedHashtags.CONTENT_URI,
-                hashTagValues.toArray(new ContentValues[hashTagValues.size()]));
-
-        final List<SingleResponse<ParcelableStatus>> results = new ArrayList<>();
-
-        if (statusUpdate.accounts.length == 0) return Collections.emptyList();
-
-        try {
-            final TwidereApplication app = TwidereApplication.getInstance(this);
-            final String uploaderComponent = mPreferences.getString(KEY_MEDIA_UPLOADER, null);
-            final String shortenerComponent = mPreferences.getString(KEY_STATUS_SHORTENER, null);
-
-            // Try find uploader and shortener, show error if set but not found
-            MediaUploaderInterface uploader = null;
-            StatusShortenerInterface shortener = null;
-            if (!ServicePickerPreference.isNoneValue(uploaderComponent)) {
-                uploader = MediaUploaderInterface.getInstance(app, uploaderComponent);
-                if (uploader == null) {
-                    throw new UploaderNotFoundException(getString(R.string.error_message_media_uploader_not_found));
-                }
-                try {
-                    uploader.checkService(new AbsServiceInterface.CheckServiceAction() {
-                        @Override
-                        public void check(@Nullable Bundle metaData) throws AbsServiceInterface.CheckServiceException {
-                            if (metaData == null) throw new ExtensionVersionMismatchException();
-                            final String extensionVersion = metaData.getString(METADATA_KEY_EXTENSION_VERSION_MEDIA_UPLOADER);
-                            if (!TextUtils.equals(extensionVersion, getString(R.string.media_uploader_service_interface_version))) {
-                                throw new ExtensionVersionMismatchException();
-                            }
-                        }
-                    });
-                } catch (AbsServiceInterface.CheckServiceException e) {
-                    if (e instanceof ExtensionVersionMismatchException) {
-                        throw new UploadException(getString(R.string.uploader_version_incompatible));
-                    }
-                    throw new UploadException(e);
-                }
-            }
-            if (!ServicePickerPreference.isNoneValue(shortenerComponent)) {
-                shortener = StatusShortenerInterface.getInstance(app, shortenerComponent);
-                if (shortener == null) throw new ShortenerNotFoundException(this);
-                try {
-                    shortener.checkService(new AbsServiceInterface.CheckServiceAction() {
-                        @Override
-                        public void check(@Nullable Bundle metaData) throws AbsServiceInterface.CheckServiceException {
-                            if (metaData == null) throw new ExtensionVersionMismatchException();
-                            final String extensionVersion = metaData.getString(METADATA_KEY_EXTENSION_VERSION_STATUS_SHORTENER);
-                            if (!TextUtils.equals(extensionVersion, getString(R.string.status_shortener_service_interface_version))) {
-                                throw new ExtensionVersionMismatchException();
-                            }
-                        }
-                    });
-                } catch (AbsServiceInterface.CheckServiceException e) {
-                    if (e instanceof ExtensionVersionMismatchException) {
-                        throw new ShortenException(getString(R.string.shortener_version_incompatible));
-                    }
-                    throw new ShortenException(e);
-                }
-            }
-
-            final boolean hasMedia = statusUpdate.media != null && statusUpdate.media.length > 0;
-
-            // Uploader handles media scaling, if no uploader present, we will handle them instead.
-            if (uploader == null && statusUpdate.media != null) {
-                for (final ParcelableMediaUpdate media : statusUpdate.media) {
-                    final String path = getImagePathFromUri(this, Uri.parse(media.uri));
-                    final File file = path != null ? new File(path) : null;
-                    if (file != null && file.exists()) {
-                        BitmapUtils.downscaleImageIfNeeded(file, 95);
-                    }
-                }
+        response = upload.finalizeUploadMedia(response.getId());
+        for (ProcessingInfo info = response.getProcessingInfo(); shouldWaitForProcess(info); info = response.getProcessingInfo()) {
+            final long checkAfterSecs = info.getCheckAfterSecs();
+            if (checkAfterSecs <= 0) {
+                break;
             }
             try {
-                if (uploader != null && hasMedia) {
-                    // Wait for uploader service binding
-                    uploader.waitForService();
-                }
-                if (shortener != null) {
-                    // Wait for shortener service binding
-                    shortener.waitForService();
-                }
-                for (final ParcelableAccount account : statusUpdate.accounts) {
-                    final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
-                            account.account_key);
-                    // Get Twitter instance corresponding to account
-                    final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(this,
-                            account.account_key, true, true);
-
-                    // Shouldn't happen
-                    if (twitter == null || credentials == null) {
-                        throw new UpdateStatusException("No account found");
-                    }
-
-                    String statusText = statusUpdate.text;
-
-                    // Use custom uploader to upload media
-                    MediaUploadResult uploadResult = null;
-                    if (uploader != null && hasMedia) {
-                        try {
-                            uploadResult = uploader.upload(statusUpdate,
-                                    UploaderMediaItem.getFromStatusUpdate(this, statusUpdate));
-                        } catch (final Exception e) {
-                            throw new UploadException(getString(R.string.error_message_media_upload_failed));
-                        }
-                        // Shouldn't return null, but handle that case for shitty extensions.
-                        if (uploadResult == null) {
-                            throw new UploadException(getString(R.string.error_message_media_upload_failed));
-                        }
-                        if (uploadResult.error_code != 0)
-                            throw new UploadException(uploadResult.error_message);
-
-                        // Replace status text to uploaded
-                        statusText = getImageUploadStatus(this, uploadResult.media_uris,
-                                statusText);
-                    }
-
-                    final boolean shouldShorten = mValidator.getTweetLength(statusText) >
-                            TwidereValidator.getTextLimit(credentials);
-                    StatusShortenResult shortenedResult = null;
-                    if (shouldShorten && shortener != null) {
-                        try {
-                            shortenedResult = shortener.shorten(statusUpdate, account.account_key,
-                                    statusText);
-                        } catch (final Exception e) {
-                            throw new ShortenException(getString(R.string.error_message_tweet_shorten_failed), e);
-                        }
-                        // Shouldn't return null, but handle that case for shitty extensions.
-                        if (shortenedResult == null)
-                            throw new ShortenException(getString(R.string.error_message_tweet_shorten_failed));
-                        if (shortenedResult.error_code != 0)
-                            throw new ShortenException(shortenedResult.error_message);
-                        if (shortenedResult.shortened == null)
-                            throw new ShortenException(getString(R.string.error_message_tweet_shorten_failed));
-                        statusText = shortenedResult.shortened;
-                    }
-
-                    final StatusUpdate status = new StatusUpdate(statusText);
-                    if (statusUpdate.in_reply_to_status != null) {
-                        status.inReplyToStatusId(statusUpdate.in_reply_to_status.id);
-                    }
-                    if (statusUpdate.repost_status_id != null) {
-                        status.setRepostStatusId(statusUpdate.repost_status_id);
-                    }
-                    if (statusUpdate.location != null) {
-                        status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location));
-                        status.displayCoordinates(statusUpdate.display_coordinates);
-                    }
-                    if (uploader == null && hasMedia) {
-                        if (uploadOnSocialPlatform(resolver, builder, shortener, uploader,
-                                credentials, twitter, statusUpdate, status, statusText,
-                                shouldShorten, shortenedResult, uploadResult, results)) {
-                            continue;
-                        }
-                    }
-                    status.possiblySensitive(statusUpdate.is_possibly_sensitive);
-
-                    try {
-                        final Status resultStatus = twitter.updateStatus(status);
-                        final ParcelableStatus result = ParcelableStatusUtils.fromStatus(resultStatus,
-                                account.account_key, false);
-                        if (!mentionedHondaJOJO) {
-                            final ParcelableUserMention[] mentions = result.mentions;
-                            if (ArrayUtils.isEmpty(mentions)) {
-                                mentionedHondaJOJO = statusUpdate.text.contains("@" + HONDAJOJO_SCREEN_NAME);
-                            } else if (mentions.length == 1 && mentions[0].key.equals(HONDAJOJO_ID)) {
-                                mentionedHondaJOJO = true;
-                            }
-                            Utils.setLastSeen(this, mentions, System.currentTimeMillis());
-                        }
-                        if (!notReplyToOther) {
-                            final String inReplyToUserId = resultStatus.getInReplyToUserId();
-                            if (inReplyToUserId == null || HONDAJOJO_ID.check(inReplyToUserId, null)) {
-                                notReplyToOther = true;
-                            }
-                        }
-                        if (shouldShorten && shortener != null && shortenedResult != null) {
-                            shortener.callback(shortenedResult, result);
-                        }
-                        if (uploader != null && uploadResult != null) {
-                            uploader.callback(uploadResult, result);
-                        }
-                        results.add(SingleResponse.getInstance(result));
-                    } catch (final MicroBlogException e) {
-                        Log.w(LOGTAG, e);
-                        final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
-                        results.add(response);
-                    }
-                }
-            } finally {
-                // Unbind uploader and shortener
-                if (uploader != null) {
-                    uploader.unbindService();
-                }
-                if (shortener != null) {
-                    shortener.unbindService();
-                }
+                Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs));
+            } catch (InterruptedException e) {
+                break;
             }
-        } catch (final UpdateStatusException e) {
-            Log.w(LOGTAG, e);
-            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
-            results.add(response);
+            response = upload.getUploadMediaStatus(response.getId());
         }
-        if (mentionedHondaJOJO) {
-            triggerEasterEgg(notReplyToOther, hasEasterEggTriggerText, hasEasterEggRestoreText);
+        ProcessingInfo info = response.getProcessingInfo();
+        if (info != null && ProcessingInfo.State.FAILED.equals(info.getState())) {
+            final MicroBlogException exception = new MicroBlogException();
+            ErrorInfo errorInfo = info.getError();
+            if (errorInfo != null) {
+                exception.setErrors(new ErrorInfo[]{errorInfo});
+            }
+            throw exception;
         }
-        return results;
+        return response;
     }
 
-    private boolean uploadOnSocialPlatform(ContentResolver resolver, Builder builder,
-                                           StatusShortenerInterface shortener,
-                                           MediaUploaderInterface uploader,
-                                           ParcelableCredentials credentials, MicroBlog twitter,
-                                           ParcelableStatusUpdate statusUpdate,
-                                           StatusUpdate status, String statusText,
-                                           boolean shouldShorten, StatusShortenResult shortenedResult,
-                                           MediaUploadResult uploadResult,
-                                           List<SingleResponse<ParcelableStatus>> results) throws UpdateStatusException {
-        try {
-            if (ParcelableAccount.Type.FANFOU.equals(credentials.account_type)) {
-                if (statusUpdate.media.length > 1) {
-                    throw new UpdateStatusException(getString(R.string.error_too_many_photos_fanfou));
-                }
-                ParcelableMediaUpdate media = statusUpdate.media[0];
-                FileBody body = null;
-                try {
-                    body = getBodyFromMedia(resolver, builder, media, statusUpdate);
-                    final PhotoStatusUpdate update = new PhotoStatusUpdate(body, statusText);
-                    if (statusUpdate.location != null) {
-                        update.setLocation(statusUpdate.location.toString());
-                    }
-                    final Status newStatus = twitter.uploadPhoto(update);
-                    final ParcelableStatus result = ParcelableStatusUtils.fromStatus(newStatus,
-                            credentials.account_key, false);
-                    if (shouldShorten && shortener != null && shortenedResult != null) {
-                        shortener.callback(shortenedResult, result);
-                    }
-                    if (uploader != null && uploadResult != null) {
-                        uploader.callback(uploadResult, result);
-                    }
-                    results.add(SingleResponse.getInstance(result));
-                } finally {
-                    Utils.closeSilently(body);
-                }
+    private boolean shouldWaitForProcess(ProcessingInfo info) {
+        if (info == null) return false;
+        switch (info.getState()) {
+            case ProcessingInfo.State.PENDING:
+            case ProcessingInfo.State.IN_PROGRESS:
                 return true;
-            } else {
-                final TwitterUpload upload = MicroBlogAPIFactory.getTwitterInstance(this, credentials,
-                        true, true, TwitterUpload.class);
-                if (upload == null) {
-                    throw new UpdateStatusException("Twitter instance is null");
-                }
-                final String[] mediaIds = new String[statusUpdate.media.length];
-
-                for (int i = 0, j = mediaIds.length; i < j; i++) {
-                    final ParcelableMediaUpdate media = statusUpdate.media[i];
-                    FileBody body = null;
-                    final MediaUploadResponse uploadResp;
-                    try {
-                        body = getBodyFromMedia(resolver, builder, media, statusUpdate);
-                        uploadResp = upload.uploadMedia(body);
-                        if (!TextUtils.isEmpty(media.alt_text)) {
-                            upload.createMetadata(new NewMediaMetadata(uploadResp.getId(),
-                                    media.alt_text));
-                        }
-                    } finally {
-                        Utils.closeSilently(body);
-                    }
-                    mediaIds[i] = uploadResp.getId();
-                }
-                status.mediaIds(mediaIds);
-            }
-        } catch (final IOException e) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, e);
-            }
-        } catch (final MicroBlogException e) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, e);
-            }
-            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(e);
-            results.add(response);
-            return true;
-        }
-        return false;
-    }
-
-    private FileBody getBodyFromMedia(final ContentResolver resolver, final Builder builder,
-                                      final ParcelableMediaUpdate media,
-                                      final ParcelableStatusUpdate statusUpdate) throws IOException {
-        final Uri mediaUri = Uri.parse(media.uri);
-        final String mediaType = resolver.getType(mediaUri);
-        final InputStream is = resolver.openInputStream(mediaUri);
-        if (is == null) {
-            throw new FileNotFoundException(media.uri);
-        }
-        final long length = is.available();
-        final ContentLengthInputStream cis = new ContentLengthInputStream(is, length);
-        cis.setReadListener(new StatusMediaUploadListener(this, mNotificationManager, builder,
-                statusUpdate));
-        final ContentType contentType;
-        if (TextUtils.isEmpty(mediaType)) {
-            contentType = ContentType.parse("application/octet-stream");
-        } else {
-            contentType = ContentType.parse(mediaType);
-        }
-        return new FileBody(cis, "attachment", length, contentType);
-    }
-
-    private void triggerEasterEgg(boolean notReplyToOther, boolean hasEasterEggTriggerText, boolean hasEasterEggRestoreText) {
-        final PackageManager pm = getPackageManager();
-        final ComponentName main = new ComponentName(this, MainActivity.class);
-        final ComponentName main2 = new ComponentName(this, MainHondaJOJOActivity.class);
-        if (hasEasterEggTriggerText && notReplyToOther) {
-            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
-            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-            showToast(R.string.easter_egg_triggered_message, Toast.LENGTH_SHORT);
-        } else if (hasEasterEggRestoreText) {
-            pm.setComponentEnabledSetting(main, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-            pm.setComponentEnabledSetting(main2, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                    PackageManager.DONT_KILL_APP);
-            showToast(R.string.icon_restored_message, Toast.LENGTH_SHORT);
+            default:
+                return false;
         }
     }
 
@@ -902,25 +575,6 @@ public class BackgroundOperationService extends IntentService implements Constan
         context.startService(intent);
     }
 
-    private static class ToastRunnable implements Runnable {
-        private final Context context;
-        private final int resId;
-        private final int duration;
-
-        public ToastRunnable(final Context context, final int resId, final int duration) {
-            this.context = context;
-            this.resId = resId;
-            this.duration = duration;
-        }
-
-        @Override
-        public void run() {
-            Toast.makeText(context, resId, duration).show();
-
-        }
-
-    }
-
     static class MessageMediaUploadListener implements ReadListener {
         private final Context context;
         private final NotificationManagerWrapper manager;
@@ -949,118 +603,4 @@ public class BackgroundOperationService extends IntentService implements Constan
         }
     }
 
-    static class ShortenerNotFoundException extends UpdateStatusException {
-        private static final long serialVersionUID = -7262474256595304566L;
-
-        public ShortenerNotFoundException(final Context context) {
-            super(context.getString(R.string.error_message_tweet_shortener_not_found));
-        }
-    }
-
-    static class ShortenException extends UpdateStatusException {
-
-        public ShortenException() {
-            super();
-        }
-
-        public ShortenException(String detailMessage, Throwable throwable) {
-            super(detailMessage, throwable);
-        }
-
-        public ShortenException(Throwable throwable) {
-            super(throwable);
-        }
-
-        public ShortenException(final String message) {
-            super(message);
-        }
-    }
-
-    static class StatusMediaUploadListener implements ReadListener {
-        private final Context context;
-        private final NotificationManagerWrapper manager;
-
-        int percent;
-
-        private final Builder builder;
-        private final ParcelableStatusUpdate statusUpdate;
-
-        StatusMediaUploadListener(final Context context, final NotificationManagerWrapper manager,
-                                  final NotificationCompat.Builder builder, final ParcelableStatusUpdate statusUpdate) {
-            this.context = context;
-            this.manager = manager;
-            this.builder = builder;
-            this.statusUpdate = statusUpdate;
-        }
-
-        @Override
-        public void onRead(final long length, final long position) {
-            final int percent = length > 0 ? (int) (position * 100 / length) : 0;
-            if (this.percent != percent) {
-                manager.notify(NOTIFICATION_ID_UPDATE_STATUS,
-                        updateUpdateStatusNotification(context, builder, percent, statusUpdate));
-            }
-            this.percent = percent;
-        }
-    }
-
-    static class UpdateStatusException extends Exception {
-        public UpdateStatusException() {
-            super();
-        }
-
-        public UpdateStatusException(String detailMessage, Throwable throwable) {
-            super(detailMessage, throwable);
-        }
-
-        public UpdateStatusException(Throwable throwable) {
-            super(throwable);
-        }
-
-        public UpdateStatusException(final String message) {
-            super(message);
-        }
-    }
-
-    static class UploaderNotFoundException extends UpdateStatusException {
-
-        public UploaderNotFoundException() {
-            super();
-        }
-
-        public UploaderNotFoundException(String detailMessage, Throwable throwable) {
-            super(detailMessage, throwable);
-        }
-
-        public UploaderNotFoundException(Throwable throwable) {
-            super(throwable);
-        }
-
-        public UploaderNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    static class UploadException extends UpdateStatusException {
-
-        public UploadException() {
-            super();
-        }
-
-        public UploadException(String detailMessage, Throwable throwable) {
-            super(detailMessage, throwable);
-        }
-
-        public UploadException(Throwable throwable) {
-            super(throwable);
-        }
-
-        public UploadException(String message) {
-            super(message);
-        }
-    }
-
-    static class ExtensionVersionMismatchException extends AbsServiceInterface.CheckServiceException {
-
-    }
 }

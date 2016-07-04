@@ -25,12 +25,11 @@ import android.text.TextUtils;
 
 import com.twitter.Validator;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.StatusNetAccountExtra;
 
-public class TwidereValidator implements Constants {
+public class TwidereValidator {
 
     private final Validator mValidator;
 

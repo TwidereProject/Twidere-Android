@@ -26,16 +26,14 @@ public class VariousItemsAdapter extends LoadMoreSupportAdapter<RecyclerView.Vie
     public static final int VIEW_TYPE_USER = 2;
     public static final int VIEW_TYPE_USER_LIST = 3;
 
-    private final boolean mCompact;
     private final LayoutInflater mInflater;
     private final int mCardBackgroundColor;
     private final DummyItemAdapter mDummyAdapter;
 
     private List<?> mData;
 
-    public VariousItemsAdapter(Context context, boolean compact) {
+    public VariousItemsAdapter(Context context) {
         super(context);
-        mCompact = compact;
         mInflater = LayoutInflater.from(context);
         mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                 ThemeUtils.getThemeBackgroundOption(context),
@@ -53,7 +51,7 @@ public class VariousItemsAdapter extends LoadMoreSupportAdapter<RecyclerView.Vie
         switch (viewType) {
             case VIEW_TYPE_STATUS: {
                 return ListParcelableStatusesAdapter.createStatusViewHolder(mDummyAdapter,
-                        mInflater, parent, mCompact, mCardBackgroundColor);
+                        mInflater, parent);
             }
             case VIEW_TYPE_USER: {
                 return ParcelableUsersAdapter.createUserViewHolder(mDummyAdapter, mInflater, parent,

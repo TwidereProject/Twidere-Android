@@ -2,7 +2,6 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
  */
 public class ListParcelableStatusesAdapter extends ParcelableStatusesAdapter {
 
-    public ListParcelableStatusesAdapter(Context context, boolean compact) {
-        super(context, compact);
+    public ListParcelableStatusesAdapter(Context context) {
+        super(context);
     }
 
     @Override
@@ -28,24 +27,13 @@ public class ListParcelableStatusesAdapter extends ParcelableStatusesAdapter {
 
     @NonNull
     @Override
-    protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact) {
-        return createStatusViewHolder(this, getInflater(), parent, compact,
-                getCardBackgroundColor());
+    protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent) {
+        return createStatusViewHolder(this, getInflater(), parent);
     }
 
     public static StatusViewHolder createStatusViewHolder(IStatusesAdapter<?> adapter,
-                                                          LayoutInflater inflater, ViewGroup parent,
-                                                          boolean compact, int cardBackgroundColor) {
-        final View view;
-        if (compact) {
-            view = inflater.inflate(R.layout.card_item_status_compact, parent, false);
-            final View itemContent = view.findViewById(R.id.item_content);
-            itemContent.setBackgroundColor(cardBackgroundColor);
-        } else {
-            view = inflater.inflate(R.layout.card_item_status, parent, false);
-            final CardView cardView = (CardView) view.findViewById(R.id.card);
-            cardView.setCardBackgroundColor(cardBackgroundColor);
-        }
+                                                          LayoutInflater inflater, ViewGroup parent) {
+        final View view = inflater.inflate(R.layout.card_item_status_compact, parent, false);
         final StatusViewHolder holder = new StatusViewHolder(adapter, view);
         holder.setOnClickListeners();
         holder.setupViewOptions();

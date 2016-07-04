@@ -22,9 +22,10 @@ package org.mariotaku.twidere.text;
 import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 
-import org.mariotaku.twidere.Constants;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE;
 
-public class TwidereHighLightStyle extends CharacterStyle implements Constants {
+public class TwidereHighLightStyle extends CharacterStyle {
 
 	private final int option;
 

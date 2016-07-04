@@ -43,7 +43,7 @@ public class RetweetsOfMeLoader extends MicroBlogAPIStatusesLoader {
                               final String sinceId, final String maxId,
                               final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                               final int tabPosition, boolean fromUser, boolean loadingMore) {
-        super(context, accountKey, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser,
+        super(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs, tabPosition, fromUser,
                 loadingMore);
     }
 

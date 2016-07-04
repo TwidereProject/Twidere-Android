@@ -72,6 +72,7 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.Twidere.NoActionBar"
         tools:ignore="UnusedAttribute">

@@ -16,6 +16,15 @@ import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.TwitterUserStream;
+import org.mariotaku.microblog.library.twitter.UserStreamCallback;
+import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.microblog.library.twitter.model.Warning;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.Endpoint;
@@ -26,15 +35,6 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.SettingsActivity;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterUserStream;
-import org.mariotaku.microblog.library.twitter.UserStreamCallback;
-import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
-import org.mariotaku.microblog.library.twitter.model.DirectMessage;
-import org.mariotaku.microblog.library.twitter.model.Status;
-import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.microblog.library.twitter.model.UserList;
-import org.mariotaku.microblog.library.twitter.model.Warning;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -47,8 +47,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Mentions;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.TwidereArrayUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -308,7 +308,7 @@ public class StreamingService extends Service implements Constants {
         @Override
         public void onFavorite(final User source, final User target, final Status targetStatus) {
             final String message = String.format("%s favorited %s's tweet: %s", source.getScreenName(),
-                    target.getScreenName(), targetStatus.getText());
+                    target.getScreenName(), targetStatus.getExtendedText());
             Log.d(LOGTAG, message);
         }
 
@@ -353,8 +353,8 @@ public class StreamingService extends Service implements Constants {
             resolver.delete(Mentions.CONTENT_URI, where, whereArgs);
             resolver.insert(Statuses.CONTENT_URI, values);
             final Status rt = status.getRetweetedStatus();
-            if (rt != null && rt.getText().contains("@" + account.screen_name) || rt == null
-                    && status.getText().contains("@" + account.screen_name)) {
+            if (rt != null && rt.getExtendedText().contains("@" + account.screen_name) || rt == null
+                    && status.getExtendedText().contains("@" + account.screen_name)) {
                 resolver.insert(Mentions.CONTENT_URI, values);
             }
         }
@@ -374,7 +374,7 @@ public class StreamingService extends Service implements Constants {
         @Override
         public void onUnfavorite(final User source, final User target, final Status targetStatus) {
             final String message = String.format("%s unfavorited %s's tweet: %s", source.getScreenName(),
-                    target.getScreenName(), targetStatus.getText());
+                    target.getScreenName(), targetStatus.getExtendedText());
             Log.d(LOGTAG, message);
         }
 

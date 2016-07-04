@@ -19,6 +19,7 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
@@ -33,15 +34,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 
 @SuppressWarnings("RedundantThrows")
-@Queries({@KeyValue(key = "include_my_retweet", valueKey = "include_my_retweet"),
-        @KeyValue(key = "include_rts", valueKey = "include_entities"),
-        @KeyValue(key = "include_entities", valueKey = "include_entities"),
-        @KeyValue(key = "include_cards", valueKey = "include_cards"),
-        @KeyValue(key = "cards_platform", valueKey = "cards_platform"),
-        @KeyValue(key = "include_reply_count", valueKey = "include_reply_count"),
-        @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
-        @KeyValue(key = "model_version", valueKey = "model_version"),
-        @KeyValue(key = "skip_aggregation", valueKey = "skip_aggregation")})
+@Queries(template = StatusAnnotationTemplate.class)
 public interface PrivateActivityResources extends PrivateResources {
 
     @GET("/activity/about_me.json")

@@ -33,13 +33,15 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Toast;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.nyan.NyanDaydreamService;
 import org.mariotaku.twidere.nyan.NyanSurfaceHelper;
 import org.mariotaku.twidere.nyan.NyanWallpaperService;
 
-public class NyanActivity extends Activity implements Constants, OnLongClickListener, OnSharedPreferenceChangeListener {
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LIVE_WALLPAPER_SCALE;
+
+public class NyanActivity extends Activity implements OnLongClickListener, OnSharedPreferenceChangeListener {
 
     private SurfaceView mSurfaceView;
     private SharedPreferences mPreferences;

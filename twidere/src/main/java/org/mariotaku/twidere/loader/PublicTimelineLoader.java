@@ -42,7 +42,7 @@ public class PublicTimelineLoader extends MicroBlogAPIStatusesLoader {
                                 final String sinceId, final String maxId,
                                 final List<ParcelableStatus> data, final String[] savedStatusesArgs,
                                 final int tabPosition, boolean fromUser, boolean loadingMore) {
-        super(context, accountId, sinceId, maxId, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
+        super(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs, tabPosition, fromUser, loadingMore);
     }
 
     @NonNull

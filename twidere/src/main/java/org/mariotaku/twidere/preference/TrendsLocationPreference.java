@@ -39,12 +39,11 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Location;
+import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -54,7 +53,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-public class TrendsLocationPreference extends Preference implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+
+public class TrendsLocationPreference extends Preference {
 
     private static final long EMPTY = 0;
     private static final long WORLDWIDE = 1;

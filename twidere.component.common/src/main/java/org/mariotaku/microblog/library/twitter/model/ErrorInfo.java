@@ -37,11 +37,20 @@ public class ErrorInfo {
 
     @JsonField(name = "code")
     int code;
+    /**
+     * Field for https://dev.twitter.com/rest/reference/get/media/upload-status
+     */
+    @JsonField(name = "name")
+    String name;
     @JsonField(name = "message")
     String message;
 
     public int getCode() {
         return code;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getMessage() {

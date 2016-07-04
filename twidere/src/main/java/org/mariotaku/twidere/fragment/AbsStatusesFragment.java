@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +48,7 @@ import org.mariotaku.abstask.library.TaskStarter;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter;
+import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration;
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.constant.IntentConstants;
@@ -318,7 +320,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (loader instanceof IExtendedLoader) {
             ((IExtendedLoader) loader).setFromUser(false);
         }
-        onLoadingFinished();
+        onStatusesLoaded(loader, data);
     }
 
     @Override
@@ -365,6 +367,38 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
         if (status == null) return;
         handleStatusActionClick(context, getFragmentManager(), mTwitterWrapper,
                 (StatusViewHolder) holder, status, id);
+    }
+
+
+    @Nullable
+    @Override
+    protected RecyclerView.ItemDecoration createItemDecoration(Context context, final RecyclerView recyclerView, final LinearLayoutManager layoutManager) {
+        final ParcelableStatusesAdapter adapter = getAdapter();
+        final DividerItemDecoration itemDecoration = new DividerItemDecoration(context,
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation());
+        final Resources res = context.getResources();
+        if (adapter.isProfileImageEnabled()) {
+            final int decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2
+                    + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image);
+            itemDecoration.setPadding(new DividerItemDecoration.Padding() {
+                @Override
+                public boolean get(int position, Rect rect) {
+                    final int itemViewType = adapter.getItemViewType(position);
+                    boolean nextItemIsStatus = false;
+                    if (position < adapter.getItemCount() - 1) {
+                        nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS;
+                    }
+                    if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                        rect.left = decorPaddingLeft;
+                    } else {
+                        rect.left = 0;
+                    }
+                    return true;
+                }
+            });
+        }
+        itemDecoration.setDecorationEndOffset(1);
+        return itemDecoration;
     }
 
     public static void handleStatusActionClick(Context context, FragmentManager fm,
@@ -556,7 +590,7 @@ public abstract class AbsStatusesFragment extends AbsContentListRecyclerViewFrag
     protected abstract Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context, final Bundle args,
                                                                              final boolean fromUser);
 
-    protected abstract void onLoadingFinished();
+    protected abstract void onStatusesLoaded(Loader<List<ParcelableStatus>> loader, List<ParcelableStatus> data);
 
     protected final void saveReadPosition(int position) {
         final String readPositionTag = getReadPositionTagWithAccounts();

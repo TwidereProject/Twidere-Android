@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="status_shortener_service_interface_version">3</string>
-    <string name="media_uploader_service_interface_version">2</string>
+    <string name="media_uploader_service_interface_version">3</string>
 </resources>

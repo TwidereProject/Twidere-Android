@@ -11,14 +11,14 @@ import android.util.Log;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.RefreshTaskParam;
@@ -30,9 +30,9 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ErrorInfoStore;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -47,7 +47,8 @@ import javax.inject.Inject;
 /**
  * Created by mariotaku on 16/1/4.
  */
-public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, Object, Object> implements Constants {
+public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, Object, Object>
+        implements Constants {
 
     protected final Context context;
     @Inject
@@ -83,7 +84,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                     accountKey);
             if (credentials == null) continue;
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true,
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
                     true);
             if (twitter == null) continue;
             final Paging paging = new Paging();
@@ -223,7 +224,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             throws MicroBlogException;
 
     @Override
-    public void afterExecute(Object result) {
+    public void afterExecute(Object handler, Object result) {
         context.getContentResolver().notifyChange(getContentUri(), null);
         bus.post(new GetActivitiesTaskEvent(getContentUri(), false, null));
     }

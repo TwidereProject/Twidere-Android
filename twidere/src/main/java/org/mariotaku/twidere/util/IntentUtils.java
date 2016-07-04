@@ -216,6 +216,7 @@ public class IntentUtils implements Constants {
 
         final ComponentName componentName = intent.resolveActivity(context.getPackageManager());
         if (componentName == null || componentName.getClassName() == null) return null;
+        if (TextUtils.equals("android", componentName.getPackageName())) return null;
         return componentName.getPackageName();
     }
 

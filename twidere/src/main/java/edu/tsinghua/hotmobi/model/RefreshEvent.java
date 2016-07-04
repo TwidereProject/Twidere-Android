@@ -46,7 +46,7 @@ public class RefreshEvent extends BaseEvent implements Parcelable {
     @TimelineType
     String timelineType;
 
-    public static RefreshEvent create(final Context context, String[] ids, @TimelineType String timelineType) {
+    public static RefreshEvent create(@NonNull final Context context, String[] ids, @TimelineType String timelineType) {
         final RefreshEvent event = new RefreshEvent();
         event.markStart(context);
         event.setIds(ids);

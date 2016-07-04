@@ -75,13 +75,11 @@ import dagger.Provides;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import okhttp3.ConnectionPool;
 
-import static org.mariotaku.twidere.util.Utils.getInternalCacheDir;
-
 /**
  * Created by mariotaku on 15/10/5.
  */
 @Module
-public class ApplicationModule implements Constants {
+public class ApplicationModule {
 
     private static ApplicationModule sApplicationModule;
 
@@ -258,9 +256,9 @@ public class ApplicationModule implements Constants {
 
     private DiskCache createDiskCache(final String dirName, SharedPreferencesWrapper preferences) {
         final File cacheDir = Utils.getExternalCacheDir(application, dirName);
-        final File fallbackCacheDir = getInternalCacheDir(application, dirName);
+        final File fallbackCacheDir = Utils.getInternalCacheDir(application, dirName);
         final URLFileNameGenerator fileNameGenerator = new URLFileNameGenerator();
-        final int cacheSize = TwidereMathUtils.clamp(preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
+        final int cacheSize = TwidereMathUtils.clamp(preferences.getInt(SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT, 300), 100, 500);
         try {
             final int cacheMaxSizeBytes = cacheSize * 1024 * 1024;
             if (cacheDir != null)

@@ -206,19 +206,27 @@
         android:id="@+id/quote_indicator"
         android:layout_width="@dimen/element_spacing_small"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/quote_original_link"
-        android:layout_alignTop="@+id/quoted_name"
+        android:layout_alignBottom="@+id/quote_indicator_anchor_bottom"
+        android:layout_alignTop="@+id/quote_indicator_anchor_top"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:background="?quoteIndicatorBackgroundColor"
         android:visibility="gone"
         tools:visibility="visible"/>
 
+    <android.support.v4.widget.Space
+        android:id="@+id/quote_indicator_anchor_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/translate_container"
+        android:layout_marginTop="@dimen/element_spacing_normal"
+        android:visibility="visible"/>
+
     <org.mariotaku.twidere.view.NameView
         android:id="@+id/quoted_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/translate_container"
+        android:layout_below="@+id/quote_indicator_anchor_top"
         android:layout_toEndOf="@+id/quote_indicator"
         android:layout_toRightOf="@+id/quote_indicator"
         android:background="?selectableItemBackground"
@@ -347,11 +355,18 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary"/>
 
+    <android.support.v4.widget.Space
+        android:id="@+id/quote_indicator_anchor_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/quote_original_link"
+        android:visibility="visible"/>
+
     <LinearLayout
         android:id="@+id/counts_users_height_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/quote_original_link"
+        android:layout_below="@+id/quote_indicator_anchor_bottom"
         android:orientation="horizontal"
         android:visibility="invisible"
         tools:visibility="visible">

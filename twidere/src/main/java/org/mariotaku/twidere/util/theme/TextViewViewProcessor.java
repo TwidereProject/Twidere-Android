@@ -10,12 +10,12 @@ import android.widget.TextView;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.viewprocessors.ViewProcessor;
 
-import org.mariotaku.twidere.Constants;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_DARK;
 
 /**
  * Created by mariotaku on 16/3/30.
  */
-public class TextViewViewProcessor implements ViewProcessor<TextView, Void>, Constants {
+public class TextViewViewProcessor implements ViewProcessor<TextView, Void> {
     @Override
     public void process(@NonNull final Context context, @Nullable final String key,
                         @Nullable final TextView target, @Nullable Void extra) {

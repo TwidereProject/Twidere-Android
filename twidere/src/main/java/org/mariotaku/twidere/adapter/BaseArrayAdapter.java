@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
@@ -38,7 +39,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements IBaseAdapter, OnSharedPreferenceChangeListener {
+public class BaseArrayAdapter<T> extends ArrayAdapter<T> implements Constants, IBaseAdapter,
+        OnSharedPreferenceChangeListener {
 
     private final TwidereLinkify mLinkify;
     @Inject

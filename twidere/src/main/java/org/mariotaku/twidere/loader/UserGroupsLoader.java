@@ -21,9 +21,9 @@ package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 
-import org.mariotaku.microblog.library.statusnet.model.Group;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.statusnet.model.Group;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.UserKey;

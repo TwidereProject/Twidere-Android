@@ -7,11 +7,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.R;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
@@ -20,6 +20,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.Utils;
+
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST;
 
 /**
  * Created by mariotaku on 16/3/11.

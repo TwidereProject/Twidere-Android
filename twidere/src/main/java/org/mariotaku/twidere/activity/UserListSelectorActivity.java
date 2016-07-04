@@ -36,10 +36,6 @@ import android.widget.ListView;
 
 import com.squareup.otto.Subscribe;
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter;
-import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
-import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
@@ -47,6 +43,10 @@ import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter;
+import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter;
+import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter;
 import org.mariotaku.twidere.fragment.CreateUserListDialogFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -57,8 +57,8 @@ import org.mariotaku.twidere.model.message.UserListCreatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.ParseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -299,7 +299,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
@@ -363,7 +363,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
 
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(mActivity, mAccountKey, false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, mAccountKey, false);
             if (twitter == null) return SingleResponse.getInstance();
             try {
                 final Paging paging = new Paging();

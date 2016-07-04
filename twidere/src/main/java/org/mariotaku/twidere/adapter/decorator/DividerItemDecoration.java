@@ -38,14 +38,14 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
-    private Drawable mDivider;
+    private final Rect mPaddingRect = new Rect();
+    private final Drawable mDivider;
 
     private int mOrientation;
-    private Rect mPadding;
+    private Padding mPadding;
     private int mDecorationStart = -1, mDecorationEnd = -1, mDecorationEndOffset;
 
     public DividerItemDecoration(Context context, int orientation) {
-        mPadding = new Rect();
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
@@ -83,8 +83,18 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void setPadding(int left, int top, int right, int bottom) {
-        mPadding.set(left, top, right, bottom);
+    public void setPadding(final int left, final int top, final int right, final int bottom) {
+        mPadding = new Padding() {
+            @Override
+            public boolean get(int position, Rect rect) {
+                rect.set(left, top, right, bottom);
+                return true;
+            }
+        };
+    }
+
+    public void setPadding(Padding padding) {
+        mPadding = padding;
     }
 
     public void drawVertical(Canvas c, RecyclerView parent) {
@@ -104,8 +114,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final int top = child.getBottom() + params.bottomMargin +
                     Math.round(ViewCompat.getTranslationY(child));
             final int bottom = top + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left + mPadding.left, top + mPadding.top, right - mPadding.right,
-                    bottom - mPadding.bottom);
+            if (mPadding != null && mPadding.get(childPos, mPaddingRect)) {
+                mDivider.setBounds(left + mPaddingRect.left, top + mPaddingRect.top, right - mPaddingRect.right,
+                        bottom - mPaddingRect.bottom);
+            } else {
+                mDivider.setBounds(left, top, right, bottom);
+            }
             mDivider.draw(c);
         }
     }
@@ -131,8 +145,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
             final int left = child.getRight() + params.rightMargin +
                     Math.round(ViewCompat.getTranslationX(child));
             final int right = left + mDivider.getIntrinsicHeight();
-            mDivider.setBounds(left + mPadding.left, top + mPadding.top, right - mPadding.right,
-                    bottom - mPadding.bottom);
+
+            mDivider.setBounds(left + mPaddingRect.left, top + mPaddingRect.top, right - mPaddingRect.right,
+                    bottom - mPaddingRect.bottom);
             mDivider.draw(c);
         }
     }
@@ -165,5 +180,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private int getDecorationStart() {
         return mDecorationStart;
+    }
+
+    public interface Padding {
+        boolean get(int position, Rect rect);
     }
 }

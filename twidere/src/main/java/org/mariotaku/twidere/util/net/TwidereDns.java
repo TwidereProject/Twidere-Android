@@ -55,7 +55,7 @@ import javax.inject.Singleton;
 import okhttp3.Dns;
 
 @Singleton
-public class TwidereDns implements Constants, Dns {
+public class TwidereDns implements Dns, Constants {
 
     private static final String RESOLVER_LOGTAG = "TwidereDns";
 

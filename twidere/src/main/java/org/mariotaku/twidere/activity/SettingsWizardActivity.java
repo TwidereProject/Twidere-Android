@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceScreen;
@@ -46,14 +47,12 @@ import android.view.ViewGroup;
 
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.util.ATEUtil;
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
+import org.mariotaku.twidere.fragment.BasePreferenceFragment;
 import org.mariotaku.twidere.fragment.BaseSupportFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.HomeTimelineFragment;
@@ -79,7 +78,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SettingsWizardActivity extends BaseActivity implements Constants {
+public class SettingsWizardActivity extends BaseActivity {
 
     public static final String WIZARD_PREFERENCE_KEY_NEXT_PAGE = "next_page";
     public static final String WIZARD_PREFERENCE_KEY_USE_DEFAULTS = "use_defaults";
@@ -484,7 +483,7 @@ public class SettingsWizardActivity extends BaseActivity implements Constants {
             @NonNull
             @Override
             public Dialog onCreateDialog(final Bundle savedInstanceState) {
-                final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getActivity());
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(R.string.wizard_page_tabs_unchanged_message);
                 builder.setPositiveButton(android.R.string.ok, this);
                 return builder.create();

@@ -37,8 +37,8 @@ import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
-import org.mariotaku.twidere.view.IconActionView;
 import org.mariotaku.twidere.view.BadgeView;
+import org.mariotaku.twidere.view.IconActionView;
 import org.mariotaku.twidere.view.ShortTimeView;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
@@ -61,7 +61,7 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
 
     private IActivitiesAdapter.ActivityEventListener mActivityEventListener;
 
-    public ActivityTitleSummaryViewHolder(ParcelableActivitiesAdapter adapter, View itemView, boolean isCompact) {
+    public ActivityTitleSummaryViewHolder(ParcelableActivitiesAdapter adapter, View itemView) {
         super(itemView);
         this.adapter = adapter;
 
@@ -81,13 +81,11 @@ public class ActivityTitleSummaryViewHolder extends ViewHolder implements View.O
         profileImageViews[4] = (ImageView) itemView.findViewById(R.id.activity_profile_image_4);
         profileImageMoreNumber = (BadgeView) itemView.findViewById(R.id.activity_profile_image_more_number);
 
-        if (isCompact) {
-            final Resources resources = adapter.getContext().getResources();
-            final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
-            final int spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
-            lp.leftMargin = spacing;
-            MarginLayoutParamsCompat.setMarginStart(lp, spacing);
-        }
+        final Resources resources = adapter.getContext().getResources();
+        final ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) titleView.getLayoutParams();
+        final int spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small);
+        lp.leftMargin = spacing;
+        MarginLayoutParamsCompat.setMarginStart(lp, spacing);
         timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime());
     }
 

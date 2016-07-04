@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.squareup.otto.Bus;
 
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
@@ -19,8 +18,8 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -30,7 +29,7 @@ import javax.inject.Inject;
  * Created by mariotaku on 16/3/11.
  */
 public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriendshipOperationTask.Arguments,
-        SingleResponse<ParcelableUser>, Object> implements Constants {
+        SingleResponse<ParcelableUser>, Object> {
 
     protected final Context context;
     @FriendshipTaskEvent.Action
@@ -62,7 +61,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     }
 
     @Override
-    protected final void afterExecute(SingleResponse<ParcelableUser> result) {
+    protected final void afterExecute(Object callback, SingleResponse<ParcelableUser> result) {
         final Arguments params = getParams();
         twitter.removeUpdatingRelationshipId(params.accountKey, params.userKey);
         final FriendshipTaskEvent event = new FriendshipTaskEvent(action, params.accountKey,
@@ -84,7 +83,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                 args.accountKey);
         if (credentials == null) return SingleResponse.getInstance();
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, false, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, false, false);
         if (twitter == null) return SingleResponse.getInstance();
         try {
             final User user = perform(twitter, credentials, args);

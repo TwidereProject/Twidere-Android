@@ -27,12 +27,11 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
-
-import com.afollestad.materialdialogs.AlertDialogWrapper;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
@@ -91,7 +90,7 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
                 throw new IllegalArgumentException();
             mValues = new boolean[length];
             mPreferences = preference.getDefaultSharedPreferences();
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(getContext());
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             for (int i = 0; i < length; i++) {
                 mValues[i] = mPreferences.getBoolean(mKeys[i], mDefaultValues[i]);
             }

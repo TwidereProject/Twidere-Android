@@ -9,7 +9,7 @@
 
 
     <dimen name="button_size_content_card">42dp</dimen>
-    <dimen name="button_size_content_card_compact">36dp</dimen>
+    <dimen name="button_size_content_card_action">36dp</dimen>
     <dimen name="element_spacing_xsmall">2dp</dimen>
     <dimen name="element_spacing_small">4dp</dimen>
     <dimen name="element_spacing_msmall">6dp</dimen>

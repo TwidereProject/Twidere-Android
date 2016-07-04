@@ -27,7 +27,6 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
@@ -37,7 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-public class TwidereImageDownloader extends BaseImageDownloader implements Constants {
+public class TwidereImageDownloader extends BaseImageDownloader {
 
     private final MediaDownloader mMediaDownloader;
     private final String mTwitterProfileImageSize;

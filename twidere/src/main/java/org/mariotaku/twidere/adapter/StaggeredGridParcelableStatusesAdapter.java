@@ -46,8 +46,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
  */
 public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAdapter {
 
-    public StaggeredGridParcelableStatusesAdapter(Context context, boolean compact) {
-        super(context, compact);
+    public StaggeredGridParcelableStatusesAdapter(Context context) {
+        super(context);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
 
     @NonNull
     @Override
-    protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent, boolean compact) {
+    protected IStatusViewHolder onCreateStatusViewHolder(ViewGroup parent) {
         final View view = getInflater().inflate(R.layout.adapter_item_media_status, parent, false);
         final MediaStatusViewHolder holder = new MediaStatusViewHolder(this, view);
         holder.setOnClickListeners();

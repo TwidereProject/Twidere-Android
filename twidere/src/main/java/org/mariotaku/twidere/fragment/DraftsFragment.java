@@ -60,7 +60,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.RawItemArray;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DraftsAdapter;
 import org.mariotaku.twidere.model.Draft;
@@ -81,7 +80,7 @@ import java.util.List;
 
 import static org.mariotaku.twidere.util.Utils.getDefaultTextSize;
 
-public class DraftsFragment extends BaseSupportFragment implements Constants, LoaderCallbacks<Cursor>,
+public class DraftsFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         OnItemClickListener, MultiChoiceModeListener {
 
     private ContentResolver mResolver;
@@ -291,10 +290,10 @@ public class DraftsFragment extends BaseSupportFragment implements Constants, Lo
                     if (item.action_extras instanceof SendDirectMessageActionExtra) {
                         recipientId = ((SendDirectMessageActionExtra) item.action_extras).getRecipientId();
                     }
-                    if (ArrayUtils.isEmpty(item.account_ids) || recipientId == null) {
+                    if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
                         continue;
                     }
-                    final UserKey accountId = item.account_ids[0];
+                    final UserKey accountId = item.account_keys[0];
                     final String imageUri = item.media != null && item.media.length > 0 ? item.media[0].uri : null;
                     twitter.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri);
                     break;

@@ -61,13 +61,13 @@ public abstract class ParcelableUserListsFragment extends AbsContentListRecycler
 
     @NonNull
     @Override
-    protected final ParcelableUserListsAdapter onCreateAdapter(Context context, boolean compact) {
+    protected final ParcelableUserListsAdapter onCreateAdapter(Context context) {
         return new ParcelableUserListsAdapter(context);
     }
 
     @Override
-    protected void setupRecyclerView(Context context, boolean compact) {
-        super.setupRecyclerView(context, true);
+    protected void setupRecyclerView(Context context, RecyclerView recyclerView) {
+        super.setupRecyclerView(context, recyclerView);
     }
 
     @Nullable

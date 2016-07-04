@@ -19,8 +19,6 @@
 
 package org.mariotaku.twidere.view.iface;
 
-import android.graphics.Rect;
-
 /**
  * Created by mariotaku on 15/4/27.
  */

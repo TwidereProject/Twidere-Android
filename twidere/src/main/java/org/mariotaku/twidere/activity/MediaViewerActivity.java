@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -72,7 +73,6 @@ import org.mariotaku.mediaviewer.library.IMediaViewerActivity;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
 import org.mariotaku.mediaviewer.library.MediaViewerFragment;
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
@@ -106,7 +106,7 @@ import edu.tsinghua.hotmobi.model.MediaDownloadEvent;
 import pl.droidsonroids.gif.GifTextureView;
 import pl.droidsonroids.gif.InputSource;
 
-public final class MediaViewerActivity extends BaseActivity implements Constants, IExtendedActivity,
+public final class MediaViewerActivity extends BaseActivity implements IExtendedActivity,
         ATEToolbarCustomizer, IMediaViewerActivity {
 
     private static final int REQUEST_SHARE_MEDIA = 201;
@@ -587,8 +587,9 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         @Override
         public void setUserVisibleHint(boolean isVisibleToUser) {
             super.setUserVisibleHint(isVisibleToUser);
-            if (isVisibleToUser) {
-                getActivity().supportInvalidateOptionsMenu();
+            final FragmentActivity activity = getActivity();
+            if (isVisibleToUser && activity != null) {
+                activity.supportInvalidateOptionsMenu();
             }
         }
 
@@ -1028,7 +1029,10 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         public void setUserVisibleHint(boolean isVisibleToUser) {
             super.setUserVisibleHint(isVisibleToUser);
             if (isVisibleToUser) {
-                getActivity().supportInvalidateOptionsMenu();
+                final FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.supportInvalidateOptionsMenu();
+                }
             } else if (mVideoView != null && mVideoView.isPlaying()) {
                 mVideoView.pause();
                 updatePlayerState();
@@ -1044,6 +1048,12 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
             if (handler == null) {
                 handler = new Handler(getActivity().getMainLooper());
             }
+
+            AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+
+            // Play audio by default if ringer mode on
+            mPlayAudio = am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+
             mVideoProgressRunnable = new VideoPlayProgressRunnable(handler, mVideoViewProgress,
                     mDurationLabel, mPositionLabel, mVideoView);
 
@@ -1282,7 +1292,10 @@ public final class MediaViewerActivity extends BaseActivity implements Constants
         public void setUserVisibleHint(boolean isVisibleToUser) {
             super.setUserVisibleHint(isVisibleToUser);
             if (isVisibleToUser) {
-                getActivity().supportInvalidateOptionsMenu();
+                final FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.supportInvalidateOptionsMenu();
+                }
             }
         }
     }

@@ -27,12 +27,10 @@ android {
     defaultConfig {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 196
-        versionName "3.1.7"
+        targetSdkVersion 24
+        versionCode 198
+        versionName "3.1.9"
         multiDexEnabled true
-
-        generatedDensities = []
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
@@ -96,18 +94,14 @@ dependencies {
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
     }
-    compile('com.github.mariotaku.material-dialogs:commons:bf2f2c5c57@aar') {
-        transitive = true
-    }
 
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
 
     // START Non-FOSS component
-    googleCompile 'com.google.android.gms:play-services-maps:8.4.0'
-    googleCompile 'com.google.android.gms:play-services-auth:8.4.0'
-    googleCompile 'com.google.android.gms:play-services-measurement:8.4.0'
+    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
+    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
@@ -123,17 +117,17 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support:support-annotations:24.0.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v13:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:preference-v7:23.4.0'
-    compile 'com.android.support:preference-v14:23.4.0'
+    compile 'com.android.support:support-v13:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.android.support:preference-v7:24.0.0'
+    compile 'com.android.support:preference-v14:24.0.0'
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
@@ -143,7 +137,6 @@ dependencies {
     compile 'com.commonsware.cwac:layouts:0.4.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'
-    compile 'com.github.johnpersano:supertoasts:1.3.4.1@aar'
     compile 'com.github.mariotaku:MessageBubbleView:1.2'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
@@ -157,7 +150,8 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile 'com.github.mariotaku:PickNCrop:0.9.4'
-    compile 'com.github.mariotaku.RestFu:okhttp3:0.9.27'
+    compile 'com.github.mariotaku.RestFu:library:0.9.29'
+    compile 'com.github.mariotaku.RestFu:okhttp3:0.9.29'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.1'
@@ -166,9 +160,10 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.9'
-    compile 'com.github.mariotaku:MultiValueSwitch:0.9.4'
-    compile 'com.github.mariotaku:AbstractTask:0.9.1'
-    compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.4'
+    compile 'com.github.mariotaku:MultiValueSwitch:0.9.6'
+    compile 'com.github.mariotaku:AbstractTask:0.9.2'
+    compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.8'
+    compile 'com.github.mariotaku.CommonsLibrary:io:0.9.8'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {

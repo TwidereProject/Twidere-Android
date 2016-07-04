@@ -28,9 +28,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import org.mariotaku.restfu.http.ContentType;
-import org.mariotaku.restfu.http.mime.FileBody;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
@@ -38,6 +35,9 @@ import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.restfu.http.ContentType;
+import org.mariotaku.restfu.http.mime.FileBody;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SingleResponse;
@@ -71,7 +71,7 @@ public class TwitterWrapper implements Constants {
 
     public static SingleResponse<Boolean> deleteProfileBannerImage(final Context context,
                                                                    final UserKey accountKey) {
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false);
         if (twitter == null) return new SingleResponse<>(false, null);
         try {
             twitter.removeProfileBannerImage();

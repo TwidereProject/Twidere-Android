@@ -57,27 +57,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.internal.MDButton;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.restfu.http.Authorization;
 import org.mariotaku.restfu.http.Endpoint;
+import org.mariotaku.restfu.oauth.OAuthAuthorization;
+import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
-import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth;
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
-import org.mariotaku.microblog.library.twitter.model.Paging;
-import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.fragment.BaseDialogFragment;
 import org.mariotaku.twidere.fragment.ProgressDialogFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -93,6 +90,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
+import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticationException;
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.AuthenticityTokenException;
@@ -101,7 +99,6 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.LoginVerificationEx
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.WrongUserPassException;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.TwitterContentUtils;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
@@ -741,7 +738,17 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
             final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
                     TwitterOAuth.class);
             final OAuthToken accessToken = oauth.getAccessToken(username, password);
-            final String userId = accessToken.getUserId();
+            String userId = accessToken.getUserId();
+            if (userId == null) {
+                // Trying to fix up userId if accessToken doesn't contain one.
+                auth = new OAuthAuthorization(consumerKey.getOauthToken(),
+                        consumerKey.getOauthTokenSecret(), accessToken);
+                endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl,
+                        noVersionSuffix);
+                MicroBlog microBlog = MicroBlogAPIFactory.getInstance(activity, endpoint, auth,
+                        MicroBlog.class);
+                userId = microBlog.verifyCredentials().getId();
+            }
             if (userId == null) return new SignInResponse(false, false, null);
             return getOAuthSignInResponse(activity, accessToken, userId,
                     AuthType.XAUTH);
@@ -1142,28 +1149,32 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
-            builder.positiveText(R.string.sign_in);
-            builder.negativeText(android.R.string.cancel);
-            builder.customView(R.layout.dialog_password_sign_in, true);
-            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setView(R.layout.dialog_password_sign_in);
+            builder.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    EditText editUsername = (EditText) dialog.findViewById(R.id.username);
-                    EditText editPassword = (EditText) dialog.findViewById(R.id.password);
+                public void onClick(DialogInterface dialog, int which) {
+                    AlertDialog alertDialog = (AlertDialog) dialog;
+                    EditText editUsername = (EditText) alertDialog.findViewById(R.id.username);
+                    EditText editPassword = (EditText) alertDialog.findViewById(R.id.password);
+                    assert editUsername != null && editPassword != null;
                     SignInActivity activity = (SignInActivity) getActivity();
                     activity.setUsernamePassword(String.valueOf(editUsername.getText()),
                             String.valueOf(editPassword.getText()));
                     activity.doLogin();
                 }
             });
-            builder.showListener(new DialogInterface.OnShowListener() {
+            builder.setNegativeButton(android.R.string.cancel, null);
+
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    final MaterialDialog materialDialog = (MaterialDialog) dialog;
+                    final AlertDialog materialDialog = (AlertDialog) dialog;
                     final EditText editUsername = (EditText) materialDialog.findViewById(R.id.username);
                     final EditText editPassword = (EditText) materialDialog.findViewById(R.id.password);
+                    assert editUsername != null && editPassword != null;
                     TextWatcher textWatcher = new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1172,7 +1183,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            MDButton button = materialDialog.getActionButton(DialogAction.POSITIVE);
+                            Button button = materialDialog.getButton(DialogInterface.BUTTON_POSITIVE);
                             if (button == null) return;
                             button.setEnabled(editUsername.length() > 0 && editPassword.length() > 0);
                         }
@@ -1187,7 +1198,7 @@ public class SignInActivity extends BaseActivity implements OnClickListener, Tex
                     editPassword.addTextChangedListener(textWatcher);
                 }
             });
-            return builder.build();
+            return alertDialog;
         }
     }
 

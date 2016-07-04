@@ -30,12 +30,12 @@ import android.util.Log;
 import android.util.Pair;
 
 import org.mariotaku.abstask.library.TaskStarter;
-import org.mariotaku.sqliteqb.library.Columns;
-import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.sqliteqb.library.Columns;
+import org.mariotaku.sqliteqb.library.Expression;
+import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -58,7 +58,8 @@ import javax.inject.Inject;
 
 import static org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser;
 
-public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>> implements Constants {
+public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<ParcelableUser>>
+        implements Constants {
 
     private final boolean mOmitIntentExtra, mLoadFromCache;
     private final Bundle mExtras;
@@ -108,7 +109,7 @@ public final class ParcelableUserLoader extends AsyncTaskLoader<SingleResponse<P
                 return SingleResponse.getInstance(user);
             }
         }
-        final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, credentials, true, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, true, true);
         if (twitter == null) return SingleResponse.getInstance();
         if (mLoadFromCache) {
             final Expression where;

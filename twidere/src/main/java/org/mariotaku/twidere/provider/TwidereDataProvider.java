@@ -162,8 +162,8 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public final class TwidereDataProvider extends ContentProvider implements Constants, OnSharedPreferenceChangeListener,
-        LazyLoadCallback {
+public final class TwidereDataProvider extends ContentProvider implements Constants,
+        OnSharedPreferenceChangeListener, LazyLoadCallback {
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");

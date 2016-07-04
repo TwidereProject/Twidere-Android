@@ -21,7 +21,6 @@ package org.mariotaku.twidere.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
@@ -52,6 +51,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.SupportMenuInflater;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener;
@@ -95,19 +95,14 @@ import android.widget.Toast;
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer;
 import com.afollestad.appthemeengine.util.ATEUtil;
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.johnpersano.supertoasts.SuperToast;
-import com.github.johnpersano.supertoasts.SuperToast.Duration;
-import com.github.johnpersano.supertoasts.SuperToast.OnDismissListener;
 import com.twitter.Extractor;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.abstask.library.TaskStarter;
+import org.mariotaku.commons.io.StreamUtils;
 import org.mariotaku.multivalueswitch.library.MultiValueSwitch;
-import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.iface.IExtendedActivity;
@@ -208,6 +203,13 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
     private AsyncTask<Object, Object, ?> mTask;
     private SupportMenuInflater mMenuInflater;
     private ItemTouchHelper mItemTouchHelper;
+
+    private final Runnable mBackTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mNavigateBackPressed = false;
+        }
+    };
 
     // Views
     private RecyclerView mAttachedMediaPreview;
@@ -580,7 +582,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         final Draft draft = new Draft();
 
         draft.action_type = getDraftAction(getIntent().getAction());
-        draft.account_ids = mAccountsAdapter.getSelectedAccountKeys();
+        draft.account_keys = mAccountsAdapter.getSelectedAccountKeys();
         draft.text = text;
         final UpdateStatusActionExtra extra = new UpdateStatusActionExtra();
         extra.setInReplyToStatus(mInReplyToStatus);
@@ -892,14 +894,9 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         if (ACTION_NAVIGATION_BACK.equals(action)) {
             if (mEditText.length() == 0 && !mTextChanged) {
                 if (!mNavigateBackPressed) {
-                    final SuperToast toast = SuperToast.create(this, getString(R.string.press_again_to_close), Duration.SHORT);
-                    toast.setOnDismissListener(new OnDismissListener() {
-                        @Override
-                        public void onDismiss(View view) {
-                            mNavigateBackPressed = false;
-                        }
-                    });
-                    toast.show();
+                    Toast.makeText(this, getString(R.string.press_again_to_close), Toast.LENGTH_SHORT).show();
+                    mEditText.removeCallbacks(mBackTimeoutRunnable);
+                    mEditText.postDelayed(mBackTimeoutRunnable, 2000);
                 } else {
                     onBackPressed();
                 }
@@ -1029,7 +1026,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         mEditText.setText(draft.text);
         final int selectionEnd = mEditText.length();
         mEditText.setSelection(selectionEnd);
-        mAccountsAdapter.setSelectedAccountIds(draft.account_ids);
+        mAccountsAdapter.setSelectedAccountIds(draft.account_keys);
         if (draft.media != null) {
             addMedia(Arrays.asList(draft.media));
         }
@@ -1192,15 +1189,17 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         if (!status.account_key.equals(status.user_key)) {
             selectionStart = mEditText.length();
         }
-        if (status.is_retweet) {
+        if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             mentions.add(status.retweeted_by_user_screen_name);
         }
-        if (status.is_quote) {
+        if (status.is_quote && !TextUtils.isEmpty(status.quoted_user_screen_name)) {
             mentions.add(status.quoted_user_screen_name);
         }
         if (!ArrayUtils.isEmpty(status.mentions)) {
             for (ParcelableUserMention mention : status.mentions) {
-                if (mention.key.equals(status.account_key)) continue;
+                if (mention.key.equals(status.account_key) || TextUtils.isEmpty(mention.screen_name)) {
+                    continue;
+                }
                 mentions.add(mention.screen_name);
             }
             mentions.addAll(mExtractor.extractMentionedScreennames(status.quoted_text_plain));
@@ -1517,9 +1516,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
 
     private void updateTextCount() {
         if (mSendTextCountView == null || mEditText == null) return;
-        final String textOrig = ParseUtils.parseString(mEditText.getText());
-        final String text = hasMedia() && textOrig != null ? mImageUploaderUsed ? Utils.getImageUploadStatus(this,
-                new String[]{FAKE_IMAGE_LINK}, textOrig) : textOrig + " " + FAKE_IMAGE_LINK : textOrig;
+        final String text = ParseUtils.parseString(mEditText.getText());
         final int validatedCount = text != null ? mValidator.getTweetLength(text) : 0;
         mSendTextCountView.setTextCount(validatedCount);
     }
@@ -1760,7 +1757,7 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
                     is = resolver.openInputStream(source);
                     os = resolver.openOutputStream(destination);
                     if (is == null || os == null) throw new FileNotFoundException();
-                    RestFuUtils.copyStream(is, os);
+                    StreamUtils.copy(is, os, null, null);
                     if (ContentResolver.SCHEME_FILE.equals(source.getScheme()) && mDeleteSrc) {
                         final File file = new File(source.getPath());
                         if (!file.delete()) {
@@ -2108,35 +2105,34 @@ public class ComposeActivity extends BaseActivity implements OnMenuItemClickList
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
-            builder.title(R.string.edit_description);
-            builder.customView(R.layout.dialog_compose_edit_alt_text, true);
-            builder.negativeText(android.R.string.cancel);
-            builder.positiveText(android.R.string.ok);
-            builder.neutralText(R.string.clear);
-            builder.onNeutral(new MaterialDialog.SingleButtonCallback() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(R.string.edit_description);
+            builder.setView(R.layout.dialog_compose_edit_alt_text);
+            builder.setNegativeButton(android.R.string.cancel, null);
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION), null);
-                }
-            });
-            builder.onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    final EditText editText = (EditText) dialog.findViewById(R.id.edit_text);
+                public void onClick(DialogInterface dialog, int which) {
+                    final EditText editText = (EditText) ((Dialog) dialog).findViewById(R.id.edit_text);
                     ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION),
                             ParseUtils.parseString(editText.getText()));
                 }
             });
-            builder.showListener(new DialogInterface.OnShowListener() {
+            builder.setNeutralButton(R.string.clear, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    ((ComposeActivity) getActivity()).setMediaAltText(getArguments().getInt(EXTRA_POSITION), null);
+                }
+            });
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
-                    MaterialDialog materialDialog = ((MaterialDialog) dialog);
+                    Dialog materialDialog = ((Dialog) dialog);
                     final EditText editText = (EditText) materialDialog.findViewById(R.id.edit_text);
                     editText.setText(getArguments().getString(EXTRA_TEXT));
                 }
             });
-            return builder.build();
+            return dialog;
         }
     }
 

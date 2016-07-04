@@ -19,6 +19,8 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.support.annotation.StringDef;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -36,6 +38,8 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
     Image image;
     @JsonField(name = "video")
     Video video;
+    @JsonField(name = "processing_info")
+    ProcessingInfo processingInfo;
 
     public String getId() {
         return mediaId;
@@ -53,6 +57,21 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
         return video;
     }
 
+    public ProcessingInfo getProcessingInfo() {
+        return processingInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "MediaUploadResponse{" +
+                "mediaId='" + mediaId + '\'' +
+                ", size=" + size +
+                ", image=" + image +
+                ", video=" + video +
+                ", processingInfo=" + processingInfo +
+                "} " + super.toString();
+    }
+
     @JsonObject
     public static class Video {
         @JsonField(name = "video_type")
@@ -60,6 +79,13 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
 
         public String getVideoType() {
             return videoType;
+        }
+
+        @Override
+        public String toString() {
+            return "Video{" +
+                    "videoType='" + videoType + '\'' +
+                    '}';
         }
     }
 
@@ -83,6 +109,63 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
 
         public int getWidth() {
             return width;
+        }
+
+        @Override
+        public String toString() {
+            return "Image{" +
+                    "width=" + width +
+                    ", height=" + height +
+                    ", imageType='" + imageType + '\'' +
+                    '}';
+        }
+    }
+
+    @JsonObject
+    public static class ProcessingInfo {
+        @JsonField(name = "state")
+        @State
+        String state;
+        @JsonField(name = "check_after_secs")
+        long checkAfterSecs;
+        @JsonField(name = "progress_percent")
+        int progressPercent;
+        @JsonField(name = "error")
+        ErrorInfo error;
+
+        @State
+        public String getState() {
+            return state;
+        }
+
+        public long getCheckAfterSecs() {
+            return checkAfterSecs;
+        }
+
+        public int getProgressPercent() {
+            return progressPercent;
+        }
+
+        public ErrorInfo getError() {
+            return error;
+        }
+
+        @Override
+        public String toString() {
+            return "ProcessingInfo{" +
+                    "state='" + state + '\'' +
+                    ", checkAfterSecs=" + checkAfterSecs +
+                    '}';
+        }
+
+
+        @StringDef({State.PENDING, State.IN_PROGRESS, State.FAILED, State.SUCCEEDED})
+        public @interface State {
+            String PENDING = "pending";
+            String IN_PROGRESS = "in_progress";
+            String FAILED = "failed";
+            String SUCCEEDED = "succeeded";
+
         }
     }
 }

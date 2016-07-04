@@ -9,23 +9,23 @@ import com.squareup.otto.Bus;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.abstask.library.AbstractTask;
-import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.twidere.BuildConfig;
+import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.RefreshTaskParam;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.ContentValuesCreator;
 import org.mariotaku.twidere.util.ErrorInfoStore;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.TwitterWrapper;
 import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -70,7 +70,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         for (final UserKey accountKey : accountKeys) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getTwitterInstance(context, accountKey, true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
             if (twitter == null) continue;
             try {
                 final Paging paging = new Paging();
@@ -145,7 +145,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
     }
 
     @Override
-    protected void afterExecute(List<TwitterWrapper.MessageListResponse> result) {
+    protected void afterExecute(Object callback, List<TwitterWrapper.MessageListResponse> result) {
         bus.post(new GetMessagesTaskEvent(getDatabaseUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 }

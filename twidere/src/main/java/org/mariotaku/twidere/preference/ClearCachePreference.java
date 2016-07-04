@@ -27,6 +27,8 @@ import org.mariotaku.twidere.R;
 
 import java.io.File;
 
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+
 public class ClearCachePreference extends AsyncTaskPreference {
 
     public ClearCachePreference(final Context context) {

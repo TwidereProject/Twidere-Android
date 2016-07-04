@@ -27,17 +27,17 @@ import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.DummyItemAdapter;
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 import org.mariotaku.twidere.view.holder.StatusViewHolder;
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
-public class CardPreviewPreference extends Preference implements Constants, OnSharedPreferenceChangeListener {
+import static org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME;
+
+public class CardPreviewPreference extends Preference implements OnSharedPreferenceChangeListener {
 
     private StatusViewHolder mHolder;
-    private boolean mCompactModeChanged;
     private DummyItemAdapter mAdapter;
 
     public CardPreviewPreference(final Context context) {
@@ -52,7 +52,7 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         super(context, attrs, defStyle);
         final SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        setLayoutResources(preferences);
+        setLayoutResource(R.layout.layout_preferences_card_preview_compact);
         preferences.registerOnSharedPreferenceChangeListener(this);
         mAdapter = new DummyItemAdapter(context);
     }
@@ -60,21 +60,8 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         if (mHolder == null) return;
-        if (KEY_COMPACT_CARDS.equals(key)) {
-            setLayoutResources(preferences);
-        }
         mAdapter.updateOptions();
         notifyChanged();
-    }
-
-    protected void setLayoutResources(SharedPreferences preferences) {
-        if (preferences.getBoolean(KEY_COMPACT_CARDS, false)) {
-            setLayoutResource(R.layout.layout_preferences_card_preview_compact);
-            mHolder = null;
-        } else {
-            setLayoutResource(R.layout.layout_preferences_card_preview);
-            mHolder = null;
-        }
     }
 
     @Override
@@ -82,7 +69,6 @@ public class CardPreviewPreference extends Preference implements Constants, OnSh
         if (mHolder == null) {
             mHolder = new StatusViewHolder(mAdapter, holder.itemView);
         }
-        mCompactModeChanged = false;
         mHolder.setupViewOptions();
         mHolder.displaySampleStatus();
         mHolder.setStatusClickListener(new IStatusViewHolder.SimpleStatusClickListener() {

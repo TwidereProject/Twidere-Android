@@ -39,10 +39,8 @@ import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.view.ProfileImageView;
 
 import javax.inject.Inject;
-
 
 public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements Constants {
 

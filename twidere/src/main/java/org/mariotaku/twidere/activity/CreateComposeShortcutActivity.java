@@ -24,10 +24,11 @@ import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 import android.os.Bundle;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 
-public class CreateComposeShortcutActivity extends Activity implements Constants {
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_COMPOSE;
+
+public class CreateComposeShortcutActivity extends Activity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {

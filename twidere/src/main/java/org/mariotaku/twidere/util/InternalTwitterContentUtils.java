@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
-import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
@@ -20,6 +19,7 @@ import org.mariotaku.microblog.library.twitter.model.MediaEntity;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -42,46 +42,6 @@ public class InternalTwitterContentUtils {
     private static final CharSequenceTranslator ESCAPE_TWITTER_RAW_TEXT = new LookupTranslator(EntityArrays.BASIC_ESCAPE());
 
     private InternalTwitterContentUtils() {
-    }
-
-    public static <T extends List<? extends Status>> T getStatusesWithQuoteData(MicroBlog twitter, @NonNull T list) throws MicroBlogException {
-        MultiValueMap<Status> quotes = new MultiValueMap<>();
-        // Phase 1: collect all statuses contains a status link, and put it in the map
-        for (Status status : list) {
-            if (status.isQuote()) continue;
-            final UrlEntity[] entities = status.getUrlEntities();
-            if (entities == null || entities.length <= 0) continue;
-            // Seems Twitter will find last status link for quote target, so we search backward
-            for (int i = entities.length - 1; i >= 0; i--) {
-                final Matcher m = PATTERN_TWITTER_STATUS_LINK.matcher(entities[i].getExpandedUrl());
-                if (!m.matches()) continue;
-                final String quoteId = m.group(3);
-                if (!TextUtils.isEmpty(quoteId)) {
-                    quotes.add(quoteId, status);
-                }
-                break;
-            }
-        }
-        // Phase 2: look up quoted tweets. Each lookup can fetch up to 100 tweets, so we split quote
-        // ids into batches
-        final Set<String> keySet = quotes.keySet();
-        final String[] quoteIds = keySet.toArray(new String[keySet.size()]);
-        for (int currentBulkIdx = 0, totalLength = quoteIds.length; currentBulkIdx < totalLength;
-             currentBulkIdx += TWITTER_BULK_QUERY_COUNT) {
-            final int currentBulkCount = Math.min(totalLength, currentBulkIdx + TWITTER_BULK_QUERY_COUNT) - currentBulkIdx;
-            final String[] ids = new String[currentBulkCount];
-            System.arraycopy(quoteIds, currentBulkIdx, ids, 0, currentBulkCount);
-            // Lookup quoted statuses, then set each status into original status
-            for (Status quoted : twitter.lookupStatuses(ids)) {
-                final List<Status> orig = quotes.get(quoted.getId());
-                // This set shouldn't be null here, add null check to make inspector happy.
-                if (orig == null) continue;
-                for (Status status : orig) {
-                    Status.setQuotedStatus(status, quoted);
-                }
-            }
-        }
-        return list;
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
@@ -236,25 +196,8 @@ public class InternalTwitterContentUtils {
             return "ipad_retina";
     }
 
-    public static String formatExpandedUserDescription(final User user) {
-        if (user == null) return null;
-        final String text = user.getDescription();
-        if (text == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
-        final UrlEntity[] urls = user.getDescriptionEntities();
-        if (urls != null) {
-            for (final UrlEntity url : urls) {
-                final String expanded_url = url.getExpandedUrl();
-                if (expanded_url != null) {
-                    builder.addLink(expanded_url, expanded_url, url.getStart(), url.getEnd());
-                }
-            }
-        }
-        return HtmlEscapeHelper.toPlainText(builder.build());
-    }
-
-    public static String formatUserDescription(final User user) {
-        if (user == null) return null;
+    @Nullable
+    public static Pair<String, SpanItem[]> formatUserDescription(@NonNull final User user) {
         final String text = user.getDescription();
         if (text == null) return null;
         final HtmlBuilder builder = new HtmlBuilder(text, false, true, true);
@@ -267,34 +210,84 @@ public class InternalTwitterContentUtils {
                 }
             }
         }
-        return builder.build();
+        return builder.buildWithIndices();
     }
 
+    @Nullable
     public static String unescapeTwitterStatusText(final CharSequence text) {
         if (text == null) return null;
         return UNESCAPE_TWITTER_RAW_TEXT.translate(text);
     }
 
-    public static String formatDirectMessageText(final DirectMessage message) {
-        if (message == null) return null;
+    @NonNull
+    public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DirectMessage message) {
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, true);
         parseEntities(builder, message);
-        return builder.build();
-    }
-
-    public static String formatStatusText(final Status status) {
-        if (status == null) return null;
-        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, true);
-        parseEntities(builder, status);
-        return builder.build();
-    }
-
-    public static Pair<String, List<SpanItem>> formatStatusTextWithIndices(final Status status) {
-        if (status == null) return null;
-        //TODO handle twitter video url
-        final HtmlBuilder builder = new HtmlBuilder(status.getText(), false, true, false);
-        parseEntities(builder, status);
         return builder.buildWithIndices();
+    }
+
+    @NonNull
+    public static StatusTextWithIndices formatStatusTextWithIndices(@NonNull final Status status) {
+        //TODO handle twitter video url
+
+        String text = status.getFullText();
+        CodePointArray source;
+        int[] range = null;
+        if (text == null) {
+            text = status.getText();
+            source = new CodePointArray(text);
+        } else {
+            range = status.getDisplayTextRange();
+            source = new CodePointArray(text);
+        }
+        final HtmlBuilder builder = new HtmlBuilder(source, false, true, false);
+        parseEntities(builder, status);
+        StatusTextWithIndices textWithIndices = new StatusTextWithIndices();
+        final Pair<String, SpanItem[]> pair = builder.buildWithIndices();
+        textWithIndices.text = pair.first;
+        textWithIndices.spans = pair.second;
+        if (range != null && range.length == 2) {
+            textWithIndices.range = new int[2];
+            textWithIndices.range[0] = getResultRangeLength(source, pair.second, 0, range[0]);
+            textWithIndices.range[1] = pair.first.length() - getResultRangeLength(source,
+                    pair.second, range[1], source.length());
+        }
+        return textWithIndices;
+    }
+
+    /**
+     * @param spans Ordered spans
+     * @param start orig_start
+     * @param end   orig_end
+     */
+    @NonNull
+    static List<SpanItem> findByOrigRange(SpanItem[] spans, int start, int end) {
+        List<SpanItem> result = new ArrayList<>();
+        for (SpanItem span : spans) {
+            if (span.orig_start >= start && span.orig_end <= end) {
+                result.add(span);
+            }
+        }
+        return result;
+    }
+
+    static int getResultRangeLength(CodePointArray source, SpanItem[] spans, int origStart, int origEnd) {
+        List<SpanItem> findResult = findByOrigRange(spans, origStart, origEnd);
+        if (findResult.isEmpty()) {
+            return source.charCount(origStart, origEnd);
+        }
+        SpanItem first = findResult.get(0), last = findResult.get(findResult.size() - 1);
+        if (first.orig_start == -1 || last.orig_end == -1)
+            return source.charCount(origStart, origEnd);
+        return source.charCount(origStart, first.orig_start) + (last.end - first.start)
+                + source.charCount(first.orig_end, origEnd);
+    }
+
+    public static class StatusTextWithIndices {
+        public String text;
+        public SpanItem[] spans;
+        @Nullable
+        public int[] range;
     }
 
     public static String getMediaUrl(MediaEntity entity) {
@@ -310,25 +303,32 @@ public class InternalTwitterContentUtils {
         if (mediaEntities == null) {
             mediaEntities = entities.getMediaEntities();
         }
+        int[] startEnd = new int[2];
         if (mediaEntities != null) {
             for (final MediaEntity mediaEntity : mediaEntities) {
-                final int start = mediaEntity.getStart(), end = mediaEntity.getEnd();
                 final String mediaUrl = getMediaUrl(mediaEntity);
-                if (mediaUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(), start, end);
+                if (mediaUrl != null && getStartEndForEntity(mediaEntity, startEnd)) {
+                    builder.addLink(mediaEntity.getExpandedUrl(), mediaEntity.getDisplayUrl(),
+                            startEnd[0], startEnd[1]);
                 }
             }
         }
         final UrlEntity[] urlEntities = entities.getUrlEntities();
         if (urlEntities != null) {
             for (final UrlEntity urlEntity : urlEntities) {
-                final int start = urlEntity.getStart(), end = urlEntity.getEnd();
                 final String expandedUrl = urlEntity.getExpandedUrl();
-                if (expandedUrl != null && start >= 0 && end >= 0) {
-                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), start, end);
+                if (expandedUrl != null && getStartEndForEntity(urlEntity, startEnd)) {
+                    builder.addLink(expandedUrl, urlEntity.getDisplayUrl(), startEnd[0],
+                            startEnd[1]);
                 }
             }
         }
+    }
+
+    private static boolean getStartEndForEntity(UrlEntity entity, @NonNull int[] out) {
+        out[0] = entity.getStart();
+        out[1] = entity.getEnd();
+        return true;
     }
 
     public static String getOriginalId(@NonNull ParcelableStatus status) {

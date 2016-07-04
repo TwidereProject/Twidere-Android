@@ -9,7 +9,6 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
@@ -19,11 +18,15 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT;
+import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_KEY;
+import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_SECRET;
+
 /**
  * Created by mariotaku on 16/3/12.
  */
 @JsonObject
-public final class CustomAPIConfig implements Constants {
+public final class CustomAPIConfig {
 
     @JsonField(name = "name")
     String name;

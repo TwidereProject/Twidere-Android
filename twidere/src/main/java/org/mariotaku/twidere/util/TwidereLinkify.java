@@ -324,6 +324,6 @@ public final class TwidereLinkify implements Constants {
 
     public interface OnLinkClickListener {
         boolean onLinkClick(String link, String orig, UserKey accountKey, long extraId, int type,
-                         boolean sensitive, int start, int end);
+                            boolean sensitive, int start, int end);
     }
 }

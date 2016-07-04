@@ -12,11 +12,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
@@ -46,22 +45,22 @@ public class PlusServiceDashboardActivity extends BaseActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Context context = getContext();
             mAdapter = new ProviderAdapter(context);
-            MaterialDialog.Builder builder = new MaterialDialog.Builder(context);
-            builder.title(R.string.sign_in_with_ellip);
-            builder.adapter(mAdapter, new MaterialDialog.ListCallback() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.sign_in_with_ellip);
+            builder.setAdapter(mAdapter, new DialogInterface.OnClickListener() {
                 @Override
-                public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                public void onClick(DialogInterface dialog, int which) {
                     startLogin(mAdapter.getItem(which));
-
                 }
             });
-            builder.showListener(new DialogInterface.OnShowListener() {
+            AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(DialogInterface dialog) {
                     loadInfo();
                 }
             });
-            return builder.build();
+            return dialog;
         }
 
         private void startLogin(ResolveInfo info) {

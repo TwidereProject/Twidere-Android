@@ -14,6 +14,17 @@ import android.webkit.URLUtil;
 
 import com.fasterxml.jackson.core.JsonParseException;
 
+import org.mariotaku.microblog.library.MicroBlog;
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.Twitter;
+import org.mariotaku.microblog.library.twitter.TwitterCaps;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth;
+import org.mariotaku.microblog.library.twitter.TwitterOAuth2;
+import org.mariotaku.microblog.library.twitter.TwitterUpload;
+import org.mariotaku.microblog.library.twitter.TwitterUserStream;
+import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
+import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
+import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory;
 import org.mariotaku.restfu.ExceptionFactory;
 import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestConverter;
@@ -31,22 +42,12 @@ import org.mariotaku.restfu.http.RawValue;
 import org.mariotaku.restfu.http.SimpleValueMap;
 import org.mariotaku.restfu.http.ValueMap;
 import org.mariotaku.restfu.http.mime.Body;
+import org.mariotaku.restfu.oauth.OAuthAuthorization;
+import org.mariotaku.restfu.oauth.OAuthEndpoint;
+import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.TwitterCaps;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth2;
-import org.mariotaku.microblog.library.twitter.TwitterUpload;
-import org.mariotaku.microblog.library.twitter.TwitterUserStream;
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.OAuthEndpoint;
-import org.mariotaku.microblog.library.twitter.auth.OAuthToken;
-import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
@@ -76,7 +77,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     static {
         sConstantPoll.put("include_cards", "true");
         sConstantPoll.put("cards_platform", CARDS_PLATFORM_ANDROID_12);
-        sConstantPoll.put("include_entities", "true");
         sConstantPoll.put("include_my_retweet", "true");
         sConstantPoll.put("include_rts", "true");
         sConstantPoll.put("include_reply_count", "true");
@@ -85,6 +85,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         sConstantPoll.put("model_version", "7");
         sConstantPoll.put("skip_aggregation", "false");
         sConstantPoll.put("include_ext_alt_text", "true");
+        sConstantPoll.put("tweet_mode", "extended");
     }
 
     private MicroBlogAPIFactory() {
@@ -102,50 +103,50 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         if (context == null) return null;
         final UserKey accountKey = Utils.getDefaultAccountKey(context);
         if (accountKey == null) return null;
-        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets);
+        return getInstance(context, accountKey, includeEntities, includeRetweets);
     }
 
     @WorkerThread
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final UserKey accountKey,
-                                               final boolean includeEntities) {
-        return getTwitterInstance(context, accountKey, includeEntities, true);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final UserKey accountKey,
+                                        final boolean includeEntities) {
+        return getInstance(context, accountKey, includeEntities, true);
     }
 
     @Nullable
     @WorkerThread
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final UserKey accountKey,
-                                               final boolean includeEntities,
-                                               final boolean includeRetweets) {
-        return getTwitterInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final UserKey accountKey,
+                                        final boolean includeEntities,
+                                        final boolean includeRetweets) {
+        return getInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
     }
 
     @Nullable
-    public static MicroBlog getTwitterInstance(@NonNull final Context context,
-                                               @NonNull final ParcelableCredentials credentials,
-                                               final boolean includeEntities, final boolean includeRetweets) {
-        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
+    public static MicroBlog getInstance(@NonNull final Context context,
+                                        @NonNull final ParcelableCredentials credentials,
+                                        final boolean includeEntities, final boolean includeRetweets) {
+        return getInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
     }
 
 
     @Nullable
     @WorkerThread
-    public static <T> T getTwitterInstance(@NonNull final Context context,
-                                           @NonNull final UserKey accountKey,
-                                           final boolean includeEntities,
-                                           final boolean includeRetweets,
-                                           @NonNull Class<T> cls) {
+    public static <T> T getInstance(@NonNull final Context context,
+                                    @NonNull final UserKey accountKey,
+                                    final boolean includeEntities,
+                                    final boolean includeRetweets,
+                                    @NonNull Class<T> cls) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
         if (credentials == null) return null;
-        return getTwitterInstance(context, credentials, includeEntities, includeRetweets, cls);
+        return getInstance(context, credentials, includeEntities, includeRetweets, cls);
     }
 
     @Nullable
-    public static <T> T getTwitterInstance(@NonNull final Context context,
-                                           @NonNull final ParcelableCredentials credentials,
-                                           final boolean includeEntities, final boolean includeRetweets,
-                                           @NonNull Class<T> cls) {
+    public static <T> T getInstance(@NonNull final Context context,
+                                    @NonNull final ParcelableCredentials credentials,
+                                    final boolean includeEntities, final boolean includeRetweets,
+                                    @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
             case ParcelableAccount.Type.FANFOU: {
@@ -260,6 +261,9 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
         final String domain, versionSuffix;
         if (MicroBlog.class.isAssignableFrom(cls)) {
+            domain = "api";
+            versionSuffix = noVersionSuffix ? null : "/1.1/";
+        } else if (Twitter.class.isAssignableFrom(cls)) {
             domain = "api";
             versionSuffix = noVersionSuffix ? null : "/1.1/";
         } else if (TwitterUpload.class.isAssignableFrom(cls)) {

@@ -29,6 +29,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,8 +43,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.AlertDialogWrapper;
-
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
@@ -56,8 +55,8 @@ import org.mariotaku.twidere.model.CustomAPIConfig;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.JsonSerializer;
-import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
+import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
@@ -66,9 +65,6 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static org.mariotaku.twidere.util.Utils.getNonEmptyString;
-import static org.mariotaku.twidere.util.Utils.trim;
 
 public class APIEditorActivity extends BaseActivity implements OnCheckedChangeListener,
         OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -212,12 +208,12 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         String consumerKey, consumerSecret;
 
         final SharedPreferences pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final String prefApiUrlFormat = getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
+        final String prefApiUrlFormat = Utils.getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT);
         final int prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH);
         final boolean prefSameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false);
         final boolean prefNoVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false);
-        final String prefConsumerKey = getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
-        final String prefConsumerSecret = getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
+        final String prefConsumerKey = Utils.getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY);
+        final String prefConsumerSecret = Utils.getNonEmptyString(pref, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET);
         final Bundle bundle;
         if (savedInstanceState != null) {
             bundle = savedInstanceState;
@@ -226,12 +222,12 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
         } else {
             bundle = new Bundle();
         }
-        apiUrlFormat = trim(bundle.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat));
+        apiUrlFormat = Utils.trim(bundle.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat));
         authType = bundle.getInt(Accounts.AUTH_TYPE, prefAuthType);
         sameOAuthSigningUrl = bundle.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL, prefSameOAuthSigningUrl);
         noVersionSuffix = bundle.getBoolean(Accounts.NO_VERSION_SUFFIX, prefNoVersionSuffix);
-        consumerKey = trim(bundle.getString(Accounts.CONSUMER_KEY, prefConsumerKey));
-        consumerSecret = trim(bundle.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret));
+        consumerKey = Utils.trim(bundle.getString(Accounts.CONSUMER_KEY, prefConsumerKey));
+        consumerSecret = Utils.trim(bundle.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret));
 
         mEditAuthType.setOnCheckedChangeListener(this);
         mEditNoVersionSuffix.setOnCheckedChangeListener(this);
@@ -293,7 +289,7 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
             final Context context = getContext();
             List<CustomAPIConfig> configs = CustomAPIConfig.listDefault(context);
             mAdapter = new CustomAPIConfigArrayAdapter(context, configs);
-            final AlertDialogWrapper.Builder builder = new AlertDialogWrapper.Builder(context);
+            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setAdapter(mAdapter, this);
             if (!BuildConfig.DEBUG) {
                 getLoaderManager().initLoader(0, null, this);
@@ -362,14 +358,14 @@ public class APIEditorActivity extends BaseActivity implements OnCheckedChangeLi
 
         private class CustomAPIConfigArrayAdapter extends ArrayAdapter<CustomAPIConfig> {
             public CustomAPIConfigArrayAdapter(Context context, List<CustomAPIConfig> defaultItems) {
-                super(context, R.layout.md_listitem, defaultItems);
+                super(context, android.R.layout.simple_list_item_1, defaultItems);
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final View view = super.getView(position, convertView, parent);
                 CustomAPIConfig config = getItem(position);
-                ((TextView) view.findViewById(com.afollestad.materialdialogs.R.id.title)).setText(config.getLocalizedName(getContext()));
+                ((TextView) view.findViewById(android.R.id.text1)).setText(config.getLocalizedName(getContext()));
                 return view;
             }
         }

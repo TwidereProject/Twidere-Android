@@ -22,12 +22,13 @@ package org.mariotaku.twidere.fragment;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.util.SparseBooleanArray;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.twitter.Extractor;
 
 import org.mariotaku.twidere.R;
@@ -55,7 +56,7 @@ public class AddStatusFilterDialogFragment extends BaseDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
-        final MaterialDialog.Builder builder = new MaterialDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         mFilterItems = getFilterItemsInfo();
         final String[] entries = new String[mFilterItems.length];
         final boolean nameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
@@ -76,20 +77,13 @@ public class AddStatusFilterDialogFragment extends BaseDialogFragment {
                     break;
             }
         }
-        builder.title(R.string.add_to_filter);
-        builder.items(entries);
-        builder.positiveText(android.R.string.ok);
-        builder.itemsCallbackMultiChoice(null, new MaterialDialog.ListCallbackMultiChoice() {
+        builder.setTitle(R.string.add_to_filter);
+        builder.setMultiChoiceItems(entries, null, null);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
-            public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                return false;
-            }
-        });
-        builder.onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                final Integer[] selectedIndices = dialog.getSelectedIndices();
-                assert selectedIndices != null;
+            public void onClick(DialogInterface dialog, int which) {
+                AlertDialog alertDialog = ((AlertDialog) dialog);
+                final SparseBooleanArray checkPositions = alertDialog.getListView().getCheckedItemPositions();
 
                 final Set<UserKey> userKeys = new HashSet<>();
                 final Set<String> keywords = new HashSet<>();
@@ -97,8 +91,9 @@ public class AddStatusFilterDialogFragment extends BaseDialogFragment {
                 final ArrayList<ContentValues> userValues = new ArrayList<>();
                 final ArrayList<ContentValues> keywordValues = new ArrayList<>();
                 final ArrayList<ContentValues> sourceValues = new ArrayList<>();
-                for (final int idx : selectedIndices) {
-                    final FilterItemInfo info = mFilterItems[idx];
+                for (int i = 0, j = checkPositions.size(); i < j; i++) {
+                    if (!checkPositions.valueAt(i)) continue;
+                    final FilterItemInfo info = mFilterItems[checkPositions.keyAt(i)];
                     final Object value = info.value;
                     if (value instanceof ParcelableUserMention) {
                         final ParcelableUserMention mention = (ParcelableUserMention) value;
@@ -135,8 +130,8 @@ public class AddStatusFilterDialogFragment extends BaseDialogFragment {
                 ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues);
             }
         });
-        builder.negativeText(android.R.string.cancel);
-        return builder.build();
+        builder.setNegativeButton(android.R.string.cancel, null);
+        return builder.create();
     }
 
     private FilterItemInfo[] getFilterItemsInfo() {

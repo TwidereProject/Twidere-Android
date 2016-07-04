@@ -9,7 +9,6 @@ import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.SignInActivity;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
