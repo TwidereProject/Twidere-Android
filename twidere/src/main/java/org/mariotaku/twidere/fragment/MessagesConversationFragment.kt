@@ -85,7 +85,7 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import java.util.*
 import javax.inject.Inject
 
-class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>, OnClickListener, OnItemSelectedListener, PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
+class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnClickListener, OnItemSelectedListener, PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
 
 
     // Callbacks and listeners
@@ -120,7 +120,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private var mEffectHelper: EffectViewHelper? = null
 
     // Adapters
-    private var mAdapter: MessageConversationAdapter? = null
+    private var adapter: MessageConversationAdapter? = null
     private var mUsersSearchAdapter: SimpleParcelableUsersAdapter? = null
 
     // Data fields
@@ -178,12 +178,12 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         accountSpinner.adapter = accountsSpinnerAdapter
         accountSpinner.onItemSelectedListener = this
         queryButton.setOnClickListener(this)
-        mAdapter = MessageConversationAdapter(activity)
+        adapter = MessageConversationAdapter(activity)
         val layoutManager = FixedLinearLayoutManager(viewContext)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         layoutManager.stackFromEnd = true
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = mAdapter
+        recyclerView.adapter = adapter
 
         val useOutline = Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP
 
@@ -345,7 +345,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val accountId = args?.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val recipientId = args?.getString(EXTRA_RECIPIENT_ID)
         val cols = DirectMessages.COLUMNS
@@ -388,8 +388,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        mAdapter!!.setCursor(null)
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
+        adapter!!.setCursor(null)
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
@@ -410,15 +410,15 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         return true
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
-        mAdapter!!.setCursor(cursor)
+    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
+        adapter!!.setCursor(cursor)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (menuInfo == null) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
-        val message = mAdapter!!.getDirectMessage(contextMenuInfo!!.position)
+        val message = adapter!!.getDirectMessage(contextMenuInfo!!.position)
         menu.setHeaderTitle(message.text_unescaped)
         inflater.inflate(R.menu.action_direct_message, menu)
     }
@@ -427,7 +427,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         if (!userVisibleHint) return false
         val menuInfo = item!!.menuInfo
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
-        val message = mAdapter!!.getDirectMessage(contextMenuInfo.position) ?: return false
+        val message = adapter!!.getDirectMessage(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.copy -> {
                 ClipboardUtils.setText(context, message.text_plain)

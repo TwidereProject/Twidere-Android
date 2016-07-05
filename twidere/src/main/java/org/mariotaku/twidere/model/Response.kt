@@ -17,23 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model;
+package org.mariotaku.twidere.model
 
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Bundle
 
 /**
  * Created by mariotaku on 15/10/11.
  */
-public interface Response<Data> {
-    Data getData();
+interface Response<Data> {
+    val data: Data?
 
-    Exception getException();
+    val exception: Exception?
 
-    @NonNull
-    Bundle getExtras();
+    val extras: Bundle
 
-    boolean hasData();
+    fun hasData(): Boolean
 
-    boolean hasException();
+    fun hasException(): Boolean
 }

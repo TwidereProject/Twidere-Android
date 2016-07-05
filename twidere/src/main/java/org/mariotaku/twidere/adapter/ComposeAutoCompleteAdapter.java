@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.TextUtils;
 import android.view.View;
@@ -154,6 +155,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
     }
 
     @Override
+    @Nullable
     public Cursor swapCursor(final Cursor cursor) {
         if (cursor != null) {
             mTypeIdx = cursor.getColumnIndex(Suggestions.AutoComplete.TYPE);

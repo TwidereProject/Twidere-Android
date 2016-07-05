@@ -72,11 +72,11 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
 
     @Override
     public SingleResponse<ParcelableStatus> loadInBackground() {
-        if (mAccountKey == null || mStatusId == null) return SingleResponse.getInstance();
+        if (mAccountKey == null || mStatusId == null) return SingleResponse.Companion.getInstance();
         if (!mOmitIntentExtra && mExtras != null) {
             final ParcelableStatus cache = mExtras.getParcelable(IntentConstants.EXTRA_STATUS);
             if (cache != null) {
-                final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(cache);
+                final SingleResponse<ParcelableStatus> response = SingleResponse.Companion.getInstance(cache);
                 final Bundle extras = response.getExtras();
                 extras.putParcelable(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey));
                 return response;
@@ -84,10 +84,10 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
         }
         try {
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey);
-            if (credentials == null) return SingleResponse.getInstance();
+            if (credentials == null) return SingleResponse.Companion.getInstance();
             final ParcelableStatus status = findStatus(getContext(), mAccountKey, mStatusId);
             ParcelableStatusUtils.updateExtraInformation(status, credentials, mUserColorNameManager);
-            final SingleResponse<ParcelableStatus> response = SingleResponse.getInstance(status);
+            final SingleResponse<ParcelableStatus> response = SingleResponse.Companion.getInstance(status);
             final Bundle extras = response.getExtras();
             extras.putParcelable(EXTRA_ACCOUNT, credentials);
             return response;
@@ -99,7 +99,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
                         mStatusId, null);
                 DataStoreUtils.deleteActivityStatus(cr, mAccountKey, mStatusId, null);
             }
-            return SingleResponse.getInstance(e);
+            return SingleResponse.Companion.getInstance(e);
         }
     }
 

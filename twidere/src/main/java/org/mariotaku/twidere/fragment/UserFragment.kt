@@ -198,7 +198,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
                                     data: SingleResponse<ParcelableUser>) {
             val activity = activity ?: return
-            if (data.hasData()) {
+            if (data.data != null) {
                 val user = data.data
                 cardContent!!.visibility = View.VISIBLE
                 errorContainer!!.visibility = View.GONE
@@ -909,7 +909,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 val newState = !item.isChecked
                 val update = FriendshipUpdate()
                 update.retweets(newState)
-                twitter.updateFriendship(user.account_key, user.key.id, update)
+                twitter.updateFriendship(user.account_key, user.key, update)
                 item.isChecked = newState
                 return true
             }
@@ -1466,22 +1466,22 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
         override fun loadInBackground(): SingleResponse<UserRelationship> {
             if (accountKey == null || user == null) {
-                return SingleResponse.getInstance<UserRelationship>(MicroBlogException("Null parameters"))
+                return SingleResponse.Companion.getInstance<UserRelationship>(MicroBlogException("Null parameters"))
             }
             val userKey = user.key
             val isFiltering = DataStoreUtils.isFilteringUser(context, userKey)
             if (accountKey == user.key) {
-                return SingleResponse.getInstance(UserRelationship(accountKey, userKey,
+                return SingleResponse.Companion.getInstance(UserRelationship(accountKey, userKey,
                         null, isFiltering))
             }
             val credentials = ParcelableCredentialsUtils.getCredentials(context,
-                    accountKey) ?: return SingleResponse.getInstance<UserRelationship>(MicroBlogException("No Account"))
+                    accountKey) ?: return SingleResponse.Companion.getInstance<UserRelationship>(MicroBlogException("No Account"))
             if (MicroBlogAPIFactory.isStatusNetCredentials(credentials)) {
                 if (!UserKeyUtils.isSameHost(accountKey, user.key)) {
-                    return SingleResponse.getInstance(UserRelationship(user, isFiltering))
+                    return SingleResponse.Companion.getInstance(UserRelationship(user, isFiltering))
                 }
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false) ?: return SingleResponse.getInstance<UserRelationship>(MicroBlogException("No Account"))
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false) ?: return SingleResponse.Companion.getInstance<UserRelationship>(MicroBlogException("No Account"))
             try {
                 val relationship = twitter.showFriendship(user.key.id)
                 if (relationship.isSourceBlockingTarget || relationship.isSourceBlockedByTarget) {
@@ -1490,10 +1490,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     Utils.setLastSeen(context, userKey, System.currentTimeMillis())
                 }
                 Utils.updateRelationship(context, accountKey, userKey, relationship)
-                return SingleResponse.getInstance(UserRelationship(accountKey, userKey,
+                return SingleResponse.Companion.getInstance(UserRelationship(accountKey, userKey,
                         relationship, isFiltering))
             } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<UserRelationship>(e)
+                return SingleResponse.Companion.getInstance<UserRelationship>(e)
             }
 
         }

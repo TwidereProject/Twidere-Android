@@ -18,7 +18,7 @@
   -->
 
 <org.mariotaku.twidere.view.ExtendedRelativeLayout
-    android:id="@+id/main_content"
+    android:id="@+id/mainContent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -50,14 +50,14 @@
                 android:orientation="horizontal">
 
                 <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/account_spinner"
+                    android:id="@+id/accountSpinner"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
                     tools:listitem="@layout/spinner_item_account_icon"/>
 
                 <EditText
-                    android:id="@+id/search_query"
+                    android:id="@+id/searchQuery"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -70,7 +70,7 @@
                 </EditText>
 
                 <org.mariotaku.twidere.view.IconActionButton
-                    android:id="@+id/search_submit"
+                    android:id="@+id/searchSubmit"
                     android:layout_width="@dimen/element_size_normal"
                     android:layout_height="match_parent"
                     android:layout_weight="0"
@@ -87,7 +87,7 @@
                 android:background="#20808080"/>
 
             <ListView
-                android:id="@+id/suggestions_list"
+                android:id="@+id/suggestionsList"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

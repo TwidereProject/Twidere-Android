@@ -119,18 +119,18 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     override var adapter: StatusAdapter? = null
 
     private var layoutManager: LinearLayoutManager? = null
-    private var mLoadTranslationTask: LoadTranslationTask? = null
+    private var loadTranslationTask: LoadTranslationTask? = null
 
     private var navigationHelper: RecyclerViewNavigationHelper? = null
     private var mScrollListener: RecyclerViewScrollHandler? = null
     // Data fields
-    private var mConversationLoaderInitialized: Boolean = false
+    private var conversationLoaderInitialized: Boolean = false
 
     private var mActivityLoaderInitialized: Boolean = false
     private var hasMoreConversation = true
     private var mStatusEvent: TweetEvent? = null
     // Listeners
-    private val mConversationsLoaderCallback = object : LoaderCallbacks<List<ParcelableStatus>> {
+    private val conversationsLoaderCallback = object : LoaderCallbacks<List<ParcelableStatus>> {
         override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>> {
             adapter!!.isRepliesLoading = true
             adapter!!.isConversationsLoading = true
@@ -412,9 +412,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableStatus>>,
                                 data: SingleResponse<ParcelableStatus>) {
         val activity = activity ?: return
-        if (data.hasData()) {
+        val status = data.data
+        if (status != null) {
             val readPosition = saveReadPosition()
-            val status = data.data
             val dataExtra = data.extras
             val credentials = dataExtra.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
             if (adapter!!.setStatus(status, credentials)) {
@@ -522,12 +522,12 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         args.putString(EXTRA_SINCE_ID, sinceId)
         args.putString(EXTRA_MAX_ID, maxId)
         args.putParcelable(EXTRA_STATUS, status)
-        if (mConversationLoaderInitialized) {
-            loaderManager.restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback)
+        if (conversationLoaderInitialized) {
+            loaderManager.restartLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
             return
         }
-        loaderManager.initLoader(LOADER_ID_STATUS_CONVERSATIONS, args, mConversationsLoaderCallback)
-        mConversationLoaderInitialized = true
+        loaderManager.initLoader(LOADER_ID_STATUS_CONVERSATIONS, args, conversationsLoaderCallback)
+        conversationLoaderInitialized = true
     }
 
 
@@ -546,11 +546,11 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
     private fun loadTranslation(status: ParcelableStatus?) {
         if (status == null) return
-        if (AsyncTaskUtils.isTaskRunning(mLoadTranslationTask)) {
-            mLoadTranslationTask!!.cancel(true)
+        if (AsyncTaskUtils.isTaskRunning(loadTranslationTask)) {
+            loadTranslationTask!!.cancel(true)
         }
-        mLoadTranslationTask = LoadTranslationTask(this)
-        AsyncTaskUtils.executeTask<LoadTranslationTask, ParcelableStatus>(mLoadTranslationTask, status)
+        loadTranslationTask = LoadTranslationTask(this)
+        AsyncTaskUtils.executeTask<LoadTranslationTask, ParcelableStatus>(loadTranslationTask, status)
     }
 
 
@@ -698,7 +698,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     true)
             val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE)
-            if (twitter == null) return SingleResponse.getInstance<TranslationResult>()
+            if (twitter == null) return SingleResponse.Companion.getInstance<TranslationResult>()
             try {
                 val prefDest = prefs.getString(SharedPreferenceConstants.KEY_TRANSLATION_DESTINATION, null)
                 val dest: String
@@ -711,15 +711,15 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     dest = prefDest
                 }
                 val statusId = if (status.is_retweet) status.retweet_id else status.id
-                return SingleResponse.getInstance(twitter.showTranslation(statusId, dest))
+                return SingleResponse.Companion.getInstance(twitter.showTranslation(statusId, dest))
             } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<TranslationResult>(e)
+                return SingleResponse.Companion.getInstance<TranslationResult>(e)
             }
 
         }
 
         override fun onPostExecute(result: SingleResponse<TranslationResult>) {
-            if (result.hasData()) {
+            if (result.data != null) {
                 fragment.displayTranslation(result.data)
             } else if (result.hasException()) {
                 Utils.showErrorMessage(context, R.string.translate, result.exception, false)

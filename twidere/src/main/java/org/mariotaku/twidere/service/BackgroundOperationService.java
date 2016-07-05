@@ -369,7 +369,11 @@ public class BackgroundOperationService extends IntentService implements Constan
                     } else for (MicroBlogException e : result.exceptions) {
                         if (e != null) {
                             // Show error
-                            Toast.makeText(context, R.string.status_not_updated, Toast.LENGTH_SHORT).show();
+                            String errorMessage = Utils.getErrorMessage(context, e);
+                            if (TextUtils.isEmpty(errorMessage)) {
+                                errorMessage = context.getString(R.string.status_not_updated);
+                            }
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show();
                             failed = true;
                             break;
                         }
@@ -432,11 +436,11 @@ public class BackgroundOperationService extends IntentService implements Constan
                                                                       final String imageUri) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(this,
                 accountKey);
-        if (credentials == null) return SingleResponse.getInstance();
+        if (credentials == null) return SingleResponse.Companion.getInstance();
         final MicroBlog twitter = MicroBlogAPIFactory.getInstance(this, credentials, true, true);
         final TwitterUpload twitterUpload = MicroBlogAPIFactory.getInstance(this, credentials,
                 true, true, TwitterUpload.class);
-        if (twitter == null || twitterUpload == null) return SingleResponse.getInstance();
+        if (twitter == null || twitterUpload == null) return SingleResponse.Companion.getInstance();
         try {
             final ParcelableDirectMessage directMessage;
             switch (ParcelableAccountUtils.getAccountType(credentials)) {
@@ -482,11 +486,11 @@ public class BackgroundOperationService extends IntentService implements Constan
             Utils.setLastSeen(this, new UserKey(recipientId, accountKey.getHost()),
                     System.currentTimeMillis());
 
-            return SingleResponse.getInstance(directMessage);
+            return SingleResponse.Companion.getInstance(directMessage);
         } catch (final IOException e) {
-            return SingleResponse.getInstance(e);
+            return SingleResponse.Companion.getInstance(e);
         } catch (final MicroBlogException e) {
-            return SingleResponse.getInstance(e);
+            return SingleResponse.Companion.getInstance(e);
         }
     }
 

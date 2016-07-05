@@ -82,16 +82,16 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
     public final SingleResponse<ParcelableUser> doLongOperation(final Arguments args) {
         final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
                 args.accountKey);
-        if (credentials == null) return SingleResponse.getInstance();
+        if (credentials == null) return SingleResponse.Companion.getInstance();
         final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, false, false);
-        if (twitter == null) return SingleResponse.getInstance();
+        if (twitter == null) return SingleResponse.Companion.getInstance();
         try {
             final User user = perform(twitter, credentials, args);
             final ParcelableUser parcelableUser = ParcelableUserUtils.fromUser(user, args.accountKey);
             succeededWorker(twitter, credentials, args, parcelableUser);
-            return SingleResponse.getInstance(parcelableUser, null);
+            return SingleResponse.Companion.getInstance(parcelableUser);
         } catch (final MicroBlogException e) {
-            return SingleResponse.getInstance(null, e);
+            return SingleResponse.Companion.getInstance(null, e);
         }
     }
 

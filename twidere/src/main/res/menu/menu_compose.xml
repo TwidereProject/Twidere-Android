@@ -10,7 +10,7 @@
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
     <item
-        android:id="@id/addImage"
+        android:id="@id/add_image"
         android:icon="@drawable/ic_action_gallery"
         android:title="@string/add_image"
         app:showAsAction="always"

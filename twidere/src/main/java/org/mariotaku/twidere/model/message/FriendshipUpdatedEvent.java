@@ -32,13 +32,14 @@ public class FriendshipUpdatedEvent {
 
     @NonNull
     UserKey accountKey;
-    String userId;
+    @NonNull
+    UserKey userKey;
     @NonNull
     Relationship relationship;
 
-    public FriendshipUpdatedEvent(@NonNull UserKey accountKey, String userId, @NonNull Relationship relationship) {
+    public FriendshipUpdatedEvent(@NonNull UserKey accountKey, @NonNull UserKey userKey, @NonNull Relationship relationship) {
         this.accountKey = accountKey;
-        this.userId = userId;
+        this.userKey = userKey;
         this.relationship = relationship;
     }
 
@@ -47,8 +48,9 @@ public class FriendshipUpdatedEvent {
         return accountKey;
     }
 
-    public String getUserId() {
-        return userId;
+    @NonNull
+    public UserKey getUserKey() {
+        return userKey;
     }
 
     @NonNull
@@ -61,7 +63,7 @@ public class FriendshipUpdatedEvent {
     }
 
     public boolean isUser(String id) {
-        return TextUtils.equals(userId, id);
+        return TextUtils.equals(userKey.getId(), id);
     }
 
     public boolean isAccount(UserKey accountKey) {

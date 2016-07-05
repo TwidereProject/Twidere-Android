@@ -61,6 +61,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
     private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
     private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
+    private val favoriteIcon by lazy { itemView.favoriteIcon }
+    private val retweetIcon by lazy { itemView.retweetIcon }
+    private val favoriteCountView by lazy { itemView.favoriteCount }
+    private val mediaLabelTextView by lazy { itemView.mediaLabelText }
+    private val quotedMediaLabelTextView by lazy { itemView.quotedMediaLabelText }
+    private val replyButton by lazy { itemView.reply }
+    private val retweetButton by lazy { itemView.retweet }
+    private val favoriteButton by lazy { itemView.favorite }
 
     private val eventListener: EventListener
 
@@ -118,10 +126,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         displayStatus(status, displayInReplyTo, true)
     }
 
-
-    private val iconActionView = itemView.favoriteIcon.isActivated
-
-    private val favoriteIcon = itemView.favoriteIcon
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
                                shouldDisplayExtraType: Boolean) {
@@ -370,11 +374,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (twitter.isDestroyingStatus(status.account_key, status.my_retweet_id)) {
-            itemView.retweetIcon.isActivated = false
+            retweetIcon.isActivated = false
             retweetCount = Math.max(0, status.retweet_count - 1)
         } else {
             val creatingRetweet = twitter.isCreatingRetweet(status.account_key, status.id)
-            itemView.retweetIcon.isActivated = creatingRetweet || status.retweeted ||
+            retweetIcon.isActivated = creatingRetweet || status.retweeted ||
                     Utils.isMyRetweet(status.account_key, status.retweeted_by_user_key,
                             status.my_retweet_id)
             retweetCount = status.retweet_count + if (creatingRetweet) 1 else 0
@@ -396,11 +400,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             favoriteCount = status.favorite_count + if (creatingFavorite) 1 else 0
         }
         if (favoriteCount > 0) {
-            itemView.favoriteCount.text = UnitConvertUtils.calculateProperCount(favoriteCount)
-            itemView.favoriteCount.visibility = View.VISIBLE
+            favoriteCountView.text = UnitConvertUtils.calculateProperCount(favoriteCount)
+            favoriteCountView.visibility = View.VISIBLE
         } else {
-            itemView.favoriteCount.text = null
-            itemView.favoriteCount.visibility = View.GONE
+            favoriteCountView.text = null
+            favoriteCountView.visibility = View.GONE
         }
         if (shouldDisplayExtraType) {
             displayExtraTypeIcon(status.card_name, status.media, status.location,
@@ -430,10 +434,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         itemMenu.setOnClickListener(eventListener)
         profileImageView.setOnClickListener(eventListener)
-        itemView.reply.setOnClickListener(eventListener)
-        itemView.retweet.setOnClickListener(eventListener)
-        itemView.favorite.setOnClickListener(eventListener)
+        replyButton.setOnClickListener(eventListener)
+        retweetButton.setOnClickListener(eventListener)
+        favoriteButton.setOnClickListener(eventListener)
     }
+
 
     override fun setTextSize(textSize: Float) {
         nameView.setPrimaryTextSize(textSize)
@@ -445,12 +450,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         timeView.textSize = textSize * 0.85f
         statusInfoLabel.textSize = textSize * 0.75f
 
-        itemView.mediaLabelText.textSize = textSize * 0.95f
-        itemView.quotedMediaLabelText.textSize = textSize * 0.95f
+        mediaLabelTextView.textSize = textSize * 0.95f
+        quotedMediaLabelTextView.textSize = textSize * 0.95f
 
         replyCountView.textSize = textSize
         retweetCountView.textSize = textSize
-        itemView.favoriteCount.textSize = textSize
+        favoriteCountView.textSize = textSize
     }
 
     fun setupViewOptions() {
@@ -477,7 +482,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
         val icon = ContextCompat.getDrawable(context, favIcon)
         val drawable = LikeAnimationDrawable(icon,
-                itemView.favoriteCount.textColors.defaultColor, favColor, favStyle)
+                favoriteCountView.textColors.defaultColor, favColor, favStyle)
         drawable.mutate()
         favoriteIcon.setImageDrawable(drawable)
         timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
@@ -570,13 +575,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 holder.profileImageView -> {
                     listener.onUserProfileClick(holder, position)
                 }
-                holder.itemView.reply, holder.itemView.replyIcon, holder.itemView.replyCount -> {
+                holder.replyButton -> {
                     listener.onItemActionClick(holder, R.id.reply, position)
                 }
-                holder.itemView.retweet, holder.itemView.retweetIcon, holder.itemView.retweetCount -> {
+                holder.retweetButton -> {
                     listener.onItemActionClick(holder, R.id.retweet, position)
                 }
-                holder.itemView.favorite, holder.itemView.favoriteIcon, holder.itemView.favoriteCount -> {
+                holder.favoriteButton -> {
                     listener.onItemActionClick(holder, R.id.favorite, position)
                 }
             }

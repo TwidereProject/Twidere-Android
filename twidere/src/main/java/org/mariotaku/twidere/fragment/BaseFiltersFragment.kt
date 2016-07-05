@@ -60,7 +60,8 @@ import org.mariotaku.twidere.util.Utils.getDefaultAccountKey
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
 
-abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(), LoaderManager.LoaderCallbacks<Cursor>, MultiChoiceModeListener {
+abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
+        LoaderManager.LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
     private var actionMode: ActionMode? = null
 
     abstract val contentUri: Uri
@@ -166,11 +167,11 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         return CursorLoader(activity, contentUri, contentColumns, null, null, null)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
+    override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
         val adapter = adapter
         adapter!!.swapCursor(data)
         if (data != null && data.count > 0) {
@@ -180,7 +181,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
         val adapter = adapter
         adapter!!.swapCursor(null)
     }
@@ -405,7 +406,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 text2.text = userId.host
             }
 
-            override fun swapCursor(c: Cursor?): Cursor {
+            override fun swapCursor(c: Cursor?): Cursor? {
                 val old = super.swapCursor(c)
                 if (c != null) {
                     userIdIdx = c.getColumnIndex(Filters.Users.USER_KEY)

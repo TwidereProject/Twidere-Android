@@ -106,7 +106,7 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         mTextSize = text_size
     }
 
-    override fun swapCursor(c: Cursor?): Cursor {
+    override fun swapCursor(c: Cursor?): Cursor? {
         val old = super.swapCursor(c)
         if (c != null) {
             mIndices = DraftCursorIndices(c)

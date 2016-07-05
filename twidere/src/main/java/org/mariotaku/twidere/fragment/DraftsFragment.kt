@@ -65,7 +65,7 @@ import org.mariotaku.twidere.util.Utils.getDefaultTextSize
 import java.io.File
 import java.util.*
 
-class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>, OnItemClickListener, MultiChoiceModeListener {
+class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemClickListener, MultiChoiceModeListener {
 
     private var adapter: DraftsAdapter? = null
 
@@ -121,19 +121,19 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>, OnItemCli
 
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val uri = Drafts.CONTENT_URI_UNSENT
         val cols = Drafts.COLUMNS
         val orderBy = Drafts.TIMESTAMP + " DESC"
         return CursorLoader(activity, uri, cols, null, null, orderBy)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
+    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
         adapter!!.swapCursor(cursor)
         setListShown(true)
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
         adapter!!.swapCursor(null)
     }
 

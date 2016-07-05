@@ -125,7 +125,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var mImageUploaderUsed: Boolean = false
     private var mStatusShortenerUsed: Boolean = false
     private var mNavigateBackPressed: Boolean = false
-    private var mTextChanged: Boolean = false
+    private var textChanged: Boolean = false
     private var mKeyMetaState: Int = 0
     private var mDraft: Draft? = null
 
@@ -133,10 +133,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var mLocationListener: LocationListener? = null
     private var mNameFirst: Boolean = false
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         when (requestCode) {
             REQUEST_TAKE_PHOTO, REQUEST_PICK_IMAGE, REQUEST_OPEN_DOCUMENT -> {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && intent != null) {
                     val src = arrayOf(intent.data)
                     val dst = arrayOf(createTempImageUri(0))
                     mTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst,
@@ -144,7 +144,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
             }
             REQUEST_EDIT_IMAGE -> {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && intent != null) {
                     if (intent.data != null) {
                         setMenu()
                         updateTextCount()
@@ -152,7 +152,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
             }
             REQUEST_EXTENSION_COMPOSE -> {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK && intent != null) {
                     val text = intent.getStringExtra(EXTRA_TEXT)
                     val append = intent.getStringExtra(EXTRA_APPEND_TEXT)
                     val imageUri = intent.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)
@@ -606,7 +606,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         updateLocationState()
         notifyAccountSelectionChanged()
 
-        mTextChanged = false
+        textChanged = false
 
         updateAttachedMediaView()
     }
@@ -679,7 +679,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
 
             override fun afterTextChanged(s: Editable) {
-                mTextChanged = s.length == 0
+                textChanged = s.length == 0
                 val deletes = s.getSpans(0, s.length, MarkForDeleteSpan::class.java)
                 for (delete in deletes) {
                     s.delete(s.getSpanStart(delete), s.getSpanEnd(delete))
@@ -702,7 +702,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
         if (KeyboardShortcutConstants.ACTION_NAVIGATION_BACK == action) {
-            if (editText.length() == 0 && !mTextChanged) {
+            if (editText.length() == 0 && !textChanged) {
                 if (!mNavigateBackPressed) {
                     Toast.makeText(this, getString(R.string.press_again_to_close), Toast.LENGTH_SHORT).show()
                     editText.removeCallbacks(mBackTimeoutRunnable)
@@ -712,7 +712,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
                 mNavigateBackPressed = true
             } else {
-                mTextChanged = false
+                textChanged = false
             }
             return true
         }

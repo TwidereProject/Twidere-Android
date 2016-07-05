@@ -76,17 +76,17 @@ class ParcelableUserLoader(
                 break
             }
         }
-        if (credentials == null) return SingleResponse.getInstance<ParcelableUser>()
+        if (credentials == null) return SingleResponse()
         if (!omitIntentExtra && extras != null) {
             val user = extras.getParcelable<ParcelableUser>(EXTRA_USER)
             if (user != null) {
                 val values = ParcelableUserValuesCreator.create(user)
                 resolver.insert(CachedUsers.CONTENT_URI, values)
                 ParcelableUserUtils.updateExtraInformation(user, credentials, userColorNameManager)
-                return SingleResponse.getInstance(user)
+                return SingleResponse.Companion.getInstance(user)
             }
         }
-        val twitter = MicroBlogAPIFactory.getInstance(context, credentials, true, true) ?: return SingleResponse.getInstance<ParcelableUser>()
+        val twitter = MicroBlogAPIFactory.getInstance(context, credentials, true, true) ?: return SingleResponse()
         if (loadFromCache) {
             val where: Expression
             val whereArgs: Array<String>
@@ -105,7 +105,7 @@ class ParcelableUserLoader(
                     whereArgs = arrayOf(screenName)
                 }
             } else {
-                return SingleResponse.getInstance<ParcelableUser>()
+                return SingleResponse()
             }
             val cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS,
                     where.sql, whereArgs, null)
@@ -118,7 +118,7 @@ class ParcelableUserLoader(
                         if (TextUtils.equals(UserKeyUtils.getUserHost(user), user.key.host)) {
                             user.account_key = accountKey
                             user.account_color = credentials.color
-                            return SingleResponse.getInstance(user)
+                            return SingleResponse.Companion.getInstance(user)
                         }
                         cur.moveToNext()
                     }
@@ -150,12 +150,12 @@ class ParcelableUserLoader(
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
             val user = ParcelableUserUtils.fromUser(twitterUser, accountKey)
             ParcelableUserUtils.updateExtraInformation(user, credentials, userColorNameManager)
-            val response = SingleResponse.getInstance(user)
+            val response = SingleResponse.Companion.getInstance(user)
             response.extras.putParcelable(EXTRA_ACCOUNT, credentials)
             return response
         } catch (e: MicroBlogException) {
             Log.w(LOGTAG, e)
-            return SingleResponse.getInstance<ParcelableUser>(e)
+            return SingleResponse(exception = e);
         }
 
     }
@@ -164,7 +164,7 @@ class ParcelableUserLoader(
         if (!omitIntentExtra && extras != null) {
             val user = extras.getParcelable<ParcelableUser>(EXTRA_USER)
             if (user != null) {
-                deliverResult(SingleResponse.getInstance(user))
+                deliverResult(SingleResponse.Companion.getInstance(user))
             }
         }
         forceLoad()
@@ -172,15 +172,13 @@ class ParcelableUserLoader(
 
     override fun deliverResult(data: SingleResponse<ParcelableUser>) {
         super.deliverResult(data)
-        if (data.hasData()) {
-            val user = data.data
-            if (user.is_cache) return
-            val account = data.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
-            if (account != null) {
-                val task = UpdateAccountInfoTask(context)
-                task.setParams(Pair(account, user))
-                TaskStarter.execute<Pair<ParcelableAccount, ParcelableUser>, Any, Any>(task)
-            }
+        val user = data.data ?: return
+        if (user.is_cache) return
+        val account = data.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
+        if (account != null) {
+            val task = UpdateAccountInfoTask(context)
+            task.params = Pair(account, user)
+            TaskStarter.execute<Pair<ParcelableAccount, ParcelableUser>, Any, Any>(task)
         }
     }
 }

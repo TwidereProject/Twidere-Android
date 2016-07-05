@@ -76,9 +76,9 @@ public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Ob
                 Log.w(LOGTAG, e);
             }
             final User user = twitter.verifyCredentials();
-            return SingleResponse.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
+            return SingleResponse.Companion.getInstance(ParcelableUserUtils.fromUser(user, mAccountKey));
         } catch (MicroBlogException | IOException e) {
-            return SingleResponse.getInstance(e);
+            return SingleResponse.Companion.getInstance(e);
         }
     }
 

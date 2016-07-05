@@ -407,10 +407,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
         override fun loadInBackground(): SingleResponse<ParcelableUserList> {
             if (!omitIntentExtra && extras != null) {
                 val cache = extras.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
-                if (cache != null) return SingleResponse.getInstance(cache)
+                if (cache != null) return SingleResponse.Companion.getInstance(cache)
             }
             val twitter = MicroBlogAPIFactory.getInstance(context, accountKey,
-                    true) ?: return SingleResponse.getInstance<ParcelableUserList>()
+                    true) ?: return SingleResponse.Companion.getInstance<ParcelableUserList>()
             try {
                 val list: UserList
                 when {
@@ -424,12 +424,12 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
                         list = twitter.showUserListByScrenName(listName, screenName)
                     }
                     else -> {
-                        return SingleResponse.getInstance<ParcelableUserList>()
+                        return SingleResponse.Companion.getInstance<ParcelableUserList>()
                     }
                 }
-                return SingleResponse.getInstance(ParcelableUserListUtils.from(list, accountKey))
+                return SingleResponse.Companion.getInstance(ParcelableUserListUtils.from(list, accountKey))
             } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableUserList>(e)
+                return SingleResponse.Companion.getInstance<ParcelableUserList>(e)
             }
 
         }

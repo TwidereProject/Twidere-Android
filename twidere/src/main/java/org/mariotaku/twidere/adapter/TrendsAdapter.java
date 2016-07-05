@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SimpleCursorAdapter;
 
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -40,6 +41,7 @@ public class TrendsAdapter extends SimpleCursorAdapter {
     }
 
     @Override
+    @Nullable
     public Cursor swapCursor(Cursor c) {
         if (c != null) {
             mNameIdx = c.getColumnIndex(TwidereDataStore.CachedTrends.NAME);

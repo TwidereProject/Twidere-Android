@@ -300,7 +300,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
         @Override
         protected SingleResponse<List<ParcelableUserList>> doInBackground(final Object... params) {
             final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, mAccountKey, false);
-            if (twitter == null) return SingleResponse.getInstance();
+            if (twitter == null) return SingleResponse.Companion.getInstance();
             try {
                 final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
                 final List<ParcelableUserList> data = new ArrayList<>();
@@ -315,12 +315,12 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
                         data.add(ParcelableUserListUtils.from(item, mAccountKey));
                     }
                 }
-                final SingleResponse<List<ParcelableUserList>> result = SingleResponse.getInstance(data);
+                final SingleResponse<List<ParcelableUserList>> result = SingleResponse.Companion.getInstance(data);
                 result.getExtras().putBoolean(EXTRA_IS_MY_ACCOUNT, isMyAccount);
                 return result;
             } catch (final MicroBlogException e) {
                 Log.w(LOGTAG, e);
-                return SingleResponse.getInstance(e);
+                return SingleResponse.Companion.getInstance(e);
             }
         }
 
@@ -364,7 +364,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
         @Override
         protected SingleResponse<List<ParcelableUser>> doInBackground(final Object... params) {
             final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, mAccountKey, false);
-            if (twitter == null) return SingleResponse.getInstance();
+            if (twitter == null) return SingleResponse.Companion.getInstance();
             try {
                 final Paging paging = new Paging();
                 final ResponseList<User> lists = twitter.searchUsers(mName, paging);
@@ -372,10 +372,10 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
                 for (final User item : lists) {
                     data.add(ParcelableUserUtils.fromUser(item, mAccountKey));
                 }
-                return SingleResponse.getInstance(data);
+                return SingleResponse.Companion.getInstance(data);
             } catch (final MicroBlogException e) {
                 Log.w(LOGTAG, e);
-                return SingleResponse.getInstance(e);
+                return SingleResponse.Companion.getInstance(e);
             }
         }
 

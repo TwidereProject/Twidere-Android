@@ -237,7 +237,7 @@ public class BrowserSignInActivity extends BaseActivity {
         @Override
         protected SingleResponse<OAuthToken> doInBackground(final Object... params) {
             if (isEmpty(mConsumerKey) || isEmpty(mConsumerSecret)) {
-                return SingleResponse.getInstance();
+                return new SingleResponse<>();
             }
             try {
                 final Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat,
@@ -245,9 +245,9 @@ public class BrowserSignInActivity extends BaseActivity {
                 final Authorization auth = new OAuthAuthorization(mConsumerKey, mConsumerSecret);
                 final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(mActivity, endpoint,
                         auth, TwitterOAuth.class);
-                return SingleResponse.getInstance(oauth.getRequestToken(OAUTH_CALLBACK_OOB));
+                return new SingleResponse<>(oauth.getRequestToken(OAUTH_CALLBACK_OOB), null, new Bundle());
             } catch (final MicroBlogException e) {
-                return SingleResponse.getInstance(e);
+                return new SingleResponse<>(null, e, new Bundle());
             }
         }
 

@@ -52,6 +52,6 @@ public class GetSavedSearchesTask extends AbstractTask<UserKey[], SingleResponse
                 }
             }
         }
-        return SingleResponse.getInstance();
+        return SingleResponse.Companion.getInstance();
     }
 }

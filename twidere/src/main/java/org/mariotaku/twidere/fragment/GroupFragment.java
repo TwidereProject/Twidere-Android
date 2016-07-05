@@ -134,11 +134,11 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
         public SingleResponse<ParcelableGroup> loadInBackground() {
             if (!mOmitIntentExtra && mExtras != null) {
                 final ParcelableGroup cache = mExtras.getParcelable(EXTRA_GROUP);
-                if (cache != null) return SingleResponse.getInstance(cache);
+                if (cache != null) return SingleResponse.Companion.getInstance(cache);
             }
             final MicroBlog twitter = MicroBlogAPIFactory.getInstance(getContext(), mAccountKey,
                     true);
-            if (twitter == null) return SingleResponse.getInstance();
+            if (twitter == null) return SingleResponse.Companion.getInstance();
             try {
                 final Group group;
                 if (mGroupId != null) {
@@ -146,12 +146,12 @@ public class GroupFragment extends AbsToolbarTabPagesFragment implements
                 } else if (mGroupName != null) {
                     group = twitter.showGroupByName(mGroupName);
                 } else {
-                    return SingleResponse.getInstance();
+                    return SingleResponse.Companion.getInstance();
                 }
-                return SingleResponse.getInstance(ParcelableGroupUtils.from(group, mAccountKey, 0,
+                return SingleResponse.Companion.getInstance(ParcelableGroupUtils.from(group, mAccountKey, 0,
                         group.isMember()));
             } catch (final MicroBlogException e) {
-                return SingleResponse.getInstance(e);
+                return SingleResponse.Companion.getInstance(e);
             }
         }
 
