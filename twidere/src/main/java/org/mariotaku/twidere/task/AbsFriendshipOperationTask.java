@@ -91,7 +91,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
             succeededWorker(twitter, credentials, args, parcelableUser);
             return SingleResponse.Companion.getInstance(parcelableUser);
         } catch (final MicroBlogException e) {
-            return SingleResponse.Companion.getInstance(null, e);
+            return SingleResponse.Companion.getInstance(e);
         }
     }
 
