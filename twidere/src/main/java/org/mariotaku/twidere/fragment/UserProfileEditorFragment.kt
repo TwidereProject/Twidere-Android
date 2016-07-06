@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import android.text.TextWatcher
 import android.view.*
@@ -63,7 +64,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>>,
         KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
 
-    private var task: AbstractTask<*, *, UserProfileEditorFragment>? = null
+    private var currentTask: AbstractTask<*, *, UserProfileEditorFragment>? = null
     private val accountKey: UserKey
         get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
     private var user: ParcelableUser? = null
@@ -82,7 +83,8 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
 
     override fun onClick(view: View) {
         val user = user
-        if (user == null || task != null && !task!!.isFinished)
+        val task = currentTask
+        if (user == null || task != null && !task.isFinished)
             return
         when (view.id) {
             R.id.profileImage -> {
@@ -138,18 +140,21 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         inflater!!.inflate(R.menu.menu_profile_editor, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.save -> {
-                val name = ParseUtils.parseString(editName!!.text)
+                val name = ParseUtils.parseString(editName.text)
                 val url = ParseUtils.parseString(editUrl.text)
-                val location = ParseUtils.parseString(editLocation!!.text)
-                val description = ParseUtils.parseString(editDescription!!.text)
-                val linkColor = linkColor!!.color
-                val backgroundColor = backgroundColor!!.color
-                task = UpdateProfileTaskInternal(this, accountKey, user, name, url, location,
+                val location = ParseUtils.parseString(editLocation.text)
+                val description = ParseUtils.parseString(editDescription.text)
+                val linkColor = linkColor.color
+                val backgroundColor = backgroundColor.color
+                val task = UpdateProfileTaskInternal(accountKey, user, name, url, location,
                         description, linkColor, backgroundColor)
+                task.params = activity
+                task.callback = this
                 TaskStarter.execute(task)
+                this.currentTask = task
                 return true
             }
         }
@@ -166,89 +171,96 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         }
 
         val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
-        editName!!.addTextChangedListener(this)
-        editDescription!!.addTextChangedListener(this)
-        editLocation!!.addTextChangedListener(this)
-        editUrl!!.addTextChangedListener(this)
+        editName.addTextChangedListener(this)
+        editDescription.addTextChangedListener(this)
+        editLocation.addTextChangedListener(this)
+        editUrl.addTextChangedListener(this)
 
-        editDescription!!.setLengthChecker(lengthChecker)
+        editDescription.setLengthChecker(lengthChecker)
 
-        profileImage!!.setOnClickListener(this)
-        profileBanner!!.setOnClickListener(this)
-        profileBackground!!.setOnClickListener(this)
+        profileImage.setOnClickListener(this)
+        profileBanner.setOnClickListener(this)
+        profileBackground.setOnClickListener(this)
 
-        editProfileImage!!.setOnClickListener(this)
-        editProfileBanner!!.setOnClickListener(this)
-        editProfileBackground!!.setOnClickListener(this)
+        editProfileImage.setOnClickListener(this)
+        editProfileBanner.setOnClickListener(this)
+        editProfileBackground.setOnClickListener(this)
 
-        setLinkColor!!.setOnClickListener(this)
-        setBackgroundColor!!.setOnClickListener(this)
+        setLinkColor.setOnClickListener(this)
+        setBackgroundColor.setOnClickListener(this)
 
         if (savedInstanceState != null && savedInstanceState.getParcelable<Parcelable>(EXTRA_USER) != null) {
             val user = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)!!
             displayUser(user)
-            editName!!.setText(savedInstanceState.getString(EXTRA_NAME, user.name))
-            editLocation!!.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location))
-            editDescription!!.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, ParcelableUserUtils.getExpandedDescription(user)))
-            editUrl!!.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded))
+            editName.setText(savedInstanceState.getString(EXTRA_NAME, user.name))
+            editLocation.setText(savedInstanceState.getString(EXTRA_LOCATION, user.location))
+            editDescription.setText(savedInstanceState.getString(EXTRA_DESCRIPTION, ParcelableUserUtils.getExpandedDescription(user)))
+            editUrl.setText(savedInstanceState.getString(EXTRA_URL, user.url_expanded))
         } else {
             getUserInfo()
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState!!.putParcelable(EXTRA_USER, user)
-        outState.putString(EXTRA_NAME, ParseUtils.parseString(editName!!.text))
-        outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(editDescription!!.text))
-        outState.putString(EXTRA_LOCATION, ParseUtils.parseString(editLocation!!.text))
-        outState.putString(EXTRA_URL, ParseUtils.parseString(editUrl!!.text))
+        outState.putParcelable(EXTRA_USER, user)
+        outState.putString(EXTRA_NAME, ParseUtils.parseString(editName.text))
+        outState.putString(EXTRA_DESCRIPTION, ParseUtils.parseString(editDescription.text))
+        outState.putString(EXTRA_LOCATION, ParseUtils.parseString(editLocation.text))
+        outState.putString(EXTRA_URL, ParseUtils.parseString(editUrl.text))
     }
 
     override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_user_profile_editor, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_user_profile_editor, container, false)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == FragmentActivity.RESULT_CANCELED) return
+        if (resultCode == FragmentActivity.RESULT_CANCELED || data == null) return
         when (requestCode) {
             REQUEST_UPLOAD_PROFILE_BANNER_IMAGE -> {
-                if (task != null && !task!!.isFinished) return
+                val task = currentTask
+                if (task != null && !task.isFinished) return
                 if (resultCode == RESULT_REMOVE_BANNER) {
-                    task = RemoveProfileBannerTaskInternal(accountKey)
+                    currentTask = RemoveProfileBannerTaskInternal(accountKey)
                 } else {
-                    task = UpdateProfileBannerImageTaskInternal(activity, accountKey,
-                            data!!.data, true)
+                    currentTask = UpdateProfileBannerImageTaskInternal(activity, accountKey,
+                            data.data, true)
                 }
             }
             REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE -> {
-                //TODO upload profile background
-                if (task != null && !task!!.isFinished) return
-                task = UpdateProfileBackgroundImageTaskInternal(activity, accountKey,
-                        data!!.data, false, true)
+                val task = currentTask
+                if (task != null && !task.isFinished) return
+                currentTask = UpdateProfileBackgroundImageTaskInternal(activity, accountKey,
+                        data.data, false, true)
             }
             REQUEST_UPLOAD_PROFILE_IMAGE -> {
-                if (task != null && !task!!.isFinished) return
-                task = UpdateProfileImageTaskInternal(activity, accountKey,
-                        data!!.data, true)
+                val task = currentTask
+                if (task != null && !task.isFinished) return
+                currentTask = UpdateProfileImageTaskInternal(activity, accountKey,
+                        data.data, true)
             }
             REQUEST_PICK_LINK_COLOR -> {
                 if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
-                    linkColor!!.color = data!!.getIntExtra(EXTRA_COLOR, 0)
+                    linkColor.color = data.getIntExtra(EXTRA_COLOR, 0)
                     updateDoneButton()
                 }
             }
             REQUEST_PICK_BACKGROUND_COLOR -> {
                 if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
-                    backgroundColor!!.color = data!!.getIntExtra(EXTRA_COLOR, 0)
+                    backgroundColor.color = data.getIntExtra(EXTRA_COLOR, 0)
                     updateDoneButton()
                 }
             }
         }
-
+        executeAfterFragmentResumed {
+            val task = currentTask
+            if (task != null && !task.isFinished) {
+                TaskStarter.execute(task)
+            }
+        }
     }
 
     private fun displayUser(user: ParcelableUser?) {
@@ -256,8 +268,8 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         getUserInfoCalled = false
         this.user = user
         if (user != null) {
-            progressContainer!!.visibility = View.GONE
-            editProfileContent!!.visibility = View.VISIBLE
+            progressContainer.visibility = View.GONE
+            editProfileContent.visibility = View.VISIBLE
             editName.setText(user.name)
             editDescription.setText(ParcelableUserUtils.getExpandedDescription(user))
             editLocation.setText(user.location)
@@ -266,16 +278,16 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
             val defWidth = resources.displayMetrics.widthPixels
             mediaLoader.displayProfileBanner(profileBanner, user.profile_banner_url, defWidth)
             mediaLoader.displayImage(profileBackground, user.profile_background_url)
-            linkColor!!.color = user.link_color
-            backgroundColor!!.color = user.background_color
+            linkColor.color = user.link_color
+            backgroundColor.color = user.background_color
             if (USER_TYPE_FANFOU_COM == user.key.host) {
-                editProfileBanner!!.visibility = View.GONE
+                editProfileBanner.visibility = View.GONE
             } else {
-                editProfileBanner!!.visibility = View.VISIBLE
+                editProfileBanner.visibility = View.VISIBLE
             }
         } else {
-            progressContainer!!.visibility = View.GONE
-            editProfileContent!!.visibility = View.GONE
+            progressContainer.visibility = View.GONE
+            editProfileContent.visibility = View.GONE
         }
         updateDoneButton()
     }
@@ -290,13 +302,6 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         } else {
             lm.initLoader(LOADER_ID_USER, null, this)
             userInfoLoaderInitialized = true
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (task != null && !task!!.isFinished) {
-            TaskStarter.execute(task)
         }
     }
 
@@ -328,7 +333,6 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
     }
 
     internal class UpdateProfileTaskInternal(
-            fragment: UserProfileEditorFragment,
             private val accountKey: UserKey,
             private val original: ParcelableUser?,
             private val name: String,
@@ -337,16 +341,11 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
             private val description: String,
             private val linkColor: Int,
             private val backgroundColor: Int
-    ) : AbstractTask<Any?, SingleResponse<ParcelableUser>, UserProfileEditorFragment>() {
-        private val activity: FragmentActivity
+    ) : AbstractTask<Context, SingleResponse<ParcelableUser>, UserProfileEditorFragment>() {
 
-        init {
-            activity = fragment.activity
-        }
-
-        override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
-            val credentials = ParcelableCredentialsUtils.getCredentials(activity, accountKey) ?: return SingleResponse.Companion.getInstance<ParcelableUser>()
-            val twitter = MicroBlogAPIFactory.getInstance(activity, credentials,
+        override fun doLongOperation(context: Context): SingleResponse<ParcelableUser> {
+            val credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey) ?: return SingleResponse.Companion.getInstance<ParcelableUser>()
+            val twitter = MicroBlogAPIFactory.getInstance(context, credentials,
                     true, true) ?: return SingleResponse.Companion.getInstance<ParcelableUser>()
             try {
                 var user: User? = null
@@ -379,18 +378,19 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
                 val orig = original ?: return true
                 if (linkColor != orig.link_color) return true
                 if (backgroundColor != orig.background_color) return true
-                if (!stringEquals(name, orig.name)) return true
-                if (!stringEquals(description, ParcelableUserUtils.getExpandedDescription(orig)))
+                if (!TextUtils.equals(name, orig.name)) return true
+                if (!TextUtils.equals(description, ParcelableUserUtils.getExpandedDescription(orig)))
                     return true
-                if (!stringEquals(location, orig.location)) return true
-                if (!stringEquals(url, if (isEmpty(orig.url_expanded)) orig.url else orig.url_expanded))
+                if (!TextUtils.equals(location, orig.location)) return true
+                if (!TextUtils.equals(url, if (isEmpty(orig.url_expanded)) orig.url else orig.url_expanded))
                     return true
                 return false
             }
 
-        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>?) {
-            super.afterExecute(callback, result)
-            if (result!!.hasData()) {
+        override fun afterExecute(callback: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>) {
+            if (callback == null) return
+            val activity = callback.activity ?: return
+            if (result.hasData()) {
                 val account = result.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
                 if (account != null) {
                     val task = UpdateAccountInfoTask(activity)
@@ -398,7 +398,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
                     TaskStarter.execute(task)
                 }
             }
-            callback?.executeAfterFragmentResumed { fragment ->
+            callback.executeAfterFragmentResumed { fragment ->
                 val f = (fragment as UserProfileEditorFragment).fragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG)
                 if (f is DialogFragment) {
                     f.dismissAllowingStateLoss()
@@ -409,7 +409,6 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
 
         override fun beforeExecute() {
             super.beforeExecute()
-            val callback = callback
             callback?.executeAfterFragmentResumed { fragment ->
                 val df = ProgressDialogFragment.show((fragment as UserProfileEditorFragment).activity, DIALOG_FRAGMENT_TAG)
                 df.isCancelable = false
@@ -512,16 +511,5 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         private val RESULT_REMOVE_BANNER = 101
         private val UPDATE_PROFILE_DIALOG_FRAGMENT_TAG = "update_profile"
 
-        private fun stringEquals(str1: CharSequence?, str2: CharSequence?): Boolean {
-            if (str1 == null || str2 == null) return str1 === str2
-            if (str1.length != str2.length) return false
-            var i = 0
-            val j = str1.length
-            while (i < j) {
-                if (str1[i] != str2[i]) return false
-                i++
-            }
-            return true
-        }
     }
 }
