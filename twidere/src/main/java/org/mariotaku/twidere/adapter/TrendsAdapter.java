@@ -42,7 +42,7 @@ public class TrendsAdapter extends SimpleCursorAdapter {
 
     @Override
     @Nullable
-    public Cursor swapCursor(Cursor c) {
+    public Cursor swapCursor(@Nullable Cursor c) {
         if (c != null) {
             mNameIdx = c.getColumnIndex(TwidereDataStore.CachedTrends.NAME);
         }

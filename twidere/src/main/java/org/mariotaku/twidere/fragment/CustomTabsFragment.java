@@ -79,6 +79,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import static org.mariotaku.twidere.Constants.EXTRA_ARGUMENTS;
+import static org.mariotaku.twidere.Constants.EXTRA_EXTRAS;
+import static org.mariotaku.twidere.Constants.EXTRA_ICON;
+import static org.mariotaku.twidere.Constants.EXTRA_ID;
+import static org.mariotaku.twidere.Constants.EXTRA_NAME;
+import static org.mariotaku.twidere.Constants.EXTRA_TYPE;
+import static org.mariotaku.twidere.Constants.INTENT_ACTION_ADD_TAB;
+import static org.mariotaku.twidere.Constants.INTENT_ACTION_EDIT_TAB;
+import static org.mariotaku.twidere.Constants.REQUEST_ADD_TAB;
+import static org.mariotaku.twidere.Constants.REQUEST_EDIT_TAB;
+
 public class CustomTabsFragment extends BaseSupportFragment implements LoaderCallbacks<Cursor>,
         MultiChoiceModeListener, OnItemClickListener {
 

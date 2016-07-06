@@ -137,7 +137,7 @@ public class UserAutoCompleteAdapter extends SimpleCursorAdapter {
 
     @Override
     @Nullable
-    public Cursor swapCursor(final Cursor cursor) {
+    public Cursor swapCursor(@Nullable final Cursor cursor) {
         if (cursor != null) {
             mIdIdx = cursor.getColumnIndex(CachedUsers.USER_KEY);
             mNameIdx = cursor.getColumnIndex(CachedUsers.NAME);

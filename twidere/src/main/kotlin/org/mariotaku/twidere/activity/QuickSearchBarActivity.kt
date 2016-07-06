@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v4.widget.CursorAdapter
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -58,32 +59,32 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 /**
  * Created by mariotaku on 15/1/6.
  */
-class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<Cursor>,
+class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<Cursor?>,
         OnItemSelectedListener, OnItemClickListener, OnFitSystemWindowsListener,
         SwipeDismissListViewTouchListener.DismissCallbacks {
 
-    private var usersSearchAdapter: SuggestionsAdapter? = null
     private val mSystemWindowsInsets = Rect()
     private var textChanged: Boolean = false
 
     override fun canDismiss(position: Int): Boolean {
-        return usersSearchAdapter!!.getItemViewType(position) == SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY
+        val adapter = suggestionsList.adapter as SuggestionsAdapter
+        return adapter.getItemViewType(position) == SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY
     }
 
     override fun onDismiss(listView: ListView, reverseSortedPositions: IntArray) {
+        val adapter = suggestionsList.adapter as SuggestionsAdapter
         val ids = LongArray(reverseSortedPositions.size)
         var i = 0
         val j = reverseSortedPositions.size
         while (i < j) {
             val position = reverseSortedPositions[i]
-            val item = usersSearchAdapter!!.getSuggestionItem(position) ?: return
+            val item = adapter.getSuggestionItem(position) ?: return
             ids[i] = item._id
             i++
         }
-        usersSearchAdapter!!.addRemovedPositions(reverseSortedPositions)
-        val cr = contentResolver
-        ContentResolverUtils.bulkDelete(cr, SearchHistory.CONTENT_URI, SearchHistory._ID, ids,
-                null)
+        adapter.addRemovedPositions(reverseSortedPositions)
+        ContentResolverUtils.bulkDelete(contentResolver, SearchHistory.CONTENT_URI,
+                SearchHistory._ID, ids, null)
         supportLoaderManager.restartLoader(0, null, this)
     }
 
@@ -95,7 +96,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val accountId = selectedAccountKey
         val builder = Suggestions.Search.CONTENT_URI.buildUpon()
         builder.appendQueryParameter(QUERY_PARAM_QUERY, ParseUtils.parseString(searchQuery.text))
@@ -105,12 +106,14 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         return CursorLoader(this, builder.build(), Suggestions.Search.COLUMNS, null, null, null)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor) {
-        usersSearchAdapter!!.changeCursor(data)
+    override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
+        val adapter = suggestionsList.adapter as SuggestionsAdapter
+        adapter.changeCursor(data)
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
-        usersSearchAdapter!!.changeCursor(null)
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
+        val adapter = suggestionsList.adapter as SuggestionsAdapter
+        adapter.changeCursor(null)
     }
 
     override fun onFitSystemWindows(insets: Rect) {
@@ -119,8 +122,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val item = usersSearchAdapter!!.getSuggestionItem(position)
-        when (usersSearchAdapter!!.getItemViewType(position)) {
+        val adapter = (suggestionsList.adapter ?: return) as SuggestionsAdapter
+        val item = adapter.getSuggestionItem(position)
+        when (adapter.getItemViewType(position)) {
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, selectedAccountKey,
                         UserKey.valueOf(item!!.extra_id), item.summary, null,
@@ -182,8 +186,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             }
         }
         mainContent.setOnFitSystemWindowsListener(this)
-        usersSearchAdapter = SuggestionsAdapter(this)
-        suggestionsList.adapter = usersSearchAdapter
+        suggestionsList.adapter = SuggestionsAdapter(this)
         suggestionsList.onItemClickListener = this
 
         val listener = SwipeDismissListViewTouchListener(suggestionsList, this)
@@ -268,20 +271,22 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
     }
 
-    class SuggestionsAdapter internal constructor(private val mActivity: QuickSearchBarActivity) : CursorAdapter(mActivity, null, 0), OnClickListener {
+    class SuggestionsAdapter internal constructor(
+            private val activity: QuickSearchBarActivity
+    ) : CursorAdapter(activity, null, 0), OnClickListener {
 
         private val mInflater: LayoutInflater
         private val mMediaLoader: MediaLoaderWrapper
         private val mUserColorNameManager: UserColorNameManager
-        private val mRemovedPositions: SortableIntList?
+        private val removedPositions: SortableIntList?
 
-        private var mIndices: Indices? = null
+        private var indices: Indices? = null
 
         init {
-            mRemovedPositions = SortableIntList()
-            mMediaLoader = mActivity.mediaLoader
-            mUserColorNameManager = mActivity.userColorNameManager
-            mInflater = LayoutInflater.from(mActivity)
+            removedPositions = SortableIntList()
+            mMediaLoader = activity.mediaLoader
+            mUserColorNameManager = activity.userColorNameManager
+            mInflater = LayoutInflater.from(activity)
         }
 
         override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
@@ -304,40 +309,40 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         internal fun getSuggestionItem(position: Int): SuggestionItem? {
             val cursor = getItem(position) as Cursor? ?: return null
-            val indices = mIndices ?: return null
+            val indices = indices ?: return null
             return SuggestionItem(cursor, indices)
         }
 
         override fun bindView(view: View, context: Context, cursor: Cursor) {
-            if (mIndices == null) throw NullPointerException()
+            val indices = indices!!
             when (getActualItemViewType(cursor.position)) {
                 VIEW_TYPE_SEARCH_HISTORY -> {
                     val holder = view.tag as SearchViewHolder
-                    val title = cursor.getString(mIndices!!.title)
+                    val title = cursor.getString(indices.title)
                     holder.edit_query.tag = title
                     holder.text1.text = title
                     holder.icon.setImageResource(R.drawable.ic_action_history)
                 }
                 VIEW_TYPE_SAVED_SEARCH -> {
                     val holder = view.tag as SearchViewHolder
-                    val title = cursor.getString(mIndices!!.title)
+                    val title = cursor.getString(indices.title)
                     holder.edit_query.tag = title
                     holder.text1.text = title
                     holder.icon.setImageResource(R.drawable.ic_action_save)
                 }
                 VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                     val holder = view.tag as UserViewHolder
-                    val userKey = UserKey.valueOf(cursor.getString(mIndices!!.extra_id))!!
+                    val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))!!
                     holder.text1.text = mUserColorNameManager.getUserNickname(userKey,
-                            cursor.getString(mIndices!!.title))
+                            cursor.getString(indices.title))
                     holder.text2.visibility = View.VISIBLE
-                    holder.text2.text = String.format("@%s", cursor.getString(mIndices!!.summary))
+                    holder.text2.text = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
-                    mMediaLoader.displayProfileImage(holder.icon, cursor.getString(mIndices!!.icon))
+                    mMediaLoader.displayProfileImage(holder.icon, cursor.getString(indices.icon))
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
-                    holder.text1.text = String.format("@%s", cursor.getString(mIndices!!.title))
+                    holder.text1.text = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
                     holder.icon.setColorFilter(holder.text1.currentTextColor, Mode.SRC_ATOP)
                     mMediaLoader.cancelDisplayTask(holder.icon)
@@ -352,8 +357,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         fun getActualItemViewType(position: Int): Int {
             val cursor = super.getItem(position) as Cursor
-            if (cursor == null || mIndices == null) throw NullPointerException()
-            when (cursor.getString(mIndices!!.type)) {
+            if (indices == null) throw NullPointerException()
+            when (cursor.getString(indices!!.type)) {
                 Suggestions.Search.TYPE_SAVED_SEARCH -> {
                     return VIEW_TYPE_SAVED_SEARCH
                 }
@@ -377,24 +382,20 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         override fun onClick(v: View) {
             when (v.id) {
                 R.id.edit_query -> {
-                    mActivity.setSearchQueryText(v.tag as String)
+                    activity.setSearchQueryText(v.tag as String)
                 }
             }
         }
 
-        override fun swapCursor(newCursor: Cursor?): Cursor {
-            if (newCursor != null) {
-                mIndices = Indices(newCursor)
-            } else {
-                mIndices = null
-            }
-            mRemovedPositions!!.clear()
+        override fun swapCursor(newCursor: Cursor?): Cursor? {
+            indices = if (newCursor != null) Indices(newCursor) else null
+            removedPositions!!.clear()
             return super.swapCursor(newCursor)
         }
 
         override fun getCount(): Int {
-            if (mRemovedPositions == null) return super.getCount()
-            return super.getCount() - mRemovedPositions.size()
+            if (removedPositions == null) return super.getCount()
+            return super.getCount() - removedPositions.size()
         }
 
         override fun getItem(position: Int): Any {
@@ -405,21 +406,21 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             return super.getItemId(getActualPosition(position))
         }
 
-        override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return super.getView(getActualPosition(position), convertView, parent)
         }
 
-        override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
             return super.getDropDownView(getActualPosition(position), convertView, parent)
         }
 
         private fun getActualPosition(position: Int): Int {
-            if (mRemovedPositions == null) return position
+            if (removedPositions == null) return position
             var skipped = 0
             var i = 0
-            val j = mRemovedPositions.size()
+            val j = removedPositions.size()
             while (i < j) {
-                if (position + skipped >= mRemovedPositions.get(i)) {
+                if (position + skipped >= removedPositions.get(i)) {
                     skipped++
                 }
                 i++
@@ -429,9 +430,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         fun addRemovedPositions(positions: IntArray) {
             for (position in positions) {
-                mRemovedPositions!!.add(getActualPosition(position))
+                removedPositions!!.add(getActualPosition(position))
             }
-            mRemovedPositions!!.sort()
+            removedPositions!!.sort()
             notifyDataSetChanged()
         }
 

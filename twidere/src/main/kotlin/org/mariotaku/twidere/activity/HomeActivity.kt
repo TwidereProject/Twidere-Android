@@ -140,11 +140,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             return DataStoreUtils.getActivatedAccountKeys(this)
         }
 
-    override fun getCurrentVisibleFragment(): Fragment? {
-        val currentItem = mainPager!!.currentItem
-        if (currentItem < 0 || currentItem >= pagerAdapter!!.count) return null
-        return pagerAdapter!!.instantiateItem(mainPager, currentItem) as Fragment
-    }
+    override val currentVisibleFragment: Fragment?
+        get() {
+            val currentItem = mainPager!!.currentItem
+            if (currentItem < 0 || currentItem >= pagerAdapter!!.count) return null
+            return pagerAdapter!!.instantiateItem(mainPager, currentItem) as Fragment
+        }
 
     override fun triggerRefresh(position: Int): Boolean {
         val f = pagerAdapter!!.instantiateItem(mainPager, position) as Fragment

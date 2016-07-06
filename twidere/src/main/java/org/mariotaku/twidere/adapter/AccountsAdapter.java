@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -178,7 +179,8 @@ public class AccountsAdapter extends SimpleDragSortCursorAdapter implements IBas
     }
 
     @Override
-    public Cursor swapCursor(final Cursor cursor) {
+    @Nullable
+    public Cursor swapCursor(@Nullable final Cursor cursor) {
         if (cursor != null) {
             mIndices = new ParcelableAccountCursorIndices(cursor);
         }

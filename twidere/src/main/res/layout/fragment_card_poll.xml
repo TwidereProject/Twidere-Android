@@ -19,14 +19,14 @@
   -->
 
 <LinearLayout
-    android:id="@+id/fragment_card_poll"
+    android:id="@+id/fragmentCardPoll"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TableLayout
-        android:id="@+id/poll_container"
+        android:id="@+id/pollContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/element_spacing_normal"/>
@@ -38,7 +38,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/poll_summary"
+            android:id="@+id/pollSummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/element_spacing_normal"

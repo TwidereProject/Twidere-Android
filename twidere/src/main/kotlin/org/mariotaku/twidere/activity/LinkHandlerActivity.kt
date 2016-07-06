@@ -61,9 +61,10 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     private var mHideOffsetNotSupported: Boolean = false
 
 
-    override fun getCurrentVisibleFragment(): Fragment {
-        return supportFragmentManager.findFragmentById(android.R.id.content)
-    }
+    override val currentVisibleFragment: Fragment?
+        get() {
+            return supportFragmentManager.findFragmentById(android.R.id.content)
+        }
 
     override fun triggerRefresh(position: Int): Boolean {
         return false

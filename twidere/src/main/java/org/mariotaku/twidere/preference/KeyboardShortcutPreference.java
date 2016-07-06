@@ -72,7 +72,7 @@ public class KeyboardShortcutPreference extends DialogPreference implements IDia
         setTitle(KeyboardShortcutsHandler.getActionLabel(context, mAction));
         mPreferencesChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
                 updateSummary();
             }
         };

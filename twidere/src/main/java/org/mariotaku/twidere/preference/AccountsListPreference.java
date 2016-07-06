@@ -143,7 +143,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         }
 
         @Override
-        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
             notifyChanged();
         }
 

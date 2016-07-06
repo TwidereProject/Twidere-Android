@@ -60,6 +60,14 @@ import org.mariotaku.twidere.util.collection.CompactHashSet;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static org.mariotaku.twidere.Constants.EXTRA_ALPHA_SLIDER;
+import static org.mariotaku.twidere.Constants.EXTRA_COLOR;
+import static org.mariotaku.twidere.Constants.EXTRA_ID;
+import static org.mariotaku.twidere.Constants.INTENT_ACTION_TWITTER_LOGIN;
+import static org.mariotaku.twidere.Constants.KEY_DEFAULT_ACCOUNT_KEY;
+import static org.mariotaku.twidere.Constants.KEY_NEW_DOCUMENT_API;
+import static org.mariotaku.twidere.Constants.REQUEST_SET_COLOR;
+
 /**
  * Created by mariotaku on 14/10/26.
  */
@@ -295,7 +303,7 @@ public class AccountsManagerFragment extends BaseSupportFragment implements Load
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
         if (KEY_DEFAULT_ACCOUNT_KEY.equals(key)) {
             updateDefaultAccount();
         }

@@ -256,10 +256,10 @@ public class UserColorNameManager implements TwidereConstants {
         }
 
         @Override
-        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
             final UserKey userId = UserKey.valueOf(key);
             if (mListener != null && userId != null) {
-                mListener.onUserColorChanged(userId, sharedPreferences.getInt(key, 0));
+                mListener.onUserColorChanged(userId, preferences.getInt(key, 0));
             }
         }
 
@@ -274,10 +274,10 @@ public class UserColorNameManager implements TwidereConstants {
         }
 
         @Override
-        public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+        public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
             final UserKey userId = UserKey.valueOf(key);
             if (mListener != null && userId != null) {
-                mListener.onUserNicknameChanged(userId, sharedPreferences.getString(key, null));
+                mListener.onUserNicknameChanged(userId, preferences.getString(key, null));
             }
         }
 

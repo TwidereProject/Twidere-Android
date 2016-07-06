@@ -182,6 +182,7 @@
                 android:layout_alignStart="@+id/text"
                 android:layout_below="@+id/text"
                 android:layout_marginTop="@dimen/element_spacing_xsmall"
+                android:background="?selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -285,6 +286,7 @@
                 android:layout_marginTop="@dimen/element_spacing_xsmall"
                 android:layout_toEndOf="@+id/quoteIndicator"
                 android:layout_toRightOf="@+id/quoteIndicator"
+                android:background="?selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

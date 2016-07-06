@@ -60,7 +60,7 @@ public class NyanActivity extends Activity implements OnLongClickListener, OnSha
     }
 
     @Override
-    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+    public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
         if (KEY_LIVE_WALLPAPER_SCALE.equals(key)) {
             updateSurface();
         }

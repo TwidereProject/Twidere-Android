@@ -65,12 +65,10 @@ android {
             resValue("bool", "debug", "false")
         }
     }
-    sourceSets {
-        main {
-            res.srcDirs += project.files("src/$name/res-localized")
-            res.srcDirs += project.files("src/$name/res-svg2png")
-            java.srcDirs += 'src/main/kotlin'
-        }
+    sourceSets.each {
+        it.res.srcDirs += project.files("src/${it.name}/res-localized")
+        it.res.srcDirs += project.files("src/${it.name}/res-svg2png")
+        it.java.srcDirs += "src/${it.name}/kotlin"
     }
     testOptions {
         unitTests.returnDefaultValues = true

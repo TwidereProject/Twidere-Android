@@ -52,6 +52,10 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT;
+import static org.mariotaku.twidere.Constants.KEY_BUILTIN_DNS_RESOLVER;
+import static org.mariotaku.twidere.Constants.KEY_DNS_SERVER;
+import static org.mariotaku.twidere.Constants.KEY_TCP_DNS_QUERY;
 
 /**
  * Network diagnostics

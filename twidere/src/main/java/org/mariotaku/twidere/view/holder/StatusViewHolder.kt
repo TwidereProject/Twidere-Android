@@ -437,6 +437,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         replyButton.setOnClickListener(eventListener)
         retweetButton.setOnClickListener(eventListener)
         favoriteButton.setOnClickListener(eventListener)
+
+        mediaLabel.setOnClickListener(eventListener)
+        quotedMediaLabel.setOnClickListener(eventListener)
     }
 
 

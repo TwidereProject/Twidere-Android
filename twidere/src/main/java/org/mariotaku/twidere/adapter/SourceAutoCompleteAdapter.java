@@ -78,7 +78,7 @@ public class SourceAutoCompleteAdapter extends SimpleCursorAdapter {
 
     @Override
     @Nullable
-    public Cursor swapCursor(final Cursor cursor) {
+    public Cursor swapCursor(@Nullable final Cursor cursor) {
         if (cursor != null) {
             mSourceIdx = cursor.getColumnIndex(CachedStatuses.SOURCE);
         }
