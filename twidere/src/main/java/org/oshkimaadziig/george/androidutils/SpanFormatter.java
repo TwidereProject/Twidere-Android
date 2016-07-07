@@ -91,7 +91,7 @@ public class SpanFormatter {
             } else if (typeTerm.equals("%")) {
                 cookedArg = "\n";
             } else {
-                int argIdx = 0;
+                int argIdx;
                 if (argTerm.equals("")) argIdx = ++argAt;
                 else if (argTerm.equals("<")) argIdx = argAt;
                 else argIdx = Integer.parseInt(argTerm.substring(0, argTerm.length() - 1)) - 1;
