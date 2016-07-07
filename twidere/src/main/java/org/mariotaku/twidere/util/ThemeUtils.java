@@ -104,8 +104,9 @@ public class ThemeUtils implements Constants {
     }
 
     public static void applyWindowBackground(@NonNull Context context, @NonNull Window window, String option, int alpha) {
-        if (isWindowFloating(context)) return;
-        if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
+        if (isWindowFloating(context)) {
+            window.setBackgroundDrawable(getWindowBackground(context));
+        } else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, alpha));
         } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {

@@ -106,17 +106,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private var mLocationManager: LocationManager? = null
     private var mTask: AsyncTask<Any, Any, *>? = null
-    private var mMenuInflater: SupportMenuInflater? = null
-    private var mItemTouchHelper: ItemTouchHelper? = null
+    private val supportMenuInflater by lazy { SupportMenuInflater(this) }
+    private var itemTouchHelper: ItemTouchHelper? = null
 
-    private val mBackTimeoutRunnable = Runnable { mNavigateBackPressed = false }
+    private val backTimeoutRunnable = Runnable { mNavigateBackPressed = false }
 
     // Adapters
-    private var mMediaPreviewAdapter: MediaPreviewAdapter? = null
+    private var mediaPreviewAdapter: MediaPreviewAdapter? = null
     private var accountsAdapter: AccountIconsAdapter? = null
 
     // Data fields
-    private var mRecentLocation: ParcelableLocation? = null
+    private var recentLocation: ParcelableLocation? = null
     private var mInReplyToStatus: ParcelableStatus? = null
     private var mMentionUser: ParcelableUser? = null
     private var mOriginalText: String? = null
@@ -406,14 +406,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun getMenuInflater(): MenuInflater {
-        if (mMenuInflater == null) {
-            mMenuInflater = SupportMenuInflater(this)
-        }
-        return mMenuInflater!!
+        return supportMenuInflater
     }
 
     fun removeAllMedia(list: List<ParcelableMediaUpdate>) {
-        mMediaPreviewAdapter!!.removeAll(list)
+        mediaPreviewAdapter!!.removeAll(list)
     }
 
     fun saveToDrafts() {
@@ -428,7 +425,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         extra.setIsPossiblySensitive(possiblySensitive)
         draft.action_extras = extra
         draft.media = media
-        draft.location = mRecentLocation
+        draft.location = recentLocation
         val values = DraftValuesCreator.create(draft)
         val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
         displayNewDraftNotification(text, draftUri)
@@ -536,14 +533,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
 
         val adapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
-        mMediaPreviewAdapter = adapter
-        mItemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(adapter))
+        mediaPreviewAdapter = adapter
+        itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(adapter))
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         attachedMediaPreview.layoutManager = layoutManager
-        attachedMediaPreview.adapter = mMediaPreviewAdapter
+        attachedMediaPreview.adapter = mediaPreviewAdapter
         registerForContextMenu(attachedMediaPreview)
-        mItemTouchHelper!!.attachToRecyclerView(attachedMediaPreview)
+        itemTouchHelper!!.attachToRecyclerView(attachedMediaPreview)
         val previewGridSpacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small)
         attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(previewGridSpacing))
 
@@ -590,7 +587,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         val menu = menuBar!!.menu
-        menuInflater.inflate(R.menu.menu_compose, menu)
+        supportMenuInflater.inflate(R.menu.menu_compose, menu)
         ThemeUtils.wrapMenuIcon(menuBar)
 
         send!!.setOnClickListener(this)
@@ -627,7 +624,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
         if (v === attachedMediaPreview) {
             menu.setHeaderTitle(R.string.edit_media)
-            menuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+            supportMenuInflater.inflate(R.menu.menu_attached_media_edit, menu)
         }
     }
 
@@ -637,7 +634,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             when (menuInfo.recyclerViewId) {
                 R.id.attachedMediaPreview -> {
                     val position = menuInfo.position
-                    val mediaUpdate = mMediaPreviewAdapter!!.getItem(position)
+                    val mediaUpdate = mediaPreviewAdapter!!.getItem(position)
                     val args = Bundle()
                     args.putString(EXTRA_TEXT, mediaUpdate.alt_text)
                     args.putInt(EXTRA_POSITION, position)
@@ -705,8 +702,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (editText.length() == 0 && !textChanged) {
                 if (!mNavigateBackPressed) {
                     Toast.makeText(this, getString(R.string.press_again_to_close), Toast.LENGTH_SHORT).show()
-                    editText.removeCallbacks(mBackTimeoutRunnable)
-                    editText.postDelayed(mBackTimeoutRunnable, 2000)
+                    editText.removeCallbacks(backTimeoutRunnable)
+                    editText.postDelayed(backTimeoutRunnable, 2000)
                 } else {
                     onBackPressed()
                 }
@@ -725,17 +722,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun addMedia(media: ParcelableMediaUpdate) {
-        mMediaPreviewAdapter!!.add(media)
+        mediaPreviewAdapter!!.add(media)
         updateAttachedMediaView()
     }
 
     private fun addMedia(media: List<ParcelableMediaUpdate>) {
-        mMediaPreviewAdapter!!.addAll(media)
+        mediaPreviewAdapter!!.addAll(media)
         updateAttachedMediaView()
     }
 
     private fun clearMedia() {
-        mMediaPreviewAdapter!!.clear()
+        mediaPreviewAdapter!!.clear()
         updateAttachedMediaView()
     }
 
@@ -768,7 +765,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
     private val mediaList: List<ParcelableMediaUpdate>
-        get() = mMediaPreviewAdapter!!.asList
+        get() = mediaPreviewAdapter!!.asList
 
     private fun handleDefaultIntent(intent: Intent?): Boolean {
         if (intent == null) return false
@@ -836,7 +833,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (draft.media != null) {
             addMedia(Arrays.asList(*draft.media))
         }
-        mRecentLocation = draft.location
+        recentLocation = draft.location
         if (draft.action_extras is UpdateStatusActionExtra) {
             val extra = draft.action_extras as UpdateStatusActionExtra?
             possiblySensitive = extra!!.isPossiblySensitive
@@ -1061,7 +1058,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun hasMedia(): Boolean {
-        return mMediaPreviewAdapter!!.itemCount > 0
+        return mediaPreviewAdapter!!.itemCount > 0
     }
 
     private val isQuote: Boolean
@@ -1172,7 +1169,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (attachPreciseLocation) {
                 locationText!!.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
             } else {
-                if (locationText!!.tag == null || location != mRecentLocation) {
+                if (locationText!!.tag == null || location != recentLocation) {
                     val task = DisplayPlaceNameTask(this)
                     task.params = location
                     task.setCallback(locationText)
@@ -1182,7 +1179,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             locationText!!.setText(R.string.unknown_location)
         }
-        mRecentLocation = location
+        recentLocation = location
     }
 
     /**
@@ -1244,8 +1241,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         locationIcon!!.isActivated = attachLocation
         if (!attachLocation) {
             locationText!!.setText(R.string.no_location)
-        } else if (mRecentLocation != null) {
-            setRecentLocation(mRecentLocation)
+        } else if (recentLocation != null) {
+            setRecentLocation(recentLocation)
         } else {
             locationText!!.setText(R.string.getting_location)
         }
@@ -1283,7 +1280,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.accounts = ParcelableAccountUtils.getAccounts(this, *accountKeys)
         update.text = text
         if (attachLocation) {
-            update.location = mRecentLocation
+            update.location = recentLocation
             update.display_coordinates = attachPreciseLocation
         }
         update.media = media
@@ -1692,7 +1689,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         val asList: List<ParcelableMediaUpdate>
-            get() = Collections.unmodifiableList(mData)
+            get() = Collections.unmodifiableList(data)
 
         override fun getItemId(position: Int): Long {
             return getItem(position).hashCode().toLong()
@@ -1731,13 +1728,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(mData, fromPosition, toPosition)
+            Collections.swap(data, fromPosition, toPosition)
             notifyItemMoved(fromPosition, toPosition)
             return true
         }
 
         fun setAltText(position: Int, altText: String?) {
-            mData[position].alt_text = altText
+            data[position].alt_text = altText
             notifyDataSetChanged()
         }
     }
@@ -1806,7 +1803,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun setMediaAltText(position: Int, altText: String?) {
-        mMediaPreviewAdapter!!.setAltText(position, altText)
+        mediaPreviewAdapter!!.setAltText(position, altText)
     }
 
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -1886,7 +1883,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private class PreviewGridOnStartDragListener(private val activity: ComposeActivity) : SimpleItemTouchHelperCallback.OnStartDragListener {
 
         override fun onStartDrag(viewHolder: ViewHolder) {
-            val helper = activity.mItemTouchHelper ?: return
+            val helper = activity.itemTouchHelper ?: return
             helper.startDrag(viewHolder)
         }
     }

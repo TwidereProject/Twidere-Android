@@ -28,8 +28,11 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_PHISHING_LINK_WARNING
 import org.mariotaku.twidere.fragment.PhishingLinkWarningDialogFragment
 
-class DirectMessageOnLinkClickHandler(context: Context, manager: MultiSelectManager,
-                                      preferences: SharedPreferencesWrapper) : OnLinkClickHandler(context, manager, preferences) {
+class DirectMessageOnLinkClickHandler(
+        context: Context,
+        manager: MultiSelectManager?,
+        preferences: SharedPreferencesWrapper
+) : OnLinkClickHandler(context, manager, preferences) {
 
     override val isPrivateData: Boolean
         get() = true

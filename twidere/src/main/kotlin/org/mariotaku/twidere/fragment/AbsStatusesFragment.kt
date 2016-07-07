@@ -560,8 +560,7 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
 
         @Subscribe
         fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            val adapter = adapter
-            adapter!!.notifyDataSetChanged()
+            adapter?.notifyDataSetChanged()
         }
 
     }

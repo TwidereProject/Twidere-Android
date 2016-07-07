@@ -684,7 +684,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             while (i < j) {
                 val tab = pagerAdapter!!.getTab(i)
                 if (tabType == CustomTabUtils.getTabTypeAlias(tab.type)) {
-                    if (tab.args != null && CustomTabUtils.hasAccountId(this, tab.args,
+                    val args = tab.args
+                    if (args != null && CustomTabUtils.hasAccountId(this, args,
                             activatedAccountKeys, accountKey)) {
                         initialTab = i
                         break

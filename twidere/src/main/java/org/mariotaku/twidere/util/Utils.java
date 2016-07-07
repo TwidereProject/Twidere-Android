@@ -419,7 +419,7 @@ public final class Utils implements Constants {
     public static void configBaseAdapter(final Context context, final IBaseAdapter adapter) {
         if (context == null) return;
         final SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        adapter.setDisplayProfileImage(pref.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true));
+        adapter.setProfileImageDisplayed(pref.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true));
         adapter.setDisplayNameFirst(pref.getBoolean(KEY_NAME_FIRST, true));
         adapter.setLinkHighlightOption(pref.getString(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HIGHLIGHT_OPTION_NONE));
         adapter.setTextSize(pref.getInt(KEY_TEXT_SIZE, getDefaultTextSize(context)));

@@ -24,7 +24,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
@@ -47,6 +46,7 @@ import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import com.squareup.otto.Bus
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IAppCompatActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
@@ -91,9 +91,6 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
     private var mSystemWindowsInsets: Rect? = null
     var keyMetaState: Int = 0
         private set
-    // Data fields
-    private var mCurrentThemeBackgroundAlpha: Int = 0
-    private var mCurrentThemeBackgroundOption: String? = null
 
     override fun getSystemWindowsInsets(insets: Rect): Boolean {
         if (mSystemWindowsInsets == null) return false
@@ -152,6 +149,7 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
             StrictModeUtils.detectAllVmPolicy()
             StrictModeUtils.detectAllThreadPolicy()
         }
+        ThemeUtils.applyDayNight(getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE), delegate)
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
     }
@@ -271,24 +269,17 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
     }
 
     override fun onApplyThemeResource(theme: Resources.Theme, resId: Int, first: Boolean) {
-        mCurrentThemeBackgroundAlpha = themeBackgroundAlpha
-        mCurrentThemeBackgroundOption = themeBackgroundOption
         super.onApplyThemeResource(theme, resId, first)
-        val window = window
-        if (window != null && shouldApplyWindowBackground()) {
+        if (window != null && shouldApplyWindowBackground) {
             ThemeUtils.applyWindowBackground(this, window, themeBackgroundOption,
                     themeBackgroundAlpha)
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        ThemeUtils.fixNightMode(resources, newConfig)
-        super.onConfigurationChanged(newConfig)
-    }
-
-    protected fun shouldApplyWindowBackground(): Boolean {
-        return true
-    }
+    protected val shouldApplyWindowBackground: Boolean
+        get() {
+            return true
+        }
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
         // Fix for https://github.com/afollestad/app-theme-engine/issues/109

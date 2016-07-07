@@ -213,7 +213,7 @@ public class AccountSelectorActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
         final boolean displayProfileImage = mPreferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mAdapter.setDisplayProfileImage(displayProfileImage);
+        mAdapter.setProfileImageDisplayed(displayProfileImage);
     }
 
     @Override

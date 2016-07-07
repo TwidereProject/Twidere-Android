@@ -496,10 +496,11 @@ class SettingsWizardActivity : BaseActivity() {
                     values.put(Tabs.TYPE, type)
                     values.put(Tabs.ARGUMENTS, InternalParseUtils.bundleToJSON(spec.args))
                     values.put(Tabs.NAME, ParseUtils.parseString(spec.name))
-                    if (spec.icon is Int) {
-                        values.put(Tabs.ICON, CustomTabUtils.findTabIconKey(spec.icon))
-                    } else if (spec.icon is File) {
-                        values.put(Tabs.ICON, spec.icon.path)
+                    val icon = spec.icon
+                    if (icon is Int) {
+                        values.put(Tabs.ICON, CustomTabUtils.findTabIconKey(icon))
+                    } else if (icon is File) {
+                        values.put(Tabs.ICON, icon.path)
                     }
                     values.put(Tabs.POSITION, i++)
                 }

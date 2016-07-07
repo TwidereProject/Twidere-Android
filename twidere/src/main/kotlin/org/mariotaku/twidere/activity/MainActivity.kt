@@ -21,12 +21,9 @@ package org.mariotaku.twidere.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.util.StrictModeUtils
-import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.Utils
 
 open class MainActivity : Activity() {
@@ -45,11 +42,6 @@ open class MainActivity : Activity() {
             startActivity(intent)
         }
         finish()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        ThemeUtils.fixNightMode(resources, newConfig)
-        super.onConfigurationChanged(newConfig)
     }
 
 }
