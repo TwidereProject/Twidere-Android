@@ -62,7 +62,7 @@ class AccountsSpinnerAdapter @JvmOverloads constructor(context: Context, itemVie
         return view
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
         bindView(view, getItem(position))
         return view

@@ -47,7 +47,6 @@ import com.squareup.otto.Bus
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
-import org.mariotaku.twidere.activity.iface.IAppCompatActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
@@ -62,7 +61,10 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedActivity, IAppCompatActivity, IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback, KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback, ATEToolbarCustomizer, ATEStatusBarCustomizer {
+open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedActivity,
+        IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
+        KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback, ATEToolbarCustomizer,
+        ATEStatusBarCustomizer {
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
@@ -244,7 +246,7 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
         actionHelper.dispatchOnResumeFragments()
     }
 
-    override fun executeAfterFragmentResumed(action: IExtendedActivity.Action) {
+    override fun executeAfterFragmentResumed(action: (IExtendedActivity) -> Unit) {
         actionHelper.executeAfterFragmentResumed(action)
     }
 

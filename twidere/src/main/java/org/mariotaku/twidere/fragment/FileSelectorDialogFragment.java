@@ -29,6 +29,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -217,7 +218,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
         }
 
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, @Nullable final View convertView, final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
             final TextView text = (TextView) (view instanceof TextView ? view : view.findViewById(android.R.id.text1));
             final File file = getItem(position);

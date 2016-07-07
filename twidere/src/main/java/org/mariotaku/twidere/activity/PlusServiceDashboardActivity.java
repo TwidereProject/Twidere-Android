@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -128,7 +129,7 @@ public class PlusServiceDashboardActivity extends BaseActivity {
             }
 
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, @Nullable View convertView, ViewGroup parent) {
                 final View view = super.getView(position, convertView, parent);
                 final Bundle metaData = getItem(position).activityInfo.metaData;
                 ((TextView) view.findViewById(android.R.id.text1)).setText(metaData.getInt(METADATA_KEY_PLUS_SERVICE_SIGN_IN_LABEL));

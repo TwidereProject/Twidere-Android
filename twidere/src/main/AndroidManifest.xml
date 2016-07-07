@@ -245,7 +245,7 @@
                 android:value=".activity.HomeActivity"/>
         </activity>
         <activity
-            android:name=".activity.APIEditorActivity"
+            android:name=".activity.iface.APIEditorActivity"
             android:label="@string/edit_api"
             android:theme="@style/Theme.Twidere.Dialog"
             android:windowSoftInputMode="adjustResize"/>

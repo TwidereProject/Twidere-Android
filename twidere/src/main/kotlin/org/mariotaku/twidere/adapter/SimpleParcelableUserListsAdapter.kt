@@ -44,7 +44,7 @@ class SimpleParcelableUserListsAdapter(
         return (if (getItem(position) != null) getItem(position).hashCode() else -1).toLong()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
         val tag = view.tag
         val holder: TwoLineWithIconViewHolder

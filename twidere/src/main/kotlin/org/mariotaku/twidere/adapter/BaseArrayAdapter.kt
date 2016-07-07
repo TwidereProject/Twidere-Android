@@ -25,7 +25,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -53,9 +52,8 @@ open class BaseArrayAdapter<T> @JvmOverloads constructor(context: Context, layou
     override var isShowAccountColor: Boolean = false
 
     init {
-        //noinspection unchecked
+        @Suppress("UNCHECKED_CAST")
         GeneralComponentHelper.build(context).inject(this as BaseArrayAdapter<Any>)
-        val app = TwidereApplication.getInstance(context)
         linkify = TwidereLinkify(OnLinkClickHandler(context, multiSelectManager, preferences))
         nicknamePrefs = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE)
         colorPrefs = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE)

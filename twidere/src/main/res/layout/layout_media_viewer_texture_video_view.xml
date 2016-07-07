@@ -27,19 +27,19 @@
     android:layout_gravity="center">
 
     <com.sprylab.android.widget.TextureVideoView
-        android:id="@+id/video_view"
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
     <FrameLayout
-        android:id="@+id/video_view_overlay"
+        android:id="@+id/videoViewOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true">
 
         <RelativeLayout
-            android:id="@+id/video_control"
+            android:id="@+id/videoControl"
             style="?actionBarSplitStyle"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
@@ -49,7 +49,7 @@
             tools:ignore="UselessParent">
 
             <ImageButton
-                android:id="@+id/play_pause_button"
+                android:id="@+id/playPauseButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
@@ -61,36 +61,36 @@
                 android:src="@drawable/ic_action_play_arrow"/>
 
             <TextView
-                android:id="@+id/position_label"
+                android:id="@+id/positionLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/video_view_progress"
-                android:layout_alignStart="@+id/video_view_progress"
-                android:layout_below="@+id/video_view_progress"
+                android:layout_alignLeft="@+id/videoViewProgress"
+                android:layout_alignStart="@+id/videoViewProgress"
+                android:layout_below="@+id/videoViewProgress"
                 android:gravity="center"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/text_size_extra_small"
                 tools:text="--:--"/>
 
             <ProgressBar
-                android:id="@+id/video_view_progress"
+                android:id="@+id/videoViewProgress"
                 style="?android:progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/play_pause_button"
-                android:layout_toLeftOf="@+id/volume_button"
-                android:layout_toRightOf="@+id/play_pause_button"
-                android:layout_toStartOf="@+id/volume_button"
+                android:layout_toEndOf="@+id/playPauseButton"
+                android:layout_toLeftOf="@+id/volumeButton"
+                android:layout_toRightOf="@+id/playPauseButton"
+                android:layout_toStartOf="@+id/volumeButton"
                 android:indeterminate="false"/>
 
             <TextView
-                android:id="@+id/duration_label"
+                android:id="@+id/durationLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/video_view_progress"
-                android:layout_alignRight="@+id/video_view_progress"
-                android:layout_below="@+id/video_view_progress"
+                android:layout_alignEnd="@+id/videoViewProgress"
+                android:layout_alignRight="@+id/videoViewProgress"
+                android:layout_below="@+id/videoViewProgress"
                 android:gravity="center"
                 android:textColor="?android:textColorPrimary"
                 android:textSize="@dimen/text_size_extra_small"
@@ -98,7 +98,7 @@
 
 
             <ImageButton
-                android:id="@+id/volume_button"
+                android:id="@+id/volumeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"

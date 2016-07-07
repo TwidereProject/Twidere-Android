@@ -24,14 +24,14 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/api_editor_content"
+        android:id="@+id/apiEditorContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
         <Button
-            android:id="@+id/load_defaults"
+            android:id="@+id/loadDefaults"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/load_defaults"
@@ -44,7 +44,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/label_api_url_format"
+                android:id="@+id/labelApiUrlFormat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -53,7 +53,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/api_url_format_help"
+                android:id="@+id/apiUrlFormatHelp"
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"
                 android:layout_weight="0"
@@ -62,7 +62,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/api_url_format"
+            android:id="@+id/editApiUrlFormat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -71,19 +71,19 @@
             tools:text="https://api.twitter.com/"/>
 
         <TextView
-            android:id="@+id/label_auth_type"
+            android:id="@+id/labelAuthType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/auth_type"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <HorizontalScrollView
-            android:id="@+id/auth_type_scroll"
+            android:id="@+id/authTypeScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <RadioGroup
-                android:id="@+id/auth_type"
+                android:id="@+id/editAuthType"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -104,7 +104,7 @@
                     android:text="@string/basic"/>
 
                 <RadioButton
-                    android:id="@+id/twip_o"
+                    android:id="@+id/twipO"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

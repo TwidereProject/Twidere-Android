@@ -5,13 +5,13 @@
     android:layout_height="match_parent">
 
     <com.commonsware.cwac.layouts.AspectLockedFrameLayout
-        android:id="@+id/webview_container"
+        android:id="@+id/webViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center">
 
         <WebView
-            android:id="@+id/webview"
+            android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </com.commonsware.cwac.layouts.AspectLockedFrameLayout>

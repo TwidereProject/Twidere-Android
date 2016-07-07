@@ -868,12 +868,12 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
     internal class PanelElevationProperty(private val elevation: Float) : Property<View, Float>(java.lang.Float.TYPE, null) {
 
-        override fun set(`object`: View, value: Float?) {
-            ViewCompat.setTranslationZ(`object`, elevation * value!!)
+        override fun set(obj: View, value: Float?) {
+            ViewCompat.setTranslationZ(obj, elevation * value!!)
         }
 
-        override fun get(`object`: View): Float? {
-            return ViewCompat.getTranslationZ(`object`) / elevation
+        override fun get(obj: View): Float? {
+            return ViewCompat.getTranslationZ(obj) / elevation
         }
     }
 

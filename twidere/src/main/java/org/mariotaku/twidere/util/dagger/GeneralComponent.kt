@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util.dagger
 
 import android.support.v7.widget.RecyclerView
 import dagger.Component
-import org.mariotaku.twidere.activity.APIEditorActivity
+import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.MediaViewerActivity
@@ -54,53 +54,53 @@ import javax.inject.Singleton
 interface GeneralComponent {
     fun inject(adapter: DummyItemAdapter)
 
-    fun inject(`object`: BaseSupportFragment)
+    fun inject(obj: BaseSupportFragment)
 
-    fun inject(`object`: MultiSelectEventHandler)
+    fun inject(obj: MultiSelectEventHandler)
 
-    fun inject(`object`: BaseDialogFragment)
+    fun inject(obj: BaseDialogFragment)
 
-    fun inject(`object`: RefreshService)
+    fun inject(obj: RefreshService)
 
-    fun inject(`object`: ComposeActivity)
+    fun inject(obj: ComposeActivity)
 
-    fun inject(`object`: TwidereDataProvider)
+    fun inject(obj: TwidereDataProvider)
 
-    fun inject(`object`: BaseListFragment)
+    fun inject(obj: BaseListFragment)
 
-    fun inject(`object`: BaseActivity)
+    fun inject(obj: BaseActivity)
 
-    fun inject(`object`: BackgroundOperationService)
+    fun inject(obj: BackgroundOperationService)
 
-    fun inject(`object`: BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
+    fun inject(obj: BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
 
-    fun inject(`object`: AccountsAdapter)
+    fun inject(obj: AccountsAdapter)
 
-    fun inject(`object`: ComposeAutoCompleteAdapter)
+    fun inject(obj: ComposeAutoCompleteAdapter)
 
-    fun inject(`object`: UserAutoCompleteAdapter)
+    fun inject(obj: UserAutoCompleteAdapter)
 
-    fun inject(`object`: AccountsSpinnerAdapter)
+    fun inject(obj: AccountsSpinnerAdapter)
 
-    fun inject(`object`: BaseArrayAdapter<Any>)
+    fun inject(obj: BaseArrayAdapter<Any>)
 
-    fun inject(`object`: DraftsAdapter)
+    fun inject(obj: DraftsAdapter)
 
-    fun inject(`object`: ManagedAsyncTask<Any, Any, Any>)
+    fun inject(obj: ManagedAsyncTask<Any, Any, Any>)
 
-    fun inject(`object`: BasePreferenceFragment)
+    fun inject(obj: BasePreferenceFragment)
 
-    fun inject(`object`: BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter)
+    fun inject(obj: BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter)
 
-    fun inject(`object`: EmojiSpannableFactory)
+    fun inject(obj: EmojiSpannableFactory)
 
-    fun inject(`object`: EmojiEditableFactory)
+    fun inject(obj: EmojiEditableFactory)
 
-    fun inject(`object`: AccountsListPreference.AccountItemPreference)
+    fun inject(obj: AccountsListPreference.AccountItemPreference)
 
-    fun inject(`object`: MessagesConversationFragment.SetReadStateTask)
+    fun inject(obj: MessagesConversationFragment.SetReadStateTask)
 
-    fun inject(`object`: DependencyHolder)
+    fun inject(obj: DependencyHolder)
 
     fun inject(provider: CacheProvider)
 

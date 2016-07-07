@@ -80,9 +80,9 @@ class SupportTabsAdapter @JvmOverloads constructor(
         return mTabs.size
     }
 
-    override fun getItemPosition(`object`: Any?): Int {
-        if (`object` !is Fragment) return PagerAdapter.POSITION_NONE
-        val args = `object`.arguments ?: return PagerAdapter.POSITION_NONE
+    override fun getItemPosition(obj: Any?): Int {
+        if (obj !is Fragment) return PagerAdapter.POSITION_NONE
+        val args = obj.arguments ?: return PagerAdapter.POSITION_NONE
         return args.getInt(EXTRA_ADAPTER_POSITION, PagerAdapter.POSITION_NONE)
     }
 

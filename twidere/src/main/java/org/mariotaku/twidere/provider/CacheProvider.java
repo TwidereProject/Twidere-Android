@@ -51,6 +51,7 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
         return builder.build();
     }
 
+    @NonNull
     public static String getCacheKey(Uri uri) {
         if (!ContentResolver.SCHEME_CONTENT.equals(uri.getScheme()))
             throw new IllegalArgumentException(uri.toString());
@@ -195,11 +196,10 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
             this.type = type;
         }
 
-        @Nullable
         @Override
+        @NonNull
         public String getFilename(@NonNull Uri source) {
             String cacheKey = getCacheKey(source);
-            if (cacheKey == null) return null;
             final int indexOfSsp = cacheKey.indexOf("://");
             if (indexOfSsp != -1) {
                 cacheKey = cacheKey.substring(indexOfSsp + 3);

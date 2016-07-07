@@ -69,7 +69,6 @@ import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
@@ -104,7 +103,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     @Inject
     lateinit var validator: TwidereValidator
 
-    private var mLocationManager: LocationManager? = null
+    private var locationManager: LocationManager? = null
     private var mTask: AsyncTask<Any, Any, *>? = null
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -223,7 +222,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         saveAccountSelection()
         try {
             if (mLocationListener != null) {
-                mLocationManager!!.removeUpdates(mLocationListener)
+                locationManager!!.removeUpdates(mLocationListener)
                 mLocationListener = null
             }
         } catch (ignore: SecurityException) {
@@ -454,7 +453,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         setContentView(R.layout.activity_compose)
         setFinishOnTouchOutside(false)
@@ -510,7 +509,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 requestOrUpdateLocation()
             } else if (mLocationListener != null) {
                 try {
-                    mLocationManager!!.removeUpdates(mLocationListener)
+                    locationManager!!.removeUpdates(mLocationListener)
                     mLocationListener = null
                 } catch (e: SecurityException) {
                     //Ignore
@@ -1139,7 +1138,18 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun setProgressVisible(visible: Boolean) {
         if (isFinishing) return
-        executeAfterFragmentResumed(SetProgressVisibleAction(visible))
+        executeAfterFragmentResumed { activity ->
+            val composeActivity = activity as ComposeActivity
+            val fm = composeActivity.supportFragmentManager
+            val f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
+            if (!visible && f is DialogFragment) {
+                f.dismiss()
+            } else if (visible) {
+                val df = ProgressDialogFragment()
+                df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
+                df.isCancelable = false
+            }
+        }
     }
 
 
@@ -1201,11 +1211,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             criteria.accuracy = Criteria.ACCURACY_COARSE
         }
-        val provider = mLocationManager!!.getBestProvider(criteria, true)
+        val provider = locationManager!!.getBestProvider(criteria, true)
         if (provider != null) {
             locationText!!.setText(R.string.getting_location)
             mLocationListener = ComposeLocationListener(this)
-            mLocationManager!!.requestLocationUpdates(provider, 0, 0f, mLocationListener)
+            locationManager!!.requestLocationUpdates(provider, 0, 0f, mLocationListener)
             val location = Utils.getCachedLocation(this)
             if (location != null) {
                 mLocationListener!!.onLocationChanged(location)
@@ -1252,7 +1262,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (isFinishing) return
         val hasMedia = hasMedia()
         val text = if (editText != null) ParseUtils.parseString(editText.text) else null
-        val tweetLength = validator!!.getTweetLength(text)
+        val tweetLength = validator.getTweetLength(text)
         val maxLength = statusTextCount.maxLength
         if (accountsAdapter!!.isSelectionEmpty) {
             editText.error = getString(R.string.no_account_selected)
@@ -1347,22 +1357,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
-    internal class SetProgressVisibleAction(val visible: Boolean) : IExtendedActivity.Action {
-
-        override fun execute(activity: IExtendedActivity) {
-            val composeActivity = activity as ComposeActivity ?: return
-            val fm = composeActivity.supportFragmentManager
-            val f = fm.findFragmentByTag(DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
-            if (!visible && f is DialogFragment) {
-                f.dismiss()
-            } else if (visible) {
-                val df = ProgressDialogFragment()
-                df.show(fm, DISCARD_STATUS_DIALOG_FRAGMENT_TAG)
-                df.isCancelable = false
-            }
-        }
-    }
-
     internal class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
         val iconView: ShapedImageView
         val nameView: TextView
@@ -1393,7 +1387,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
-    internal class AccountIconsAdapter(private val mActivity: ComposeActivity) : BaseRecyclerViewAdapter<AccountIconViewHolder>(mActivity) {
+    internal class AccountIconsAdapter(private val activity: ComposeActivity) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity) {
         private val mInflater: LayoutInflater
         private val mSelection: MutableMap<UserKey, Boolean>
         val isNameFirst: Boolean
@@ -1402,7 +1396,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         init {
             setHasStableIds(true)
-            mInflater = mActivity.layoutInflater
+            mInflater = activity.layoutInflater
             mSelection = HashMap<UserKey, Boolean>()
             isNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         }
@@ -1463,7 +1457,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (mAccounts == null || position < 0) return
             val account = mAccounts!![position]
             mSelection.put(account.account_key, java.lang.Boolean.TRUE != mSelection[account.account_key])
-            mActivity.notifyAccountSelectionChanged()
+            activity.notifyAccountSelectionChanged()
             notifyDataSetChanged()
         }
     }

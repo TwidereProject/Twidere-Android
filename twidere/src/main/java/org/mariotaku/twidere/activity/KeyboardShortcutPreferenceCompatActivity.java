@@ -47,6 +47,7 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
     private Button mButtonPositive, mButtonNegative, mButtonNeutral;
     private int mMetaState;
 
+    @NonNull
     @Override
     public String getThemeBackgroundOption() {
         return VALUE_THEME_BACKGROUND_DEFAULT;

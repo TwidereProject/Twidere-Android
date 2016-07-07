@@ -237,7 +237,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     private val selectedAccountKey: UserKey?
         get() {
-            val account = accountSpinner.selectedItem as ParcelableAccount ?: return null
+            val account = accountSpinner.selectedItem as ParcelableAccount
             return account.account_key
         }
 

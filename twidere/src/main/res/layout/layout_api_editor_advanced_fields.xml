@@ -32,7 +32,7 @@
     tools:showIn="@layout/layout_api_editor">
 
     <CheckBox
-        android:id="@+id/same_oauth_signing_url"
+        android:id="@+id/editSameOAuthSigningUrl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/element_spacing_normal"
@@ -42,7 +42,7 @@
         tools:checked="true"/>
 
     <CheckBox
-        android:id="@+id/no_version_suffix"
+        android:id="@+id/editNoVersionSuffix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/element_spacing_normal"
@@ -52,7 +52,7 @@
         tools:checked="false"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/consumer_key"
+        android:id="@+id/editConsumerKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -65,7 +65,7 @@
         tools:text="0123456789ABCD"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/consumer_secret"
+        android:id="@+id/editConsumerSecret"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

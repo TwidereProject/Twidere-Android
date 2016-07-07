@@ -27,7 +27,7 @@
         android:divider="?android:dividerVertical"
         android:orientation="vertical"
         android:showDividers="middle"
-        tools:context=".activity.APIEditorActivity"
+        tools:context=".activity.iface.APIEditorActivity"
         tools:ignore="UselessParent">
 
         <include

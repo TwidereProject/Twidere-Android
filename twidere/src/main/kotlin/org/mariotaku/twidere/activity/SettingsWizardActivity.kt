@@ -188,7 +188,7 @@ class SettingsWizardActivity : BaseActivity() {
             }
         }
 
-        override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             val preferenceManager = preferenceManager
             preferenceManager.sharedPreferencesName = SHARED_PREFERENCES_NAME
             addPreferencesFromResource(preferenceResource)

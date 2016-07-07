@@ -17,28 +17,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.activity;
+package org.mariotaku.twidere.activity
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.os.Bundle
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 
-import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.SettingsDetailsFragment;
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.fragment.SettingsDetailsFragment
 
-public class HiddenSettingsActivity extends BaseActivity {
+class HiddenSettingsActivity : BaseActivity() {
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        final Bundle fragmentArgs = new Bundle();
-        fragmentArgs.putInt(EXTRA_RESID, R.xml.preferences_hidden);
-        final FragmentManager fm = getSupportFragmentManager();
-        final FragmentTransaction ft = fm.beginTransaction();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val fragmentArgs = Bundle()
+        fragmentArgs.putInt(EXTRA_RESID, R.xml.preferences_hidden)
+        val fm = supportFragmentManager
+        val ft = fm.beginTransaction()
         ft.replace(android.R.id.content, Fragment.instantiate(this,
-                SettingsDetailsFragment.class.getName(), fragmentArgs));
-        ft.commit();
+                SettingsDetailsFragment::class.java.name, fragmentArgs))
+        ft.commit()
     }
 
 }

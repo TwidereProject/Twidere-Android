@@ -41,7 +41,7 @@ class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context,
         return getItem(position).hashCode().toLong()
     }
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
 
         val holder: CheckableTwoLineWithIconViewHolder

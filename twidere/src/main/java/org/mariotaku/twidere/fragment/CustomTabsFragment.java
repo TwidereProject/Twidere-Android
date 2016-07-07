@@ -111,7 +111,7 @@ public class CustomTabsFragment extends BaseSupportFragment implements LoaderCal
                 final long[] itemIds = mListView.getCheckedItemIds();
                 final Expression where = Expression.in(new Column(Tabs._ID), new RawItemArray(itemIds));
                 mResolver.delete(Tabs.CONTENT_URI, where.getSQL(), null);
-                SettingsActivity.setShouldNotifyChange(getActivity());
+                SettingsActivity.Companion.setShouldNotifyChange(getActivity());
                 break;
             }
         }
@@ -192,7 +192,7 @@ public class CustomTabsFragment extends BaseSupportFragment implements LoaderCal
                     values.put(Tabs.EXTRAS, data.getStringExtra(EXTRA_EXTRAS));
                     values.put(Tabs.POSITION, mAdapter.getCount());
                     mResolver.insert(Tabs.CONTENT_URI, values);
-                    SettingsActivity.setShouldNotifyChange(getActivity());
+                    SettingsActivity.Companion.setShouldNotifyChange(getActivity());
                 }
                 break;
             }
@@ -204,7 +204,7 @@ public class CustomTabsFragment extends BaseSupportFragment implements LoaderCal
                     values.put(Tabs.EXTRAS, data.getStringExtra(EXTRA_EXTRAS));
                     final String where = Expression.equals(Tabs._ID, data.getLongExtra(EXTRA_ID, -1)).getSQL();
                     mResolver.update(Tabs.CONTENT_URI, values, where, null);
-                    SettingsActivity.setShouldNotifyChange(getActivity());
+                    SettingsActivity.Companion.setShouldNotifyChange(getActivity());
                 }
                 break;
             }
@@ -329,7 +329,7 @@ public class CustomTabsFragment extends BaseSupportFragment implements LoaderCal
                 mResolver.update(Tabs.CONTENT_URI, values, where, null);
             }
         }
-        SettingsActivity.setShouldNotifyChange(getActivity());
+        SettingsActivity.Companion.setShouldNotifyChange(getActivity());
     }
 
     private void updateTitle(final ActionMode mode) {

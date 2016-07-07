@@ -243,7 +243,7 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
             mHostMapping = context.getSharedPreferences(Constants.HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
         }
 
-        override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
             val text1 = view.findViewById(android.R.id.text1) as TextView
             val text2 = view.findViewById(android.R.id.text2) as TextView
