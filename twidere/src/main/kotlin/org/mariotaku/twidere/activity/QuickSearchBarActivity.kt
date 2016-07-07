@@ -63,7 +63,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         OnItemSelectedListener, OnItemClickListener, OnFitSystemWindowsListener,
         SwipeDismissListViewTouchListener.DismissCallbacks {
 
-    private val mSystemWindowsInsets = Rect()
+    private val systemWindowsInsets = Rect()
     private var textChanged: Boolean = false
 
     override fun canDismiss(position: Int): Boolean {
@@ -117,7 +117,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     }
 
     override fun onFitSystemWindows(insets: Rect) {
-        mSystemWindowsInsets.set(insets)
+        systemWindowsInsets.set(insets)
         updateWindowAttributes()
     }
 
@@ -245,7 +245,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         val window = window
         val attributes = window.attributes
         attributes.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-        attributes.y = mSystemWindowsInsets.top
+        attributes.y = systemWindowsInsets.top
         window.attributes = attributes
     }
 
@@ -258,10 +258,10 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     internal class SuggestionItem(cursor: Cursor, indices: SuggestionsAdapter.Indices) {
 
 
-        val title: String
-        val summary: String
+        val title: String?
+        val summary: String?
         val _id: Long
-        val extra_id: String
+        val extra_id: String?
 
         init {
             _id = cursor.getLong(indices._id)
@@ -275,31 +275,31 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             private val activity: QuickSearchBarActivity
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
-        private val mInflater: LayoutInflater
-        private val mMediaLoader: MediaLoaderWrapper
-        private val mUserColorNameManager: UserColorNameManager
+        private val inflater: LayoutInflater
+        private val mediaLoader: MediaLoaderWrapper
+        private val userColorNameManager: UserColorNameManager
         private val removedPositions: SortableIntList?
 
         private var indices: Indices? = null
 
         init {
             removedPositions = SortableIntList()
-            mMediaLoader = activity.mediaLoader
-            mUserColorNameManager = activity.userColorNameManager
-            mInflater = LayoutInflater.from(activity)
+            mediaLoader = activity.mediaLoader
+            userColorNameManager = activity.userColorNameManager
+            inflater = LayoutInflater.from(activity)
         }
 
         override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
             when (getActualItemViewType(cursor.position)) {
                 VIEW_TYPE_SEARCH_HISTORY, VIEW_TYPE_SAVED_SEARCH -> {
-                    val view = mInflater.inflate(R.layout.list_item_suggestion_search, parent, false)
+                    val view = inflater.inflate(R.layout.list_item_suggestion_search, parent, false)
                     val holder = SearchViewHolder(view)
                     holder.edit_query.setOnClickListener(this)
                     view.tag = holder
                     return view
                 }
                 VIEW_TYPE_USER_SUGGESTION_ITEM, VIEW_TYPE_USER_SCREEN_NAME -> {
-                    val view = mInflater.inflate(R.layout.list_item_suggestion_user, parent, false)
+                    val view = inflater.inflate(R.layout.list_item_suggestion_user, parent, false)
                     view.tag = UserViewHolder(view)
                     return view
                 }
@@ -308,7 +308,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         internal fun getSuggestionItem(position: Int): SuggestionItem? {
-            val cursor = getItem(position) as Cursor? ?: return null
+            val cursor = (getItem(position) ?: return null) as Cursor
             val indices = indices ?: return null
             return SuggestionItem(cursor, indices)
         }
@@ -333,19 +333,19 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                     val holder = view.tag as UserViewHolder
                     val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))!!
-                    holder.text1.text = mUserColorNameManager.getUserNickname(userKey,
+                    holder.text1.text = userColorNameManager.getUserNickname(userKey,
                             cursor.getString(indices.title))
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.text = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
-                    mMediaLoader.displayProfileImage(holder.icon, cursor.getString(indices.icon))
+                    mediaLoader.displayProfileImage(holder.icon, cursor.getString(indices.icon))
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
                     holder.text1.text = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
                     holder.icon.setColorFilter(holder.text1.currentTextColor, Mode.SRC_ATOP)
-                    mMediaLoader.cancelDisplayTask(holder.icon)
+                    mediaLoader.cancelDisplayTask(holder.icon)
                     holder.icon.setImageResource(R.drawable.ic_action_user)
                 }
             }
@@ -398,7 +398,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             return super.getCount() - removedPositions.size()
         }
 
-        override fun getItem(position: Int): Any {
+        override fun getItem(position: Int): Any? {
             return super.getItem(getActualPosition(position))
         }
 
