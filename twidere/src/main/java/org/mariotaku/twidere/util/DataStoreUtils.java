@@ -44,7 +44,6 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.OrderBy;
-import org.mariotaku.sqliteqb.library.RawItemArray;
 import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.sqliteqb.library.SQLQueryBuilder;
 import org.mariotaku.sqliteqb.library.Table;
@@ -706,17 +705,19 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
-    public static int[] getAccountColors(final Context context, final long[] accountIds) {
-        if (context == null || accountIds == null) return new int[0];
+    public static int[] getAccountColors(final Context context, final UserKey[] accountKeys) {
+        if (context == null || accountKeys == null) return new int[0];
         final String[] cols = new String[]{Accounts.ACCOUNT_KEY, Accounts.COLOR};
-        final String where = Expression.in(new Column(Accounts.ACCOUNT_KEY), new RawItemArray(accountIds)).getSQL();
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where, null, null);
+        final String where = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), accountKeys.length).getSQL();
+        final String[] whereArgs = TwidereArrayUtils.toStringArray(accountKeys);
+        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where,
+                whereArgs, null);
         if (cur == null) return new int[0];
         try {
             final int[] colors = new int[cur.getCount()];
             for (int i = 0, j = cur.getCount(); i < j; i++) {
                 cur.moveToPosition(i);
-                colors[ArrayUtils.indexOf(accountIds, cur.getLong(0))] = cur.getInt(1);
+                colors[ArrayUtils.indexOf(accountKeys, cur.getLong(0))] = cur.getInt(1);
             }
             return colors;
         } finally {

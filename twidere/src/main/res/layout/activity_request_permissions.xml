@@ -45,7 +45,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@android:id/icon"
+                    android:id="@+id/iconView"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     android:layout_margin="4dp"
@@ -59,7 +59,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@android:id/text1"
+                        android:id="@+id/nameView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
@@ -67,7 +67,7 @@
                         android:textStyle="bold"/>
 
                     <TextView
-                        android:id="@android:id/text2"
+                        android:id="@+id/descriptionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
@@ -76,7 +76,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/message"
+                android:id="@+id/messageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
@@ -87,7 +87,7 @@
     </ScrollView>
 
     <LinearLayout
-        android:id="@+id/buttons"
+        android:id="@+id/buttonsContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_bar_height"
         android:divider="?android:dividerHorizontal"

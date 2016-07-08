@@ -29,13 +29,13 @@
     tools:context=".activity.AccountSelectorActivity">
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/accountsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <LinearLayout
-        android:id="@+id/select_account_buttons"
+        android:id="@+id/selectAccountButtons"
         style="?android:buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/confirmSelection"
             style="?android:borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

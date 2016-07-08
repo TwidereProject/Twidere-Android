@@ -8,6 +8,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
+import org.mariotaku.twidere.Constants.GOOGLE_APIS_SERVER_CLIENT_ID
+import org.mariotaku.twidere.Constants.LOGTAG
 
 /**
  * Created by mariotaku on 16/5/14.
@@ -21,14 +23,16 @@ class PlusServiceGoogleSignInActivity : BasePlusServiceSignInActivity(), GoogleA
         super.onCreate(savedInstanceState)
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().requestIdToken(GOOGLE_APIS_SERVER_CLIENT_ID).build()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(GOOGLE_APIS_SERVER_CLIENT_ID).build()
         // Build a GoogleApiClient with access to the Google Sign-In API and the
         // options specified by gso.
         mGoogleApiClient = GoogleApiClient.Builder(this).enableAutoManage(this, this).addApi(Auth.GOOGLE_SIGN_IN_API, gso).build()
         signInWithGoogle()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);

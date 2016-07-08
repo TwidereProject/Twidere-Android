@@ -156,6 +156,7 @@ public interface IntentConstants {
     String EXTRA_IMAGE_URI = "image_uri";
     String EXTRA_ACTIVATED_ONLY = "activated_only";
     String EXTRA_TAB_POSITION = "tab_position";
+    String EXTRA_TAB_ID = "tab_id";
     String EXTRA_OAUTH_VERIFIER = "oauth_verifier";
     String EXTRA_REQUEST_TOKEN = "request_token";
     String EXTRA_REQUEST_TOKEN_SECRET = "request_token_secret";

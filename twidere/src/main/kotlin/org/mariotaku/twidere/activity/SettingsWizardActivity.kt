@@ -117,7 +117,7 @@ class SettingsWizardActivity : BaseActivity() {
         return ATEUtil.darkenColor(ThemeUtils.getColorBackground(this))
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_IMPORT_SETTINGS -> {
                 if (resultCode == Activity.RESULT_OK) {

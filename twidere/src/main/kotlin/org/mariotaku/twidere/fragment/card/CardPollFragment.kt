@@ -60,7 +60,7 @@ import java.util.regex.Pattern
 /**
  * Created by mariotaku on 15/12/20.
  */
-class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<ParcelableCardEntity>, View.OnClickListener {
+class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<ParcelableCardEntity?>, View.OnClickListener {
     private var fetchedCard: ParcelableCardEntity? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -232,17 +232,17 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
 
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<ParcelableCardEntity> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ParcelableCardEntity?> {
         val card = card
         return ParcelableCardEntityLoader(context, card.account_key, card.url, card.name)
     }
 
-    override fun onLoadFinished(loader: Loader<ParcelableCardEntity>, data: ParcelableCardEntity?) {
+    override fun onLoadFinished(loader: Loader<ParcelableCardEntity?>, data: ParcelableCardEntity?) {
         if (data == null) return
         displayPoll(data, status)
     }
 
-    override fun onLoaderReset(loader: Loader<ParcelableCardEntity>) {
+    override fun onLoaderReset(loader: Loader<ParcelableCardEntity?>) {
 
     }
 
@@ -280,22 +280,26 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
         }
     }
 
-    class ParcelableCardEntityLoader(context: Context, private val mAccountKey: UserKey,
-                                     private val mCardUri: String, private val mCardName: String) : AsyncTaskLoader<ParcelableCardEntity>(context) {
+    class ParcelableCardEntityLoader(
+            context: Context,
+            private val accountKey: UserKey,
+            private val cardUri: String,
+            private val cardName: String
+    ) : AsyncTaskLoader<ParcelableCardEntity?>(context) {
 
         override fun loadInBackground(): ParcelableCardEntity? {
-            val caps = MicroBlogAPIFactory.getInstance(context, mAccountKey,
+            val caps = MicroBlogAPIFactory.getInstance(context, accountKey,
                     true, true, TwitterCaps::class.java) ?: return null
             try {
                 val params = CardDataMap()
-                params.putString("card_uri", mCardUri)
+                params.putString("card_uri", cardUri)
                 params.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
-                params.putString("response_card_name", mCardName)
+                params.putString("response_card_name", cardName)
                 val card = caps.getPassThrough(params).card
                 if (card == null || card.name == null) {
                     return null
                 }
-                return ParcelableCardEntityUtils.fromCardEntity(card, mAccountKey)
+                return ParcelableCardEntityUtils.fromCardEntity(card, accountKey)
             } catch (e: MicroBlogException) {
                 return null
             }

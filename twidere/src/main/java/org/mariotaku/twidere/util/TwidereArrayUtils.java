@@ -116,17 +116,6 @@ public final class TwidereArrayUtils {
         }
     }
 
-    public static long min(final long[] array) {
-        if (array == null || array.length == 0) throw new IllegalArgumentException();
-        long min = array[0];
-        for (int i = 1, j = array.length; i < j; i++) {
-            if (min > array[i]) {
-                min = array[i];
-            }
-        }
-        return min;
-    }
-
     @NonNull
     public static long[] parseLongArray(final String string, final char token) {
         if (TextUtils.isEmpty(string)) return new long[0];

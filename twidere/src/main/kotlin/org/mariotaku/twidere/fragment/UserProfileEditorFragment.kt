@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -243,13 +244,13 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
                         data.data, true)
             }
             REQUEST_PICK_LINK_COLOR -> {
-                if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     linkColor.color = data.getIntExtra(EXTRA_COLOR, 0)
                     updateDoneButton()
                 }
             }
             REQUEST_PICK_BACKGROUND_COLOR -> {
-                if (resultCode == ColorPickerDialogActivity.RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     backgroundColor.color = data.getIntExtra(EXTRA_COLOR, 0)
                     updateDoneButton()
                 }

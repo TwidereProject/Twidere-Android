@@ -252,7 +252,6 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val activity = getActivity(position)
         if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         } else if (position == activityCount) {
@@ -260,24 +259,25 @@ class ParcelableActivitiesAdapter(
         } else if (isGapItem(position)) {
             return ITEM_VIEW_TYPE_GAP
         }
-        val action = getActivityAction(position) ?: throw NullPointerException()
+        val action = getActivityAction(position)!!
+        val activity = getActivity(position)!!
         when (action) {
             Activity.Action.MENTION -> {
-                if (ArrayUtils.isEmpty(activity!!.target_object_statuses)) {
+                if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
                 if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
             Activity.Action.REPLY -> {
-                if (ArrayUtils.isEmpty(activity!!.target_statuses)) {
+                if (ArrayUtils.isEmpty(activity.target_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
                 if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
             Activity.Action.QUOTE -> {
-                if (ArrayUtils.isEmpty(activity!!.target_statuses)) {
+                if (ArrayUtils.isEmpty(activity.target_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
                 if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
@@ -286,7 +286,7 @@ class ParcelableActivitiesAdapter(
             Activity.Action.FOLLOW, Activity.Action.FAVORITE, Activity.Action.RETWEET, Activity.Action.FAVORITED_RETWEET, Activity.Action.RETWEETED_RETWEET, Activity.Action.RETWEETED_MENTION, Activity.Action.FAVORITED_MENTION, Activity.Action.LIST_CREATED, Activity.Action.LIST_MEMBER_ADDED, Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED, Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                 if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                 ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds, followingOnly)
-                if (ArrayUtils.isEmpty(activity!!.after_filtered_source_ids)) {
+                if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
                     return ITEM_VIEW_TYPE_EMPTY
                 }
                 return ITEM_VIEW_TYPE_TITLE_SUMMARY

@@ -81,7 +81,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     }
 
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SHARE_MEDIA -> {
                 ShareProvider.clearTempFiles(this)

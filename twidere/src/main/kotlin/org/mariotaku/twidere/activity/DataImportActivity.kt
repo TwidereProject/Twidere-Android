@@ -31,11 +31,11 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_PICK_FILE -> {
                 resumeFragmentsRunnable = Runnable {
-                    if (resultCode == RESULT_OK) {
+                    if (resultCode == RESULT_OK && data != null) {
                         val path = data.data.path
                         if (openImportTypeTask == null || openImportTypeTask!!.status != AsyncTask.Status.RUNNING) {
                             openImportTypeTask = OpenImportTypeTask(this@DataImportActivity, path)

@@ -186,6 +186,7 @@ public class CustomTabUtils implements Constants {
             @ReadPositionTag
             final String tag = getTagByType(type);
             args.putInt(EXTRA_TAB_POSITION, position);
+            args.putLong(EXTRA_TAB_ID, cur.getLong(indices.id));
             final TabExtras tabExtras = parseTabExtras(type, cur.getString(idxExtras));
             if (tabExtras != null) {
                 args.putParcelable(EXTRA_EXTRAS, tabExtras);
