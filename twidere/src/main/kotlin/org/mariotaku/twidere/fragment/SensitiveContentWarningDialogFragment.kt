@@ -23,13 +23,13 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import org.mariotaku.ktextension.asTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.Utils
 
 class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -44,8 +44,7 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
                 val status = args.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                 val option = args.getBundle(EXTRA_ACTIVITY_OPTIONS)
                 val newDocument = args.getBoolean(EXTRA_NEW_DOCUMENT)
-                val media = Utils.newParcelableArray(args.getParcelableArray(EXTRA_MEDIA),
-                        ParcelableMedia.CREATOR)
+                val media = args.getParcelableArray(EXTRA_MEDIA).asTypedArray(ParcelableMedia.CREATOR)
                 IntentUtils.openMediaDirectly(context, accountKey, status, null, current, media,
                         option, newDocument)
             }

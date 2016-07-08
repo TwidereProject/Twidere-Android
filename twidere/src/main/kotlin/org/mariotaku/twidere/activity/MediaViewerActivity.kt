@@ -37,6 +37,7 @@ import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.apache.commons.lang3.ArrayUtils
+import org.mariotaku.ktextension.asTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
@@ -49,8 +50,10 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.task.SaveMediaToGalleryTask
-import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.AsyncTaskUtils
+import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.MenuUtils
+import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.File
 import javax.inject.Inject
@@ -291,8 +294,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
 
     private val media: Array<ParcelableMedia> by lazy {
-        Utils.newParcelableArray(intent.getParcelableArrayExtra(EXTRA_MEDIA),
-                ParcelableMedia.CREATOR)
+        intent.getParcelableArrayExtra(EXTRA_MEDIA).asTypedArray(ParcelableMedia.CREATOR)
     }
 
     protected fun processShareIntent(intent: Intent) {
