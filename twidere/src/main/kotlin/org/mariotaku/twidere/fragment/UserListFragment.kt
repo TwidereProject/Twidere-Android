@@ -65,7 +65,7 @@ import org.mariotaku.twidere.util.*
 
 class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback, SupportFragmentCallback {
 
-    private var mUserListLoaderInitialized: Boolean = false
+    private var userListLoaderInitialized: Boolean = false
 
     var userList: ParcelableUserList? = null
         private set
@@ -88,9 +88,9 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
         lm.destroyLoader(0)
         val args = Bundle(arguments)
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
-        if (!mUserListLoaderInitialized) {
+        if (!userListLoaderInitialized) {
             lm.initLoader(0, args, this)
-            mUserListLoaderInitialized = true
+            userListLoaderInitialized = true
         } else {
             lm.restartLoader(0, args, this)
         }
@@ -101,8 +101,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
         when (requestCode) {
             REQUEST_SELECT_USER -> {
                 val userList = this.userList
-                if (resultCode != Activity.RESULT_OK || !data!!.hasExtra(EXTRA_USER) || twitter == null
-                        || userList == null)
+                if (resultCode != Activity.RESULT_OK || !data!!.hasExtra(EXTRA_USER) || userList == null)
                     return
                 val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
                 twitter.addUserListMembersAsync(userList.account_key, userList.id, user)
@@ -247,6 +246,12 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
                 intent.setClass(activity, AccountSelectorActivity::class.java)
                 intent.putExtra(EXTRA_SINGLE_SELECTION, true)
                 startActivityForResult(intent, REQUEST_SELECT_ACCOUNT)
+            }
+            R.id.info -> {
+                val df = UserListDetailsDialogFragment()
+                df.arguments = Bundle()
+                df.arguments.putParcelable(EXTRA_USER_LIST, userList)
+                df.show(childFragmentManager, "user_list_details")
             }
             else -> {
                 if (item.intent != null) {
@@ -438,6 +443,17 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             forceLoad()
         }
 
+    }
+
+    class UserListDetailsDialogFragment : BaseDialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val userList = arguments.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(userList.name)
+            builder.setMessage(userList.description)
+            builder.setPositiveButton(android.R.string.ok, null)
+            return builder.create()
+        }
     }
 
 }
