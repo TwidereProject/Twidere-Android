@@ -64,6 +64,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageButton;
 
+import com.emojidex.emojidexandroid.Emojidex;
 import com.squareup.otto.Subscribe;
 
 import org.mariotaku.abstask.library.AbstractTask;
@@ -452,6 +453,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         if (Utils.isStreamingEnabled()) {
             startService(new Intent(this, StreamingService.class));
         }
+
+        // Initialize emojidex.
+        final Emojidex emojidex = Emojidex.getInstance();
+        emojidex.initialize(this);
+        if(emojidex.getAllEmojiList().isEmpty())
+            emojidex.reload();
     }
 
     @Override
