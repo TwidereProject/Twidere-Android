@@ -19,6 +19,8 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.emojidex.emojidexandroid.Emojidex;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -91,6 +93,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
 
     private StatusClickListener statusClickListener;
 
+    private final Emojidex emojidex;
+
     public StatusViewHolder(@NonNull final IStatusesAdapter<?> adapter, @NonNull final View itemView) {
         super(itemView);
         this.adapter = adapter;
@@ -145,6 +149,12 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
             View.inflate(mediaPreview.getContext(), R.layout.layout_card_media_preview, mediaPreview);
             View.inflate(quoteMediaPreview.getContext(), R.layout.layout_card_media_preview, quoteMediaPreview);
         }
+
+        // Initialize emojidex.
+        emojidex = Emojidex.getInstance();
+        emojidex.initialize(adapter.getContext());
+        if(emojidex.getAllEmojiList().isEmpty())
+            emojidex.reload();
     }
 
     public void displaySampleStatus() {
@@ -503,6 +513,8 @@ public class StatusViewHolder extends ViewHolder implements Constants, IStatusVi
         nameView.updateText(formatter);
         quotedNameView.updateText(formatter);
 
+        // Convert to emojidex.
+        textView.setText(emojidex.emojify(emojidex.deEmojify(textView.getText())));
     }
 
     @Override
