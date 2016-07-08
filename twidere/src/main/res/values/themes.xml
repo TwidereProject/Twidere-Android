@@ -133,8 +133,7 @@
 
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_viewer</item>
-        <!--<item name="android:windowIsTranslucent">true</item>-->
-        <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
+
         <item name="windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
         <item name="actionModeShareDrawable">@drawable/ic_action_share</item>

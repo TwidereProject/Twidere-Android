@@ -117,7 +117,6 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private var scrollListener: PanelShowHideListener? = null
 
     private var messageDrafts: SharedPreferences? = null
-    private var mEffectHelper: EffectViewHelper? = null
 
     // Adapters
     private var adapter: MessageConversationAdapter? = null
@@ -350,8 +349,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         val recipientId = args?.getString(EXTRA_RECIPIENT_ID)
         val cols = DirectMessages.COLUMNS
         val isValid = accountId != null && recipientId != null
-        conversationContainer!!.visibility = if (isValid) View.VISIBLE else View.GONE
-        recipientSelectorContainer!!.visibility = if (isValid) View.GONE else View.VISIBLE
+        conversationContainer.visibility = if (isValid) View.VISIBLE else View.GONE
+        recipientSelectorContainer.visibility = if (isValid) View.GONE else View.VISIBLE
         if (!isValid) {
             return CursorLoader(activity, TwidereDataStore.CONTENT_URI_NULL, cols, null, null, null)
         }
@@ -494,7 +493,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
     val isShowingConversation: Boolean
-        get() = conversationContainer!!.visibility == View.VISIBLE
+        get() = conversationContainer.visibility == View.VISIBLE
 
     private fun getDraftsTextKey(accountKey: UserKey, userId: UserKey): String {
         return String.format(Locale.ROOT, "text_%s_to_%s", accountKey, userId)

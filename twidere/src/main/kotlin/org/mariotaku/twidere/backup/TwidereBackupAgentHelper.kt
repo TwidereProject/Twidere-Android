@@ -17,26 +17,26 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.backup;
+package org.mariotaku.twidere.backup
 
-import android.annotation.TargetApi;
-import android.app.backup.BackupAgentHelper;
-import android.app.backup.SharedPreferencesBackupHelper;
-import android.os.Build;
+import android.annotation.TargetApi
+import android.app.backup.BackupAgentHelper
+import android.app.backup.SharedPreferencesBackupHelper
+import android.os.Build
+import org.mariotaku.twidere.TwidereConstants.*
 
-import org.mariotaku.twidere.Constants;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
-public class TwidereBackupAgentHelper extends BackupAgentHelper implements Constants {
+class TwidereBackupAgentHelper : BackupAgentHelper() {
 
     // A key to uniquely identify the set of backup data
-    static final String PREFS_BACKUP_KEY = "preference_backup";
+    val PREFS_BACKUP_KEY = "preference_backup"
 
-    @Override
-    public void onCreate() {
-        addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, SHARED_PREFERENCES_NAME));
-        addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, HOST_MAPPING_PREFERENCES_NAME));
-        addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, USER_COLOR_PREFERENCES_NAME));
-        addHelper(PREFS_BACKUP_KEY, new SharedPreferencesBackupHelper(this, PERMISSION_PREFERENCES_NAME));
+    override fun onCreate() {
+        addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, SHARED_PREFERENCES_NAME))
+        addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, HOST_MAPPING_PREFERENCES_NAME))
+        addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, USER_COLOR_PREFERENCES_NAME))
+        addHelper(PREFS_BACKUP_KEY, SharedPreferencesBackupHelper(this, PERMISSION_PREFERENCES_NAME))
     }
+
 }
