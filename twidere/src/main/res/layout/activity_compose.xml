@@ -213,7 +213,6 @@
                 android:layout_alignTop="@+id/accountProfileImageFrame"
                 android:layout_gravity="center"
                 android:contentDescription="@string/select_accounts_for_compose"
-                android:contextClickable="true"
                 android:textColor="?android:colorForeground"/>
 
         </RelativeLayout>
@@ -222,9 +221,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toEndOf="@+id/accountSelectorButton"
-            android:layout_toLeftOf="@+id/send"
+            android:layout_toLeftOf="@+id/updateStatus"
             android:layout_toRightOf="@+id/accountSelectorButton"
-            android:layout_toStartOf="@+id/send"
+            android:layout_toStartOf="@+id/updateStatus"
             android:scrollbars="none">
 
             <android.support.v7.widget.TwidereActionMenuView
@@ -237,7 +236,7 @@
         </FrameLayout>
 
         <LinearLayout
-            android:id="@+id/send"
+            android:id="@+id/updateStatus"
             style="?actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -487,21 +487,14 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
     protected abstract fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?)
 
     protected fun saveReadPosition(position: Int) {
-        val readPositionTag = readPositionTagWithAccounts ?: return
         if (position == RecyclerView.NO_POSITION) return
         val adapter = adapter
         val status = adapter!!.getStatus(position) ?: return
         val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
-        readStateManager.setPosition(readPositionTag, positionKey)
-        val accountKeys = accountKeys
-        if (accountKeys.size > 1) {
-            for (accountKey in accountKeys) {
-                val tag = Utils.getReadPositionTagWithAccounts(readPositionTagWithArguments,
-                        accountKey)
-                readStateManager.setPosition(tag, positionKey)
-            }
+        for (accountKey in accountKeys) {
+            val tag = Utils.getReadPositionTagWithAccount(readPositionTagWithArguments, accountKey)
+            readStateManager.setPosition(tag, positionKey)
         }
-        readStateManager.setPosition(currentReadPositionTag, positionKey, true)
     }
 
     override val extraContentPadding: Rect
@@ -536,13 +529,7 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
     }
 
     private val currentReadPositionTag: String?
-        get() {
-            val tag = readPositionTagWithAccounts ?: return null
-            return tag + "_current"
-        }
-
-    private val readPositionTagWithAccounts: String?
-        get() = Utils.getReadPositionTagWithAccounts(readPositionTagWithArguments, *accountKeys)
+        get() = "${readPositionTag}_${tabId}_current"
 
     class DefaultOnLikedListener(
             private val twitter: AsyncTwitterWrapper,

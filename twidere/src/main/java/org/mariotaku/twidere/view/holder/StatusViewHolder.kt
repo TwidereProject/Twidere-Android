@@ -587,6 +587,18 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 holder.favoriteButton -> {
                     listener.onItemActionClick(holder, R.id.favorite, position)
                 }
+                holder.mediaLabel -> {
+                    val media = holder.adapter.getStatus(position)?.media ?: return
+                    if (media.isNotEmpty()) {
+                        listener.onMediaClick(holder, v, media[0], position)
+                    }
+                }
+                holder.quotedMediaLabel -> {
+                    val media = holder.adapter.getStatus(position)?.quoted_media ?: return
+                    if (media.isNotEmpty()) {
+                        listener.onMediaClick(holder, v, media[0], position)
+                    }
+                }
             }
         }
 

@@ -109,11 +109,9 @@ class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFr
     }
 
 
-    override val extraConfiguration: Bundle?
-        get() = null
-
-    override val tabPosition: Int
-        get() = 0
+    override val extraConfiguration: Bundle? = null
+    override val tabPosition: Int = -1
+    override val tabId: Long = -1L
 
     override fun requestFitSystemWindows() {
         val activity = activity

@@ -74,7 +74,7 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final String tag = getPositionTag(notificationType);
                 if (tag != null && !TextUtils.isEmpty(paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION))) {
                     final long def = -1;
-                    manager.setPosition(Utils.getReadPositionTagWithAccounts(tag, accountKey),
+                    manager.setPosition(Utils.getReadPositionTagWithAccount(tag, accountKey),
                             NumberUtils.toLong(paramReadPosition, def));
                 } else if (!TextUtils.isEmpty(paramReadPositions = uri.getQueryParameter(QUERY_PARAM_READ_POSITIONS))) {
                     try {

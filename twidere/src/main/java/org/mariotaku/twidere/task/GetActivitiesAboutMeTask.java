@@ -37,13 +37,13 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
     }
 
     @Override
-    protected void saveReadPosition(@NonNull UserKey accountId, ParcelableCredentials credentials, @NonNull MicroBlog twitter) {
+    protected void saveReadPosition(@NonNull UserKey accountKey, ParcelableCredentials credentials, @NonNull MicroBlog twitter) {
         if (ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
             if (Utils.isOfficialCredentials(context, credentials)) {
                 try {
                     CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
-                    final String tag = Utils.getReadPositionTagWithAccounts(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                            accountId);
+                    final String tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                            accountKey);
                     readStateManager.setPosition(tag, response.getCursor(), false);
                 } catch (MicroBlogException e) {
                     // Ignore

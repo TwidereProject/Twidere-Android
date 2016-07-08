@@ -1289,7 +1289,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private long getPositionTag(String tag, UserKey accountKey) {
-        final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccounts(tag,
+        final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccount(tag,
                 accountKey));
         if (position != -1) return position;
         return mReadStateManager.getPosition(tag);

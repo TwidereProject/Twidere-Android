@@ -123,7 +123,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CopyLinkActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.AccountsManagerFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
 import org.mariotaku.twidere.fragment.DraftsFragment;
@@ -841,28 +840,11 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static String getReadPositionTagWithAccounts(@Nullable final String tag,
-                                                        final UserKey... accountKeys) {
+    public static String getReadPositionTagWithAccount(@Nullable final String tag,
+                                                       @Nullable final UserKey accountKey) {
         if (tag == null) return null;
-        if (ArrayUtils.isEmpty(accountKeys)) return tag;
-        final UserKey[] accountIdsClone = accountKeys.clone();
-        Arrays.sort(accountIdsClone);
-        return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
-    }
-
-    @Nullable
-    public static String getReadPositionTagWithAccounts(Context context, boolean activatedIfMissing,
-                                                        @Nullable @ReadPositionTag String tag,
-                                                        @Nullable UserKey[] accountKeys) {
-        if (tag == null) return null;
-        if (ArrayUtils.isEmpty(accountKeys)) {
-            final UserKey[] activatedIds = DataStoreUtils.getActivatedAccountKeys(context);
-            Arrays.sort(activatedIds);
-            return tag + "_" + TwidereArrayUtils.toString(activatedIds, '_', false);
-        }
-        final UserKey[] accountIdsClone = accountKeys.clone();
-        Arrays.sort(accountIdsClone);
-        return tag + "_" + TwidereArrayUtils.toString(accountIdsClone, '_', false);
+        if (accountKey == null) return tag;
+        return tag + "_" + accountKey;
     }
 
     public static String encodeQueryParams(final String value) throws IOException {

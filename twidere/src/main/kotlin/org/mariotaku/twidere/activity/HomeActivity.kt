@@ -861,22 +861,26 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 when (spec.type) {
                     CustomTabType.HOME_TIMELINE -> {
-                        val accountKeys = Utils.getAccountKeys(context, spec.args)
-                        val tagWithAccounts = Utils.getReadPositionTagWithAccounts(context,
-                                true, ReadPositionTag.HOME_TIMELINE, accountKeys)
-                        val position = readStateManager.getPosition(tagWithAccounts)
+                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?:
+                                DataStoreUtils.getActivatedAccountKeys(context)
+                        val position = accountKeys.map {
+                            val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, it)
+                            readStateManager.getPosition(tag)
+                        }.fold(0L, Math::max)
                         val count = DataStoreUtils.getStatusesCount(context, Statuses.CONTENT_URI,
                                 spec.args, position, Statuses.STATUS_TIMESTAMP, true, accountKeys)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))
                     }
                     CustomTabType.NOTIFICATIONS_TIMELINE -> {
-                        val accountIds = Utils.getAccountKeys(context, spec.args)
-                        val tagWithAccounts = Utils.getReadPositionTagWithAccounts(context,
-                                true, ReadPositionTag.ACTIVITIES_ABOUT_ME, accountIds)
-                        val position = readStateManager.getPosition(tagWithAccounts)
+                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?:
+                                DataStoreUtils.getActivatedAccountKeys(context)
+                        val position = accountKeys.map {
+                            val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME, it)
+                            readStateManager.getPosition(tag)
+                        }.fold(0L, Math::max)
                         val count = DataStoreUtils.getInteractionsCount(context, spec.args,
-                                accountIds, position, Activities.TIMESTAMP)
+                                accountKeys, position, Activities.TIMESTAMP)
                         publishProgress(TabBadge(i, count))
                         result.put(i, count)
                     }

@@ -89,8 +89,14 @@ open class BaseSupportFragment : Fragment(), IBaseFragment {
 
     override val tabPosition: Int
         get() {
-            val args = arguments
-            return if (args != null) args.getInt(IntentConstants.EXTRA_TAB_POSITION, -1) else -1
+            val args = arguments ?: return -1
+            return args.getInt(IntentConstants.EXTRA_TAB_POSITION, -1)
+        }
+
+    override val tabId: Long
+        get() {
+            val args = arguments ?: return -1L
+            return args.getLong(IntentConstants.EXTRA_TAB_POSITION, -1L)
         }
 
     override fun requestFitSystemWindows() {

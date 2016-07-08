@@ -491,22 +491,20 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     protected fun saveReadPosition(position: Int) {
         if (context == null) return
-        val readPositionTag = readPositionTagWithAccounts ?: return
         if (position == RecyclerView.NO_POSITION) return
-        val adapter = adapter
         val item = adapter!!.getActivity(position) ?: return
-        val accountKeys = accountKeys
-        if (readStateManager.setPosition(readPositionTag, item.timestamp)) {
+
+        var positionUpdated = false
+        for (accountKey in accountKeys) {
+            val tag = Utils.getReadPositionTagWithAccount(readPositionTag, accountKey)
+            if (readStateManager.setPosition(tag, item.timestamp)) {
+                positionUpdated = true
+            }
+        }
+
+        if (positionUpdated) {
             twitterWrapper.setActivitiesAboutMeUnreadAsync(accountKeys, item.timestamp)
         }
-
-        for (accountKey in accountKeys) {
-            val tag = Utils.getReadPositionTagWithAccounts(readPositionTag,
-                    accountKey)
-            readStateManager.setPosition(tag, item.timestamp)
-        }
-
-        readStateManager.setPosition(currentReadPositionTag, item.timestamp, true)
     }
 
     override val extraContentPadding: Rect
@@ -592,21 +590,13 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         return itemDecoration
     }
 
-
     private val currentReadPositionTag: String?
-        get() {
-            val tag = readPositionTagWithAccounts ?: return null
-            return tag + "_current"
-        }
-
-    private val readPositionTagWithAccounts: String?
-        get() = Utils.getReadPositionTagWithAccounts(readPositionTag, *accountKeys)
+        get() = "${readPositionTag}_${tabId}_current"
 
     protected inner class StatusesBusCallback {
 
         @Subscribe
         fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            val adapter = adapter
             adapter!!.notifyDataSetChanged()
         }
 
