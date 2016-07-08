@@ -35,9 +35,9 @@ import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBar
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
@@ -50,7 +50,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
-import kotlinx.android.synthetic.main.layout_actionbar_message_user_picker.*
+import kotlinx.android.synthetic.main.layout_actionbar_message_user_picker.view.*
 import me.uucky.colorpicker.internal.EffectViewHelper
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -85,15 +85,15 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import java.util.*
 import javax.inject.Inject
 
-class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnClickListener, OnItemSelectedListener, PopupMenu.OnMenuItemClickListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
-
+class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnClickListener,
+        OnItemSelectedListener, KeyboardShortcutCallback, TakeAllKeyboardShortcut {
 
     // Callbacks and listeners
     private val searchLoadersCallback = object : LoaderCallbacks<List<ParcelableUser>> {
         override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>> {
-            usersSearchList!!.visibility = View.GONE
-            usersSearchEmpty!!.visibility = View.GONE
-            usersSearchProgress!!.visibility = View.VISIBLE
+            usersSearchList.visibility = View.GONE
+            usersSearchEmpty.visibility = View.GONE
+            usersSearchProgress.visibility = View.VISIBLE
             val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             val query = args.getString(EXTRA_QUERY)
             val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
@@ -103,10 +103,10 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         }
 
         override fun onLoadFinished(loader: Loader<List<ParcelableUser>>, data: List<ParcelableUser>?) {
-            usersSearchList!!.visibility = View.VISIBLE
-            usersSearchProgress!!.visibility = View.GONE
-            usersSearchEmpty!!.visibility = if (data == null || data.isEmpty()) View.GONE else View.VISIBLE
-            mUsersSearchAdapter!!.setData(data, true)
+            usersSearchList.visibility = View.VISIBLE
+            usersSearchProgress.visibility = View.GONE
+            usersSearchEmpty.visibility = if (data == null || data.isEmpty()) View.GONE else View.VISIBLE
+            usersSearchAdapter!!.setData(data, true)
             updateEmptyText()
         }
 
@@ -121,12 +121,11 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
     // Adapters
     private var adapter: MessageConversationAdapter? = null
-    private var mUsersSearchAdapter: SimpleParcelableUsersAdapter? = null
+    private var usersSearchAdapter: SimpleParcelableUsersAdapter? = null
 
     // Data fields
     private var searchUsersLoaderInitialized: Boolean = false
     private var navigateBackPressed: Boolean = false
-    private val selectedDirectMessage: ParcelableDirectMessage? = null
     private var loaderInitialized: Boolean = false
     private var imageUri: String? = null
     private var account: ParcelableCredentials? = null
@@ -135,6 +134,9 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private var queryTextChanged: Boolean = false
 
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
+
+    private val actionBarCustomView: View
+        get() = (activity as AppCompatActivity).supportActionBar!!.customView
 
     @Subscribe
     fun notifyTaskStateChanged(event: TaskStateChangedEvent) {
@@ -163,10 +165,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         val activity = activity as BaseActivity
         messageDrafts = activity.getSharedPreferences(MESSAGE_DRAFTS_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
-        val view = view!!
-        val viewContext = view.context
         setHasOptionsMenu(true)
-        val actionBar = activity.supportActionBar ?: throw NullPointerException()
+        val actionBar = activity.supportActionBar!!
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar.setCustomView(R.layout.layout_actionbar_message_user_picker)
@@ -175,11 +175,11 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 actionBar.themedContext, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user)
         accountsSpinnerAdapter.addAll(accounts)
-        accountSpinner.adapter = accountsSpinnerAdapter
-        accountSpinner.onItemSelectedListener = this
-        queryButton.setOnClickListener(this)
+        actionBarCustomView.accountSpinner.adapter = accountsSpinnerAdapter
+        actionBarCustomView.accountSpinner.onItemSelectedListener = this
+        actionBarCustomView.queryButton.setOnClickListener(this)
         adapter = MessageConversationAdapter(activity)
-        val layoutManager = FixedLinearLayoutManager(viewContext)
+        val layoutManager = FixedLinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         layoutManager.stackFromEnd = true
         recyclerView.layoutManager = layoutManager
@@ -197,24 +197,24 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         }
         scrollListener = PanelShowHideListener(effectHelper)
 
-        inputPanelShadowCompat!!.visibility = if (useOutline) View.GONE else View.VISIBLE
+        inputPanelShadowCompat.visibility = if (useOutline) View.GONE else View.VISIBLE
         ViewCompat.setAlpha(inputPanelShadowCompat, 0f)
 
-        mUsersSearchAdapter = SimpleParcelableUsersAdapter(activity)
-        usersSearchList!!.adapter = mUsersSearchAdapter
-        usersSearchList!!.emptyView = usersSearchEmpty
-        usersSearchList!!.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val account = accountSpinner.selectedItem as ParcelableCredentials
-            showConversation(account, mUsersSearchAdapter!!.getItem(position))
+        usersSearchAdapter = SimpleParcelableUsersAdapter(activity)
+        usersSearchList.adapter = usersSearchAdapter
+        usersSearchList.emptyView = usersSearchEmpty
+        usersSearchList.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
+            showConversation(account, usersSearchAdapter!!.getItem(position))
             updateRecipientInfo()
         }
 
         setupEditQuery()
         setupEditText()
 
-        send!!.setOnClickListener(this)
-        addImage!!.setOnClickListener(this)
-        send!!.isEnabled = false
+        sendMessage.setOnClickListener(this)
+        addImage.setOnClickListener(this)
+        sendMessage.isEnabled = false
         if (savedInstanceState != null) {
             val account = savedInstanceState.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
             val recipient = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)
@@ -237,7 +237,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                     }
                     val accountPos = accountsSpinnerAdapter.findPositionByKey(accountKey)
                     if (accountPos >= 0) {
-                        accountSpinner.setSelection(accountPos)
+                        actionBarCustomView.accountSpinner.setSelection(accountPos)
                     }
                     val userId = args.getString(EXTRA_RECIPIENT_ID)
                     if (accountPos >= 0) {
@@ -263,11 +263,11 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         }
         editText.setSelection(editText.length())
         val isValid = account != null && recipient != null
-        conversationContainer!!.visibility = if (isValid) View.VISIBLE else View.GONE
-        recipientSelectorContainer!!.visibility = if (isValid) View.GONE else View.VISIBLE
+        conversationContainer.visibility = if (isValid) View.VISIBLE else View.GONE
+        recipientSelectorContainer.visibility = if (isValid) View.GONE else View.VISIBLE
 
-        usersSearchList!!.visibility = View.GONE
-        usersSearchProgress!!.visibility = View.GONE
+        usersSearchList.visibility = View.GONE
+        usersSearchProgress.visibility = View.GONE
 
         registerForContextMenu(recyclerView)
 
@@ -360,23 +360,23 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
     override fun onClick(view: View) {
-        when (view.id) {
-            R.id.send -> {
+        when (view) {
+            sendMessage -> {
                 sendDirectMessage()
             }
-            R.id.addImage -> {
+            addImage -> {
                 val intent = ThemedImagePickerActivity.withThemed(activity).build()
                 startActivityForResult(intent, REQUEST_PICK_IMAGE)
             }
-            R.id.queryButton -> {
-                val account = accountSpinner.selectedItem as ParcelableCredentials
-                searchUsers(account.account_key, ParseUtils.parseString(editUserQuery!!.text), false)
+            actionBarCustomView.queryButton -> {
+                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
+                searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
             }
         }
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        val account = accountSpinner.selectedItem as ParcelableCredentials?
+        val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials?
         if (account != null) {
             this.account = account
             updateRecipientInfo()
@@ -390,24 +390,6 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {
         adapter!!.setCursor(null)
-    }
-
-    override fun onMenuItemClick(item: MenuItem): Boolean {
-        val message = selectedDirectMessage
-        if (message != null) {
-            when (item.itemId) {
-                R.id.delete -> {
-                    twitterWrapper.destroyDirectMessageAsync(message.account_key, message.id)
-                }
-                R.id.copy -> {
-                    if (ClipboardUtils.setText(activity, message.text_plain)) {
-                        Utils.showOkMessage(activity, R.string.text_copied, false)
-                    }
-                }
-                else -> return false
-            }
-        }
-        return true
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
@@ -450,7 +432,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
         if (ACTION_NAVIGATION_BACK == action) {
             val showingConversation = isShowingConversation
-            val editText = if (showingConversation) editText else editUserQuery
+            val editText = if (showingConversation) editText else actionBarCustomView.editUserQuery
             val textChanged = if (showingConversation) textChanged else queryTextChanged
             if (editText.length() == 0 && !textChanged) {
                 val activity = activity
@@ -505,9 +487,9 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private fun updateAccount() {
         if (account == null) return
         if (Utils.isOfficialCredentials(context, account!!)) {
-            addImage!!.visibility = View.VISIBLE
+            addImage.visibility = View.VISIBLE
         } else {
-            addImage!!.visibility = View.GONE
+            addImage.visibility = View.GONE
         }
     }
 
@@ -576,7 +558,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
     private fun setupEditQuery() {
-        val queryEnterHandler = EditTextEnterHandler.attach(editUserQuery!!, object : EnterListener {
+        val queryEnterHandler = EditTextEnterHandler.attach(actionBarCustomView.editUserQuery, object : EnterListener {
             override fun shouldCallListener(): Boolean {
                 val activity = activity
                 if (activity !is BaseActivity) return false
@@ -587,9 +569,9 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 val activity = activity
                 if (activity !is BaseActivity) return false
                 if (activity.keyMetaState != 0) return false
-                val account = accountSpinner.selectedItem as ParcelableCredentials ?: return false
+                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials ?: return false
                 editText.setAccountKey(account.account_key)
-                searchUsers(account.account_key, ParseUtils.parseString(editUserQuery!!.text), false)
+                searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
                 return true
             }
         }, true)
@@ -602,12 +584,12 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             }
 
             override fun afterTextChanged(s: Editable) {
-                val account = (accountSpinner.selectedItem ?: return) as ParcelableCredentials
+                val account = (actionBarCustomView.accountSpinner.selectedItem ?: return) as ParcelableCredentials
                 editText.setAccountKey(account.account_key)
                 searchUsers(account.account_key, ParseUtils.parseString(s), true)
             }
         })
-        editUserQuery!!.addTextChangedListener(object : TextWatcher {
+        actionBarCustomView.editUserQuery.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
             }
@@ -645,8 +627,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (send == null || s == null) return
-                send!!.isEnabled = validator.isValidDirectMessage(s.toString())
+                if (s == null) return
+                sendMessage.isEnabled = validator.isValidDirectMessage(s.toString())
             }
         })
     }
@@ -659,7 +641,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
     private fun updateAddImageButton() {
-        addImage!!.isActivated = imageUri != null
+        addImage.isActivated = imageUri != null
     }
 
     //    @Override
@@ -670,7 +652,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     //    }
 
     private fun updateEmptyText() {
-        val noQuery = editUserQuery!!.length() <= 0
+        val noQuery = actionBarCustomView.editUserQuery!!.length() <= 0
         if (noQuery) {
             usersSearchEmptyText!!.setText(R.string.type_name_to_search)
         } else {

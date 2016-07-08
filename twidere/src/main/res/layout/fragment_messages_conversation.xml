@@ -80,7 +80,7 @@
                 android:visibility="gone"/>
 
             <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/send"
+                android:id="@+id/sendMessage"
                 android:layout_width="@dimen/element_size_normal"
                 android:layout_height="@dimen/element_size_normal"
                 android:layout_alignParentEnd="true"
@@ -99,9 +99,9 @@
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_gravity="end"
                 android:layout_toEndOf="@+id/addImage"
-                android:layout_toLeftOf="@+id/send"
+                android:layout_toLeftOf="@+id/sendMessage"
                 android:layout_toRightOf="@+id/addImage"
-                android:layout_toStartOf="@+id/send"
+                android:layout_toStartOf="@+id/sendMessage"
                 app:bubbleColor="?messageBubbleColor"
                 app:caretHeight="8dp"
                 app:caretPosition="topEnd"
