@@ -77,7 +77,11 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
                 holder.media_preview_container.visibility = View.GONE
             }
         }
-        holder.content.drawEnd(*DataStoreUtils.getAccountColors(context, accountKeys))
+        if (accountKeys != null) {
+            holder.content.drawEnd(*DataStoreUtils.getAccountColors(context, accountKeys))
+        } else {
+            holder.content.drawEnd()
+        }
         holder.setTextSize(mTextSize)
         val emptyContent = TextUtils.isEmpty(text)
         if (emptyContent) {

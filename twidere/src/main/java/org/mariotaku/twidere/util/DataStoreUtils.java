@@ -705,19 +705,23 @@ public class DataStoreUtils implements Constants {
         return filterExpression;
     }
 
-    public static int[] getAccountColors(final Context context, final UserKey[] accountKeys) {
-        if (context == null || accountKeys == null) return new int[0];
+    @NonNull
+    public static int[] getAccountColors(@NonNull final Context context, @NonNull final UserKey[] accountKeys) {
         final String[] cols = new String[]{Accounts.ACCOUNT_KEY, Accounts.COLOR};
         final String where = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), accountKeys.length).getSQL();
         final String[] whereArgs = TwidereArrayUtils.toStringArray(accountKeys);
+        final int[] colors = new int[accountKeys.length];
         final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where,
                 whereArgs, null);
-        if (cur == null) return new int[0];
+        if (cur == null) return colors;
         try {
-            final int[] colors = new int[cur.getCount()];
-            for (int i = 0, j = cur.getCount(); i < j; i++) {
-                cur.moveToPosition(i);
-                colors[ArrayUtils.indexOf(accountKeys, cur.getLong(0))] = cur.getInt(1);
+            cur.moveToFirst();
+            while (!cur.isAfterLast()) {
+                final int idx = ArrayUtils.indexOf(accountKeys, UserKey.valueOf(cur.getString(0)));
+                if (idx >= 0) {
+                    colors[idx] = cur.getInt(1);
+                }
+                cur.moveToNext();
             }
             return colors;
         } finally {
