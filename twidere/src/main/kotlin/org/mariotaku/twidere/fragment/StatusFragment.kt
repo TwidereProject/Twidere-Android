@@ -1439,9 +1439,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         var translationResult: TranslationResult? = null
             set(translation) {
                 if (status == null || translation == null || !TextUtils.equals(InternalTwitterContentUtils.getOriginalId(status!!), translation.id)) {
-                    translationResult = null
+                    field = null
                 } else {
-                    translationResult = translation
+                    field = translation
                 }
                 notifyDataSetChanged()
             }

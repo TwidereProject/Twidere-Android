@@ -48,7 +48,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import java.util.*
 
-class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnClickListener, OnItemClickListener {
+class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClickListener, OnItemClickListener {
 
     private val mContentObserver = object : ContentObserver(null) {
 
@@ -85,7 +85,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnClick
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val conditions = ArrayList<Expression>()
         val conditionArgs = ArrayList<String>()
         if (isOAuthOnly) {
@@ -120,7 +120,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnClick
                 Accounts.SORT_POSITION)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
+    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
         val adapter = adapter!!
         adapter.swapCursor(cursor)
         if (cursor != null && firstCreated) {
@@ -140,7 +140,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor>, OnClick
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>) {
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
         adapter!!.swapCursor(null)
     }
 
