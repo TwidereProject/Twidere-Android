@@ -50,7 +50,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
         return downloadUri != null
     }
 
-    override fun onCreateMediaView(inflater: LayoutInflater, parent: ViewGroup, savedInstanceState: Bundle): View {
+    override fun onCreateMediaView(inflater: LayoutInflater, parent: ViewGroup, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.layout_media_viewer_gif, parent, false)
     }
 
