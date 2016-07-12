@@ -542,7 +542,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     class InputLoginVerificationDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener, DialogInterface.OnShowListener {
 
         private var callback: SignInTask.InputLoginVerificationCallback? = null
-        private var challengeType: String? = null
+        var challengeType: String? = null
 
         internal fun setCallback(callback: SignInTask.InputLoginVerificationCallback) {
             this.callback = callback
@@ -577,34 +577,36 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
         }
 
-        fun setChallengeType(challengeType: String) {
-            this.challengeType = challengeType
-        }
-
         override fun onShow(dialog: DialogInterface) {
             val alertDialog = dialog as AlertDialog
             val verificationHint = alertDialog.findViewById(R.id.verification_hint) as TextView?
             val editVerification = alertDialog.findViewById(R.id.edit_verification_code) as EditText?
             if (verificationHint == null || editVerification == null) return
-            if ("Push".equals(challengeType!!, ignoreCase = true)) {
-                verificationHint.setText(R.string.login_verification_push_hint)
-                editVerification.visibility = View.GONE
-            } else if ("RetypePhoneNumber".equals(challengeType!!, ignoreCase = true)) {
-                verificationHint.setText(R.string.login_challenge_retype_phone_hint)
-                editVerification.inputType = InputType.TYPE_CLASS_PHONE
-                editVerification.visibility = View.VISIBLE
-            } else if ("RetypeEmail".equals(challengeType!!, ignoreCase = true)) {
-                verificationHint.setText(R.string.login_challenge_retype_email_hint)
-                editVerification.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-                editVerification.visibility = View.VISIBLE
-            } else if ("Sms".equals(challengeType!!, ignoreCase = true)) {
-                verificationHint.setText(R.string.login_verification_pin_hint)
-                editVerification.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                editVerification.visibility = View.VISIBLE
-            } else {
-                verificationHint.text = getString(R.string.unsupported_login_verification_type_name,
-                        challengeType)
-                editVerification.visibility = View.VISIBLE
+            when {
+                "Push".equals(challengeType, ignoreCase = true) -> {
+                    verificationHint.setText(R.string.login_verification_push_hint)
+                    editVerification.visibility = View.GONE
+                }
+                "RetypePhoneNumber".equals(challengeType, ignoreCase = true) -> {
+                    verificationHint.setText(R.string.login_challenge_retype_phone_hint)
+                    editVerification.inputType = InputType.TYPE_CLASS_PHONE
+                    editVerification.visibility = View.VISIBLE
+                }
+                "RetypeEmail".equals(challengeType, ignoreCase = true) -> {
+                    verificationHint.setText(R.string.login_challenge_retype_email_hint)
+                    editVerification.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+                    editVerification.visibility = View.VISIBLE
+                }
+                "Sms".equals(challengeType, ignoreCase = true) -> {
+                    verificationHint.setText(R.string.login_verification_pin_hint)
+                    editVerification.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                    editVerification.visibility = View.VISIBLE
+                }
+                else -> {
+                    verificationHint.text = getString(R.string.unsupported_login_verification_type_name,
+                            challengeType)
+                    editVerification.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -933,7 +935,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                     field = value
                 }
 
-            override fun getLoginVerification(challengeType: String): String? {
+            override fun getLoginVerification(challengeType: String?): String? {
                 // Dismiss current progress dialog
                 publishProgress(Runnable {
                     val activity = activityRef.get() ?: return@Runnable
@@ -947,7 +949,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                         val df = InputLoginVerificationDialogFragment()
                         df.isCancelable = false
                         df.setCallback(this@InputLoginVerificationCallback)
-                        df.setChallengeType(challengeType)
+                        df.challengeType = challengeType
                         df.show(sia.supportFragmentManager, null)
                         Unit
                     }
