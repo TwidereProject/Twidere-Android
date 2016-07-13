@@ -428,7 +428,6 @@
   <string name="wizard_page_tabs_text">أضف بعض للتبويبات إلى تويدر.\nتتبع الأشخاص أو الأشياء التي تهتم بشأنها.</string>
   <string name="wizard_page_cards_text">إعداد مكونات البطاقة.</string>
   <string name="wizard_page_hints_text">بعض الإشارات المفيدة.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere يساهم في بعض مشاريع الابحاث والتي تحتاج بعض معلومات الاستخدام.</string>
   <string name="wizard_page_finished_title">إنتهى</string>
   <string name="wizard_page_finished_text">الآن تويدر جاهز.</string>
   <string name="invalid_tab">تبويبة معطلة</string>
@@ -533,7 +532,6 @@
   <string name="getting_location">يجلب الموقع</string>
   <string name="save_to_gallery">حفظ في المعرض</string>
   <string name="unknown_location">مكان مجهول</string>
-  <string name="usage_statistics_notification_summary">ساعدنا كي نحسن تويدر!</string>
   <!-- 'Tweet' here is a verb -->
   <string name="hide_card_actions">إخفاء أزرار البطاقة</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->

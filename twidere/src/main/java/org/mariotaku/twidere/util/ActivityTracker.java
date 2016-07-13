@@ -29,17 +29,12 @@ import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
 import org.mariotaku.twidere.activity.HomeActivity;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.PreProcessing;
-import edu.tsinghua.hotmobi.model.SessionEvent;
-
 /**
  * Created by mariotaku on 15/10/5.
  */
 public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
 
     private final IntList mInternalStack = new ArrayIntList();
-    private SessionEvent mSessionEvent;
     private boolean mHomeActivityStarted;
 
     private boolean isSwitchingInSameTask(int hashCode) {
@@ -65,11 +60,6 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
         if (activity instanceof HomeActivity) {
             mHomeActivityStarted = true;
         }
-        // BEGIN HotMobi
-        if (mSessionEvent == null) {
-            mSessionEvent = SessionEvent.create(activity);
-        }
-        // END HotMobi
     }
 
     @Override
@@ -88,19 +78,6 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
         if (activity instanceof HomeActivity) {
             mHomeActivityStarted = false;
         }
-        // BEGIN HotMobi
-        final SessionEvent event = mSessionEvent;
-        if (event != null && !isSwitchingInSameTask(hashCode)) {
-            event.markEnd();
-            HotMobiLogger.getInstance(activity).log(event, new PreProcessing<SessionEvent>() {
-                @Override
-                public void process(SessionEvent event, Context appContext) {
-                    event.dumpPreferences(appContext);
-                }
-            });
-            mSessionEvent = null;
-        }
-        // END HotMobi
 
         mInternalStack.removeElement(hashCode);
     }

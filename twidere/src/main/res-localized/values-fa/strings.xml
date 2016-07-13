@@ -453,7 +453,6 @@
   <string name="wizard_page_tabs_unchanged_message">می‌توانید در "تنظیمات" - "زبانه‌ها"، زبانه‌هایی بیفزایید</string>
   <string name="wizard_page_cards_text">تنظیم موارد کارتی.</string>
   <string name="wizard_page_hints_text">این‌جا راهنماهای مفیدی هست.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere در برخی پروژه‌های تحقیقی نقش دارد که نیازمند داده‌های مصرف است.</string>
   <string name="wizard_page_finished_title">پایان یافت</string>
   <string name="wizard_page_finished_text">اکنون Twidere برای استفاده آماده است.</string>
   <string name="invalid_tab">برگه‌ی نامعتبر</string>
@@ -630,19 +629,16 @@
   <string name="no_location">بدون موقعیّت</string>
   <string name="getting_location">گرفتن موقعیّت</string>
   <string name="save_to_gallery">ذخیره در جُنگ</string>
-  <string name="usage_statistics">آمار استفاده</string>
   <string name="research_hot_mobile">تحقیقات شبکهٔ همراه داده محور</string>
   <string name="unknown_location">موقعیّت ناشناخته</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">تنظیمات ورود/صدور</string>
-  <string name="usage_statistics_header_summary">تویدر در برهی پروژه‌های تحقیقاتی شرکت می‌کند،شرکت در این پروژه‌های تویدر و برخی برنامه‌های دیگر را بهتر خواهد کرد.</string>
   <string name="no_tab">بدون زبانه</string>
   <string name="user_protected_summary">برای دیدن توییت‌ها، لازم است برای این کاربر محافظت‌شده، درخواست دنبال کردن بفرستید</string>
   <string name="no_account">بدون حساب</string>
   <string name="permission_description_shorten_status">برنامه می‌تواند توییت را برای تویدر کوتاه کند، پس می‌تواند به توییت‌های ارسالی‌تان دسترسی داشته باشد.</string>
   <string name="permission_description_upload_media">برنامه می‌تواند رسانه را برای تویدر بارگذاری کند، پیس می‌تواند به توییت‌های ارسالی‌تان دسترسی داشته باشد.</string>
   <string name="permission_description_sync_timeline">برنامه می‌تواند جایگاه خواندن را برای تویدر هم‌گام کند، پس می‌تواند به جایگاه خواندنتان دسترسی داشته باشد.</string>
-  <string name="usage_statistics_notification_summary">کمک کنید تویدر را بهتر کنیم!</string>
   <string name="from_name">از <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">از <xliff:g id="name">%1$s</xliff:g> و <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">از <xliff:g id="name">%1$s</xliff:g> و <xliff:g id="name">%2$d</xliff:g> نفر دیگر</string>
@@ -710,7 +706,6 @@
   <string name="set_consumer_key_secret_message">توییدر به کران ژتون رسیده است. باید در https://apps.twitter.com/ کاره‌ای ساختع و کلید و رمز مصرف‌کننده را در زیر بچسبانید.\nاگر به استفاده از کلید پیش‌گزیده ادامه دهید، ممکن است قادر به ورود نباشید.</string>
   <string name="send_at">ارسال در</string>
   <string name="scheduled_statuses">تویتت‌های زمان‌بندی شده</string>
-  <string name="report_usage_statistics_now">اکنون آمار استفاده را گزارش کن</string>
   <string name="cache_size_limit">کران اندازهٔ انباره</string>
   <string name="bug_reports">گزارش‌های مشکل</string>
   <string name="bug_reports_summary">نیرو گرفته از فابریک</string>

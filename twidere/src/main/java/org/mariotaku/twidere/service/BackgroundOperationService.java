@@ -92,10 +92,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.TimelineType;
-import edu.tsinghua.hotmobi.model.TweetEvent;
-
 public class BackgroundOperationService extends IntentService implements Constants {
 
 
@@ -407,9 +403,6 @@ public class BackgroundOperationService extends IntentService implements Constan
                 Log.w(LOGTAG, result.exception);
             } else for (ParcelableStatus status : result.statuses) {
                 if (status == null) continue;
-                final TweetEvent event = TweetEvent.create(context, status, TimelineType.OTHER);
-                event.setAction(TweetEvent.Action.TWEET);
-                HotMobiLogger.getInstance(context).log(status.account_key, event);
             }
         }
         if (mPreferences.getBoolean(KEY_REFRESH_AFTER_TWEET)) {

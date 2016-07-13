@@ -32,8 +32,6 @@ import org.mariotaku.twidere.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 public class UserMentionsFragment extends StatusesSearchFragment {
 
     @Override
@@ -66,12 +64,5 @@ public class UserMentionsFragment extends StatusesSearchFragment {
         result.add("account=" + accountKey);
         result.add("screen_name=" + screenName);
         return result.toArray(new String[result.size()]);
-    }
-
-    @NonNull
-    @Override
-    @TimelineType
-    protected String getTimelineType() {
-        return TimelineType.OTHER;
     }
 }

@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 14/12/3.
  */
@@ -117,18 +115,4 @@ public class HomeTimelineFragment extends CursorStatusesFragment {
         }
         return super.processWhere(where, whereArgs);
     }
-
-    @NonNull
-    @Override
-    @TimelineType
-    protected String getTimelineType() {
-        return TimelineType.HOME;
-    }
-
-    @Override
-    @ReadPositionTag
-    protected String getReadPositionTag() {
-        return ReadPositionTag.HOME_TIMELINE;
-    }
-
 }

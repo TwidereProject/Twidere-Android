@@ -166,9 +166,6 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener;
 import java.util.Calendar;
 import java.util.Locale;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.UserEvent;
-
 public class UserFragment extends BaseSupportFragment implements OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
         SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener, KeyboardShortcutCallback,
@@ -233,7 +230,6 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
     private boolean mNameFirst;
     private int mPreviousTabItemIsDark, mPreviousActionBarItemIsDark;
     private boolean mHideBirthdayView;
-    private UserEvent mUserEvent;
 
     private final LoaderCallbacks<SingleResponse<UserRelationship>> mFriendshipLoaderCallbacks =
             new LoaderCallbacks<SingleResponse<UserRelationship>>() {
@@ -842,21 +838,11 @@ public class UserFragment extends BaseSupportFragment implements OnClickListener
         @Referral
         final String referral = getArguments().getString(EXTRA_REFERRAL);
         final Context context = getContext();
-        if (mUserEvent == null) {
-            mUserEvent = UserEvent.create(context, referral);
-        } else {
-            mUserEvent.markStart(context);
-        }
     }
 
     @Override
     public void onStop() {
         final Context context = getContext();
-        if (mUserEvent != null && context != null && mUser != null) {
-            mUserEvent.setUser(mUser);
-            mUserEvent.markEnd();
-            HotMobiLogger.getInstance(context).log(mUserEvent);
-        }
         mBus.unregister(this);
         super.onStop();
     }

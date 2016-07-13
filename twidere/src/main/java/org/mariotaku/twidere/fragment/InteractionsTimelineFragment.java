@@ -36,21 +36,12 @@ import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 public class InteractionsTimelineFragment extends CursorActivitiesFragment {
 
     @Override
     public boolean getActivities(RefreshTaskParam param) {
         mTwitterWrapper.getActivitiesAboutMeAsync(param);
         return true;
-    }
-
-    @NonNull
-    @Override
-    @TimelineType
-    protected String getTimelineType() {
-        return TimelineType.INTERACTIONS;
     }
 
     @NonNull

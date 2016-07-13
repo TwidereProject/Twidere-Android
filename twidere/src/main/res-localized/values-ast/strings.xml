@@ -452,7 +452,6 @@
   <string name="wizard_page_tabs_unchanged_message">Pues amestar llingüetes n\'«Axustes» - «Llingüetes»</string>
   <string name="wizard_page_cards_text">Configuración d\'elementos de tarxetes.</string>
   <string name="wizard_page_hints_text">Equí hai dellos conseyos interesantes.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere participa en dellos proyeutos d\'investigación que necesiten dél usu de datos.</string>
   <string name="wizard_page_finished_title">Finemos</string>
   <string name="wizard_page_finished_text">Agora Twidere ta tresnáu pa usase.</string>
   <string name="invalid_tab">Llingüeta non válida</string>
@@ -629,19 +628,16 @@
   <string name="no_location">Ensin allugamientu</string>
   <string name="getting_location">Consiguiendo allugamientu</string>
   <string name="save_to_gallery">Guardar na galería</string>
-  <string name="usage_statistics">Estadístiques d\'usu</string>
   <string name="research_hot_mobile">Investigación de redes móviles de datos</string>
   <string name="unknown_location">Allugamientu desconocíu</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Esportar axustes</string>
-  <string name="usage_statistics_header_summary">Twidere participa en dellos proyeutos d\'investigación, xunise a estos proyeutos ameyorarán Twidere y daqué otra aplicación.</string>
   <string name="no_tab">Ensin llingüetes</string>
   <string name="user_protected_summary">Necesites unviar la solicitú de siguimientu a esti usuariu protexíu pa ver los tuits</string>
   <string name="no_account">Ensin cuentes</string>
   <string name="permission_description_shorten_status">L\'aplicación pue acurtiar tuits pa Twidere, d\'esti mou pue accedese al to tuit pa unviar.</string>
   <string name="permission_description_upload_media">L\'aplicación pue xubir multimedia pa Twidere, d\'esti mou pue accedese a la multimedia nel tuit pa unviar.</string>
   <string name="permission_description_sync_timeline">L\'aplicación pue sincronizar la posición de llectura pa Twidere, d\'esti mou pue accedese a la to posición de llectura.</string>
-  <string name="usage_statistics_notification_summary">¡Ayúdamos a ameyorar Twidere!</string>
   <string name="from_name">De <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">De <xliff:g id="name">%1$s</xliff:g> y <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">De <xliff:g id="name">%1$s</xliff:g> y <xliff:g id="name">%2$d</xliff:g> más</string>
@@ -708,7 +704,6 @@
   <string name="media_preload">Precarga multimedia</string>
   <string name="set_consumer_key_secret_message">Twidere ta algamando\'l llímite de pases, habrás crear una app en https://apps.twitter.com/ y apegar embaxo la clave y el secretu de consumidor.\nSi sigues usando la clave por defeutu, quiciabes nun sías quien a aniciar sesión.</string>
   <string name="scheduled_statuses">Tuits planificaos</string>
-  <string name="report_usage_statistics_now">Reportar agora les estadístiques d\'usu</string>
   <string name="cache_size_limit">Llímite de tamañu de caché</string>
   <string name="bug_reports">Informes de fallos</string>
   <string name="bug_reports_summary">Cola potencia de Fabric</string>

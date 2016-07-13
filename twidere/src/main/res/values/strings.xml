@@ -454,7 +454,6 @@
     <string name="wizard_page_tabs_unchanged_message">You can add tabs in &quot;Settings&quot; - &quot;Tabs&quot;</string>
     <string name="wizard_page_cards_text">Config card items.</string>
     <string name="wizard_page_hints_text">Here are some useful hints.</string>
-    <string name="wizard_page_usage_statistics_text">Twidere took part in some research project that needs some usage data.</string>
     <string name="wizard_page_finished_title">Finished</string>
     <string name="wizard_page_finished_text">Now Twidere is ready for use.</string>
     <string name="invalid_tab">Invalid tab</string>
@@ -632,19 +631,16 @@
     <string name="no_location">No location</string>
     <string name="getting_location">Getting location</string>
     <string name="save_to_gallery">Save to gallery</string>
-    <string name="usage_statistics">Usage statistics</string>
     <string name="research_hot_mobile">Data-Driven Mobile Network Research</string>
     <string name="unknown_location">Unknown location</string>
     <string name="ellipsis">…</string>
     <string name="import_export_settings">Import/Export settings</string>
-    <string name="usage_statistics_header_summary">Twidere took part in some research project, join these projects will make Twidere and some other application better.</string>
     <string name="no_tab">No tab</string>
     <string name="user_protected_summary">You need to send follow request to this protected user to see tweets</string>
     <string name="no_account">No account</string>
     <string name="permission_description_shorten_status">Application can shorten tweet for Twidere, so it can access your tweet to send.</string>
     <string name="permission_description_upload_media">Application can upload media for Twidere, so it can access media in your tweet to send.</string>
     <string name="permission_description_sync_timeline">Application can sync read position for Twidere, so it can access your read position.</string>
-    <string name="usage_statistics_notification_summary">Help us improve Twidere!</string>
     <string name="from_name">From <xliff:g id="name">%1$s</xliff:g></string>
     <string name="from_name_and_name">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g></string>
     <string name="from_name_and_N_others">From <xliff:g id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
@@ -713,7 +709,6 @@
     <string name="set_consumer_key_secret_message">Twidere is reaching token limit, you will have to create an app at https://apps.twitter.com/ and paste consumer key and secret below.\nIf you continue using default key, you may not be able to sign in.</string>
     <string name="send_at">Send at</string>
     <string name="scheduled_statuses">Scheduled tweets</string>
-    <string name="report_usage_statistics_now">Report usage statistics now</string>
     <string name="cache_size_limit">Cache size limit</string>
     <string name="bug_reports">Bug reports</string>
     <string name="bug_reports_summary">Powered by Fabric</string>

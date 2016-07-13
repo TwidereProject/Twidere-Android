@@ -13,8 +13,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.task.twitter.GetStatusesTask;
 import org.mariotaku.twidere.util.ErrorInfoStore;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 16/2/11.
  */
@@ -35,12 +33,6 @@ public class GetHomeTimelineTask extends GetStatusesTask {
     @Override
     protected Uri getContentUri() {
         return TwidereDataStore.Statuses.CONTENT_URI;
-    }
-
-    @TimelineType
-    @Override
-    protected String getTimelineType() {
-        return TimelineType.HOME;
     }
 
     @NonNull

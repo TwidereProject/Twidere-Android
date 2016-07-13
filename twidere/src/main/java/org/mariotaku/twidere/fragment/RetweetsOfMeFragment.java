@@ -32,8 +32,6 @@ import org.mariotaku.twidere.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
 
     @Override
@@ -67,11 +65,5 @@ public class RetweetsOfMeFragment extends ParcelableStatusesFragment {
         result.add(AUTHORITY_RETWEETS_OF_ME);
         result.add("account=" + accountKey);
         return result.toArray(new String[result.size()]);
-    }
-
-    @NonNull
-    @Override
-    protected String getTimelineType() {
-        return TimelineType.INTERACTIONS;
     }
 }

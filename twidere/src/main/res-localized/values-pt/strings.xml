@@ -437,7 +437,6 @@
   <string name="wizard_page_tabs_unchanged_message">Você pode adicionar abas em "Configurações" - "Abas"</string>
   <string name="wizard_page_cards_text">Configurar itens do cartão.</string>
   <string name="wizard_page_hints_text">Aqui estão algumas dicas úteis.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere participa de alguns projetos de pesquisa que precisam de alguns dados de uso.</string>
   <string name="wizard_page_finished_title">Concluído</string>
   <string name="wizard_page_finished_text">Agora o Twidere está pronto para o uso.</string>
   <string name="invalid_tab">Aba invalida</string>
@@ -614,19 +613,16 @@
   <string name="no_location">Sem localização</string>
   <string name="getting_location">Recebendo localização</string>
   <string name="save_to_gallery">Salvar na galeria</string>
-  <string name="usage_statistics">Estatísticas de uso</string>
   <string name="research_hot_mobile">Pesquisa de rede móvel por dados</string>
   <string name="unknown_location">Localização desconhecida</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Exportar configurações</string>
-  <string name="usage_statistics_header_summary">Twidere participa de alguns projetos de pesquisa, participar desses projetos irá aperfeiçoar o Twidere e outros aplicativos.</string>
   <string name="no_tab">Sem aba</string>
   <string name="user_protected_summary">Você precisa enviar uma solicitação para seguir esta conta privada para ver os tweets</string>
   <string name="no_account">Sem conta</string>
   <string name="permission_description_shorten_status">Uma aplicação que pode encurtar tweets para o Twidere, de forma que ele possa obter o tweet à enviar.</string>
   <string name="permission_description_upload_media">Uma aplicação que pode fazer upload de mídia para o Twidere, de forma que ele possa compor o tweet à enviar.</string>
   <string name="permission_description_sync_timeline">Uma aplicação que pode sincronizar sua posição de leitura para o Twidere, de forma que ele possa obter a posição atual.</string>
-  <string name="usage_statistics_notification_summary">Ajude-nos a melhorar o Twidere!</string>
   <string name="from_name">De <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">De <xliff:g id="name">%1$s</xliff:g> e <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">De <xliff:g id="name">%1$s</xliff:g> e <xliff:g id="name">%2$d</xliff:g> outros</string>
@@ -693,7 +689,6 @@
   <string name="set_consumer_key_secret_message">Os tokens de autorização gerados pelo Twidere estão se esgotando, pode ser necessário que vocẽ crie um aplicativo em https://apps.twitter.com/ e cole seu \"consumer key\" e senha abaixo.\nSe, ao invés disso, você usar a \"key default\" do Twidere, você pode não conseguir entrar.</string>
   <string name="send_at">Enviado em</string>
   <string name="scheduled_statuses">Tweets agendados</string>
-  <string name="report_usage_statistics_now">Reportar estatísticas de uso agora</string>
   <string name="cache_size_limit">Limite do tamanho do cache</string>
   <string name="bug_reports">Relatórios de bugs</string>
   <string name="bug_reports_summary">Powered by Fabric</string>

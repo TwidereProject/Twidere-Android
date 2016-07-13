@@ -39,9 +39,6 @@ import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.NotificationEvent;
-
 /**
  * Created by mariotaku on 15/4/4.
  */
@@ -62,12 +59,6 @@ public class NotificationReceiver extends BroadcastReceiver implements Constants
                 final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
                 final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
                 final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-                if (CustomTabType.NOTIFICATIONS_TIMELINE.equals(CustomTabUtils.getTabTypeAlias(notificationType))
-                        && accountKey != null && itemId != -1 && timestamp != -1) {
-                    final HotMobiLogger logger = holder.getHotMobiLogger();
-                    logger.log(accountKey, NotificationEvent.deleted(context, timestamp, notificationType, accountKey,
-                            itemId, itemUserId, itemUserFollowing));
-                }
                 final ReadStateManager manager = holder.getReadStateManager();
                 final String paramReadPosition, paramReadPositions;
                 @ReadPositionTag

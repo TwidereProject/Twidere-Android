@@ -39,8 +39,6 @@ import org.mariotaku.twidere.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 14/12/2.
  */
@@ -130,12 +128,4 @@ public class GroupTimelineFragment extends ParcelableStatusesFragment {
         }
         return sb.toString();
     }
-
-    @NonNull
-    @Override
-    @TimelineType
-    protected String getTimelineType() {
-        return TimelineType.OTHER;
-    }
-
 }

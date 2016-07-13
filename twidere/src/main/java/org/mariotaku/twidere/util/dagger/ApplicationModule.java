@@ -72,7 +72,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import edu.tsinghua.hotmobi.HotMobiLogger;
 import okhttp3.ConnectionPool;
 
 /**
@@ -267,11 +266,5 @@ public class ApplicationModule {
         } catch (IOException e) {
             return new ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator);
         }
-    }
-
-    @Provides
-    @Singleton
-    public HotMobiLogger hotMobiLogger() {
-        return new HotMobiLogger(application);
     }
 }

@@ -453,7 +453,6 @@
   <string name="wizard_page_tabs_unchanged_message">"設定" - "タブ"でタブを追加出来ます</string>
   <string name="wizard_page_cards_text">カードアイテムを編集します。</string>
   <string name="wizard_page_hints_text">お役立ちヒント!</string>
-  <string name="wizard_page_usage_statistics_text">Twidereは使用状況データを研究目的において必要とするプロジェクトに参加しています</string>
   <string name="wizard_page_finished_title">完了</string>
   <string name="wizard_page_finished_text">Twidereを使う準備ができました。</string>
   <string name="invalid_tab">不正なタブです</string>
@@ -630,19 +629,16 @@
   <string name="no_location">位置情報なし</string>
   <string name="getting_location">位置を取得しています</string>
   <string name="save_to_gallery">ギャラリーに保存</string>
-  <string name="usage_statistics">匿名利用状況データ</string>
   <string name="research_hot_mobile">データ駆動型モバイルネットワーク研究</string>
   <string name="unknown_location">場所不明</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">設定の保存/読み込み</string>
-  <string name="usage_statistics_header_summary">Twidere は研究プロジェクトに参加しています。プロジェクトに参加する事で、Twidere や他のアプリがより良くなります。</string>
   <string name="no_tab">タブがありません</string>
   <string name="user_protected_summary">このツイートは非公開です。見るためにはフォローリクエストを送信し、承認される必要があります</string>
   <string name="no_account">アカウント無し</string>
   <string name="permission_description_shorten_status">送信するツイートへの Twidere のアクセスを許可し、ツイートを短縮できるようにします。</string>
   <string name="permission_description_upload_media">送信するツイートのメディアへの Twidere のアクセスを許可し、メディアをアップロードできるようにします。</string>
   <string name="permission_description_sync_timeline">既読位置情報への Twidere のアクセスを許可し、既読位置を同期できるようにします。</string>
-  <string name="usage_statistics_notification_summary">Twidereの機能向上にご協力ください</string>
   <string name="from_name"><xliff:g id="name">%1$s</xliff:g>さんから</string>
   <string name="from_name_and_name"><xliff:g id="name">%1$s</xliff:g>さんと<xliff:g id="name">%2$s</xliff:g>さんから</string>
   <string name="from_name_and_N_others"><xliff:g id="name">%1$s</xliff:g>さんと他<xliff:g id="name">%2$d</xliff:g>人から</string>
@@ -710,7 +706,6 @@
   <string name="set_consumer_key_secret_message">Twidere はトークン規制が迫っているので、 https://apps.twitter.com/ でアプリを作成し、コンシューマーキーとシークレットを下に貼り付けて規制を回避してください。\nもしこのまま Twidere のキーを使い続けると、サインインできないかもしれません。</string>
   <string name="send_at">送信</string>
   <string name="scheduled_statuses">定期ツイート</string>
-  <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
   <string name="cache_size_limit">キャッシュサイズ制限</string>
   <string name="bug_reports">バグレポート</string>
   <string name="bug_reports_summary">Powered by Fabric</string>

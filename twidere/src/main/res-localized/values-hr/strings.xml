@@ -410,7 +410,6 @@
   <string name="wizard_page_tabs_text">Dodajte tabove u Twidere.\nPratite ljude i stvari do kojih vam je stalo.</string>
   <string name="wizard_page_cards_text">Postavite stavke kartice.</string>
   <string name="wizard_page_hints_text">Evo nekoliko korisnih savjeta.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere sudjeluje u istraživačkom projektu kojemu trebaju podaci o korištenju.</string>
   <string name="wizard_page_finished_title">Završeno</string>
   <string name="wizard_page_finished_text">Twidere je sada spreman za korištenje.</string>
   <string name="invalid_tab">Nevažeći tab</string>
@@ -585,19 +584,16 @@
   <string name="no_location">Nema lokacije</string>
   <string name="getting_location">Pribavljam lokaciju</string>
   <string name="save_to_gallery">Spremi u galeriju</string>
-  <string name="usage_statistics">Statistika korištenja</string>
   <string name="research_hot_mobile">Istraživanje o Mobilnoj Mreži Pogonjenoj Podacima</string>
   <string name="unknown_location">Nepoznata lokacija</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Postavke izvoza/uvoza</string>
-  <string name="usage_statistics_header_summary">Twidere je sudjelovao u nekim istraživačkim projektima, pridružite se tim projektima kako bi učinili Twidere i ostale aplikacije boljima.</string>
   <string name="no_tab">Nema tabova</string>
   <string name="user_protected_summary">Morate poslati zahtjev za slijeđenjem ovom zaštićenom korisniku da biste vidjeli tweetove</string>
   <string name="no_account">Nema računa</string>
   <string name="permission_description_shorten_status">Aplikacija može skratiti tweet za Twidere, tako da može pristupiti tweetu za slanje.</string>
   <string name="permission_description_upload_media">Aplikacija može prenijeti medijske datoteke za Twidere, tako da može pristupiti medijskim datotekama u tweetu za slanje.</string>
   <string name="permission_description_sync_timeline">Aplikacija može sinkronizirati poziciju čitanja za Twidere, tako da može pristupiti vašoj poziciji čitanja.</string>
-  <string name="usage_statistics_notification_summary">Pomozite nam poboljšati Twidere!</string>
   <string name="from_name">Od <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Od <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Od <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$d</xliff:g> drugih</string>
@@ -662,7 +658,6 @@
   <string name="set_consumer_key_secret_message">Twidere se približava limitu tokena, morat ćete stvoriti aplikaciju na https://apps.twitter.com/ i zalijepiti korisnički ključ i tajnu dolje.\nAko nastavite koristiti zadani ključ, možda se nećete moći prijaviti.</string>
   <string name="send_at">Pošalji u</string>
   <string name="scheduled_statuses">Planirani tweetovi</string>
-  <string name="report_usage_statistics_now">Podnesi sada statistiku o korištenju</string>
   <string name="cache_size_limit">Ograničenje veličine predmemorije</string>
   <string name="bug_reports">Izvješća o greškama</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->

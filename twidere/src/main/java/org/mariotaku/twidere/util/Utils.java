@@ -210,9 +210,6 @@ import java.util.zip.CRC32;
 
 import javax.net.ssl.SSLException;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.NotificationEvent;
-
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
@@ -2152,11 +2149,6 @@ public final class Utils implements Constants {
         final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
         final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
         final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-        if (!NotificationEvent.isSupported(type) || accountKey == null || itemId < 0 || timestamp < 0)
-            return;
-        final NotificationEvent event = NotificationEvent.open(context, timestamp, type,
-                accountKey.getId(), itemId, itemUserId, itemUserFollowing);
-        HotMobiLogger.getInstance(context).log(accountKey, event);
     }
 
     public static boolean hasOfficialAPIAccess(@NonNull Context context, @NonNull ParcelableCredentials account) {

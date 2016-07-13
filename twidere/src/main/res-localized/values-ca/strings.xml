@@ -424,7 +424,6 @@
   <string name="wizard_page_tabs_text">Afegeix alguna pestanya al Twidere.\nPodreu seguir la gent o els temes que us importin.</string>
   <string name="wizard_page_cards_text">Configura els elements de les targetes.</string>
   <string name="wizard_page_hints_text">A continuació us deixem uns consells.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere participa en un projecte de recerca, que consumeix una mica de dades.</string>
   <string name="wizard_page_finished_title">Ja heu acabat</string>
   <string name="wizard_page_finished_text">Ara el Twidere està preparat per funcionar.</string>
   <string name="invalid_tab">Pestanya invàlida</string>
@@ -599,18 +598,15 @@
   <string name="no_location">Sense localització</string>
   <string name="getting_location">S\'està intentant aconseguir la ubicació</string>
   <string name="save_to_gallery">Desar a la galeria</string>
-  <string name="usage_statistics">Estadístiques d\'ús</string>
   <string name="unknown_location">Localització desconeguda</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Importar/Exportar configuració</string>
-  <string name="usage_statistics_header_summary">Twidere forma part en alguns projectes d\'investigació; contribuint a aquests projectes faràs Twidere i altres aplicacions futures millor.</string>
   <string name="no_tab">No hi ha pestanyes</string>
   <string name="user_protected_summary">Has de demanar a aquest usuari que et segueixi per poder veure\'n les piulades, perquè està protegit</string>
   <string name="no_account">Sense compte</string>
   <string name="permission_description_shorten_status">L\'aplicació pot escurçar les piulades pel Twidere. Per tant, ha de poder-les llegir.</string>
   <string name="permission_description_upload_media">L\'aplicació pot pujar multimèdia pel Twidere. Per tant, ha de poder accedir als adjunts de les piulades abans de ser enviades.</string>
   <string name="permission_description_sync_timeline">L\'aplicació pot sincronitzar la posició de lectura pel Twidere. Per tant, ha de tenir accés a la posició de lectura.</string>
-  <string name="usage_statistics_notification_summary">Ajuda\'ns a millorar Twidere!</string>
   <string name="from_name">De <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">De <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">De <xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$d</xliff:g> més</string>

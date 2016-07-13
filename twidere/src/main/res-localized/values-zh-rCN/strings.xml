@@ -454,7 +454,6 @@
   <string name="wizard_page_tabs_unchanged_message">你可以在"设置" - "标签页"添加标签</string>
   <string name="wizard_page_cards_text">设定卡片项。</string>
   <string name="wizard_page_hints_text">这里有一些有用的小提示。</string>
-  <string name="wizard_page_usage_statistics_text">Twidere加入了一些需要收集使用信息的研究项目。</string>
   <string name="wizard_page_finished_title">完成</string>
   <string name="wizard_page_finished_text">现在Twidere已经可以使用了。</string>
   <string name="invalid_tab">无效标签页</string>
@@ -632,19 +631,16 @@
   <string name="no_location">没有位置</string>
   <string name="getting_location">获取位置</string>
   <string name="save_to_gallery">保存到相册</string>
-  <string name="usage_statistics">使用信息统计</string>
   <string name="research_hot_mobile">Data-Driven Mobile Network Research</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">导入/导出设定</string>
-  <string name="usage_statistics_header_summary">Twidere参与了一些研究项目，加入这些项目帮助Twidere和更多应用做得更好。</string>
   <string name="no_tab">没有标签页</string>
   <string name="user_protected_summary">你需要向这个受保护的用户发送关注请求来查看推文</string>
   <string name="no_account">没有帐号</string>
   <string name="permission_description_shorten_status">应用程序可以为Twidere缩短推文，所以它可以访问你正在发送的推文。</string>
   <string name="permission_description_upload_media">应用程序可以为Twidere上传媒体，所以它可以访问你正在发送的推文中的媒体。</string>
   <string name="permission_description_sync_timeline">应用程序可以为Twidere同步阅读位置，所以它可以访问你的阅读位置。</string>
-  <string name="usage_statistics_notification_summary">帮助我们改进Twidere！</string>
   <string name="from_name">来自<xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">来自<xliff:g id="name">%1$s</xliff:g>和<xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">来自<xliff:g id="name">%1$s</xliff:g>和其他<xliff:g id="name">%2$d</xliff:g>人</string>
@@ -712,7 +708,6 @@
   <string name="set_consumer_key_secret_message">Twidere 的令牌将要用完了。你需要在 https://apps.twitter.com/ 创建一个应用并把 consumer key and secret 粘贴在下面。\n如果你继续使用默认的key，可能会没法登录。</string>
   <string name="send_at">发送于</string>
   <string name="scheduled_statuses">被排期推文</string>
-  <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="cache_size_limit">缓存空间限制</string>
   <string name="bug_reports">错误报告</string>
   <string name="bug_reports_summary">由 Fabric 提供技术支持</string>

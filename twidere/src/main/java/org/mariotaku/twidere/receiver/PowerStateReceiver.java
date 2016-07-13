@@ -23,8 +23,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import edu.tsinghua.hotmobi.model.BatteryRecord;
-
 /**
  * Created by mariotaku on 15/9/29.
  */
@@ -38,6 +36,5 @@ public class PowerStateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (serviceReceiverStarted) return;
-        BatteryRecord.log(context);
     }
 }

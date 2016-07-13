@@ -431,7 +431,6 @@
   <string name="wizard_page_tabs_unchanged_message">Du kan legge til faner fra «Innstillinger» - «Faner»</string>
   <string name="wizard_page_cards_text">Sett opp kortelementer.</string>
   <string name="wizard_page_hints_text">Her er noen nyttige tips.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere tok del i flere forskningsprosjekt som trenger bruksdata.</string>
   <string name="wizard_page_finished_title">Ferdig</string>
   <string name="wizard_page_finished_text">Nå er Twidere klar til bruk.</string>
   <string name="invalid_tab">Ugyldig fane</string>
@@ -607,19 +606,16 @@
   <string name="no_location">Ingen posisjon</string>
   <string name="getting_location">Henter posisjon</string>
   <string name="save_to_gallery">Lagre til galleri</string>
-  <string name="usage_statistics">Bruksstatistikk</string>
   <string name="research_hot_mobile">Datadrevet mobilnett-forskning</string>
   <string name="unknown_location">Ukjent posisjon</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Importer/eksporter innstillinger</string>
-  <string name="usage_statistics_header_summary">Twidere tok del i noen forskningsprosjekter. Ved å bidra til disse prosjektene gjør du Twidere og fremtidige apper bedre.</string>
   <string name="no_tab">Ingen faner</string>
   <string name="user_protected_summary">Du må sende en følgeforespørsel til denne beskyttede brukeren for å se tweets</string>
   <string name="no_account">Ingen konto</string>
   <string name="permission_description_shorten_status">Applikasjonen kan forkorte tweets for Twidere, så den har tilgang til tweets du sender.</string>
   <string name="permission_description_upload_media">Applikasjonen kan laste opp media for Twidere, så den har tilgang til media i tweets du sender.</string>
   <string name="permission_description_sync_timeline">Applikasjonen kan synkronisere leseposisjonen for Twidere, så den har tilgang til leseposisjonen din.</string>
-  <string name="usage_statistics_notification_summary">Hjelp oss å forbedre Twidere!</string>
   <string name="from_name">Fra <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Fra <xliff:g id="name">%1$s</xliff:g> og <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Fra <xliff:g id="name">%1$s</xliff:g> og <xliff:g id="name">%2$d</xliff:g> andre</string>
@@ -686,7 +682,6 @@
   <string name="set_consumer_key_secret_message">Twidere er i ferd med å nå token-grensen. Opprett en app på https://apps.twitter.com/ and lime inn nøkkelen and passordet under.\nHvis du fortsetter å bruke standardnøkkelen, kan det hende du ikke får logget inn.</string>
   <string name="send_at">Send den</string>
   <string name="scheduled_statuses">Planlagte tweets</string>
-  <string name="report_usage_statistics_now">Rapporter bruksstatistikk nå</string>
   <string name="cache_size_limit">Hurtiglager størrelsesgrense</string>
   <string name="bug_reports">Feilrapporter</string>
   <string name="invalid_consumer_key">Ugyldig forbrukernøkkel</string>

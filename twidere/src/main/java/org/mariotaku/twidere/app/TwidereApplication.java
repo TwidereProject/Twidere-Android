@@ -225,7 +225,6 @@ public class TwidereApplication extends Application implements Constants,
                     PackageManager.DONT_KILL_APP);
         }
 
-        migrateUsageStatisticsPreferences();
         Utils.startRefreshServiceIfNeeded(this);
 
         DependencyHolder holder = DependencyHolder.get(this);
@@ -259,21 +258,6 @@ public class TwidereApplication extends Application implements Constants,
         if (!preferences.getBoolean(KEY_BUG_REPORTS, BuildConfig.DEBUG)) return;
         BugReporter.setImplementation(new TwidereBugReporter());
         BugReporter.init(this);
-    }
-
-    private void migrateUsageStatisticsPreferences() {
-        final SharedPreferences preferences = getSharedPreferences();
-        final boolean hasUsageStatistics = preferences.contains(KEY_USAGE_STATISTICS);
-        if (hasUsageStatistics) return;
-        if (preferences.contains(KEY_UCD_DATA_PROFILING) || preferences.contains(KEY_SPICE_DATA_PROFILING)) {
-            final boolean prevUsageEnabled = preferences.getBoolean(KEY_UCD_DATA_PROFILING, false)
-                    || preferences.getBoolean(KEY_SPICE_DATA_PROFILING, false);
-            final Editor editor = preferences.edit();
-            editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled);
-            editor.remove(KEY_UCD_DATA_PROFILING);
-            editor.remove(KEY_SPICE_DATA_PROFILING);
-            editor.apply();
-        }
     }
 
     private SharedPreferences getSharedPreferences() {

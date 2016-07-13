@@ -83,18 +83,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.MediaEvent;
-import edu.tsinghua.hotmobi.model.ScrollRecord;
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFragment<ParcelableActivitiesAdapter>
         implements LoaderCallbacks<List<ParcelableActivity>>, ParcelableActivitiesAdapter.ActivityAdapterListener, KeyboardShortcutCallback {
 
     private final Object mStatusesBusCallback;
     private final OnScrollListener mHotMobiScrollTracker = new OnScrollListener() {
 
-        public List<ScrollRecord> mRecords;
         private long mFirstVisibleTimestamp = -1;
         private UserKey mFirstVisibleAccountId = null;
         private int mFirstVisiblePosition = -1;
@@ -112,10 +106,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
                     final long timestamp = activity.timestamp;
                     final UserKey accountKey = activity.account_key;
                     if (timestamp != mFirstVisibleTimestamp || !accountKey.equals(mFirstVisibleAccountId)) {
-                        if (mRecords == null) mRecords = new ArrayList<>();
-                        final long time = System.currentTimeMillis();
-                        mRecords.add(ScrollRecord.create(String.valueOf(timestamp), accountKey, time,
-                                TimeZone.getDefault().getOffset(time), mScrollState));
                     }
                     mFirstVisibleTimestamp = timestamp;
                     mFirstVisibleAccountId = accountKey;
@@ -127,12 +117,6 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             mScrollState = newState;
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (mRecords != null) {
-                    HotMobiLogger.getInstance(getActivity()).logList(mRecords, null, "scroll");
-                }
-                mRecords = null;
-            }
         }
     };
 
@@ -360,16 +344,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         if (status == null || media == null) return;
         IntentUtils.openMedia(getActivity(), status, media, null,
                 mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
-        // BEGIN HotMobi
-        final MediaEvent event = MediaEvent.create(getActivity(), status, media,
-                getTimelineType(), adapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
-        // END HotMobi
     }
-
-    @NonNull
-    @TimelineType
-    protected abstract String getTimelineType();
 
     @Override
     public void onStatusActionClick(IStatusViewHolder holder, int id, int position) {
@@ -450,13 +425,7 @@ public abstract class AbsActivitiesFragment extends AbsContentListRecyclerViewFr
         final AbstractTask<Object, Boolean, RecyclerView> task = new AbstractTask<Object, Boolean, RecyclerView>() {
             @Override
             public Boolean doLongOperation(Object params) {
-                final Context context = getContext();
-                if (context == null) return false;
-                final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                        Context.MODE_PRIVATE);
-                if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false;
-                final File logFile = HotMobiLogger.getLogFile(context, null, "scroll");
-                return logFile.length() < 131072;
+                return false;
             }
 
             @Override

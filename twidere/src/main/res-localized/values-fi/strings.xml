@@ -436,7 +436,6 @@
   <string name="wizard_page_tabs_unchanged_message">Voit lisätä välilehtiä kohdassa "Asetukset" - "Välilehdet"</string>
   <string name="wizard_page_cards_text">Määritä kortit.</string>
   <string name="wizard_page_hints_text">Tässä on joitakin hyödyllisiä vinkkejä.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere otti osaa erääseen tutkimukseen, joka tarvitsee jonkin verran käyttötietoja.</string>
   <string name="wizard_page_finished_title">Valmis</string>
   <string name="wizard_page_finished_text">Twidere on nyt valmis käyttöön.</string>
   <string name="invalid_tab">Virheellinen välilehti</string>
@@ -613,19 +612,16 @@
   <string name="no_location">Ei sijaintia</string>
   <string name="getting_location">Hakee sijainnin</string>
   <string name="save_to_gallery">Tallenna kuvastoon</string>
-  <string name="usage_statistics">Käyttötilasto</string>
   <string name="research_hot_mobile">Datapainotteinen Mobiiliverkkotutkimus</string>
   <string name="unknown_location">Tuntematon sijainti</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Tuonti/Vientiasetukset</string>
-  <string name="usage_statistics_header_summary">Twidere otti osaa tutkimusprojektiin. Osallistumalla kehität Twidereä ja muita sovelluksia.</string>
   <string name="no_tab">Ei välilehteä</string>
   <string name="user_protected_summary">Sinun täytyy lähettää seurauspyyntö suojatulle käyttäjälle, jotta näet twiitit</string>
   <string name="no_account">Ei tiliä</string>
   <string name="permission_description_shorten_status">Sovellus lyhentää twiittisi, joten se päsee käsiksi lähetettäviin twiitteihin.</string>
   <string name="permission_description_upload_media">Sovellus voi lähettää Twidereen mediaa, joten se pääsee käsiksi lähtevien twiittien mediaan.</string>
   <string name="permission_description_sync_timeline">Sovellus synkronoi Twideren lukukohdan, joten sillä on pääsy lukusijaintiin.</string>
-  <string name="usage_statistics_notification_summary">Auta meitä kehittämään Twidereä!</string>
   <string name="from_name">Käyttäjältä <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Käyttäjiltä <xliff:g id="name">%1$s</xliff:g> ja <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Käyttäjiltä <xliff:g id="name">%1$s</xliff:g> ja <xliff:g id="name">%2$d</xliff:g> muulta</string>
@@ -692,7 +688,6 @@
   <string name="set_consumer_key_secret_message">Twidere on ylittämässä sallitun käyttäjämäärän. Sinun täytyy luoda sovellus osoitteessa https://apps.twitter.com/ ja liittää alle kuluttaja-avain ja -salaus.\nJos jatkat oletusavaimen käyttöä, et välttämättä pääse enää kirjautumaan sisälle.</string>
   <string name="send_at">Lähetä ajankohtana</string>
   <string name="scheduled_statuses">Ajoitetut twiitit</string>
-  <string name="report_usage_statistics_now">Raportoi käyttötilastot nyt</string>
   <string name="cache_size_limit">Välimuistin kokorajoitus</string>
   <string name="bug_reports">Vikailmoitukset</string>
   <string name="bug_reports_summary">Käyttää Fabricia</string>

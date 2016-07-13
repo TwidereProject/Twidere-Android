@@ -32,10 +32,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.app.TwidereApplication;
 import org.mariotaku.twidere.util.Utils;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.UploadLogsService;
-import edu.tsinghua.hotmobi.model.NetworkEvent;
-
 public class ConnectivityStateReceiver extends BroadcastReceiver implements Constants {
 
     private static final String RECEIVER_LOGTAG = LOGTAG + "." + "Connectivity";
@@ -51,24 +47,6 @@ public class ConnectivityStateReceiver extends BroadcastReceiver implements Cons
         Utils.startRefreshServiceIfNeeded(application);
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        if (prefs.getBoolean(KEY_USAGE_STATISTICS, false) && prefs.getBoolean(KEY_SETTINGS_WIZARD_COMPLETED, false)) {
-            // BEGIN HotMobi
-            final NetworkEvent event = NetworkEvent.create(context);
-            HotMobiLogger.getInstance(context).log(event);
-            // END HotMobi
-        }
-
-        final Context appContext = context.getApplicationContext();
-        final ConnectivityManager cm = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final boolean isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm);
-        final boolean isCharging = Utils.isCharging(appContext);
-        if (!isNetworkMetered && isCharging) {
-            final long currentTime = System.currentTimeMillis();
-            final long lastSuccessfulTime = HotMobiLogger.getLastUploadTime(appContext);
-            if ((currentTime - lastSuccessfulTime) > HotMobiLogger.UPLOAD_INTERVAL_MILLIS) {
-                appContext.startService(new Intent(appContext, UploadLogsService.class));
-            }
-        }
 
     }
 }

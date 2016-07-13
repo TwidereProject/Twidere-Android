@@ -436,7 +436,6 @@
   <string name="wizard_page_tabs_unchanged_message">Вы можете добавить вкладки в "Настройки" - "Вкладки"</string>
   <string name="wizard_page_cards_text">Настроим карточки.</string>
   <string name="wizard_page_hints_text">Здесь вы найдёте несколько полезных подсказок.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere принимает участие в научно-исследовательской работе, для которой нужны некоторые данные об использовании приложения.</string>
   <string name="wizard_page_finished_title">Завершено</string>
   <string name="wizard_page_finished_text">Теперь Twidere готов к использованию.</string>
   <string name="invalid_tab">Неверная вкладка</string>
@@ -613,19 +612,16 @@
   <string name="no_location">Не отправлять местоположение</string>
   <string name="getting_location">Определение местонахождения</string>
   <string name="save_to_gallery">Сохранить в галерею</string>
-  <string name="usage_statistics">Статистика использования</string>
   <string name="research_hot_mobile">Исследования мобильной сети управляемых данных</string>
   <string name="unknown_location">Неизвестное местоположение</string>
   <string name="ellipsis">...</string>
   <string name="import_export_settings">Импорт/Экспорт настроек</string>
-  <string name="usage_statistics_header_summary">Twidere принимает участие в некоторых исследовательских проектах, присоединившись к которым вы сделаете Twidere и другие приложения лучше.</string>
   <string name="no_tab">Нет вкладок</string>
   <string name="user_protected_summary">Необходимо отправить запрос этому пользователю, чтобы вы могли видеть его твиты</string>
   <string name="no_account">Нет аккаунтов</string>
   <string name="permission_description_shorten_status">Приложение может сократить твит в Twidere, оно получит доступ к отправке твита.</string>
   <string name="permission_description_upload_media">Приложение может загрузить медиа в Twidere, оно получит доступ к медиа при  отправке твита.</string>
   <string name="permission_description_sync_timeline">Приложение может синхронизировать позицию ленты в Twidere, оно получит доступ к чтению позиции.</string>
-  <string name="usage_statistics_notification_summary">Помогите нам улучшить Twidere!</string>
   <string name="from_name">От <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">От <xliff:g id="name">%1$s</xliff:g> и <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">От <xliff:g id="name">%1$s</xliff:g> и <xliff:g id="name">%2$d</xliff:g> других</string>
@@ -692,7 +688,6 @@
   <string name="set_consumer_key_secret_message">Twidere достигла лимит токенов, вы должны создать токен на https://apps.twitter.com/ и вставить персональный ключ в секретную секцию.\nЕсли вы продолжите использовать стандартный ключ, то вы не сможете войти.</string>
   <string name="send_at">Отправить в</string>
   <string name="scheduled_statuses">Запланированные твиты</string>
-  <string name="report_usage_statistics_now">Сообщить статистику использования</string>
   <string name="cache_size_limit">Ограничение размера кэша</string>
   <string name="bug_reports">Сообщения об ошибках</string>
   <string name="invalid_consumer_key">Недействительный пользовательский ключ</string>

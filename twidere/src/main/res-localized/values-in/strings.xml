@@ -420,7 +420,6 @@
 "Tabs"</string>
   <string name="wizard_page_cards_text">Konfigurasi item kartu.</string>
   <string name="wizard_page_hints_text">Disini ada berbagai petunjuk berguna.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere mengambil bagian dalam beberapa proyek penelitian yang membutuhkan penggunaan data.</string>
   <string name="wizard_page_finished_title">Selesai</string>
   <string name="wizard_page_finished_text">Twidere sudah dapat digunakan.</string>
   <string name="invalid_tab">Salah tab</string>
@@ -597,19 +596,16 @@
   <string name="no_location">Tidak ada lokasi</string>
   <string name="getting_location">Mendapatkan lokasi</string>
   <string name="save_to_gallery">Simpan ke galeri</string>
-  <string name="usage_statistics">Statistik penggunaan</string>
   <string name="research_hot_mobile">Penelitian Data-Driven Jaringan Mobile</string>
   <string name="unknown_location">Lokasi tidak diketahui</string>
   <string name="ellipsis">...</string>
   <string name="import_export_settings">Impor/Ekspor pengaturan</string>
-  <string name="usage_statistics_header_summary">Twidere mengambil bagian dalam beberapa proyek penelitian, bergabung dengan proyek ini akan membuat Twidere dan beberapa aplikasi lain menjadi lebih baik.</string>
   <string name="no_tab">Tidak ada tab</string>
   <string name="user_protected_summary">Anda perlu mengirim permintaan mengikuti kepada pengguna yang diproteksi ini untuk melihat tweetnya</string>
   <string name="no_account">Tidak ada akun</string>
   <string name="permission_description_shorten_status">Aplikasi dapat mempersingkat tweet untuk Twidere, sehingga dapat mengakses tweet Anda untuk mengirim.</string>
   <string name="permission_description_upload_media">Aplikasi dapat meng-upload media untuk Twidere, sehingga dapat mengakses media dalam tweet Anda untuk mengirim.</string>
   <string name="permission_description_sync_timeline">Aplikasi dapat menyelaraskan posisi membaca untuk Twidere, sehingga dapat mengakses posisi membaca Anda.</string>
-  <string name="usage_statistics_notification_summary">Bantu kami memperbaiki Twidere!</string>
   <string name="from_name">Dari <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Dari <xliff:g id="name">%1$s</xliff:g> dan <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Dari <xliff:g id="name">%1$s</xliff:g> dan <xliff:g id="name">%2$d</xliff:g> lainnya</string>
@@ -676,7 +672,6 @@
   <string name="set_consumer_key_secret_message">Twidere mencapai batas token, Anda harus membuat sebuah aplikasi di https://apps.twitter.com/ kemudian menempelkan consumer key dan consumer secret dibawah ini.\nJika Anda tetap menggunakan kunci bawaan, Anda mungkin tidak dapat masuk.</string>
   <string name="send_at">Kirim pada</string>
   <string name="scheduled_statuses">Tweet terjadwal</string>
-  <string name="report_usage_statistics_now">Laporkan statistik penggunaan sekarang</string>
   <string name="cache_size_limit">Batas ukuran cache</string>
   <string name="bug_reports">Laporan kesalahan</string>
   <string name="invalid_consumer_key">Consumer key tidak valid</string>

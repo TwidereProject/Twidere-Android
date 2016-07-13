@@ -432,7 +432,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
 
         setupSlidingMenu();
         setupBars();
-        showDataProfilingRequest();
         initUnreadCount();
         setupHomeTabs();
         updateActionsButton();
@@ -888,23 +887,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
                 return false;
             }
         });
-    }
-
-    private void showDataProfilingRequest() {
-        //spice
-        if (mPreferences.contains(KEY_USAGE_STATISTICS)) {
-            return;
-        }
-        final Intent intent = new Intent(this, UsageStatisticsActivity.class);
-        final PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setAutoCancel(true);
-        builder.setSmallIcon(R.drawable.ic_stat_info);
-        builder.setTicker(getString(R.string.usage_statistics));
-        builder.setContentTitle(getString(R.string.usage_statistics));
-        builder.setContentText(getString(R.string.usage_statistics_notification_summary));
-        builder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID_DATA_PROFILING, builder.build());
     }
 
     private void triggerActionsClick() {

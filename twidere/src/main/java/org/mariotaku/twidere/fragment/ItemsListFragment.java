@@ -34,10 +34,6 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder;
 
 import java.util.List;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.MediaEvent;
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 16/3/20.
  */
@@ -89,11 +85,6 @@ public class ItemsListFragment extends AbsContentListRecyclerViewFragment<Variou
                 if (status == null || media == null) return;
                 IntentUtils.openMedia(getActivity(), status, media, null,
                         mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
-                // BEGIN HotMobi
-                final MediaEvent event = MediaEvent.create(getActivity(), status, media,
-                        TimelineType.OTHER, dummyItemAdapter.isMediaPreviewEnabled());
-                HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
-                // END HotMobi
             }
 
             @Override

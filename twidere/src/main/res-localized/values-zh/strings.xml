@@ -442,7 +442,6 @@
   <string name="wizard_page_tabs_unchanged_message">妳可以在"設定"-"標籤"處添加標籤</string>
   <string name="wizard_page_cards_text">設定卡片項目。</string>
   <string name="wizard_page_hints_text">這裡有一些有用的小提示。</string>
-  <string name="wizard_page_usage_statistics_text">Twidere加入了一些需要收集使用資訊的研究項目。</string>
   <string name="wizard_page_finished_title">完成</string>
   <string name="wizard_page_finished_text">現在 Twidere 已經可以使用了。</string>
   <string name="invalid_tab">無效標籤頁</string>
@@ -619,19 +618,16 @@
   <string name="no_location">沒有位置</string>
   <string name="getting_location">獲取位置</string>
   <string name="save_to_gallery">儲存到相冊</string>
-  <string name="usage_statistics">使用資訊統計</string>
   <string name="research_hot_mobile">數據驅動的移動網絡研究</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">導入/導出設定</string>
-  <string name="usage_statistics_header_summary">Twidere參與了一些研究項目，加入這些項目幫助Twidere和更多應用做得更好。</string>
   <string name="no_tab">沒有標籤頁</string>
   <string name="user_protected_summary">你需要向這個受保護的用戶發送關注請求來查看推文</string>
   <string name="no_account">沒有帳號</string>
   <string name="permission_description_shorten_status">應用程序可以為Twidere縮短推文，所以它可以訪問你正在發送的推文。</string>
   <string name="permission_description_upload_media">應用程序可以為Twidere上傳媒體，所以它可以訪問你正在發送的推文中的媒體。</string>
   <string name="permission_description_sync_timeline">應用程序可以為Twidere同步閱讀位置，所以它可以訪問你的閱讀位置。</string>
-  <string name="usage_statistics_notification_summary">幫助我們改進Twidere！</string>
   <string name="from_name">來自<xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">來自<xliff:g id="name">%1$s</xliff:g>和<xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">來自<xliff:g id="name">%1$s</xliff:g>和其他<xliff:g id="name">%2$d</xliff:g>人</string>
@@ -698,7 +694,6 @@
   <string name="set_consumer_key_secret_message">Twidere 的令牌將要用完了。你需要在 https://apps.twitter.com/ 創建一個應用並把 consumer key and secret 粘貼在下面。\n如果你繼續使用默認的key，可能會沒法登錄。</string>
   <string name="send_at">發送於</string>
   <string name="scheduled_statuses">被排期推文</string>
-  <string name="report_usage_statistics_now">立即彙報使用情況</string>
   <string name="cache_size_limit">緩存空間限制</string>
   <string name="bug_reports">錯誤報告</string>
   <string name="bug_reports_summary">由 Fabric 提供技術支持</string>

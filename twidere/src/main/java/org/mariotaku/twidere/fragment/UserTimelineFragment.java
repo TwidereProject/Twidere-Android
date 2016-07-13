@@ -32,19 +32,10 @@ import org.mariotaku.twidere.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 14/12/2.
  */
 public class UserTimelineFragment extends ParcelableStatusesFragment {
-
-    @NonNull
-    @Override
-    @TimelineType
-    protected String getTimelineType() {
-        return TimelineType.USER;
-    }
 
     @Override
     protected Loader<List<ParcelableStatus>> onCreateStatusesLoader(final Context context,

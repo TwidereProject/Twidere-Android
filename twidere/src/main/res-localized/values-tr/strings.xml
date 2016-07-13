@@ -414,7 +414,6 @@
   <string name="wizard_page_tabs_text">Twidere\'ye sekme ekle.\nÖnemsediğin kişileri veya şeyleri izle.</string>
   <string name="wizard_page_cards_text">Kart içeriğini özelleştir.</string>
   <string name="wizard_page_hints_text">İşe yarayabilecek bazı ipuçları.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere, bazı kullanım verilerine ihtiyaç duyan bazı araştırma projelerinde yer aldı.</string>
   <string name="wizard_page_finished_title">Bitti</string>
   <string name="wizard_page_finished_text">Twidere artık kullanıma hazır.</string>
   <string name="invalid_tab">Geçersiz sekme</string>
@@ -532,7 +531,6 @@
   <string name="no_tab">Sekme yok</string>
   <string name="user_protected_summary">Bu kısıtlı kullanıcının tweetlerini görmek için ona takip isteği göndermen gerek</string>
   <string name="no_account">Hesap yok</string>
-  <string name="usage_statistics_notification_summary">Twidere\'yi geliştirmemize yardımcı ol!</string>
   <string name="activated_accounts">Etkinleştirilmiş hesaplar</string>
   <string name="search">Ara</string>
   <string name="crop">Kırp</string>

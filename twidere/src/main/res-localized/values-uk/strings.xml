@@ -415,7 +415,6 @@
   <string name="wizard_page_tabs_text">Додайте вкладки до Twidere.\nОтримуйте миттєві оновлення про те, що вас цікавить.</string>
   <string name="wizard_page_cards_text">Налаштуємо картки.</string>
   <string name="wizard_page_hints_text">Ось декілька корисних порад.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere взяв участь у дослідницькому проекті, який потребує збору деяких даних о використанні програми.</string>
   <string name="wizard_page_finished_title">Завершено</string>
   <string name="wizard_page_finished_text">Тепер Twidere готовий до використання.</string>
   <string name="invalid_tab">Невірна вкладка</string>
@@ -590,19 +589,16 @@
   <string name="no_location">Не відправляти місцезнаходження</string>
   <string name="getting_location">Визначення місцеположення</string>
   <string name="save_to_gallery">Зберегти в галерею</string>
-  <string name="usage_statistics">Статистика  використання</string>
   <string name="research_hot_mobile">Керовані даними дослідження мобільної мережі</string>
   <string name="unknown_location">Невідоме місцеположення</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Імпорт/Експорт налаштувань</string>
-  <string name="usage_statistics_header_summary">Twidere взяв участь у деяких дослідницких проектах. Долучившись до них, ви покращите Twidere та деякі інші програми.</string>
   <string name="no_tab">Нема вкладок</string>
   <string name="user_protected_summary">Треба відправити запит цьому захищеному користувачу, щоб побачити його твіти</string>
   <string name="no_account">Немає облікового запису</string>
   <string name="permission_description_shorten_status">Додаток може скоротити твіт для Twidere, тому зможе отримати доступ до твого твіту для відправки.</string>
   <string name="permission_description_upload_media">Додаток може завантажувати медіадані для Twidere, тому зможе отримати доступ до медіа з твого твіту для відправки.</string>
   <string name="permission_description_sync_timeline">Додаток може синхронізувати позицію читання для Twidere, тому матиме до неї доступ.</string>
-  <string name="usage_statistics_notification_summary">Допоможіть нам покращити Twidere!</string>
   <string name="from_name">Від <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Від <xliff:g id="name">%1$s</xliff:g> і <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Від <xliff:g id="name">%1$s</xliff:g> і ще <xliff:g id="name">%2$d</xliff:g> інших</string>
@@ -667,7 +663,6 @@
   <string name="set_consumer_key_secret_message">Twidere доходить до обмеження за токеном, вам потрібно створти додаток за адресою https://apps.twitter.com/ і ввести код та cекретний ключ користувача нижче.\nПри подальшому використанні усталеного токену ви не зможете увійти.</string>
   <string name="send_at">Надіслати о</string>
   <string name="scheduled_statuses">Заплановані твіти</string>
-  <string name="report_usage_statistics_now">Надіслати звіт про використання</string>
   <string name="cache_size_limit">Обмеження розміру кешу</string>
   <string name="bug_reports">Повідомлення про помилки</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->

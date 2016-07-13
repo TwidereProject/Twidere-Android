@@ -120,10 +120,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.TimelineType;
-import edu.tsinghua.hotmobi.model.TweetEvent;
-
 public class AsyncTwitterWrapper extends TwitterWrapper {
 
     private final Context mContext;
@@ -802,11 +798,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus status = result.getData();
                 taskEvent.setStatus(status);
                 taskEvent.setSucceeded(true);
-                // BEGIN HotMobi
-                final TweetEvent tweetEvent = TweetEvent.create(getContext(), status, TimelineType.OTHER);
-                tweetEvent.setAction(TweetEvent.Action.FAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(mAccountKey, tweetEvent);
-                // END HotMobi
             } else {
                 taskEvent.setSucceeded(false);
                 Utils.showErrorMessage(mContext, R.string.action_favoriting, result.getException(), true);
@@ -1276,11 +1267,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus status = result.getData();
                 taskEvent.setStatus(status);
                 taskEvent.setSucceeded(true);
-                // BEGIN HotMobi
-                final TweetEvent tweetEvent = TweetEvent.create(getContext(), status, TimelineType.OTHER);
-                tweetEvent.setAction(TweetEvent.Action.UNFAVORITE);
-                HotMobiLogger.getInstance(getContext()).log(mAccountKey, tweetEvent);
-                // END HotMobi
                 Utils.showInfoMessage(mContext, R.string.status_unfavorited, false);
             } else {
                 taskEvent.setSucceeded(false);
@@ -1631,11 +1617,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             mCreatingRetweetIds.removeElement(calculateHashCode(mAccountKey, mStatusId));
             if (result.hasData()) {
                 final ParcelableStatus status = result.getData();
-                // BEGIN HotMobi
-                final TweetEvent event = TweetEvent.create(getContext(), status, TimelineType.OTHER);
-                event.setAction(TweetEvent.Action.RETWEET);
-                HotMobiLogger.getInstance(getContext()).log(mAccountKey, event);
-                // END HotMobi
 
                 bus.post(new StatusRetweetedEvent(status));
             } else {

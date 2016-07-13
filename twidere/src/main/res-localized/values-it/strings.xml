@@ -442,7 +442,6 @@
   <string name="wizard_page_tabs_unchanged_message">Puoi aggiungere tab tramite "Impostazioni" - "Tab"</string>
   <string name="wizard_page_cards_text">Configura le schede.</string>
   <string name="wizard_page_hints_text">Ecco alcuni suggerimenti utili.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere prende parte a dei progetti di ricerca che hanno bisogno di alcuni dati di utilizzo.</string>
   <string name="wizard_page_finished_title">Finito</string>
   <string name="wizard_page_finished_text">Ora Twidere è pronto all\'uso.</string>
   <string name="invalid_tab">Tab non valida</string>
@@ -619,18 +618,15 @@
   <string name="no_location">Nessuna posizione</string>
   <string name="getting_location">Ottiene la posizione</string>
   <string name="save_to_gallery">Salva nella galleria</string>
-  <string name="usage_statistics">Statistiche di utilizzo</string>
   <string name="unknown_location">Posizione sconosciuta</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Importa/Esporta le impostazioni</string>
-  <string name="usage_statistics_header_summary">Twidere prende parte ad alcuni progetti di ricerca,unendoti a questi progetti renderai migliore Twidere e le altre applicationi.</string>
   <string name="no_tab">Nessuna scheda</string>
   <string name="user_protected_summary">Hai bisogno di inviare una richiesta di follow per leggere i tweet di questo utente protetto</string>
   <string name="no_account">Nessun account</string>
   <string name="permission_description_shorten_status">L\'applicazione puo\' accorciare i tweet per Twidere, quindi puo\' leggere i tweet che invii.</string>
   <string name="permission_description_upload_media">L\'applicazione puo\' uploadare media per Twidere, quindi puo\' leggere i media nei tweet che invii.</string>
   <string name="permission_description_sync_timeline">L\'applicazione puo\' sincronizzare la tua posizione per Twidere, quindi puo\' accedere alla tua posizione.</string>
-  <string name="usage_statistics_notification_summary">Aiutaci a migliorare Twidere!</string>
   <string name="from_name">Da <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Da <xliff:g id="name">%1$s</xliff:g> e <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Da <xliff:g id="name">%1$s</xliff:g> e <xliff:g id="name">%2$d</xliff:g> altri</string>
@@ -695,7 +691,6 @@
   <string name="media_preload">Precarica media</string>
   <string name="send_at">Invia alle</string>
   <string name="scheduled_statuses">Tweet schedulati</string>
-  <string name="report_usage_statistics_now">Invia ora rapporto sulle statistiche dell\'uso</string>
   <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="page_up">Pagina su</string>
   <string name="page_down">Pagina giù</string>

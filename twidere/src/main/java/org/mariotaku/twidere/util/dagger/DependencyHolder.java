@@ -31,7 +31,6 @@ import org.mariotaku.twidere.util.net.TwidereDns;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
 import okhttp3.ConnectionPool;
 
 /**
@@ -40,8 +39,6 @@ import okhttp3.ConnectionPool;
 public class DependencyHolder {
 
     private static DependencyHolder sInstance;
-    @Inject
-    HotMobiLogger mHotMobiLogger;
     @Inject
     ReadStateManager mReadStateManager;
     @Inject
@@ -66,10 +63,6 @@ public class DependencyHolder {
     public static DependencyHolder get(Context context) {
         if (sInstance != null) return sInstance;
         return sInstance = new DependencyHolder(context);
-    }
-
-    public HotMobiLogger getHotMobiLogger() {
-        return mHotMobiLogger;
     }
 
     public ReadStateManager getReadStateManager() {

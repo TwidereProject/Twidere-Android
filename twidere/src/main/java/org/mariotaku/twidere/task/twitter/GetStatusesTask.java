@@ -50,10 +50,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.RefreshEvent;
-import edu.tsinghua.hotmobi.model.TimelineType;
-
 /**
  * Created by mariotaku on 16/1/2.
  */
@@ -83,9 +79,6 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
 
     @NonNull
     protected abstract Uri getContentUri();
-
-    @TimelineType
-    protected abstract String getTimelineType();
 
     @Override
     public void afterExecute(Object handler, List<TwitterWrapper.StatusListResponse> result) {
@@ -228,11 +221,6 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
                     Statuses.POSITION_KEY, false, accountKey);
         }
         final int rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs);
-
-        // BEGIN HotMobi
-        final RefreshEvent event = RefreshEvent.create(context, statusIds, getTimelineType());
-        HotMobiLogger.getInstance(context).log(accountKey, event);
-        // END HotMobi
 
         // Insert a gap.
         final boolean deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId);

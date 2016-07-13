@@ -529,7 +529,6 @@
   <string name="photo">Zdjęcie</string>
   <string name="remove">Usuń</string>
   <string name="import_export_settings">Importuj/eksportuj ustawienia</string>
-  <string name="usage_statistics_notification_summary">Pomóż nam ulepszyć Twidere!</string>
   <string name="from_name"><xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name"><xliff:g id="name">%1$s</xliff:g> oraz <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others"><xliff:g id="name">%1$s</xliff:g> i <xliff:g id="name">%2$d</xliff:g> innych</string>

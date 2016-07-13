@@ -436,7 +436,6 @@
   <string name="wizard_page_tabs_unchanged_message">Füleket itt tudsz hozzáadni: "Beállítások" - "Fülek"</string>
   <string name="wizard_page_cards_text">Kártya elemek beállítása.</string>
   <string name="wizard_page_hints_text">Itt van néhány hasznos link:</string>
-  <string name="wizard_page_usage_statistics_text">A Twidere részt vett néhány kutatási projektben, amelyeknek szüksége van használati adatokra.</string>
   <string name="wizard_page_finished_title">Befejezve</string>
   <string name="wizard_page_finished_text">A Twidere készen áll a használatra.</string>
   <string name="invalid_tab">Érvénytelen fül</string>
@@ -613,19 +612,16 @@
   <string name="no_location">Nincs hely</string>
   <string name="getting_location">Hely meghatározása</string>
   <string name="save_to_gallery">Mentés a galériába</string>
-  <string name="usage_statistics">Használati statisztikák</string>
   <string name="research_hot_mobile">Statisztikán alapuló mobil hálózat kutatás</string>
   <string name="unknown_location">Ismeretlen hely</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">Beállítások Importálása/Exportálása</string>
-  <string name="usage_statistics_header_summary">A Twidere részt vesz néhány kutatási projektben. Csatlakozz ezekhez, hogy a Twidere és néhány másik alkalmazás jobb lehessen.</string>
   <string name="no_tab">Nincs fül</string>
   <string name="user_protected_summary">Követési kérelmet kell küldened, hogy láthasd ennek a védett felhasználónak a tweetjeit</string>
   <string name="no_account">Nincs fiók</string>
   <string name="permission_description_shorten_status">Az alkalmazás képes tweetet rövidíteni a Twidere számára, ezért hozzáférhet a tweetedhez a küldéshez.</string>
   <string name="permission_description_upload_media">Az alkalmazás képes médiát feltölteni a Twidere számára, ezért hozzáférhet a tweetedben lévő médiához  a küldéshez.</string>
   <string name="permission_description_sync_timeline">Az alkalmazás képes olvasási állapotot szinkronizálni a Twidere számára, ezért hozzáférhet a olvasási állapotodhoz.</string>
-  <string name="usage_statistics_notification_summary">Segíts fejleszteni a Twidere-t!</string>
   <string name="from_name">Tőle: <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">Tőlük: <xliff:g id="name">%1$s</xliff:g> és <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">Tőlük: <xliff:g id="name">%1$s</xliff:g> és még <xliff:g id="name">%2$d</xliff:g> felhasználó</string>
@@ -692,7 +688,6 @@
   <string name="set_consumer_key_secret_message">Twidere lassan eléri a token korlátozást, létre kell majd hoznod egy alkalmazást a https://apps.twitter.com/ webhelyen és be kell illeszteni a lenti felhasználó kulcsot és jelszót.\nHa folytatod az alapértelmezett kulcs használatát, lehetséges, hogy nem tudsz majd bejelentkezni.</string>
   <string name="send_at">Küldés ekkor:</string>
   <string name="scheduled_statuses">Időzített tweet-ek</string>
-  <string name="report_usage_statistics_now">Használati statisztikák küldése most</string>
   <string name="cache_size_limit">Gyorsítótár méret korlát</string>
   <string name="bug_reports">Hibajelentések</string>
   <string name="bug_reports_summary">Powered by Fabric</string>

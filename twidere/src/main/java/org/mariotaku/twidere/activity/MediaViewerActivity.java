@@ -101,8 +101,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.MediaDownloadEvent;
 import pl.droidsonroids.gif.GifTextureView;
 import pl.droidsonroids.gif.InputSource;
 
@@ -544,7 +542,6 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
 
     public static class ImagePageFragment extends SubsampleImageViewerFragment {
         private int mMediaLoadState;
-        private MediaDownloadEvent mMediaDownloadEvent;
         private CacheDownloadLoader.ResultCreator mResultCreator;
 
         static Bitmap decodeBitmap(ContentResolver cr, Uri uri, BitmapFactory.Options o) throws IOException {
@@ -673,31 +670,16 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
         @Override
         public void onDownloadRequested(long nonce) {
             super.onDownloadRequested(nonce);
-            final Context context = getContext();
-            if (context != null) {
-                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
-            } else {
-                mMediaDownloadEvent = null;
-            }
         }
 
         @Override
         public void onDownloadStart(long total, long nonce) {
             super.onDownloadStart(total, nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(total);
-            }
         }
 
         @Override
         public void onDownloadFinished(long nonce) {
             super.onDownloadFinished(nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.markEnd();
-                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
-                mMediaDownloadEvent = null;
-            }
         }
 
         static class SizedResult extends CacheDownloadLoader.Result {
@@ -772,7 +754,6 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
     public static class GifPageFragment extends CacheDownloadMediaViewerFragment {
 
         private GifTextureView mGifView;
-        private MediaDownloadEvent mMediaDownloadEvent;
 
         @Override
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -844,29 +825,18 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
             super.onDownloadRequested(nonce);
             final Context context = getContext();
             if (context != null) {
-                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
             } else {
-                mMediaDownloadEvent = null;
             }
         }
 
         @Override
         public void onDownloadStart(long total, long nonce) {
             super.onDownloadStart(total, nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(total);
-            }
         }
 
         @Override
         public void onDownloadFinished(long nonce) {
             super.onDownloadFinished(nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.markEnd();
-                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
-                mMediaDownloadEvent = null;
-            }
         }
     }
 
@@ -897,7 +867,6 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
         private VideoPlayProgressRunnable mVideoProgressRunnable;
         private MediaPlayer mMediaPlayer;
         private int mMediaPlayerError;
-        private MediaDownloadEvent mMediaDownloadEvent;
 
         @Override
         protected Object getDownloadExtra() {
@@ -1157,29 +1126,18 @@ public final class MediaViewerActivity extends BaseActivity implements IExtended
             super.onDownloadRequested(nonce);
             final Context context = getContext();
             if (context != null) {
-                mMediaDownloadEvent = MediaDownloadEvent.create(context, getMedia(), nonce);
             } else {
-                mMediaDownloadEvent = null;
             }
         }
 
         @Override
         public void onDownloadStart(long total, long nonce) {
             super.onDownloadStart(total, nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.setOpenedTime(System.currentTimeMillis());
-                mMediaDownloadEvent.setSize(total);
-            }
         }
 
         @Override
         public void onDownloadFinished(long nonce) {
             super.onDownloadFinished(nonce);
-            if (mMediaDownloadEvent != null && mMediaDownloadEvent.getNonce() == nonce) {
-                mMediaDownloadEvent.markEnd();
-                HotMobiLogger.getInstance(getContext()).log(getAccountKey(), mMediaDownloadEvent);
-                mMediaDownloadEvent = null;
-            }
         }
 
         @Nullable

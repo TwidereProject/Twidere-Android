@@ -36,9 +36,6 @@ import org.mariotaku.twidere.model.util.ParcelableMediaUtils;
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.LinkEvent;
-
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY;
 import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API;
 
@@ -64,10 +61,6 @@ public class OnLinkClickHandler implements OnLinkClickListener {
                                final int start, final int end) {
         if (manager != null && manager.isActive()) return false;
         if (!isPrivateData()) {
-            // BEGIN HotMobi
-            final LinkEvent event = LinkEvent.create(context, link, type);
-            HotMobiLogger.getInstance(context).log(accountKey, event);
-            // END HotMobi
         }
 
         switch (type) {

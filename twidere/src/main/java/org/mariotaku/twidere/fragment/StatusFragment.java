@@ -175,11 +175,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.MediaEvent;
-import edu.tsinghua.hotmobi.model.TimelineType;
-import edu.tsinghua.hotmobi.model.TweetEvent;
-
 /**
  * Created by mariotaku on 14/12/5.
  */
@@ -213,7 +208,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
     private boolean mConversationLoaderInitialized;
     private boolean mActivityLoaderInitialized;
     private boolean mHasMoreConversation = true;
-    private TweetEvent mStatusEvent;
 
     // Listeners
     private LoaderCallbacks<List<ParcelableStatus>> mConversationsLoaderCallback = new LoaderCallbacks<List<ParcelableStatus>>() {
@@ -418,10 +412,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null || media == null) return;
         IntentUtils.openMedia(getActivity(), status, media, null,
                 mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
-
-        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.DETAILS,
-                mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
     }
 
     @Override
@@ -464,11 +454,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
         if (status == null || media == null) return;
         IntentUtils.openMediaDirectly(getActivity(), accountKey, status, media, null,
                 mPreferences.getBoolean(KEY_NEW_DOCUMENT_API));
-        // BEGIN HotMobi
-        MediaEvent event = MediaEvent.create(getActivity(), status, media, TimelineType.OTHER,
-                mStatusAdapter.isMediaPreviewEnabled());
-        HotMobiLogger.getInstance(getActivity()).log(status.account_key, event);
-        // END HotMobi
     }
 
     @Override
@@ -566,10 +551,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
                 if (position != RecyclerView.NO_POSITION) {
                     mLayoutManager.scrollToPositionWithOffset(position, 0);
                 }
-
-                final TweetEvent event = TweetEvent.create(activity, status, TimelineType.OTHER);
-                event.setAction(TweetEvent.Action.OPEN);
-                mStatusEvent = event;
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition);
             }
@@ -587,11 +568,6 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
     @Override
     public void onLoaderReset(final Loader<SingleResponse<ParcelableStatus>> loader) {
-        final TweetEvent event = mStatusEvent;
-        if (event == null) return;
-        event.markEnd();
-        final UserKey accountKey = new UserKey(event.getAccountId(), event.getAccountHost());
-        HotMobiLogger.getInstance(getActivity()).log(accountKey, event);
     }
 
     @Override

@@ -52,9 +52,6 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
-import edu.tsinghua.hotmobi.model.BatteryRecord;
-import edu.tsinghua.hotmobi.model.ScreenEvent;
-
 public class RefreshService extends Service implements Constants {
 
     @Inject
@@ -185,11 +182,9 @@ public class RefreshService extends Service implements Constants {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case Intent.ACTION_BATTERY_CHANGED: {
-                    BatteryRecord.log(context, intent);
                     break;
                 }
                 default: {
-                    BatteryRecord.log(context);
                     break;
                 }
             }
@@ -203,17 +198,14 @@ public class RefreshService extends Service implements Constants {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case Intent.ACTION_SCREEN_ON: {
-                    ScreenEvent.log(context, ScreenEvent.Action.ON, getPresentDuration());
                     break;
                 }
                 case Intent.ACTION_SCREEN_OFF: {
-                    ScreenEvent.log(context, ScreenEvent.Action.OFF, getPresentDuration());
                     mPresentTime = -1;
                     break;
                 }
                 case Intent.ACTION_USER_PRESENT: {
                     mPresentTime = SystemClock.elapsedRealtime();
-                    ScreenEvent.log(context, ScreenEvent.Action.PRESENT, -1);
                     break;
                 }
             }

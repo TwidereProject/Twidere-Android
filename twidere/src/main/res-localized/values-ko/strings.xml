@@ -436,7 +436,6 @@
   <string name="wizard_page_tabs_unchanged_message">"설정" - "탭"에서 탭을 추가할 수 있습니다.</string>
   <string name="wizard_page_cards_text">카드 항목을 설정하세요.</string>
   <string name="wizard_page_hints_text">힌트를 드리겠습니다.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere는 사용 데이터 중 일부가 필요한 연구 프로젝트에 참여하고 있습니다.</string>
   <string name="wizard_page_finished_title">종료</string>
   <string name="wizard_page_finished_text">Twidere 사용 준비가 끝났습니다.</string>
   <string name="invalid_tab">잘못된 탭</string>
@@ -619,19 +618,16 @@
   <string name="no_location">위치 없음</string>
   <string name="getting_location">위치 찾는 중</string>
   <string name="save_to_gallery">갤러리에 저장</string>
-  <string name="usage_statistics">사용 통계</string>
   <string name="research_hot_mobile">데이터 기반 모바일 네트워크 연구</string>
   <string name="unknown_location">알 수 없는 위치</string>
   <string name="ellipsis">…</string>
   <string name="import_export_settings">설정 가져오기/내보내기</string>
-  <string name="usage_statistics_header_summary">Twidere는 일부 연구 프로젝트에 참여하고 있습니다. 프로젝트에 참여하면 Twidere와 다른 앱들을 향상시킬 수 있을 것입니다.</string>
   <string name="no_tab">탭 없음</string>
   <string name="user_protected_summary">트윗을 보려면 이 비공개 사용자에게 팔로우 요청을 보내야 합니다.</string>
   <string name="no_account">계정 없음</string>
   <string name="permission_description_shorten_status">앱은 Twidere에서 트윗을 단축할 수 있으며, 앱이 단축된 트윗을 전송하기 위해 당신의 트윗에 접근할 수 있습니다.</string>
   <string name="permission_description_upload_media">앱은 Twidere에서 미디어를 업로드할 수 있으며, 앱이 당신의 트윗에 있는 미디어에 접근할 수 있습니다.</string>
   <string name="permission_description_sync_timeline">앱은 Twidere에서 읽은 위치를 동기화할 수 있으며, 앱이 읽은 위치에 접근할 수 있습니다.</string>
-  <string name="usage_statistics_notification_summary">Twidere를 보완하는데 도와주세요!</string>
   <string name="from_name">다음으로부터: <xliff:g id="name">%1$s</xliff:g></string>
   <string name="from_name_and_name">다음으로부터: <xliff:g id="name">%1$s</xliff:g> 그리고 <xliff:g id="name">%2$s</xliff:g></string>
   <string name="from_name_and_N_others">다음으로부터: <xliff:g id="name">%1$s</xliff:g> 그리고 <xliff:g id="name">%2$d</xliff:g> 등등</string>
@@ -698,7 +694,6 @@
   <string name="set_consumer_key_secret_message">Twidere가 토큰 리밋에 걸리면, https://apps.twitter.com/ 에 접속해 어플리케이션을 만들어 컨슈머 키와 컨슈머 시크릿을 붙여넣으십시오.\n만약 기본 키를 계속 사용하면 로그인하지 못할 수도 있습니다.</string>
   <string name="send_at">전송</string>
   <string name="scheduled_statuses">예약 트윗</string>
-  <string name="report_usage_statistics_now">현재 사용 통계 보고</string>
   <string name="cache_size_limit">캐시 크기 제한</string>
   <string name="bug_reports">버그 리포트</string>
   <string name="bug_reports_summary">Powered by Fabric</string>
