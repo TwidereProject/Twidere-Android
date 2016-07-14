@@ -73,6 +73,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.SupportTabsAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
+import org.mariotaku.twidere.emojidex.EmojidexUpdater;
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment;
 import org.mariotaku.twidere.fragment.CustomTabsFragment;
 import org.mariotaku.twidere.fragment.DirectMessagesFragment;
@@ -456,8 +457,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, OnPag
         // Initialize emojidex.
         final Emojidex emojidex = Emojidex.getInstance();
         emojidex.initialize(this);
-        if(emojidex.getAllEmojiList().isEmpty())
-            emojidex.reload();
+        new EmojidexUpdater(this).startUpdateThread();
     }
 
     @Override
