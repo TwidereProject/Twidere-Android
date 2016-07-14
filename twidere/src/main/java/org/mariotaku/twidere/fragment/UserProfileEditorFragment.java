@@ -213,6 +213,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                 final int backgroundColor = mBackgroundColor.getColor();
                 mTask = new UpdateProfileTaskInternal(this, mAccountId, mUser, name, url, location,
                         description, linkColor, backgroundColor);
+                mTask.setResultHandler(this);
                 TaskStarter.execute(mTask);
                 return true;
             }
@@ -522,7 +523,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         }
 
         @Override
-        protected void afterExecute(UserProfileEditorFragment callback, SingleResponse<ParcelableUser> result) {
+        protected void afterExecute(@Nullable UserProfileEditorFragment callback, SingleResponse<ParcelableUser> result) {
             super.afterExecute(callback, result);
             if (result.hasData()) {
                 final ParcelableAccount account = result.getExtras().getParcelable(EXTRA_ACCOUNT);
@@ -532,16 +533,18 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
                     TaskStarter.execute(task);
                 }
             }
-            callback.executeAfterFragmentResumed(new Action() {
-                @Override
-                public void execute(IBaseFragment fragment) {
-                    final Fragment f = ((UserProfileEditorFragment) fragment).getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
-                    if (f instanceof DialogFragment) {
-                        ((DialogFragment) f).dismissAllowingStateLoss();
+            if (callback != null) {
+                callback.executeAfterFragmentResumed(new Action() {
+                    @Override
+                    public void execute(IBaseFragment fragment) {
+                        final Fragment f = ((UserProfileEditorFragment) fragment).getFragmentManager().findFragmentByTag(DIALOG_FRAGMENT_TAG);
+                        if (f instanceof DialogFragment) {
+                            ((DialogFragment) f).dismissAllowingStateLoss();
+                        }
+                        f.getActivity().finish();
                     }
-                    f.getActivity().finish();
-                }
-            });
+                });
+            }
         }
 
         @Override
@@ -575,7 +578,7 @@ public class UserProfileEditorFragment extends BaseSupportFragment implements On
         }
 
         @Override
-        protected void afterExecute(UserProfileEditorFragment callback, final SingleResponse<Boolean> result) {
+        protected void afterExecute(@Nullable UserProfileEditorFragment callback, final SingleResponse<Boolean> result) {
             super.afterExecute(callback, result);
             if (result.getData() != null && result.getData()) {
                 getUserInfo();
