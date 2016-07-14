@@ -167,7 +167,7 @@ dependencies {
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.8'
     compile 'com.github.mariotaku.CommonsLibrary:io:0.9.8'
 
-    compile 'org.genshin:emojidexandroid-lib:0.0.4'
+    compile 'org.genshin:emojidexandroid-lib:0.0.5'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {
