@@ -510,7 +510,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         return false
     }
 
-    fun getUserInfo(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
+    fun getUserInfo(accountKey: UserKey, userKey: UserKey?, screenName: String?,
                     omitIntentExtra: Boolean) {
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_USER)
@@ -614,16 +614,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 ThemeUtils.getUserThemeBackgroundAlpha(activity))
         mActionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
-        var accountId: UserKey? = null
-        var userId: UserKey? = null
-        var screenName: String? = null
-        if (savedInstanceState != null) {
-            args.putAll(savedInstanceState)
-        } else {
-            accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-            userId = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-            screenName = args.getString(EXTRA_SCREEN_NAME)
-        }
+        val accountId: UserKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val userId: UserKey? = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val screenName: String? = args.getString(EXTRA_SCREEN_NAME)
 
         Utils.setNdefPushMessageCallback(activity, CreateNdefMessageCallback {
             val user = user ?: return@CreateNdefMessageCallback null

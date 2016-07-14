@@ -133,8 +133,8 @@ public class BrowserSignInActivity extends BaseActivity {
     private String readOAuthPin(final String html) {
         try {
             OAuthPasswordAuthenticator.OAuthPinData data = new OAuthPasswordAuthenticator.OAuthPinData();
-            OAuthPasswordAuthenticator.readOAuthPINFromHtml(new StringReader(html), data);
-            return data.oauthPin;
+            OAuthPasswordAuthenticator.Companion.readOAuthPINFromHtml(new StringReader(html), data);
+            return data.getOauthPin();
         } catch (final AttoParseException | IOException e) {
             Log.w(LOGTAG, e);
         }

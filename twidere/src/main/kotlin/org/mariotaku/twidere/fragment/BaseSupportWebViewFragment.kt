@@ -90,10 +90,8 @@ open class BaseSupportWebViewFragment : BaseSupportFragment() {
      * Called when the fragment is no longer in use. Destroys the internal state of the WebView.
      */
     override fun onDestroy() {
-        if (internalWebView != null) {
-            internalWebView!!.destroy()
-            internalWebView = null
-        }
+        internalWebView?.destroy()
+        internalWebView = null
         super.onDestroy()
     }
 

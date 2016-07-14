@@ -363,10 +363,13 @@ public class BackgroundOperationService extends IntentService implements Constan
                 @Override
                 public void afterExecute(Context handler, UpdateStatusTask.UpdateStatusResult result) {
                     boolean failed = false;
-                    if (result.exception != null) {
-                        Toast.makeText(context, result.exception.getMessage(), Toast.LENGTH_SHORT).show();
+                    final UpdateStatusTask.UpdateStatusException exception = result.getException();
+                    final MicroBlogException[] exceptions = result.getExceptions();
+                    if (exception != null) {
+                        Toast.makeText(context, exception.getMessage(), Toast.LENGTH_SHORT).show();
                         failed = true;
-                    } else for (MicroBlogException e : result.exceptions) {
+                        Log.w(LOGTAG, exception);
+                    } else for (MicroBlogException e : exceptions) {
                         if (e != null) {
                             // Show error
                             String errorMessage = Utils.getErrorMessage(context, e);
@@ -407,9 +410,11 @@ public class BackgroundOperationService extends IntentService implements Constan
                 }
             });
 
-            if (result.exception != null) {
-                Log.w(LOGTAG, result.exception);
-            } else for (ParcelableStatus status : result.statuses) {
+            final UpdateStatusTask.UpdateStatusException exception = result.getException();
+            final ParcelableStatus[] updatedStatuses = result.getStatuses();
+            if (exception != null) {
+                Log.w(LOGTAG, exception);
+            } else for (ParcelableStatus status : updatedStatuses) {
                 if (status == null) continue;
                 final TweetEvent event = TweetEvent.create(context, status, TimelineType.OTHER);
                 event.setAction(TweetEvent.Action.TWEET);
@@ -457,7 +462,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         final Uri mediaUri = Uri.parse(imageUri);
                         FileBody body = null;
                         try {
-                            body = UpdateStatusTask.getBodyFromMedia(getContentResolver(), mediaUri,
+                            body = UpdateStatusTask.Companion.getBodyFromMedia(getContentResolver(), mediaUri,
                                     new MessageMediaUploadListener(this, mNotificationManager,
                                             builder, text));
                             final MediaUploadResponse uploadResp = uploadMedia(twitterUpload, body);

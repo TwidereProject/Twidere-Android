@@ -157,7 +157,7 @@ public abstract class UserStreamCallback implements RawCallback {
     }
 
     @Override
-    public final void error(final Throwable cause) {
+    public final void error(final Exception cause) {
         onException(cause);
     }
 

@@ -51,7 +51,7 @@ class ExternalBrowserPageFragment : MediaViewerFragment() {
     }
 
     override fun onDestroy() {
-        webView.destroy()
+        webView?.destroy()
         super.onDestroy()
     }
 
