@@ -450,8 +450,8 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         }
         response = upload.finalizeUploadMedia(response.id)
         run {
-            var info: MediaUploadResponse.ProcessingInfo = response.processingInfo
-            while (shouldWaitForProcess(info)) {
+            var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
+            while (info != null && shouldWaitForProcess(info)) {
                 val checkAfterSecs = info.checkAfterSecs
                 if (checkAfterSecs <= 0) {
                     break
@@ -482,8 +482,7 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         return exception is MicroBlogException && exception.errorCode == ErrorInfo.STATUS_IS_DUPLICATE
     }
 
-    private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo?): Boolean {
-        if (info == null) return false
+    private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
         when (info.state) {
             MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
             else -> return false

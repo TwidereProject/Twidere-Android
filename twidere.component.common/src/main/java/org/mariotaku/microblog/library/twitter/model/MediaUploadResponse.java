@@ -19,6 +19,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -39,6 +40,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
     @JsonField(name = "video")
     Video video;
     @JsonField(name = "processing_info")
+    @Nullable
     ProcessingInfo processingInfo;
 
     public String getId() {
@@ -57,6 +59,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
         return video;
     }
 
+    @Nullable
     public ProcessingInfo getProcessingInfo() {
         return processingInfo;
     }
