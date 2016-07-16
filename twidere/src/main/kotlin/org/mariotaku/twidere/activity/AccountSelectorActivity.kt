@@ -36,7 +36,7 @@ import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_account_selector.*
-import org.apache.commons.lang3.ArrayUtils
+import org.mariotaku.ktextension.asTypedArray
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -45,6 +45,7 @@ import org.mariotaku.twidere.adapter.AccountsAdapter
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import java.util.*
 
@@ -124,12 +125,9 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         val adapter = adapter!!
         adapter.swapCursor(cursor)
         if (cursor != null && firstCreated) {
-            val activatedIds = intentExtraIds
-            var i = 0
-            val j = adapter.count
-            while (i < j) {
-                accountsList.setItemChecked(i, ArrayUtils.contains(activatedIds, adapter.getItemId(i)))
-                i++
+            val activatedKeys = intentExtraIds
+            for (i in 0..adapter.count - 1) {
+                accountsList.setItemChecked(i, activatedKeys?.contains(adapter.getAccount(i)!!.account_key) ?: false)
             }
         }
         if (adapter.count == 1 && shouldSelectOnlyItem()) {
@@ -199,9 +197,9 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         super.onStop()
     }
 
-    private val intentExtraIds: LongArray
+    private val intentExtraIds: Array<UserKey>?
         get() {
-            return intent.getLongArrayExtra(EXTRA_IDS)
+            return intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS)?.asTypedArray(UserKey.CREATOR)
         }
 
     private val isOAuthOnly: Boolean

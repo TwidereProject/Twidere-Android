@@ -1364,7 +1364,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 preferences: SharedPreferencesWrapper
         ) : StatusLinkClickHandler(context, manager, preferences) {
 
-            override fun onLinkClick(link: String, orig: String?, accountKey: UserKey,
+            override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
                                      extraId: Long, type: Int, sensitive: Boolean, start: Int, end: Int): Boolean {
                 val current = getCurrentMedia(link, extraId.toInt())
                 if (current != null && !current.open_browser) {

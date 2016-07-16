@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -276,18 +277,20 @@ public final class TwidereLinkify implements Constants {
             final int listEnd = matcherEnd(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
             final String username = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_USERNAME);
             final String list = matcherGroup(matcher, Regex.VALID_MENTION_OR_LIST_GROUP_LIST);
-            applyLink(username, null, start, usernameEnd, spannable, accountKey, extraId,
-                    LINK_TYPE_MENTION, false, highlightOption, listener);
-            if (listStart >= 0 && listEnd >= 0 && list != null && username != null) {
-                StringBuilder sb = new StringBuilder(username);
-                if (!list.startsWith("/")) {
-                    sb.append("/");
+            if (username != null) {
+                applyLink(username, null, start, usernameEnd, spannable, accountKey, extraId,
+                        LINK_TYPE_MENTION, false, highlightOption, listener);
+                if (listStart >= 0 && listEnd >= 0 && list != null) {
+                    StringBuilder sb = new StringBuilder(username);
+                    if (!list.startsWith("/")) {
+                        sb.append("/");
+                    }
+                    sb.append(list);
+                    applyLink(sb.toString(), null, listStart, listEnd, spannable, accountKey, extraId,
+                            LINK_TYPE_LIST, false, highlightOption, listener);
                 }
-                sb.append(list);
-                applyLink(sb.toString(), null, listStart, listEnd, spannable, accountKey, extraId,
-                        LINK_TYPE_LIST, false, highlightOption, listener);
+                hasMatches = true;
             }
-            hasMatches = true;
         }
         // Extract lists from twitter.com links.
         final URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);
@@ -307,8 +310,8 @@ public final class TwidereLinkify implements Constants {
         return hasMatches;
     }
 
-    private void applyLink(final String url, final String orig, final int start, final int end,
-                           final Spannable text, final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
+    private void applyLink(@NonNull final String url, @Nullable final String orig, final int start, final int end,
+                           final Spannable text, @Nullable final UserKey accountKey, final long extraId, final int type, final boolean sensitive,
                            final int highlightOption, final OnLinkClickListener listener) {
         final TwidereURLSpan span = new TwidereURLSpan(url, orig, accountKey, extraId, type, sensitive,
                 highlightOption, start, end, listener);
@@ -323,7 +326,7 @@ public final class TwidereLinkify implements Constants {
     }
 
     public interface OnLinkClickListener {
-        boolean onLinkClick(String link, String orig, UserKey accountKey, long extraId, int type,
+        boolean onLinkClick(@NonNull String link, @Nullable String orig, @Nullable UserKey accountKey, long extraId, int type,
                             boolean sensitive, int start, int end);
     }
 }

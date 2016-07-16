@@ -43,7 +43,7 @@ open class OnLinkClickHandler(
         protected val preferences: SharedPreferencesWrapper
 ) : OnLinkClickListener {
 
-    override fun onLinkClick(link: String, orig: String?, accountKey: UserKey,
+    override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
                              extraId: Long, type: Int, sensitive: Boolean,
                              start: Int, end: Int): Boolean {
         if (manager != null && manager.isActive) return false
@@ -67,7 +67,7 @@ open class OnLinkClickHandler(
             }
             TwidereLinkify.LINK_TYPE_LINK_IN_TEXT -> {
                 if (isMedia(link, extraId)) {
-                    openMedia(accountKey, extraId, sensitive, link, start, end)
+                    openMedia(accountKey!!, extraId, sensitive, link, start, end)
                 } else {
                     openLink(link)
                 }
@@ -75,7 +75,7 @@ open class OnLinkClickHandler(
             }
             TwidereLinkify.LINK_TYPE_ENTITY_URL -> {
                 if (isMedia(link, extraId)) {
-                    openMedia(accountKey, extraId, sensitive, link, start, end)
+                    openMedia(accountKey!!, extraId, sensitive, link, start, end)
                 } else {
                     val authority = UriUtils.getAuthority(link)
                     if (authority == null) {
@@ -110,7 +110,7 @@ open class OnLinkClickHandler(
                         }
                         else -> {
                             if (IntentUtils.isWebLinkHandled(context, Uri.parse(link))) {
-                                openTwitterLink(link, accountKey)
+                                openTwitterLink(link, accountKey!!)
                                 return true
                             }
                         }
