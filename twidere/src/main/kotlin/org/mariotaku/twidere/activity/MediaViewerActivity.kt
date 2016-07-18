@@ -283,14 +283,10 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         return 0
     }
 
-    fun hasStatus(): Boolean {
-        return intent.hasExtra(EXTRA_STATUS)
-    }
-
-    private val status: ParcelableStatus
+    private val status: ParcelableStatus?
         get() = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
 
-    private val initialMedia: ParcelableMedia
+    private val initialMedia: ParcelableMedia?
         get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
 
     private val media: Array<ParcelableMedia> by lazy {
@@ -298,8 +294,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     }
 
     protected fun processShareIntent(intent: Intent) {
-        if (!hasStatus()) return
-        val status = status
+        val status = status ?: return
         intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.getStatusShareSubject(this, status))
         intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(this, status))
     }
