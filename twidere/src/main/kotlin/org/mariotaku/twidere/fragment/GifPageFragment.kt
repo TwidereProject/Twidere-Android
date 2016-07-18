@@ -55,7 +55,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
     }
 
     override fun recycleMedia() {
-        gifView.setInputSource(null)
+        gifView?.setInputSource(null)
     }
 
     private val media: ParcelableMedia

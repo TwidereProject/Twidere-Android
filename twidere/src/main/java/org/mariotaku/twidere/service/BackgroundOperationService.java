@@ -464,7 +464,7 @@ public class BackgroundOperationService extends IntentService implements Constan
                         try {
                             body = UpdateStatusTask.Companion.getBodyFromMedia(getContentResolver(), mediaUri,
                                     new MessageMediaUploadListener(this, mNotificationManager,
-                                            builder, text));
+                                            builder, text), null);
                             final MediaUploadResponse uploadResp = uploadMedia(twitterUpload, body);
                             final DirectMessage response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.getId());
