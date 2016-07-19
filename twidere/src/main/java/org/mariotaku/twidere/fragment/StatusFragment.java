@@ -84,6 +84,7 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.emojidex.emojidexandroid.Emojidex;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -1208,6 +1209,10 @@ public class StatusFragment extends BaseSupportFragment implements LoaderCallbac
 
             textView.setMovementMethod(LinkMovementMethod.getInstance());
             quotedTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+            // Convert to emojidex.
+            final Emojidex emojidex = Emojidex.getInstance();
+            textView.setText(emojidex.emojify(emojidex.deEmojify(textView.getText())));
         }
 
         @Override
