@@ -1109,7 +1109,7 @@ public class DataStoreUtils implements Constants {
         void assign(T array, int arrayIdx, Cursor cur, int colIdx);
     }
 
-    static int queryCount(@NonNull final Context context, @NonNull final Uri uri,
+    public static int queryCount(@NonNull final Context context, @NonNull final Uri uri,
                           @Nullable final String selection, @Nullable final String[] selectionArgs) {
         final ContentResolver resolver = context.getContentResolver();
         final String[] projection = new String[]{SQLFunctions.COUNT()};

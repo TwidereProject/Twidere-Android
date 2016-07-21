@@ -23,21 +23,16 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.ContentResolver
-import android.content.ContentValues
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.database.Cursor
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.CursorLoader
+import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.view.SupportMenuInflater
@@ -54,6 +49,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewSwitcher
+import kotlinx.android.synthetic.main.fragment_accounts_dashboard.*
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.setMenuItemIcon
@@ -65,26 +61,26 @@ import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.content.SupportFragmentReloadCursorObserver
 import org.mariotaku.twidere.view.ShapedImageView
 import java.util.*
 
-class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>, OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback, NavigationView.OnNavigationItemSelectedListener {
+class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<AccountsInfo>, OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private val mSystemWindowsInsets = Rect()
     private var mResolver: ContentResolver? = null
 
     private var mAccountsAdapter: AccountSelectorAdapter? = null
 
-    private var mNavigationView: NavigationView? = null
     private var mAccountSelectorView: View? = null
     var accountsSelector: RecyclerView? = null
         private set
@@ -98,19 +94,19 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
     private var mNoAccountContainer: View? = null
 
     private var mAccountActionProvider: AccountToggleProvider? = null
-    private val mReloadContentObserver = object : SupportFragmentReloadCursorObserver(
-            this, 0, this) {
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            val cr = contentResolver
-            val c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION)
-            try {
-                updateAccountProviderData(c)
-            } finally {
-                Utils.closeSilently(c)
-            }
-            super.onChange(selfChange, uri)
-        }
-    }
+    //    private val mReloadContentObserver = object : SupportFragmentReloadCursorObserver(
+//            this, 0, this) {
+//        override fun onChange(selfChange: Boolean, uri: Uri?) {
+//            val cr = contentResolver
+//            val c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION)
+//            try {
+//                updateAccountProviderData(c)
+//            } finally {
+//                Utils.closeSilently(c)
+//            }
+//            super.onChange(selfChange, uri)
+//        }
+//    }
     private var mSwitchAccountAnimationPlaying: Boolean = false
     private var mUseStarsForLikes: Boolean = false
     private var mLoaderInitialized: Boolean = false
@@ -208,19 +204,18 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION)
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
+        return AccountsInfoLoader(activity)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
+    override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
         updateAccountProviderData(data)
     }
 
-    private fun updateAccountProviderData(cursor: Cursor?) {
-        if (cursor == null) return
+    private fun updateAccountProviderData(data: AccountsInfo) {
         val menu = mAccountsToggleMenu!!.menu
         mAccountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
-        val accounts = ParcelableAccountUtils.getAccounts(cursor)
+        val accounts = data.accounts
         if (accounts.size > 0) {
             mNoAccountContainer!!.visibility = View.GONE
             mAccountProfileContainer!!.visibility = View.VISIBLE
@@ -262,9 +257,15 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
             displayCurrentAccount(null)
         }
         updateDefaultAccountState()
+
+        if (data.draftsCount > 0) {
+            navigationView.menu.findItem(R.id.drafts).title = "${getString(R.string.drafts)} (${data.draftsCount})"
+        } else {
+            navigationView.menu.findItem(R.id.drafts).title = getString(R.string.drafts)
+        }
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor?>) {
+    override fun onLoaderReset(loader: Loader<AccountsInfo>) {
     }
 
 
@@ -334,7 +335,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
                     mAccountProfileBannerView, false)
         }
 
-        mNavigationView!!.setNavigationItemSelectedListener(this)
+        navigationView.setNavigationItemSelectedListener(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
 
         loadAccounts()
@@ -351,14 +352,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_accounts_dashboard, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mNavigationView = view!!.findViewById(R.id.navigation_view) as NavigationView
-        mAccountSelectorView = mNavigationView!!.getHeaderView(0)
+        mAccountSelectorView = navigationView.getHeaderView(0)
         accountsSelector = mAccountSelectorView!!.findViewById(R.id.otherAccountsList) as RecyclerView
         mAccountProfileContainer = mAccountSelectorView!!.findViewById(R.id.profileContainer)
         mNoAccountContainer = mAccountSelectorView!!.findViewById(R.id.noAccountContainer)
@@ -373,13 +373,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
     override fun onStart() {
         super.onStart()
         val resolver = contentResolver
-        resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver)
+//        resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver)
         loaderManager.restartLoader(0, null, this)
     }
 
     override fun onStop() {
         val resolver = contentResolver
-        resolver.unregisterContentObserver(mReloadContentObserver)
+//        resolver.unregisterContentObserver(mReloadContentObserver)
         super.onStop()
     }
 
@@ -404,7 +404,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
                 }
             }
         }
-        val menu = mNavigationView!!.menu
+        val menu = navigationView.menu
         menu.setItemAvailability(R.id.interactions, !hasInteractionsTab)
         menu.setItemAvailability(R.id.messages, !hasDmTab)
 
@@ -763,7 +763,20 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Cursor>
         }
     }
 
+    data class AccountsInfo(
+            val accounts: Array<ParcelableAccount>,
+            val draftsCount: Int
+    )
 
-    data class OptionItem(val name: Int, val icon: Int, val id: Int)
+    class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
+        override fun loadInBackground(): AccountsInfo {
+            val accounts = ParcelableAccountUtils.getAccounts(context)
+            val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI, null, null)
+            return AccountsInfo(accounts, draftsCount)
+        }
 
+        override fun onStartLoading() {
+            forceLoad()
+        }
+    }
 }
