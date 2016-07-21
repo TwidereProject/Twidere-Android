@@ -25,31 +25,31 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.*
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.database.ContentObserver
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.view.SupportMenuInflater
-import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.ViewSwitcher
-import kotlinx.android.synthetic.main.fragment_accounts_dashboard.*
+import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.setMenuItemIcon
@@ -81,32 +81,22 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     private var mAccountsAdapter: AccountSelectorAdapter? = null
 
-    private var mAccountSelectorView: View? = null
-    var accountsSelector: RecyclerView? = null
-        private set
-    private var mAccountProfileBannerView: ViewSwitcher? = null
-    private var mFloatingProfileImageSnapshotView: ImageView? = null
-    private var mAccountProfileImageView: ShapedImageView? = null
-    private var mAccountProfileNameView: TextView? = null
-    private var mAccountProfileScreenNameView: TextView? = null
-    private var mAccountsToggleMenu: ActionMenuView? = null
-    private var mAccountProfileContainer: View? = null
-    private var mNoAccountContainer: View? = null
+    @Suppress("HasPlatformType")
+    val accountsSelector by lazy { accountsHeader.otherAccountsList }
+
+    private val navigationView by lazy { view as NavigationView }
+    private val accountsHeader by lazy { navigationView.getHeaderView(0) }
+    private val accountProfileBanner by lazy { accountsHeader.accountProfileBanner }
+    private val floatingProfileImageSnapshot by lazy { accountsHeader.floatingProfileImageSnapshot }
+    private val accountProfileImageView by lazy { accountsHeader.profileImage }
+    private val accountProfileNameView by lazy { accountsHeader.name }
+    private val accountProfileScreenNameView by lazy { accountsHeader.screenName }
+    private val accountDashboardMenu by lazy { accountsHeader.accountDashboardMenu }
+    private val profileContainer by lazy { accountsHeader.profileContainer }
+    private val noAccountContainer by lazy { accountsHeader.noAccountContainer }
 
     private var mAccountActionProvider: AccountToggleProvider? = null
-    //    private val mReloadContentObserver = object : SupportFragmentReloadCursorObserver(
-//            this, 0, this) {
-//        override fun onChange(selfChange: Boolean, uri: Uri?) {
-//            val cr = contentResolver
-//            val c = cr.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, Accounts.SORT_POSITION)
-//            try {
-//                updateAccountProviderData(c)
-//            } finally {
-//                Utils.closeSilently(c)
-//            }
-//            super.onChange(selfChange, uri)
-//        }
-//    }
+
     private var mSwitchAccountAnimationPlaying: Boolean = false
     private var mUseStarsForLikes: Boolean = false
     private var mLoaderInitialized: Boolean = false
@@ -213,15 +203,15 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun updateAccountProviderData(data: AccountsInfo) {
-        val menu = mAccountsToggleMenu!!.menu
+        val menu = accountDashboardMenu.menu
         mAccountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
         val accounts = data.accounts
         if (accounts.size > 0) {
-            mNoAccountContainer!!.visibility = View.GONE
-            mAccountProfileContainer!!.visibility = View.VISIBLE
+            noAccountContainer.visibility = View.GONE
+            profileContainer.visibility = View.VISIBLE
         } else {
-            mNoAccountContainer!!.visibility = View.VISIBLE
-            mAccountProfileContainer!!.visibility = View.INVISIBLE
+            noAccountContainer.visibility = View.VISIBLE
+            profileContainer.visibility = View.INVISIBLE
         }
         var defaultId: UserKey? = null
         for (account in accounts) {
@@ -281,26 +271,22 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun updateSystemWindowsInsets() {
-        if (mAccountProfileContainer == null) return
-        val insets = mSystemWindowsInsets
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mResolver = contentResolver
-        val view = view!!
-        val context = view.context
         val inflater = getLayoutInflater(savedInstanceState)
         mAccountsAdapter = AccountSelectorAdapter(inflater, this)
         val layoutManager = FixedLinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         layoutManager.stackFromEnd = true
-        accountsSelector!!.layoutManager = layoutManager
-        accountsSelector!!.adapter = mAccountsAdapter
-        accountsSelector!!.itemAnimator = null
+        accountsSelector.layoutManager = layoutManager
+        accountsSelector.adapter = mAccountsAdapter
+        accountsSelector.itemAnimator = null
         val menuInflater = SupportMenuInflater(context)
-        menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, mAccountsToggleMenu!!.menu)
-        mAccountsToggleMenu!!.setOnMenuItemClickListener(OnMenuItemClickListener { item ->
+        menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
+        accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->
             if (item.groupId != AccountToggleProvider.MENU_GROUP) {
                 when (item.itemId) {
                     R.id.compose -> {
@@ -326,13 +312,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             true
         })
 
-        mAccountProfileContainer!!.setOnClickListener(this)
+        profileContainer.setOnClickListener(this)
 
-        mAccountProfileBannerView!!.setInAnimation(getContext(), android.R.anim.fade_in)
-        mAccountProfileBannerView!!.setOutAnimation(getContext(), android.R.anim.fade_out)
-        mAccountProfileBannerView!!.setFactory {
+        accountProfileBanner.setInAnimation(getContext(), android.R.anim.fade_in)
+        accountProfileBanner.setOutAnimation(getContext(), android.R.anim.fade_out)
+        accountProfileBanner.setFactory {
             inflater.inflate(R.layout.layout_account_dashboard_profile_image,
-                    mAccountProfileBannerView, false)
+                    accountProfileBanner, false)
         }
 
         navigationView.setNavigationItemSelectedListener(this)
@@ -356,30 +342,12 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mAccountSelectorView = navigationView.getHeaderView(0)
-        accountsSelector = mAccountSelectorView!!.findViewById(R.id.otherAccountsList) as RecyclerView
-        mAccountProfileContainer = mAccountSelectorView!!.findViewById(R.id.profileContainer)
-        mNoAccountContainer = mAccountSelectorView!!.findViewById(R.id.noAccountContainer)
-        mAccountProfileImageView = mAccountSelectorView!!.findViewById(R.id.profileImage) as ShapedImageView
-        mAccountProfileBannerView = mAccountSelectorView!!.findViewById(R.id.accountProfileBanner) as ViewSwitcher
-        mFloatingProfileImageSnapshotView = mAccountSelectorView!!.findViewById(R.id.floatingProfileImageSnapshot) as ImageView
-        mAccountProfileNameView = mAccountSelectorView!!.findViewById(R.id.name) as TextView
-        mAccountProfileScreenNameView = mAccountSelectorView!!.findViewById(R.id.screenName) as TextView
-        mAccountsToggleMenu = mAccountSelectorView!!.findViewById(R.id.accountDashboardMenu) as ActionMenuView
-    }
-
     override fun onStart() {
         super.onStart()
-        val resolver = contentResolver
-//        resolver.registerContentObserver(Accounts.CONTENT_URI, true, mReloadContentObserver)
         loaderManager.restartLoader(0, null, this)
     }
 
     override fun onStop() {
-        val resolver = contentResolver
-//        resolver.unregisterContentObserver(mReloadContentObserver)
         super.onStop()
     }
 
@@ -455,8 +423,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     private fun onAccountSelected(holder: AccountProfileImageViewHolder, account: ParcelableAccount) {
         if (mSwitchAccountAnimationPlaying) return
-        val snapshotView = mFloatingProfileImageSnapshotView!!
-        val profileImageView = mAccountProfileImageView!!
+        val snapshotView = floatingProfileImageSnapshot
+        val profileImageView = accountProfileImageView
         val clickedImageView = holder.iconView
 
         // Reset snapshot view position
@@ -499,7 +467,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             override fun onAnimationStart(animation: Animator) {
                 snapshotView.visibility = View.VISIBLE
                 snapshotView.setImageBitmap(snapshotBitmap)
-                val profileDrawable = profileImageView!!.drawable
+                val profileDrawable = profileImageView.drawable
                 clickedDrawable = clickedImageView.drawable
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = mAccountsAdapter!!.selectedAccount ?: return
@@ -533,7 +501,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 displayCurrentAccount(clickedDrawable)
                 snapshotView.visibility = View.INVISIBLE
                 snapshotView.setImageDrawable(null)
-                profileImageView!!.setImageDrawable(clickedDrawable)
+                profileImageView.setImageDrawable(clickedDrawable)
                 profileImageView.setBorderColors(*clickedColors!!)
                 profileImageView.alpha = 1f
                 clickedImageView.scaleX = 1f
@@ -547,11 +515,11 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     protected fun displayAccountBanner(account: ParcelableAccount) {
-        val bannerWidth = mAccountProfileBannerView!!.width
+        val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
-        val bannerView = mAccountProfileBannerView!!.nextView as ImageView
+        val bannerView = accountProfileBanner.nextView as ImageView
         if (bannerView.drawable == null || !CompareUtils.objectEquals(account, bannerView.tag)) {
             mediaLoader.displayProfileBanner(bannerView, account, width)
             bannerView.tag = account
@@ -562,12 +530,12 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
         val account = mAccountsAdapter!!.selectedAccount ?: return
-        mAccountProfileNameView!!.text = account.name
-        mAccountProfileScreenNameView!!.text = String.format("@%s", account.screen_name)
-        mediaLoader.displayDashboardProfileImage(mAccountProfileImageView!!, account,
+        accountProfileNameView.text = account.name
+        accountProfileScreenNameView.text = String.format("@%s", account.screen_name)
+        mediaLoader.displayDashboardProfileImage(accountProfileImageView, account,
                 profileImageSnapshot)
-        mAccountProfileImageView!!.setBorderColors(account.color)
-        mAccountProfileBannerView!!.showNext()
+        accountProfileImageView.setBorderColors(account.color)
+        accountProfileBanner.showNext()
     }
 
     private fun updateDefaultAccountState() {
@@ -641,7 +609,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     fun setStatusBarHeight(height: Int) {
         val top = Utils.getInsetsTopWithoutActionBarHeight(activity, height)
-        mAccountProfileContainer!!.setPadding(0, top, 0, 0)
+        profileContainer.setPadding(0, top, 0, 0)
     }
 
     internal class AccountProfileImageViewHolder(val adapter: AccountSelectorAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
@@ -769,14 +737,72 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     )
 
     class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
+
+        private var contentObserver: ContentObserver? = null
+        private var firstLoad: Boolean
+
+        init {
+            firstLoad = true
+        }
+
         override fun loadInBackground(): AccountsInfo {
             val accounts = ParcelableAccountUtils.getAccounts(context)
             val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI, null, null)
             return AccountsInfo(accounts, draftsCount)
         }
 
+        /**
+         * Handles a request to completely reset the Loader.
+         */
+        override fun onReset() {
+            super.onReset()
+
+            // Ensure the loader is stopped
+            onStopLoading()
+
+            // Stop monitoring for changes.
+            if (contentObserver != null) {
+                val cr = context.contentResolver
+                cr.unregisterContentObserver(contentObserver)
+                contentObserver = null
+            }
+        }
+
+        /**
+         * Handles a request to start the Loader.
+         */
         override fun onStartLoading() {
-            forceLoad()
+
+            // Start watching for changes in the app data.
+            if (contentObserver == null) {
+                contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+                    override fun onChange(selfChange: Boolean) {
+                        onContentChanged()
+                    }
+
+                    override fun onChange(selfChange: Boolean, uri: Uri?) {
+                        onContentChanged()
+                    }
+                }
+                val cr = context.contentResolver
+                cr.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver)
+                cr.registerContentObserver(Drafts.CONTENT_URI, true, contentObserver)
+            }
+
+            if (takeContentChanged() || firstLoad) {
+                firstLoad = false
+                // If the data has changed since the last time it was loaded
+                // or is not currently available, start a load.
+                forceLoad()
+            }
+        }
+
+        /**
+         * Handles a request to stop the Loader.
+         */
+        override fun onStopLoading() {
+            // Attempt to cancel the current load task if possible.
+            cancelLoad()
         }
     }
 }
