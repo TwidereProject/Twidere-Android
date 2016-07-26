@@ -45,7 +45,6 @@ import org.mariotaku.twidere.fragment.HomeTimelineFragment;
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
 import org.mariotaku.twidere.fragment.InvalidTabFragment;
 import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
-import org.mariotaku.twidere.fragment.RetweetsOfMeFragment;
 import org.mariotaku.twidere.fragment.StatusesSearchFragment;
 import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
 import org.mariotaku.twidere.fragment.UserFavoritesFragment;
@@ -116,10 +115,6 @@ public class CustomTabUtils implements Constants {
         CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.LIST_TIMELINE, new CustomTabConfiguration(
                 UserListTimelineFragment.class, R.string.list_timeline, R.drawable.ic_action_list,
                 CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_USER_LIST, 7));
-
-        CUSTOM_TABS_CONFIGURATION_MAP.put(CustomTabType.RETWEETS_OF_ME, new CustomTabConfiguration(
-                RetweetsOfMeFragment.class, R.string.retweets_of_me, R.drawable.ic_action_retweet,
-                CustomTabConfiguration.ACCOUNT_REQUIRED, CustomTabConfiguration.FIELD_TYPE_NONE, 10));
 
         CUSTOM_TABS_ICON_NAME_MAP.put("accounts", R.drawable.ic_action_accounts);
         CUSTOM_TABS_ICON_NAME_MAP.put("hashtag", R.drawable.ic_action_hashtag);
@@ -214,8 +209,7 @@ public class CustomTabUtils implements Constants {
         switch (type) {
             case CustomTabType.HOME_TIMELINE:
             case CustomTabType.NOTIFICATIONS_TIMELINE:
-            case CustomTabType.DIRECT_MESSAGES:
-            case CustomTabType.RETWEETS_OF_ME: {
+            case CustomTabType.DIRECT_MESSAGES: {
                 return JsonSerializer.parse(json, TabArguments.class);
             }
             case CustomTabType.USER_TIMELINE:

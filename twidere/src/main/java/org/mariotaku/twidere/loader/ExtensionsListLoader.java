@@ -32,6 +32,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.twidere.Constants;
@@ -115,6 +116,7 @@ public class ExtensionsListLoader extends AsyncTaskLoader<List<ExtensionsListLoa
     }
 
     public static class ExtensionInfo implements Comparable<ExtensionInfo> {
+        @Nullable
         public final String[] permissions;
         public final String label, description;
         public final String pname, settings;

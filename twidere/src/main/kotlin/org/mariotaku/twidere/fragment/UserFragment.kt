@@ -122,7 +122,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     // Data fields
     var user: ParcelableUser? = null
         private set
-    private var mAccount: ParcelableAccount? = null
+    private var account: ParcelableAccount? = null
     private var mRelationship: UserRelationship? = null
     private var mLocale: Locale? = null
     private var mGetUserInfoLoaderInitialized: Boolean = false
@@ -218,7 +218,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 cardContent!!.visibility = View.VISIBLE
                 errorContainer!!.visibility = View.GONE
                 progressContainer!!.visibility = View.GONE
-                displayUser(user, mAccount)
+                displayUser(user, account)
                 updateOptionsMenuVisibility()
             } else {
                 if (data.hasException()) {
@@ -399,7 +399,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     fun displayUser(user: ParcelableUser?, account: ParcelableAccount?) {
         val activity = activity ?: return
         this.user = user
-        mAccount = account
+        this.account = account
         if (user == null || user.key == null) {
             profileImage.visibility = View.GONE
             profileType!!.visibility = View.GONE
@@ -552,7 +552,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val user = user
         // TODO check account status
         if (user == null || user != event.user) return
-        displayUser(event.user, mAccount)
+        displayUser(event.user, account)
     }
 
     @Subscribe
@@ -748,9 +748,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself)
         MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself)
         MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself)
-        if (mAccount != null) {
+        if (account != null) {
             MenuUtils.setItemAvailability(menu, R.id.add_to_list, TextUtils.equals(ParcelableAccount.Type.TWITTER,
-                    ParcelableAccountUtils.getAccountType(mAccount!!)))
+                    ParcelableAccountUtils.getAccountType(account!!)))
         } else {
             MenuUtils.setItemAvailability(menu, R.id.add_to_list, false)
         }
@@ -1151,12 +1151,12 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     override fun onUserNicknameChanged(userId: UserKey, nick: String) {
         if (user == null || user!!.key != userId) return
-        displayUser(user, mAccount)
+        displayUser(user, account)
     }
 
     override fun onUserColorChanged(userId: UserKey, color: Int) {
         if (user == null || user!!.key != userId) return
-        displayUser(user, mAccount)
+        displayUser(user, account)
     }
 
     override fun onSizeChanged(view: View, w: Int, h: Int, oldw: Int, oldh: Int) {

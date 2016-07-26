@@ -14,7 +14,6 @@ import android.support.annotation.StringDef;
         CustomTabType.USER_TIMELINE,
         CustomTabType.SEARCH_STATUSES,
         CustomTabType.LIST_TIMELINE,
-        CustomTabType.RETWEETS_OF_ME,
 })
 public @interface CustomTabType {
     String HOME_TIMELINE = "home_timeline";
@@ -26,5 +25,4 @@ public @interface CustomTabType {
     String USER_TIMELINE = "user_timeline";
     String SEARCH_STATUSES = "search_statuses";
     String LIST_TIMELINE = "list_timeline";
-    String RETWEETS_OF_ME = "retweets_of_me";
 }

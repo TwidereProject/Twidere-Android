@@ -51,7 +51,7 @@ class HomeTimelineFragment : CursorStatusesFragment() {
         get() = true
 
     override fun updateRefreshState() {
-        val twitter = twitterWrapper ?: return
+        val twitter = twitterWrapper
         refreshing = twitter.isHomeTimelineRefreshing
     }
 

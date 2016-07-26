@@ -56,6 +56,7 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
         listAdapter = adapter
         listView.setOnCreateContextMenuListener(this)
         loaderManager.initLoader(0, null, this)
+        setEmptyText(getString(R.string.no_extension_installed))
         setListShown(false)
     }
 
@@ -63,7 +64,7 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
         super.onStop()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ExtensionInfo>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {
         return ExtensionsListLoader(activity, packageManager)
     }
 
@@ -123,7 +124,7 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
 
     private fun openSettings(info: ExtensionInfo): Boolean {
         val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
-        intent.setPackage(info.pname)
+        intent.`package` = info.pname
         if (info.settings != null) {
             intent.setClassName(info.pname, info.settings)
         } else {

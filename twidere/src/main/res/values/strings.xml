@@ -810,4 +810,5 @@
     <string name="hide_retweets">Hide retweets</string>
     <string name="hide_quotes">Hide quotes</string>
     <string name="hide_replies">Hide replies</string>
+    <string name="no_extension_installed">No extension installed</string>
 </resources>
