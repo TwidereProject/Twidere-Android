@@ -29,7 +29,7 @@
         android:key="drawer_toggle"
         android:title="@string/drawer_toggle">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 

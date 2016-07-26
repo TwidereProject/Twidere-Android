@@ -76,10 +76,12 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
         val extras = preference.extras
         if (extras != null) {
             val activity = activity
-            if (extras.containsKey(EXTRA_NOTIFY_CHANGE)) {
-                SettingsActivity.setShouldNotifyChange(activity)
+            if (extras.containsKey(EXTRA_SHOULD_RESTART)) {
+                SettingsActivity.setShouldRestart(activity)
+            } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
+                SettingsActivity.setShouldRecreate(activity)
             }
-            if (extras.containsKey(EXTRA_RESTART_ACTIVITY)) {
+            if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
                 activity.recreate()
             }
         }

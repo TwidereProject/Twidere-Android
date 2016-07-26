@@ -28,7 +28,7 @@
         android:key="media_preview_style"
         android:title="@string/media_preview_style">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
     <SwitchPreferenceCompat
@@ -37,7 +37,7 @@
         android:summary="@string/show_absolute_time_summary"
         android:title="@string/show_absolute_time">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
     <SwitchPreferenceCompat
@@ -45,7 +45,7 @@
         android:key="unread_count"
         android:title="@string/unread_count">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 

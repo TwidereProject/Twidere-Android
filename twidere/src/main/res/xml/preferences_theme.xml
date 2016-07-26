@@ -13,7 +13,7 @@
         android:order="21"
         android:title="@string/theme">
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
@@ -22,10 +22,10 @@
         android:order="22"
         android:title="@string/background">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeBackgroundPreference>
 
@@ -35,10 +35,10 @@
         android:title="@string/color"
         app:defaultColor="@color/branding_color">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
@@ -49,10 +49,10 @@
         android:order="24"
         android:title="@string/font_family">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
         <extra
-            android:name="restart_activity"
+            android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
 
@@ -61,7 +61,7 @@
         android:order="25"
         android:title="@string/emoji_support">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EmojiSupportPreference>
 

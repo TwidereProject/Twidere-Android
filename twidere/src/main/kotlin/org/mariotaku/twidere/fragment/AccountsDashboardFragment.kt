@@ -60,6 +60,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
@@ -160,8 +161,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         when (requestCode) {
             REQUEST_SETTINGS -> {
                 if (data == null) return
-                val activity = activity
-                if (data.getBooleanExtra(EXTRA_CHANGED, false)) {
+                if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
+                    Utils.restartActivity(activity)
+                } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
                     activity.recreate()
                 }
                 return

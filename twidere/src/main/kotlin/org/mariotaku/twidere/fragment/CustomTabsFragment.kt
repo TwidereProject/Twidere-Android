@@ -68,7 +68,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 val itemIds = listView.checkedItemIds
                 val where = Expression.`in`(Column(Tabs._ID), RawItemArray(itemIds))
                 contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
-                SettingsActivity.setShouldNotifyChange(activity)
+                SettingsActivity.setShouldRestart(activity)
             }
         }
         mode.finish()
@@ -127,7 +127,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                     values.put(Tabs.EXTRAS, data.getStringExtra(EXTRA_EXTRAS))
                     values.put(Tabs.POSITION, adapter!!.count)
                     contentResolver.insert(Tabs.CONTENT_URI, values)
-                    SettingsActivity.setShouldNotifyChange(activity)
+                    SettingsActivity.setShouldRestart(activity)
                 }
             }
             REQUEST_EDIT_TAB -> {
@@ -138,7 +138,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                     values.put(Tabs.EXTRAS, data.getStringExtra(EXTRA_EXTRAS))
                     val where = Expression.equals(Tabs._ID, data.getLongExtra(EXTRA_ID, -1)).sql
                     contentResolver.update(Tabs.CONTENT_URI, values, where, null)
-                    SettingsActivity.setShouldNotifyChange(activity)
+                    SettingsActivity.setShouldRestart(activity)
                 }
             }
         }
@@ -251,7 +251,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 i++
             }
         }
-        SettingsActivity.setShouldNotifyChange(activity)
+        SettingsActivity.setShouldRestart(activity)
     }
 
     private fun updateTitle(mode: ActionMode?) {

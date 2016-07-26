@@ -23,7 +23,7 @@
         app:min="12"
         app:progressTextSuffix="sp">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.SeekBarDialogPreference>
 
@@ -33,7 +33,7 @@
         android:order="23"
         android:title="@string/profile_image">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 
@@ -45,7 +45,7 @@
         android:order="24"
         android:title="@string/profile_image_style">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
@@ -55,7 +55,7 @@
         android:order="25"
         android:title="@string/media_preview">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 
@@ -65,7 +65,7 @@
         android:order="27"
         android:title="@string/link_highlight_option">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </org.mariotaku.twidere.preference.LinkHighlightPreference>
 
@@ -75,7 +75,7 @@
         android:order="33"
         android:title="@string/hide_card_actions">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 
@@ -86,7 +86,7 @@
         android:summary="@string/i_want_my_stars_back_summary"
         android:title="@string/i_want_my_stars_back">
         <extra
-            android:name="notify_change"
+            android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
 

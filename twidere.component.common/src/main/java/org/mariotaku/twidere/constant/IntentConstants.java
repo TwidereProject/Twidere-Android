@@ -198,9 +198,10 @@ public interface IntentConstants {
     String EXTRA_HIDE_QUOTES = "hide_quotes";
     String EXTRA_HIDE_REPLIES = "hide_replies";
     String EXTRA_MENTIONS_ONLY = "mentions_only";
-    String EXTRA_CHANGED = "changed";
-    String EXTRA_NOTIFY_CHANGE = "notify_change";
     String EXTRA_RESTART_ACTIVITY = "restart_activity";
+    String EXTRA_RECREATE_ACTIVITY = "recreate_activity";
+    String EXTRA_SHOULD_RECREATE = "should_recreate";
+    String EXTRA_SHOULD_RESTART = "should_restart";
     String EXTRA_FROM_USER = "from_user";
     String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     String EXTRA_SHOW_EXTRA_TYPE = "show_extra_type";

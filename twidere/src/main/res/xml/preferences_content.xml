@@ -17,7 +17,7 @@
             android:summaryOn="@string/name_first_summary_on"
             android:title="@string/name_first">
             <extra
-                android:name="notify_change"
+                android:name="should_recreate"
                 android:value="true"/>
         </SwitchPreferenceCompat>
 
