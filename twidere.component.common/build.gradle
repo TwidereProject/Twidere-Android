@@ -39,7 +39,7 @@ dependencies {
     apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     apt 'com.github.mariotaku.ObjectCursor:processor:0.9.9'
-    compile 'com.android.support:support-annotations:24.0.0'
+    compile 'com.android.support:support-annotations:24.1.0'
     compile 'com.bluelinelabs:logansquare:1.3.7'
     compile 'com.github.mariotaku.RestFu:library:0.9.32'
     compile 'com.github.mariotaku.RestFu:oauth:0.9.32'
