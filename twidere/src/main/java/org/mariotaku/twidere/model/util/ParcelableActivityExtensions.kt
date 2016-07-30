@@ -10,17 +10,20 @@ import org.mariotaku.twidere.model.ParcelableStatus
  */
 fun ParcelableActivity.getActivityStatus(): ParcelableStatus? {
     val status: ParcelableStatus
-    if (Activity.Action.MENTION == action) {
-        if (ArrayUtils.isEmpty(target_object_statuses)) return null
-        status = target_object_statuses[0]
-    } else if (Activity.Action.REPLY == action) {
-        if (ArrayUtils.isEmpty(target_statuses)) return null
-        status = target_statuses[0]
-    } else if (Activity.Action.QUOTE == action) {
-        if (ArrayUtils.isEmpty(target_statuses)) return null
-        status = target_statuses[0]
-    } else {
-        return null
+    when (action) {
+        Activity.Action.MENTION -> {
+            if (ArrayUtils.isEmpty(target_object_statuses)) return null
+            status = target_object_statuses[0]
+        }
+        Activity.Action.REPLY -> {
+            if (ArrayUtils.isEmpty(target_statuses)) return null
+            status = target_statuses[0]
+        }
+        Activity.Action.QUOTE -> {
+            if (ArrayUtils.isEmpty(target_statuses)) return null
+            status = target_statuses[0]
+        }
+        else -> return null
     }
     status.account_color = account_color
     status.user_color = status_user_color

@@ -1155,7 +1155,7 @@ public final class Utils implements Constants {
         return context.getString(R.string.error_message_with_action, action, message);
     }
 
-    public static String getErrorMessage(final Context context, final CharSequence action, final Throwable t) {
+    public static String getErrorMessage(final Context context, final CharSequence action, @Nullable final Throwable t) {
         if (context == null) return null;
         if (t instanceof MicroBlogException)
             return getTwitterErrorMessage(context, action, (MicroBlogException) t);
@@ -1786,7 +1786,7 @@ public final class Utils implements Constants {
     }
 
     public static void showErrorMessage(final Context context, final CharSequence action,
-                                        final Throwable t, final boolean longMessage) {
+                                        @Nullable final Throwable t, final boolean longMessage) {
         if (context == null) return;
         if (t instanceof MicroBlogException) {
             showTwitterErrorMessage(context, action, (MicroBlogException) t, longMessage);
@@ -1801,7 +1801,8 @@ public final class Utils implements Constants {
         showErrorMessage(context, context.getString(actionRes), desc, longMessage);
     }
 
-    public static void showErrorMessage(final Context context, final int action, final Throwable t,
+    public static void showErrorMessage(final Context context, final int action,
+                                        @Nullable final Throwable t,
                                         final boolean long_message) {
         if (context == null) return;
         showErrorMessage(context, context.getString(action), t, long_message);

@@ -283,7 +283,12 @@ class ParcelableActivitiesAdapter(
                 if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
-            Activity.Action.FOLLOW, Activity.Action.FAVORITE, Activity.Action.RETWEET, Activity.Action.FAVORITED_RETWEET, Activity.Action.RETWEETED_RETWEET, Activity.Action.RETWEETED_MENTION, Activity.Action.FAVORITED_MENTION, Activity.Action.LIST_CREATED, Activity.Action.LIST_MEMBER_ADDED, Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED, Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
+            Activity.Action.FOLLOW, Activity.Action.FAVORITE, Activity.Action.RETWEET,
+            Activity.Action.FAVORITED_RETWEET, Activity.Action.RETWEETED_RETWEET,
+            Activity.Action.RETWEETED_MENTION, Activity.Action.FAVORITED_MENTION,
+            Activity.Action.LIST_CREATED, Activity.Action.LIST_MEMBER_ADDED,
+            Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
+            Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                 if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                 ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds, followingOnly)
                 if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {

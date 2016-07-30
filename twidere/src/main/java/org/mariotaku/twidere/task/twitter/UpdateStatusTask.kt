@@ -5,12 +5,12 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Point
 import android.net.Uri
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import android.util.Pair
-import android.util.Size
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
@@ -228,8 +228,13 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
                                 result.exceptions[i] = MicroBlogException(
                                         context.getString(R.string.error_too_many_photos_fanfou))
                             } else {
+                                val sizeLimit = Point(2048, 1536)
                                 body = getBodyFromMedia(context.contentResolver,
-                                        Uri.parse(statusUpdate.media[0].uri), ContentLengthInputStream.ReadListener { length, position -> stateCallback.onUploadingProgressChanged(-1, position, length) })
+                                        Uri.parse(statusUpdate.media[0].uri),
+                                        sizeLimit,
+                                        ContentLengthInputStream.ReadListener { length, position ->
+                                            stateCallback.onUploadingProgressChanged(-1, position, length)
+                                        })
                                 val photoUpdate = PhotoStatusUpdate(body,
                                         pendingUpdate.overrideTexts[i])
                                 val requestResult = microBlog.uploadPhoto(photoUpdate)
@@ -413,9 +418,11 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
             //noinspection TryWithIdenticalCatches
             var body: Body? = null
             try {
-                body = getBodyFromMedia(context.contentResolver, Uri.parse(media.uri), ContentLengthInputStream.ReadListener { length, position ->
-                    stateCallback.onUploadingProgressChanged(index, position, length)
-                })
+                val sizeLimit = Point(2048, 1536)
+                body = getBodyFromMedia(context.contentResolver, Uri.parse(media.uri), sizeLimit,
+                        ContentLengthInputStream.ReadListener { length, position ->
+                            stateCallback.onUploadingProgressChanged(index, position, length)
+                        })
                 if (chucked) {
                     resp = uploadMediaChucked(upload, body, ownerIds)
                 } else {
@@ -652,8 +659,8 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         @Throws(IOException::class)
         fun getBodyFromMedia(resolver: ContentResolver,
                              mediaUri: Uri,
-                             readListener: ContentLengthInputStream.ReadListener,
-                             sizeLimit: Size? = null): FileBody {
+                             sizeLimit: Point? = null,
+                             readListener: ContentLengthInputStream.ReadListener): FileBody {
             val mediaType = resolver.getType(mediaUri)
             val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
             val cis: ContentLengthInputStream
@@ -662,6 +669,8 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
                 val o = BitmapFactory.Options()
                 o.inJustDecodeBounds = true
                 BitmapFactory.decodeStream(st, null, o)
+                o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
+                        sizeLimit.x, sizeLimit.y)
                 o.inJustDecodeBounds = false
                 val bitmap = BitmapFactory.decodeStream(st, null, o)
                 val os = DirectByteArrayOutputStream()
