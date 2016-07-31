@@ -231,7 +231,7 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
                                 val sizeLimit = Point(2048, 1536)
                                 body = getBodyFromMedia(context.contentResolver,
                                         Uri.parse(statusUpdate.media[0].uri),
-                                        sizeLimit,
+                                        sizeLimit, statusUpdate.media[0].type,
                                         ContentLengthInputStream.ReadListener { length, position ->
                                             stateCallback.onUploadingProgressChanged(-1, position, length)
                                         })
@@ -274,16 +274,14 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
     private fun uploadMediaWithDefaultProvider(update: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate) {
         // Return empty array if no media attached
         if (ArrayUtils.isEmpty(update.media)) return
-        val ownersList = ArrayList<UserKey>()
-        val ownerIdsList = ArrayList<String>()
-        for (item in update.accounts) {
-            if (ParcelableAccount.Type.TWITTER == ParcelableAccountUtils.getAccountType(item)) {
-                // Add to owners list
-                ownersList.add(item.account_key)
-                ownerIdsList.add(item.account_key.id)
-            }
+        val ownersList = update.accounts.filter {
+            ParcelableAccount.Type.TWITTER == ParcelableAccountUtils.getAccountType(it)
+        }.map {
+            it.account_key
         }
-        val ownerIds = ownerIdsList.toTypedArray()
+        val ownerIds = ownersList.map {
+            it.id
+        }.toTypedArray()
         for (i in 0..pendingUpdate.length - 1) {
             val account = update.accounts[i]
             val mediaIds: Array<String>?
@@ -420,9 +418,9 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
             try {
                 val sizeLimit = Point(2048, 1536)
                 body = getBodyFromMedia(context.contentResolver, Uri.parse(media.uri), sizeLimit,
-                        ContentLengthInputStream.ReadListener { length, position ->
-                            stateCallback.onUploadingProgressChanged(index, position, length)
-                        })
+                        media.type, ContentLengthInputStream.ReadListener { length, position ->
+                    stateCallback.onUploadingProgressChanged(index, position, length)
+                })
                 if (chucked) {
                     resp = uploadMediaChucked(upload, body, ownerIds)
                 } else {
@@ -660,24 +658,41 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         fun getBodyFromMedia(resolver: ContentResolver,
                              mediaUri: Uri,
                              sizeLimit: Point? = null,
+                             @ParcelableMedia.Type type: Int,
                              readListener: ContentLengthInputStream.ReadListener): FileBody {
-            val mediaType = resolver.getType(mediaUri)
-            val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
+            var mediaType = resolver.getType(mediaUri)
             val cis: ContentLengthInputStream
             val length: Long
-            if (sizeLimit != null) {
+            if (type == ParcelableMedia.Type.IMAGE && sizeLimit != null) {
                 val o = BitmapFactory.Options()
                 o.inJustDecodeBounds = true
-                BitmapFactory.decodeStream(st, null, o)
+                BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+                if (o.outMimeType != null) {
+                    mediaType = o.outMimeType
+                }
                 o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
                         sizeLimit.x, sizeLimit.y)
                 o.inJustDecodeBounds = false
-                val bitmap = BitmapFactory.decodeStream(st, null, o)
-                val os = DirectByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
-                length = os.size().toLong()
-                cis = ContentLengthInputStream(os.inputStream(true), length)
+                val bitmap = BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+                if (bitmap != null) {
+                    val os = DirectByteArrayOutputStream()
+                    when (mediaType) {
+                        "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
+                        }
+                        else -> {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                        }
+                    }
+                    length = os.size().toLong()
+                    cis = ContentLengthInputStream(os.inputStream(true), length)
+                } else {
+                    val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
+                    length = st.available().toLong()
+                    cis = ContentLengthInputStream(st, length)
+                }
             } else {
+                val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
                 length = st.available().toLong()
                 cis = ContentLengthInputStream(st, length)
             }

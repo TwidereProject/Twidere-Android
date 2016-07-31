@@ -1483,12 +1483,14 @@ public final class Utils implements Constants {
 
     public static String getTwitterErrorMessage(final Context context, final MicroBlogException te) {
         if (te == null) return null;
-        if (StatusCodeMessageUtils.containsTwitterError(te.getErrorCode()))
+        if (StatusCodeMessageUtils.containsTwitterError(te.getErrorCode())) {
             return StatusCodeMessageUtils.getTwitterErrorMessage(context, te.getErrorCode());
-        else if (StatusCodeMessageUtils.containsHttpStatus(te.getStatusCode()))
+        } else if (StatusCodeMessageUtils.containsHttpStatus(te.getStatusCode())) {
             return StatusCodeMessageUtils.getHttpStatusMessage(context, te.getStatusCode());
-        else
-            return te.getMessage();
+        } else if (te.getErrorMessage() != null) {
+            return te.getErrorMessage();
+        }
+        return te.getMessage();
     }
 
 

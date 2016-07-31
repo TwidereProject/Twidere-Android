@@ -367,8 +367,9 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                         var body: FileBody? = null
                         try {
                             body = UpdateStatusTask.getBodyFromMedia(contentResolver,
-                                    mediaUri, null, MessageMediaUploadListener(this,
-                                    notificationManager, builder, text))
+                                    mediaUri, null, ParcelableMedia.Type.IMAGE,
+                                    MessageMediaUploadListener(this, notificationManager,
+                                            builder, text))
                             val uploadResp = uploadMedia(twitterUpload, body)
                             val response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.id)
