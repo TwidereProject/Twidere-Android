@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1467263510000)
+--- twidere/build.gradle	(date 1470755396000)
 +++ twidere/build.gradle	(revision )
 @@ -6,7 +6,7 @@
  apply plugin: 'androidsvgdrawable'
@@ -39,7 +39,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -82,7 +82,7 @@
+@@ -80,7 +80,7 @@
      mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -48,24 +48,24 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -103,11 +103,11 @@
+@@ -101,11 +101,11 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
--    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
--    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
+-    googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
+-    googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
-+//    googleCompile 'com.google.android.gms:play-services-maps:9.0.2'
-+//    googleCompile 'com.google.android.gms:play-services-auth:9.0.2'
++//    googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
++//    googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
 +//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
 +//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
-@@ -203,5 +203,5 @@
+@@ -201,5 +201,5 @@
  }
  
  // START Non-FOSS component
