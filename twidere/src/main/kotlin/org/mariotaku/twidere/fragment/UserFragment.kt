@@ -526,7 +526,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         } else {
             lm.restartLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks)
         }
-        if (accountKey == null || userKey == null && screenName == null) {
+        if (userKey == null && screenName == null) {
             cardContent!!.visibility = View.GONE
             errorContainer!!.visibility = View.GONE
         }
@@ -625,7 +625,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
 
         userFragmentView.setWindowInsetsListener { left, top, right, bottom ->
-            profileContentContainer!!.setPadding(0, top, 0, 0)
+            profileContentContainer.setPadding(0, top, 0, 0)
             profileBannerSpace.statusBarHeight = top
 
             if (profileBannerSpace.toolbarHeight == 0) {
@@ -636,13 +636,13 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 profileBannerSpace.toolbarHeight = toolbarHeight
             }
         }
-        profileContentContainer!!.setOnSizeChangedListener { view, w, h, oldw, oldh ->
+        profileContentContainer.setOnSizeChangedListener { view, w, h, oldw, oldh ->
             val toolbarHeight = toolbar.measuredHeight
-            userProfileDrawer!!.setPadding(0, toolbarHeight, 0, 0)
+            userProfileDrawer.setPadding(0, toolbarHeight, 0, 0)
             profileBannerSpace.toolbarHeight = toolbarHeight
         }
 
-        userProfileDrawer!!.setDrawerCallback(this)
+        userProfileDrawer.setDrawerCallback(this)
 
         pagerAdapter = SupportTabsAdapter(activity, childFragmentManager)
 

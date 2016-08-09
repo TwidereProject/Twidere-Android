@@ -399,7 +399,7 @@ class ParcelableActivitiesAdapter(
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            return false
+            return true
         }
 
         override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {

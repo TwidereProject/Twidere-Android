@@ -214,7 +214,6 @@ import edu.tsinghua.hotmobi.model.NotificationEvent;
 import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
 import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
-import static org.mariotaku.twidere.util.TwidereLinkify.TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES;
 
 @SuppressWarnings("unused")
 public final class Utils implements Constants {
@@ -1335,8 +1334,9 @@ public final class Utils implements Constants {
 
     public static String getOriginalTwitterProfileImage(final String url) {
         if (url == null) return null;
-        if (PATTERN_TWITTER_PROFILE_IMAGES.matcher(url).matches())
-            return replaceLast(url, "_" + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES, "");
+        final Matcher matcher = PATTERN_TWITTER_PROFILE_IMAGES.matcher(url);
+        if (matcher.matches())
+            return matcher.replaceFirst("$1$2/profile_images/$3/$4$6");
         return url;
     }
 
@@ -1496,8 +1496,10 @@ public final class Utils implements Constants {
 
     public static String getTwitterProfileImageOfSize(final String url, final String size) {
         if (url == null) return null;
-        if (PATTERN_TWITTER_PROFILE_IMAGES.matcher(url).matches())
-            return replaceLast(url, "_" + TWITTER_PROFILE_IMAGES_AVAILABLE_SIZES, String.format("_%s", size));
+        final Matcher matcher = PATTERN_TWITTER_PROFILE_IMAGES.matcher(url);
+        if (matcher.matches()) {
+            return matcher.replaceFirst("$1$2/profile_images/$3/$4_" + size + "$6");
+        }
         return url;
     }
 
@@ -1709,11 +1711,6 @@ public final class Utils implements Constants {
             return top;
         }
         return top - actionBarHeight;
-    }
-
-    public static String replaceLast(final String text, final String regex, final String replacement) {
-        if (text == null || regex == null || replacement == null) return text;
-        return text.replaceFirst("(?s)" + regex + "(?!.*?" + regex + ")", replacement);
     }
 
     public static void restartActivity(final Activity activity) {

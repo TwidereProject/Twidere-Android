@@ -454,24 +454,21 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
             upload.appendUploadMedia(response.id, segmentIndex, bulk)
         }
         response = upload.finalizeUploadMedia(response.id)
-        run {
-            var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
-            while (info != null && shouldWaitForProcess(info)) {
-                val checkAfterSecs = info.checkAfterSecs
-                if (checkAfterSecs <= 0) {
-                    break
-                }
-                try {
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs))
-                } catch (e: InterruptedException) {
-                    break
-                }
-
-                response = upload.getUploadMediaStatus(response.id)
-                info = response.processingInfo
+        var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
+        while (info != null && shouldWaitForProcess(info)) {
+            val checkAfterSecs = info.checkAfterSecs
+            if (checkAfterSecs <= 0) {
+                break
             }
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs))
+            } catch (e: InterruptedException) {
+                break
+            }
+
+            response = upload.getUploadMediaStatus(response.id)
+            info = response.processingInfo
         }
-        val info = response.processingInfo
         if (info != null && MediaUploadResponse.ProcessingInfo.State.FAILED == info.state) {
             val exception = MicroBlogException()
             val errorInfo = info.error

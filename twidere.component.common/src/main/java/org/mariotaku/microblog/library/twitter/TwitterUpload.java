@@ -28,6 +28,8 @@ import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.annotation.param.Raw;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.mime.Body;
@@ -59,8 +61,8 @@ public interface TwitterUpload {
     MediaUploadResponse finalizeUploadMedia(@Param("media_id") String mediaId) throws MicroBlogException;
 
     @GET("/media/upload.json")
-    @Params(@KeyValue(key = "command", value = "STATUS"))
-    MediaUploadResponse getUploadMediaStatus(@Param("media_id") String mediaId) throws MicroBlogException;
+    @Queries(@KeyValue(key = "command", value = "STATUS"))
+    MediaUploadResponse getUploadMediaStatus(@Query("media_id") String mediaId) throws MicroBlogException;
 
     @POST("/media/metadata/create.json")
     ResponseCode createMetadata(@Raw NewMediaMetadata metadata) throws MicroBlogException;
