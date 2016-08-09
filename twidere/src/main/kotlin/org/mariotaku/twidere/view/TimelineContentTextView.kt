@@ -73,11 +73,11 @@ class TimelineContentTextView : AppCompatTextView {
     }
 
     override fun setClickable(clickable: Boolean) {
-        super.setClickable(isTextSelectable)
+        super.setClickable(clickable && isTextSelectable)
     }
 
     override fun setLongClickable(longClickable: Boolean) {
-        super.setLongClickable(isTextSelectable)
+        super.setLongClickable(longClickable && isTextSelectable)
     }
 
     internal class InternalMovementMethod : MovementMethod {
