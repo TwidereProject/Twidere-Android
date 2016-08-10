@@ -46,7 +46,7 @@ class DummyItemAdapter @JvmOverloads constructor(
     override var sensitiveContentEnabled: Boolean = false
     override var mediaPreviewEnabled: Boolean = false
     override var isShowAbsoluteTime: Boolean = false
-    override var followClickListener: IUsersAdapter.FollowClickListener? = null
+    override var followClickListener: IUsersAdapter.FriendshipClickListener? = null
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
     override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
     override var userClickListener: IUsersAdapter.UserClickListener? = null

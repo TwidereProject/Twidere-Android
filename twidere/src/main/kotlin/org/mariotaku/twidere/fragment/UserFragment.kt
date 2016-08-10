@@ -1515,10 +1515,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             this.filtering = filtering
             if (user.extras != null) {
                 this.following = user.is_following
-                this.followed_by = user.extras.statusnet_followed_by
-                this.blocking = user.extras.statusnet_blocking
-                this.blocked_by = user.extras.statusnet_blocked_by
-                this.can_dm = user.extras.statusnet_followed_by
+                this.followed_by = user.extras.followed_by
+                this.blocking = user.extras.blocking
+                this.blocked_by = user.extras.blocked_by
+                this.can_dm = user.extras.followed_by
             }
         }
 

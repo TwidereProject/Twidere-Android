@@ -25,11 +25,6 @@
         android:icon="@drawable/ic_action_edit"
         android:title="@string/set_nickname"/>
     <item
-        android:id="@id/add_to_filter"
-        android:checkable="true"
-        android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/add_to_filter"/>
-    <item
         android:id="@+id/incoming_friendships"
         android:icon="@drawable/ic_action_profile"
         android:title="@string/incoming_friendships"/>
@@ -51,9 +46,14 @@
         android:icon="@drawable/ic_action_retweet"
         android:title="@string/enable_retweets"/>
     <item
+        android:id="@id/add_to_filter"
+        android:checkable="true"
+        android:icon="@drawable/ic_action_speaker_muted"
+        android:title="@string/add_to_filter"/>
+    <item
         android:id="@id/mute_user"
         android:checkable="true"
-        android:icon="@drawable/ic_action_mic_muted"
+        android:icon="@drawable/ic_action_visibility_off"
         android:title="@string/twitter_mute_user"/>
     <item
         android:id="@id/block"
@@ -65,7 +65,7 @@
         android:title="@string/report_for_spam"/>
     <item
         android:id="@+id/muted_users"
-        android:icon="@drawable/ic_action_mic_muted"
+        android:icon="@drawable/ic_action_visibility_off"
         android:title="@string/twitter_muted_users"/>
     <item
         android:id="@+id/blocked_users"

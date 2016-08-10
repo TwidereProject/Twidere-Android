@@ -336,15 +336,18 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "unique_id")
         @ParcelableThisPlease
         public String unique_id;
-        @JsonField(name = "statusnet_blocking")
+        @JsonField(name = "blocking")
         @ParcelableThisPlease
-        public boolean statusnet_blocking;
-        @JsonField(name = "statusnet_blocked_by")
+        public boolean blocking;
+        @JsonField(name = "blocked_by")
         @ParcelableThisPlease
-        public boolean statusnet_blocked_by;
-        @JsonField(name = "statusnet_followed_by")
+        public boolean blocked_by;
+        @JsonField(name = "followed_by")
         @ParcelableThisPlease
-        public boolean statusnet_followed_by;
+        public boolean followed_by;
+        @JsonField(name = "muting")
+        @ParcelableThisPlease
+        public boolean muting;
 
 
         @Override
@@ -366,9 +369,10 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                     ", profile_image_url_profile_size='" + profile_image_url_profile_size + '\'' +
                     ", groups_count=" + groups_count +
                     ", unique_id='" + unique_id + '\'' +
-                    ", statusnet_blocking=" + statusnet_blocking +
-                    ", statusnet_blocked_by=" + statusnet_blocked_by +
-                    ", statusnet_followed_by=" + statusnet_followed_by +
+                    ", blocking=" + blocking +
+                    ", blocked_by=" + blocked_by +
+                    ", followed_by=" + followed_by +
+                    ", muting=" + muting +
                     '}';
         }
 

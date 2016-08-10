@@ -235,8 +235,16 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "blocks_you")
     boolean blocksYou;
 
+    @JsonField(name = "blocked_by")
+    boolean blockedBy;
+
     @JsonField(name = "statusnet_blocking")
     boolean statusnetBlocking;
+
+    @JsonField(name = "blocking")
+    boolean blocking;
+    @JsonField(name = "muting")
+    boolean muting;
 
     @JsonField(name = "pinned_tweet_ids")
     String[] pinnedTweetIds;
@@ -278,7 +286,7 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
 
 
     public boolean isFollowedBy() {
-        return followedBy;
+        return followedBy || followsYou;
     }
 
 
@@ -519,16 +527,16 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
         return uniqueId;
     }
 
-    public boolean isStatusnetBlocking() {
-        return statusnetBlocking;
+    public boolean isBlocking() {
+        return blocking || statusnetBlocking;
     }
 
-    public boolean isBlocksYou() {
-        return blocksYou;
+    public boolean isBlockedBy() {
+        return blockedBy || blocksYou;
     }
 
-    public boolean isFollowsYou() {
-        return followsYou;
+    public boolean isMuting() {
+        return muting;
     }
 
     public String[] getPinnedTweetIds() {

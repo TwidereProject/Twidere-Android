@@ -46,7 +46,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     override val isShowAbsoluteTime: Boolean
     override var userClickListener: IUsersAdapter.UserClickListener? = null
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
-    override var followClickListener: IUsersAdapter.FollowClickListener? = null
+    override var followClickListener: IUsersAdapter.FriendshipClickListener? = null
 
 
     init {
@@ -68,7 +68,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     }
 
     protected fun bindUser(holder: UserViewHolder, position: Int) {
-        holder.displayUser(getUser(position))
+        holder.displayUser(getUser(position)!!)
     }
 
     override fun getItemCount(): Int {

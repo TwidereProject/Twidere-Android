@@ -33,7 +33,7 @@ interface IUsersAdapter<Data> : IContentCardAdapter {
 
     val requestClickListener: RequestClickListener?
 
-    val followClickListener: FollowClickListener?
+    val followClickListener: FriendshipClickListener?
 
     val showAccountsColor: Boolean
 
@@ -58,13 +58,23 @@ interface IUsersAdapter<Data> : IContentCardAdapter {
         fun onDenyClicked(holder: UserViewHolder, position: Int)
     }
 
-    interface FollowClickListener {
+    interface FriendshipClickListener {
         fun onFollowClicked(holder: UserViewHolder, position: Int)
+        fun onUnblockClicked(holder: UserViewHolder, position: Int)
+        fun onUnmuteClicked(holder: UserViewHolder, position: Int)
     }
 
-    abstract class SimpleUserClickListener : UserClickListener, RequestClickListener, FollowClickListener {
+    abstract class SimpleUserClickListener : UserClickListener, RequestClickListener, FriendshipClickListener {
 
         override fun onFollowClicked(holder: UserViewHolder, position: Int) {
+
+        }
+
+        override fun onUnblockClicked(holder: UserViewHolder, position: Int) {
+
+        }
+
+        override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {
 
         }
 
