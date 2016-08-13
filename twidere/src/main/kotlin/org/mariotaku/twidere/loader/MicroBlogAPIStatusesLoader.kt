@@ -103,7 +103,7 @@ abstract class MicroBlogAPIStatusesLoader(
                 return ListResponse.getListInstance(CopyOnWriteArrayList(data))
             }
         }
-        if (!isFromUser) return ListResponse.getListInstance(data)
+        if (!fromUser) return ListResponse.getListInstance(data)
         val twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
                 true) ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val statuses: List<Status>

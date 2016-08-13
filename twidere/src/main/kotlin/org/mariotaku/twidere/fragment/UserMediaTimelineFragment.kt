@@ -100,7 +100,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>>, data: List<ParcelableStatus>?) {
         val adapter = adapter
         val changed = adapter!!.setData(data)
-        if ((loader as IExtendedLoader).isFromUser && loader is MediaTimelineLoader) {
+        if ((loader as IExtendedLoader).fromUser && loader is MediaTimelineLoader) {
             val maxId = loader.maxId
             val sinceId = loader.sinceId
             if (TextUtils.isEmpty(sinceId) && !TextUtils.isEmpty(maxId)) {
@@ -111,7 +111,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
             }
         }
-        loader.isFromUser = false
+        loader.fromUser = false
         showContent()
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
     }

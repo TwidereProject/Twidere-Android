@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
@@ -35,8 +36,8 @@ import java.util.List;
 
 public class MutesUsersLoader extends CursorSupportUsersLoader {
 
-    public MutesUsersLoader(final Context context, final UserKey accountKey,
-                            final List<ParcelableUser> data, boolean fromUser) {
+    public MutesUsersLoader(final Context context, @Nullable final UserKey accountKey,
+                            @Nullable final List<ParcelableUser> data, boolean fromUser) {
         super(context, accountKey, data, fromUser);
     }
 

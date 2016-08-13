@@ -38,7 +38,7 @@ public class ExtendedObjectCursorLoader<E> extends ObjectCursorLoader<E> impleme
     }
 
     @Override
-    public boolean isFromUser() {
+    public boolean getFromUser() {
         return true;
     }
 

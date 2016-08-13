@@ -17,36 +17,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader;
-
-import android.content.Context;
-import android.net.Uri;
-import android.support.v4.content.CursorLoader;
-
-import org.mariotaku.twidere.loader.iface.IExtendedLoader;
+package org.mariotaku.twidere.loader.iface
 
 /**
  * Created by mariotaku on 15/1/9.
  */
-public class ExtendedCursorLoader extends CursorLoader implements IExtendedLoader {
-
-    public ExtendedCursorLoader(Context context) {
-        super(context);
-    }
-
-    public ExtendedCursorLoader(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, boolean fromUser) {
-        super(context, uri, projection, selection, selectionArgs, sortOrder);
-        setFromUser(fromUser);
-    }
-
-    @Override
-    public boolean isFromUser() {
-        return true;
-    }
-
-    @Override
-    public void setFromUser(boolean fromUser) {
-        //No-op
-    }
-
+interface IExtendedLoader {
+    var fromUser: Boolean
 }

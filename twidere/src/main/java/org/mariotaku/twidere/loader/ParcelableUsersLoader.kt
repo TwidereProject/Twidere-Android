@@ -22,51 +22,35 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.support.v4.content.AsyncTaskLoader
 import android.text.TextUtils
-
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
-import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
+import java.util.*
 
-abstract class ParcelableStatusesLoader(
+abstract class ParcelableUsersLoader(
         context: Context,
-        adapterData: List<ParcelableStatus>?,
-        protected val tabPosition: Int,
+        data: List<ParcelableUser>?,
         override var fromUser: Boolean
-) : AsyncTaskLoader<List<ParcelableStatus>>(context), Constants, IExtendedLoader {
+) : AsyncTaskLoader<List<ParcelableUser>>(context), IExtendedLoader, Constants {
 
-    protected val data = NoDuplicatesArrayList<ParcelableStatus>()
-    protected val isFirstLoad: Boolean
+    protected val data: MutableList<ParcelableUser> = Collections.synchronizedList(NoDuplicatesArrayList<ParcelableUser>())
 
     init {
-        isFirstLoad = adapterData == null
-        if (adapterData != null) {
-            data.addAll(adapterData)
+        if (data != null) {
+            this.data.addAll(data)
         }
     }
 
-    protected fun containsStatus(statusId: String): Boolean {
-        for (status in this.data) {
-            if (TextUtils.equals(status.id, statusId)) return true
-        }
-        return false
-    }
-
-    protected fun deleteStatus(statuses: MutableList<ParcelableStatus>?, statusId: String): Boolean {
-        if (statuses == null || statuses.isEmpty()) return false
-        var result = false
-        for (i in statuses.indices.reversed()) {
-            if (TextUtils.equals(statuses[i].id, statusId)) {
-                statuses.removeAt(i)
-                result = true
-            }
-        }
-        return result
-    }
-
-    override fun onStartLoading() {
+    public override fun onStartLoading() {
         forceLoad()
     }
 
+    protected fun hasId(id: String): Boolean {
+        for (i in this.data.indices) {
+            if (TextUtils.equals(this.data[i].key.id, id)) return true
+        }
+        return false
+    }
 
 }

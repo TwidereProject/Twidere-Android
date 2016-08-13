@@ -17,15 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.loader.iface;
+package org.mariotaku.twidere.loader.iface
 
 /**
  * Created by mariotaku on 15/4/29.
  */
-public interface ICursorSupportLoader {
-    long getCursor();
+interface ICursorSupportLoader {
+    val cursor: Long
 
-    long getNextCursor();
+    val nextCursor: Long
 
-    long getPrevCursor();
+    val prevCursor: Long
 }

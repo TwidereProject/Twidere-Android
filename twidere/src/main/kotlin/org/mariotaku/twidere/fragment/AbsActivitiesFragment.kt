@@ -272,7 +272,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         }
 
         refreshEnabled = true
-        if (loader !is IExtendedLoader || loader.isFromUser) {
+        if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
             var pos = -1
             for (i in activityStartIndex..activityEndExclusiveIndex - 1) {
@@ -291,14 +291,14 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
             }
         }
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
         onLoadingFinished()
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableActivity>>) {
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
     }
 

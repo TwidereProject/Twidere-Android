@@ -77,12 +77,12 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     override fun onLoadFinished(loader: Loader<List<ParcelableGroup>?>, data: List<ParcelableGroup>?) {
         val adapter = adapter
         adapter!!.setData(data)
-        if (loader !is IExtendedLoader || loader.isFromUser) {
+        if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
             refreshEnabled = true
         }
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
         showContent()
         refreshEnabled = true
@@ -141,7 +141,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
 
     override fun onLoaderReset(loader: Loader<List<ParcelableGroup>?>) {
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
     }
 

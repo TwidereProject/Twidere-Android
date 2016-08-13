@@ -76,12 +76,12 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>, data: List<ParcelableUserList>) {
         val adapter = adapter
         adapter!!.setData(data)
-        if (loader !is IExtendedLoader || loader.isFromUser) {
+        if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
             refreshEnabled = true
         }
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
         if (loader is ICursorSupportLoader) {
             nextCursor = loader.nextCursor
@@ -144,7 +144,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>) {
         if (loader is IExtendedLoader) {
-            loader.isFromUser = false
+            loader.fromUser = false
         }
     }
 

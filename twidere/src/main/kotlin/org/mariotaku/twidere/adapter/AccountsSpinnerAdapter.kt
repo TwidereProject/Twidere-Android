@@ -56,7 +56,7 @@ class AccountsSpinnerAdapter @JvmOverloads constructor(context: Context, itemVie
         return getItem(position).hashCode().toLong()
     }
 
-    override fun getDropDownView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getDropDownView(position, convertView, parent)
         bindView(view, getItem(position))
         return view
