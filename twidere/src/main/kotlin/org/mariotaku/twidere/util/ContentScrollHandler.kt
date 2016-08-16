@@ -30,43 +30,32 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
  * Created by mariotaku on 15/3/15.
  */
 open class ContentScrollHandler(
-        private val mContentListSupport: ContentScrollHandler.ContentListSupport,
-        private val mViewCallback: ContentScrollHandler.ViewCallback?
+        private val contentListSupport: ContentScrollHandler.ContentListSupport,
+        private val viewCallback: ContentScrollHandler.ViewCallback?
 ) {
-    private val mTouchListener: TouchListener
+    val touchListener: View.OnTouchListener
+    var touchSlop: Int = 0
+    var reversed: Boolean = false
 
     protected var scrollState: Int = 0
         private set
-    private var mScrollSum: Int = 0
-    private var mTouchSlop: Int = 0
-    private var mReversed: Boolean = false
+    private var scrollSum: Int = 0
 
-    private var mScrollDirection: Int = 0
+    private var scrollDirection: Int = 0
 
     init {
-        mTouchListener = TouchListener(this)
+        touchListener = TouchListener(this)
     }
-
-    fun setTouchSlop(touchSlop: Int) {
-        mTouchSlop = touchSlop
-    }
-
-    fun setReversed(inversed: Boolean) {
-        mReversed = inversed
-    }
-
-    val onTouchListener: View.OnTouchListener
-        get() = mTouchListener
 
     private fun postNotifyScrollStateChanged() {
-        if (mContentListSupport is Fragment) {
-            if (mContentListSupport.context == null) return
+        if (contentListSupport is Fragment) {
+            if (contentListSupport.context == null) return
         }
-        if (mViewCallback != null) {
-            mViewCallback.post(object : Runnable {
+        if (viewCallback != null) {
+            viewCallback.post(object : Runnable {
                 override fun run() {
-                    if (mViewCallback.isComputingLayout) {
-                        mViewCallback.post(this)
+                    if (viewCallback.computingLayout) {
+                        viewCallback.post(this)
                     } else {
                         notifyScrollStateChanged()
                     }
@@ -78,28 +67,30 @@ open class ContentScrollHandler(
     }
 
     private fun notifyScrollStateChanged() {
-        if (mContentListSupport is Fragment) {
-            if (mContentListSupport.context == null) return
+        if (contentListSupport is Fragment) {
+            if (contentListSupport.context == null) return
         }
-        val adapter = mContentListSupport.adapter
+        val adapter = contentListSupport.adapter
         if (adapter !is ILoadMoreSupportAdapter) return
-        if (!mContentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
+        if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
                 && adapter.loadMoreIndicatorPosition == ILoadMoreSupportAdapter.NONE) {
             var position: Long = 0
-            if (mContentListSupport.reachingEnd && mScrollDirection >= 0) {
+            if (contentListSupport.reachingEnd && scrollDirection >= 0) {
                 position = position or ILoadMoreSupportAdapter.END
             }
-            if (mContentListSupport.reachingStart && mScrollDirection <= 0) {
+            if (contentListSupport.reachingStart && scrollDirection <= 0) {
                 position = position or ILoadMoreSupportAdapter.START
             }
             resetScrollDirection()
-            mContentListSupport.onLoadMoreContents(position.toLong())
+            if (position != 0L) {
+                contentListSupport.onLoadMoreContents(position)
+            }
         }
     }
 
     fun handleScrollStateChanged(scrollState: Int, idleState: Int) {
-        if (mContentListSupport is Fragment) {
-            if (mContentListSupport.context == null) return
+        if (contentListSupport is Fragment) {
+            if (contentListSupport.context == null) return
         }
         if (this.scrollState != idleState) {
             postNotifyScrollStateChanged()
@@ -108,17 +99,17 @@ open class ContentScrollHandler(
     }
 
     fun handleScroll(dy: Int, scrollState: Int, oldState: Int, idleState: Int) {
-        if (mContentListSupport is Fragment) {
-            if (mContentListSupport.context == null) return
+        if (contentListSupport is Fragment) {
+            if (contentListSupport.context == null) return
         }
         //Reset mScrollSum when scrolling in reverse direction
-        if (dy * mScrollSum < 0) {
-            mScrollSum = 0
+        if (dy * scrollSum < 0) {
+            scrollSum = 0
         }
-        mScrollSum += dy
-        if (Math.abs(mScrollSum) > mTouchSlop) {
-            mContentListSupport.setControlVisible(mReversed xor (dy < 0))
-            mScrollSum = 0
+        scrollSum += dy
+        if (Math.abs(scrollSum) > touchSlop) {
+            contentListSupport.setControlVisible(reversed xor (dy < 0))
+            scrollSum = 0
         }
         if (scrollState == idleState && oldState != scrollState) {
             postNotifyScrollStateChanged()
@@ -126,28 +117,28 @@ open class ContentScrollHandler(
     }
 
     private fun setScrollDirection(direction: Int) {
-        mScrollDirection = direction
+        scrollDirection = direction
     }
 
     private fun resetScrollDirection() {
-        mScrollDirection = 0
+        scrollDirection = 0
     }
 
     internal class TouchListener(private val listener: ContentScrollHandler) : View.OnTouchListener {
-        private var mLastY: Float = 0.toFloat()
+        private var lastY: Float = 0f
 
         override fun onTouch(v: View, event: MotionEvent): Boolean {
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     listener.resetScrollDirection()
-                    mLastY = java.lang.Float.NaN
+                    lastY = Float.NaN
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    if (!java.lang.Float.isNaN(mLastY)) {
-                        val delta = mLastY - event.rawY
+                    if (!java.lang.Float.isNaN(lastY)) {
+                        val delta = lastY - event.rawY
                         listener.setScrollDirection(if (delta < 0) -1 else 1)
                     } else {
-                        mLastY = event.rawY
+                        lastY = event.rawY
                     }
                 }
             }
@@ -156,7 +147,7 @@ open class ContentScrollHandler(
     }
 
     interface ViewCallback {
-        val isComputingLayout: Boolean
+        val computingLayout: Boolean
 
         fun post(runnable: Runnable)
     }

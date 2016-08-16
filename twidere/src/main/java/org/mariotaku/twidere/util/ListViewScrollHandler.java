@@ -71,12 +71,12 @@ public class ListViewScrollHandler extends ContentScrollHandler implements AbsLi
         }
 
         @Override
-        public boolean isComputingLayout() {
+        public boolean getComputingLayout() {
             return ViewSupport.isInLayout(listView);
         }
 
         @Override
-        public void post(Runnable runnable) {
+        public void post(@NonNull Runnable runnable) {
             listView.post(runnable);
         }
     }

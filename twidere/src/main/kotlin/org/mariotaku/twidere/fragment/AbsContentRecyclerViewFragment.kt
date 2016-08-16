@@ -200,8 +200,8 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         recyclerView.adapter = adapter
 
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
-        scrollListener!!.setTouchSlop(ViewConfiguration.get(context).scaledTouchSlop)
-        recyclerView.setOnTouchListener(scrollListener!!.onTouchListener)
+        scrollListener!!.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        recyclerView.setOnTouchListener(scrollListener!!.touchListener)
     }
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

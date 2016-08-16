@@ -122,7 +122,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     private var loadTranslationTask: LoadTranslationTask? = null
 
     private var navigationHelper: RecyclerViewNavigationHelper? = null
-    private var mScrollListener: RecyclerViewScrollHandler? = null
+    private var scrollListener: RecyclerViewScrollHandler? = null
     // Data fields
     private var conversationLoaderInitialized: Boolean = false
 
@@ -280,9 +280,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         recyclerView.adapter = adapter
         registerForContextMenu(recyclerView!!)
 
-        mScrollListener = RecyclerViewScrollHandler(this,
+        scrollListener = RecyclerViewScrollHandler(this,
                 RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
-        mScrollListener!!.setTouchSlop(ViewConfiguration.get(context).scaledTouchSlop)
+        scrollListener!!.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
 
         navigationHelper = RecyclerViewNavigationHelper(recyclerView!!, layoutManager!!,
                 adapter!!, null)
@@ -293,8 +293,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
-        val status = adapter!!.getStatus(statusPosition)
-        if (status == null) return
+        val status = adapter!!.getStatus(statusPosition) ?: return
         IntentUtils.openMedia(activity, status, media, null,
                 preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
 
@@ -595,13 +594,13 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     override fun onStart() {
         super.onStart()
         bus.register(this)
-        recyclerView!!.addOnScrollListener(mScrollListener)
-        recyclerView!!.setOnTouchListener(mScrollListener!!.onTouchListener)
+        recyclerView!!.addOnScrollListener(scrollListener)
+        recyclerView!!.setOnTouchListener(scrollListener!!.touchListener)
     }
 
     override fun onStop() {
         recyclerView.setOnTouchListener(null)
-        recyclerView!!.removeOnScrollListener(mScrollListener)
+        recyclerView!!.removeOnScrollListener(scrollListener)
         bus.unregister(this)
         super.onStop()
     }

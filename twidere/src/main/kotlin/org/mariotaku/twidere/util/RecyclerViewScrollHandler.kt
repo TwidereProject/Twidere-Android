@@ -18,16 +18,20 @@ class RecyclerViewScrollHandler(contentListSupport: ContentListSupport, viewCall
         scrollHandler = ContentScrollHandler(contentListSupport, viewCallback)
     }
 
-    fun setReversed(inversed: Boolean) {
-        scrollHandler.setReversed(inversed)
-    }
+    var touchSlop: Int
+        get() = scrollHandler.touchSlop
+        set(value) {
+            scrollHandler.touchSlop = value
+        }
 
-    fun setTouchSlop(touchSlop: Int) {
-        scrollHandler.setTouchSlop(touchSlop)
-    }
+    var reversed: Boolean
+        get() = scrollHandler.reversed
+        set(value) {
+            scrollHandler.reversed = value
+        }
 
-    val onTouchListener: View.OnTouchListener
-        get() = scrollHandler.onTouchListener
+    val touchListener: View.OnTouchListener
+        get() = scrollHandler.touchListener
 
     override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
         scrollHandler.handleScrollStateChanged(newState, RecyclerView.SCROLL_STATE_IDLE)
@@ -41,7 +45,7 @@ class RecyclerViewScrollHandler(contentListSupport: ContentListSupport, viewCall
 
     class RecyclerViewCallback(private val recyclerView: RecyclerView) : ViewCallback {
 
-        override val isComputingLayout: Boolean
+        override val computingLayout: Boolean
             get() = recyclerView.isComputingLayout
 
         override fun post(runnable: Runnable) {

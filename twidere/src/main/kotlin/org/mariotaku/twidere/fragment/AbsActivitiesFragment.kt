@@ -433,7 +433,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        scrollListener!!.setReversed(preferences.getBoolean(KEY_READ_FROM_BOTTOM))
+        scrollListener!!.reversed = preferences.getBoolean(KEY_READ_FROM_BOTTOM)
         val adapter = adapter
         val layoutManager = layoutManager
         adapter!!.setListener(this)

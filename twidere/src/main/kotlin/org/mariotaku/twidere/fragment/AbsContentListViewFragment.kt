@@ -42,7 +42,7 @@ import org.mariotaku.twidere.util.TwidereColorUtils
  * Created by mariotaku on 15/4/16.
  */
 abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment(), OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport, AbsListView.OnScrollListener {
-    private var mScrollHandler: ListViewScrollHandler? = null
+    private var scrollHandler: ListViewScrollHandler? = null
 
     override var adapter: A? = null
 
@@ -128,19 +128,19 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment
         }
         listView.adapter = adapter
         listView.clipToPadding = false
-        mScrollHandler = ListViewScrollHandler(this, ListViewScrollHandler.ListViewCallback(listView))
-        mScrollHandler!!.setTouchSlop(ViewConfiguration.get(context).scaledTouchSlop)
-        mScrollHandler!!.onScrollListener = this
+        scrollHandler = ListViewScrollHandler(this, ListViewScrollHandler.ListViewCallback(listView))
+        scrollHandler!!.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        scrollHandler!!.onScrollListener = this
     }
 
 
     override fun onStart() {
         super.onStart()
-        listView.setOnScrollListener(mScrollHandler)
+        listView.setOnScrollListener(scrollHandler)
     }
 
     override fun onStop() {
-        listView.setOnScrollListener(mScrollHandler)
+        listView.setOnScrollListener(scrollHandler)
         super.onStop()
     }
 
