@@ -43,7 +43,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.ErrorInfoStore
-import org.mariotaku.twidere.util.TwidereArrayUtils
 import org.mariotaku.twidere.util.Utils
 
 /**
@@ -92,8 +91,10 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         } else {
             where = accountWhere
         }
-        val accountSelectionArgs = TwidereArrayUtils.toStringArray(accountKeys, 0,
-                accountKeys.size)
+
+        val accountSelectionArgs = Array(accountKeys.size) {
+            accountKeys[it].toString()
+        }
         val expression = processWhere(where, accountSelectionArgs)
         val selection = expression.sql
         val adapter = adapter!!

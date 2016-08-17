@@ -289,7 +289,7 @@ class ParcelableActivitiesAdapter(
                 if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
                 if (filteredUserIds != null) {
                     ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds!!, followingOnly)
-                    if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
+                    if (activity.after_filtered_source_ids.isEmpty()) {
                         return ITEM_VIEW_TYPE_EMPTY
                     }
                 }

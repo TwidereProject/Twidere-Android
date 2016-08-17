@@ -286,6 +286,7 @@ public class ParcelableMediaUtils {
         return null;
     }
 
+    @Nullable
     public static ParcelableMedia[] getPrimaryMedia(ParcelableStatus status) {
         if (status.is_quote && ArrayUtils.isEmpty(status.media)) {
             return status.quoted_media;

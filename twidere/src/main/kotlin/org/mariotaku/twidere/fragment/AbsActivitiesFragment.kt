@@ -36,7 +36,6 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import edu.tsinghua.hotmobi.model.ScrollRecord
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.BuildConfig
@@ -351,12 +350,12 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
         val activity = adapter!!.getActivity(position) ?: return
         val list = ArrayList<Parcelable>()
-        if (!ArrayUtils.isEmpty(activity.target_object_statuses)) {
-            Collections.addAll(list, *activity.target_object_statuses)
-        } else if (!ArrayUtils.isEmpty(activity.target_statuses)) {
-            Collections.addAll(list, *activity.target_statuses)
+        if (activity.target_object_statuses?.isNotEmpty() ?: false) {
+            list.addAll(activity.target_object_statuses)
+        } else if (activity.target_statuses?.isNotEmpty() ?: false) {
+            list.addAll(activity.target_statuses)
         }
-        Collections.addAll(list, *ParcelableActivityUtils.getAfterFilteredSources(activity))
+        list.addAll(ParcelableActivityUtils.getAfterFilteredSources(activity))
         IntentUtils.openItems(getActivity(), list)
     }
 

@@ -472,15 +472,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
         if (attachLocation) {
             if (attachPreciseLocation) {
-                locationSwitch.checkedPosition = ArrayUtils.indexOf(LOCATION_OPTIONS,
-                        LOCATION_VALUE_COORDINATE)
+                locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_COORDINATE)
             } else {
-                locationSwitch.checkedPosition = ArrayUtils.indexOf(LOCATION_OPTIONS,
-                        LOCATION_VALUE_PLACE)
+                locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_PLACE)
             }
         } else {
-            locationSwitch.checkedPosition = ArrayUtils.indexOf(LOCATION_OPTIONS,
-                    LOCATION_VALUE_NONE)
+            locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
         }
         locationSwitch.setOnCheckedChangeListener {
             val value = LOCATION_OPTIONS[locationSwitch.checkedPosition]
@@ -1093,7 +1090,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun saveAccountSelection() {
         if (!shouldSaveAccounts) return
         val editor = preferences.edit()
-        editor.putString(KEY_COMPOSE_ACCOUNTS, TwidereArrayUtils.toString(accountsAdapter!!.selectedAccountKeys, ',', false))
+
+        editor.putString(KEY_COMPOSE_ACCOUNTS, accountsAdapter!!.selectedAccountKeys.joinToString(","))
         editor.apply()
     }
 
@@ -1384,15 +1382,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class AccountIconsAdapter(private val activity: ComposeActivity) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity) {
         private val mInflater: LayoutInflater
-        private val mSelection: MutableMap<UserKey, Boolean>
+        private val selection: MutableMap<UserKey, Boolean>
         val isNameFirst: Boolean
 
-        private var mAccounts: Array<ParcelableCredentials>? = null
+        private var accounts: Array<ParcelableCredentials>? = null
 
         init {
             setHasStableIds(true)
             mInflater = activity.layoutInflater
-            mSelection = HashMap<UserKey, Boolean>()
+            selection = HashMap<UserKey, Boolean>()
             isNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         }
 
@@ -1400,29 +1398,29 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             get() = mediaLoader
 
         override fun getItemId(position: Int): Long {
-            return mAccounts!![position].hashCode().toLong()
+            return accounts!![position].hashCode().toLong()
         }
 
         val selectedAccountKeys: Array<UserKey>
             get() {
-                val accounts = mAccounts ?: return emptyArray()
-                return accounts.filter { mSelection[it.account_key] ?: false }
+                val accounts = accounts ?: return emptyArray()
+                return accounts.filter { selection[it.account_key] ?: false }
                         .map { it.account_key!! }
                         .toTypedArray()
             }
 
         fun setSelectedAccountIds(vararg accountKeys: UserKey) {
-            mSelection.clear()
+            selection.clear()
             for (accountKey in accountKeys) {
-                mSelection.put(accountKey, true)
+                selection.put(accountKey, true)
             }
             notifyDataSetChanged()
         }
 
         val selectedAccounts: Array<ParcelableCredentials>
             get() {
-                val accounts = mAccounts ?: return emptyArray()
-                return accounts.filter { mSelection[it.account_key] ?: false }.toTypedArray()
+                val accounts = accounts ?: return emptyArray()
+                return accounts.filter { selection[it.account_key] ?: false }.toTypedArray()
             }
 
         val isSelectionEmpty: Boolean
@@ -1434,24 +1432,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun onBindViewHolder(holder: AccountIconViewHolder, position: Int) {
-            val account = mAccounts!![position]
-            val isSelected = mSelection[account.account_key] ?: false
+            val account = accounts!![position]
+            val isSelected = selection[account.account_key] ?: false
             holder.showAccount(this, account, isSelected)
         }
 
         override fun getItemCount(): Int {
-            return if (mAccounts != null) mAccounts!!.size else 0
+            return if (accounts != null) accounts!!.size else 0
         }
 
         fun setAccounts(accounts: Array<ParcelableCredentials>) {
-            mAccounts = accounts
+            this.accounts = accounts
             notifyDataSetChanged()
         }
 
         internal fun toggleSelection(position: Int) {
-            if (mAccounts == null || position < 0) return
-            val account = mAccounts!![position]
-            mSelection.put(account.account_key, java.lang.Boolean.TRUE != mSelection[account.account_key])
+            if (accounts == null || position < 0) return
+            val account = accounts!![position]
+            selection.put(account.account_key, java.lang.Boolean.TRUE != selection[account.account_key])
             activity.notifyAccountSelectionChanged()
             notifyDataSetChanged()
         }

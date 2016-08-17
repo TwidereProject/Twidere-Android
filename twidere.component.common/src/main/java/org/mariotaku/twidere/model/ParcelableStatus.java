@@ -297,10 +297,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "media")
     @CursorField(value = Statuses.MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
+    @Nullable
     public ParcelableMedia[] media;
     @ParcelableThisPlease
     @JsonField(name = "quoted_media")
     @CursorField(value = Statuses.QUOTED_MEDIA_JSON, converter = LoganSquareCursorFieldConverter.class)
+    @Nullable
     public ParcelableMedia[] quoted_media;
     @Nullable
     @ParcelableThisPlease

@@ -82,14 +82,14 @@ public class TwitterWrapper implements Constants {
     }
 
     public static int removeUnreadCounts(final Context context, final int position, final long account_id,
-                                         final long... status_ids) {
-        if (context == null || position < 0 || status_ids == null || status_ids.length == 0)
+                                         final long... statusIds) {
+        if (context == null || position < 0 || statusIds == null || statusIds.length == 0)
             return 0;
         int result = 0;
         final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
         builder.appendPath(String.valueOf(position));
         builder.appendPath(String.valueOf(account_id));
-        builder.appendPath(TwidereArrayUtils.toString(status_ids, ',', false));
+        builder.appendPath(TwidereArrayUtils.toString(statusIds, ',', false));
         result += context.getContentResolver().delete(builder.build(), null, null);
         return result;
     }

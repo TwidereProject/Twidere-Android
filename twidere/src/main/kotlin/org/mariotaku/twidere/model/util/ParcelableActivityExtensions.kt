@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.model.util
 
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -12,15 +11,15 @@ fun ParcelableActivity.getActivityStatus(): ParcelableStatus? {
     val status: ParcelableStatus
     when (action) {
         Activity.Action.MENTION -> {
-            if (ArrayUtils.isEmpty(target_object_statuses)) return null
+            if (target_object_statuses?.isEmpty() ?: true) return null
             status = target_object_statuses[0]
         }
         Activity.Action.REPLY -> {
-            if (ArrayUtils.isEmpty(target_statuses)) return null
+            if (target_statuses?.isEmpty() ?: true) return null
             status = target_statuses[0]
         }
         Activity.Action.QUOTE -> {
-            if (ArrayUtils.isEmpty(target_statuses)) return null
+            if (target_statuses?.isEmpty() ?: true) return null
             status = target_statuses[0]
         }
         else -> return null

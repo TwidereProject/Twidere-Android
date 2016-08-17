@@ -93,8 +93,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                              final UserKey accountId, final long extraId,
                              final OnMediaClickListener mediaClickListener,
                              final MediaLoadingHandler loadingHandler) {
-        displayMedia(loader, mediaClickListener, loadingHandler, mediaArray, accountId, extraId, false
-        );
+        displayMedia(loader, mediaClickListener, loadingHandler, mediaArray, accountId, extraId, false);
     }
 
     public void displayMedia(@NonNull final MediaLoaderWrapper loader, final OnMediaClickListener mediaClickListener, final MediaLoadingHandler loadingHandler, @Nullable final ParcelableMedia[] mediaArray,

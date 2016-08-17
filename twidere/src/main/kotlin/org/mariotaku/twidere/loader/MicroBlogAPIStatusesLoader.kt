@@ -24,7 +24,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import android.util.Log
 import com.nostra13.universalimageloader.cache.disc.DiskCache
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -142,7 +141,7 @@ abstract class MicroBlogAPIStatusesLoader(
         }
 
         // Insert a gap.
-        val deletedOldGap = rowsDeleted > 0 && ArrayUtils.contains(statusIds, maxId)
+        val deletedOldGap = rowsDeleted > 0 && statusIds.contains(maxId)
         val noRowsDeleted = rowsDeleted == 0
         val insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size >= loadItemLimit && !loadingMore

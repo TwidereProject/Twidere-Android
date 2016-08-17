@@ -41,8 +41,6 @@ import com.twitter.Extractor
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
-import org.apache.commons.lang3.ArrayUtils
-import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.asTypedArray
 import org.mariotaku.ktextension.configure
@@ -170,15 +168,12 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                 updateStatuses(item.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, item))
             }
             Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {
-                var recipientId: String? = null
-                if (item.action_extras is SendDirectMessageActionExtra) {
-                    recipientId = (item.action_extras as SendDirectMessageActionExtra).recipientId
-                }
-                if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
+                val recipientId = (item.action_extras as? SendDirectMessageActionExtra)?.recipientId ?: return
+                if (item.account_keys?.isEmpty() ?: true) {
                     return
                 }
-                val accountKey = item.account_keys!![0]
-                val imageUri = if (ArrayUtils.isEmpty(item.media)) null else item.media[0].uri
+                val accountKey = item.account_keys!!.first()
+                val imageUri = item.media.firstOrNull()?.uri
                 sendMessage(accountKey, recipientId, item.text, imageUri)
             }
         }
@@ -187,11 +182,9 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
     private fun handleDiscardDraftIntent(intent: Intent) {
         val data = intent.data ?: return
         notificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS)
-        val cr = contentResolver
-        val def: Long = -1
-        val id = NumberUtils.toLong(data.lastPathSegment, def)
+        val id = data.lastPathSegment.toLong(-1)
         val where = Expression.equals(Drafts._ID, id)
-        cr.delete(Drafts.CONTENT_URI, where.sql, null)
+        contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
     }
 
     private fun handleSendDirectMessageIntent(intent: Intent) {

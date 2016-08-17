@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util
 import android.graphics.Point
 import android.support.v4.app.Fragment
 import android.text.TextUtils
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.twidere.fragment.card.CardPollFragment
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -74,11 +73,11 @@ object TwitterCardUtils {
         val card = status.card ?: return false
         when (status.card_name) {
             CARD_NAME_PLAYER -> {
-                if (!ArrayUtils.isEmpty(status.media)) {
+                status.media?.let { mediaArray ->
                     val appUrlResolved = ParcelableCardEntityUtils.getString(card, "app_url_resolved")
                     val cardUrl = card.url
-                    for (media in status.media) {
-                        if (media.url == appUrlResolved || media.url == cardUrl) {
+                    mediaArray.forEach {
+                        if (it.url == appUrlResolved || it.url == cardUrl) {
                             return false
                         }
                     }

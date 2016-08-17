@@ -36,7 +36,6 @@ import android.widget.Toast
 import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import kotlinx.android.synthetic.main.activity_media_viewer.*
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.asTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
@@ -204,7 +203,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     }
 
     override fun getInitialPosition(): Int {
-        return ArrayUtils.indexOf(media, initialMedia)
+        return media.indexOf(initialMedia)
     }
 
     override fun getLayoutRes(): Int {

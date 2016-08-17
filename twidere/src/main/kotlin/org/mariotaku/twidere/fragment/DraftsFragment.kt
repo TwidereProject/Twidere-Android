@@ -44,7 +44,6 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_drafts.*
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
@@ -213,7 +212,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                     if (item.action_extras is SendDirectMessageActionExtra) {
                         recipientId = (item.action_extras as SendDirectMessageActionExtra).recipientId
                     }
-                    if (ArrayUtils.isEmpty(item.account_keys) || recipientId == null) {
+                    if (item.account_keys?.isEmpty() ?: true || recipientId == null) {
                         continue@loop
                     }
                     val accountId = item.account_keys!![0]

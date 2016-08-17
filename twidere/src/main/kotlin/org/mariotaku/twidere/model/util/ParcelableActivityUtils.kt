@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.model.util
 
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUser
@@ -28,14 +27,14 @@ object ParcelableActivityUtils {
                                    followingOnly: Boolean): Boolean {
         if (activity.sources == null) return false
         if (activity.after_filtered_source_ids != null) return false
-        if (followingOnly || !ArrayUtils.isEmpty(filteredUserIds)) {
+        if (followingOnly || filteredUserIds.isNotEmpty()) {
             val list = ArrayList<UserKey>()
             for (user in activity.sources) {
                 if (followingOnly && !user.is_following) {
                     continue
                 }
 
-                if (!ArrayUtils.contains(filteredUserIds, user.key)) {
+                if (!filteredUserIds.contains(user.key)) {
                     list.add(user.key)
                 }
             }
