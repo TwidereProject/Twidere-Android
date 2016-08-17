@@ -96,11 +96,11 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 accountKeys.size)
         val expression = processWhere(where, accountSelectionArgs)
         val selection = expression.sql
-        val adapter = adapter
-        adapter!!.showAccountsColor = accountKeys.size > 1
+        val adapter = adapter!!
+        adapter.showAccountsColor = accountKeys.size > 1
         val projection = Activities.COLUMNS
-        return CursorActivitiesLoader(context, uri, projection, selection,
-                expression.parameters, sortOrder, fromUser)
+        return CursorActivitiesLoader(context, uri, projection, selection, expression.parameters,
+                sortOrder, fromUser)
     }
 
     override fun createMessageBusCallback(): Any {

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.net.Uri
 import edu.tsinghua.hotmobi.model.TimelineType
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_INTERACTIONS_TIMELINE
@@ -65,10 +64,18 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
         val arguments = arguments
         if (arguments != null) {
             val extras = arguments.getParcelable<InteractionsTabExtras>(EXTRA_EXTRAS)
-            if (extras != null && extras.isMentionsOnly) {
-                val expression = Expression.and(where, Expression.inArgs(Activities.ACTION, 3))
-                return ParameterizedExpression(expression, ArrayUtils.addAll(whereArgs, Activity.Action.MENTION,
-                        Activity.Action.REPLY, Activity.Action.QUOTE))
+            if (extras != null) {
+                val expressions = mutableListOf(where)
+                val combinedArgs = mutableListOf(*whereArgs)
+                if (extras.isMentionsOnly) {
+                    expressions.add(Expression.inArgs(Activities.ACTION, 3))
+                    combinedArgs.addAll(arrayOf(Activity.Action.MENTION, Activity.Action.REPLY, Activity.Action.QUOTE))
+                }
+                if (extras.isMyFollowingOnly) {
+                    expressions.add(Expression.equals(Activities.HAS_FOLLOWING_SOURCE, 1))
+                }
+                return ParameterizedExpression(Expression.and(*expressions.toTypedArray()),
+                        combinedArgs.toTypedArray())
             }
         }
         return super.processWhere(where, whereArgs)

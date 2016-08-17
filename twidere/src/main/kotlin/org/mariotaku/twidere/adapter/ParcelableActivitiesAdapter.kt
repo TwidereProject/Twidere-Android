@@ -266,21 +266,18 @@ class ParcelableActivitiesAdapter(
                 if (ArrayUtils.isEmpty(activity.target_object_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
-                if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
             Activity.Action.REPLY -> {
                 if (ArrayUtils.isEmpty(activity.target_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
-                if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
             Activity.Action.QUOTE -> {
                 if (ArrayUtils.isEmpty(activity.target_statuses)) {
                     return ITEM_VIEW_TYPE_STUB
                 }
-                if (followingOnly && !activity.status_user_following) return ITEM_VIEW_TYPE_EMPTY
                 return ITEM_VIEW_TYPE_STATUS
             }
             Activity.Action.FOLLOW, Activity.Action.FAVORITE, Activity.Action.RETWEET,
@@ -290,9 +287,11 @@ class ParcelableActivitiesAdapter(
             Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
             Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                 if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
-                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds, followingOnly)
-                if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
-                    return ITEM_VIEW_TYPE_EMPTY
+                if (filteredUserIds != null) {
+                    ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds!!, followingOnly)
+                    if (ArrayUtils.isEmpty(activity.after_filtered_source_ids)) {
+                        return ITEM_VIEW_TYPE_EMPTY
+                    }
                 }
                 return ITEM_VIEW_TYPE_TITLE_SUMMARY
             }

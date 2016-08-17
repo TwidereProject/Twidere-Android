@@ -932,6 +932,7 @@ public interface TwidereDataStore {
         String TARGET_OBJECT_STATUSES = "target_object_statuses";
         String TARGET_OBJECT_USER_LISTS = "target_object_user_lists";
         String TARGET_OBJECT_USERS = "target_object_users";
+        String HAS_FOLLOWING_SOURCE = "has_following_source";
 
         String POSITION_KEY = "position_key";
 

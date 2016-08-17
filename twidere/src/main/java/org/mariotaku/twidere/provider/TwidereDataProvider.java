@@ -1425,9 +1425,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 if (timestamp == -1) {
                     timestamp = activity.timestamp;
                 }
-                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds,
+                ParcelableActivityUtils.INSTANCE.initAfterFilteredSourceIds(activity, filteredUserIds,
                         pref.isNotificationFollowingOnly());
-                final ParcelableUser[] sources = ParcelableActivityUtils.getAfterFilteredSources(activity);
+                final ParcelableUser[] sources = ParcelableActivityUtils.INSTANCE.getAfterFilteredSources(activity);
                 if (ArrayUtils.isEmpty(sources)) continue;
                 final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
                         mUserColorNameManager, activity, sources,

@@ -154,7 +154,7 @@ public abstract class GetActivitiesTask extends AbstractTask<RefreshTaskParam, O
             final long sortDiff = firstSortId - lastSortId;
             for (int i = 0, j = activities.size(); i < j; i++) {
                 Activity item = activities.get(i);
-                final ParcelableActivity activity = ParcelableActivityUtils.fromActivity(item,
+                final ParcelableActivity activity = ParcelableActivityUtils.INSTANCE.fromActivity(item,
                         credentials.account_key, false);
                 activity.position_key = GetStatusesTask.getPositionKey(activity.timestamp,
                         activity.timestamp, lastSortId, sortDiff, i, j);

@@ -215,6 +215,11 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @Nullable
     public String status_my_retweet_id;
 
+    @CursorField(Activities.HAS_FOLLOWING_SOURCE)
+    @ParcelableThisPlease
+    @JsonField(name = "has_following_source")
+    public boolean has_following_source = true;
+
     public transient UserKey[] after_filtered_source_ids;
     public transient ParcelableUser[] after_filtered_sources;
 
