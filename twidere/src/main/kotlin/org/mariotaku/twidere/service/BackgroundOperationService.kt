@@ -22,10 +22,14 @@ package org.mariotaku.twidere.service
 import android.app.IntentService
 import android.app.Notification
 import android.app.Service
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
+import android.provider.BaseColumns
+import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.Builder
@@ -41,6 +45,7 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.asTypedArray
+import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
@@ -74,7 +79,7 @@ import javax.inject.Inject
 class BackgroundOperationService : IntentService("background_operation"), Constants {
 
 
-    private var handler: Handler? = null
+    private val handler: Handler by lazy { Handler(Looper.getMainLooper()) }
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
@@ -90,7 +95,6 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
     override fun onCreate() {
         super.onCreate()
         GeneralComponentHelper.build(this).inject(this)
-        handler = Handler()
     }
 
     override fun onDestroy() {
@@ -103,15 +107,15 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
     }
 
     fun showErrorMessage(message: CharSequence, longMessage: Boolean) {
-        handler!!.post { Utils.showErrorMessage(this@BackgroundOperationService, message, longMessage) }
+        handler.post { Utils.showErrorMessage(this@BackgroundOperationService, message, longMessage) }
     }
 
     fun showErrorMessage(actionRes: Int, e: Exception?, longMessage: Boolean) {
-        handler!!.post { Utils.showErrorMessage(this@BackgroundOperationService, actionRes, e, longMessage) }
+        handler.post { Utils.showErrorMessage(this@BackgroundOperationService, actionRes, e, longMessage) }
     }
 
     fun showErrorMessage(actionRes: Int, message: String, longMessage: Boolean) {
-        handler!!.post { Utils.showErrorMessage(this@BackgroundOperationService, actionRes, message, longMessage) }
+        handler.post { Utils.showErrorMessage(this@BackgroundOperationService, actionRes, message, longMessage) }
     }
 
     fun showOkMessage(messageRes: Int, longMessage: Boolean) {
@@ -119,7 +123,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
     }
 
     private fun showToast(message: CharSequence, longMessage: Boolean) {
-        handler!!.post { Toast.makeText(this@BackgroundOperationService, message, if (longMessage) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show() }
+        handler.post { Toast.makeText(this@BackgroundOperationService, message, if (longMessage) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show() }
     }
 
     override fun onHandleIntent(intent: Intent?) {
@@ -282,9 +286,10 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                             builder, 0, item))
                 }
 
-                override fun afterExecute(handler: Context?, result: UpdateStatusTask.UpdateStatusResult?) {
+                @UiThread
+                override fun afterExecute(handler: Context?, result: UpdateStatusTask.UpdateStatusResult) {
                     var failed = false
-                    val exception = result!!.exception
+                    val exception = result.exception
                     val exceptions = result.exceptions
                     if (exception != null) {
                         Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
@@ -302,9 +307,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                             break
                         }
                     }
-                    if (failed) {
-                        // TODO show draft notification
-                    } else {
+                    if (!failed) {
                         Toast.makeText(context, R.string.status_updated, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -313,27 +316,27 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
 
                 }
             })
-            task.setCallback(this)
+            task.callback = this
             task.params = Pair.create(actionType, item)
-            handler!!.post { ManualTaskStarter.invokeBeforeExecute(task) }
+            handler.post { ManualTaskStarter.invokeBeforeExecute(task) }
 
             val result = ManualTaskStarter.invokeExecute(task)
-            handler!!.post { ManualTaskStarter.invokeAfterExecute(task, result) }
+            handler.post { ManualTaskStarter.invokeAfterExecute(task, result) }
 
-            val exception = result.exception
-            val updatedStatuses = result.statuses
-            if (exception != null) {
-                Log.w(LOGTAG, exception)
-            } else
-                for (status in updatedStatuses) {
-                    if (status == null) continue
-                    val event = TweetEvent.create(context, status, TimelineType.OTHER)
-                    event.setAction(TweetEvent.Action.TWEET)
-                    HotMobiLogger.getInstance(context).log(status.account_key, event)
-                }
+            if (!result.succeed) {
+                contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, configure(ContentValues()) {
+                    put(BaseColumns._ID, result.draftId)
+                })
+            }
+            for (status in result.statuses) {
+                if (status == null) continue
+                val event = TweetEvent.create(context, status, TimelineType.OTHER)
+                event.setAction(TweetEvent.Action.TWEET)
+                HotMobiLogger.getInstance(context).log(status.account_key, event)
+            }
         }
         if (preferences.getBoolean(KEY_REFRESH_AFTER_TWEET)) {
-            handler!!.post { twitterWrapper.refreshAll() }
+            handler.post { twitterWrapper.refreshAll() }
         }
         stopForeground(false)
         notificationManager.cancel(NOTIFICATION_ID_UPDATE_STATUS)

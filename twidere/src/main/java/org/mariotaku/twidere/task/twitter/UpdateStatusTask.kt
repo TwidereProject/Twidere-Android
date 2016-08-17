@@ -49,7 +49,10 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/5/22.
  */
-class UpdateStatusTask(internal val context: Context, internal val stateCallback: UpdateStatusTask.StateCallback) : AbstractTask<Pair<String, ParcelableStatusUpdate>, UpdateStatusTask.UpdateStatusResult, Context>(), Constants {
+class UpdateStatusTask(
+        internal val context: Context,
+        internal val stateCallback: UpdateStatusTask.StateCallback
+) : AbstractTask<Pair<String, ParcelableStatusUpdate>, UpdateStatusTask.UpdateStatusResult, Context>(), Constants {
 
     @Inject
     lateinit var twitterWrapper: AsyncTwitterWrapper
@@ -64,11 +67,11 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         val draftId = saveDraft(params.first, params.second)
         twitterWrapper.addSendingDraftId(draftId)
         try {
-            val result = doUpdateStatus(params.second)
+            val result = doUpdateStatus(params.second, draftId)
             deleteOrUpdateDraft(params.second, result, draftId)
             return result
         } catch (e: UpdateStatusException) {
-            return UpdateStatusResult(e)
+            return UpdateStatusResult(e, draftId)
         } finally {
             twitterWrapper.removeSendingDraftId(draftId)
         }
@@ -78,12 +81,12 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         stateCallback.beforeExecute()
     }
 
-    override fun afterExecute(handler: Context?, result: UpdateStatusResult?) {
+    override fun afterExecute(handler: Context?, result: UpdateStatusResult) {
         stateCallback.afterExecute(handler, result)
     }
 
     @Throws(UpdateStatusException::class)
-    private fun doUpdateStatus(update: ParcelableStatusUpdate): UpdateStatusResult {
+    private fun doUpdateStatus(update: ParcelableStatusUpdate, draftId: Long): UpdateStatusResult {
         val app = TwidereApplication.getInstance(context)
         val uploader = getMediaUploader(app)
         val shortener = getStatusShortener(app)
@@ -96,9 +99,9 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
 
         val result: UpdateStatusResult
         try {
-            result = requestUpdateStatus(update, pendingUpdate)
+            result = requestUpdateStatus(update, pendingUpdate, draftId)
         } catch (e: IOException) {
-            return UpdateStatusResult(UpdateStatusException(e))
+            return UpdateStatusResult(UpdateStatusException(e), draftId)
         }
 
         mediaUploadCallback(uploader, pendingUpdate, result)
@@ -207,14 +210,16 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
     }
 
     @Throws(IOException::class)
-    private fun requestUpdateStatus(statusUpdate: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate): UpdateStatusResult {
+    private fun requestUpdateStatus(statusUpdate: ParcelableStatusUpdate,
+                                    pendingUpdate: PendingStatusUpdate,
+                                    draftId: Long): UpdateStatusResult {
 
         stateCallback.onUpdatingStatus()
 
         val result = UpdateStatusResult(arrayOfNulls<ParcelableStatus>(pendingUpdate.length),
-                arrayOfNulls<MicroBlogException>(pendingUpdate.length))
+                arrayOfNulls<MicroBlogException>(pendingUpdate.length), draftId)
 
-        for (i in 0..pendingUpdate.length - 1) {
+        for (i in 0 until pendingUpdate.length) {
             val account = statusUpdate.accounts[i]
             val microBlog = MicroBlogAPIFactory.getInstance(context, account.account_key, true)
             var body: Body? = null
@@ -492,7 +497,7 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
     }
 
 
-    private fun saveDraft(draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
+    private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
         val draft = Draft()
         draft.account_keys = ParcelableAccountUtils.getAccountKeys(statusUpdate.accounts)
         if (draftAction != null) {
@@ -548,48 +553,45 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         val exceptions: Array<MicroBlogException?>
 
         val exception: UpdateStatusException?
+        val draftId: Long
 
-        constructor(statuses: Array<ParcelableStatus?>, exceptions: Array<MicroBlogException?>) {
+        val succeed: Boolean get() = !statuses.contains(null)
+
+        constructor(statuses: Array<ParcelableStatus?>, exceptions: Array<MicroBlogException?>, draftId: Long) {
             this.statuses = statuses
             this.exceptions = exceptions
             this.exception = null
+            this.draftId = draftId
         }
 
-        constructor(exception: UpdateStatusException) {
+        constructor(exception: UpdateStatusException, draftId: Long) {
             this.exception = exception
             this.statuses = arrayOfNulls<ParcelableStatus>(0)
             this.exceptions = arrayOfNulls<MicroBlogException>(0)
+            this.draftId = draftId
         }
     }
 
 
     open class UpdateStatusException : Exception {
-        constructor() : super() {
-        }
+        constructor() : super()
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(throwable: Throwable) : super(throwable) {
-        }
+        constructor(throwable: Throwable) : super(throwable)
 
-        constructor(message: String) : super(message) {
-        }
+        constructor(message: String) : super(message)
     }
 
     class UploaderNotFoundException : UpdateStatusException {
 
-        constructor() : super() {
-        }
+        constructor() : super()
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(throwable: Throwable) : super(throwable) {
-        }
+        constructor(throwable: Throwable) : super(throwable)
 
-        constructor(message: String) : super(message) {
-        }
+        constructor(message: String) : super(message)
     }
 
     class UploadException : UpdateStatusException {
@@ -640,7 +642,7 @@ class UpdateStatusTask(internal val context: Context, internal val stateCallback
         fun onUpdatingStatus()
 
         @UiThread
-        fun afterExecute(handler: Context?, result: UpdateStatusResult?)
+        fun afterExecute(handler: Context?, result: UpdateStatusResult)
 
         @UiThread
         fun beforeExecute()
