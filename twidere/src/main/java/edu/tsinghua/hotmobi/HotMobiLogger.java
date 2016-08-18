@@ -128,6 +128,7 @@ public class HotMobiLogger implements HotMobiConstants {
     }
 
     public <T extends LogModel> void log(UserKey accountId, final T event, final PreProcessing<T> preProcessing) {
+        if (!BuildConfig.HOTMOBI_LOG_ENABLED) return;
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
 
@@ -148,6 +149,7 @@ public class HotMobiLogger implements HotMobiConstants {
     }
 
     public <T extends LogModel> void logList(List<T> events, UserKey accountId, String type, final PreProcessing<T> preProcessing) {
+        if (!BuildConfig.HOTMOBI_LOG_ENABLED) return;
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, type, events, preProcessing));
     }
 

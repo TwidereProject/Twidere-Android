@@ -55,7 +55,7 @@ public class UploadLogsTask implements Runnable {
 
     @Override
     public void run() {
-
+        if (!BuildConfig.HOTMOBI_LOG_ENABLED) return;
         final SharedPreferences prefs = context.getSharedPreferences(HotMobiConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
         if (prefs.contains(HotMobiConstants.KEY_LAST_UPLOAD_TIME)) {
