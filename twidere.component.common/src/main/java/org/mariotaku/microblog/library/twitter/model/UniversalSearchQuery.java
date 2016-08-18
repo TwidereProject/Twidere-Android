@@ -19,8 +19,26 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import org.mariotaku.restfu.http.SimpleValueMap;
+
 /**
  * Created by mariotaku on 15/10/21.
  */
-public class PrivateSearchResult {
+public class UniversalSearchQuery extends SimpleValueMap {
+
+    public void setCursor(String cursor) {
+        put("cursor", cursor);
+    }
+
+    public void setQuery(String query) {
+        put("q", query);
+    }
+
+    public void setCount(int count) {
+        put("count", count);
+    }
+
+    public void setModules(String[] modules) {
+        put("modules", modules);
+    }
 }

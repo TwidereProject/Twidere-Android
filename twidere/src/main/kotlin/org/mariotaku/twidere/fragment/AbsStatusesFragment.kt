@@ -161,7 +161,9 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
                     return true
                 }
                 KeyboardShortcutConstants.ACTION_STATUS_RETWEET -> {
-                    RetweetQuoteDialogFragment.show(fragmentManager, status)
+                    executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(fragmentManager, status)
+                    }
                     return true
                 }
                 KeyboardShortcutConstants.ACTION_STATUS_FAVORITE -> {
@@ -410,7 +412,7 @@ abstract class AbsStatusesFragment protected constructor() : AbsContentListRecyc
                 }
             }
         }
-        task.setCallback(recyclerView)
+        task.callback = recyclerView
         TaskStarter.execute(task)
         bus.register(statusesBusCallback)
     }

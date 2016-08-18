@@ -19,17 +19,21 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.PrivateSearchQuery;
-import org.mariotaku.microblog.library.twitter.model.PrivateSearchResult;
+import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery;
+import org.mariotaku.microblog.library.twitter.model.UniversalSearchResult;
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Query;
 
 /**
  * Created by mariotaku on 15/10/21.
  */
-public interface PrivateSearchResources {
+public interface PrivateSearchResources extends PrivateResources {
 
     @GET("/search/universal.json")
-    PrivateSearchResult searchTweets(PrivateSearchQuery query) throws MicroBlogException;
+    @Queries(template = StatusAnnotationTemplate.class)
+    UniversalSearchResult universalSearch(@Query UniversalSearchQuery query) throws MicroBlogException;
 
 }

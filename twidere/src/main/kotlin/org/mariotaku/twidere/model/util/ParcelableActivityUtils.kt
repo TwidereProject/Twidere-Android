@@ -80,7 +80,7 @@ object ParcelableActivityUtils {
             if (item.isFollowing) {
                 return@fold true
             }
-            return@fold false
+            return@fold folded
         }
         if (result.sources != null) {
             result.source_ids = arrayOfNulls<UserKey>(result.sources.size)

@@ -28,7 +28,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.twitter.Extractor
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -44,7 +43,9 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, ActionMode.Callback, MultiSelectManager.Callback {
+class MultiSelectEventHandler(
+        private val activity: BaseActivity
+) : ActionMode.Callback, MultiSelectManager.Callback {
 
     @Inject
     lateinit var twitterWrapper: AsyncTwitterWrapper
@@ -52,9 +53,9 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
 
-    private var mActionMode: ActionMode? = null
+    private var actionMode: ActionMode? = null
 
-    private var mAccountActionProvider: AccountActionProvider? = null
+    private var accountActionProvider: AccountActionProvider? = null
 
     init {
         GeneralComponentHelper.build(activity).inject(this)
@@ -108,11 +109,11 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
                 bundle.putStringArray(EXTRA_SCREEN_NAMES, allMentions.toTypedArray())
                 intent.putExtras(bundle)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                activity!!.startActivity(intent)
+                activity.startActivity(intent)
                 mode.finish()
             }
             R.id.mute_user -> {
-                val resolver = activity!!.contentResolver
+                val resolver = activity.contentResolver
                 val valuesList = ArrayList<ContentValues>()
                 val userIds = HashSet<UserKey>()
                 for (`object` in selectedItems) {
@@ -152,9 +153,7 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false
             val account = intent.getParcelableExtra<ParcelableAccount>(EXTRA_ACCOUNT)
             multiSelectManager.accountKey = account.account_key
-            if (mAccountActionProvider != null) {
-                mAccountActionProvider!!.selectedAccountIds = arrayOf(account.account_key)
-            }
+            accountActionProvider?.selectedAccountIds = arrayOf(account.account_key)
             mode.invalidate()
         }
         return true
@@ -162,8 +161,8 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_multi_select_contents, menu)
-        mAccountActionProvider = menu.findItem(R.id.select_account).actionProvider as AccountActionProvider
-        mAccountActionProvider!!.selectedAccountIds = arrayOf(multiSelectManager.firstSelectAccountKey)
+        accountActionProvider = menu.findItem(R.id.select_account).actionProvider as AccountActionProvider
+        accountActionProvider?.selectedAccountIds = arrayOf(multiSelectManager.firstSelectAccountKey)
         return true
     }
 
@@ -171,8 +170,8 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
         if (multiSelectManager.count != 0) {
             multiSelectManager.clearSelectedItems()
         }
-        mAccountActionProvider = null
-        mActionMode = null
+        accountActionProvider = null
+        actionMode = null
     }
 
     override fun onItemsCleared() {
@@ -194,20 +193,18 @@ class MultiSelectEventHandler(private val activity: BaseActivity) : Constants, A
 
     private fun updateMultiSelectState() {
         if (multiSelectManager.isActive) {
-            if (mActionMode == null) {
-                mActionMode = activity!!.startActionMode(this)
+            if (actionMode == null) {
+                actionMode = activity.startActionMode(this)
             }
-            updateSelectedCount(mActionMode)
+            updateSelectedCount(actionMode)
         } else {
-            if (mActionMode != null) {
-                mActionMode!!.finish()
-                mActionMode = null
-            }
+            actionMode?.finish()
+            actionMode = null
         }
     }
 
     private fun updateSelectedCount(mode: ActionMode?) {
-        if (mode == null || activity == null || multiSelectManager == null) return
+        if (mode == null) return
         val count = multiSelectManager.count
         mode.title = activity.resources.getQuantityString(R.plurals.Nitems_selected, count, count)
     }

@@ -31,7 +31,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices
 import org.mariotaku.twidere.model.UserKey
@@ -52,7 +52,9 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 abstract class ParcelableStatusesAdapter(
         context: Context
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), Constants, IStatusesAdapter<List<ParcelableStatus>> {
+
     protected val inflater: LayoutInflater
+
     override val mediaLoadingHandler: MediaLoadingHandler
     override val twidereLinkify: TwidereLinkify
     override val textSize: Float
@@ -88,6 +90,7 @@ abstract class ParcelableStatusesAdapter(
             field = value
             notifyDataSetChanged()
         }
+
     private var data: List<ParcelableStatus>? = null
     private var showingActionCardId = RecyclerView.NO_ID
     private var lastItemFiltered: Boolean = false
@@ -95,17 +98,17 @@ abstract class ParcelableStatusesAdapter(
     init {
         inflater = LayoutInflater.from(context)
         mediaLoadingHandler = MediaLoadingHandler(*progressViewIds)
-        textSize = preferences.getInt(SharedPreferenceConstants.KEY_TEXT_SIZE, context.resources.getInteger(R.integer.default_text_size)).toFloat()
-        profileImageStyle = Utils.getProfileImageStyle(preferences.getString(SharedPreferenceConstants.KEY_PROFILE_IMAGE_STYLE, null))
-        mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE, null))
-        linkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(SharedPreferenceConstants.KEY_LINK_HIGHLIGHT_OPTION, null))
-        nameFirst = preferences.getBoolean(SharedPreferenceConstants.KEY_NAME_FIRST, true)
-        profileImageEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_PROFILE_IMAGE, true)
+        textSize = preferences.getInt(KEY_TEXT_SIZE, context.resources.getInteger(R.integer.default_text_size)).toFloat()
+        profileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null))
+        mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null))
+        linkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null))
+        nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true)
+        profileImageEnabled = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
         mediaPreviewEnabled = Utils.isMediaPreviewEnabled(context, preferences)
-        sensitiveContentEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)
-        showCardActions = !preferences.getBoolean(SharedPreferenceConstants.KEY_HIDE_CARD_ACTIONS, false)
-        useStarsForLikes = preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)
-        isShowAbsoluteTime = preferences.getBoolean(SharedPreferenceConstants.KEY_SHOW_ABSOLUTE_TIME, false)
+        sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
+        showCardActions = !preferences.getBoolean(KEY_HIDE_CARD_ACTIONS, false)
+        useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
+        isShowAbsoluteTime = preferences.getBoolean(KEY_SHOW_ABSOLUTE_TIME, false)
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
         twidereLinkify = TwidereLinkify(handler)
         handler.setAdapter(this)
@@ -142,10 +145,7 @@ abstract class ParcelableStatusesAdapter(
         }
 
     override val rawStatusCount: Int
-        get() {
-            if (data == null) return 0
-            return data!!.size
-        }
+        get() = data?.size ?: 0
 
     override fun getItemId(position: Int): Long {
         val dataPosition = position - statusStartIndex
