@@ -54,7 +54,7 @@ class VariousItemsAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerVie
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val obj = getItem(position)
-        when (getItemViewType(obj)) {
+        when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
                 (holder as StatusViewHolder).displayStatus(obj as ParcelableStatus, true)
             }

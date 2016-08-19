@@ -736,16 +736,16 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus result;
                 switch (ParcelableAccountUtils.getAccountType(credentials)) {
                     case ParcelableAccount.Type.FANFOU: {
-                        result = ParcelableStatusUtils.fromStatus(twitter.createFanfouFavorite(mStatusId),
+                        result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.createFanfouFavorite(mStatusId),
                                 mAccountKey, false);
                         break;
                     }
                     default: {
-                        result = ParcelableStatusUtils.fromStatus(twitter.createFavorite(mStatusId),
+                        result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.createFavorite(mStatusId),
                                 mAccountKey, false);
                     }
                 }
-                ParcelableStatusUtils.updateExtraInformation(result, credentials,
+                ParcelableStatusUtils.INSTANCE.updateExtraInformation(result, credentials,
                         mUserColorNameManager);
                 Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();
@@ -1220,12 +1220,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 final ParcelableStatus result;
                 switch (ParcelableAccountUtils.getAccountType(credentials)) {
                     case ParcelableAccount.Type.FANFOU: {
-                        result = ParcelableStatusUtils.fromStatus(twitter.destroyFanfouFavorite(mStatusId),
+                        result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.destroyFanfouFavorite(mStatusId),
                                 mAccountKey, false);
                         break;
                     }
                     default: {
-                        result = ParcelableStatusUtils.fromStatus(twitter.destroyFavorite(mStatusId),
+                        result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.destroyFavorite(mStatusId),
                                 mAccountKey, false);
                     }
                 }
@@ -1361,9 +1361,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             ParcelableStatus status = null;
             MicroBlogException exception = null;
             try {
-                status = ParcelableStatusUtils.fromStatus(twitter.destroyStatus(mStatusId),
+                status = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.destroyStatus(mStatusId),
                         mAccountKey, false);
-                ParcelableStatusUtils.updateExtraInformation(status, credentials,
+                ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials,
                         mUserColorNameManager);
             } catch (final MicroBlogException e) {
                 exception = e;
@@ -1582,9 +1582,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 return SingleResponse.Companion.getInstance();
             }
             try {
-                final ParcelableStatus result = ParcelableStatusUtils.fromStatus(twitter.retweetStatus(mStatusId),
+                final ParcelableStatus result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.retweetStatus(mStatusId),
                         mAccountKey, false);
-                ParcelableStatusUtils.updateExtraInformation(result, credentials,
+                ParcelableStatusUtils.INSTANCE.updateExtraInformation(result, credentials,
                         mUserColorNameManager);
                 Utils.setLastSeen(mContext, result.mentions, System.currentTimeMillis());
                 final ContentValues values = new ContentValues();

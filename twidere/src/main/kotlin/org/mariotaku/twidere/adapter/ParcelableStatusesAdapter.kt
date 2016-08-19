@@ -26,9 +26,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
+import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
@@ -51,31 +51,35 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
  */
 abstract class ParcelableStatusesAdapter(
         context: Context
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), Constants, IStatusesAdapter<List<ParcelableStatus>> {
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IStatusesAdapter<List<ParcelableStatus>>,
+        IItemCountsAdapter {
 
     protected val inflater: LayoutInflater
 
-    override val mediaLoadingHandler: MediaLoadingHandler
-    override val twidereLinkify: TwidereLinkify
-    override val textSize: Float
-    @ShapedImageView.ShapeStyle
+    override final val mediaLoadingHandler: MediaLoadingHandler
+    final override val twidereLinkify: TwidereLinkify
+    final override val textSize: Float
+    @ShapedImageView.ShapeStyle final
     override val profileImageStyle: Int
-    @CardMediaContainer.PreviewStyle
+    @CardMediaContainer.PreviewStyle final
     override val mediaPreviewStyle: Int
-    @TwidereLinkify.HighlightStyle
+    @TwidereLinkify.HighlightStyle final
     override val linkHighlightingStyle: Int
-    override val nameFirst: Boolean
-    override val mediaPreviewEnabled: Boolean
-    override val profileImageEnabled: Boolean
-    override val sensitiveContentEnabled: Boolean
-    override val useStarsForLikes: Boolean
-    override val isShowAbsoluteTime: Boolean
+    final override val nameFirst: Boolean
+    final override val mediaPreviewEnabled: Boolean
+    final override val profileImageEnabled: Boolean
+    final override val sensitiveContentEnabled: Boolean
+    final override val useStarsForLikes: Boolean
+    final override val isShowAbsoluteTime: Boolean
     override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     private val showCardActions: Boolean
 
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
+
+    val hasPinnedStatuses: Boolean
+        get() = pinnedStatuses != null
 
     override var showAccountsColor: Boolean = false
         set(value) {
@@ -91,9 +95,20 @@ abstract class ParcelableStatusesAdapter(
             notifyDataSetChanged()
         }
 
+    var pinnedStatuses: List<ParcelableStatus>? = null
+        set(value) {
+            field = value
+            value?.forEach { it.is_pinned_status = true }
+            notifyDataSetChanged()
+        }
+
     private var data: List<ParcelableStatus>? = null
     private var showingActionCardId = RecyclerView.NO_ID
     private var lastItemFiltered: Boolean = false
+
+    override val itemCounts: IntArray = IntArray(4)
+
+    protected abstract val progressViewIds: IntArray
 
     init {
         inflater = LayoutInflater.from(context)
@@ -148,7 +163,7 @@ abstract class ParcelableStatusesAdapter(
         get() = data?.size ?: 0
 
     override fun getItemId(position: Int): Long {
-        val dataPosition = position - statusStartIndex
+        val dataPosition = position - getItemStartPosition(2)
         if (dataPosition < 0 || dataPosition >= statusCount) return position.toLong()
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
@@ -162,7 +177,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatusId(position: Int): String? {
-        val dataPosition = position - statusStartIndex
+        val dataPosition = position - getItemStartPosition(2)
         if (dataPosition < 0 || dataPosition >= rawStatusCount) return null
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
@@ -174,7 +189,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatusTimestamp(position: Int): Long {
-        val dataPosition = position - statusStartIndex
+        val dataPosition = position - getItemStartPosition(2)
         if (dataPosition < 0 || dataPosition >= rawStatusCount) return -1
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
@@ -186,7 +201,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatusPositionKey(position: Int): Long {
-        val dataPosition = position - statusStartIndex
+        val dataPosition = position - getItemStartPosition(2)
         if (dataPosition < 0 || dataPosition >= rawStatusCount) return -1
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
@@ -203,7 +218,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getAccountKey(position: Int): UserKey? {
-        val dataPosition = position - statusStartIndex
+        val dataPosition = position - getItemStartPosition(2)
         if (dataPosition < 0 || dataPosition >= rawStatusCount) return null
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
@@ -230,8 +245,6 @@ abstract class ParcelableStatusesAdapter(
     fun getData(): List<ParcelableStatus>? {
         return data
     }
-
-    protected abstract val progressViewIds: IntArray
 
     override fun isCardActionsShown(position: Int): Boolean {
         if (position == RecyclerView.NO_POSITION) return showCardActions
@@ -280,38 +293,55 @@ abstract class ParcelableStatusesAdapter(
     protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_STATUS -> {
-                bindStatus(holder as IStatusViewHolder, position)
+        when (getItemCountIndex(position)) {
+            1 -> {
+                val status = pinnedStatuses!![position - getItemStartPosition(1)]
+                (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
+            }
+            2 -> {
+                when (holder.itemViewType) {
+                    ITEM_VIEW_TYPE_STATUS -> {
+                        val status = data!![position - getItemStartPosition(2)]
+                        (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
+                    }
+                }
             }
         }
+
     }
 
     override fun getItemViewType(position: Int): Int {
         if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
             return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
-        if (position == statusCount) {
-            return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
-        } else if (isGapItem(position)) {
-            return IGapSupportedAdapter.ITEM_VIEW_TYPE_GAP
+        when (getItemCountIndex(position)) {
+            0, 3 -> {
+                return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
+            }
+            1 -> {
+                return ITEM_VIEW_TYPE_STATUS
+            }
+            2 -> {
+                if (isGapItem(position)) {
+                    return IGapSupportedAdapter.ITEM_VIEW_TYPE_GAP
+                } else if (isFiltered(position)) {
+                    return ITEM_VIEW_TYPE_EMPTY
+                } else {
+                    return ITEM_VIEW_TYPE_STATUS
+                }
+            }
         }
-        if (isFiltered(position)) return ITEM_VIEW_TYPE_EMPTY
-        return ITEM_VIEW_TYPE_STATUS
+        throw AssertionError()
     }
 
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
-        var count = 0
-        if (position and ILoadMoreSupportAdapter.START != 0L) {
-            count += 1
-        }
-        count += statusCount
-        if (position and ILoadMoreSupportAdapter.END != 0L) {
-            count += 1
-        }
-        return count
+        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[1] = pinnedStatuses?.size ?: 0
+        itemCounts[2] = statusCount
+        itemCounts[3] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        return itemCounts.sum()
     }
 
 
@@ -327,19 +357,8 @@ abstract class ParcelableStatusesAdapter(
         return null
     }
 
-    protected fun bindStatus(holder: IStatusViewHolder, position: Int) {
-        holder.displayStatus(getStatus(position)!!, isShowInReplyTo)
-    }
-
     val statusStartIndex: Int
-        get() {
-            val position = loadMoreIndicatorPosition
-            var start = 0
-            if (position and ILoadMoreSupportAdapter.START != 0L) {
-                start += 1
-            }
-            return start
-        }
+        get() = getItemStartPosition(2)
 
     private fun isFiltered(position: Int): Boolean {
         if (data is ObjectCursor) return false
@@ -350,5 +369,6 @@ abstract class ParcelableStatusesAdapter(
         const val ITEM_VIEW_TYPE_STATUS = 2
         const val ITEM_VIEW_TYPE_EMPTY = 3
     }
+
 
 }

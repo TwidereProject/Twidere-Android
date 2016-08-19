@@ -215,6 +215,8 @@ public interface IntentConstants {
     String EXTRA_IS_POSSIBLY_SENSITIVE = "is_possibly_sensitive";
     String EXTRA_REFERRAL = "referral";
     String EXTRA_LOADING_MORE = "loading_more";
+    String EXTRA_PINNED_STATUS_IDS = "pinned_status_ids";
+    String EXTRA_SHOULD_INIT_LOADER = "should_init_loader";
     String EXTRA_START_INTENT = "start_intent";
     String EXTRA_SELECT_ONLY_ITEM = "select_only_item";
 }

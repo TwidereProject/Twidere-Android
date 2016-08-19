@@ -82,6 +82,8 @@ import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
+import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -112,7 +114,12 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.util.*
 
-class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener, OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback, SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener, KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener, IToolBarSupportFragment {
+class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener,
+        OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
+        SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
+        KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
+        IToolBarSupportFragment, StatusesFragmentDelegate, UserTimelineFragmentDelegate {
+
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
 
@@ -164,7 +171,6 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         override fun onLoadFinished(loader: Loader<SingleResponse<UserRelationship>>,
                                     data: SingleResponse<UserRelationship>) {
             followProgress!!.visibility = View.GONE
-            val user = user
             val relationship = data.data
             displayRelationship(user, relationship)
             updateOptionsMenuVisibility()
@@ -179,11 +185,11 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             val userId = args.getParcelable<UserKey>(EXTRA_USER_KEY)
             val screenName = args.getString(EXTRA_SCREEN_NAME)
             if (user == null && (!omitIntentExtra || !args.containsKey(EXTRA_USER))) {
-                cardContent!!.visibility = View.GONE
-                errorContainer!!.visibility = View.GONE
-                progressContainer!!.visibility = View.VISIBLE
-                errorText!!.text = null
-                errorText!!.visibility = View.GONE
+                cardContent.visibility = View.GONE
+                errorContainer.visibility = View.GONE
+                progressContainer.visibility = View.VISIBLE
+                errorText.text = null
+                errorText.visibility = View.GONE
             }
             val user = this@UserFragment.user
             val loadFromCache = user == null || !user.is_cache && user.key.maybeEquals(userId)
@@ -200,9 +206,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             val activity = activity ?: return
             if (data.data != null) {
                 val user = data.data
-                cardContent!!.visibility = View.VISIBLE
-                errorContainer!!.visibility = View.GONE
-                progressContainer!!.visibility = View.GONE
+                cardContent.visibility = View.VISIBLE
+                errorContainer.visibility = View.GONE
+                progressContainer.visibility = View.GONE
                 val account = data.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
                 displayUser(user, account)
                 if (user.is_cache) {
@@ -215,25 +221,27 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 }
                 updateOptionsMenuVisibility()
             } else if (user != null && user!!.is_cache) {
-                cardContent!!.visibility = View.VISIBLE
-                errorContainer!!.visibility = View.GONE
-                progressContainer!!.visibility = View.GONE
+                cardContent.visibility = View.VISIBLE
+                errorContainer.visibility = View.GONE
+                progressContainer.visibility = View.GONE
                 displayUser(user, account)
                 updateOptionsMenuVisibility()
             } else {
                 if (data.hasException()) {
-                    errorText!!.text = Utils.getErrorMessage(activity, data.exception)
-                    errorText!!.visibility = View.VISIBLE
+                    errorText.text = Utils.getErrorMessage(activity, data.exception)
+                    errorText.visibility = View.VISIBLE
                 }
-                cardContent!!.visibility = View.GONE
-                errorContainer!!.visibility = View.VISIBLE
-                progressContainer!!.visibility = View.GONE
+                cardContent.visibility = View.GONE
+                errorContainer.visibility = View.VISIBLE
+                progressContainer.visibility = View.GONE
                 displayUser(null, null)
                 updateOptionsMenuVisibility()
             }
         }
 
     }
+    override val pinnedStatusIds: Array<String>?
+        get() = user?.extras?.pinned_status_ids
 
     private fun updateOptionsMenuVisibility() {
         setHasOptionsMenu(user != null && mRelationship != null)
@@ -407,6 +415,11 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 setUiColor(Config.primaryColor(activity, activity.ateKey))
             }
             return
+        }
+        val adapter = pagerAdapter!!
+        for (i in 0 until adapter.count) {
+            val sf = adapter.instantiateItem(viewPager, i) as? AbsStatusesFragment
+            sf?.initLoaderIfNeeded()
         }
         profileImage.visibility = View.VISIBLE
         val resources = resources
@@ -1393,6 +1406,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             return 0
         }
 
+    override val shouldInitLoader: Boolean
+        get() = user != null
 
     private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {
 

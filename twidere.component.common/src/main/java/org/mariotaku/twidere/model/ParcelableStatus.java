@@ -358,6 +358,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.INSERTED_DATE)
     public long inserted_date;
 
+    @ParcelableThisPlease
+    public boolean is_pinned_status;
+
     public ParcelableStatus() {
     }
 

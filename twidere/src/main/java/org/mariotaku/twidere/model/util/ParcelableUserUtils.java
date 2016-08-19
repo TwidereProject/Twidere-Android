@@ -83,6 +83,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         extras.statusnet_profile_url = user.getStatusnetProfileUrl();
         extras.profile_image_url_original = user.getProfileImageUrlOriginal();
         extras.profile_image_url_profile_size = user.getProfileImageUrlProfileSize();
+        extras.pinned_status_ids = user.getPinnedTweetIds();
         if (extras.profile_image_url_profile_size == null) {
             extras.profile_image_url_profile_size = user.getProfileImageUrlLarge();
         }

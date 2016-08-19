@@ -39,21 +39,8 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         @TimelineType
         get() = TimelineType.USER
 
-    override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val data = adapterData
-        val accountKey = Utils.getAccountKey(context, args)
-        val maxId = args.getString(EXTRA_MAX_ID)
-        val sinceId = args.getString(EXTRA_SINCE_ID)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return UserTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
-    }
+    val pinnedStatusIds: Array<String>?
+        get() = (parentFragment as? UserTimelineFragmentDelegate)?.pinnedStatusIds
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
@@ -92,4 +79,34 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
             }
             return sb.toString()
         }
+
+    override fun onCreateStatusesLoader(context: Context,
+                                        args: Bundle,
+                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+        refreshing = true
+        val data = adapterData
+        val accountKey = Utils.getAccountKey(context, args)
+        val maxId = args.getString(EXTRA_MAX_ID)
+        val sinceId = args.getString(EXTRA_SINCE_ID)
+        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val screenName = args.getString(EXTRA_SCREEN_NAME)
+        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
+        val pinnedIds = if (adapter!!.hasPinnedStatuses) null else pinnedStatusIds
+        return UserTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId, data,
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds)
+    }
+
+    override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
+        val timelineLoader = loader as UserTimelineLoader
+        val adapter = adapter!!
+        if (!adapter.hasPinnedStatuses) {
+            adapter.pinnedStatuses = timelineLoader.pinnedStatuses
+        }
+        super.onStatusesLoaded(loader, data)
+    }
+
+    interface UserTimelineFragmentDelegate {
+        val pinnedStatusIds: Array<String>?
+    }
 }

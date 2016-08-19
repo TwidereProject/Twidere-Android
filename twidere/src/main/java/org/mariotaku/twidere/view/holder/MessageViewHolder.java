@@ -97,7 +97,7 @@ public class MessageViewHolder extends ViewHolder {
         final SpanItem[] spans = JsonSerializer.parseArray(cursor.getString(indices.spans),
                 SpanItem.class);
         final SpannableStringBuilder text = SpannableStringBuilder.valueOf(cursor.getString(indices.text_unescaped));
-        ParcelableStatusUtils.applySpans(text, spans);
+        ParcelableStatusUtils.INSTANCE.applySpans(text, spans);
         // Detect entity support
         linkify.applyAllLinks(text, accountKey, false, true);
         textView.setText(text);

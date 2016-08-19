@@ -36,10 +36,10 @@ import org.mariotaku.twidere.view.holder.GapViewHolder
  * Created by mariotaku on 15/10/26.
  */
 interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
-    fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean)
 
     fun displayStatus(status: ParcelableStatus,
-                      displayInReplyTo: Boolean, shouldDisplayExtraType: Boolean)
+                      displayInReplyTo: Boolean = true,
+                      shouldDisplayExtraType: Boolean = true)
 
     val profileImageView: ImageView?
 

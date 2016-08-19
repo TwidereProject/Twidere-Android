@@ -106,7 +106,7 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
+        when (holder.itemViewType) {
             ITEM_VIEW_TYPE_MESSAGE -> {
                 val c = mCursor
                 c!!.moveToPosition(position)

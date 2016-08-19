@@ -86,7 +86,7 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey);
             if (credentials == null) return SingleResponse.Companion.getInstance();
             final ParcelableStatus status = findStatus(getContext(), mAccountKey, mStatusId);
-            ParcelableStatusUtils.updateExtraInformation(status, credentials, mUserColorNameManager);
+            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials, mUserColorNameManager);
             final SingleResponse<ParcelableStatus> response = SingleResponse.Companion.getInstance(status);
             final Bundle extras = response.getExtras();
             extras.putParcelable(EXTRA_ACCOUNT, credentials);

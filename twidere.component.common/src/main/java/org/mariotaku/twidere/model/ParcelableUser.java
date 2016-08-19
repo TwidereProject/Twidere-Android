@@ -348,6 +348,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "muting")
         @ParcelableThisPlease
         public boolean muting;
+        @JsonField(name = "pinned_status_ids")
+        @ParcelableThisPlease
+        public String[] pinned_status_ids;
 
 
         @Override
@@ -373,6 +376,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
                     ", blocked_by=" + blocked_by +
                     ", followed_by=" + followed_by +
                     ", muting=" + muting +
+                    ", pinned_status_ids=" + Arrays.toString(pinned_status_ids) +
                     '}';
         }
 

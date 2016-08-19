@@ -88,7 +88,7 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
 
 
         @Override
-        public void displayStatus(ParcelableStatus status, boolean displayInReplyTo) {
+        public void displayStatus(@NonNull ParcelableStatus status, boolean displayInReplyTo, boolean shouldDisplayExtraType) {
             final MediaLoaderWrapper loader = adapter.getMediaLoader();
             final ParcelableMedia[] media = status.media;
             if (media == null || media.length < 1) return;
@@ -106,11 +106,6 @@ public class StaggeredGridParcelableStatusesAdapter extends ParcelableStatusesAd
             loader.displayProfileImage(mediaProfileImageView, status);
             loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.preview_url,
                     status.account_key, adapter.getMediaLoadingHandler());
-        }
-
-        @Override
-        public void displayStatus(@NonNull ParcelableStatus status, boolean displayInReplyTo, boolean shouldDisplayExtraType) {
-            displayStatus(status, displayInReplyTo);
         }
 
         @Override

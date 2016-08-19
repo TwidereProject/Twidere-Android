@@ -236,7 +236,7 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (getItemViewType(position)) {
+        when (holder.itemViewType) {
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivity(position)?.getActivityStatus() ?: return
                 val statusViewHolder = holder as IStatusViewHolder

@@ -23,7 +23,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
-
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -32,7 +31,9 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import java.util.concurrent.atomic.AtomicReference
 
 class UserTimelineLoader(
         context: Context,
@@ -45,13 +46,34 @@ class UserTimelineLoader(
         savedStatusesArgs: Array<String>?,
         tabPosition: Int,
         fromUser: Boolean,
-        loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs, tabPosition, fromUser, loadingMore) {
+        loadingMore: Boolean,
+        val pinnedStatusIds: Array<String>?
+) : MicroBlogAPIStatusesLoader(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs,
+        tabPosition, fromUser, loadingMore) {
+
+    private val pinnedStatusesRef = AtomicReference<List<ParcelableStatus>>()
+
+    var pinnedStatuses: List<ParcelableStatus>?
+        get() = pinnedStatusesRef.get()
+        private set(value) {
+            pinnedStatusesRef.set(value)
+        }
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
                              credentials: ParcelableCredentials,
                              paging: Paging): ResponseList<Status> {
+        if (pinnedStatusIds != null) {
+            try {
+                pinnedStatuses = microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
+                    val created = ParcelableStatusUtils.fromStatus(status, credentials.account_key, false)
+                    created.sort_id = idx.toLong()
+                    return@mapIndexed created
+                }
+            } catch (e: MicroBlogException) {
+                // Ignore
+            }
+        }
         if (userId != null) {
             return microBlog.getUserTimeline(userId.id, paging)
         } else if (screenName != null) {

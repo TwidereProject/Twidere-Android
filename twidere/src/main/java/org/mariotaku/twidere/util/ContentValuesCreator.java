@@ -158,7 +158,7 @@ public final class ContentValuesCreator implements TwidereConstants {
 
     @NonNull
     public static ContentValues createStatus(final Status orig, final UserKey accountKey) {
-        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
+        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.INSTANCE.fromStatus(orig,
                 accountKey, false));
     }
 
@@ -172,7 +172,7 @@ public final class ContentValuesCreator implements TwidereConstants {
         activity.account_color = credentials.color;
 
         if (status != null) {
-            ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
+            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials, manager);
 
             activity.status_id = status.id;
             activity.status_retweet_id = status.retweet_id;

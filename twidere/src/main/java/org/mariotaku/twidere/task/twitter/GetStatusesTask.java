@@ -197,9 +197,9 @@ public abstract class GetStatusesTask extends AbstractTask<RefreshTaskParam,
 
             for (int i = 0, j = statuses.size(); i < j; i++) {
                 final Status item = statuses.get(i);
-                final ParcelableStatus status = ParcelableStatusUtils.fromStatus(item, accountKey,
+                final ParcelableStatus status = ParcelableStatusUtils.INSTANCE.fromStatus(item, accountKey,
                         false);
-                ParcelableStatusUtils.updateExtraInformation(status, credentials, manager);
+                ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials, manager);
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, j);
                 status.inserted_date = System.currentTimeMillis();

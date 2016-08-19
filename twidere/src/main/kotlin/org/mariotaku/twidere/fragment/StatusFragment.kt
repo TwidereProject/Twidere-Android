@@ -1146,7 +1146,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             }
 
             override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-                when (getItemViewType(position)) {
+                when (holder.itemViewType) {
                     ITEM_VIEW_TYPE_USER -> {
                         (holder as ProfileImageViewHolder).displayUser(getUser(position)!!)
                     }
@@ -1678,9 +1678,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val itemType = getItemType(position)
-            val itemViewType = getItemViewTypeByItemType(itemType)
-            when (itemViewType) {
+            when (holder.itemViewType) {
                 VIEW_TYPE_DETAIL_STATUS -> {
                     val status = getStatus(position)
                     val detailHolder = holder as DetailStatusViewHolder
@@ -1693,8 +1691,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     // Display 'in reply to' for first item
                     // useful to indicate whether first tweet has reply or not
                     // We only display that indicator for first conversation item
-                    statusHolder.displayStatus(status!!,
-                            itemType == ITEM_IDX_CONVERSATION && position - getItemTypeStart(position) == 0)
+                    val itemType = getItemType(position)
+                    statusHolder.displayStatus(status!!, itemType == ITEM_IDX_CONVERSATION
+                            && position - getItemTypeStart(position) == 0)
                 }
                 VIEW_TYPE_REPLY_ERROR -> {
                     val errorHolder = holder as StatusErrorItemViewHolder

@@ -49,27 +49,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     private var page = 1
     private var pageDelta: Int = 0
 
-    fun deleteStatus(statusId: String) {
-        val list = adapterData ?: return
-        val dataToRemove = HashSet<ParcelableStatus>()
-        var i = 0
-        val j = list.size
-        while (i < j) {
-            val status = list[i]
-            if (TextUtils.equals(status.id, statusId) || TextUtils.equals(status.retweet_id, statusId)) {
-                dataToRemove.add(status)
-            } else if (TextUtils.equals(status.my_retweet_id, statusId)) {
-                status.my_retweet_id = null
-                status.retweet_count = status.retweet_count - 1
-            }
-            i++
-        }
-        if (list is MutableList) {
-            list.removeAll(dataToRemove)
-        }
-        adapterData = list
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
@@ -77,7 +56,26 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         }
     }
 
+    fun deleteStatus(statusId: String) {
+        val list = adapterData ?: return
+        val dataToRemove = HashSet<ParcelableStatus>()
+        for (i in 0 until list.size) {
+            val status = list[i]
+            if (TextUtils.equals(status.id, statusId) || TextUtils.equals(status.retweet_id, statusId)) {
+                dataToRemove.add(status)
+            } else if (TextUtils.equals(status.my_retweet_id, statusId)) {
+                status.my_retweet_id = null
+                status.retweet_count = status.retweet_count - 1
+            }
+        }
+        if (list is MutableList) {
+            list.removeAll(dataToRemove)
+        }
+        adapterData = list
+    }
+
     override fun getStatuses(param: RefreshTaskParam): Boolean {
+        if (!loaderInitialized) return false
         val args = Bundle(arguments)
         val maxIds = param.maxIds
         if (maxIds != null) {

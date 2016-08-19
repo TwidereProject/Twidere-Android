@@ -907,7 +907,7 @@ public final class Utils implements Constants {
         final ContentResolver resolver = context.getContentResolver();
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs);
         resolver.insert(CachedStatuses.CONTENT_URI, ContentValuesCreator.createStatus(status, accountKey));
-        return ParcelableStatusUtils.fromStatus(status, accountKey, false);
+        return ParcelableStatusUtils.INSTANCE.fromStatus(status, accountKey, false);
     }
 
     @Nullable

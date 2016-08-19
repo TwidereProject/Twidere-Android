@@ -114,7 +114,7 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        switch (getItemViewType(position)) {
+        switch (holder.getItemViewType()) {
             case ITEM_VIEW_TYPE_MESSAGE_INCOMING:
             case ITEM_VIEW_TYPE_MESSAGE_OUTGOING: {
                 final Cursor c = mCursor;
