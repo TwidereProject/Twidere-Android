@@ -36,18 +36,16 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>> : AbsContentRecyclerViewFragment<A, LinearLayoutManager>() {
 
     override fun createItemDecoration(context: Context,
-                                      recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+                                      recyclerView: RecyclerView,
+                                      layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         return DividerItemDecoration(context, layoutManager.orientation)
     }
 
-
     override fun setLoadMoreIndicatorPosition(@IndicatorPosition position: Long) {
         val decor = itemDecoration
-        if (decor != null) {
-            if (decor is DividerItemDecoration) {
-                decor.setDecorationStart(if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0)
-                decor.setDecorationEndOffset(if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0)
-            }
+        if (decor is DividerItemDecoration) {
+            decor.setDecorationStart(if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0)
+            decor.setDecorationEndOffset(if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0)
         }
         super.setLoadMoreIndicatorPosition(position)
     }
