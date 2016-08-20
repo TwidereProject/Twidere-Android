@@ -103,8 +103,8 @@ public class DefaultAPIPreference extends DialogPreference implements Constants,
                     mButtonTwipOMode = (RadioButton) editDialog.findViewById(R.id.twipO);
                     mEditSameOAuthSigningUrl = (CheckBox) editDialog.findViewById(R.id.editSameOAuthSigningUrl);
                     mEditNoVersionSuffix = (CheckBox) editDialog.findViewById(R.id.editNoVersionSuffix);
-                    mEditConsumerKey = (EditText) editDialog.findViewById(R.id.consumer_key);
-                    mEditConsumerSecret = (EditText) editDialog.findViewById(R.id.consumer_secret);
+                    mEditConsumerKey = (EditText) editDialog.findViewById(R.id.editConsumerKey);
+                    mEditConsumerSecret = (EditText) editDialog.findViewById(R.id.editConsumerSecret);
                     mAPIFormatHelpButton = editDialog.findViewById(R.id.apiUrlFormatHelp);
 
                     mEditNoVersionSuffix.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

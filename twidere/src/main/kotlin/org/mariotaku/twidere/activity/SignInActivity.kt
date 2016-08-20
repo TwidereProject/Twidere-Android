@@ -661,8 +661,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val builder = AlertDialog.Builder(activity)
             builder.setView(R.layout.dialog_set_consumer_key_secret)
             builder.setPositiveButton(android.R.string.ok) { dialog, which ->
-                val editConsumerKey = (dialog as Dialog).findViewById(R.id.consumer_key) as EditText
-                val editConsumerSecret = dialog.findViewById(R.id.consumer_secret) as EditText
+                val editConsumerKey = (dialog as Dialog).findViewById(R.id.editConsumerKey) as EditText
+                val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as EditText
                 val prefs = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
                 val editor = prefs.edit()
                 editor.putString(KEY_CONSUMER_KEY, ParseUtils.parseString(editConsumerKey.text))
@@ -672,8 +672,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val dialog = builder.create()
             dialog.setOnShowListener(DialogInterface.OnShowListener { dialog ->
                 val activity = activity ?: return@OnShowListener
-                val editConsumerKey = (dialog as Dialog).findViewById(R.id.consumer_key) as MaterialEditText
-                val editConsumerSecret = dialog.findViewById(R.id.consumer_secret) as MaterialEditText
+                val editConsumerKey = (dialog as Dialog).findViewById(R.id.editConsumerKey) as MaterialEditText
+                val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as MaterialEditText
                 editConsumerKey.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)))
                 editConsumerSecret.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)))
                 val prefs = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
