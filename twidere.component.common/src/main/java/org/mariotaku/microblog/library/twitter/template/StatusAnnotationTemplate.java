@@ -15,7 +15,9 @@ import org.mariotaku.restfu.annotation.param.Queries;
         @KeyValue(key = "include_descendent_reply_count", valueKey = "include_descendent_reply_count"),
         @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text"),
         @KeyValue(key = "tweet_mode", valueKey = "tweet_mode"),
-        @KeyValue(key = "model_version", valueKey = "model_version")
+        @KeyValue(key = "model_version", valueKey = "model_version"),
+        @KeyValue(key = "include_blocking", value = "true"),
+        @KeyValue(key = "include_blocked_by", value = "true")
 })
 public class StatusAnnotationTemplate {
 }

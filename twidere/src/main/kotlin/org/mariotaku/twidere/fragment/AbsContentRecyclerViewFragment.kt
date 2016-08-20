@@ -78,8 +78,10 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         updateRefreshProgressOffset()
     }
 
-    override fun onRefresh() {
-        triggerRefresh()
+    override final fun onRefresh() {
+        if (!triggerRefresh()) {
+            refreshing = false
+        }
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -237,7 +239,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     override fun fitSystemWindows(insets: Rect) {
         val extraPadding = extraContentPadding
-        recyclerView!!.setPadding(insets.left + extraPadding.left, insets.top + extraPadding.top,
+        recyclerView.setPadding(insets.left + extraPadding.left, insets.top + extraPadding.top,
                 insets.right + extraPadding.right, insets.bottom + extraPadding.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)

@@ -119,62 +119,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         }
     }
 
-    protected inner class CursorStatusesBusCallback {
-
-        @Subscribe
-        fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
-            if (event.uri != contentUri) return
-            refreshing = event.running
-            if (!event.running) {
-                setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-                refreshEnabled = true
-                showContentOrError()
-            }
-        }
-
-
-        @Subscribe
-        fun notifyFavoriteTask(event: FavoriteTaskEvent) {
-            if (event.isSucceeded) {
-                val status = event.status
-                val data = adapterData
-                if (status == null || data == null || data.isEmpty()) return
-                val adapter = adapter as ParcelableStatusesAdapter
-                val firstVisiblePosition = layoutManager!!.findFirstVisibleItemPosition()
-                val lastVisiblePosition = layoutManager!!.findLastVisibleItemPosition()
-                val startIndex = adapter.statusStartIndex
-                for (i in firstVisiblePosition..lastVisiblePosition) {
-                    if (status.account_key == adapter.getAccountKey(i) && status.id == adapter.getStatusId(i)) {
-                        if (data is MutableList) {
-                            data[i - startIndex] = status
-                        }
-                        return
-                    }
-                }
-                adapter.notifyDataSetChanged()
-            }
-        }
-
-        @Subscribe
-        fun notifyStatusDestroyed(event: StatusDestroyedEvent) {
-        }
-
-        @Subscribe
-        fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            adapter!!.notifyDataSetChanged()
-        }
-
-        @Subscribe
-        fun notifyStatusRetweeted(event: StatusRetweetedEvent) {
-        }
-
-        @Subscribe
-        fun notifyAccountChanged(event: AccountChangedEvent) {
-
-        }
-
-    }
-
     override val accountKeys: Array<UserKey>
         get() {
             val args = arguments
@@ -197,7 +141,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 reloadStatuses()
             }
         }
-        cr!!.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver!!)
+        cr.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver!!)
         cr.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
         updateRefreshState()
         reloadStatuses()
@@ -215,7 +159,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onStop() {
-        contentResolver?.unregisterContentObserver(contentObserver!!)
+        contentResolver.unregisterContentObserver(contentObserver!!)
         super.onStop()
     }
 
@@ -299,7 +243,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return DataStoreUtils.getNewestStatusIds(context, contentUri, accountKeys)
     }
 
-
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         val context = context
@@ -309,6 +252,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             }
         }
     }
+
 
     protected fun getOldestStatusIds(accountKeys: Array<UserKey>): Array<String>? {
         val context = context ?: return null
@@ -320,5 +264,61 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     protected abstract fun updateRefreshState()
+
+    protected inner class CursorStatusesBusCallback {
+
+        @Subscribe
+        fun notifyGetStatusesTaskChanged(event: GetStatusesTaskEvent) {
+            if (event.uri != contentUri) return
+            refreshing = event.running
+            if (!event.running) {
+                setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
+                refreshEnabled = true
+                showContentOrError()
+            }
+        }
+
+
+        @Subscribe
+        fun notifyFavoriteTask(event: FavoriteTaskEvent) {
+            if (event.isSucceeded) {
+                val status = event.status
+                val data = adapterData
+                if (status == null || data == null || data.isEmpty()) return
+                val adapter = adapter as ParcelableStatusesAdapter
+                val firstVisiblePosition = layoutManager!!.findFirstVisibleItemPosition()
+                val lastVisiblePosition = layoutManager!!.findLastVisibleItemPosition()
+                val startIndex = adapter.statusStartIndex
+                for (i in firstVisiblePosition..lastVisiblePosition) {
+                    if (status.account_key == adapter.getAccountKey(i) && status.id == adapter.getStatusId(i)) {
+                        if (data is MutableList) {
+                            data[i - startIndex] = status
+                        }
+                        return
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        }
+
+        @Subscribe
+        fun notifyStatusDestroyed(event: StatusDestroyedEvent) {
+        }
+
+        @Subscribe
+        fun notifyStatusListChanged(event: StatusListChangedEvent) {
+            adapter!!.notifyDataSetChanged()
+        }
+
+        @Subscribe
+        fun notifyStatusRetweeted(event: StatusRetweetedEvent) {
+        }
+
+        @Subscribe
+        fun notifyAccountChanged(event: AccountChangedEvent) {
+
+        }
+
+    }
 
 }

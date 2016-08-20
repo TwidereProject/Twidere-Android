@@ -179,10 +179,6 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         }
     }
 
-    override fun onRefresh() {
-        triggerRefresh()
-    }
-
     override fun scrollToStart(): Boolean {
         val result = super.scrollToStart()
         if (result) {

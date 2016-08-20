@@ -19,14 +19,6 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
-import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
-import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.AccountSettings;
 import org.mariotaku.microblog.library.twitter.model.Category;
@@ -38,11 +30,17 @@ import org.mariotaku.microblog.library.twitter.model.ResponseCode;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SettingsUpdate;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.microblog.library.twitter.template.UserAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Query;
+import org.mariotaku.restfu.http.BodyType;
+import org.mariotaku.restfu.http.mime.FileBody;
 
 @SuppressWarnings("RedundantThrows")
-@Queries({@KeyValue(key = "include_entities", valueKey = "include_entities"),
-        @KeyValue(key = "include_cards", valueKey = "include_cards"),
-        @KeyValue(key = "cards_platform", valueKey = "cards_platform")})
+@Queries(template = UserAnnotationTemplate.class)
 public interface UsersResources {
 
     @POST("/blocks/create.json")

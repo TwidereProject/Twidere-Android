@@ -23,11 +23,10 @@ import android.text.TextUtils
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.attoparser.AttoParseException
-import org.attoparser.markup.MarkupAttoParser
-import org.attoparser.markup.html.AbstractStandardNonValidatingHtmlAttoHandler
-import org.attoparser.markup.html.HtmlParsingConfiguration
-import org.attoparser.markup.html.elements.IHtmlElement
+import org.attoparser.ParseException
+import org.attoparser.config.ParseConfiguration
+import org.attoparser.simple.AbstractSimpleMarkupHandler
+import org.attoparser.simple.SimpleMarkupParser
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.restfu.RestAPIFactory
@@ -139,28 +138,23 @@ class OAuthPasswordAuthenticator(
                 throw LoginVerificationException()
             }
             return data
-        } catch (e: AttoParseException) {
+        } catch (e: ParseException) {
             throw LoginVerificationException("Login verification challenge failed", e)
         } finally {
             Utils.closeSilently(response)
         }
     }
 
-    @Throws(AttoParseException::class, IOException::class)
+    @Throws(ParseException::class, IOException::class)
     private fun parseAuthorizeRequestData(response: HttpResponse, data: AuthorizeRequestData) {
-        val conf = HtmlParsingConfiguration()
-        val handler = object : AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+        val handler = object : AbstractSimpleMarkupHandler() {
             internal var isOAuthFormOpened: Boolean = false
-
-            override fun handleHtmlStandaloneElement(element: IHtmlElement?, minimized: Boolean,
-                                                     elementName: String?, attributes: Map<String, String>?,
-                                                     line: Int, col: Int) {
-                handleHtmlOpenElement(element, elementName, attributes, line, col)
-                handleHtmlCloseElement(element, elementName, line, col)
+            override fun handleStandaloneElement(elementName: String?, attributes: MutableMap<String, String>?, minimized: Boolean, line: Int, col: Int) {
+                handleOpenElement(elementName, attributes, line, col)
+                handleCloseElement(elementName, line, col)
             }
 
-            override fun handleHtmlOpenElement(element: IHtmlElement?, elementName: String?,
-                                               attributes: Map<String, String>?, line: Int, col: Int) {
+            override fun handleOpenElement(elementName: String?, attributes: MutableMap<String, String>?, line: Int, col: Int) {
                 when (elementName) {
                     "form" -> {
                         if (attributes != null && "oauth_form" == attributes["id"]) {
@@ -181,7 +175,7 @@ class OAuthPasswordAuthenticator(
                 }
             }
 
-            override fun handleHtmlCloseElement(element: IHtmlElement?, elementName: String?, line: Int, col: Int) {
+            override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
                 if ("form" == elementName) {
                     isOAuthFormOpened = false
                 }
@@ -216,19 +210,18 @@ class OAuthPasswordAuthenticator(
             authorizeResultBuilder.headers(requestHeaders)
             authorizeResultBuilder.body(authorizationResultBody)
             response = client.newCall(authorizeResultBuilder.build()).execute()
-            val conf = HtmlParsingConfiguration()
-            val handler = object : AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+            val handler = object : AbstractSimpleMarkupHandler() {
                 internal var isOAuthPinDivOpened: Boolean = false
                 internal var isChallengeFormOpened: Boolean = false
 
-                override fun handleHtmlStandaloneElement(element: IHtmlElement?, minimized: Boolean,
-                                                         elementName: String?, attributes: Map<String, String>?,
-                                                         line: Int, col: Int) {
-                    handleHtmlOpenElement(element, elementName, attributes, line, col)
-                    handleHtmlCloseElement(element, elementName, line, col)
+                override fun handleStandaloneElement(elementName: String?,
+                                                     attributes: MutableMap<String, String>?,
+                                                     minimized: Boolean, line: Int, col: Int) {
+                    handleOpenElement(elementName, attributes, line, col)
+                    handleCloseElement(elementName, line, col)
                 }
 
-                override fun handleHtmlCloseElement(element: IHtmlElement?, elementName: String?, line: Int, col: Int) {
+                override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             isOAuthPinDivOpened = false
@@ -239,8 +232,8 @@ class OAuthPasswordAuthenticator(
                     }
                 }
 
-                override fun handleHtmlOpenElement(element: IHtmlElement?, elementName: String?,
-                                                   attributes: Map<String, String>?, line: Int, col: Int) {
+                override fun handleOpenElement(elementName: String?,
+                                               attributes: Map<String, String>?, line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             if (attributes != null && "oauth_pin" == attributes["id"]) {
@@ -295,7 +288,7 @@ class OAuthPasswordAuthenticator(
                     }
                 }
 
-                @Throws(AttoParseException::class)
+                @Throws(ParseException::class)
                 override fun handleText(buffer: CharArray?, offset: Int, len: Int, line: Int, col: Int) {
                     if (isOAuthPinDivOpened) {
                         val s = String(buffer!!, offset, len)
@@ -307,7 +300,7 @@ class OAuthPasswordAuthenticator(
             }
             PARSER.parse(SimpleBody.reader(response!!.body), handler)
             return data
-        } catch (e: AttoParseException) {
+        } catch (e: ParseException) {
             throw AuthenticationException("Malformed HTML", e)
         } finally {
             Utils.closeSilently(response)
@@ -335,7 +328,7 @@ class OAuthPasswordAuthenticator(
                 throw AuthenticationException()
             }
             return data
-        } catch (e: AttoParseException) {
+        } catch (e: ParseException) {
             throw AuthenticationException("Malformed HTML", e)
         } finally {
             Utils.closeSilently(response)
@@ -458,22 +451,20 @@ class OAuthPasswordAuthenticator(
 
     companion object {
 
-        private val PARSER = MarkupAttoParser()
+        private val PARSER = SimpleMarkupParser(ParseConfiguration.htmlConfiguration())
 
-        @Throws(AttoParseException::class, IOException::class)
+        @Throws(ParseException::class, IOException::class)
         fun readOAuthPINFromHtml(reader: Reader, data: OAuthPinData) {
-            val conf = HtmlParsingConfiguration()
-            val handler = object : AbstractStandardNonValidatingHtmlAttoHandler(conf) {
+            val handler = object : AbstractSimpleMarkupHandler() {
                 internal var isOAuthPinDivOpened: Boolean = false
-
-                override fun handleHtmlStandaloneElement(element: IHtmlElement?, minimized: Boolean,
-                                                         elementName: String?, attributes: Map<String, String>?,
-                                                         line: Int, col: Int) {
-                    handleHtmlOpenElement(element, elementName, attributes, line, col)
-                    handleHtmlCloseElement(element, elementName, line, col)
+                override fun handleStandaloneElement(elementName: String?,
+                                                     attributes: MutableMap<String, String>?,
+                                                     minimized: Boolean, line: Int, col: Int) {
+                    handleOpenElement(elementName, attributes, line, col)
+                    handleCloseElement(elementName, line, col)
                 }
 
-                override fun handleHtmlOpenElement(element: IHtmlElement?, elementName: String?, attributes: Map<String, String>?, line: Int, col: Int) {
+                override fun handleOpenElement(elementName: String?, attributes: Map<String, String>?, line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             if (attributes != null && "oauth_pin" == attributes["id"]) {
@@ -483,7 +474,7 @@ class OAuthPasswordAuthenticator(
                     }
                 }
 
-                override fun handleHtmlCloseElement(element: IHtmlElement?, elementName: String?, line: Int, col: Int) {
+                override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
                     if ("div" == elementName) {
                         isOAuthPinDivOpened = false
                     }

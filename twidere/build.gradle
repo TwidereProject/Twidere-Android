@@ -21,7 +21,7 @@ buildscript {
 
     dependencies {
         // START Non-FOSS component
-        classpath 'io.fabric.tools:gradle:1.21.5'
+        classpath 'io.fabric.tools:gradle:1.21.7'
         // END Non-FOSS component
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -90,7 +90,7 @@ dependencies {
 //    wearApp project(':twidere.wear')
     kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
-    kapt 'com.google.dagger:dagger-compiler:2.1'
+    kapt 'com.google.dagger:dagger-compiler:2.6'
     kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.9'
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
@@ -105,11 +105,11 @@ dependencies {
     googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
     googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
-    googleCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') { transitive = true }
+    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.1'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.2'
 
     debugCompile 'com.facebook.stetho:stetho:1.3.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
@@ -155,13 +155,13 @@ dependencies {
     compile 'com.github.mariotaku:PickNCrop:0.9.4'
     compile 'com.github.mariotaku.RestFu:library:0.9.33'
     compile 'com.github.mariotaku.RestFu:okhttp3:0.9.33'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
-    compile 'com.google.dagger:dagger:2.1'
-    compile 'org.attoparser:attoparser:1.4.0.RELEASE'
+    compile 'com.google.dagger:dagger:2.6'
+    compile 'org.attoparser:attoparser:2.0.0.RELEASE'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
-    compile 'com.github.mariotaku.SQLiteQB:library:0.9.6'
+    compile 'com.github.mariotaku.SQLiteQB:library:0.9.7'
     compile 'com.github.mariotaku.ObjectCursor:core:0.9.9'
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
     compile 'com.github.mariotaku:AbstractTask:0.9.4'

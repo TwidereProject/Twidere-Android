@@ -70,4 +70,12 @@ public class SettingsUpdate extends SimpleValueMap {
         put("screen_name", screenName);
     }
 
+    public void setUniversalQualityFiltering(boolean enabled) {
+        put("universal_quality_filtering", enabled ? "enabled" : "disabled");
+    }
+
+    public void setSmartMute(boolean enabled) {
+        put("smart_mute", enabled ? "enabled" : "disabled");
+    }
+
 }
