@@ -18,11 +18,12 @@
   -->
 
 <org.mariotaku.twidere.view.TintedStatusFrameLayout
+    android:id="@+id/userFragmentView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/userFragmentView"
     android:fitsSystemWindows="true"
     app:setPadding="false">
 
@@ -36,7 +37,8 @@
             android:id="@+id/profileBanner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            tools:src="@drawable/nyan_stars_background"/>
 
         <FrameLayout
             android:id="@+id/profileBirthdayBanner"
@@ -77,7 +79,8 @@
             android:layout_alignParentTop="true"
             android:elevation="@dimen/toolbar_elevation"
             android:tag="ate_ignore"
-            app:popupTheme="?actionBarPopupTheme"/>
+            app:popupTheme="?actionBarPopupTheme"
+            tools:elevation="0dp"/>
 
         <View
             android:id="@+id/windowOverlay"

@@ -267,18 +267,11 @@
                     tools:text="July 17, 2009 18:35 (20 tweets per day)"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.2dp"
-                android:background="?android:dividerVertical"/>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_button_size"
                 android:baselineAligned="false"
-                android:divider="?android:dividerHorizontal"
                 android:orientation="horizontal"
-                android:showDividers="middle"
                 android:splitMotionEvents="false">
 
                 <LinearLayout
@@ -397,6 +390,8 @@
                         android:textColor="?android:textColorSecondary"/>
                 </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
 
         <include layout="@layout/layout_content_fragment_common"/>
