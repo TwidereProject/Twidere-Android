@@ -42,11 +42,10 @@
             android:layout_height="@dimen/element_size_normal"
             android:outlineProvider="background"
             android:textColor="?android:textColorSecondary"
-            app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
             app:tabExpandEnabled="true"
             app:tabHorizontalPadding="@dimen/element_spacing_large"
             app:tabIconColor="?android:colorForeground"
-            app:tabShowDivider="true"
+            app:tabShowDivider="false"
             tools:ignore="UnusedAttribute"
             tools:listitem="@layout/layout_tab_item"/>
 

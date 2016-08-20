@@ -130,21 +130,21 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     var user: ParcelableUser? = null
         private set
     private var account: ParcelableAccount? = null
-    private var mRelationship: UserRelationship? = null
-    private var mLocale: Locale? = null
+    private var relationship: UserRelationship? = null
+    private var locale: Locale? = null
     private var mGetUserInfoLoaderInitialized: Boolean = false
     private var mGetFriendShipLoaderInitialized: Boolean = false
     private var mBannerWidth: Int = 0
-    private var mCardBackgroundColor: Int = 0
-    private var mActionBarShadowColor: Int = 0
-    private var mUiColor: Int = 0
+    private var cardBackgroundColor: Int = 0
+    private var actionBarShadowColor: Int = 0
+    private var uiColor: Int = 0
     private var mPrimaryColor: Int = 0
     private var mPrimaryColorDark: Int = 0
-    private var mNameFirst: Boolean = false
+    private var nameFirst: Boolean = false
     private var mPreviousTabItemIsDark: Int = 0
     private var mPreviousActionBarItemIsDark: Int = 0
     private var mHideBirthdayView: Boolean = false
-    private var mUserEvent: UserEvent? = null
+    private var userEvent: UserEvent? = null
 
     private val mFriendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<UserRelationship>> {
 
@@ -244,26 +244,26 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         get() = user?.extras?.pinned_status_ids
 
     private fun updateOptionsMenuVisibility() {
-        setHasOptionsMenu(user != null && mRelationship != null)
+        setHasOptionsMenu(user != null && relationship != null)
     }
 
     private fun displayRelationship(user: ParcelableUser?,
                                     userRelationship: UserRelationship?) {
         if (user == null) {
-            mRelationship = null
+            relationship = null
             return
         }
         if (user.account_key.maybeEquals(user.key)) {
             followContainer.follow.setText(R.string.edit)
             followContainer.follow.visibility = View.VISIBLE
-            mRelationship = userRelationship
+            relationship = userRelationship
             return
         }
         if (userRelationship == null || !userRelationship.check(user)) {
-            mRelationship = null
+            relationship = null
             return
         } else {
-            mRelationship = userRelationship
+            relationship = userRelationship
         }
         invalidateOptionsMenu()
         followContainer.follow.isEnabled = userRelationship.blocking || !userRelationship.blocked_by
@@ -463,11 +463,11 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
         createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
                 createdAt, dailyTweets)
-        listedContainer.listedCount.text = Utils.getLocalizedNumber(mLocale, user.listed_count)
+        listedContainer.listedCount.text = Utils.getLocalizedNumber(locale, user.listed_count)
         val groupsCount = if (user.extras != null) user.extras.groups_count else -1
-        groupsContainer.groupsCount.text = Utils.getLocalizedNumber(mLocale, groupsCount)
-        followersContainer.followersCount!!.text = Utils.getLocalizedNumber(mLocale, user.followers_count)
-        friendsContainer.friendsCount!!.text = Utils.getLocalizedNumber(mLocale, user.friends_count)
+        groupsContainer.groupsCount.text = Utils.getLocalizedNumber(locale, groupsCount)
+        followersContainer.followersCount!!.text = Utils.getLocalizedNumber(locale, user.followers_count)
+        friendsContainer.friendsCount!!.text = Utils.getLocalizedNumber(locale, user.friends_count)
 
         listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
         groupsContainer.visibility = if (groupsCount < 0) View.GONE else View.VISIBLE
@@ -487,12 +487,12 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             profileBanner.tag = bannerUrl
             mediaLoader.displayProfileBanner(profileBanner, bannerUrl, width)
         }
-        val relationship = mRelationship
+        val relationship = relationship
         if (relationship == null) {
             getFriendship()
         }
         activity.title = UserColorNameManager.decideDisplayName(user.nickname, user.name,
-                user.screen_name, mNameFirst)
+                user.screen_name, nameFirst)
 
         val cal = Calendar.getInstance()
         val currentMonth = cal.get(Calendar.MONTH)
@@ -590,8 +590,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 if (user == null) return
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val twitter = twitterWrapper
-                    val list = data.getParcelableExtra<ParcelableUserList>(EXTRA_USER_LIST)
-                    if (list == null) return
+                    val list = data.getParcelableExtra<ParcelableUserList>(EXTRA_USER_LIST) ?: return
                     twitter.addUserListMembersAsync(user.account_key, list.id, user)
                 }
             }
@@ -602,9 +601,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     @Referral
                     val referral = arguments.getString(EXTRA_REFERRAL)
-                    IntentUtils.openUserProfile(activity, accountKey, user.key,
-                            user.screen_name, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            referral)
+                    IntentUtils.openUserProfile(activity, accountKey, user.key, user.screen_name,
+                            null, preferences.getBoolean(KEY_NEW_DOCUMENT_API), referral)
                 }
             }
         }
@@ -620,12 +618,12 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val activity = activity
         userColorNameManager.registerColorChangedListener(this)
         userColorNameManager.registerNicknameChangedListener(this)
-        mNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
-        mLocale = resources.configuration.locale
-        mCardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
+        nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+        locale = resources.configuration.locale
+        cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
                 ThemeUtils.getThemeBackgroundOption(activity),
                 ThemeUtils.getUserThemeBackgroundAlpha(activity))
-        mActionBarShadowColor = 0xA0000000.toInt()
+        actionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
         val accountId: UserKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userId: UserKey? = args.getParcelable<UserKey>(EXTRA_USER_KEY)
@@ -678,9 +676,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         profileBannerSpace.setOnTouchListener(this)
 
 
-        profileNameBackground.setBackgroundColor(mCardBackgroundColor)
-        profileDetailsContainer.setBackgroundColor(mCardBackgroundColor)
-        toolbarTabs.setBackgroundColor(mCardBackgroundColor)
+        profileNameBackground.setBackgroundColor(cardBackgroundColor)
+        profileDetailsContainer.setBackgroundColor(cardBackgroundColor)
+        toolbarTabs.setBackgroundColor(cardBackgroundColor)
 
         val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
         ViewCompat.setElevation(toolbarTabs, actionBarElevation)
@@ -698,19 +696,19 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         @Referral
         val referral = arguments.getString(EXTRA_REFERRAL)
         val context = context
-        if (mUserEvent == null) {
-            mUserEvent = UserEvent.create(context, referral)
+        if (userEvent == null) {
+            userEvent = UserEvent.create(context, referral)
         } else {
-            mUserEvent!!.markStart(context)
+            userEvent!!.markStart(context)
         }
     }
 
     override fun onStop() {
         val context = context
-        if (mUserEvent != null && context != null && user != null) {
-            mUserEvent!!.setUser(user!!)
-            mUserEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<UserEvent>(mUserEvent)
+        if (userEvent != null && context != null && user != null) {
+            userEvent!!.setUser(user!!)
+            userEvent!!.markEnd()
+            HotMobiLogger.getInstance(context).log<UserEvent>(userEvent)
         }
         bus.unregister(this)
         super.onStop()
@@ -718,7 +716,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     override fun onResume() {
         super.onResume()
-        setUiColor(mUiColor)
+        setUiColor(uiColor)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -728,7 +726,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     override fun onDestroyView() {
         user = null
-        mRelationship = null
+        relationship = null
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
@@ -747,7 +745,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val mentionItem = menu!!.findItem(R.id.mention)
         if (mentionItem != null) {
             val displayName = UserColorNameManager.decideDisplayName(user.nickname,
-                    user.name, user.screen_name, mNameFirst)
+                    user.name, user.screen_name, nameFirst)
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
         MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
@@ -768,7 +766,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             MenuUtils.setItemAvailability(menu, R.id.add_to_list, false)
         }
 
-        val userRelationship = mRelationship
+        val userRelationship = relationship
         if (userRelationship != null) {
 
             val filterItem = menu.findItem(R.id.add_to_filter)
@@ -816,7 +814,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val context = context
         val twitter = twitterWrapper
         val user = user
-        val userRelationship = mRelationship
+        val userRelationship = relationship
         if (user == null) return false
         when (item!!.itemId) {
             R.id.block -> {
@@ -1067,7 +1065,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 if (user.account_key.maybeEquals(user.key)) {
                     IntentUtils.openProfileEditor(getActivity(), user.account_key)
                 } else {
-                    val userRelationship = mRelationship
+                    val userRelationship = relationship
                     val twitter = twitterWrapper
                     if (userRelationship == null) return
                     if (userRelationship.blocking) {
@@ -1202,7 +1200,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     private fun getFriendship() {
         val user = user ?: return
-        mRelationship = null
+        relationship = null
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
         val args = Bundle()
@@ -1222,7 +1220,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     private fun setUiColor(color: Int) {
-        mUiColor = color
+        uiColor = color
         mPreviousActionBarItemIsDark = 0
         mPreviousTabItemIsDark = 0
         if (mActionBarBackground == null) {
@@ -1246,7 +1244,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             taskColor = Config.toolbarColor(activity, activity.ateKey, toolbar)
         }
         if (user != null) {
-            val name = userColorNameManager.getDisplayName(user, mNameFirst)
+            val name = userColorNameManager.getDisplayName(user, nameFirst)
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(name, null, taskColor))
         } else {
             ActivitySupport.setTaskDescription(activity, TaskDescriptionCompat(null, null, taskColor))
@@ -1347,7 +1345,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         }
 
         val currentTabColor = sArgbEvaluator.evaluate(tabOutlineAlphaFactor,
-                stackedTabColor, mCardBackgroundColor) as Int
+                stackedTabColor, cardBackgroundColor) as Int
 
         val tabBackground = toolbarTabs.background
         (tabBackground as ColorDrawable).color = currentTabColor
@@ -1360,14 +1358,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             if (Config.coloredActionBar(activity, activity.ateKey)) {
                 toolbarTabs.setStripColor(tabContrastColor)
             } else {
-                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(mUiColor,
+                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(uiColor,
                         tabContrastColor))
             }
             toolbarTabs.updateAppearance()
         }
         mPreviousTabItemIsDark = if (tabItemIsDark) 1 else -1
 
-        val currentActionBarColor = sArgbEvaluator.evaluate(factor, mActionBarShadowColor,
+        val currentActionBarColor = sArgbEvaluator.evaluate(factor, actionBarShadowColor,
                 stackedTabColor) as Int
         val actionItemIsDark = ThemeUtils.isLightColor(currentActionBarColor)
         if (mPreviousActionBarItemIsDark == 0 || (if (actionItemIsDark) 1 else -1) != mPreviousActionBarItemIsDark) {

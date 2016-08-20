@@ -47,10 +47,9 @@
             android:id="@+id/toolbarTabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/element_size_normal"
-            app:tabDividerVerticalPadding="@dimen/element_spacing_mlarge"
             app:tabExpandEnabled="true"
             app:tabHorizontalPadding="@dimen/element_spacing_large"
-            app:tabShowDivider="true"
+            app:tabShowDivider="false"
             tools:ignore="UnusedAttribute"
             tools:listitem="@layout/layout_tab_item"/>
     </org.mariotaku.twidere.view.ExtendedLinearLayout>
