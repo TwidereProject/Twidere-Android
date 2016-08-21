@@ -239,16 +239,13 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         val c = adapter!!.cursor
         if (positions != null && c != null && !c.isClosed) {
             val idIdx = c.getColumnIndex(Tabs._ID)
-            var i = 0
-            val j = positions.size
-            while (i < j) {
+            for (i in 0 until positions.size) {
                 c.moveToPosition(positions[i])
                 val id = c.getLong(idIdx)
                 val values = ContentValues()
                 values.put(Tabs.POSITION, i)
                 val where = Expression.equals(Tabs._ID, id).sql
                 contentResolver.update(Tabs.CONTENT_URI, values, where, null)
-                i++
             }
         }
         SettingsActivity.setShouldRestart(activity)

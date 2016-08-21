@@ -166,21 +166,13 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
                 val linkIntent = Intent(this, WebLinkHandlerActivity::class.java)
                 val intent = PendingIntent.getActivity(this, 0, linkIntent, 0)
                 val intentFilter = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
-                run {
-                    var i = 0
-                    val j = handlerFilter.countDataSchemes()
-                    while (i < j) {
-                        intentFilter.addDataScheme(handlerFilter.getDataScheme(i))
-                        i++
-                    }
+                for (i in 0 until handlerFilter.countDataSchemes()) {
+                    intentFilter.addDataScheme(handlerFilter.getDataScheme(i))
                 }
-                var i = 0
-                val j = handlerFilter.countDataAuthorities()
-                while (i < j) {
+                for (i in 0 until handlerFilter.countDataAuthorities()) {
                     val authorityEntry = handlerFilter.getDataAuthority(i)
                     val port = authorityEntry.port
                     intentFilter.addDataAuthority(authorityEntry.host, if (port < 0) null else Integer.toString(port))
-                    i++
                 }
                 try {
                     adapter.enableForegroundDispatch(this, intent, arrayOf(intentFilter), null)

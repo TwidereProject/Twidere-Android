@@ -130,9 +130,7 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
             return
         }
         val length = Math.min(profileImageViews.size, statuses.size)
-        var i = 0
-        val j = profileImageViews.size
-        while (i < j) {
+        for (i in 0 until profileImageViews.size) {
             val view = profileImageViews[i]
             view.setImageDrawable(null)
             if (i < length) {
@@ -142,7 +140,6 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
                 imageLoader.cancelDisplayTask(view)
                 view.visibility = View.GONE
             }
-            i++
         }
         if (statuses.size > profileImageViews.size) {
             val moreNumber = statuses.size - profileImageViews.size

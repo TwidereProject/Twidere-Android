@@ -152,15 +152,12 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>,
     private fun saveActivatedState() {
         val trueIds = CompactHashSet<UserKey>()
         val falseIds = CompactHashSet<UserKey>()
-        var i = 0
-        val j = activatedState.size()
-        while (i < j) {
+        for (i in 0 until activatedState.size()) {
             if (activatedState.valueAt(i)) {
                 trueIds.add(activatedState.keyAt(i))
             } else {
                 falseIds.add(activatedState.keyAt(i))
             }
-            i++
         }
         val cr = contentResolver
         val values = ContentValues()
@@ -228,16 +225,13 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>,
         val c = adapter!!.cursor
         if (positions != null && c != null && !c.isClosed) {
             val idIdx = c.getColumnIndex(Accounts._ID)
-            var i = 0
-            val j = positions.size
-            while (i < j) {
+            for (i in 0 until positions.size) {
                 c.moveToPosition(positions[i])
                 val id = c.getLong(idIdx)
                 val values = ContentValues()
                 values.put(Accounts.SORT_POSITION, i)
                 val where = Expression.equals(Accounts._ID, id)
                 cr.update(Accounts.CONTENT_URI, values, where.sql, null)
-                i++
             }
         }
     }

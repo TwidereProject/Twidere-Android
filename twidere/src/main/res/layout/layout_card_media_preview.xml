@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:showIn="@layout/card_item_status_compact">
+    tools:showIn="@layout/list_item_status">
 
     <com.commonsware.cwac.layouts.AspectLockedFrameLayout
         android:id="@+id/media_preview_item_0"

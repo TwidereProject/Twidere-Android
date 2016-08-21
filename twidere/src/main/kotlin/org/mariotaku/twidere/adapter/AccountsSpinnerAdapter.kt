@@ -35,7 +35,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 
 import javax.inject.Inject
 
-class AccountsSpinnerAdapter @JvmOverloads constructor(context: Context, itemViewResource: Int = R.layout.list_item_user) : ArrayAdapter<ParcelableCredentials>(context, itemViewResource) {
+class AccountsSpinnerAdapter @JvmOverloads constructor(context: Context, itemViewResource: Int = R.layout.list_item_simple_user) : ArrayAdapter<ParcelableCredentials>(context, itemViewResource) {
 
     @Inject
     lateinit var mediaLoader: MediaLoaderWrapper
@@ -115,13 +115,10 @@ class AccountsSpinnerAdapter @JvmOverloads constructor(context: Context, itemVie
     }
 
     fun findPositionByKey(key: UserKey): Int {
-        var i = 0
-        val j = count
-        while (i < j) {
+        for (i in 0 until count) {
             if (key == getItem(i).account_key) {
                 return i
             }
-            i++
         }
         return -1
     }

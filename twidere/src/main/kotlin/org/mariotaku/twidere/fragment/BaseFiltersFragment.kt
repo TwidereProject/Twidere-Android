@@ -122,12 +122,9 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 contentResolver.delete(contentUri, where.sql, null)
             }
             R.id.inverse_selection -> {
-                val positions = listView.getCheckedItemPositions()
-                var i = 0
-                val j = listView.getCount()
-                while (i < j) {
+                val positions = listView.checkedItemPositions
+                for (i in 0 until listView.count) {
                     listView.setItemChecked(i, !positions.get(i))
-                    i++
                 }
                 return true
             }

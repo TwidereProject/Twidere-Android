@@ -80,7 +80,7 @@
                 android:src="@drawable/ic_action_more_vertical"/>
         </RelativeLayout>
 
-        <include layout="@layout/card_item_status_compact"/>
+        <include layout="@layout/list_item_status"/>
     </LinearLayout>
 
 </ScrollView>

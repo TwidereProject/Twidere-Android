@@ -74,13 +74,10 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onDismiss(listView: ListView, reverseSortedPositions: IntArray) {
         val adapter = suggestionsList.adapter as SuggestionsAdapter
         val ids = LongArray(reverseSortedPositions.size)
-        var i = 0
-        val j = reverseSortedPositions.size
-        while (i < j) {
+        for (i in 0 until reverseSortedPositions.size) {
             val position = reverseSortedPositions[i]
             val item = adapter.getSuggestionItem(position) ?: return
             ids[i] = item._id
-            i++
         }
         adapter.addRemovedPositions(reverseSortedPositions)
         ContentResolverUtils.bulkDelete(contentResolver, SearchHistory.CONTENT_URI,
@@ -170,7 +167,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         setContentView(R.layout.activity_quick_search_bar)
         val accounts = DataStoreUtils.getCredentialsList(this, false)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon)
-        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user)
+        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)
         accountSpinner.adapter = accountsSpinnerAdapter
         accountSpinner.onItemSelectedListener = this
@@ -417,13 +414,10 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         private fun getActualPosition(position: Int): Int {
             if (removedPositions == null) return position
             var skipped = 0
-            var i = 0
-            val j = removedPositions.size()
-            while (i < j) {
+            for (i in 0 until removedPositions.size()) {
                 if (position + skipped >= removedPositions.get(i)) {
                     skipped++
                 }
-                i++
             }
             return position + skipped
         }

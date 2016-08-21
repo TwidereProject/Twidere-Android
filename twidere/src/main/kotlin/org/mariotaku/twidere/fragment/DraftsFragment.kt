@@ -94,13 +94,10 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                 val checked = listView!!.checkedItemPositions
                 val list = ArrayList<Draft>()
                 val indices = DraftCursorIndices(c)
-                var i = 0
-                val j = checked.size()
-                while (i < j) {
+                for (i in 0 until checked.size()) {
                     if (checked.valueAt(i) && c.moveToPosition(checked.keyAt(i))) {
                         list.add(indices.newObject(c))
                     }
-                    i++
                 }
                 if (sendDrafts(list)) {
                     val where = Expression.`in`(Column(Drafts._ID),

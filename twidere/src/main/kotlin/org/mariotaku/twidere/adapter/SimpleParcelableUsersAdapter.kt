@@ -32,7 +32,7 @@ import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 
 class SimpleParcelableUsersAdapter @JvmOverloads constructor(
         context: Context,
-        layoutRes: Int = R.layout.list_item_user
+        layoutRes: Int = R.layout.list_item_simple_user
 ) : BaseArrayAdapter<ParcelableUser>(context, layoutRes), IBaseAdapter {
 
     init {
@@ -87,11 +87,8 @@ class SimpleParcelableUsersAdapter @JvmOverloads constructor(
     }
 
     fun findUserPosition(userKey: UserKey): Int {
-        var i = 0
-        val j = count
-        while (i < j) {
+        for (i in 0 until count) {
             if (userKey == getItem(i).key) return i
-            i++
         }
         return -1
     }

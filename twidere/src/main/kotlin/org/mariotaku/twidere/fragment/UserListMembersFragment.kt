@@ -139,12 +139,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
                     users.removeAll(newUsers)
                     users.addAll(0, newUsers)
                 }
-                var i = 0
-                val j = users.size
-                while (i < j) {
-                    users[i].position = i.toLong()
-                    i++
-                }
+                users.forEachIndexed { idx, user -> user.position = idx.toLong() }
                 adapter.notifyDataSetChanged()
             }
             UserListMembersChangedEvent.Action.REMOVED -> {
@@ -154,12 +149,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
                 if (users is MutableList) {
                     users.removeAll(removedUsers)
                 }
-                var i = 0
-                val j = users.size
-                while (i < j) {
-                    users[i].position = i.toLong()
-                    i++
-                }
+                users.forEachIndexed { idx, user -> user.position = idx.toLong() }
                 adapter.notifyDataSetChanged()
             }
         }

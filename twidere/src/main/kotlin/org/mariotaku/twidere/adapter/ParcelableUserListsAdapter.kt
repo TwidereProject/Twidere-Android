@@ -141,7 +141,7 @@ class ParcelableUserListsAdapter(context: Context) : LoadMoreSupportAdapter<Recy
                                      inflater: LayoutInflater,
                                      parent: ViewGroup): UserListViewHolder {
             val view: View
-            view = inflater.inflate(R.layout.card_item_user_list_compact, parent, false)
+            view = inflater.inflate(R.layout.list_item_user_list, parent, false)
             val holder = UserListViewHolder(adapter, view)
             holder.setOnClickListeners()
             holder.setupViewOptions()

@@ -166,9 +166,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         val adapter = adapter
         val rangeStart = Math.max(adapter!!.statusStartIndex, lm!!.findFirstVisibleItemPosition())
         val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.statusCount - 1)
-        var i = rangeStart
-        val j = rangeEnd + 1
-        while (i < j) {
+        for (i in rangeStart..rangeEnd) {
             val item = adapter.getStatus(i)
             if (status == item) {
                 item.favorite_count = status.favorite_count
@@ -177,7 +175,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
                 item.is_favorite = status.is_favorite
             }
-            i++
         }
         adapter.notifyItemRangeChanged(rangeStart, rangeEnd)
     }
@@ -224,15 +221,11 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     private fun updateRetweetedStatuses(status: ParcelableStatus?) {
         val data = adapterData
         if (status == null || status.retweet_id == null || data == null) return
-        var i = 0
-        val j = data.size
-        while (i < j) {
-            val orig = data[i]
+        data.forEach { orig ->
             if (orig.account_key == status.account_key && TextUtils.equals(orig.id, status.retweet_id)) {
                 orig.my_retweet_id = status.my_retweet_id
                 orig.retweet_count = status.retweet_count
             }
-            i++
         }
         adapterData = data
     }

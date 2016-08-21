@@ -271,14 +271,11 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         val adapter = adapter
         val rangeStart = Math.max(adapter!!.activityStartIndex, lm!!.findFirstVisibleItemPosition())
         val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.activityCount - 1)
-        var i = rangeStart
-        val j = rangeEnd + 1
-        while (i < j) {
+        loop@ for (i in rangeStart..rangeEnd) {
             val activity = adapter.getActivity(i)
             if (result.account_key == activity!!.account_key && result.id == activity.status_id) {
                 if (result.id != activity.status_id) {
-                    i++
-                    continue
+                    continue@loop
                 }
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
@@ -294,7 +291,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                     }
                 }
             }
-            i++
         }
         adapter.notifyItemRangeChanged(rangeStart, rangeEnd)
     }

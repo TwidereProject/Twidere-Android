@@ -69,6 +69,7 @@ import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.header_status_common.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
+import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.TranslationResult
@@ -574,7 +575,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
     private fun restoreReadPosition(position: ReadPosition?) {
         if (position == null) return
-        val adapterPosition = adapter!!.findPositionById(position.statusId)
+        val adapterPosition = adapter!!.findPositionByItemId(position.statusId)
         if (adapterPosition < 0) return
         //TODO maintain read position
         layoutManager!!.scrollToPositionWithOffset(adapterPosition, position.offsetTop)
@@ -1485,16 +1486,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             twidereLinkify = TwidereLinkify(listener)
         }
 
-        fun findPositionById(itemId: Long): Int {
-            var i = 0
-            val j = itemCount
-            while (i < j) {
-                if (getItemId(i) == itemId) return i
-                i++
-            }
-            return RecyclerView.NO_POSITION
-        }
-
         override val textSize: Float
             get() = mTextSize.toFloat()
 
@@ -1597,19 +1588,16 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 var conversationCount = 0
                 var replyCount = 0
                 var replyStart = -1
-                var i = 0
-                val j = data.size
-                while (i < j) {
+                for (i in 0 until data.size) {
                     val item = data[i]
                     if (item.sort_id < sortId) {
                         conversationCount++
-                    } else if (item.sort_id > sortId) {
+                    } else if (item.sort_id > sortId && status.id != item.id) {
                         if (replyStart < 0) {
                             replyStart = i
                         }
                         replyCount++
                     }
-                    i++
                 }
                 setTypeCount(ITEM_IDX_CONVERSATION, conversationCount)
                 setTypeCount(ITEM_IDX_REPLY, replyCount)
@@ -1912,9 +1900,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         override fun getDecoratedMeasuredHeight(child: View): Int {
             var heightBeforeSpace = 0
             if (getItemViewType(child) == StatusAdapter.VIEW_TYPE_SPACE) {
-                var i = 0
-                val j = childCount
-                while (i < j) {
+                for (i in 0 until childCount) {
                     val childToMeasure = getChildAt(i)
                     val paramsToMeasure = childToMeasure.layoutParams as LayoutParams
                     val typeToMeasure = getItemViewType(childToMeasure)
@@ -1925,7 +1911,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                         heightBeforeSpace += super.getDecoratedMeasuredHeight(childToMeasure)
                         +paramsToMeasure.topMargin + paramsToMeasure.bottomMargin
                     }
-                    i++
                 }
                 if (heightBeforeSpace != 0) {
                     val spaceHeight = recyclerView.measuredHeight - heightBeforeSpace

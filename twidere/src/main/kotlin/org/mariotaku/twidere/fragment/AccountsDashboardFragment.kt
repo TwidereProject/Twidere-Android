@@ -659,16 +659,6 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             setHasStableIds(true)
         }
 
-        private fun indexOfAccount(accounts: List<ParcelableAccount>, accountId: UserKey): Int {
-            var i = 0
-            val j = accounts.size
-            while (i < j) {
-                if (accounts[i].account_key == accountId) return i
-                i++
-            }
-            return -1
-        }
-
         fun getAdapterAccount(adapterPosition: Int): ParcelableAccount? {
             if (accounts == null || accounts!!.size < 1) {
                 return null

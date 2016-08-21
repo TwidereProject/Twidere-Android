@@ -89,9 +89,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             val initialTag = intent.getStringExtra(EXTRA_INITIAL_TAG)
             var initialItem = -1
             var firstEntry = -1
-            var i = 0
-            val j = mEntriesAdapter!!.count
-            while (i < j) {
+            for (i in 0 until mEntriesAdapter!!.count) {
                 val entry = mEntriesAdapter!!.getItem(i)
                 if (entry is PreferenceEntry) {
                     if (firstEntry == -1) {
@@ -102,7 +100,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                         break
                     }
                 }
-                i++
             }
             if (initialItem == -1) {
                 initialItem = firstEntry

@@ -168,6 +168,9 @@ dependencies {
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.8'
     compile 'com.github.mariotaku.CommonsLibrary:io:0.9.8'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'nl.komponents.kovenant:kovenant:3.3.0'
+    compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
+    compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {

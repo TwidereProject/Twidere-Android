@@ -1467,19 +1467,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun doInBackground(vararg params: Any): BooleanArray {
             val activity = mActivityRef.get() ?: return BooleanArray(0)
             val result = BooleanArray(sources.size)
-            var i = 0
-            val j = sources.size
-            while (i < j) {
+            for (i in 0 until sources.size) {
                 val source = sources[i]
                 val destination = mDestinations[i]
-                var `is`: InputStream? = null
+                var st: InputStream? = null
                 var os: OutputStream? = null
                 try {
                     val resolver = activity.contentResolver
-                    `is` = resolver.openInputStream(source)
+                    st = resolver.openInputStream(source)
                     os = resolver.openOutputStream(destination)
-                    if (`is` == null || os == null) throw FileNotFoundException()
-                    StreamUtils.copy(`is`, os, null, null)
+                    if (st == null || os == null) throw FileNotFoundException()
+                    StreamUtils.copy(st, os, null, null)
                     if (ContentResolver.SCHEME_FILE == source.scheme && mDeleteSrc) {
                         val file = File(source.path)
                         if (!file.delete()) {
@@ -1494,9 +1492,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     result[i] = false
                 } finally {
                     Utils.closeSilently(os)
-                    Utils.closeSilently(`is`)
+                    Utils.closeSilently(st)
                 }
-                i++
 
             }
             return result

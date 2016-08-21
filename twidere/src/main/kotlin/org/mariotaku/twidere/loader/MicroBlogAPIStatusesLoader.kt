@@ -127,19 +127,14 @@ abstract class MicroBlogAPIStatusesLoader(
         val statusIds = arrayOfNulls<String>(statuses.size)
         var minIdx = -1
         var rowsDeleted = 0
-        run {
-            var i = 0
-            val j = statuses.size
-            while (i < j) {
-                val status = statuses[i]
-                if (minIdx == -1 || status < statuses[minIdx]) {
-                    minIdx = i
-                }
-                statusIds[i] = status.id
-                if (deleteStatus(data, status.id)) {
-                    rowsDeleted++
-                }
-                i++
+        for (i in 0 until statuses.size) {
+            val status = statuses[i]
+            if (minIdx == -1 || status < statuses[minIdx]) {
+                minIdx = i
+            }
+            statusIds[i] = status.id
+            if (deleteStatus(data, status.id)) {
+                rowsDeleted++
             }
         }
 

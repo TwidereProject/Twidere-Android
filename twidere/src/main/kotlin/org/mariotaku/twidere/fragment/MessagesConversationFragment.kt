@@ -172,7 +172,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         val accounts = DataStoreUtils.getCredentialsList(activity, false)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(
                 actionBar.themedContext, R.layout.spinner_item_account_icon)
-        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_user)
+        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)
         actionBarCustomView.accountSpinner.adapter = accountsSpinnerAdapter
         actionBarCustomView.accountSpinner.onItemSelectedListener = this

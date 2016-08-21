@@ -27,7 +27,7 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.card_item_user_compact.view.*
+import kotlinx.android.synthetic.main.list_item_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*

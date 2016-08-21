@@ -17,48 +17,254 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ColorLabelRelativeLayout
+    android:id="@+id/itemContent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeightSmall"
-    android:orientation="horizontal"
-    android:padding="@dimen/element_spacing_normal">
+    android:background="?selectableItemBackground"
+    android:clipChildren="false"
+    android:padding="@dimen/element_spacing_normal"
+    app:ignorePadding="true"
+    tools:context=".adapter.ParcelableUsersAdapter">
 
-    <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@android:id/icon"
-        style="?profileImageStyle"
-        android:layout_width="@dimen/icon_size_list_item_small"
-        android:layout_height="@dimen/icon_size_list_item_small"
-        android:contentDescription="@string/icon"
-        android:scaleType="centerCrop" />
+    <RelativeLayout
+        android:id="@+id/profileImageContainer"
+        android:layout_width="@dimen/icon_size_card_list_item"
+        android:layout_height="@dimen/icon_size_card_list_item"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/actionsProgressContainer"
+        android:layout_marginEnd="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
+        android:clipChildren="false"
+        tools:visibility="visible">
+
+        <org.mariotaku.twidere.view.ProfileImageView
+            android:id="@+id/profileImage"
+            style="?profileImageStyle"
+            android:layout_width="@dimen/icon_size_card_list_item"
+            android:layout_height="@dimen/icon_size_card_list_item"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/profile_image"
+            tools:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/profileType"
+            android:layout_width="@dimen/icon_size_profile_type"
+            android:layout_height="@dimen/icon_size_profile_type"
+            android:layout_alignBottom="@+id/profileImage"
+            android:layout_alignEnd="@+id/profileImage"
+            android:layout_alignRight="@+id/profileImage"
+            android:layout_marginBottom="@dimen/element_spacing_minus_small"
+            android:layout_marginEnd="@dimen/element_spacing_minus_normal"
+            android:layout_marginRight="@dimen/element_spacing_minus_normal"
+            android:scaleType="centerInside"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_user_type_verified"
+            tools:visibility="visible"/>
+    </RelativeLayout>
+
+
+    <org.mariotaku.twidere.view.NameView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/actionsProgressContainer"
+        android:layout_alignTop="@+id/actionsProgressContainer"
+        android:layout_toEndOf="@+id/profileImageContainer"
+        android:layout_toLeftOf="@+id/actionsProgressContainer"
+        android:layout_toRightOf="@+id/profileImageContainer"
+        android:layout_toStartOf="@+id/actionsProgressContainer"
+        android:gravity="center_vertical"
+        app:nv_primaryTextColor="?android:textColorPrimary"
+        app:nv_primaryTextStyle="bold"
+        app:nv_secondaryTextColor="?android:textColorSecondary"
+        app:nv_twoLine="true"/>
+
+    <FrameLayout
+        android:id="@+id/actionsProgressContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:clipChildren="false"
+        android:minHeight="@dimen/button_size_content_card"
+        android:minWidth="@dimen/button_size_content_card">
+
+        <LinearLayout
+            android:id="@+id/actionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clipChildren="false"
+            android:orientation="horizontal"
+            tools:visibility="visible">
+
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/unmute"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/follow"
+                android:src="@drawable/ic_action_visibility_off"
+                app:backgroundTint="@color/material_grey"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/follow"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/follow"
+                android:src="@drawable/ic_action_add"
+                app:backgroundTint="@color/color_stateful_follow"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/acceptRequest"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/accept"
+                android:src="@drawable/ic_action_confirm"
+                app:backgroundTint="@color/material_light_green"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/denyRequest"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/deny"
+                android:src="@drawable/ic_action_cancel"
+                app:backgroundTint="@color/material_red"
+                app:iabColor="@android:color/transparent"/>
+
+            <org.mariotaku.twidere.view.IconActionButton
+                android:id="@+id/unblock"
+                style="?buttonStyleSmall"
+                android:layout_width="@dimen/button_size_content_card"
+                android:layout_height="@dimen/button_size_content_card"
+                android:contentDescription="@string/deny"
+                android:src="@drawable/ic_action_block"
+                app:backgroundTint="@color/material_red"
+                app:iabColor="@android:color/transparent"/>
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/processingRequest"
+            style="?android:progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
+        android:id="@+id/externalIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/name"
+        android:paddingTop="@dimen/element_spacing_small"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textStyle="italic"
+        tools:text="External user at twitter.com"/>
+
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/externalIndicator"
+        android:paddingTop="@dimen/element_spacing_small"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="@string/sample_status_text"/>
+
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/description"
+        android:drawableLeft="@drawable/ic_indicator_location"
+        android:drawablePadding="@dimen/element_spacing_small"
+        android:drawableStart="@drawable/ic_indicator_location"
+        android:paddingTop="@dimen/element_spacing_small"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="Earth"/>
+
+    <org.mariotaku.twidere.view.ActionIconThemedTextView
+        android:id="@+id/url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/location"
+        android:drawableLeft="@drawable/ic_indicator_web"
+        android:drawablePadding="@dimen/element_spacing_small"
+        android:drawableStart="@drawable/ic_indicator_web"
+        android:paddingTop="@dimen/element_spacing_small"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="https://github.com/TwidereProject"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingEnd="0dp"
-        android:paddingLeft="@dimen/element_spacing_small"
-        android:paddingRight="0dp"
-        android:paddingStart="@dimen/element_spacing_small">
+        android:layout_alignLeft="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_below="@+id/url"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/element_spacing_small">
 
-        <TextView
-            android:id="@android:id/text1"
-            android:layout_width="wrap_content"
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
+            android:id="@+id/statusesCount"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:text="Mariotaku" />
-
-        <TextView
-            android:id="@android:id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_indicator_twitter"
+            android:drawablePadding="@dimen/element_spacing_small"
+            android:drawableStart="@drawable/ic_indicator_twitter"
             android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="\@mariotaku" />
+            tools:text="255"/>
+
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
+            android:id="@+id/followersCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_indicator_followers"
+            android:drawablePadding="@dimen/element_spacing_small"
+            android:drawableStart="@drawable/ic_indicator_followers"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="255"/>
+
+        <org.mariotaku.twidere.view.ActionIconThemedTextView
+            android:id="@+id/friendsCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_indicator_following"
+            android:drawablePadding="@dimen/element_spacing_small"
+            android:drawableStart="@drawable/ic_indicator_following"
+            android:singleLine="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="255"/>
     </LinearLayout>
 
-</LinearLayout>
+</org.mariotaku.twidere.view.ColorLabelRelativeLayout>

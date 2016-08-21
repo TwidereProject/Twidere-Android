@@ -220,11 +220,8 @@ class SettingsWizardActivity : BaseActivity() {
                 true
             }
 
-            var i = 0
-            val j = screen.preferenceCount
-            while (i < j) {
+            for (i in 0 until screen.preferenceCount) {
                 screen.getPreference(i).onPreferenceChangeListener = listener
-                i++
             }
         }
 

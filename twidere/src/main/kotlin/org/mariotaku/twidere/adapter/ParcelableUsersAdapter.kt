@@ -132,14 +132,11 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
 
     fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
         if (data == null) return RecyclerView.NO_POSITION
-        var i = userStartIndex
-        val j = i + userCount
-        while (i < j) {
+        for (i in userStartIndex until userStartIndex + userCount) {
             val user = data!![i]
             if (accountKey == user.account_key && userKey == user.key) {
                 return i
             }
-            i++
         }
         return RecyclerView.NO_POSITION
     }
@@ -181,7 +178,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
 
 
         fun createUserViewHolder(adapter: IUsersAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): UserViewHolder {
-            val view = inflater.inflate(R.layout.card_item_user_compact, parent, false)
+            val view = inflater.inflate(R.layout.list_item_user, parent, false)
             val holder = UserViewHolder(adapter, view)
             holder.setOnClickListeners()
             holder.setupViewOptions()

@@ -430,13 +430,10 @@ class OAuthPasswordAuthenticator(
                 for (pathSegments in originalLocation.pathSegments()) {
                     locationBuilder.addPathSegment(pathSegments)
                 }
-                var i = 0
-                val j = originalLocation.querySize()
-                while (i < j) {
+                for (i in 0 until originalLocation.querySize()) {
                     val name = originalLocation.queryParameterName(i)
                     val value = originalLocation.queryParameterValue(i)
                     locationBuilder.addQueryParameter(name, value)
-                    i++
                 }
                 val encodedFragment = originalLocation.encodedFragment()
                 if (encodedFragment != null) {

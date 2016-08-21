@@ -24,6 +24,7 @@ import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
@@ -147,9 +148,15 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getStatus(position: Int): ParcelableStatus? {
-        val dataPosition = position - statusStartIndex
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return null
-        return data!![dataPosition]
+        when (getItemCountIndex(position)) {
+            1 -> {
+                return pinnedStatuses!![position - getItemStartPosition(1)]
+            }
+            2 -> {
+                return data!![position - getItemStartPosition(2)]
+            }
+        }
+        return null
     }
 
     override val statusCount: Int
@@ -346,13 +353,10 @@ abstract class ParcelableStatusesAdapter(
 
 
     override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
-        var i = 0
-        val j = statusCount
-        while (i < j) {
+        for (i in 0 until statusCount) {
             if (accountKey == getAccountKey(i) && statusId == getStatusId(i)) {
                 return getStatus(i)
             }
-            i++
         }
         return null
     }

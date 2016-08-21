@@ -49,26 +49,21 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
         filterItems = filterItemsInfo
         val entries = arrayOfNulls<String>(filterItems!!.size)
         val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
-        run {
-            var i = 0
-            val j = entries.size
-            while (i < j) {
-                val info = filterItems!![i]
-                when (info.type) {
-                    FilterItemInfo.FILTER_TYPE_USER -> {
-                        entries[i] = getString(R.string.user_filter_name, getName(userColorNameManager,
-                                info.value, nameFirst))
-                    }
-                    FilterItemInfo.FILTER_TYPE_KEYWORD -> {
-                        entries[i] = getString(R.string.keyword_filter_name, getName(userColorNameManager,
-                                info.value, nameFirst))
-                    }
-                    FilterItemInfo.FILTER_TYPE_SOURCE -> {
-                        entries[i] = getString(R.string.source_filter_name, getName(userColorNameManager,
-                                info.value, nameFirst))
-                    }
+        for (i in 0 until entries.size) {
+            val info = filterItems!![i]
+            when (info.type) {
+                FilterItemInfo.FILTER_TYPE_USER -> {
+                    entries[i] = getString(R.string.user_filter_name, getName(userColorNameManager,
+                            info.value, nameFirst))
                 }
-                i++
+                FilterItemInfo.FILTER_TYPE_KEYWORD -> {
+                    entries[i] = getString(R.string.keyword_filter_name, getName(userColorNameManager,
+                            info.value, nameFirst))
+                }
+                FilterItemInfo.FILTER_TYPE_SOURCE -> {
+                    entries[i] = getString(R.string.source_filter_name, getName(userColorNameManager,
+                            info.value, nameFirst))
+                }
             }
         }
         builder.setTitle(R.string.add_to_filter)
@@ -83,12 +78,9 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             val userValues = ArrayList<ContentValues>()
             val keywordValues = ArrayList<ContentValues>()
             val sourceValues = ArrayList<ContentValues>()
-            var i = 0
-            val j = checkPositions.size()
-            while (i < j) {
+            loop@ for (i in 0 until checkPositions.size()) {
                 if (!checkPositions.valueAt(i)) {
-                    i++
-                    continue
+                    continue@loop
                 }
                 val info = filterItems!![checkPositions.keyAt(i)]
                 val value = info.value
@@ -111,7 +103,6 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     values.put(Filters.Sources.VALUE, source)
                     sourceValues.add(values)
                 }
-                i++
             }
             val resolver = contentResolver
             ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeys, null)

@@ -52,13 +52,4 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         GeneralComponentHelper.build(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
     }
 
-    fun findPositionByItemId(itemId: Long): Int {
-        var i = 0
-        val j = itemCount
-        while (i < j) {
-            if (getItemId(i) == itemId) return i
-            i++
-        }
-        return RecyclerView.NO_POSITION
-    }
 }
