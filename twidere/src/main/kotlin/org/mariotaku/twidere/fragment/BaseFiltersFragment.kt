@@ -203,8 +203,11 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
 
-    override var refreshing: Boolean = false
+    override var refreshing: Boolean
         get() = false
+        set(value) {
+            super.refreshing = value
+        }
 
     override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
         return FilterListAdapter(context)

@@ -49,10 +49,13 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     var prevCursor: Long = 0
         private set
 
-    override var refreshing: Boolean = false
+    override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
             return loaderManager.hasRunningLoaders()
+        }
+        set(value) {
+            super.refreshing = value
         }
 
     override fun onCreateAdapter(context: Context): ParcelableUserListsAdapter {
