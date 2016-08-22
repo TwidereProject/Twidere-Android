@@ -305,14 +305,6 @@ abstract class AbsStatusesFragment protected constructor() :
         return onCreateStatusesLoader(activity, args, fromUser)
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-
-        if (isVisibleToUser) {
-            saveReadPosition()
-        }
-    }
-
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         val adapter = adapter ?: return
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, false)
@@ -508,13 +500,19 @@ abstract class AbsStatusesFragment protected constructor() :
 
 
     protected fun saveReadPosition(position: Int) {
+        if (host == null) return
         if (position == RecyclerView.NO_POSITION) return
-        val adapter = adapter
-        val status = adapter!!.getStatus(position) ?: return
+        val adapter = adapter ?: return
+        val status = adapter.getStatus(position) ?: return
         val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
-        for (accountKey in accountKeys) {
-            val tag = Utils.getReadPositionTagWithAccount(readPositionTagWithArguments, accountKey)
-            readStateManager.setPosition(tag, positionKey)
+        readPositionTagWithArguments?.let {
+            for (accountKey in accountKeys) {
+                val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
+                readStateManager.setPosition(tag, positionKey)
+            }
+        }
+        currentReadPositionTag?.let {
+            readStateManager.setPosition(it, positionKey, true)
         }
     }
 

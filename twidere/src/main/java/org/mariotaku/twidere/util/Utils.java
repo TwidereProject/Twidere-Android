@@ -838,10 +838,9 @@ public final class Utils implements Constants {
         return accountKeys[0];
     }
 
-    @Nullable
-    public static String getReadPositionTagWithAccount(@Nullable final String tag,
+    @NonNull
+    public static String getReadPositionTagWithAccount(@NonNull final String tag,
                                                        @Nullable final UserKey accountKey) {
-        if (tag == null) return null;
         if (accountKey == null) return tag;
         return tag + "_" + accountKey;
     }

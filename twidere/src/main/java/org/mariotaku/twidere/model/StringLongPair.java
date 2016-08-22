@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
@@ -69,8 +70,8 @@ public class StringLongPair {
         return key + ":" + value;
     }
 
-    public static StringLongPair valueOf(String s) throws NumberFormatException {
-        if (s == null) return null;
+    @NonNull
+    public static StringLongPair valueOf(@NonNull String s) throws NumberFormatException {
         final String[] segs = s.split(":");
         if (segs.length != 2) throw new NumberFormatException();
         return new StringLongPair(segs[0], Long.parseLong(segs[1]));

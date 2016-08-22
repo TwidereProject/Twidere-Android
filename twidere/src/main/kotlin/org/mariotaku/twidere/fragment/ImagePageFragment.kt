@@ -70,9 +70,10 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         }
     }
 
-    override fun setupImageView(imageView: SubsamplingScaleImageView?) {
-        imageView!!.maxScale = resources.displayMetrics.density
+    override fun setupImageView(imageView: SubsamplingScaleImageView) {
+        imageView.maxScale = resources.displayMetrics.density
         imageView.setBitmapDecoderClass(PreviewBitmapDecoder::class.java)
+        imageView.setParallelLoadingEnabled(true)
     }
 
     override fun getImageSource(data: CacheDownloadLoader.Result): ImageSource {
