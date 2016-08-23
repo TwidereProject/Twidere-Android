@@ -146,7 +146,10 @@ abstract class AbsStatusesFragment protected constructor() :
     protected open val readPositionTagWithArguments: String?
         get() = readPositionTag
     private val currentReadPositionTag: String?
-        get() = "${readPositionTag}_${tabId}_current"
+        get() {
+            if (readPositionTag == null || tabId < 0) return null
+            return "${readPositionTag}_${tabId}_current"
+        }
 
     override val extraContentPadding: Rect
         get() {
@@ -303,6 +306,13 @@ abstract class AbsStatusesFragment protected constructor() :
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         args.remove(EXTRA_FROM_USER)
         return onCreateStatusesLoader(activity, args, fromUser)
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        if (userVisibleHint && !isVisibleToUser && host != null) {
+            saveReadPosition()
+        }
+        super.setUserVisibleHint(isVisibleToUser)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
