@@ -40,6 +40,8 @@ import com.afollestad.appthemeengine.ATE
 import com.afollestad.appthemeengine.Config
 import com.pnikosis.materialishprogress.ProgressWheel
 import com.rengwuxian.materialedittext.MaterialEditText
+import nl.komponents.kovenant.android.startKovenant
+import nl.komponents.kovenant.android.stopKovenant
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
@@ -99,6 +101,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         val preferences = sharedPreferences
         resetTheme(preferences)
         super.onCreate()
+        startKovenant()
 
         profileImageViewViewProcessor = ProfileImageViewViewProcessor()
         fontFamilyTagProcessor = FontFamilyTagProcessor()
@@ -271,6 +274,11 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 ATE.config(this, null).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(false).coloredStatusBar(false).commit()
             }
         }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        stopKovenant()
     }
 
     private fun resetTheme(preferences: SharedPreferences) {

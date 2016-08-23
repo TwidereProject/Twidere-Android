@@ -652,7 +652,6 @@ class UpdateStatusTask(
 
         private val BULK_SIZE = 256 * 1024// 128 Kib
 
-
         @Throws(IOException::class)
         fun getBodyFromMedia(resolver: ContentResolver,
                              mediaUri: Uri,
@@ -673,7 +672,7 @@ class UpdateStatusTask(
                         sizeLimit.x, sizeLimit.y)
                 o.inJustDecodeBounds = false
                 val bitmap = BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
-                if (bitmap != null) {
+                if (bitmap != null && mediaType != "image/gif") {
                     val os = DirectByteArrayOutputStream()
                     when (mediaType) {
                         "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
