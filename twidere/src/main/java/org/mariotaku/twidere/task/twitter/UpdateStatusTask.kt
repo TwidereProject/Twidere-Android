@@ -671,23 +671,29 @@ class UpdateStatusTask(
                 o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
                         sizeLimit.x, sizeLimit.y)
                 o.inJustDecodeBounds = false
-                val bitmap = BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
-                if (bitmap != null && mediaType != "image/gif") {
-                    val os = DirectByteArrayOutputStream()
-                    when (mediaType) {
-                        "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
-                        }
-                        else -> {
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
-                        }
-                    }
-                    length = os.size().toLong()
-                    cis = ContentLengthInputStream(os.inputStream(true), length)
-                } else {
+                if (mediaType == "image/gif") {
                     val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
                     length = st.available().toLong()
                     cis = ContentLengthInputStream(st, length)
+                } else {
+                    val bitmap = BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+                    if (bitmap != null) {
+                        val os = DirectByteArrayOutputStream()
+                        when (mediaType) {
+                            "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
+                            }
+                            else -> {
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                            }
+                        }
+                        length = os.size().toLong()
+                        cis = ContentLengthInputStream(os.inputStream(true), length)
+                    } else {
+                        val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
+                        length = st.available().toLong()
+                        cis = ContentLengthInputStream(st, length)
+                    }
                 }
             } else {
                 val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
