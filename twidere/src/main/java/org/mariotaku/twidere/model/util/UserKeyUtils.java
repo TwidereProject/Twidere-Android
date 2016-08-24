@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -16,10 +15,13 @@ import org.mariotaku.twidere.util.UriUtils;
 
 import java.util.ArrayList;
 
+import static org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM;
+import static org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM;
+
 /**
  * Created by mariotaku on 16/3/7.
  */
-public class UserKeyUtils implements TwidereConstants {
+public class UserKeyUtils {
 
     private UserKeyUtils() {
     }
@@ -72,21 +74,13 @@ public class UserKeyUtils implements TwidereConstants {
     }
 
     public static boolean isFanfouUser(User user) {
-        return isFanfouUrl(user.getProfileImageUrlLarge()) || isFanfouUrl(user.getProfileImageUrl())
-                || isFanfouUrl(user.getProfileBackgroundImageUrl());
+        return user.getUniqueId() != null && user.getProfileImageUrlLarge() != null;
     }
 
     public static boolean isFanfouUser(ParcelableUser user) {
-        return isFanfouUrl(user.profile_image_url) || isFanfouUrl(user.profile_background_url);
+        return USER_TYPE_FANFOU_COM.equals(user.key.getHost());
     }
 
-    static boolean isFanfouUrl(String url) {
-        return url != null && isFanfouHost(getUserHost(url, "twitter.com"));
-    }
-
-    private static boolean isFanfouHost(@NonNull String host) {
-        return TextUtils.equals("fanfou.com", host) || host.endsWith(".fanfou.com");
-    }
 
     @NonNull
     public static String getUserHost(@Nullable String uri, @Nullable String def) {
