@@ -167,6 +167,7 @@ dependencies {
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.8'
     compile 'com.github.mariotaku.CommonsLibrary:io:0.9.8'
+    compile 'com.github.mariotaku:KPreferences:0.9.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
