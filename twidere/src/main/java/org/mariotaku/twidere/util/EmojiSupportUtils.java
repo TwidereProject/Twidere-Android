@@ -29,6 +29,8 @@ import org.mariotaku.twidere.text.style.EmojiSpan;
 import org.mariotaku.twidere.text.util.EmojiEditableFactory;
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory;
 
+import kotlin.ranges.RangesKt;
+
 /**
  * Created by mariotaku on 15/12/20.
  */
