@@ -32,7 +32,8 @@ import org.mariotaku.twidere.fragment.WebMapFragment
  * Created by mariotaku on 15/4/27.
  */
 class MapFragmentFactoryImpl : MapFragmentFactory() {
-    override fun createMapFragment(context: Context): Fragment? {
+
+    override fun createMapFragment(context: Context): Fragment {
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS) {
             return GoogleMapFragment()
         }
