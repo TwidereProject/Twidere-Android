@@ -1175,7 +1175,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (locationText!!.tag == null || location != recentLocation) {
                     val task = DisplayPlaceNameTask(this)
                     task.params = location
-                    task.setCallback(locationText)
+                    task.callback = locationText
                     TaskStarter.execute(task)
                 }
             }

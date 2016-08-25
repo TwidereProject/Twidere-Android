@@ -728,48 +728,48 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             when (authType) {
                 ParcelableCredentials.AuthType.BASIC -> {
                     values = ContentValues()
-                    values.put(TwidereDataStore.Accounts.BASIC_AUTH_USERNAME, basicUsername)
-                    values.put(TwidereDataStore.Accounts.BASIC_AUTH_PASSWORD, basicPassword)
-                    values.put(TwidereDataStore.Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.BASIC)
+                    values.put(Accounts.BASIC_AUTH_USERNAME, basicUsername)
+                    values.put(Accounts.BASIC_AUTH_PASSWORD, basicPassword)
+                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.BASIC)
                 }
                 ParcelableCredentials.AuthType.TWIP_O_MODE -> {
                     values = ContentValues()
-                    values.put(TwidereDataStore.Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.TWIP_O_MODE)
+                    values.put(Accounts.AUTH_TYPE, ParcelableCredentials.AuthType.TWIP_O_MODE)
                 }
                 ParcelableCredentials.AuthType.OAUTH, ParcelableCredentials.AuthType.XAUTH -> {
                     values = ContentValues()
                     val accessToken = oauth!!.oauthToken
-                    values.put(TwidereDataStore.Accounts.OAUTH_TOKEN, accessToken.oauthToken)
-                    values.put(TwidereDataStore.Accounts.OAUTH_TOKEN_SECRET, accessToken.oauthTokenSecret)
-                    values.put(TwidereDataStore.Accounts.CONSUMER_KEY, oauth.getConsumerKey())
-                    values.put(TwidereDataStore.Accounts.CONSUMER_SECRET, oauth.getConsumerSecret())
-                    values.put(TwidereDataStore.Accounts.AUTH_TYPE, authType)
+                    values.put(Accounts.OAUTH_TOKEN, accessToken.oauthToken)
+                    values.put(Accounts.OAUTH_TOKEN_SECRET, accessToken.oauthTokenSecret)
+                    values.put(Accounts.CONSUMER_KEY, oauth.consumerKey)
+                    values.put(Accounts.CONSUMER_SECRET, oauth.consumerSecret)
+                    values.put(Accounts.AUTH_TYPE, authType)
                 }
                 else -> {
                     return null
                 }
             }
 
-            values.put(TwidereDataStore.Accounts.ACCOUNT_KEY, UserKeyUtils.fromUser(user).toString())
-            values.put(TwidereDataStore.Accounts.SCREEN_NAME, user.screenName)
-            values.put(TwidereDataStore.Accounts.NAME, user.name)
-            values.put(TwidereDataStore.Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user))
-            values.put(TwidereDataStore.Accounts.PROFILE_BANNER_URL, user.profileBannerImageUrl)
+            values.put(Accounts.ACCOUNT_KEY, UserKeyUtils.fromUser(user).toString())
+            values.put(Accounts.SCREEN_NAME, user.screenName)
+            values.put(Accounts.NAME, user.name)
+            values.put(Accounts.PROFILE_IMAGE_URL, TwitterContentUtils.getProfileImageUrl(user))
+            values.put(Accounts.PROFILE_BANNER_URL, user.profileBannerImageUrl)
 
-            values.put(TwidereDataStore.Accounts.COLOR, color)
-            values.put(TwidereDataStore.Accounts.IS_ACTIVATED, 1)
+            values.put(Accounts.COLOR, color)
+            values.put(Accounts.IS_ACTIVATED, 1)
 
 
-            values.put(TwidereDataStore.Accounts.API_URL_FORMAT, apiUrlFormat)
-            values.put(TwidereDataStore.Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl)
-            values.put(TwidereDataStore.Accounts.NO_VERSION_SUFFIX, noVersionSuffix)
+            values.put(Accounts.API_URL_FORMAT, apiUrlFormat)
+            values.put(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl)
+            values.put(Accounts.NO_VERSION_SUFFIX, noVersionSuffix)
 
             if (accountType != null) {
-                values.put(TwidereDataStore.Accounts.ACCOUNT_TYPE, accountType.first)
-                values.put(TwidereDataStore.Accounts.ACCOUNT_EXTRAS, accountType.second)
+                values.put(Accounts.ACCOUNT_TYPE, accountType.first)
+                values.put(Accounts.ACCOUNT_EXTRAS, accountType.second)
                 val accountKey = UserKeyUtils.fromUser(user)
                 val parcelableUser = ParcelableUserUtils.fromUser(user, accountKey)
-                values.put(TwidereDataStore.Accounts.ACCOUNT_USER, JsonSerializer.serialize(parcelableUser, ParcelableUser::class.java))
+                values.put(Accounts.ACCOUNT_USER, JsonSerializer.serialize(parcelableUser, ParcelableUser::class.java))
             }
             return values
         }

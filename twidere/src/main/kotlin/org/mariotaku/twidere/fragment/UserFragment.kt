@@ -335,7 +335,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     private fun updateSubtitle() {
-        val activity = activity as AppCompatActivity ?: return
+        val activity = activity as AppCompatActivity
         val actionBar = activity.supportActionBar ?: return
         val user = this.user
         if (user == null) {
@@ -1150,7 +1150,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 return true
             }
             TwidereLinkify.LINK_TYPE_LIST -> {
-                val mentionList = link.split("/".toRegex()).dropLastWhile { it.isEmpty() }
+                val mentionList = link.split("/").dropLastWhile(String::isEmpty)
                 if (mentionList.size != 2) {
                     return false
                 }

@@ -405,7 +405,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setSubtitle(mSubtitle)
+            actionBar.subtitle = mSubtitle
         }
     }
 

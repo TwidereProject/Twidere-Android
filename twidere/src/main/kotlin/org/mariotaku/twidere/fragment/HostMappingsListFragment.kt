@@ -227,7 +227,7 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
         }
 
         private fun updateButton() {
-            val dialog = dialog as AlertDialog ?: return
+            val dialog = dialog as AlertDialog
             val hostValid = !isEmpty(mEditHost!!.text)
             val addressValid = !isEmpty(mEditAddress!!.text) || mCheckExclude!!.isChecked
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)

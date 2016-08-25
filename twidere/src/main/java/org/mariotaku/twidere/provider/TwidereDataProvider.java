@@ -1358,7 +1358,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());
             try {
                 nm.notify("home_" + accountKey, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey), builder.build());
-                Utils.sendPebbleNotification(context, notificationContent);
+                Utils.sendPebbleNotification(context, null, notificationContent);
             } catch (SecurityException e) {
                 // Silently ignore
             }

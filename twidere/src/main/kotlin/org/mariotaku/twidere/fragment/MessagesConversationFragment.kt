@@ -568,7 +568,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 val activity = activity
                 if (activity !is BaseActivity) return false
                 if (activity.keyMetaState != 0) return false
-                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials ?: return false
+                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
                 editText.setAccountKey(account.account_key)
                 searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
                 return true

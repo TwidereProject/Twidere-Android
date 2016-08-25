@@ -124,7 +124,7 @@ class UpdateStatusTask(
         val cr = context.contentResolver
         if (hasError) {
             val values = ContentValues()
-            values.put(Drafts.ACCOUNT_KEYS, CollectionUtils.toString(failedAccounts, ',', false))
+            values.put(Drafts.ACCOUNT_KEYS, failedAccounts.joinToString(","))
             cr.update(Drafts.CONTENT_URI, values, where, whereArgs)
             // TODO show error message
         } else {

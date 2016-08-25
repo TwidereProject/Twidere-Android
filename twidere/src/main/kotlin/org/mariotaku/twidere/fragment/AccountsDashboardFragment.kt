@@ -314,8 +314,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
         profileContainer.setOnClickListener(this)
 
-        accountProfileBanner.setInAnimation(getContext(), android.R.anim.fade_in)
-        accountProfileBanner.setOutAnimation(getContext(), android.R.anim.fade_out)
+        accountProfileBanner.setInAnimation(context, android.R.anim.fade_in)
+        accountProfileBanner.setOutAnimation(context, android.R.anim.fade_out)
         accountProfileBanner.setFactory {
             inflater.inflate(R.layout.layout_account_dashboard_profile_image,
                     accountProfileBanner, false)
@@ -352,7 +352,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     internal fun updateAccountActions() {
-        val activity = activity as HomeActivity ?: return
+        val activity = activity as HomeActivity
         val tabs = activity.tabs
         val account = mAccountsAdapter!!.selectedAccount ?: return
         var hasDmTab = false

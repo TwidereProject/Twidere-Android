@@ -20,7 +20,7 @@ import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.task.SaveFileTask;
-import org.mariotaku.twidere.util.Utils;
+import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import java.io.File;
@@ -100,7 +100,7 @@ public class CacheProvider extends ContentProvider implements TwidereConstants {
                 case Type.IMAGE: {
                     final File file = mSimpleDiskCache.get(getCacheKey(uri));
                     if (file == null) return null;
-                    return Utils.getImageMimeType(file);
+                    return BitmapUtils.getImageMimeType(file);
                 }
                 case Type.VIDEO: {
                     return "video/mp4";

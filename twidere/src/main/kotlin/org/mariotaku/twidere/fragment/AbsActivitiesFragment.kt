@@ -390,7 +390,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
                 }
             }
         }
-        task.setCallback(recyclerView)
+        task.callback = recyclerView
         TaskStarter.execute(task)
         bus.register(statusesBusCallback)
     }

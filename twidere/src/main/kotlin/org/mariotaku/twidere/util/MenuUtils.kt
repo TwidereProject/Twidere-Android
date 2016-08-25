@@ -69,11 +69,11 @@ object MenuUtils {
     }
 
     fun setItemChecked(menu: Menu?, id: Int, checked: Boolean) {
-        menu?.setItemChecked(id, checked);
+        menu?.setItemChecked(id, checked)
     }
 
     fun setMenuItemIcon(menu: Menu?, id: Int, @DrawableRes icon: Int) {
-        menu?.setMenuItemIcon(id, icon);
+        menu?.setMenuItemIcon(id, icon)
     }
 
     fun setMenuItemTitle(menu: Menu?, id: Int, @StringRes icon: Int) {

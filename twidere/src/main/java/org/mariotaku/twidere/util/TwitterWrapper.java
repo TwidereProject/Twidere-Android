@@ -237,7 +237,7 @@ public class TwitterWrapper implements Constants {
         final ContentResolver cr = context.getContentResolver();
         String type = cr.getType(imageUri);
         if (type == null) {
-            type = Utils.getImageMimeType(cr, imageUri);
+            type = BitmapUtils.getImageMimeType(cr, imageUri);
         }
         final ContentType contentType;
         final String extension;

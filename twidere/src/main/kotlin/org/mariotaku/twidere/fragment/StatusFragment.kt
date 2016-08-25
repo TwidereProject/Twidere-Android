@@ -1915,7 +1915,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 if (heightBeforeSpace != 0) {
                     val spaceHeight = recyclerView.measuredHeight - heightBeforeSpace
                     this.spaceHeight = Math.max(0, spaceHeight)
-                    return this.spaceHeight;
+                    return this.spaceHeight
                 }
             }
             return super.getDecoratedMeasuredHeight(child)
@@ -2022,7 +2022,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 if (adapter.isRepliesLoading) {
                     count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE)
                 }
-                val spaceHeight = calculateSpaceHeight();
+                val spaceHeight = calculateSpaceHeight()
                 if (spaceHeight > 0) {
                     count += adapter.getTypeCount(StatusAdapter.ITEM_IDX_SPACE)
                 }

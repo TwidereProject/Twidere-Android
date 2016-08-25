@@ -159,7 +159,7 @@ class ParcelableUserLoader(
             return response
         } catch (e: MicroBlogException) {
             Log.w(LOGTAG, e)
-            return SingleResponse(exception = e);
+            return SingleResponse(exception = e)
         }
 
     }

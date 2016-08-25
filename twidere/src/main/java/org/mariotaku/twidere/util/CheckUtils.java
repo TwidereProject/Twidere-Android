@@ -43,10 +43,7 @@ public class CheckUtils {
             return false;
         }
 
-        if (start < 0 || end < 0) {
-            return false;
-        }
-        return true;
+        return !(start < 0 || end < 0);
     }
 
     public static boolean isValidLocale(String locale) {
