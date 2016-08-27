@@ -12,6 +12,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -91,6 +92,8 @@ class DummyItemAdapter @JvmOverloads constructor(
             return adapter.getStatus(position)
         } else if (adapter is VariousItemsAdapter) {
             return adapter.getItem(position) as ParcelableStatus
+        } else if (adapter is ParcelableActivitiesAdapter) {
+            return adapter.getActivity(position)?.getActivityStatus()
         }
         return null
     }
