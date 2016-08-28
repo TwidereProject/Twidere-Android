@@ -569,7 +569,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 if (activity !is BaseActivity) return false
                 if (activity.keyMetaState != 0) return false
                 val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
-                editText.setAccountKey(account.account_key)
+                editText.accountKey = account.account_key
                 searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
                 return true
             }
@@ -584,7 +584,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
 
             override fun afterTextChanged(s: Editable) {
                 val account = (actionBarCustomView.accountSpinner.selectedItem ?: return) as ParcelableCredentials
-                editText.setAccountKey(account.account_key)
+                editText.accountKey = account.account_key
                 searchUsers(account.account_key, ParseUtils.parseString(s), true)
             }
         })

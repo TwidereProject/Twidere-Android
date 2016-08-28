@@ -79,31 +79,28 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         dialog.setOnShowListener {
             val alertDialog = it as AlertDialog
 
-            val itemContent = alertDialog.findViewById(R.id.itemContent)
-            val textCountView = alertDialog.findViewById(R.id.comment_text_count) as StatusTextCountView?
-            val itemMenu = alertDialog.findViewById(R.id.itemMenu)
-            val actionButtons = alertDialog.findViewById(R.id.actionButtons)
-            val commentContainer = alertDialog.findViewById(R.id.comment_container)
-            val editComment = alertDialog.findViewById(R.id.edit_comment) as ComposeEditText?
-            val commentMenu = alertDialog.findViewById(R.id.comment_menu)
-            assert(itemContent != null && textCountView != null && itemMenu != null
-                    && actionButtons != null && commentContainer != null && editComment != null
-                    && commentMenu != null)
+            val itemContent = alertDialog.findViewById(R.id.itemContent)!!
+            val textCountView = alertDialog.findViewById(R.id.comment_text_count) as StatusTextCountView
+            val itemMenu = alertDialog.findViewById(R.id.itemMenu)!!
+            val actionButtons = alertDialog.findViewById(R.id.actionButtons)!!
+            val commentContainer = alertDialog.findViewById(R.id.comment_container)!!
+            val editComment = alertDialog.findViewById(R.id.edit_comment) as ComposeEditText
+            val commentMenu = alertDialog.findViewById(R.id.comment_menu)!!
 
             val adapter = DummyItemAdapter(context)
             adapter.setShouldShowAccountsColor(true)
-            val holder = StatusViewHolder(adapter, itemContent!!)
+            val holder = StatusViewHolder(adapter, itemContent)
             holder.displayStatus(status, false, true)
 
-            textCountView!!.maxLength = TwidereValidator.getTextLimit(credentials)
+            textCountView.maxLength = TwidereValidator.getTextLimit(credentials)
 
-            itemMenu!!.visibility = View.GONE
-            actionButtons!!.visibility = View.GONE
+            itemMenu.visibility = View.GONE
+            actionButtons.visibility = View.GONE
             itemContent.isFocusable = false
             val useQuote = useQuote(!status.user_is_protected, credentials)
 
-            commentContainer!!.visibility = if (useQuote) View.VISIBLE else View.GONE
-            editComment!!.setAccountKey(status.account_key)
+            commentContainer.visibility = if (useQuote) View.VISIBLE else View.GONE
+            editComment.accountKey = (status.account_key)
 
             val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
             val enterHandler = EditTextEnterHandler.attach(editComment, object : EditTextEnterHandler.EnterListener {
@@ -133,9 +130,9 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                 }
             })
 
-            popupMenu = PopupMenu(context, commentMenu!!, Gravity.NO_GRAVITY,
+            popupMenu = PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
                     R.attr.actionOverflowMenuStyle, 0)
-            commentMenu.setOnClickListener(View.OnClickListener { popupMenu!!.show() })
+            commentMenu.setOnClickListener { popupMenu!!.show() }
             commentMenu.setOnTouchListener(popupMenu!!.dragToOpenListener)
             popupMenu!!.inflate(R.menu.menu_dialog_comment)
             val menu = popupMenu!!.menu

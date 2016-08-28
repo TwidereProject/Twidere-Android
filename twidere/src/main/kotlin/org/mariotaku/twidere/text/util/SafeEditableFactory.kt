@@ -17,18 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.text.util;
+package org.mariotaku.twidere.text.util
 
-import android.text.Editable;
+import android.text.Editable
 
-import org.mariotaku.twidere.text.SafeSpannableStringBuilder;
+import org.mariotaku.twidere.text.SafeSpannableStringBuilder
 
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class SafeEditableFactory extends Editable.Factory {
-    @Override
-    public Editable newEditable(CharSequence source) {
-        return new SafeSpannableStringBuilder(source);
+open class SafeEditableFactory : Editable.Factory() {
+    override fun newEditable(source: CharSequence): Editable {
+        return SafeSpannableStringBuilder(source)
     }
 }

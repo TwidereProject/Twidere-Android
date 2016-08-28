@@ -1073,9 +1073,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accounts = accountsAdapter!!.selectedAccounts
         setSelectedAccounts(*accounts)
         if (ArrayUtils.isEmpty(accounts)) {
-            editText.setAccountKey(Utils.getDefaultAccountKey(this))
+            editText.accountKey = Utils.getDefaultAccountKey(this)
         } else {
-            editText.setAccountKey(accounts[0].account_key)
+            editText.accountKey = accounts[0].account_key
         }
         statusTextCount.maxLength = TwidereValidator.getTextLimit(accounts)
         setMenu()

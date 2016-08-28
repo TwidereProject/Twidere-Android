@@ -58,7 +58,7 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
     private final boolean mDisplayProfileImage;
 
     private int mTypeIdx, mIconIdx, mTitleIdx, mSummaryIdx, mExtraIdIdx, mValueIdx;
-    private UserKey mAccountKey;
+    private UserKey accountKey;
     private char mToken;
 
     public ComposeAutoCompleteAdapter(final Context context) {
@@ -144,14 +144,18 @@ public class ComposeAutoCompleteAdapter extends SimpleCursorAdapter implements C
                 return null;
             }
         }
-        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(mAccountKey));
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, String.valueOf(accountKey));
         return mContext.getContentResolver().query(builder.build(), Suggestions.AutoComplete.COLUMNS,
                 null, null, null);
     }
 
 
     public void setAccountKey(UserKey accountKey) {
-        mAccountKey = accountKey;
+        this.accountKey = accountKey;
+    }
+
+    public UserKey getAccountKey() {
+        return accountKey;
     }
 
     @Override

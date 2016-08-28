@@ -17,33 +17,32 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.text.util;
+package org.mariotaku.twidere.text.util
 
-import android.text.Spannable;
-import android.widget.TextView;
+import android.text.Spannable
+import android.widget.TextView
 
-import org.mariotaku.twidere.util.EmojiSupportUtils;
-import org.mariotaku.twidere.util.ExternalThemeManager;
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+import org.mariotaku.twidere.util.EmojiSupportUtils
+import org.mariotaku.twidere.util.ExternalThemeManager
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 
-import javax.inject.Inject;
+import javax.inject.Inject
 
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class EmojiSpannableFactory extends SafeSpannableFactory {
+class EmojiSpannableFactory(textView: TextView) : SafeSpannableFactory() {
 
     @Inject
-    ExternalThemeManager externalThemeManager;
+    lateinit internal var externalThemeManager: ExternalThemeManager
 
-    public EmojiSpannableFactory(TextView textView) {
-        GeneralComponentHelper.build(textView.getContext()).inject(this);
+    init {
+        GeneralComponentHelper.build(textView.context).inject(this)
     }
 
-    @Override
-    public Spannable newSpannable(CharSequence source) {
-        final Spannable spannable = super.newSpannable(source);
-        EmojiSupportUtils.applyEmoji(externalThemeManager, spannable);
-        return spannable;
+    override fun newSpannable(source: CharSequence): Spannable {
+        val spannable = super.newSpannable(source)
+        EmojiSupportUtils.applyEmoji(externalThemeManager, spannable)
+        return spannable
     }
 }

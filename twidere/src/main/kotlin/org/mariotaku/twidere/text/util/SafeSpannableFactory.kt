@@ -17,18 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.text.util;
+package org.mariotaku.twidere.text.util
 
-import android.text.Spannable;
+import android.text.Spannable
 
-import org.mariotaku.twidere.text.SafeSpannableString;
+import org.mariotaku.twidere.text.SafeSpannableString
 
 /**
  * Created by mariotaku on 15/12/20.
  */
-public class SafeSpannableFactory extends Spannable.Factory {
-    @Override
-    public Spannable newSpannable(CharSequence source) {
-        return new SafeSpannableString(source);
+open class SafeSpannableFactory : Spannable.Factory() {
+    override fun newSpannable(source: CharSequence): Spannable {
+        return SafeSpannableString(source)
     }
 }
