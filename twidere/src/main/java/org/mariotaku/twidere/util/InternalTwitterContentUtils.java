@@ -10,8 +10,7 @@ import android.text.TextUtils;
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
-import org.mariotaku.microblog.library.MicroBlog;
-import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.commons.text.CodePointArray;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.EntitySupport;
 import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport;
@@ -19,7 +18,6 @@ import org.mariotaku.microblog.library.twitter.model.MediaEntity;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.restfu.http.MultiValueMap;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -27,8 +25,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

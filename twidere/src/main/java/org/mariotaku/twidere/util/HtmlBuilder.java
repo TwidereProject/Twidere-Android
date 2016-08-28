@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
+import org.mariotaku.commons.text.CodePointArray;
 import org.mariotaku.twidere.model.SpanItem;
 
 import java.util.ArrayList;
