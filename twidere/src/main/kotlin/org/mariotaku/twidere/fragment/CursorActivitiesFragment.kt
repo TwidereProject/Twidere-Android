@@ -71,7 +71,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected abstract val errorInfoKey: String
 
-    private var mContentObserver: ContentObserver? = null
+    private var contentObserver: ContentObserver? = null
 
     abstract val contentUri: Uri
 
@@ -125,13 +125,13 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     override fun onStart() {
         super.onStart()
         val cr = contentResolver
-        mContentObserver = object : ContentObserver(Handler()) {
+        contentObserver = object : ContentObserver(Handler()) {
             override fun onChange(selfChange: Boolean) {
                 reloadActivities()
             }
         }
-        cr.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver!!)
-        cr.registerContentObserver(Filters.CONTENT_URI, true, mContentObserver!!)
+        cr.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver!!)
+        cr.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
         updateRefreshState()
         reloadActivities()
     }
@@ -149,7 +149,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override fun onStop() {
         val cr = contentResolver
-        cr.unregisterContentObserver(mContentObserver!!)
+        cr.unregisterContentObserver(contentObserver!!)
         super.onStop()
     }
 

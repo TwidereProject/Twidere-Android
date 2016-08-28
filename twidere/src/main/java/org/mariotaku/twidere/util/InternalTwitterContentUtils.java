@@ -232,6 +232,7 @@ public class InternalTwitterContentUtils {
 
         String text = status.getFullText();
         CodePointArray source;
+        // Display text range
         int[] range = null;
         if (text == null) {
             text = status.getText();

@@ -235,7 +235,6 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         bus.register(this)
         val adapter = adapter
         adapter!!.updateReadState()
-        updateRefreshState()
     }
 
     override fun onStop() {
@@ -297,10 +296,6 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
             }
             return DataStoreUtils.getActivatedAccountKeys(getActivity())
         }
-
-    protected fun updateRefreshState() {
-        refreshing = twitterWrapper.isReceivedDirectMessagesRefreshing || twitterWrapper.isSentDirectMessagesRefreshing
-    }
 
     private fun addReadPosition(firstVisibleItem: Int) {
         if (mFirstVisibleItem != firstVisibleItem) {

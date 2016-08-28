@@ -92,7 +92,7 @@ public class RefreshService extends Service implements Constants {
                     break;
                 }
                 case BROADCAST_REFRESH_HOME_TIMELINE: {
-                    if (isAutoRefreshAllowed() && !isHomeTimelineRefreshing()) {
+                    if (isAutoRefreshAllowed()) {
                         mTwitterWrapper.getHomeTimelineAsync(new SimpleRefreshTaskParam() {
                             private UserKey[] accountIds;
 
@@ -140,7 +140,7 @@ public class RefreshService extends Service implements Constants {
                     break;
                 }
                 case BROADCAST_REFRESH_DIRECT_MESSAGES: {
-                    if (isAutoRefreshAllowed() && !isReceivedDirectMessagesRefreshing()) {
+                    if (isAutoRefreshAllowed()) {
                         mTwitterWrapper.getReceivedDirectMessagesAsync(new SimpleRefreshTaskParam() {
                             private UserKey[] accountIds;
 
@@ -311,14 +311,6 @@ public class RefreshService extends Service implements Constants {
         if (mPreferences == null) return 0;
         final int prefValue = NumberUtils.toInt(mPreferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL), -1);
         return Math.max(prefValue, 3) * 60 * 1000;
-    }
-
-    private boolean isHomeTimelineRefreshing() {
-        return mTwitterWrapper.isHomeTimelineRefreshing();
-    }
-
-    private boolean isReceivedDirectMessagesRefreshing() {
-        return mTwitterWrapper.isReceivedDirectMessagesRefreshing();
     }
 
     private void rescheduleDirectMessagesRefreshing() {
