@@ -40,6 +40,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.constant.CompatibilityConstants
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.fragment.*
@@ -472,6 +473,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName)
                 }
+                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
                 if (paramUserKey != null) {
                     userHost = paramUserKey.host
                 }
