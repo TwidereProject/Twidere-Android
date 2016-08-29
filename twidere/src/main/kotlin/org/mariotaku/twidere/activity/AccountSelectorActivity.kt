@@ -28,7 +28,6 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.AdapterView
@@ -94,7 +93,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
             conditionArgs.add(ParcelableCredentials.AuthType.OAUTH.toString())
         }
         val accountHost = accountHost
-        if (!TextUtils.isEmpty(accountHost)) {
+        if (accountHost != null) {
             if (USER_TYPE_TWITTER_COM == accountHost) {
                 conditions.add(Expression.or(
                         Expression.equalsArgs(Accounts.ACCOUNT_TYPE),
@@ -207,7 +206,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
             return intent.getBooleanExtra(EXTRA_OAUTH_ONLY, false)
         }
 
-    private val accountHost: String
+    private val accountHost: String?
         get() {
             return intent.getStringExtra(EXTRA_ACCOUNT_HOST)
         }
