@@ -77,6 +77,11 @@ public class ParcelableUserList implements Parcelable, Comparable<ParcelableUser
     @JsonField(name = "user_profile_image_url")
     public String user_profile_image_url;
 
+    /**
+     * Internal use
+     */
+    public boolean is_user_inside;
+
     public ParcelableUserList() {
     }
 

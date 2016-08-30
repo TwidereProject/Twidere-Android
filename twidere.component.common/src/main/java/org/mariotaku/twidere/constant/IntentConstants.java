@@ -145,6 +145,7 @@ public interface IntentConstants {
     String EXTRA_USERS = "users";
     String EXTRA_ITEMS = "items";
     String EXTRA_USER_LIST = "user_list";
+    String EXTRA_USER_LISTS = "user_lists";
     String EXTRA_APPEND_TEXT = "append_text";
     String EXTRA_NAME = "name";
     String EXTRA_POSITION = "position";

@@ -293,6 +293,7 @@
     <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="users_count">%2$d</xliff:g> others sent you <xliff:g id="messages_count">%3$d</xliff:g> direct messages.</string>
     <string name="action_getting_status">getting tweet</string>
     <string name="action_updating_status">sending tweet</string>
+    <string name="action_getting_user_lists">getting user lists</string>
     <string name="action_sending_direct_message">sending direct message</string>
     <string name="action_refreshing_home_timeline">refreshing home timeline</string>
     <string name="action_refreshing_mentions">refreshing mentions</string>
@@ -312,6 +313,7 @@
     <string name="action_unfollowing">unfollowing</string>
     <string name="action_creating_list">creating list</string>
     <string name="action_adding_member">adding member</string>
+    <string name="action_modifying_lists">modifying lists</string>
     <string name="action_signing_in">signing in</string>
     <string name="action_retweeting">retweeting</string>
     <string name="action_reporting_for_spam">reporting for spam</string>
@@ -812,4 +814,5 @@
     <string name="hide_replies">Hide replies</string>
     <string name="no_extension_installed">No extension installed</string>
     <string name="pinned_status">Pinned tweet</string>
+    <string name="add_or_remove_from_list">Add or remove from list</string>
 </resources>

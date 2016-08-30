@@ -411,7 +411,8 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
         override fun beforeExecute() {
             super.beforeExecute()
             callback?.executeAfterFragmentResumed { fragment ->
-                val df = ProgressDialogFragment.show((fragment as UserProfileEditorFragment).activity, DIALOG_FRAGMENT_TAG)
+                val fm = (fragment as UserProfileEditorFragment).activity.supportFragmentManager
+                val df = ProgressDialogFragment.show(fm, DIALOG_FRAGMENT_TAG)
                 df.isCancelable = false
             }
         }

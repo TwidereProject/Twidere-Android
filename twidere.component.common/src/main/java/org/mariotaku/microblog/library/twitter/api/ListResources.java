@@ -107,10 +107,10 @@ public interface ListResources {
     PageableResponseList<UserList> getUserListOwnerships(@Query Paging paging) throws MicroBlogException;
 
     @GET("/lists/ownerships.json")
-    PageableResponseList<UserList> getUserListOwnerships(@Query("user_id") String listMemberId, @Query Paging paging) throws MicroBlogException;
+    PageableResponseList<UserList> getUserListOwnerships(@Query("user_id") String ownerId, @Query Paging paging) throws MicroBlogException;
 
     @GET("/lists/ownerships.json")
-    PageableResponseList<UserList> getUserListOwnershipsByScreenName(@Query("screen_name") String listMemberScreenName, @Query Paging paging)
+    PageableResponseList<UserList> getUserListOwnershipsByScreenName(@Query("screen_name") String ownerScreenName, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/list.json")

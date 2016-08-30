@@ -107,9 +107,10 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         override fun onPostExecute(result: Boolean?) {
-            val fm = activity.supportFragmentManager
-            val f = fm.findFragmentByTag(FRAGMENT_TAG)
-            if (f is DialogFragment) {
+            activity.executeAfterFragmentResumed {
+                val activity = it as DataImportActivity
+                val fm = activity.supportFragmentManager
+                val f = fm.findFragmentByTag(FRAGMENT_TAG) as DialogFragment
                 f.dismiss()
             }
             if (result != null && result) {
@@ -121,7 +122,10 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         override fun onPreExecute() {
-            ProgressDialogFragment.show(activity, FRAGMENT_TAG).isCancelable = false
+            activity.executeAfterFragmentResumed {
+                val activity = it as DataImportActivity
+                ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG).isCancelable = false
+            }
         }
 
         companion object {
@@ -130,11 +134,11 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
 
     }
 
-    internal class OpenImportTypeTask(private val mActivity: DataImportActivity, private val mPath: String?) : AsyncTask<Any, Any, Int>() {
+    internal class OpenImportTypeTask(private val activity: DataImportActivity, private val path: String?) : AsyncTask<Any, Any, Int>() {
 
         override fun doInBackground(vararg params: Any): Int? {
-            if (mPath == null) return 0
-            val file = File(mPath)
+            if (path == null) return 0
+            val file = File(path)
             if (!file.isFile) return 0
             try {
                 return DataImportExportUtils.getImportedSettingsFlags(file)
@@ -145,26 +149,30 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         override fun onPostExecute(flags: Int?) {
-            val fm = mActivity.supportFragmentManager
-            val f = fm.findFragmentByTag(FRAGMENT_TAG)
-            if (f is DialogFragment) {
+            activity.executeAfterFragmentResumed {
+                val activity = it as DataImportActivity
+                val fm = activity.supportFragmentManager
+                val f = fm.findFragmentByTag(FRAGMENT_TAG) as DialogFragment
                 f.dismiss()
             }
             val df = DataExportImportTypeSelectorDialogFragment()
             val args = Bundle()
-            args.putString(EXTRA_PATH, mPath)
-            args.putString(EXTRA_TITLE, mActivity.getString(R.string.import_settings_type_dialog_title))
+            args.putString(EXTRA_PATH, path)
+            args.putString(EXTRA_TITLE, activity.getString(R.string.import_settings_type_dialog_title))
             if (flags != null) {
                 args.putInt(EXTRA_FLAGS, flags)
             } else {
                 args.putInt(EXTRA_FLAGS, 0)
             }
             df.arguments = args
-            df.show(mActivity.supportFragmentManager, "select_import_type")
+            df.show(activity.supportFragmentManager, "select_import_type")
         }
 
         override fun onPreExecute() {
-            ProgressDialogFragment.show(mActivity, FRAGMENT_TAG).isCancelable = false
+            activity.executeAfterFragmentResumed {
+                val activity = it as DataImportActivity
+                ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG).isCancelable = false
+            }
         }
 
         companion object {

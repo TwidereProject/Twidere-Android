@@ -510,14 +510,20 @@ class SettingsWizardActivity : BaseActivity() {
         protected abstract fun nextStep()
 
         override fun onPostExecute(result: Boolean?) {
-            val fm = activity.supportFragmentManager
-            val f = fm.findFragmentByTag(FRAGMENT_TAG) as DialogFragment
-            f.dismiss()
+            activity.executeAfterFragmentResumed {
+                val activity = it as SettingsWizardActivity
+                val fm = activity.supportFragmentManager
+                val f = fm.findFragmentByTag(FRAGMENT_TAG) as DialogFragment
+                f.dismiss()
+            }
             nextStep()
         }
 
         override fun onPreExecute() {
-            ProgressDialogFragment.show(activity, FRAGMENT_TAG).isCancelable = false
+            activity.executeAfterFragmentResumed {
+                val activity = it as SettingsWizardActivity
+                ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG).isCancelable = false
+            }
         }
 
         private fun wasConfigured(tabs: List<SupportTabSpec>): Boolean {

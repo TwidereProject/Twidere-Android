@@ -42,7 +42,7 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
 import org.mariotaku.abstask.library.ManualTaskStarter
-import org.mariotaku.ktextension.asTypedArray
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.microblog.library.MicroBlogException
@@ -236,7 +236,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
         val statusParcelables = intent.getParcelableArrayExtra(EXTRA_STATUSES)
         val statuses: Array<ParcelableStatusUpdate>
         if (statusParcelables != null) {
-            statuses = statusParcelables.asTypedArray(ParcelableStatusUpdate.CREATOR)
+            statuses = statusParcelables.toTypedArray(ParcelableStatusUpdate.CREATOR)
         } else if (status != null) {
             statuses = arrayOf(status)
         } else

@@ -731,11 +731,17 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         private val linkClickHandler: StatusLinkClickHandler
         private val linkify: TwidereLinkify
 
+
+        private val locationView: TextView
+        private val retweetedByView: TextView
+
         init {
             this.linkClickHandler = DetailStatusLinkClickHandler(adapter.context,
                     adapter.multiSelectManager, adapter, adapter.preferences)
             this.linkify = TwidereLinkify(linkClickHandler)
 
+            locationView = itemView.locationView
+            retweetedByView = itemView.retweetedBy
             initViews()
         }
 
@@ -757,11 +763,11 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             if (status.retweet_id != null) {
                 val retweetedBy = UserColorNameManager.decideDisplayName(status.retweet_user_nickname,
                         status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst)
-                itemView.retweetedBy.text = context.getString(R.string.name_retweeted, retweetedBy)
-                itemView.retweetedBy.visibility = View.VISIBLE
+                retweetedByView.text = context.getString(R.string.name_retweeted, retweetedBy)
+                retweetedByView.visibility = View.VISIBLE
             } else {
-                itemView.retweetedBy.text = null
-                itemView.retweetedBy.visibility = View.GONE
+                retweetedByView.text = null
+                retweetedByView.visibility = View.GONE
             }
 
             itemView.profileContainer.drawEnd(status.account_color)
@@ -890,27 +896,20 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 itemView.text.visibility = View.VISIBLE
             }
 
-            val location: ParcelableLocation?
-            val placeFullName: String?
-            if (status.is_quote) {
-                location = status.quoted_location
-                placeFullName = status.quoted_place_full_name
-            } else {
-                location = status.location
-                placeFullName = status.place_full_name
-            }
+            val location: ParcelableLocation? = status.location
+            val placeFullName: String? = status.place_full_name
 
             if (!TextUtils.isEmpty(placeFullName)) {
-                itemView.locationView.visibility = View.VISIBLE
-                itemView.locationView.text = placeFullName
-                itemView.locationView.isClickable = ParcelableLocationUtils.isValidLocation(location)
+                locationView.visibility = View.VISIBLE
+                locationView.text = placeFullName
+                locationView.isClickable = ParcelableLocationUtils.isValidLocation(location)
             } else if (ParcelableLocationUtils.isValidLocation(location)) {
-                itemView.locationView.visibility = View.VISIBLE
-                itemView.locationView.setText(R.string.view_map)
-                itemView.locationView.isClickable = true
+                locationView.visibility = View.VISIBLE
+                locationView.setText(R.string.view_map)
+                locationView.isClickable = true
             } else {
-                itemView.locationView.visibility = View.GONE
-                itemView.locationView.text = null
+                locationView.visibility = View.GONE
+                locationView.text = null
             }
 
             val interactUsersAdapter = itemView.countsUsers.adapter as CountsUsersAdapter
@@ -930,7 +929,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 itemView.countsUsersHeightHolder.visibility = View.GONE
             }
 
-            val media = ParcelableMediaUtils.getPrimaryMedia(status)
+            val media = status.media
 
             if (media?.isEmpty() ?: true) {
                 itemView.mediaPreviewContainer.visibility = View.GONE
@@ -948,6 +947,26 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 itemView.mediaPreview.visibility = View.GONE
                 itemView.mediaPreviewLoad.visibility = View.VISIBLE
                 itemView.mediaPreview.displayMedia()
+            }
+
+            val quotedMedia = status.quoted_media
+
+            if (quotedMedia?.isEmpty() ?: true) {
+                itemView.quotedMediaPreviewContainer.visibility = View.GONE
+                itemView.quotedMediaPreview.visibility = View.GONE
+                itemView.quotedMediaPreviewLoad.visibility = View.GONE
+                itemView.quotedMediaPreview.displayMedia()
+            } else if (adapter.isDetailMediaExpanded) {
+                itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                itemView.quotedMediaPreview.visibility = View.VISIBLE
+                itemView.quotedMediaPreviewLoad.visibility = View.GONE
+                itemView.quotedMediaPreview.displayMedia(media, loader, status.account_key, -1,
+                        adapter.fragment, adapter.mediaLoadingHandler)
+            } else {
+                itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                itemView.quotedMediaPreview.visibility = View.GONE
+                itemView.quotedMediaPreviewLoad.visibility = View.VISIBLE
+                itemView.quotedMediaPreview.displayMedia()
             }
 
             if (TwitterCardUtils.isCardSupported(status)) {
@@ -1020,7 +1039,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                             status.user_screen_name, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                             Referral.STATUS)
                 }
-                itemView.retweetedBy -> {
+                retweetedByView -> {
                     if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.context, status.account_key,
                                 status.retweeted_by_user_key, status.retweeted_by_user_screen_name,
@@ -1028,7 +1047,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                                 Referral.STATUS)
                     }
                 }
-                itemView.locationView -> {
+                locationView -> {
                     val location = status.location
                     if (!ParcelableLocationUtils.isValidLocation(location)) return
                     IntentUtils.openMap(adapter.context, location.latitude, location.longitude)
@@ -1089,8 +1108,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             itemView.mediaPreviewLoad.setOnClickListener(this)
             itemView.profileContainer.setOnClickListener(this)
             itemView.quotedName.setOnClickListener(this)
-            itemView.retweetedBy.setOnClickListener(this)
-            itemView.locationView.setOnClickListener(this)
+            retweetedByView.setOnClickListener(this)
+            locationView.setOnClickListener(this)
             itemView.quoteOriginalLink.setOnClickListener(this)
             itemView.translateLabel.setOnClickListener(this)
 
@@ -1104,7 +1123,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             itemView.quotedText.textSize = textSize * 1.25f
 
             itemView.quoteOriginalLink.textSize = textSize * 0.85f
-            itemView.locationView.textSize = textSize * 0.85f
+            locationView.textSize = textSize * 0.85f
             itemView.timeSource.textSize = textSize * 0.85f
             itemView.translateLabel.textSize = textSize * 0.85f
             itemView.translateResult.textSize = textSize * 1.05f

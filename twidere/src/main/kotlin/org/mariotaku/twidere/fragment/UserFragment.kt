@@ -22,7 +22,9 @@ package org.mariotaku.twidere.fragment
 import android.animation.ArgbEvaluator
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Outline
@@ -38,6 +40,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.annotation.UiThread
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -47,12 +50,14 @@ import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v4.view.WindowCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.util.Linkify
 import android.util.Pair
+import android.util.SparseBooleanArray
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
@@ -68,17 +73,29 @@ import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import kotlinx.android.synthetic.main.layout_content_pages_common.*
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.promiseOnUi
+import nl.komponents.kovenant.ui.successUi
 import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Relationship
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.*
+import org.mariotaku.twidere.activity.AccountSelectorActivity
+import org.mariotaku.twidere.activity.BaseActivity
+import org.mariotaku.twidere.activity.ColorPickerDialogActivity
+import org.mariotaku.twidere.activity.LinkHandlerActivity
+import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
@@ -883,12 +900,38 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 SetUserNicknameDialogFragment.show(fragmentManager, user.key, nick)
             }
             R.id.add_to_list -> {
-                val intent = Intent(INTENT_ACTION_SELECT_USER_LIST)
-                intent.setClass(activity, UserListSelectorActivity::class.java)
-                intent.putExtra(EXTRA_ACCOUNT_KEY, user.account_key)
-                intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(activity,
-                        user.account_key))
-                startActivityForResult(intent, REQUEST_ADD_TO_LIST)
+                promiseOnUi {
+                    executeAfterFragmentResumed {
+                        ProgressDialogFragment.show(fragmentManager, "get_list_progress")
+                    }
+                }.then {
+                    val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key, true)
+
+                    val ownedLists = microBlog.getUserListOwnerships(null)
+                    val userListMemberships = microBlog.getUserListMemberships(user.key.id, null, true)
+                    return@then Array<ParcelableUserList>(ownedLists.size) { idx ->
+                        val list = ParcelableUserListUtils.from(ownedLists[idx], user.account_key)
+                        list.is_user_inside = userListMemberships.firstOrNull { it.id == ownedLists[idx].id } != null
+                        return@Array list
+                    }
+                }.alwaysUi {
+                    executeAfterFragmentResumed {
+                        val df = fragmentManager.findFragmentByTag("get_list_progress") as? DialogFragment
+                        df?.dismiss()
+                    }
+                }.successUi { result ->
+                    executeAfterFragmentResumed {
+                        val df = AddRemoveUserListDialogFragment()
+                        df.arguments = Bundle {
+                            this[EXTRA_ACCOUNT_KEY] = user.account_key
+                            this[EXTRA_USER_KEY] = user.key
+                            this[EXTRA_USER_LISTS] = result
+                        }
+                        df.show(fragmentManager, "add_remove_list")
+                    }
+                }.failUi {
+                    Utils.showErrorMessage(context, R.string.action_getting_user_lists, it, false)
+                }
             }
             R.id.open_with_account -> {
                 val intent = Intent(INTENT_ACTION_SELECT_ACCOUNT)
@@ -1555,6 +1598,88 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 //            resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(args.second))
             return null
         }
+    }
+
+    class AddRemoveUserListDialogFragment : BaseDialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val lists = arguments.getParcelableArray(EXTRA_USER_LISTS).toTypedArray(ParcelableUserList.CREATOR)
+            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val accountKey = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.add_or_remove_from_list)
+            val entries = Array(lists.size) { idx ->
+                lists[idx].name
+            }
+            val states = BooleanArray(lists.size) { idx ->
+                lists[idx].is_user_inside
+            }
+            builder.setPositiveButton(android.R.string.ok, null)
+            builder.setNeutralButton(R.string.new_user_list, null)
+            builder.setNegativeButton(android.R.string.cancel, null)
+
+            builder.setMultiChoiceItems(entries, states, null)
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                    val checkedPositions = dialog.listView.checkedItemPositions
+
+                    promiseOnUi {
+                        val activity = activity as IExtendedActivity
+                        activity.executeAfterFragmentResumed {
+                            ProgressDialogFragment.show(fragmentManager, "update_lists_progress")
+                        }
+                    }.then {
+                        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false)
+                        val successfulStates = SparseBooleanArray()
+                        try {
+                            for (i in 0 until checkedPositions.size()) {
+                                val pos = checkedPositions.keyAt(i)
+                                val checked = checkedPositions.valueAt(i)
+                                if (states[pos] != checked) {
+                                    if (checked) {
+                                        twitter.addUserListMember(lists[pos].id, userKey.id)
+                                    } else {
+                                        twitter.deleteUserListMember(lists[pos].id, userKey.id)
+                                    }
+                                    successfulStates.put(pos, checked)
+                                }
+                            }
+                        } catch (e: MicroBlogException) {
+                            throw UpdateListsException(successfulStates)
+                        }
+                    }.alwaysUi {
+                        val activity = activity as IExtendedActivity
+                        activity.executeAfterFragmentResumed {
+                            val df = fragmentManager.findFragmentByTag("update_lists_progress") as? DialogFragment
+                            df?.dismiss()
+                        }
+                    }.successUi {
+                        dismiss()
+                    }.failUi { e ->
+                        if (e is UpdateListsException) {
+                            val successfulStates = e.successfulStates
+                            for (i in 0 until successfulStates.size()) {
+                                val pos = successfulStates.keyAt(i)
+                                val checked = successfulStates.valueAt(i)
+                                dialog.listView.setItemChecked(pos, checked)
+                                states[pos] = checked
+                            }
+                        }
+                        Utils.showErrorMessage(context, R.string.action_modifying_lists, e, false)
+                    }
+                }
+                dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener {
+                    val df = CreateUserListDialogFragment()
+                    df.arguments = Bundle {
+                        this[EXTRA_ACCOUNT_KEY] = accountKey
+                    }
+                    df.show(fragmentManager, "create_user_list")
+                }
+            }
+            return dialog
+        }
+
+        class UpdateListsException(val successfulStates: SparseBooleanArray) : MicroBlogException()
     }
 
     companion object {

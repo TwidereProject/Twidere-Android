@@ -36,7 +36,7 @@ import android.widget.Toast
 import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import kotlinx.android.synthetic.main.activity_media_viewer.*
-import org.mariotaku.ktextension.asTypedArray
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
@@ -289,7 +289,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
 
     private val media: Array<ParcelableMedia> by lazy {
-        intent.getParcelableArrayExtra(EXTRA_MEDIA).asTypedArray(ParcelableMedia.CREATOR)
+        intent.getParcelableArrayExtra(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
     }
 
     protected fun processShareIntent(intent: Intent) {

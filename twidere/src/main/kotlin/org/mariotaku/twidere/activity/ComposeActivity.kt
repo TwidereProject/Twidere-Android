@@ -65,7 +65,7 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
-import org.mariotaku.ktextension.asTypedArray
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
@@ -540,7 +540,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
-            val selected = savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS).asTypedArray(UserKey.CREATOR)
+            val selected = savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
             accountsAdapter!!.setSelectedAccountIds(*selected)
             possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
@@ -764,7 +764,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val action = intent.action
         val hasAccountIds: Boolean
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
-            val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).asTypedArray(UserKey.CREATOR)
+            val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
             accountsAdapter!!.setSelectedAccountIds(*accountKeys)
             hasAccountIds = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {

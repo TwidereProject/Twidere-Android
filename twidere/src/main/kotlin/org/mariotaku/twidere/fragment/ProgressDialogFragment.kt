@@ -22,8 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
-
+import android.support.v4.app.FragmentManager
 import org.mariotaku.twidere.R
 
 class ProgressDialogFragment : BaseDialogFragment() {
@@ -36,9 +35,9 @@ class ProgressDialogFragment : BaseDialogFragment() {
 
     companion object {
 
-        fun show(activity: FragmentActivity, tag: String): ProgressDialogFragment {
+        fun show(fm: FragmentManager, tag: String): ProgressDialogFragment {
             val f = ProgressDialogFragment()
-            f.show(activity.supportFragmentManager, tag)
+            f.show(fm, tag)
             return f
         }
     }
