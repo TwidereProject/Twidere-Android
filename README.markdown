@@ -4,7 +4,7 @@
 [![Travis status](https://api.travis-ci.org/TwidereProject/Twidere-Android.png)](https://travis-ci.org/TwidereProject/Twidere-Android/)
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/twidere/localized.svg)](https://crowdin.com/project/twidere)
 
-Material Design ready and feature reach Twitter app for Android 4.0+
+Material Design ready and feature rich Twitter app for Android 4.0+
 
 ---
 
