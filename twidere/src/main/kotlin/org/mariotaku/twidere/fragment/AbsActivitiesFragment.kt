@@ -45,6 +45,7 @@ import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
+import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STUB
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_TITLE_SUMMARY
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -553,7 +554,8 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {
                 when (adapter.getItemViewType(childPos)) {
-                    ITEM_VIEW_TYPE_STATUS, ITEM_VIEW_TYPE_TITLE_SUMMARY, ITEM_VIEW_TYPE_GAP -> {
+                    ITEM_VIEW_TYPE_STATUS, ITEM_VIEW_TYPE_TITLE_SUMMARY, ITEM_VIEW_TYPE_GAP,
+                    ITEM_VIEW_TYPE_STUB -> {
                         return true
                     }
                     else -> {

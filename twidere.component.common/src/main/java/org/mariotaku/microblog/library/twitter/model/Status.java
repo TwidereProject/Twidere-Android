@@ -532,6 +532,11 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
             quotedStatus = repostStatus;
             quotedStatusId = repostStatusId;
             isQuoteStatus = true;
+
+            // Set repost media to null if identical to original
+            if (photo != null && photo.equals(repostStatus.photo)) {
+                photo = null;
+            }
         }
     }
 

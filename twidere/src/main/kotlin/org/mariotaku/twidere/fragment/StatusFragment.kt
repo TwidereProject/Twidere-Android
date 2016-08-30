@@ -776,12 +776,10 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             val skipLinksInText = status.extras != null && status.extras.support_entities
             if (status.is_quote) {
 
-                itemView.quoteIndicator.visibility = View.VISIBLE
+                itemView.quotedView.visibility = View.VISIBLE
 
                 val originalIdAvailable = !TextUtils.isEmpty(status.quoted_id)
                 val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
-
-                itemView.quoteOriginalLink.visibility = if (originalIdAvailable) View.VISIBLE else View.GONE
 
                 if (quoteContentAvailable) {
                     itemView.quotedName.visibility = View.VISIBLE
@@ -815,9 +813,28 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     }
 
                     itemView.quoteIndicator.color = status.quoted_user_color
+
+                    val quotedMedia = status.quoted_media
+
+                    if (quotedMedia?.isEmpty() ?: true) {
+                        itemView.quotedMediaPreviewContainer.visibility = View.GONE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                        itemView.quotedMediaPreviewPlaceholder.visibility = View.GONE
+                    } else if (adapter.isDetailMediaExpanded) {
+                        itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.visibility = View.VISIBLE
+                        itemView.quotedMediaPreviewPlaceholder.visibility = View.GONE
+                        itemView.quotedMediaPreview.displayMedia(quotedMedia, loader, status.account_key, -1,
+                                adapter.fragment, null)
+                    } else {
+                        itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                        itemView.quotedMediaPreview.visibility = View.GONE
+                        itemView.quotedMediaPreviewPlaceholder.visibility = View.VISIBLE
+                    }
                 } else {
                     itemView.quotedName.visibility = View.GONE
                     itemView.quotedText.visibility = View.VISIBLE
+                    itemView.quotedMediaPreviewContainer.visibility = View.GONE
 
                     // Not available
                     val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))
@@ -829,10 +846,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     itemView.quoteIndicator.color = 0
                 }
             } else {
-                itemView.quoteOriginalLink.visibility = View.GONE
-                itemView.quotedName.visibility = View.GONE
-                itemView.quotedText.visibility = View.GONE
-                itemView.quoteIndicator.visibility = View.GONE
+                itemView.quotedView.visibility = View.GONE
             }
 
             itemView.profileContainer.drawStart(status.user_color)
@@ -949,26 +963,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 itemView.mediaPreview.displayMedia()
             }
 
-            val quotedMedia = status.quoted_media
-
-            if (quotedMedia?.isEmpty() ?: true) {
-                itemView.quotedMediaPreviewContainer.visibility = View.GONE
-                itemView.quotedMediaPreview.visibility = View.GONE
-                itemView.quotedMediaPreviewLoad.visibility = View.GONE
-                itemView.quotedMediaPreview.displayMedia()
-            } else if (adapter.isDetailMediaExpanded) {
-                itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
-                itemView.quotedMediaPreview.visibility = View.VISIBLE
-                itemView.quotedMediaPreviewLoad.visibility = View.GONE
-                itemView.quotedMediaPreview.displayMedia(media, loader, status.account_key, -1,
-                        adapter.fragment, adapter.mediaLoadingHandler)
-            } else {
-                itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
-                itemView.quotedMediaPreview.visibility = View.GONE
-                itemView.quotedMediaPreviewLoad.visibility = View.VISIBLE
-                itemView.quotedMediaPreview.displayMedia()
-            }
-
             if (TwitterCardUtils.isCardSupported(status)) {
                 val size = TwitterCardUtils.getCardSize(status.card!!)
                 itemView.twitterCard.visibility = View.VISIBLE
@@ -1013,11 +1007,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             }
 
             itemView.text.setTextIsSelectable(true)
-            itemView.quotedText.setTextIsSelectable(true)
             itemView.translateResult.setTextIsSelectable(true)
 
             itemView.text.movementMethod = LinkMovementMethod.getInstance()
-            itemView.quotedText.movementMethod = LinkMovementMethod.getInstance()
         }
 
         override fun onClick(v: View) {
@@ -1052,12 +1044,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     if (!ParcelableLocationUtils.isValidLocation(location)) return
                     IntentUtils.openMap(adapter.context, location.latitude, location.longitude)
                 }
-                itemView.quotedName -> {
-                    IntentUtils.openUserProfile(adapter.context, status.account_key,
-                            status.quoted_user_key, status.quoted_user_screen_name, null,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.STATUS)
-                }
-                itemView.quoteOriginalLink -> {
+                itemView.quotedView -> {
                     IntentUtils.openStatus(adapter.context, status.account_key, status.quoted_id)
                 }
                 itemView.translateLabel -> {
@@ -1107,10 +1094,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             ThemeUtils.wrapMenuIcon(itemView.menuBar, MENU_GROUP_STATUS_SHARE)
             itemView.mediaPreviewLoad.setOnClickListener(this)
             itemView.profileContainer.setOnClickListener(this)
-            itemView.quotedName.setOnClickListener(this)
             retweetedByView.setOnClickListener(this)
             locationView.setOnClickListener(this)
-            itemView.quoteOriginalLink.setOnClickListener(this)
+            itemView.quotedView.setOnClickListener(this)
             itemView.translateLabel.setOnClickListener(this)
 
             val textSize = adapter.textSize
@@ -1122,7 +1108,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             itemView.quotedName.setSecondaryTextSize(textSize * 0.85f)
             itemView.quotedText.textSize = textSize * 1.25f
 
-            itemView.quoteOriginalLink.textSize = textSize * 0.85f
             locationView.textSize = textSize * 0.85f
             itemView.timeSource.textSize = textSize * 0.85f
             itemView.translateLabel.textSize = textSize * 0.85f
@@ -1135,8 +1120,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             itemView.quotedName.setNameFirst(adapter.nameFirst)
 
             itemView.mediaPreview.setStyle(adapter.mediaPreviewStyle)
+            itemView.quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
 
-            itemView.quotedText.customSelectionActionModeCallback = StatusActionModeCallback(itemView.quotedText, activity)
             itemView.text.customSelectionActionModeCallback = StatusActionModeCallback(itemView.text, activity)
 
             val layoutManager = LinearLayoutManager(adapter.context)

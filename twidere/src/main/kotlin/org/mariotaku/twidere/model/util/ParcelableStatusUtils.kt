@@ -90,8 +90,6 @@ object ParcelableStatusUtils {
             result.quoted_timestamp = quoted.createdAt.time
             result.quoted_source = quoted.source
             result.quoted_media = ParcelableMediaUtils.fromStatus(quoted)
-            result.quoted_location = getLocation(quoted)
-            result.quoted_place_full_name = getPlaceFullName(quoted)
 
             result.quoted_user_key = UserKeyUtils.fromUser(quotedUser)
             result.quoted_user_name = quotedUser.name

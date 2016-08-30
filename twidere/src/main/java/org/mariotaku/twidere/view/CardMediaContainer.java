@@ -91,13 +91,16 @@ public class CardMediaContainer extends ViewGroup implements Constants {
     public void displayMedia(@Nullable final ParcelableMedia[] mediaArray,
                              @NonNull final MediaLoaderWrapper loader,
                              final UserKey accountId, final long extraId,
-                             final OnMediaClickListener mediaClickListener,
-                             final MediaLoadingHandler loadingHandler) {
-        displayMedia(loader, mediaClickListener, loadingHandler, mediaArray, accountId, extraId, false);
+                             @Nullable final OnMediaClickListener mediaClickListener,
+                             @Nullable final MediaLoadingHandler loadingHandler) {
+        displayMedia(loader, mediaArray, accountId, mediaClickListener, loadingHandler, extraId, false);
     }
 
-    public void displayMedia(@NonNull final MediaLoaderWrapper loader, final OnMediaClickListener mediaClickListener, final MediaLoadingHandler loadingHandler, @Nullable final ParcelableMedia[] mediaArray,
-                             final UserKey accountId, final long extraId, boolean withCredentials) {
+    public void displayMedia(@NonNull final MediaLoaderWrapper loader,
+                             @Nullable final ParcelableMedia[] mediaArray, final UserKey accountId,
+                             @Nullable final OnMediaClickListener mediaClickListener,
+                             @Nullable final MediaLoadingHandler loadingHandler,
+                             final long extraId, boolean withCredentials) {
         if (mediaArray == null || mMediaPreviewStyle == VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE) {
             for (int i = 0, j = getChildCount(); i < j; i++) {
                 final View child = getChildAt(i);
@@ -110,7 +113,9 @@ public class CardMediaContainer extends ViewGroup implements Constants {
                 accountId, extraId);
         for (int i = 0, j = getChildCount(), k = mediaArray.length; i < j; i++) {
             final View child = getChildAt(i);
-            child.setOnClickListener(clickListener);
+            if (mediaClickListener != null) {
+                child.setOnClickListener(clickListener);
+            }
             final ImageView imageView = (ImageView) child.findViewById(R.id.mediaPreview);
             switch (mMediaPreviewStyle) {
                 case VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP: {
@@ -170,9 +175,9 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         }
     }
 
-    private void measure1Media(int contentWidth, int[] childIndices) {
+    private void measure1Media(int contentWidth, int[] childIndices, float ratioMultiplier) {
         final View child = getChildAt(childIndices[0]);
-        final int childHeight = Math.round(contentWidth * WIDTH_HEIGHT_RATIO);
+        final int childHeight = Math.round(contentWidth * WIDTH_HEIGHT_RATIO * ratioMultiplier);
         final int widthSpec = MeasureSpec.makeMeasureSpec(contentWidth, MeasureSpec.EXACTLY);
         final int heightSpec = MeasureSpec.makeMeasureSpec(childHeight, MeasureSpec.EXACTLY);
         child.measure(widthSpec, heightSpec);
@@ -219,16 +224,17 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         }
     }
 
-    private void measure3Media(int contentWidth, int horizontalSpacing, int[] childIndices) {
+    private void measure3Media(int contentWidth, int horizontalSpacing, int[] childIndices, float ratioMultiplier) {
         final View child0 = getChildAt(childIndices[0]), child1 = getChildAt(childIndices[1]),
                 child2 = getChildAt(childIndices[2]);
         final int childWidth = (contentWidth - horizontalSpacing) / 2;
-        final int sizeSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
-        child0.measure(sizeSpec, sizeSpec);
-        final int childRightHeight = Math.round(childWidth - horizontalSpacing) / 2;
-        final int heightSpec = MeasureSpec.makeMeasureSpec(childRightHeight, MeasureSpec.EXACTLY);
-        child1.measure(sizeSpec, heightSpec);
-        child2.measure(sizeSpec, heightSpec);
+        final int childLeftHeightSpec = MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), MeasureSpec.EXACTLY);
+        final int widthSpec = MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY);
+        child0.measure(widthSpec, childLeftHeightSpec);
+        final int childRightHeight = Math.round((childWidth - horizontalSpacing) / 2 * ratioMultiplier);
+        final int childRightHeightSpec = MeasureSpec.makeMeasureSpec(childRightHeight, MeasureSpec.EXACTLY);
+        child1.measure(widthSpec, childRightHeightSpec);
+        child2.measure(widthSpec, childRightHeightSpec);
     }
 
     private void layout3Media(int horizontalSpacing, int verticalSpacing, int[] childIndices) {
@@ -248,23 +254,33 @@ public class CardMediaContainer extends ViewGroup implements Constants {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int measuredWidth = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         final int contentWidth = measuredWidth - getPaddingLeft() - getPaddingRight();
+        float ratioMultiplier = 1;
+        int contentHeight = -1;
+        if (getLayoutParams().height != LayoutParams.WRAP_CONTENT) {
+            final int measuredHeight = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+            ratioMultiplier = contentWidth > 0 ? measuredHeight / (contentWidth * WIDTH_HEIGHT_RATIO) : 1;
+            contentHeight = contentWidth;
+        }
         final int[] childIndices = createChildIndices();
         final int childCount = getChildIndicesInLayout(this, childIndices);
         int heightSum = 0;
         if (childCount > 0) {
             if (childCount == 1) {
-                measure1Media(contentWidth, childIndices);
-                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO);
+                measure1Media(contentWidth, childIndices, ratioMultiplier);
+                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO * ratioMultiplier);
             } else if (childCount == 2) {
-                measureGridMedia(childCount, 2, contentWidth, 1, mHorizontalSpacing, mVerticalSpacing,
-                        childIndices);
-                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO);
+                measureGridMedia(childCount, 2, contentWidth, ratioMultiplier, mHorizontalSpacing,
+                        mVerticalSpacing, childIndices);
+                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO * ratioMultiplier);
             } else if (childCount == 3) {
-                measure3Media(contentWidth, mHorizontalSpacing, childIndices);
-                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO);
+                measure3Media(contentWidth, mHorizontalSpacing, childIndices, ratioMultiplier);
+                heightSum = Math.round(contentWidth * WIDTH_HEIGHT_RATIO * ratioMultiplier);
             } else {
-                heightSum = measureGridMedia(childCount, 2, contentWidth, WIDTH_HEIGHT_RATIO,
-                        mHorizontalSpacing, mVerticalSpacing, childIndices);
+                heightSum = measureGridMedia(childCount, 2, contentWidth,
+                        WIDTH_HEIGHT_RATIO * ratioMultiplier, mHorizontalSpacing, mVerticalSpacing, childIndices);
+            }
+            if (contentHeight > 0) {
+                heightSum = contentHeight;
             }
         }
         final int height = heightSum + getPaddingTop() + getPaddingBottom();
@@ -298,7 +314,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
         private final UserKey mAccountKey;
         private final long mExtraId;
 
-        ImageGridClickListener(final OnMediaClickListener listener, final UserKey accountKey,
+        ImageGridClickListener(@Nullable final OnMediaClickListener listener, final UserKey accountKey,
                                final long extraId) {
             mListenerRef = new WeakReference<>(listener);
             mAccountKey = accountKey;

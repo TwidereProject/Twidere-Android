@@ -49,6 +49,31 @@ public class Photo implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Photo photo = (Photo) o;
+
+        if (url != null ? !url.equals(photo.url) : photo.url != null) return false;
+        if (imageUrl != null ? !imageUrl.equals(photo.imageUrl) : photo.imageUrl != null)
+            return false;
+        if (thumbUrl != null ? !thumbUrl.equals(photo.thumbUrl) : photo.thumbUrl != null)
+            return false;
+        return largeUrl != null ? largeUrl.equals(photo.largeUrl) : photo.largeUrl == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = url != null ? url.hashCode() : 0;
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (thumbUrl != null ? thumbUrl.hashCode() : 0);
+        result = 31 * result + (largeUrl != null ? largeUrl.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

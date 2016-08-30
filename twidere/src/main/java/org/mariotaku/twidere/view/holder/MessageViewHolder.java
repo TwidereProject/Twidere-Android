@@ -103,7 +103,7 @@ public class MessageViewHolder extends ViewHolder {
         textView.setText(text);
         time.setText(Utils.formatToLongTimeString(context, timestamp));
         mediaContainer.setVisibility(media != null && media.length > 0 ? View.VISIBLE : View.GONE);
-        mediaContainer.displayMedia(loader, adapter.getOnMediaClickListener(), adapter.getMediaLoadingHandler(), media, accountKey, getLayoutPosition(), true
+        mediaContainer.displayMedia(loader, media, accountKey, adapter.getOnMediaClickListener(), adapter.getMediaLoadingHandler(), getLayoutPosition(), true
         );
     }
 

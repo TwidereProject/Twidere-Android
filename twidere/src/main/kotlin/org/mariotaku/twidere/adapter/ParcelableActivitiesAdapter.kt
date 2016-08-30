@@ -366,12 +366,15 @@ class ParcelableActivitiesAdapter(
         init {
             text1 = itemView.findViewById(android.R.id.text1) as TextView
             text2 = itemView.findViewById(android.R.id.text2) as TextView
+
+            text2.setSingleLine(false)
         }
 
         fun displayActivity(activity: ParcelableActivity) {
             text1.text = text1.resources.getString(R.string.unsupported_activity_action_title,
                     activity.action)
-            text2.setText(R.string.unsupported_activity_action_summary)
+            text2.text = "host: ${activity.account_key.host}, id: ${activity.status_id}\n"
+            text2.append(itemView.context.getString(R.string.unsupported_activity_action_summary))
         }
     }
 

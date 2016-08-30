@@ -275,14 +275,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @CursorField(Statuses.QUOTED_USER_PROFILE_IMAGE)
     public String quoted_user_profile_image;
     @ParcelableThisPlease
-    @JsonField(name = "quoted_location")
-    @CursorField(value = Statuses.QUOTED_LOCATION, converter = ParcelableLocation.Converter.class)
-    public ParcelableLocation quoted_location;
-    @ParcelableThisPlease
-    @JsonField(name = "quoted_place_full_name")
-    @CursorField(value = Statuses.QUOTED_PLACE_FULL_NAME, converter = LoganSquareCursorFieldConverter.class)
-    public String quoted_place_full_name;
-    @ParcelableThisPlease
     @JsonField(name = "location")
     @CursorField(value = Statuses.LOCATION, converter = ParcelableLocation.Converter.class)
     public ParcelableLocation location;
@@ -401,11 +393,12 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @Override
     public String toString() {
         return "ParcelableStatus{" +
-                "id='" + id + '\'' +
-                ", sort_id=" + sort_id +
+                "_id=" + _id +
+                ", id='" + id + '\'' +
                 ", account_key=" + account_key +
-                ", timestamp=" + timestamp +
+                ", sort_id=" + sort_id +
                 ", position_key=" + position_key +
+                ", timestamp=" + timestamp +
                 ", user_key=" + user_key +
                 ", retweet_id='" + retweet_id + '\'' +
                 ", retweeted_by_user_key=" + retweeted_by_user_key +
@@ -449,8 +442,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", quoted_user_name='" + quoted_user_name + '\'' +
                 ", quoted_user_screen_name='" + quoted_user_screen_name + '\'' +
                 ", quoted_user_profile_image='" + quoted_user_profile_image + '\'' +
-                ", quoted_location=" + quoted_location +
-                ", quoted_place_full_name='" + quoted_place_full_name + '\'' +
                 ", location=" + location +
                 ", place_full_name='" + place_full_name + '\'' +
                 ", mentions=" + Arrays.toString(mentions) +
@@ -469,7 +460,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", quoted_user_nickname='" + quoted_user_nickname + '\'' +
                 ", retweet_user_nickname='" + retweet_user_nickname + '\'' +
                 ", in_reply_to_user_nickname='" + in_reply_to_user_nickname + '\'' +
-                ", _id=" + _id +
+                ", inserted_date=" + inserted_date +
+                ", is_pinned_status=" + is_pinned_status +
                 '}';
     }
 
@@ -481,8 +473,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
 
     @OnJsonParseComplete
     void onParseComplete() throws IOException {
-        if (is_quote && TextUtils.isEmpty(quoted_text_unescaped))
-            throw new IOException("Incompatible model");
         fixSortId();
     }
 

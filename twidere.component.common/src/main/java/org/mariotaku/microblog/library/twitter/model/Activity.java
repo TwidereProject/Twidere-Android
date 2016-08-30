@@ -246,7 +246,7 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
         }
     }
 
-    public static Activity fromMention(String accountId, Status status) {
+    public static Activity fromMention(@NonNull String accountId, @NonNull Status status) {
         final Activity activity = new Activity();
 
         activity.maxPosition = activity.minPosition = status.getId();
