@@ -27,6 +27,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -195,6 +196,7 @@ public class UserColorNameManager implements TwidereConstants {
         return mColorPreferences.getInt(userId, Color.TRANSPARENT);
     }
 
+    @Nullable
     public String getUserNickname(@NonNull final UserKey userKey) {
         final String userKeyString = userKey.toString();
         if (mNicknamePreferences.contains(userKey.getId())) {
@@ -208,11 +210,13 @@ public class UserColorNameManager implements TwidereConstants {
         return mNicknamePreferences.getString(userKeyString, null);
     }
 
+    @Nullable
     public String getUserNickname(@NonNull final UserKey userId, final String name) {
         final String nick = getUserNickname(userId);
         return decideNickname(nick, name);
     }
 
+    @Nullable
     public String getUserNickname(@NonNull final String userId, final String name) {
         final String nick = getUserNicknameInternal(userId);
         return decideNickname(nick, name);

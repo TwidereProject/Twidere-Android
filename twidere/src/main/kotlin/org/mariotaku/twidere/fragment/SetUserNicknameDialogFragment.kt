@@ -56,7 +56,7 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val args = arguments
-        val nick = args.getString(EXTRA_NAME)
+        val nick: String? = args.getString(EXTRA_NAME)
         val context = activity
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.set_nickname)
@@ -73,7 +73,7 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
         private val FRAGMENT_TAG_SET_USER_NICKNAME = "set_user_nickname"
 
-        fun show(fm: FragmentManager, userKey: UserKey, nickname: String): SetUserNicknameDialogFragment {
+        fun show(fm: FragmentManager, userKey: UserKey, nickname: String?): SetUserNicknameDialogFragment {
             val f = SetUserNicknameDialogFragment()
             val args = Bundle()
             args.putParcelable(EXTRA_USER_KEY, userKey)

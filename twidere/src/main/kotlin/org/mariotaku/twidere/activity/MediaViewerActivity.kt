@@ -355,8 +355,8 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
                 val activity = context as IExtendedActivity
                 activity.executeAfterFragmentResumed { activity ->
                     val fm = (activity as FragmentActivity).supportFragmentManager
-                    val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as DialogFragment
-                    fragment.dismiss()
+                    val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
+                    fragment?.dismiss()
                     Unit
                 }
             }

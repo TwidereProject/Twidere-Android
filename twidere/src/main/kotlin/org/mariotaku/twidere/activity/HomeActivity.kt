@@ -154,7 +154,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return f.triggerRefresh()
     }
 
-    val leftDrawerFragment: Fragment
+    val leftDrawerFragment: Fragment?
         get() = supportFragmentManager.findFragmentById(R.id.leftDrawer)
 
     override fun getSystemWindowsInsets(insets: Rect): Boolean {

@@ -48,7 +48,7 @@ abstract class ProgressSaveFileTask(
     override fun dismissProgress() {
         (context as IExtendedActivity).executeAfterFragmentResumed { activity ->
             val fm = (activity as FragmentActivity).supportFragmentManager
-            val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as DialogFragment?
+            val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
             fragment?.dismiss()
         }
     }

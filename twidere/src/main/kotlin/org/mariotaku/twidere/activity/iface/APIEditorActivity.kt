@@ -223,15 +223,16 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         editConsumerSecret.setText(apiConfig.consumerSecret)
     }
 
-    class LoadDefaultsChooserDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener, LoaderManager.LoaderCallbacks<List<CustomAPIConfig>> {
-        private var mAdapter: ArrayAdapter<CustomAPIConfig>? = null
+    class LoadDefaultsChooserDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener,
+            LoaderManager.LoaderCallbacks<List<CustomAPIConfig>?> {
+        private lateinit var adapter: ArrayAdapter<CustomAPIConfig>
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = context
             val configs = CustomAPIConfig.listDefault(context)
-            mAdapter = CustomAPIConfigArrayAdapter(context, configs)
+            adapter = CustomAPIConfigArrayAdapter(context, configs)
             val builder = AlertDialog.Builder(context)
-            builder.setAdapter(mAdapter, this)
+            builder.setAdapter(adapter, this)
             if (!BuildConfig.DEBUG) {
                 loaderManager.initLoader(0, null, this)
             }
@@ -239,26 +240,26 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {
-            (activity as APIEditorActivity).setAPIConfig(mAdapter!!.getItem(which))
+            (activity as APIEditorActivity).setAPIConfig(adapter.getItem(which))
             dismiss()
         }
 
-        override fun onCreateLoader(id: Int, args: Bundle): Loader<List<CustomAPIConfig>> {
+        override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<CustomAPIConfig>?> {
             return DefaultAPIConfigLoader(context)
         }
 
-        override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>>, data: List<CustomAPIConfig>?) {
+        override fun onLoadFinished(loader: Loader<List<CustomAPIConfig>?>, data: List<CustomAPIConfig>?) {
             if (data != null) {
-                mAdapter!!.clear()
-                mAdapter!!.addAll(data)
+                adapter.clear()
+                adapter.addAll(data)
             }
         }
 
-        override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>>) {
+        override fun onLoaderReset(loader: Loader<List<CustomAPIConfig>?>) {
 
         }
 
-        class DefaultAPIConfigLoader(context: Context) : AsyncTaskLoader<List<CustomAPIConfig>>(context) {
+        class DefaultAPIConfigLoader(context: Context) : AsyncTaskLoader<List<CustomAPIConfig>?>(context) {
             @Inject
             lateinit var client: RestHttpClient
 
