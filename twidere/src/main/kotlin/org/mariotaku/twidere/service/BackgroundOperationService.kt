@@ -42,9 +42,9 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
 import org.mariotaku.abstask.library.ManualTaskStarter
-import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
@@ -88,6 +88,8 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
     lateinit var validator: TwidereValidator
     @Inject
     lateinit var extractor: Extractor
+    @Inject
+    lateinit var mediaLoader: MediaLoaderWrapper
 
 
     override fun onCreate() {
@@ -362,7 +364,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                         val mediaUri = Uri.parse(imageUri)
                         var body: FileBody? = null
                         try {
-                            body = UpdateStatusTask.getBodyFromMedia(contentResolver,
+                            body = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
                                     mediaUri, null, ParcelableMedia.Type.IMAGE,
                                     MessageMediaUploadListener(this, notificationManager,
                                             builder, text))
