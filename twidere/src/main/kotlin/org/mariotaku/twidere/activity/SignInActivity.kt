@@ -73,7 +73,6 @@ import org.mariotaku.twidere.model.ParcelableCredentials.AuthType
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
@@ -378,16 +377,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 if (values != null) {
                     val where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).sql
                     val whereArgs = arrayOf(values.getAsString(Accounts.ACCOUNT_KEY))
-                    contentResolver!!.update(Accounts.CONTENT_URI, values, where, whereArgs)
+                    contentResolver.update(Accounts.CONTENT_URI, values, where, whereArgs)
                 }
                 Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
             } else if (result.succeed) {
                 val values = result.toContentValues()
                 if (values != null) {
-                    contentResolver!!.insert(Accounts.CONTENT_URI, values)
+                    contentResolver.insert(Accounts.CONTENT_URI, values)
                 }
                 val intent = Intent(this, HomeActivity::class.java)
-                //TODO refresh timelines
+                //TODO refresh time lines
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 startActivity(intent)
                 finish()
@@ -433,13 +432,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
     internal fun showSignInProgressDialog() {
         executeAfterFragmentResumed {
-            if (isFinishing) return@executeAfterFragmentResumed Unit
+            if (isFinishing) return@executeAfterFragmentResumed
             val fm = supportFragmentManager
             val ft = fm.beginTransaction()
             val fragment = ProgressDialogFragment()
             fragment.isCancelable = false
             fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS)
-            Unit
         }
     }
 

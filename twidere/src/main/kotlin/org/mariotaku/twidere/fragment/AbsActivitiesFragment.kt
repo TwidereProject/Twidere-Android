@@ -113,6 +113,15 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         }
     }
 
+    private val onScrollListener = object : OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                val layoutManager = layoutManager ?: return
+                saveReadPosition(layoutManager.findFirstVisibleItemPosition())
+            }
+        }
+    }
+
     private var navigationHelper: RecyclerViewNavigationHelper? = null
     private var pauseOnScrollListener: OnScrollListener? = null
     private var activeHotMobiScrollTracker: OnScrollListener? = null
@@ -373,6 +382,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     override fun onStart() {
         super.onStart()
+        recyclerView.addOnScrollListener(onScrollListener)
         recyclerView.addOnScrollListener(pauseOnScrollListener)
         val task = object : AbstractTask<Any?, Boolean, RecyclerView>() {
             public override fun doLongOperation(params: Any?): Boolean {
@@ -403,6 +413,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         }
         activeHotMobiScrollTracker = null
         recyclerView.removeOnScrollListener(pauseOnScrollListener)
+        recyclerView.removeOnScrollListener(onScrollListener)
         if (userVisibleHint) {
             saveReadPosition()
         }

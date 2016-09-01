@@ -117,8 +117,8 @@ abstract class AbsStatusesFragment protected constructor() :
     private val onScrollListener = object : OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                val layoutManager = layoutManager
-                saveReadPosition(layoutManager!!.findFirstVisibleItemPosition())
+                val layoutManager = layoutManager ?: return
+                saveReadPosition(layoutManager.findFirstVisibleItemPosition())
             }
         }
     }
