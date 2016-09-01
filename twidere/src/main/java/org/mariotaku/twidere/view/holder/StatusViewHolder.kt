@@ -51,20 +51,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val timeView by lazy { itemView.time }
     private val replyCountView by lazy { itemView.replyCount }
     private val retweetCountView by lazy { itemView.retweetCount }
-    private val quoteIndicator by lazy { itemView.quoteIndicator }
-    private val quoteIndicatorAnchorTop by lazy { itemView.quoteIndicatorAnchorTop }
-    private val quoteIndicatorAnchorBottom by lazy { itemView.quoteIndicatorAnchorBottom }
+    private val quotedView by lazy { itemView.quotedView }
     private val quotedTextView by lazy { itemView.quotedText }
     private val actionButtons by lazy { itemView.actionButtons }
     private val mediaLabel by lazy { itemView.mediaLabel }
-    private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
     private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
     private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
     private val favoriteIcon by lazy { itemView.favoriteIcon }
     private val retweetIcon by lazy { itemView.retweetIcon }
     private val favoriteCountView by lazy { itemView.favoriteCount }
     private val mediaLabelTextView by lazy { itemView.mediaLabelText }
-    private val quotedMediaLabelTextView by lazy { itemView.quotedMediaLabelText }
     private val replyButton by lazy { itemView.reply }
     private val retweetButton by lazy { itemView.retweet }
     private val favoriteButton by lazy { itemView.favorite }
@@ -112,7 +108,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
             mediaLabel.visibility = View.VISIBLE
         }
-        quotedMediaLabel.visibility = View.GONE
         actionButtons.visibility = if (showCardActions) View.VISIBLE else View.GONE
         itemMenu.visibility = if (showCardActions) View.VISIBLE else View.GONE
         statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
@@ -182,9 +177,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val skipLinksInText = status.extras != null && status.extras.support_entities
         if (status.is_quote) {
 
-            quoteIndicator.visibility = View.VISIBLE
-            quoteIndicatorAnchorTop.visibility = View.VISIBLE
-            quoteIndicatorAnchorBottom.visibility = View.VISIBLE
+            quotedView.visibility = View.VISIBLE
 
             val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
             if (quoteContentAvailable) {
@@ -223,7 +216,31 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedTextView.visibility = View.VISIBLE
                 }
 
-                quoteIndicator.color = status.quoted_user_color
+                if (status.quoted_user_color != 0) {
+                    quotedView.drawStart(status.quoted_user_color)
+                } else {
+                    quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
+                }
+
+                if (status.quoted_media?.isNotEmpty() ?: false) {
+
+                    if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
+                        // Sensitive content, show label instead of media view
+                        quotedMediaPreview.visibility = View.GONE
+                    } else if (!adapter.mediaPreviewEnabled) {
+                        // Media preview disabled, just show label
+
+                    } else {
+                        // Show media
+                        quotedMediaPreview.visibility = View.VISIBLE
+
+                        quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1,
+                                null, null)
+                    }
+                } else {
+                    // No media, hide all related views
+                    quotedMediaPreview.visibility = View.GONE
+                }
             } else {
                 quotedNameView.visibility = View.GONE
                 quotedTextView.visibility = View.VISIBLE
@@ -235,17 +252,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                         string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 quotedTextView.text = string
 
-                quoteIndicator.color = 0
+                quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
             }
 
             itemContent.drawStart(status.user_color)
         } else {
-
-            quoteIndicatorAnchorTop.visibility = View.GONE
-            quoteIndicatorAnchorBottom.visibility = View.GONE
-            quotedNameView.visibility = View.GONE
-            quotedTextView.visibility = View.GONE
-            quoteIndicator.visibility = View.GONE
+            quotedView.visibility = View.GONE
 
             if (status.is_retweet) {
                 val retweetUserColor = status.retweet_user_color
@@ -290,53 +302,31 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             itemContent.drawEnd()
         }
 
-        val hasQuotedMedia = status.quoted_media?.isNotEmpty() ?: false
-        val hasPrimaryMedia = !hasQuotedMedia && status.media?.isNotEmpty() ?: false
-
-
-        if (!hasPrimaryMedia && !hasQuotedMedia) {
-            // No media, hide all related views
-            mediaLabel.visibility = View.GONE
-            quotedMediaLabel.visibility = View.GONE
-            mediaPreview.visibility = View.GONE
-            quotedMediaPreview.visibility = View.GONE
-
-        } else {
+        if (status.media?.isNotEmpty() ?: false) {
 
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
-                mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
-
+                mediaLabel.visibility = View.VISIBLE
                 mediaPreview.visibility = View.GONE
-                quotedMediaPreview.visibility = View.GONE
-
             } else if (!adapter.mediaPreviewEnabled) {
                 // Media preview disabled, just show label
-                mediaLabel.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                quotedMediaLabel.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
-
+                mediaLabel.visibility = View.VISIBLE
                 mediaPreview.visibility = View.GONE
-                quotedMediaPreview.visibility = View.GONE
-
             } else {
                 // Show media
-
                 mediaLabel.visibility = View.GONE
-                quotedMediaLabel.visibility = View.GONE
-
-                mediaPreview.setStyle(adapter.mediaPreviewStyle)
-                quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
-
-                mediaPreview.visibility = if (hasPrimaryMedia) View.VISIBLE else View.GONE
-                quotedMediaPreview.visibility = if (hasQuotedMedia) View.VISIBLE else View.GONE
+                mediaPreview.visibility = View.VISIBLE
 
                 mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
                         adapter.mediaLoadingHandler)
-                quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1, this,
-                        adapter.mediaLoadingHandler)
             }
+        } else {
+            // No media, hide all related views
+            mediaLabel.visibility = View.GONE
+            mediaPreview.visibility = View.GONE
         }
+
+
 
         var displayEnd = -1
         if (status.extras.display_text_range != null) {
@@ -440,7 +430,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         favoriteButton.setOnClickListener(eventListener)
 
         mediaLabel.setOnClickListener(eventListener)
-        quotedMediaLabel.setOnClickListener(eventListener)
     }
 
 
@@ -455,7 +444,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         statusInfoLabel.textSize = textSize * 0.75f
 
         mediaLabelTextView.textSize = textSize * 0.95f
-        quotedMediaLabelTextView.textSize = textSize * 0.95f
 
         replyCountView.textSize = textSize
         retweetCountView.textSize = textSize
@@ -465,6 +453,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     fun setupViewOptions() {
         setTextSize(adapter.textSize)
         mediaPreview.setStyle(adapter.mediaPreviewStyle)
+        quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
         //        profileImageView.setStyle(adapter.getProfileImageStyle());
 
         val nameFirst = adapter.nameFirst
@@ -590,10 +579,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 }
                 holder.mediaLabel -> {
                     val firstMedia = holder.adapter.getStatus(position)?.media?.firstOrNull() ?: return
-                    listener.onMediaClick(holder, v, firstMedia, position)
-                }
-                holder.quotedMediaLabel -> {
-                    val firstMedia = holder.adapter.getStatus(position)?.quoted_media?.firstOrNull() ?: return
                     listener.onMediaClick(holder, v, firstMedia, position)
                 }
             }

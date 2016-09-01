@@ -282,6 +282,8 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             if (contentHeight > 0) {
                 heightSum = contentHeight;
             }
+        } else if (contentHeight > 0) {
+            heightSum = contentHeight;
         }
         final int height = heightSum + getPaddingTop() + getPaddingBottom();
         setMeasuredDimension(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
