@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1471690750000)
+--- twidere/build.gradle	(date 1473397693000)
 +++ twidere/build.gradle	(revision )
 @@ -6,7 +6,7 @@
  apply plugin: 'androidsvgdrawable'
@@ -54,18 +54,18 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // START Non-FOSS component
 -    googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
 -    googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
--    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
+-    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') { transitive = true }
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
 +//    googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
 +//    googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
-+//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
++//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
 +//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') { transitive = true }
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
      // END Non-FOSS component
  
-     fdroidCompile 'org.osmdroid:osmdroid-android:5.2'
-@@ -203,5 +203,5 @@
+     fdroidCompile 'org.osmdroid:osmdroid-android:5.4'
+@@ -209,5 +209,5 @@
  }
  
  // START Non-FOSS component
