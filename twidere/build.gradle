@@ -109,7 +109,7 @@ dependencies {
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.4'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.4:release@aar'
 
     debugCompile 'com.facebook.stetho:stetho:1.4.0'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.0'

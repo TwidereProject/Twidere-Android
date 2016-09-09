@@ -64,7 +64,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
      // END Non-FOSS component
  
-     fdroidCompile 'org.osmdroid:osmdroid-android:5.4'
+     fdroidCompile 'org.osmdroid:osmdroid-android:5.4:release@aar'
 @@ -209,5 +209,5 @@
  }
  
