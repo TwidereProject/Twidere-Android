@@ -90,7 +90,7 @@ dependencies {
 //    wearApp project(':twidere.wear')
     kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
-    kapt 'com.google.dagger:dagger-compiler:2.6'
+    kapt 'com.google.dagger:dagger-compiler:2.6.1'
     kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.9'
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
@@ -104,16 +104,16 @@ dependencies {
     // START Non-FOSS component
     googleCompile 'com.google.android.gms:play-services-maps:9.4.0'
     googleCompile 'com.google.android.gms:play-services-auth:9.4.0'
-    googleCompile 'com.google.maps.android:android-maps-utils:0.4.3'
+    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.2'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.4'
 
-    debugCompile 'com.facebook.stetho:stetho:1.3.1'
-    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.3.1'
-    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.3.1'
+    debugCompile 'com.facebook.stetho:stetho:1.4.0'
+    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.0'
+    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.4.0'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
 
     provided 'javax.annotation:jsr250-api:1.0'
@@ -140,7 +140,7 @@ dependencies {
     compile 'com.commonsware.cwac:layouts:0.4.2'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'
-    compile 'com.github.mariotaku:MessageBubbleView:1.2'
+    compile 'com.github.mariotaku:MessageBubbleView:1.6'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.15'
@@ -157,7 +157,7 @@ dependencies {
     compile 'com.github.mariotaku.RestFu:okhttp3:0.9.34'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
-    compile 'com.google.dagger:dagger:2.6'
+    compile 'com.google.dagger:dagger:2.6.1'
     compile 'org.attoparser:attoparser:2.0.0.RELEASE'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
@@ -169,7 +169,7 @@ dependencies {
     compile 'com.github.mariotaku.CommonsLibrary:io:0.9.10'
     compile 'com.github.mariotaku.CommonsLibrary:text:0.9.10'
     compile 'com.github.mariotaku.CommonsLibrary:text-kotlin:0.9.10'
-    compile 'com.github.mariotaku:KPreferences:0.9.1'
+    compile 'com.github.mariotaku:KPreferences:0.9.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
