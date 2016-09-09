@@ -185,23 +185,21 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 return this@CursorStatusesFragment.accountKeys
             }
 
-            override fun getMaxIds(): Array<String>? {
-                return getOldestStatusIds(accountKeys)
-            }
+            override val maxIds: Array<String?>?
+                get() = getOldestStatusIds(accountKeys)
 
-            override fun getMaxSortIds(): LongArray? {
-                val context = context ?: return null
-                return DataStoreUtils.getOldestStatusSortIds(context, contentUri,
-                        accountKeys)
-            }
+            override val maxSortIds: LongArray?
+                get() {
+                    val context = context ?: return null
+                    return DataStoreUtils.getOldestStatusSortIds(context, contentUri,
+                            accountKeys)
+                }
 
-            override fun hasMaxIds(): Boolean {
-                return true
-            }
+            override val hasMaxIds: Boolean
+                get() = true
 
-            override fun shouldAbort(): Boolean {
-                return context == null
-            }
+            override val shouldAbort: Boolean
+                get() = context == null
         })
     }
 
@@ -212,23 +210,17 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 return this@CursorStatusesFragment.accountKeys
             }
 
-            override fun hasMaxIds(): Boolean {
-                return false
-            }
+            override val hasMaxIds: Boolean
+                get() = false
 
-            override fun getSinceIds(): Array<String>? {
-                return getNewestStatusIds(accountKeys)
-            }
+            override val sinceIds: Array<String?>?
+                get() = getNewestStatusIds(accountKeys)
 
-            override fun getSinceSortIds(): LongArray? {
-                val context = context ?: return null
-                return DataStoreUtils.getNewestStatusSortIds(context, contentUri,
-                        accountKeys)
-            }
+            override val sinceSortIds: LongArray?
+                get() = DataStoreUtils.getNewestStatusSortIds(context, contentUri, accountKeys)
 
-            override fun shouldAbort(): Boolean {
-                return context == null
-            }
+            override val shouldAbort: Boolean
+                get() = context == null
         })
         return true
     }
@@ -238,7 +230,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return buildStatusFilterWhereClause(table, null)
     }
 
-    protected fun getNewestStatusIds(accountKeys: Array<UserKey>): Array<String>? {
+    protected fun getNewestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
         return DataStoreUtils.getNewestStatusIds(context, contentUri, accountKeys)
     }
@@ -254,7 +246,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
 
-    protected fun getOldestStatusIds(accountKeys: Array<UserKey>): Array<String>? {
+    protected fun getOldestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
         return DataStoreUtils.getOldestStatusIds(context, contentUri, accountKeys)
     }

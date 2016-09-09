@@ -26,7 +26,7 @@ public class LocationUtils implements HotMobiConstants, Constants {
 
     public static LatLng getCachedLatLng(@NonNull final Context context) {
         final Context appContext = context.getApplicationContext();
-        final SharedPreferences prefs = DependencyHolder.get(context).getPreferences();
+        final SharedPreferences prefs = DependencyHolder.Companion.get(context).getPreferences();
         if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return null;
         if (BuildConfig.DEBUG) {
             Log.d(HotMobiLogger.LOGTAG, "getting cached location");

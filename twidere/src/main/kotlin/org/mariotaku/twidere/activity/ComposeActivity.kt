@@ -65,8 +65,8 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
-import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.setItemChecked
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -103,6 +103,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     lateinit var extractor: Extractor
     @Inject
     lateinit var validator: TwidereValidator
+    @Inject
+    lateinit var defaultFeatures: DefaultFeatures
 
     private var locationManager: LocationManager? = null
     private var mTask: AsyncTask<Any, Any, *>? = null
@@ -751,10 +753,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private val media: Array<ParcelableMediaUpdate>
-        get() {
-            val list = mediaList
-            return list.toTypedArray()
-        }
+        get() = mediaList.toTypedArray()
 
     private val mediaList: List<ParcelableMediaUpdate>
         get() = mediaPreviewAdapter!!.asList
@@ -1312,9 +1311,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateTextCount() {
-        val text = ParseUtils.parseString(editText.text)
-        val validatedCount = if (text != null) validator.getTweetLength(text) else 0
-        statusTextCount.textCount = validatedCount
+        var text = editText.text?.toString() ?: return
+        if (defaultFeatures.isMediaLinkCountsInStatus && media.isNotEmpty()) {
+            text += " https://twitter.com/example/status/12345678901234567890/photos/1"
+        }
+        statusTextCount.textCount = validator.getTweetLength(text)
     }
 
     override fun getLightToolbarMode(toolbar: Toolbar?): Int {

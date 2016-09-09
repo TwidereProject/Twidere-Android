@@ -21,11 +21,12 @@ package org.mariotaku.twidere.util.dagger
 
 import android.support.v7.widget.RecyclerView
 import dagger.Component
-import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.adapter.*
+import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -133,4 +134,6 @@ interface GeneralComponent {
     fun inject(loader: APIEditorActivity.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
 
     fun inject(task: UpdateStatusTask)
+
+    fun inject(application: TwidereApplication)
 }

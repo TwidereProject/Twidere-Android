@@ -55,12 +55,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     private val quotedTextView by lazy { itemView.quotedText }
     private val actionButtons by lazy { itemView.actionButtons }
     private val mediaLabel by lazy { itemView.mediaLabel }
+    private val quotedMediaLabel by lazy { itemView.quotedMediaLabel }
     private val statusContentLowerSpace by lazy { itemView.statusContentLowerSpace }
     private val quotedMediaPreview by lazy { itemView.quotedMediaPreview }
     private val favoriteIcon by lazy { itemView.favoriteIcon }
     private val retweetIcon by lazy { itemView.retweetIcon }
     private val favoriteCountView by lazy { itemView.favoriteCount }
     private val mediaLabelTextView by lazy { itemView.mediaLabelText }
+    private val quotedMediaLabelTextView by lazy { itemView.quotedMediaLabelText }
     private val replyButton by lazy { itemView.reply }
     private val retweetButton by lazy { itemView.retweet }
     private val favoriteButton by lazy { itemView.favorite }
@@ -227,12 +229,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                         // Sensitive content, show label instead of media view
                         quotedMediaPreview.visibility = View.GONE
+                        quotedMediaLabel.visibility = View.VISIBLE
                     } else if (!adapter.mediaPreviewEnabled) {
                         // Media preview disabled, just show label
-
+                        quotedMediaPreview.visibility = View.GONE
+                        quotedMediaLabel.visibility = View.VISIBLE
                     } else {
                         // Show media
                         quotedMediaPreview.visibility = View.VISIBLE
+                        quotedMediaLabel.visibility = View.GONE
 
                         quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1,
                                 null, null)
@@ -240,6 +245,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 } else {
                     // No media, hide all related views
                     quotedMediaPreview.visibility = View.GONE
+                    quotedMediaLabel.visibility = View.GONE
                 }
             } else {
                 quotedNameView.visibility = View.GONE

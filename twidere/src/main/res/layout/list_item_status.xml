@@ -256,6 +256,8 @@
                 android:id="@+id/quotedName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/quotedMediaPreview"
                 android:layout_toEndOf="@+id/quotedMediaPreview"
                 android:layout_toRightOf="@+id/quotedMediaPreview"
@@ -278,7 +280,9 @@
                 android:id="@+id/quotedText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/quotedName"
                 android:layout_alignLeft="@+id/quotedName"
+                android:layout_alignRight="@+id/quotedName"
                 android:layout_alignStart="@+id/quotedName"
                 android:layout_below="@+id/quotedName"
                 android:paddingBottom="@dimen/element_spacing_small"
@@ -294,6 +298,38 @@
                 tools:text="@string/sample_status_text"
                 tools:visibility="visible"/>
 
+            <LinearLayout
+                android:id="@+id/quotedMediaLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/quotedName"
+                android:layout_alignLeft="@+id/quotedName"
+                android:layout_alignRight="@+id/quotedName"
+                android:layout_alignStart="@+id/quotedName"
+                android:layout_below="@+id/quotedText"
+                android:layout_marginTop="@dimen/element_spacing_xsmall"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <org.mariotaku.twidere.view.IconActionView
+                    android:layout_width="@dimen/element_size_small"
+                    android:layout_height="@dimen/element_size_small"
+                    android:layout_weight="0"
+                    android:color="?android:textColorSecondary"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_gallery"
+                    tools:tint="?android:textColorSecondary"/>
+
+                <TextView
+                    android:id="@+id/quotedMediaLabelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/media"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
         </org.mariotaku.twidere.view.ColorLabelRelativeLayout>
 
     </RelativeLayout>

@@ -404,7 +404,7 @@ abstract class AbsStatusesFragment protected constructor() :
         }
         if (status == null) return
         val accountIds = arrayOf(status.account_key)
-        val maxIds = arrayOf(status.id)
+        val maxIds = arrayOf<String?>(status.id)
         val maxSortIds = longArrayOf(status.sort_id)
         getStatuses(BaseRefreshTaskParam(accountIds, maxIds, null, maxSortIds, null))
     }
@@ -425,8 +425,7 @@ abstract class AbsStatusesFragment protected constructor() :
         val context = context ?: return
         val adapter = adapter
         val status = adapter!!.getStatus(position) ?: return
-        handleStatusActionClick(context, fragmentManager, twitterWrapper,
-                holder as StatusViewHolder, status, id)
+        handleStatusActionClick(context, fragmentManager, twitterWrapper, holder as StatusViewHolder, status, id)
     }
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {

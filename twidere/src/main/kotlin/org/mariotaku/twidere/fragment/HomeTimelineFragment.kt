@@ -56,7 +56,7 @@ class HomeTimelineFragment : CursorStatusesFragment() {
     }
 
     override fun getStatuses(param: RefreshTaskParam): Boolean {
-        if (!param.hasMaxIds()) return twitterWrapper.refreshAll(param.accountKeys)
+        if (!param.hasMaxIds) return twitterWrapper.refreshAll(param.accountKeys)
         return twitterWrapper.getHomeTimelineAsync(param)
     }
 

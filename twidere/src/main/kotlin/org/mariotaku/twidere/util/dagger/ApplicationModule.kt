@@ -36,12 +36,14 @@ import dagger.Module
 import dagger.Provides
 import edu.tsinghua.hotmobi.HotMobiLogger
 import okhttp3.ConnectionPool
+import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache
 import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader
@@ -87,6 +89,12 @@ class ApplicationModule(private val application: Application) {
     fun sharedPreferences(): SharedPreferencesWrapper {
         return SharedPreferencesWrapper.getInstance(application, Constants.SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE, SharedPreferenceConstants::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun kPreferences(sharedPreferences: SharedPreferencesWrapper): KPreferences {
+        return KPreferences(sharedPreferences)
     }
 
     @Provides
@@ -218,6 +226,12 @@ class ApplicationModule(private val application: Application) {
     @Provides
     fun provideBidiFormatter(): BidiFormatter {
         return BidiFormatter.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun defaultFeatures(): DefaultFeatures {
+        return DefaultFeatures()
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {

@@ -88,7 +88,7 @@ public class HotMobiLogger implements HotMobiConstants {
     }
 
     public static HotMobiLogger getInstance(Context context) {
-        return DependencyHolder.get(context).getHotMobiLogger();
+        return DependencyHolder.Companion.get(context).getHotMobiLogger();
     }
 
     public static File getLogFile(Context context, @Nullable UserKey accountKey, String type) {

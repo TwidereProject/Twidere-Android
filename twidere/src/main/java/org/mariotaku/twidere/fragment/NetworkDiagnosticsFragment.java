@@ -144,7 +144,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             publishProgress(new LogText("Text below may have personal information, BE CAREFUL TO MAKE IT PUBLIC",
                     LogText.State.WARNING));
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
-            DependencyHolder holder = DependencyHolder.get(mContext);
+            DependencyHolder holder = DependencyHolder.Companion.get(mContext);
             final TwidereDns dns = holder.getDns();
             final SharedPreferencesWrapper prefs = holder.getPreferences();
             publishProgress(new LogText("Network preferences"), LogText.LINEBREAK);

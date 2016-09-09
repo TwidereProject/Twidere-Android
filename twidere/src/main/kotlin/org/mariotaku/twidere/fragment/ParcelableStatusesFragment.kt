@@ -153,7 +153,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (idx < 0) return
         val status = adapter.getStatus(idx) ?: return
         val accountKeys = arrayOf(status.account_key)
-        val maxIds = arrayOf(status.id)
+        val maxIds = arrayOf<String?>(status.id)
         page += pageDelta
         val param = BaseRefreshTaskParam(accountKeys, maxIds, null)
         param.isLoadingMore = true
@@ -181,13 +181,16 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        val adapter = adapter
-        val accountIds = accountKeys
-        if (adapter!!.statusCount > 0) {
-            val sinceIds = arrayOf(adapter.getStatus(0)!!.id)
-            getStatuses(BaseRefreshTaskParam(accountIds, null, sinceIds))
+        val adapter = adapter ?: return false
+        val accountKeys = accountKeys
+        if (adapter.statusCount > 0) {
+            val firstStatus = adapter.getStatus(0)!!
+            val sinceIds = Array(accountKeys.size) {
+                return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null
+            }
+            getStatuses(BaseRefreshTaskParam(accountKeys, null, sinceIds))
         } else {
-            getStatuses(BaseRefreshTaskParam(accountIds, null, null))
+            getStatuses(BaseRefreshTaskParam(accountKeys, null, null))
         }
         return true
     }
