@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -32,14 +33,17 @@ public class UriExtraUtils {
     private UriExtraUtils() {
     }
 
+    @Nullable
     public static void addExtra(Uri.Builder builder, String key, Object value) {
         builder.appendQueryParameter(QUERY_PARAM_EXTRA, key + "=" + String.valueOf(value));
     }
 
+    @Nullable
     public static String getExtra(Uri uri, String key) {
         return getExtra(uri.getQueryParameters(QUERY_PARAM_EXTRA), key);
     }
 
+    @Nullable
     public static String getExtra(List<String> extras, String key) {
         for (String extra : extras) {
             final String prefix = key + "=";
