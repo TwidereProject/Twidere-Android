@@ -790,7 +790,7 @@
     <string name="provider_gnusocial_net">GNU Social.net</string>
     <string name="provider_gnusocial_de">GNU Social.de</string>
     <string name="new_document_api">New Document API</string>
-    <string name="new_document_api_summary">Open profile and media in new currentTask</string>
+    <string name="new_document_api_summary">Open profile and media in new task</string>
     <string name="drawer_toggle">Drawer toggle</string>
     <!-- GNU social group like https://quitter.se/group/qvitter -->
     <string name="group">Group</string>
