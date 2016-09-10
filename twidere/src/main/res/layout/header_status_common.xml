@@ -300,10 +300,13 @@
 
             </org.mariotaku.twidere.view.CardMediaContainer>
 
-            <View
+            <ImageView
                 android:id="@+id/quotedMediaPreviewPlaceholder"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"
+                android:scaleType="center"
+                android:src="@drawable/ic_action_gallery"/>
         </FrameLayout>
 
         <LinearLayout
