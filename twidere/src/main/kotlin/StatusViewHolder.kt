@@ -250,6 +250,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             } else {
                 quotedNameView.visibility = View.GONE
                 quotedTextView.visibility = View.VISIBLE
+                quotedMediaPreview.visibility = View.GONE
+                quotedMediaLabel.visibility = View.GONE
 
                 // Not available
                 val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))

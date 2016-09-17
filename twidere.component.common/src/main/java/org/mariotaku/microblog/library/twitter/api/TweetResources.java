@@ -48,6 +48,9 @@ public interface TweetResources {
     @POST("/statuses/retweet/{id}.json")
     Status retweetStatus(@Path("id") String statusId) throws MicroBlogException;
 
+    @POST("/statuses/unretweet/{id}.json")
+    Status unretweetStatus(@Path("id") String statusId) throws MicroBlogException;
+
     @GET("/statuses/show.json")
     Status showStatus(@Query("id") String id) throws MicroBlogException;
 

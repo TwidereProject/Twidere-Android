@@ -18,10 +18,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
 import org.mariotaku.microblog.library.twitter.TwitterUpload
-import org.mariotaku.microblog.library.twitter.model.ErrorInfo
-import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.StatusUpdate
+import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.FileBody
@@ -433,6 +430,7 @@ class UpdateStatusTask(
                 } else {
                     resp = upload.uploadMedia(body, ownerIds)
                 }
+
             } catch (e: IOException) {
                 throw UploadException(e)
             } catch (e: MicroBlogException) {
@@ -440,7 +438,14 @@ class UpdateStatusTask(
             } finally {
                 Utils.closeSilently(body)
             }
-            resp.id
+            if (media.alt_text?.isNotEmpty() ?: false) {
+                try {
+                    upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
+                } catch (e: MicroBlogException) {
+                    // Ignore
+                }
+            }
+            return@mapIndexed resp.id
         }
         return mediaIds.toTypedArray()
     }

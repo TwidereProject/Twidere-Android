@@ -95,9 +95,9 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
     @JsonObject
     public static class Image {
 
-        @JsonField(name = "width")
+        @JsonField(name = "w")
         int width;
-        @JsonField(name = "height")
+        @JsonField(name = "h")
         int height;
         @JsonField(name = "image_type")
         String imageType;

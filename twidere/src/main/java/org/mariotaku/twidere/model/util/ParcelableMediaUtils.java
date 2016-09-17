@@ -57,8 +57,6 @@ public class ParcelableMediaUtils {
                 final String expanded = url.getExpandedUrl();
                 final ParcelableMedia media = PreviewMediaExtractor.fromLink(expanded);
                 if (media != null) {
-                    media.start = url.getStart();
-                    media.end = url.getEnd();
                     list.add(media);
                 }
             }
@@ -73,8 +71,6 @@ public class ParcelableMediaUtils {
         media.media_url = mediaUrl;
         media.preview_url = mediaUrl;
         media.page_url = entity.getExpandedUrl();
-        media.start = entity.getStart();
-        media.end = entity.getEnd();
         media.type = ParcelableMediaUtils.getTypeInt(entity.getType());
         media.alt_text = entity.getAltText();
         final MediaEntity.Size size = entity.getSizes().get(MediaEntity.ScaleType.LARGE);
@@ -207,15 +203,6 @@ public class ParcelableMediaUtils {
             if (summaryPhotoImage instanceof CardEntity.ImageValue) {
                 media.preview_url = ((CardEntity.ImageValue) summaryPhotoImage).getUrl();
             }
-            if (urlEntities != null) {
-                for (UrlEntity entity : urlEntities) {
-                    if (entity.getUrl().equals(media.url)) {
-                        media.start = entity.getStart();
-                        media.end = entity.getEnd();
-                        break;
-                    }
-                }
-            }
             return new ParcelableMedia[]{media};
         }
         return new ParcelableMedia[0];
@@ -231,8 +218,6 @@ public class ParcelableMediaUtils {
                     if (media.page_url == null) {
                         media.page_url = media.url;
                     }
-                    media.start = entity.getStart();
-                    media.end = entity.getEnd();
                     break;
                 }
             }

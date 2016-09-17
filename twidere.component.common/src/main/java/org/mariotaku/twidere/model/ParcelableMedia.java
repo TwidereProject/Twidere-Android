@@ -35,12 +35,6 @@ public class ParcelableMedia implements Parcelable {
     @JsonField(name = "preview_url")
     @ParcelableThisPlease
     public String preview_url;
-    @JsonField(name = "start")
-    @ParcelableThisPlease
-    public int start;
-    @JsonField(name = "end")
-    @ParcelableThisPlease
-    public int end;
     @Type
     @JsonField(name = "type")
     @ParcelableThisPlease
@@ -106,8 +100,6 @@ public class ParcelableMedia implements Parcelable {
 
         ParcelableMedia media = (ParcelableMedia) o;
 
-        if (start != media.start) return false;
-        if (end != media.end) return false;
         if (type != media.type) return false;
         if (width != media.width) return false;
         if (height != media.height) return false;
@@ -128,8 +120,6 @@ public class ParcelableMedia implements Parcelable {
         int result = url.hashCode();
         result = 31 * result + (media_url != null ? media_url.hashCode() : 0);
         result = 31 * result + (preview_url != null ? preview_url.hashCode() : 0);
-        result = 31 * result + start;
-        result = 31 * result + end;
         result = 31 * result + type;
         result = 31 * result + width;
         result = 31 * result + height;
@@ -145,8 +135,6 @@ public class ParcelableMedia implements Parcelable {
                 "url='" + url + '\'' +
                 ", media_url='" + media_url + '\'' +
                 ", preview_url='" + preview_url + '\'' +
-                ", start=" + start +
-                ", end=" + end +
                 ", type=" + type +
                 ", width=" + width +
                 ", height=" + height +
