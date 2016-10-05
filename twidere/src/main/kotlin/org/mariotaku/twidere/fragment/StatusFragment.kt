@@ -64,6 +64,7 @@ import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import edu.tsinghua.hotmobi.model.TimelineType
+import edu.tsinghua.hotmobi.model.TranslateEvent
 import edu.tsinghua.hotmobi.model.TweetEvent
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
@@ -432,7 +433,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 }
 
                 val event = TweetEvent.create(activity, status, TimelineType.OTHER)
-                event.setAction(TweetEvent.Action.OPEN)
+                event.action = TweetEvent.Action.OPEN
+                event.isHasTranslateFeature = Utils.isOfficialCredentials(context, credentials)
                 mStatusEvent = event
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition)
@@ -555,6 +557,11 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
     private fun displayTranslation(translation: TranslationResult) {
         adapter?.translationResult = translation
+        val status = this.status
+        if (status != null) {
+            val event = TranslateEvent.create(context, status, translation.translatedLang)
+            HotMobiLogger.getInstance(context).log(status.account_key, event);
+        }
     }
 
     private fun saveReadPosition(): ReadPosition? {

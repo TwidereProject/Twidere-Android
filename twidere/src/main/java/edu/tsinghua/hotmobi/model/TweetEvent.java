@@ -65,8 +65,19 @@ public class TweetEvent extends BaseEvent implements Parcelable {
     @Action
     String action;
     @ParcelableThisPlease
+    @JsonField(name = "in_reply_to_id")
+    @Action
+    String inReplyToId;
+    @ParcelableThisPlease
+    @JsonField(name = "tweet_lang")
+    String tweetLang;
+    @ParcelableThisPlease
     @JsonField(name = "following")
     boolean following;
+    @ParcelableThisPlease
+    @JsonField(name = "has_translate_feature")
+    boolean hasTranslateFeature;
+
     public static final Creator<TweetEvent> CREATOR = new Creator<TweetEvent>() {
         public TweetEvent createFromParcel(Parcel source) {
             TweetEvent target = new TweetEvent();
@@ -88,12 +99,17 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         event.setUserId(status.user_key.getId());
         event.setTimelineType(timelineType);
         event.setTweetType(TwidereDataUtils.getTweetType(status));
+        event.setTweetLang(status.lang);
         event.setFollowing(status.user_is_following);
         return event;
     }
 
     public void setFollowing(boolean following) {
         this.following = following;
+    }
+
+    public String getAction() {
+        return action;
     }
 
     public void setAction(@Action String action) {
@@ -116,6 +132,14 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.timelineType = timelineType;
     }
 
+    public String getTweetLang() {
+        return tweetLang;
+    }
+
+    public void setTweetLang(String tweetLang) {
+        this.tweetLang = tweetLang;
+    }
+
     public String getAccountId() {
         return accountId;
     }
@@ -132,15 +156,33 @@ public class TweetEvent extends BaseEvent implements Parcelable {
         this.accountHost = accountHost;
     }
 
+    public String getInReplyToId() {
+        return inReplyToId;
+    }
+
+    public void setInReplyToId(String inReplyToId) {
+        this.inReplyToId = inReplyToId;
+    }
+
+    public boolean isHasTranslateFeature() {
+        return hasTranslateFeature;
+    }
+
+    public void setHasTranslateFeature(boolean hasTranslateFeature) {
+        this.hasTranslateFeature = hasTranslateFeature;
+    }
+
     @Override
     public String toString() {
         return "TweetEvent{" +
-                "id=" + id +
-                ", accountKey=" + accountId +
-                ", userId=" + userId +
+                "accountHost='" + accountHost + '\'' +
+                ", id='" + id + '\'' +
+                ", accountId='" + accountId + '\'' +
+                ", userId='" + userId + '\'' +
                 ", tweetType='" + tweetType + '\'' +
                 ", timelineType='" + timelineType + '\'' +
                 ", action='" + action + '\'' +
+                ", inReplyToId='" + inReplyToId + '\'' +
                 ", following=" + following +
                 "} " + super.toString();
     }

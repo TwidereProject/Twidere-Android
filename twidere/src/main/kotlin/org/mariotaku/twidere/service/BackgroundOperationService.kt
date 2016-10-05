@@ -25,6 +25,7 @@ import android.app.Service
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -39,6 +40,8 @@ import android.util.Pair
 import android.widget.Toast
 import com.twitter.Extractor
 import edu.tsinghua.hotmobi.HotMobiLogger
+import edu.tsinghua.hotmobi.model.MediaEvent
+import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
 import org.mariotaku.abstask.library.ManualTaskStarter
@@ -326,7 +329,10 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
             for (status in result.statuses) {
                 if (status == null) continue
                 val event = TweetEvent.create(context, status, TimelineType.OTHER)
-                event.setAction(TweetEvent.Action.TWEET)
+                event.action = TweetEvent.Action.TWEET
+                if (item.in_reply_to_status != null && item.in_reply_to_status.user_is_protected) {
+                    event.inReplyToId = item.in_reply_to_status.id
+                }
                 HotMobiLogger.getInstance(context).log(status.account_key, event)
             }
         }
@@ -362,19 +368,19 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                 else -> {
                     if (imageUri != null) {
                         val mediaUri = Uri.parse(imageUri)
-                        var body: FileBody? = null
+                        var bodyAndSize: Pair<Body, Point>? = null
                         try {
-                            body = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
+                            bodyAndSize = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
                                     mediaUri, null, ParcelableMedia.Type.IMAGE,
                                     MessageMediaUploadListener(this, notificationManager,
                                             builder, text))
-                            val uploadResp = uploadMedia(twitterUpload, body)
+                            val uploadResp = uploadMedia(twitterUpload, bodyAndSize.first)
                             val response = twitter.sendDirectMessage(recipientId,
                                     text, uploadResp.id)
                             directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
                                     accountKey, true)
                         } finally {
-                            Utils.closeSilently(body)
+                            Utils.closeSilently(bodyAndSize?.first)
                         }
                         val path = Utils.getImagePathFromUri(this, mediaUri)
                         if (path != null) {

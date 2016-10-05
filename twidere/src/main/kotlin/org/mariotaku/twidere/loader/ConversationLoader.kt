@@ -94,7 +94,7 @@ class ConversationLoader(
     }
 
     @Throws(MicroBlogException::class)
-    protected fun showConversationCompat(twitter: MicroBlog,
+    private fun showConversationCompat(twitter: MicroBlog,
                                          credentials: ParcelableCredentials,
                                          status: ParcelableStatus,
                                          loadReplies: Boolean): List<Status> {

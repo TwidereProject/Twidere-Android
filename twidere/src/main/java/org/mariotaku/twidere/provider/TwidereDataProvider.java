@@ -1431,7 +1431,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 if (ArrayUtils.isEmpty(sources)) continue;
                 final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
                         mUserColorNameManager, activity, sources,
-                        0, false, mUseStarForLikes, mNameFirst);
+                        0, mUseStarForLikes, mNameFirst);
                 if (message != null) {
                     final CharSequence summary = message.getSummary();
                     if (TextUtils.isEmpty(summary)) {

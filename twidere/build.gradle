@@ -41,7 +41,7 @@ android {
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
-        buildConfigField 'boolean', 'HOTMOBI_LOG_ENABLED', 'Boolean.parseBoolean("false")'
+        buildConfigField 'boolean', 'HOTMOBI_LOG_ENABLED', 'Boolean.parseBoolean("true")'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

@@ -15,7 +15,6 @@ import android.text.style.StyleSpan;
 import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.util.ParcelableActivityExtensionsKt;
-import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
@@ -23,13 +22,13 @@ import org.oshkimaadziig.george.androidutils.SpanFormatter;
  * Created by mariotaku on 16/1/1.
  */
 public class ActivityTitleSummaryMessage {
-    final int icon;
-    final int color;
+    private final int icon;
+    private final int color;
     @NonNull
-    final CharSequence title;
-    final CharSequence summary;
+    private final CharSequence title;
+    private final CharSequence summary;
 
-    ActivityTitleSummaryMessage(int icon, int color, @NonNull CharSequence title, @Nullable CharSequence summary) {
+    private ActivityTitleSummaryMessage(int icon, int color, @NonNull CharSequence title, @Nullable CharSequence summary) {
         this.icon = icon;
         this.color = color;
         this.title = title;
@@ -38,22 +37,18 @@ public class ActivityTitleSummaryMessage {
 
     @Nullable
     public static ActivityTitleSummaryMessage get(Context context, UserColorNameManager manager, ParcelableActivity activity,
-                                                  ParcelableUser[] sources, int defaultColor, boolean byFriends,
+                                                  ParcelableUser[] sources, int defaultColor,
                                                   boolean shouldUseStarsForLikes,
                                                   boolean nameFirst) {
         final Resources resources = context.getResources();
+        boolean byFriends = false;
         switch (activity.action) {
             case Activity.Action.FOLLOW: {
                 int typeIcon = R.drawable.ic_activity_action_follow;
                 int color = ContextCompat.getColor(context, R.color.highlight_follow);
                 CharSequence title;
-                if (byFriends) {
-                    title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_follow,
-                            R.string.activity_by_friends_follow_multi, sources, activity.target_users, nameFirst);
-                } else {
-                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_follow,
-                            R.string.activity_about_me_follow_multi, sources, nameFirst);
-                }
+                title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_follow,
+                        R.string.activity_about_me_follow_multi, sources, nameFirst);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, null);
             }
             case Activity.Action.FAVORITE: {
@@ -63,24 +58,14 @@ public class ActivityTitleSummaryMessage {
                 if (shouldUseStarsForLikes) {
                     typeIcon = R.drawable.ic_activity_action_favorite;
                     color = ContextCompat.getColor(context, R.color.highlight_favorite);
-                    if (byFriends) {
-                        title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_favorite,
-                                R.string.activity_by_friends_favorite_multi, sources, activity.target_statuses, nameFirst);
-                    } else {
-                        title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorite,
-                                R.string.activity_about_me_favorite_multi, sources, nameFirst);
-                    }
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_favorite,
+                            R.string.activity_about_me_favorite_multi, sources, nameFirst);
                 } else {
                     typeIcon = R.drawable.ic_activity_action_like;
                     color = ContextCompat.getColor(context, R.color.highlight_like);
 
-                    if (byFriends) {
-                        title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_like,
-                                R.string.activity_by_friends_like_multi, sources, activity.target_statuses, nameFirst);
-                    } else {
-                        title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_like,
-                                R.string.activity_about_me_like_multi, sources, nameFirst);
-                    }
+                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_like,
+                            R.string.activity_about_me_like_multi, sources, nameFirst);
                 }
                 final CharSequence summary = generateTextOnlySummary(context, activity.target_statuses);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
@@ -89,19 +74,13 @@ public class ActivityTitleSummaryMessage {
                 int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
                 CharSequence title;
-                if (byFriends) {
-                    title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_retweet,
-                            R.string.activity_by_friends_retweet_multi, sources, activity.target_statuses, nameFirst);
-                } else {
-                    title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweet,
-                            R.string.activity_about_me_retweet_multi, sources, nameFirst);
-                }
+                title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweet,
+                        R.string.activity_about_me_retweet_multi, sources, nameFirst);
                 final CharSequence summary = generateTextOnlySummary(context,
                         activity.target_object_statuses);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.FAVORITED_RETWEET: {
-                if (byFriends) return null;
                 int typeIcon;
                 int color;
                 CharSequence title;
@@ -121,7 +100,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.RETWEETED_RETWEET: {
-                if (byFriends) return null;
                 int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
                 CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_retweet,
@@ -131,7 +109,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.RETWEETED_MENTION: {
-                if (byFriends) return null;
                 int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
                 CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_mention,
@@ -141,7 +118,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.FAVORITED_MENTION: {
-                if (byFriends) return null;
                 int typeIcon;
                 int color;
                 CharSequence title;
@@ -161,7 +137,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.LIST_CREATED: {
-                if (!byFriends) return null;
                 int typeIcon = R.drawable.ic_activity_action_list_added;
                 CharSequence title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_list_created,
                         R.string.activity_by_friends_list_created_multi, sources,
@@ -178,7 +153,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, defaultColor, title, sb);
             }
             case Activity.Action.LIST_MEMBER_ADDED: {
-                if (byFriends) return null;
                 CharSequence title;
                 int icon = R.drawable.ic_activity_action_list_added;
                 if ((sources.length == 1) && (activity.target_object_user_lists != null)
@@ -218,7 +192,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, null);
             }
             case Activity.Action.MEDIA_TAGGED: {
-                if (byFriends) return null;
                 int typeIcon = R.drawable.ic_activity_action_media_tagged;
                 int color = ContextCompat.getColor(context, R.color.highlight_tagged);
                 CharSequence title;
@@ -229,7 +202,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.FAVORITED_MEDIA_TAGGED: {
-                if (byFriends) return null;
                 int typeIcon;
                 int color;
                 CharSequence title;
@@ -249,7 +221,6 @@ public class ActivityTitleSummaryMessage {
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
             case Activity.Action.RETWEETED_MEDIA_TAGGED: {
-                if (byFriends) return null;
                 int typeIcon = R.drawable.ic_activity_action_retweet;
                 int color = ContextCompat.getColor(context, R.color.highlight_retweet);
                 CharSequence title = getTitleStringAboutMe(resources, manager, R.string.activity_about_me_retweeted_media_tagged,

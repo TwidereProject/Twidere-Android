@@ -11,6 +11,8 @@ import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import android.util.Pair
 import com.nostra13.universalimageloader.core.assist.ImageSize
+import edu.tsinghua.hotmobi.HotMobiLogger
+import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
@@ -221,7 +223,7 @@ class UpdateStatusTask(
         for (i in 0 until pendingUpdate.length) {
             val account = statusUpdate.accounts[i]
             val microBlog = MicroBlogAPIFactory.getInstance(context, account.account_key, true)
-            var body: Body? = null
+            var bodyAndSize: Pair<Body, Point>? = null
             try {
                 when (ParcelableAccountUtils.getAccountType(account)) {
                     ParcelableAccount.Type.FANFOU -> {
@@ -233,13 +235,13 @@ class UpdateStatusTask(
                                         context.getString(R.string.error_too_many_photos_fanfou))
                             } else {
                                 val sizeLimit = Point(2048, 1536)
-                                body = getBodyFromMedia(context, mediaLoader,
+                                bodyAndSize = getBodyFromMedia(context, mediaLoader,
                                         Uri.parse(statusUpdate.media[0].uri),
                                         sizeLimit, statusUpdate.media[0].type,
                                         ContentLengthInputStream.ReadListener { length, position ->
                                             stateCallback.onUploadingProgressChanged(-1, position, length)
                                         })
-                                val photoUpdate = PhotoStatusUpdate(body,
+                                val photoUpdate = PhotoStatusUpdate(bodyAndSize.first,
                                         pendingUpdate.overrideTexts[i])
                                 val requestResult = microBlog.uploadPhoto(photoUpdate)
 
@@ -265,7 +267,7 @@ class UpdateStatusTask(
             } catch (e: MicroBlogException) {
                 result.exceptions[i] = e
             } finally {
-                Utils.closeSilently(body)
+                Utils.closeSilently(bodyAndSize?.first)
             }
         }
         return result
@@ -280,9 +282,7 @@ class UpdateStatusTask(
         if (ArrayUtils.isEmpty(update.media)) return
         val ownersList = update.accounts.filter {
             ParcelableAccount.Type.TWITTER == ParcelableAccountUtils.getAccountType(it)
-        }.map {
-            it.account_key
-        }
+        }.map(ParcelableAccount::account_key)
         val ownerIds = ownersList.map {
             it.id
         }.toTypedArray()
@@ -418,25 +418,29 @@ class UpdateStatusTask(
         val mediaIds = update.media.mapIndexed { index, media ->
             val resp: MediaUploadResponse
             //noinspection TryWithIdenticalCatches
-            var body: Body? = null
+            var bodyAndSize: Pair<Body, Point>? = null
             try {
                 val sizeLimit = Point(2048, 1536)
-                body = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
+                bodyAndSize = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
                         media.type, ContentLengthInputStream.ReadListener { length, position ->
                     stateCallback.onUploadingProgressChanged(index, position, length)
                 })
+                val mediaUploadEvent = MediaUploadEvent.create(context, media)
+                mediaUploadEvent.setFileSize(bodyAndSize.first.length())
+                mediaUploadEvent.setGeometry(bodyAndSize.second.x, bodyAndSize.second.y)
                 if (chucked) {
-                    resp = uploadMediaChucked(upload, body, ownerIds)
+                    resp = uploadMediaChucked(upload, bodyAndSize.first, ownerIds)
                 } else {
-                    resp = upload.uploadMedia(body, ownerIds)
+                    resp = upload.uploadMedia(bodyAndSize.first, ownerIds)
                 }
-
+                mediaUploadEvent.markEnd()
+                HotMobiLogger.getInstance(context).log(mediaUploadEvent)
             } catch (e: IOException) {
                 throw UploadException(e)
             } catch (e: MicroBlogException) {
                 throw UploadException(e)
             } finally {
-                Utils.closeSilently(body)
+                Utils.closeSilently(bodyAndSize?.first)
             }
             if (media.alt_text?.isNotEmpty() ?: false) {
                 try {
@@ -663,9 +667,10 @@ class UpdateStatusTask(
         fun getBodyFromMedia(context: Context, mediaLoader: MediaLoaderWrapper,
                              mediaUri: Uri, sizeLimit: Point? = null,
                              @ParcelableMedia.Type type: Int,
-                             readListener: ContentLengthInputStream.ReadListener): FileBody {
+                             readListener: ContentLengthInputStream.ReadListener): Pair<Body, Point> {
             val resolver = context.contentResolver
             var mediaType = resolver.getType(mediaUri)
+            val size = Point()
             val cis = run {
                 if (type == ParcelableMedia.Type.IMAGE && sizeLimit != null) {
                     val length: Long
@@ -675,6 +680,7 @@ class UpdateStatusTask(
                     if (o.outMimeType != null) {
                         mediaType = o.outMimeType
                     }
+                    size.set(o.outWidth, o.outHeight)
                     o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
                             sizeLimit.x, sizeLimit.y)
                     o.inJustDecodeBounds = false
@@ -683,6 +689,7 @@ class UpdateStatusTask(
                                 ImageSize(o.outWidth, o.outHeight).scaleDown(o.inSampleSize))
 
                         if (bitmap != null) {
+                            size.set(bitmap.width, bitmap.height)
                             val os = DirectByteArrayOutputStream()
                             when (mediaType) {
                                 "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
@@ -709,7 +716,7 @@ class UpdateStatusTask(
             } else {
                 contentType = ContentType.parse(mediaType!!)
             }
-            return FileBody(cis, "attachment", cis.length(), contentType)
+            return Pair(FileBody(cis, "attachment", cis.length(), contentType), size)
         }
 
         internal class DirectByteArrayOutputStream : ByteArrayOutputStream {

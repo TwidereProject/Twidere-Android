@@ -87,7 +87,7 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
         val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
         val message = ActivityTitleSummaryMessage.get(context,
                 adapter.userColorNameManager, activity, sources, activityTypeView.defaultColor,
-                byFriends, adapter.useStarsForLikes, adapter.isNameFirst)
+                adapter.useStarsForLikes, adapter.isNameFirst)
         if (message == null) {
             showNotSupported()
             return

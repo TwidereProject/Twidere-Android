@@ -173,8 +173,7 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
             val whereArgs = arrayOf(credentials.account_key.toString(), deleteBound[0].toString(), deleteBound[1].toString())
             val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs)
             // Why loadItemLimit / 2? because it will not acting strange in most cases
-            val insertGap = valuesList.size >= loadItemLimit && !noItemsBefore && olderCount > 0
-                    && rowsDeleted <= 0 && activities.size > loadItemLimit / 2
+            val insertGap = !noItemsBefore && olderCount > 0  && rowsDeleted <= 0 && activities.size > loadItemLimit / 2
             if (insertGap && !valuesList.isEmpty()) {
                 valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
             }
@@ -187,7 +186,7 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
             val noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
                     Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
                     Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).sql
-            val noGapWhereArgs = arrayOf(credentials.toString(), maxId, maxId)
+            val noGapWhereArgs = arrayOf(credentials.account_key.toString(), maxId, maxId)
             cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
         }
     }

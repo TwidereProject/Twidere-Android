@@ -27,8 +27,10 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import org.mariotaku.ktextension.LocaleExtensionKt;
 import org.mariotaku.twidere.BuildConfig;
 
+import java.util.Locale;
 import java.util.TimeZone;
 
 import edu.tsinghua.hotmobi.util.LocationUtils;
@@ -59,6 +61,11 @@ public abstract class BaseEvent implements Parcelable, LogModel {
     @ParcelableThisPlease
     LatLng location;
 
+    @JsonField(name = "device_locale")
+    @ParcelableThisPlease
+    String deviceLocale;
+
+
     public BaseEvent() {
     }
 
@@ -78,10 +85,19 @@ public abstract class BaseEvent implements Parcelable, LogModel {
         this.location = location;
     }
 
+    public String getDeviceLocale() {
+        return deviceLocale;
+    }
+
+    public void setDeviceLocale(String deviceLocale) {
+        this.deviceLocale = deviceLocale;
+    }
+
     public void markStart(@NonNull Context context) {
         setStartTime(System.currentTimeMillis());
         setTimeOffset(TimeZone.getDefault().getOffset(startTime));
         setLocation(LocationUtils.getCachedLatLng(context));
+        setDeviceLocale(LocaleExtensionKt.getBcp47Tag(Locale.getDefault()));
     }
 
     public void markEnd() {
@@ -96,6 +112,7 @@ public abstract class BaseEvent implements Parcelable, LogModel {
                 ", endTime=" + endTime +
                 ", timeOffset=" + timeOffset +
                 ", location=" + location +
+                ", locale='" + deviceLocale + '\'' +
                 '}';
     }
 
