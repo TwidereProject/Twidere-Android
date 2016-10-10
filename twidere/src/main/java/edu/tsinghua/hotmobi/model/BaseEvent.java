@@ -105,6 +105,11 @@ public abstract class BaseEvent implements Parcelable, LogModel {
     }
 
     @Override
+    public boolean isEnabled() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "BaseEvent{" +
                 "appVersion=" + appVersion +

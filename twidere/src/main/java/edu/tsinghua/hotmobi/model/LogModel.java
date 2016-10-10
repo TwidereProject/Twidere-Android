@@ -8,4 +8,6 @@ import android.support.annotation.NonNull;
 public interface LogModel {
     @NonNull
     String getLogFileName();
+
+    boolean isEnabled();
 }

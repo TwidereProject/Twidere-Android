@@ -88,6 +88,11 @@ public class TranslateEvent extends BaseEvent implements Parcelable {
     }
 
     @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

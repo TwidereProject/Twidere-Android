@@ -22,6 +22,7 @@ package edu.tsinghua.hotmobi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -127,16 +128,16 @@ public class HotMobiLogger implements HotMobiConstants {
             return false;
     }
 
-    public <T extends LogModel> void log(UserKey accountId, final T event, final PreProcessing<T> preProcessing) {
-        if (!BuildConfig.HOTMOBI_LOG_ENABLED) return;
+    public <T extends LogModel> void log(UserKey accountId, @NonNull final T event, final PreProcessing<T> preProcessing) {
+        if (!BuildConfig.HOTMOBI_LOG_ENABLED || !event.isEnabled()) return;
         mExecutor.execute(new WriteLogTask<>(mApplication, accountId, event, preProcessing));
     }
 
-    public <T extends LogModel> void log(UserKey accountId, final T event) {
+    public <T extends LogModel> void log(UserKey accountId, @NonNull final T event) {
         log(accountId, event, null);
     }
 
-    public <T extends LogModel> void log(final T event) {
+    public <T extends LogModel> void log(@NonNull final T event) {
         log(event, null);
     }
 

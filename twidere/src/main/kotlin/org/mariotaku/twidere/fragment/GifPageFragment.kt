@@ -86,7 +86,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
         super.onDownloadFinished(nonce)
         if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
             mediaDownloadEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<MediaDownloadEvent>(accountKey, mediaDownloadEvent)
+            HotMobiLogger.getInstance(context).log<MediaDownloadEvent>(accountKey, mediaDownloadEvent!!)
             mediaDownloadEvent = null
         }
     }

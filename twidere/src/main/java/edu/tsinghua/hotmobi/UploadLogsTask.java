@@ -103,7 +103,7 @@ public class UploadLogsTask implements Runnable {
                 InputStream is = null;
                 try {
                     final UploadLogEvent uploadLogEvent = UploadLogEvent.create(context, logFile);
-                    HttpURLConnection conn = (HttpURLConnection) new URL("http://www.dnext.xyz/usage/upload").openConnection();
+                    HttpURLConnection conn = (HttpURLConnection) new URL("https://cloud.snapcode.mobi/usage/upload.php").openConnection();
                     conn.setRequestProperty("X-HotMobi-UUID", uuid);
                     conn.setRequestProperty("X-HotMobi-Date", dayLogsDir.getName());
                     conn.setRequestProperty("X-HotMobi-FileName", logFile.getName());

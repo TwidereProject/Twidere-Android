@@ -725,7 +725,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         if (userEvent != null && context != null && user != null) {
             userEvent!!.setUser(user!!)
             userEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<UserEvent>(userEvent)
+            HotMobiLogger.getInstance(context).log<UserEvent>(userEvent!!)
         }
         bus.unregister(this)
         super.onStop()

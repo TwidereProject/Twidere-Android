@@ -25,7 +25,7 @@ import java.io.InputStream
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
     private var mMediaLoadState: Int = 0
-    private var mMediaDownloadEvent: MediaDownloadEvent? = null
+    private var mediaDownloadEvent: MediaDownloadEvent? = null
     private var resultCreator: CacheDownloadLoader.ResultCreator? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -111,26 +111,26 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         super.onDownloadRequested(nonce)
         val context = context
         if (context != null) {
-            mMediaDownloadEvent = MediaDownloadEvent.create(context, media, nonce)
+            mediaDownloadEvent = MediaDownloadEvent.create(context, media, nonce)
         } else {
-            mMediaDownloadEvent = null
+            mediaDownloadEvent = null
         }
     }
 
     override fun onDownloadStart(total: Long, nonce: Long) {
         super.onDownloadStart(total, nonce)
-        if (mMediaDownloadEvent != null && mMediaDownloadEvent!!.nonce == nonce) {
-            mMediaDownloadEvent!!.setOpenedTime(System.currentTimeMillis())
-            mMediaDownloadEvent!!.setSize(total)
+        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
+            mediaDownloadEvent!!.setOpenedTime(System.currentTimeMillis())
+            mediaDownloadEvent!!.setSize(total)
         }
     }
 
     override fun onDownloadFinished(nonce: Long) {
         super.onDownloadFinished(nonce)
-        if (mMediaDownloadEvent != null && mMediaDownloadEvent!!.nonce == nonce) {
-            mMediaDownloadEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<MediaDownloadEvent>(accountKey, mMediaDownloadEvent)
-            mMediaDownloadEvent = null
+        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
+            mediaDownloadEvent!!.markEnd()
+            HotMobiLogger.getInstance(context).log<MediaDownloadEvent>(accountKey, mediaDownloadEvent!!)
+            mediaDownloadEvent = null
         }
     }
 
