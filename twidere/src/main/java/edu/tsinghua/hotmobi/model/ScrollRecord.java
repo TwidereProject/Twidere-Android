@@ -95,4 +95,9 @@ public class ScrollRecord implements LogModel {
     public String getLogFileName() {
         return "scroll";
     }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

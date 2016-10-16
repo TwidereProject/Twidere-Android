@@ -111,4 +111,9 @@ public class BatteryRecord implements LogModel {
     public String getLogFileName() {
         return "battery";
     }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
