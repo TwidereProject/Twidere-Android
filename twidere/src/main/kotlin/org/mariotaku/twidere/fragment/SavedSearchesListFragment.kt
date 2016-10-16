@@ -37,7 +37,9 @@ import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import java.util.*
 
-class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapter>(), LoaderCallbacks<ResponseList<SavedSearch>>, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapter>(),
+        LoaderCallbacks<ResponseList<SavedSearch>?>, AdapterView.OnItemClickListener,
+        AdapterView.OnItemLongClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -61,7 +63,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         return SavedSearchesAdapter(activity)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<ResponseList<SavedSearch>> {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<ResponseList<SavedSearch>?> {
         return SavedSearchesLoader(activity, accountKey)
     }
 
@@ -79,11 +81,11 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         openTweetSearch(activity, accountKey, item.query)
     }
 
-    override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>>) {
+    override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>?>) {
         adapter!!.setData(null)
     }
 
-    override fun onLoadFinished(loader: Loader<ResponseList<SavedSearch>>, data: ResponseList<SavedSearch>?) {
+    override fun onLoadFinished(loader: Loader<ResponseList<SavedSearch>?>, data: ResponseList<SavedSearch>?) {
         if (data != null) {
             Collections.sort(data, POSITION_COMPARATOR)
         }
