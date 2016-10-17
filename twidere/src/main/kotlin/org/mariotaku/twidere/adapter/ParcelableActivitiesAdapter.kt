@@ -287,8 +287,8 @@ class ParcelableActivitiesAdapter(
             Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
             Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                 if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
-                if (filteredUserIds != null) {
-                    ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds!!, followingOnly)
+                filteredUserIds?.let {
+                    ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
                     if (activity.after_filtered_source_ids.isEmpty()) {
                         return ITEM_VIEW_TYPE_EMPTY
                     }

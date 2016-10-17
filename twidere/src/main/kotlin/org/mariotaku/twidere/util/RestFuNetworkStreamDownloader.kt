@@ -21,7 +21,7 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.net.Uri
-import org.mariotaku.pickncrop.library.ImagePickerActivity.NetworkStreamDownloader
+import org.mariotaku.pickncrop.library.MediaPickerActivity.NetworkStreamDownloader
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.twidere.util.dagger.DependencyHolder
@@ -33,7 +33,7 @@ import java.io.IOException
 class RestFuNetworkStreamDownloader(context: Context) : NetworkStreamDownloader(context) {
 
     @Throws(IOException::class)
-    override operator fun get(uri: Uri): NetworkStreamDownloader.DownloadResult {
+    override operator fun get(uri: Uri): DownloadResult {
         val client = DependencyHolder.get(context).restHttpClient
         val builder = HttpRequest.Builder()
         builder.method(GET.METHOD)
@@ -42,7 +42,7 @@ class RestFuNetworkStreamDownloader(context: Context) : NetworkStreamDownloader(
         if (response.isSuccessful) {
             val body = response.body
             val contentType = body.contentType().contentType ?: "image/*"
-            return NetworkStreamDownloader.DownloadResult.get(body.stream(), contentType)
+            return DownloadResult.get(body.stream(), contentType)
         } else {
             throw IOException("Unable to get " + uri)
         }

@@ -515,6 +515,15 @@
             android:authorities="twidere.share"
             android:exported="true"
             tools:ignore="ExportedContentProvider"/>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="org.mariotaku.twidere.pncfileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pickncrop__file_paths"/>
+        </provider>
 
         <receiver android:name=".receiver.ConnectivityStateReceiver">
             <intent-filter>
