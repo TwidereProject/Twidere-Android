@@ -47,7 +47,6 @@ import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.os.AsyncTask;
-import android.os.BadParcelableException;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -59,7 +58,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.WorkerThread;
-import android.support.v4.app.Fragment;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
@@ -109,38 +107,6 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.CopyLinkActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
-import org.mariotaku.twidere.fragment.AccountsManagerFragment;
-import org.mariotaku.twidere.fragment.DirectMessagesFragment;
-import org.mariotaku.twidere.fragment.DraftsFragment;
-import org.mariotaku.twidere.fragment.FiltersFragment;
-import org.mariotaku.twidere.fragment.GroupFragment;
-import org.mariotaku.twidere.fragment.IncomingFriendshipsFragment;
-import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
-import org.mariotaku.twidere.fragment.ItemsListFragment;
-import org.mariotaku.twidere.fragment.ListsFragment;
-import org.mariotaku.twidere.fragment.MessagesConversationFragment;
-import org.mariotaku.twidere.fragment.MutesUsersListFragment;
-import org.mariotaku.twidere.fragment.PublicTimelineFragment;
-import org.mariotaku.twidere.fragment.SavedSearchesListFragment;
-import org.mariotaku.twidere.fragment.SearchFragment;
-import org.mariotaku.twidere.fragment.StatusFavoritersListFragment;
-import org.mariotaku.twidere.fragment.StatusFragment;
-import org.mariotaku.twidere.fragment.StatusRetweetersListFragment;
-import org.mariotaku.twidere.fragment.UserBlocksListFragment;
-import org.mariotaku.twidere.fragment.UserFavoritesFragment;
-import org.mariotaku.twidere.fragment.UserFollowersFragment;
-import org.mariotaku.twidere.fragment.UserFragment;
-import org.mariotaku.twidere.fragment.UserFriendsFragment;
-import org.mariotaku.twidere.fragment.UserGroupsFragment;
-import org.mariotaku.twidere.fragment.UserListFragment;
-import org.mariotaku.twidere.fragment.UserListMembersFragment;
-import org.mariotaku.twidere.fragment.UserListMembershipsFragment;
-import org.mariotaku.twidere.fragment.UserListSubscribersFragment;
-import org.mariotaku.twidere.fragment.UserListTimelineFragment;
-import org.mariotaku.twidere.fragment.UserMediaTimelineFragment;
-import org.mariotaku.twidere.fragment.UserMentionsFragment;
-import org.mariotaku.twidere.fragment.UserProfileEditorFragment;
-import org.mariotaku.twidere.fragment.UserTimelineFragment;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -647,12 +613,17 @@ public final class Utils implements Constants {
         if (t instanceof MicroBlogException)
             return getTwitterErrorMessage(context, action, (MicroBlogException) t);
         else if (t != null) return getErrorMessage(context, trimLineBreak(t.getMessage()));
+        TwidereBugReporter.logException(new IllegalStateException());
         return context.getString(R.string.error_unknown_error);
     }
 
-    public static String getErrorMessage(final Context context, final Throwable t) {
-        if (t == null) return null;
-        if (context != null && t instanceof MicroBlogException)
+    @Nullable
+    public static String getErrorMessage(@NonNull final Context context, final Throwable t) {
+        if (t == null) {
+            TwidereBugReporter.logException(new IllegalStateException());
+            return context.getString(R.string.error_unknown_error);
+        }
+        if (t instanceof MicroBlogException)
             return getTwitterErrorMessage(context, (MicroBlogException) t);
         return t.getMessage();
     }
@@ -900,6 +871,7 @@ public final class Utils implements Constants {
             return getErrorMessage(context, action, trimLineBreak(te.getMessage()));
     }
 
+    @Nullable
     public static String getTwitterErrorMessage(final Context context, final MicroBlogException te) {
         if (te == null) return null;
         if (StatusCodeMessageUtils.containsTwitterError(te.getErrorCode())) {

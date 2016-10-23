@@ -133,7 +133,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         } else if (loader is MicroBlogAPIStatusesLoader) {
             val e = loader.exception
             if (e != null) {
-                showError(R.drawable.ic_info_error_generic, Utils.getErrorMessage(context, e))
+                showError(R.drawable.ic_info_error_generic, Utils.getErrorMessage(context, e) ?:
+                        context.getString(R.string.error_unknown_error))
             } else {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
             }

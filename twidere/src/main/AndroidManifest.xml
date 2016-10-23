@@ -119,6 +119,10 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/compose_shortcuts"/>
+
         </activity>
         <activity
             android:name=".activity.MainHondaJOJOActivity"
@@ -135,6 +139,10 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/compose_shortcuts"/>
+
         </activity>
         <activity
             android:name=".activity.HomeActivity"
@@ -171,6 +179,8 @@
             <intent-filter android:label="@string/compose">
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="org.mariotaku.twidere.COMPOSE"/>
+                <action android:name="org.mariotaku.twidere.COMPOSE_TAKE_PHOTO"/>
+                <action android:name="org.mariotaku.twidere.COMPOSE_PICK_IMAGE"/>
                 <action android:name="org.mariotaku.twidere.REPLY"/>
                 <action android:name="org.mariotaku.twidere.QUOTE"/>
                 <action android:name="org.mariotaku.twidere.EDIT_DRAFT"/>

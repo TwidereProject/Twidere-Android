@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:targetApi="n_mr1">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_app_shortcut_compose"
+        android:shortcutId="compose"
+        android:shortcutLongLabel="@string/compose"
+        android:shortcutShortLabel="@string/compose">
+        <intent
+            android:action="org.mariotaku.twidere.COMPOSE"
+            android:targetClass="org.mariotaku.twidere.activity.ComposeActivity"
+            android:targetPackage="org.mariotaku.twidere"/>
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_app_shortcut_camera"
+        android:shortcutId="compose-take-photo"
+        android:shortcutLongLabel="@string/take_photo"
+        android:shortcutShortLabel="@string/take_photo">
+        <intent
+            android:action="org.mariotaku.twidere.COMPOSE_TAKE_PHOTO"
+            android:targetClass="org.mariotaku.twidere.activity.ComposeActivity"
+            android:targetPackage="org.mariotaku.twidere"/>
+    </shortcut>
+    <!-- Specify more shortcuts here. -->
+</shortcuts>
