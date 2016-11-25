@@ -151,6 +151,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         task {
             defaultFeatures.loadRemoteSettings(restHttpClient)
         }.success {
+            defaultFeatures.save(sharedPreferences)
             if (BuildConfig.DEBUG) {
                 Log.d(LOGTAG, "Loaded remote features")
             }

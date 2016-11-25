@@ -28,7 +28,7 @@ public class DefaultFeatures {
     private final static String REMOTE_SETTINGS_URL = "https://raw.githubusercontent.com/TwidereProject/Twidere-Android/master/twidere/src/main/assets/data/default_features.json";
 
     @JsonField(name = "media_link_counts_in_status")
-    boolean mediaLinkCountsInStatus = true;
+    boolean mediaLinkCountsInStatus = false;
 
 
     public boolean isMediaLinkCountsInStatus() {

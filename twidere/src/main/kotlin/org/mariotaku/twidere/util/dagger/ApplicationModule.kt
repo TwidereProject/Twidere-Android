@@ -230,8 +230,10 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun defaultFeatures(): DefaultFeatures {
-        return DefaultFeatures()
+    fun defaultFeatures(preferences: SharedPreferencesWrapper): DefaultFeatures {
+        val features = DefaultFeatures()
+        features.load(preferences)
+        return features
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {
