@@ -35,6 +35,7 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.FragmentManagerAccessor
 import android.support.v4.app.LoaderManager.LoaderCallbacks
+import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
@@ -485,7 +486,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     }
 
     override val refreshing: Boolean
-        get() = loaderManager.hasRunningLoaders()
+        get() = loaderManager.hasRunningLoadersSafe()
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         if (!hasMoreConversation) return
@@ -558,6 +559,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     private fun displayTranslation(translation: TranslationResult) {
         adapter?.translationResult = translation
         val status = this.status
+        val context = this.context ?: return
         if (status != null) {
             val event = TranslateEvent.create(context, status, translation.translatedLang)
             HotMobiLogger.getInstance(context).log(status.account_key, event);
@@ -565,24 +567,27 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     }
 
     private fun saveReadPosition(): ReadPosition? {
-        val position = layoutManager!!.findFirstVisibleItemPosition()
+        val lm = layoutManager ?: return null
+        val adapter = this.adapter ?: return null
+        val position = lm.findFirstVisibleItemPosition()
         if (position == RecyclerView.NO_POSITION) return null
-        val itemType = adapter!!.getItemType(position)
-        var itemId = adapter!!.getItemId(position)
+        val itemType = adapter.getItemType(position)
+        var itemId = adapter.getItemId(position)
         val positionView: View?
         if (itemType == StatusAdapter.ITEM_IDX_CONVERSATION_LOAD_MORE) {
             // Should be next item
-            positionView = layoutManager!!.findViewByPosition(position + 1)
-            itemId = adapter!!.getItemId(position + 1)
+            positionView = lm.findViewByPosition(position + 1)
+            itemId = adapter.getItemId(position + 1)
         } else {
-            positionView = layoutManager!!.findViewByPosition(position)
+            positionView = lm.findViewByPosition(position)
         }
-        return ReadPosition(itemId, if (positionView != null) positionView.top else 0)
+        return ReadPosition(itemId, positionView?.top ?: 0)
     }
 
     private fun restoreReadPosition(position: ReadPosition?) {
+        val adapter = this.adapter ?: return
         if (position == null) return
-        val adapterPosition = adapter!!.findPositionByItemId(position.statusId)
+        val adapterPosition = adapter.findPositionByItemId(position.statusId)
         if (adapterPosition < 0) return
         //TODO maintain read position
         layoutManager!!.scrollToPositionWithOffset(adapterPosition, position.offsetTop)

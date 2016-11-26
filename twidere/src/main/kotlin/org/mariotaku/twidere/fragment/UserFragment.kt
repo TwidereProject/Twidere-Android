@@ -757,6 +757,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     @UiThread
     override fun onPrepareOptionsMenu(menu: Menu?) {
         val user = user ?: return
+        val account = this.account
 
         val isMyself = user.account_key.maybeEquals(user.key)
         val mentionItem = menu!!.findItem(R.id.mention)
@@ -768,20 +769,28 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
         MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.scheduled_statuses, isMyself && MicroBlogAPIFactory.getOfficialKeyType(activity, user.account_key) == ConsumerKeyType.TWEETDECK)
-        MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.blocked_users, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.scheduled_statuses, isMyself &&
+                MicroBlogAPIFactory.getOfficialKeyType(activity, user.account_key)
+                        == ConsumerKeyType.TWEETDECK)
 
+        MenuUtils.setItemAvailability(menu, R.id.blocked_users, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.block, !isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself)
+
+
+        val isTwitter: Boolean
+
         if (account != null) {
-            MenuUtils.setItemAvailability(menu, R.id.add_to_list, TextUtils.equals(ParcelableAccount.Type.TWITTER,
-                    ParcelableAccountUtils.getAccountType(account!!)))
+            isTwitter = TextUtils.equals(ParcelableAccount.Type.TWITTER,
+                    ParcelableAccountUtils.getAccountType(account))
         } else {
-            MenuUtils.setItemAvailability(menu, R.id.add_to_list, false)
+            isTwitter = false
         }
+
+        MenuUtils.setItemAvailability(menu, R.id.add_to_list, isTwitter)
+        MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself && isTwitter)
+        MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself && isTwitter)
+        MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself && isTwitter)
+        MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself && isTwitter)
 
         val userRelationship = relationship
         if (userRelationship != null) {

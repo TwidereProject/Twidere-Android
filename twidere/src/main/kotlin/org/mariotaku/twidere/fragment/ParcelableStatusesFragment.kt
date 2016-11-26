@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.text.TextUtils
 import com.squareup.otto.Subscribe
@@ -199,7 +200,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     override var refreshing: Boolean
         get() {
             if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoaders()
+            return loaderManager.hasRunningLoadersSafe()
         }
         set(value) {
             super.refreshing = value

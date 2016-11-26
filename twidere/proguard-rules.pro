@@ -33,14 +33,15 @@
 -dontwarn sun.misc.**
 -dontwarn sun.nio.**
 -dontwarn java.nio.file.**
-
+-dontwarn InnerClasses
 
 -keepattributes *Annotation*
 -keepattributes EnclosingMethod
 -keepattributes SourceFile
 -keepattributes LineNumberTable
 -keepattributes Signature
--keepattributes InnetClasses
+-keepattributes InnerClasses
+
 
 # https://github.com/bluelinelabs/LoganSquare
 -keep class com.bluelinelabs.logansquare.annotation.JsonObject

@@ -24,10 +24,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import android.support.v4.app.*
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -103,10 +100,9 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         val adapter = viewPager.adapter
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
-        val obj = adapter.instantiateItem(viewPager, currentItem)
-        if (obj !is MediaViewerFragment) return false
+        val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
         if (obj is CacheDownloadMediaViewerFragment) {
-            val running = obj.loaderManager.hasRunningLoaders()
+            val running = obj.loaderManager.hasRunningLoadersSafe()
             val downloaded = obj.hasDownloadedData()
             MenuUtils.setItemAvailability(menu, R.id.refresh, !running && !downloaded)
             MenuUtils.setItemAvailability(menu, R.id.share, !running && downloaded)

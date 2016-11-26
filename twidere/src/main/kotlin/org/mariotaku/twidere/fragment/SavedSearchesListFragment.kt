@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
+import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView
@@ -100,7 +101,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     }
 
     override var refreshing: Boolean
-        get() = loaderManager.hasRunningLoaders()
+        get() = loaderManager.hasRunningLoadersSafe()
         set(value) {
             super.refreshing = value
         }

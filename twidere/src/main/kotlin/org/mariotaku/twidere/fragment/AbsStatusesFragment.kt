@@ -335,7 +335,7 @@ abstract class AbsStatusesFragment protected constructor() :
             val lastItemIndex = Math.min(statusEndIndex, lastVisiblePos)
             lastReadPositionKey = adapter.getStatusPositionKey(lastItemIndex)
             val positionView = layoutManager.findViewByPosition(lastItemIndex)
-            lastVisibleTop = if (positionView != null) positionView.top else 0
+            lastVisibleTop = positionView?.top ?: 0
         } else if (rememberPosition && tag != null) {
             lastReadPositionKey = readStateManager.getPosition(tag)
             lastVisibleTop = 0
