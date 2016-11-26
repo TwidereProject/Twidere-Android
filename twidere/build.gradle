@@ -10,7 +10,7 @@ apply plugin: 'io.fabric'
 // END Non-FOSS component
 
 buildscript {
-    ext.kotlin_version = '1.0.4'
+    ext.kotlin_version = '1.0.5-2'
 
     repositories {
         jcenter()
@@ -21,7 +21,7 @@ buildscript {
 
     dependencies {
         // START Non-FOSS component
-        classpath 'io.fabric.tools:gradle:1.21.7'
+        classpath 'io.fabric.tools:gradle:1.22.0'
         // END Non-FOSS component
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -91,7 +91,7 @@ dependencies {
     kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.6.1'
-    kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.9'
+    kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.10'
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
@@ -102,18 +102,18 @@ dependencies {
     compile project(':twidere.component.nyan')
 
     // START Non-FOSS component
-    googleCompile 'com.google.android.gms:play-services-maps:9.6.1'
-    googleCompile 'com.google.android.gms:play-services-auth:9.6.1'
+    googleCompile 'com.google.android.gms:play-services-maps:9.8.0'
+    googleCompile 'com.google.android.gms:play-services-auth:9.8.0'
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
-    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') { transitive = true }
+    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.4:release@aar'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.5:release@aar'
 
-    debugCompile 'com.facebook.stetho:stetho:1.4.0'
-    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.0'
-    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.4.0'
+    debugCompile 'com.facebook.stetho:stetho:1.4.1'
+    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.4.1'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
 
     provided 'javax.annotation:jsr250-api:1.0'
@@ -133,7 +133,7 @@ dependencies {
     compile 'com.android.support:preference-v14:25.0.0'
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.7'
     compile 'com.commonsware.cwac:merge:1.1.1'
@@ -147,7 +147,7 @@ dependencies {
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.1.1'
     compile 'com.squareup:pollexor:2.0.4'
     compile 'com.squareup:tape:1.2.3'
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-primitives:commons-primitives:1.0'
     compile 'com.bluelinelabs:logansquare:1.3.7'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
@@ -155,14 +155,14 @@ dependencies {
     compile 'com.github.mariotaku:PickNCrop:0.9.5'
     compile 'com.github.mariotaku.RestFu:library:0.9.34'
     compile 'com.github.mariotaku.RestFu:okhttp3:0.9.34'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.6.1'
-    compile 'org.attoparser:attoparser:2.0.0.RELEASE'
+    compile 'org.attoparser:attoparser:2.0.1.RELEASE'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
-    compile 'com.github.mariotaku.SQLiteQB:library:0.9.7'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.9'
+    compile 'com.github.mariotaku.SQLiteQB:library:0.9.8'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.10'
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.10'

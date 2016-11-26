@@ -56,7 +56,6 @@ import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.util.Linkify
-import android.util.Pair
 import android.util.SparseBooleanArray
 import android.view.*
 import android.view.View.OnClickListener
@@ -73,20 +72,20 @@ import kotlinx.android.synthetic.main.header_user.*
 import kotlinx.android.synthetic.main.header_user.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import kotlinx.android.synthetic.main.layout_content_pages_common.*
+import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.apache.commons.lang3.ObjectUtils
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
+import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Relationship
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
@@ -114,8 +113,7 @@ import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.*
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
@@ -163,7 +161,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     private var mHideBirthdayView: Boolean = false
     private var userEvent: UserEvent? = null
 
-    private val mFriendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<UserRelationship>> {
+    private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<UserRelationship>> {
 
         override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<UserRelationship>> {
             invalidateOptionsMenu()
@@ -194,7 +192,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         }
 
     }
-    private val mUserInfoLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableUser>> {
+    private val userInfoLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableUser>> {
 
         override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUser>> {
             val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
@@ -310,9 +308,11 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         followContainer.follow.compoundDrawablePadding = Math.round(followContainer.follow.textSize * 0.25f)
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
 
-        val task = CacheUserInfoTask(context.applicationContext)
-        task.setParams(Pair.create(user, userRelationship))
-        TaskStarter.execute(task)
+        task {
+            val resolver = contentResolver;
+            resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
+            resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(userRelationship))
+        }
         followContainer.follow.visibility = View.VISIBLE
     }
 
@@ -551,10 +551,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         args.putString(EXTRA_SCREEN_NAME, screenName)
         args.putBoolean(EXTRA_OMIT_INTENT_EXTRA, omitIntentExtra)
         if (!mGetUserInfoLoaderInitialized) {
-            lm.initLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks)
+            lm.initLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
             mGetUserInfoLoaderInitialized = true
         } else {
-            lm.restartLoader(LOADER_ID_USER, args, mUserInfoLoaderCallbacks)
+            lm.restartLoader(LOADER_ID_USER, args, userInfoLoaderCallbacks)
         }
         if (userKey == null && screenName == null) {
             cardContent!!.visibility = View.GONE
@@ -906,8 +906,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     }
                 }.then {
                     val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key, true)
-
-                    val ownedLists = microBlog.getUserListOwnerships(null)
+                    val paging = Paging()
+                    val ownedLists = microBlog.getUserListOwnerships(paging)
+                    var nextCursor = ownedLists.nextCursor
+                    while (nextCursor != 0L) {
+                        val list = microBlog.getUserListOwnerships(paging)
+                        ownedLists.addAll(list)
+                        nextCursor = list.nextCursor
+                    }
                     val userListMemberships = microBlog.getUserListMemberships(user.key.id, null, true)
                     return@then Array<ParcelableUserList>(ownedLists.size) { idx ->
                         val list = ParcelableUserListUtils.from(ownedLists[idx], user.account_key)
@@ -1250,10 +1256,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         args.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
         args.putParcelable(EXTRA_USER, user)
         if (!mGetFriendShipLoaderInitialized) {
-            lm.initLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks)
+            lm.initLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
             mGetFriendShipLoaderInitialized = true
         } else {
-            lm.restartLoader(LOADER_ID_FRIENDSHIP, args, mFriendshipLoaderCallbacks)
+            lm.restartLoader(LOADER_ID_FRIENDSHIP, args, friendshipLoaderCallbacks)
         }
     }
 
@@ -1585,19 +1591,6 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             return user.extras != null && TextUtils.equals(user_key.id, user.extras.unique_id) || TextUtils.equals(user_key.id, user.key.id)
         }
 
-    }
-
-    private class CacheUserInfoTask(
-            private val context: Context
-    ) : AbstractTask<Pair<ParcelableUser, CachedRelationship>, Any, Any?>() {
-
-        public override fun doLongOperation(args: Pair<ParcelableUser, CachedRelationship>): Any? {
-            val resolver = context.contentResolver
-            val user = args.first
-            resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
-//            resolver.insert(CachedRelationships.CONTENT_URI, CachedRelationshipValuesCreator.create(args.second))
-            return null
-        }
     }
 
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {
