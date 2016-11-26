@@ -250,8 +250,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             apiUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT)
             authType = savedInstanceState.getInt(Accounts.AUTH_TYPE)
             sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL)
-            consumerKey = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_KEY))
-            consumerSecret = Utils.trim(savedInstanceState.getString(Accounts.CONSUMER_SECRET))
+            consumerKey = savedInstanceState.getString(Accounts.CONSUMER_KEY)?.trim()
+            consumerSecret = savedInstanceState.getString(Accounts.CONSUMER_SECRET)?.trim()
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
         }
 

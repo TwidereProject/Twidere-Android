@@ -90,9 +90,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.GeoLocation;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
-import org.mariotaku.microblog.library.twitter.model.Relationship;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
@@ -125,7 +123,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -321,12 +318,6 @@ public final class Utils implements Constants {
         } catch (final IOException e) {
             return false;
         }
-        return true;
-    }
-
-    public static boolean closeSilently(final Cursor c) {
-        if (c == null) return false;
-        c.close();
         return true;
     }
 
@@ -1269,14 +1260,6 @@ public final class Utils implements Constants {
         return orig.replaceAll("\\n+", "\n");
     }
 
-    public static void updateRelationship(Context context, UserKey accountKey, UserKey userKey,
-                                          Relationship relationship) {
-        final ContentResolver resolver = context.getContentResolver();
-        final ContentValues values = ContentValuesCreator.createCachedRelationship(relationship,
-                accountKey, userKey);
-        resolver.insert(CachedRelationships.CONTENT_URI, values);
-    }
-
     private static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {
         if (pm == null || info == null || info.metaData == null || key == null || !info.metaData.containsKey(key))
             return null;
@@ -1480,13 +1463,6 @@ public final class Utils implements Constants {
             context.getApplicationContext().sendBroadcast(intent);
         }
 
-    }
-
-    @Nullable
-    public static GeoLocation getCachedGeoLocation(Context context) {
-        final Location location = getCachedLocation(context);
-        if (location == null) return null;
-        return new GeoLocation(location.getLatitude(), location.getLongitude());
     }
 
     @Nullable

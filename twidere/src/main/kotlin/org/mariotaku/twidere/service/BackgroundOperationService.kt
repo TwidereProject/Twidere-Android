@@ -219,11 +219,11 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
 
         val resolver = contentResolver
         if (result.hasData()) {
-            val message = result.data
+            val message = result.data!!
             val values = ContentValuesCreator.createDirectMessage(message)
             val deleteWhere = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
                     Expression.equalsArgs(DirectMessages.MESSAGE_ID)).sql
-            val deleteWhereArgs = arrayOf(message!!.account_key.toString(), message.id)
+            val deleteWhereArgs = arrayOf(message.account_key.toString(), message.id)
             resolver.delete(DirectMessages.Outbox.CONTENT_URI, deleteWhere, deleteWhereArgs)
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values)
             showOkMessage(R.string.direct_message_sent, false)

@@ -144,12 +144,12 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
 
         setContentView(R.layout.activity_api_editor)
 
-        val apiUrlFormat: String
+        val apiUrlFormat: String?
         val authType: Int
         val sameOAuthSigningUrl: Boolean
         val noVersionSuffix: Boolean
-        val consumerKey: String
-        val consumerSecret: String
+        val consumerKey: String?
+        val consumerSecret: String?
 
         val pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val prefApiUrlFormat = Utils.getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT)
@@ -166,12 +166,12 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         } else {
             bundle = Bundle()
         }
-        apiUrlFormat = Utils.trim(bundle.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat))
+        apiUrlFormat = bundle.getString(Accounts.API_URL_FORMAT, prefApiUrlFormat)?.trim()
         authType = bundle.getInt(Accounts.AUTH_TYPE, prefAuthType)
         sameOAuthSigningUrl = bundle.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL, prefSameOAuthSigningUrl)
         noVersionSuffix = bundle.getBoolean(Accounts.NO_VERSION_SUFFIX, prefNoVersionSuffix)
-        consumerKey = Utils.trim(bundle.getString(Accounts.CONSUMER_KEY, prefConsumerKey))
-        consumerSecret = Utils.trim(bundle.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret))
+        consumerKey = bundle.getString(Accounts.CONSUMER_KEY, prefConsumerKey)?.trim()
+        consumerSecret = bundle.getString(Accounts.CONSUMER_SECRET, prefConsumerSecret)?.trim()
 
         editAuthType.setOnCheckedChangeListener(this)
         editNoVersionSuffix.setOnCheckedChangeListener(this)

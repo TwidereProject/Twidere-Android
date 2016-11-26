@@ -79,14 +79,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
 
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onCompletion(mp: MediaPlayer) {
         updatePlayerState()
         //            mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);

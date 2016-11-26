@@ -181,12 +181,12 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
         @Throws(IOException::class)
         internal fun decodeBitmap(cr: ContentResolver, uri: Uri, o: BitmapFactory.Options): Bitmap? {
-            var `is`: InputStream? = null
+            var st: InputStream? = null
             try {
-                `is` = cr.openInputStream(uri)
-                return BitmapFactory.decodeStream(`is`, null, o)
+                st = cr.openInputStream(uri)
+                return BitmapFactory.decodeStream(st, null, o)
             } finally {
-                Utils.closeSilently(`is`)
+                Utils.closeSilently(st)
             }
         }
 

@@ -22,13 +22,13 @@ package org.mariotaku.twidere.util;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
+import com.nostra13.universalimageloader.utils.IoUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
-
-import static org.mariotaku.twidere.util.Utils.closeSilently;
 
 public class ImageValidator {
 
@@ -103,7 +103,7 @@ public class ImageValidator {
         } catch (final IOException e) {
             return INVALID;
         } finally {
-            closeSilently(raf);
+            IoUtils.closeSilently(raf);
         }
         return VALID_FOR_ALL;
     }

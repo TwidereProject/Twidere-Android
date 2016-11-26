@@ -62,7 +62,6 @@ import org.mariotaku.twidere.util.TwidereQueryBuilder.DirectMessagesQueryBuilder
 
 import java.util.HashMap;
 
-import static org.mariotaku.twidere.util.Utils.trim;
 import static org.mariotaku.twidere.util.content.DatabaseUpgradeHelper.safeUpgrade;
 
 public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements Constants {
@@ -210,10 +209,12 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                     .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
             // Here I use old consumer key/secret because it's default key for
             // older versions
-            final String pref_consumer_key = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_LEGACY);
-            final String pref_consumer_secret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_LEGACY);
-            values.put(Accounts.CONSUMER_KEY, trim(pref_consumer_key));
-            values.put(Accounts.CONSUMER_SECRET, trim(pref_consumer_secret));
+            final String prefConsumerKey = prefs.getString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY_LEGACY);
+            final String prefConsumerSecret = prefs.getString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET_LEGACY);
+            if (prefConsumerKey != null && prefConsumerSecret != null) {
+                values.put(Accounts.CONSUMER_KEY, prefConsumerKey.trim());
+                values.put(Accounts.CONSUMER_SECRET, prefConsumerSecret.trim());
+            }
             db.update(Accounts.TABLE_NAME, values, null, null);
         }
     }
