@@ -98,7 +98,7 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="?android:textColorPrimary"
                 tools:text="Name"/>
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorPrimary"
                 tools:text="\@screenname"/>
@@ -122,7 +122,7 @@
                 android:layout_marginStart="@dimen/element_spacing_small"
                 android:layout_toEndOf="@+id/screenName"
                 android:layout_toRightOf="@+id/screenName"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="@string/following_you"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="?android:textColorSecondary"
@@ -162,8 +162,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:padding="@dimen/element_spacing_small"
-                    android:singleLine="true"
                     android:text="@string/description"
                     android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
@@ -202,9 +202,9 @@
                     android:id="@+id/location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
                     android:paddingLeft="@dimen/element_spacing_small"
                     android:paddingRight="@dimen/element_spacing_small"
-                    android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorPrimary"
                     tools:text="Zhengzhou China"/>
@@ -233,10 +233,10 @@
                     android:autoLink="web"
                     android:paddingLeft="@dimen/element_spacing_small"
                     android:paddingRight="@dimen/element_spacing_small"
-                    android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorPrimary"
-                    tools:text="mariotaku.org"/>
+                    tools:text="mariotaku.org"
+                    android:maxLines="1"/>
             </LinearLayout>
 
             <LinearLayout
@@ -261,10 +261,10 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/element_spacing_small"
                     android:paddingRight="@dimen/element_spacing_small"
-                    android:singleLine="true"
                     android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="?android:textColorPrimary"
-                    tools:text="July 17, 2009 18:35 (20 tweets per day)"/>
+                    tools:text="July 17, 2009 18:35 (20 tweets per day)"
+                    android:maxLines="1"/>
             </LinearLayout>
 
             <LinearLayout
