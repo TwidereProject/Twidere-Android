@@ -35,7 +35,7 @@ subprojects {
         if (project.hasProperty('android')) {
             android {
                 compileSdkVersion 25
-                buildToolsVersion '25.0.0'
+                buildToolsVersion '25.0.1'
 
                 lintOptions {
                     abortOnError false

@@ -4,7 +4,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
-    <uses-sdk/>
+    <uses-sdk tools:overrideLibrary="android.support.customtabs"/>
 
     <uses-feature
         android:name="android.hardware.camera"
