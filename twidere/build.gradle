@@ -91,7 +91,7 @@ dependencies {
     kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.6.1'
-    kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.10'
+    kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.11'
 
     compile('com.github.mariotaku:app-theme-engine:1efc6237e1@aar') {
         transitive = true
@@ -162,7 +162,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.8'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.10'
+    compile 'com.github.mariotaku.ObjectCursor:core:0.9.11'
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile 'com.github.mariotaku.CommonsLibrary:parcel:0.9.10'
