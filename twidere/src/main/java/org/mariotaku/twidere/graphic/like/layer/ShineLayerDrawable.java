@@ -95,8 +95,8 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
         final ShineLayerState state = (ShineLayerState) mState;
         // Start point: 1/4 of icon radius
         final int fullRadius = state.getFullRadius();
-        startEnd[0] = fullRadius / 3;
-        startEnd[1] = startEnd[0] + (fullRadius / 4 * progress * 4);
+        startEnd[0] = fullRadius / 3F;
+        startEnd[1] = startEnd[0] + (fullRadius / 4F * progress * 4);
     }
 
     /**
