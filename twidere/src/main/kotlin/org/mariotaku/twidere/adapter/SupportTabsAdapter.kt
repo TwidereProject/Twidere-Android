@@ -30,6 +30,7 @@ import android.view.ViewGroup
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.model.SupportTabSpec
+import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.util.CustomTabUtils.getTabIconDrawable
 import org.mariotaku.twidere.util.Utils.announceForAccessibilityCompat
 import org.mariotaku.twidere.view.iface.PagerIndicator
@@ -44,40 +45,35 @@ class SupportTabsAdapter @JvmOverloads constructor(
         private val columns: Int = 1
 ) : SupportFixedFragmentStatePagerAdapter(fm), TabProvider, TabListener {
 
-    private val mTabs = ArrayList<SupportTabSpec>()
+    private val tab = ArrayList<SupportTabSpec>()
 
     init {
         clear()
     }
 
-    fun addTab(cls: Class<out Fragment>, args: Bundle?, name: String,
-               icon: Int?, position: Int, tag: String?) {
+    fun addTab(cls: Class<out Fragment>, args: Bundle? = null, name: String,
+               icon: DrawableHolder? = null, type: String? = null, position: Int = 0, tag: String? = null) {
         addTab(SupportTabSpec(name = name, icon = icon, cls = cls, args = args,
-                position = position, tag = tag))
-    }
-
-    fun addTab(cls: Class<out Fragment>, args: Bundle?, name: String,
-               icon: Int?, type: String, position: Int, tag: String?) {
-        addTab(SupportTabSpec(name, icon, type, cls, args, position, tag))
+                position = position, type = type, tag = tag))
     }
 
     fun addTab(spec: SupportTabSpec) {
-        mTabs.add(spec)
+        tab.add(spec)
         notifyDataSetChanged()
     }
 
     fun addTabs(specs: Collection<SupportTabSpec>) {
-        mTabs.addAll(specs)
+        tab.addAll(specs)
         notifyDataSetChanged()
     }
 
     fun clear() {
-        mTabs.clear()
+        tab.clear()
         notifyDataSetChanged()
     }
 
     override fun getCount(): Int {
-        return mTabs.size
+        return tab.size
     }
 
     override fun getItemPosition(obj: Any?): Int {
@@ -92,7 +88,7 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return mTabs[position].name
+        return tab[position].name
     }
 
     override fun getPageWidth(position: Int): Float {
@@ -100,8 +96,8 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     override fun getItem(position: Int): Fragment {
-        val fragment = Fragment.instantiate(context, mTabs[position].cls.name)
-        fragment.arguments = getPageArguments(mTabs[position], position)
+        val fragment = Fragment.instantiate(context, tab[position].cls.name)
+        fragment.arguments = getPageArguments(tab[position], position)
         return fragment
     }
 
@@ -110,15 +106,15 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     override fun getPageIcon(position: Int): Drawable {
-        return getTabIconDrawable(context, mTabs[position].icon)
+        return getTabIconDrawable(context, tab[position].icon)
     }
 
     fun getTab(position: Int): SupportTabSpec {
-        return mTabs[position]
+        return tab[position]
     }
 
     val tabs: List<SupportTabSpec>
-        get() = mTabs
+        get() = tab
 
     override fun onPageReselected(position: Int) {
         if (context !is SupportFragmentCallback) return
@@ -143,10 +139,7 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     fun setTabLabel(position: Int, label: CharSequence) {
-        for (spec in mTabs) {
-            if (position == spec.position)
-                spec.name = label
-        }
+        tab.filter { position == it.position }.forEach { it.name = label }
         notifyDataSetChanged()
     }
 

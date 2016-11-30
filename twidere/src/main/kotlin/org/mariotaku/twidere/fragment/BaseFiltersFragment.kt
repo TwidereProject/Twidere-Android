@@ -230,9 +230,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     if (TextUtils.isEmpty(text)) return
                     val values = ContentValues()
                     values.put(Filters.VALUE, text)
-                    val args = arguments
-                    val uri = args.getParcelable<Uri>(EXTRA_URI)!!
-                    contentResolver.insert(uri, values)
+                    val uri: Uri = arguments.getParcelable(EXTRA_URI)
+                    context.contentResolver.insert(uri, values)
                 }
             }
 

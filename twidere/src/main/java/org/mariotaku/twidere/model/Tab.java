@@ -1,11 +1,15 @@
 package org.mariotaku.twidere.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
@@ -24,28 +28,34 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 /**
  * Created by mariotaku on 16/3/6.
  */
+@ParcelablePlease(allFields = false)
 @CursorObject(valuesCreator = true, tableInfo = true)
 @JsonObject
-public class Tab {
+public class Tab implements Parcelable {
     @CursorField(value = Tabs._ID, excludeWrite = true)
     @JsonField(name = "id")
+    @ParcelableThisPlease
     long id;
 
     @CursorField(Tabs.NAME)
     @JsonField(name = "name")
+    @ParcelableThisPlease
     String name;
 
     @CursorField(Tabs.ICON)
     @JsonField(name = "icon")
+    @ParcelableThisPlease
     String icon;
 
     @CursorField(Tabs.TYPE)
     @JsonField(name = "type")
     @CustomTabType
+    @ParcelableThisPlease
     String type;
 
     @CursorField(Tabs.POSITION)
     @JsonField(name = "position")
+    @ParcelableThisPlease
     int position;
 
     @Nullable
@@ -58,10 +68,12 @@ public class Tab {
 
     @Nullable
     @JsonField(name = "arguments")
+    @ParcelableThisPlease
     InternalArguments internalArguments;
 
     @Nullable
     @JsonField(name = "extras")
+    @ParcelableThisPlease
     InternalExtras internalExtras;
 
     public long getId() {
@@ -103,20 +115,28 @@ public class Tab {
 
     @Nullable
     public TabArguments getArguments() {
+        if (arguments == null && internalArguments != null) {
+            arguments = internalArguments.getArguments();
+        }
         return arguments;
     }
 
     public void setArguments(@Nullable TabArguments arguments) {
         this.arguments = arguments;
+        this.internalArguments = InternalArguments.from(arguments);
     }
 
     @Nullable
     public TabExtras getExtras() {
+        if (extras == null && internalExtras != null) {
+            extras = internalExtras.getExtras();
+        }
         return extras;
     }
 
     public void setExtras(@Nullable TabExtras extras) {
         this.extras = extras;
+        this.internalExtras = InternalExtras.from(extras);
     }
 
 
@@ -149,15 +169,19 @@ public class Tab {
                 '}';
     }
 
+    @ParcelablePlease(allFields = false)
     @JsonObject
-    static class InternalArguments {
+    static class InternalArguments implements Parcelable {
         @JsonField(name = "base")
         TabArguments base;
         @JsonField(name = "text_query")
+        @ParcelableThisPlease
         TextQueryArguments textQuery;
         @JsonField(name = "user")
+        @ParcelableThisPlease
         UserArguments user;
         @JsonField(name = "user_list")
+        @ParcelableThisPlease
         UserListArguments userList;
 
         public static InternalArguments from(TabArguments arguments) {
@@ -186,16 +210,41 @@ public class Tab {
                 return base;
             }
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            Tab$InternalArgumentsParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<InternalArguments> CREATOR = new Creator<InternalArguments>() {
+            public InternalArguments createFromParcel(Parcel source) {
+                InternalArguments target = new InternalArguments();
+                Tab$InternalArgumentsParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public InternalArguments[] newArray(int size) {
+                return new InternalArguments[size];
+            }
+        };
     }
 
+    @ParcelablePlease(allFields = false)
     @JsonObject
-    static class InternalExtras {
+    static class InternalExtras implements Parcelable {
 
         @JsonField(name = "base")
         TabExtras base;
         @JsonField(name = "interactions")
+        @ParcelableThisPlease
         InteractionsTabExtras interactions;
         @JsonField(name = "home")
+        @ParcelableThisPlease
         HomeTabExtras home;
 
         public static InternalExtras from(TabExtras extras) {
@@ -221,5 +270,49 @@ public class Tab {
                 return base;
             }
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            Tab$InternalExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<InternalExtras> CREATOR = new Creator<InternalExtras>() {
+            public InternalExtras createFromParcel(Parcel source) {
+                InternalExtras target = new InternalExtras();
+                Tab$InternalExtrasParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public InternalExtras[] newArray(int size) {
+                return new InternalExtras[size];
+            }
+        };
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        TabParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<Tab> CREATOR = new Creator<Tab>() {
+        public Tab createFromParcel(Parcel source) {
+            Tab target = new Tab();
+            TabParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public Tab[] newArray(int size) {
+            return new Tab[size];
+        }
+    };
 }

@@ -22,12 +22,13 @@ package org.mariotaku.twidere.model
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.util.CompareUtils.bundleEquals
 import org.mariotaku.twidere.util.CompareUtils.objectEquals
 
 data class SupportTabSpec(
         var name: CharSequence? = null,
-        var icon: Any? = null,
+        var icon: DrawableHolder? = null,
         @CustomTabType val type: String? = null,
         var cls: Class<out Fragment>,
         var args: Bundle? = null,

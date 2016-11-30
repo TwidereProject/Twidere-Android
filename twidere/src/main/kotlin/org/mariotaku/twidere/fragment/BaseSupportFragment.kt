@@ -77,11 +77,6 @@ open class BaseSupportFragment : Fragment(), IBaseFragment {
             return activity!!.contentResolver!!
         }
 
-    fun invalidateOptionsMenu() {
-        val activity = activity ?: return
-        activity.supportInvalidateOptionsMenu()
-    }
-
     override val extraConfiguration: Bundle?
         get() {
             return null

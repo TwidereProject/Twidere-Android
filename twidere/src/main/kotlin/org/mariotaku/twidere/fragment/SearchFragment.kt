@@ -38,6 +38,7 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCal
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.provider.RecentSearchProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 
@@ -104,8 +105,10 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
 
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        adapter.addTab(StatusesSearchFragment::class.java, arguments, getString(R.string.statuses), R.drawable.ic_action_twitter, 0, null)
-        adapter.addTab(SearchUsersFragment::class.java, arguments, getString(R.string.users), R.drawable.ic_action_user, 1, null)
+        adapter.addTab(cls = StatusesSearchFragment::class.java, args = arguments,
+                name = getString(R.string.statuses), icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
+        adapter.addTab(cls = SearchUsersFragment::class.java, args = arguments,
+                name = getString(R.string.users), icon = DrawableHolder.resource(R.drawable.ic_action_user))
     }
 
 

@@ -20,8 +20,10 @@
 package org.mariotaku.twidere.fragment
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.graphics.Paint
@@ -30,35 +32,41 @@ import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
-import android.support.v4.content.res.ResourcesCompat
+import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.view.*
-import android.widget.AbsListView
+import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
 import com.afollestad.appthemeengine.ATEActivity
 import com.afollestad.appthemeengine.Config
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
+import kotlinx.android.synthetic.main.list_item_section_header.view.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.CustomTabEditorActivity
 import org.mariotaku.twidere.activity.SettingsActivity
-import org.mariotaku.twidere.model.CustomTabConfiguration
-import org.mariotaku.twidere.model.CustomTabConfiguration.CustomTabConfigurationComparator
+import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
+import org.mariotaku.twidere.adapter.ArrayAdapter
+import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.model.ParcelableAccount
+import org.mariotaku.twidere.model.Tab
+import org.mariotaku.twidere.model.TabCursorIndices
+import org.mariotaku.twidere.model.TabValuesCreator
+import org.mariotaku.twidere.model.tab.DrawableHolder
+import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
-import java.util.*
 
-class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, MultiChoiceModeListener, OnItemClickListener {
+class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
 
     private var adapter: CustomTabsAdapter? = null
 
@@ -81,7 +89,14 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         adapter = CustomTabsAdapter(context)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
-        listView.onItemClickListener = this
+        listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            val tab = adapter!!.getTab(position)
+            val df = TabEditorDialogFragment()
+            df.arguments = Bundle {
+                this[EXTRA_OBJECT] = tab
+            }
+            df.show(fragmentManager, TabEditorDialogFragment.TAG_EDIT_TAB)
+        }
         listView.adapter = adapter
         listView.emptyView = emptyView
         listView.setDropListener { from, to ->
@@ -95,19 +110,6 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         emptyIcon.setImageResource(R.drawable.ic_info_tab)
         loaderManager.initLoader(0, null, this)
         setListShown(false)
-    }
-
-    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val c = adapter!!.cursor
-        c.moveToPosition(adapter!!.getCursorPosition(position))
-        val intent = Intent(INTENT_ACTION_EDIT_TAB)
-        intent.setClass(activity, CustomTabEditorActivity::class.java)
-        intent.putExtra(EXTRA_ID, c.getLong(c.getColumnIndex(Tabs._ID)))
-        intent.putExtra(EXTRA_TYPE, c.getString(c.getColumnIndex(Tabs.TYPE)))
-        intent.putExtra(EXTRA_NAME, c.getString(c.getColumnIndex(Tabs.NAME)))
-        intent.putExtra(EXTRA_ICON, c.getString(c.getColumnIndex(Tabs.ICON)))
-        intent.putExtra(EXTRA_EXTRAS, c.getString(c.getColumnIndex(Tabs.EXTRAS)))
-        startActivityForResult(intent, REQUEST_EDIT_TAB)
     }
 
     private fun setListShown(shown: Boolean) {
@@ -154,40 +156,40 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         return CursorLoader(activity, Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_custom_tabs, menu)
-        val res = resources
-        val activity = activity
-        val accountIds = DataStoreUtils.getAccountKeys(activity)
-        val itemAdd = menu!!.findItem(R.id.add_submenu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_custom_tabs, menu)
+        val context = this.context
+        val accountIds = DataStoreUtils.getAccountKeys(context)
+        val itemAdd = menu.findItem(R.id.add_submenu)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
-            val map = CustomTabUtils.getConfigurationMap()
-            val tabs = ArrayList(
-                    map.entries)
-            Collections.sort(tabs, CustomTabConfigurationComparator.SINGLETON)
-            for ((type, conf) in tabs) {
-
-                val accountIdRequired = conf.accountRequirement == CustomTabConfiguration.ACCOUNT_REQUIRED
-
-                val intent = Intent(INTENT_ACTION_ADD_TAB)
-                intent.setClass(activity, CustomTabEditorActivity::class.java)
-                intent.putExtra(EXTRA_TYPE, type)
-
-                val subItem = subMenu.add(conf.defaultTitle)
-                val disabledByNoAccount = accountIdRequired && accountIds.size == 0
-                val disabledByDuplicateTab = conf.isSingleTab && CustomTabUtils.isTabAdded(activity, type)
+            for ((type, conf) in TabConfiguration.all()) {
+                val accountIdRequired = (conf.accountRequirement and TabConfiguration.FLAG_ACCOUNT_REQUIRED) != 0
+                val subItem = subMenu.add(0, 0, conf.sortPosition, conf.name.createString(context))
+                val disabledByNoAccount = accountIdRequired && accountIds.isEmpty()
+                val disabledByDuplicateTab = conf.isSingleTab && CustomTabUtils.isTabAdded(context, type)
                 val shouldDisable = disabledByDuplicateTab || disabledByNoAccount
                 subItem.isVisible = !shouldDisable
                 subItem.isEnabled = !shouldDisable
-                val icon = ResourcesCompat.getDrawable(res, conf.defaultIcon, null)
-                if (icon != null && activity is ATEActivity) {
-                    icon.mutate().setColorFilter(Config.textColorPrimary(activity,
-                            activity.ateKey), Mode.SRC_ATOP)
+                val icon = conf.icon.createDrawable(context)
+                if (context is ATEActivity) {
+                    icon.mutate().setColorFilter(Config.textColorPrimary(context, context.ateKey),
+                            Mode.SRC_ATOP)
                 }
                 subItem.icon = icon
-                subItem.intent = intent
+                subItem.setOnMenuItemClickListener { item ->
+                    val df = TabEditorDialogFragment()
+                    df.arguments = Bundle {
+                        this[EXTRA_TAB_TYPE] = type
+                        val adapter = adapter!!
+                        if (!adapter.isEmpty) {
+                            this[EXTRA_TAB_POSITION] = adapter.getTab(adapter.count - 1).position + 1
+                        }
+                    }
+                    df.show(fragmentManager, TabEditorDialogFragment.TAG_ADD_TAB)
+                    return@setOnMenuItemClickListener true
+                }
             }
         }
     }
@@ -257,13 +259,180 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         mode.title = resources.getQuantityString(R.plurals.Nitems_selected, count, count)
     }
 
-    class CustomTabsAdapter(context: Context) : SimpleDragSortCursorAdapter(context, R.layout.list_item_custom_tab, null, arrayOfNulls<String>(0), IntArray(0), 0) {
+    class TabEditorDialogFragment : BaseDialogFragment() {
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
 
-        private val mIconColor: Int
-        private var indices: CursorIndices? = null
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            builder.setView(R.layout.dialog_custom_tab_editor)
+            builder.setPositiveButton(R.string.save, null)
+            builder.setNegativeButton(android.R.string.cancel, null)
+            @CustomTabType
+            val tabType: String
+            val tab: Tab
+            val conf: TabConfiguration
+            when (tag) {
+                TAG_ADD_TAB -> {
+                    tabType = arguments.getString(EXTRA_TAB_TYPE)
+                    tab = Tab()
+                    conf = TabConfiguration.ofType(tabType)!!
+                    tab.type = tabType
+                    tab.icon = conf.icon.persistentKey
+                    tab.position = arguments.getInt(EXTRA_TAB_POSITION)
+                }
+                TAG_EDIT_TAB -> {
+                    tab = arguments.getParcelable(EXTRA_OBJECT)
+                    tabType = tab.type
+                    conf = TabConfiguration.ofType(tabType)!!
+                }
+                else -> {
+                    throw AssertionError()
+                }
+            }
+
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                val tabName = dialog.findViewById(R.id.tabName) as EditText
+                val iconSpinner = dialog.findViewById(R.id.tab_icon_spinner) as Spinner
+                val accountSpinner = dialog.findViewById(R.id.account_spinner) as Spinner
+                val accountContainer = dialog.findViewById(R.id.account_container)!!
+                val accountSectionHeader = accountContainer.sectionHeader
+                val extraConfigContainer = dialog.findViewById(R.id.extra_config_container) as LinearLayout
+
+                val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+
+                val iconsAdapter = TabIconsAdapter(context)
+                val accountsAdapter = AccountsSpinnerAdapter(context)
+                iconSpinner.adapter = iconsAdapter
+                accountSpinner.adapter = accountsAdapter
+
+                iconsAdapter.setData(DrawableHolder.builtins())
+
+                tabName.setText(tab.name ?: conf.name.createString(context))
+                iconSpinner.setSelection(iconsAdapter.findPositionByKey(tab.icon))
+                accountSectionHeader.setText(R.string.account)
+
+                val hasAccount = conf.accountRequirement and TabConfiguration.FLAG_HAS_ACCOUNT != 0
+                if (hasAccount) {
+                    accountContainer.visibility = View.VISIBLE
+                    val accountIdRequired = conf.accountRequirement and TabConfiguration.FLAG_ACCOUNT_REQUIRED != 0
+                    accountsAdapter.clear()
+                    if (!accountIdRequired) {
+                        accountsAdapter.add(ParcelableAccount.dummyCredentials())
+                    }
+                    val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
+                    accountsAdapter.addAll(DataStoreUtils.getCredentialsList(context, false, officialKeyOnly))
+                    accountsAdapter.setDummyItemText(R.string.activated_accounts)
+
+                    tab.arguments?.accountKeys?.firstOrNull()?.let { key ->
+                        accountSpinner.setSelection(accountsAdapter.findPositionByKey(key))
+                    }
+                } else {
+                    accountContainer.visibility = View.GONE
+                }
+
+                val extraConfigurations = conf.getExtraConfigurations(context).orEmpty()
+
+                fun inflateHeader(title: String): View {
+                    val headerView = LayoutInflater.from(context).inflate(R.layout.list_item_section_header,
+                            extraConfigContainer, false)
+                    headerView.sectionHeader.text = title
+                    return headerView
+                }
+
+                extraConfigurations.forEachIndexed { idx, extraConf ->
+                    extraConf.headerTitle?.let {
+                        extraConfigContainer.addView(inflateHeader(it.createString(context)))
+                    }
+                    val view = extraConf.onCreateView(context, extraConfigContainer)
+                    extraConf.onViewCreated(context, view, this)
+                    conf.readExtraConfigurationFrom(tab, extraConf)
+                    extraConfigContainer.addView(view)
+                }
+
+                positiveButton.setOnClickListener {
+                    tab.name = tabName.text.toString()
+                    tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
+                    tab.arguments = CustomTabUtils.newTabArguments(tabType)
+                    if (hasAccount) {
+                        val account = accountSpinner.selectedItem as ParcelableAccount
+                        if (!account.is_dummy) {
+                            tab.arguments?.accountKeys = arrayOf(account.account_key)
+                        } else {
+                            tab.arguments?.accountKeys = null
+                        }
+                    }
+                    tab.extras = CustomTabUtils.newTabExtras(tabType)
+                    extraConfigurations.forEach {
+                        conf.applyExtraConfigurationTo(tab, it)
+                    }
+                    context.contentResolver.insert(Tabs.CONTENT_URI, TabValuesCreator.create(tab))
+                    dismiss()
+                }
+            }
+            return dialog
+        }
+
+        companion object {
+
+            const val TAG_EDIT_TAB = "edit_tab"
+            const val TAG_ADD_TAB = "add_tab"
+        }
+    }
+
+    internal class TabIconsAdapter(context: Context) : ArrayAdapter<DrawableHolder>(context, R.layout.spinner_item_custom_tab_icon) {
+
+        private val iconColor: Int
 
         init {
-            mIconColor = ThemeUtils.getThemeForegroundColor(context)
+            setDropDownViewResource(R.layout.list_item_two_line_small)
+            iconColor = ThemeUtils.getThemeForegroundColor(context)
+        }
+
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = super.getDropDownView(position, convertView, parent)
+            view.findViewById(android.R.id.text2).visibility = View.GONE
+            val text1 = view.findViewById(android.R.id.text1) as TextView
+            val item = getItem(position)
+            text1.text = item.name
+            bindIconView(item, view)
+            return view
+        }
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+            val view = super.getView(position, convertView, parent)
+            bindIconView(getItem(position), view)
+            return view
+        }
+
+        fun setData(list: List<DrawableHolder>?) {
+            clear()
+            if (list == null) return
+            addAll(list)
+        }
+
+        private fun bindIconView(item: DrawableHolder, view: View) {
+            val icon = view.findViewById(android.R.id.icon) as ImageView
+            icon.setColorFilter(iconColor, Mode.SRC_ATOP)
+            icon.setImageDrawable(item.createDrawable(icon.context))
+        }
+
+        fun findPositionByKey(key: String): Int {
+            return (0 until count).indexOfFirst { getItem(it).persistentKey == key }
+        }
+
+    }
+
+    class CustomTabsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
+            R.layout.list_item_custom_tab, null, emptyArray(), intArrayOf(), 0) {
+
+        private val iconColor: Int
+        private var indices: TabCursorIndices? = null
+
+        init {
+            iconColor = ThemeUtils.getThemeForegroundColor(context)
         }
 
         override fun bindView(view: View, context: Context?, cursor: Cursor) {
@@ -284,19 +453,19 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 holder.text1.paintFlags = holder.text1.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
                 holder.text2.setText(R.string.invalid_tab)
             }
-            val icon = CustomTabUtils.getTabIconDrawable(context, CustomTabUtils.getTabIconObject(iconKey))
+            val icon = CustomTabUtils.getTabIconDrawable(context, DrawableHolder.parse(iconKey))
             holder.icon.visibility = View.VISIBLE
             if (icon != null) {
                 holder.icon.setImageDrawable(icon)
             } else {
                 holder.icon.setImageResource(R.drawable.ic_action_list)
             }
-            holder.icon.setColorFilter(mIconColor, Mode.SRC_ATOP)
+            holder.icon.setColorFilter(iconColor, Mode.SRC_ATOP)
         }
 
         override fun changeCursor(cursor: Cursor?) {
             if (cursor != null) {
-                indices = CursorIndices(cursor)
+                indices = TabCursorIndices(cursor)
             }
             super.changeCursor(cursor)
         }
@@ -311,20 +480,10 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             return view
         }
 
-        internal class CursorIndices(cursor: Cursor) {
-            val _id: Int
-            val name: Int
-            val icon: Int
-            val type: Int
-            val arguments: Int
 
-            init {
-                _id = cursor.getColumnIndex(Tabs._ID)
-                icon = cursor.getColumnIndex(Tabs.ICON)
-                name = cursor.getColumnIndex(Tabs.NAME)
-                type = cursor.getColumnIndex(Tabs.TYPE)
-                arguments = cursor.getColumnIndex(Tabs.ARGUMENTS)
-            }
+        fun getTab(position: Int): Tab {
+            cursor.moveToPosition(position)
+            return indices!!.newObject(cursor)
         }
 
     }

@@ -3,6 +3,7 @@ package org.mariotaku.twidere.model.tab.argument;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -23,13 +24,15 @@ public class TabArguments implements TwidereConstants {
     String accountId;
 
     @JsonField(name = "account_keys")
+    @Nullable
     UserKey[] accountKeys;
 
+    @Nullable
     public UserKey[] getAccountKeys() {
         return accountKeys;
     }
 
-    public void setAccountKeys(UserKey[] accountKeys) {
+    public void setAccountKeys(@Nullable UserKey[] accountKeys) {
         this.accountKeys = accountKeys;
     }
 
@@ -39,7 +42,9 @@ public class TabArguments implements TwidereConstants {
 
     @CallSuper
     public void copyToBundle(@NonNull Bundle bundle) {
+        final UserKey[] accountKeys = this.accountKeys;
         if (!ArrayUtils.isEmpty(accountKeys)) {
+            assert accountKeys != null;
             for (UserKey key : accountKeys) {
                 if (key == null) return;
             }

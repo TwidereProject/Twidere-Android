@@ -80,7 +80,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
         } else {
             activity.setTitle(R.string.user_list)
         }
-        invalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     fun getUserListInfo(omitIntentExtra: Boolean) {
@@ -150,9 +150,9 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID))
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME))
         }
-        adapter.addTab(UserListTimelineFragment::class.java, tabArgs, getString(R.string.statuses), null, 0, null)
-        adapter.addTab(UserListMembersFragment::class.java, tabArgs, getString(R.string.members), null, 1, null)
-        adapter.addTab(UserListSubscribersFragment::class.java, tabArgs, getString(R.string.subscribers), null, 2, null)
+        adapter.addTab(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.statuses))
+        adapter.addTab(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
+        adapter.addTab(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.subscribers))
     }
 
     override fun onStart() {

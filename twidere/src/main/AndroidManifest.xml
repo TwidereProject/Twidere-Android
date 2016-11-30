@@ -342,19 +342,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CustomTabEditorActivity"
-            android:exported="false"
-            android:label="@string/add_tab"
-            android:theme="@style/Theme.Twidere.Dialog"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.ADD_TAB"/>
-                <action android:name="org.mariotaku.twidere.EDIT_TAB"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".activity.CreateComposeShortcutActivity"
             android:label="@string/compose"
             android:theme="@style/Theme.Twidere.NoDisplay">

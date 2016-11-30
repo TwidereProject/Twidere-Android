@@ -111,6 +111,7 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent
 import org.mariotaku.twidere.model.message.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
+import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*
@@ -163,7 +164,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
 
         override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableRelationship>> {
-            invalidateOptionsMenu()
+            activity.invalidateOptionsMenu()
             val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
             if (user != null && user.key == accountKey) {
@@ -279,7 +280,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         } else {
             relationship = userRelationship
         }
-        invalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
         followContainer.follow.isEnabled = userRelationship.blocking || !userRelationship.blocked_by
         if (userRelationship.blocked_by) {
             pagesErrorContainer!!.visibility = View.GONE
@@ -520,7 +521,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             profileBirthdayBanner.visibility = View.GONE
         }
         updateTitleAlpha()
-        invalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
         updateSubtitle()
     }
 
@@ -586,7 +587,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
     @Subscribe
     fun notifyTaskStateChanged(event: TaskStateChangedEvent) {
-        invalidateOptionsMenu()
+        activity.invalidateOptionsMenu()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -1348,16 +1349,16 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable<Parcelable>(EXTRA_USER_KEY))
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
         }
-        pagerAdapter!!.addTab(UserTimelineFragment::class.java, tabArgs, getString(R.string.statuses),
-                R.drawable.ic_action_quote, TAB_TYPE_STATUSES, TAB_POSITION_STATUSES, null)
-        pagerAdapter!!.addTab(UserMediaTimelineFragment::class.java, tabArgs, getString(R.string.media),
-                R.drawable.ic_action_gallery, TAB_TYPE_MEDIA, TAB_POSITION_MEDIA, null)
+        pagerAdapter!!.addTab(cls = UserTimelineFragment::class.java, args = tabArgs, name = getString(R.string.statuses),
+                icon = DrawableHolder.resource(R.drawable.ic_action_quote), type = TAB_TYPE_STATUSES, position = TAB_POSITION_STATUSES)
+        pagerAdapter!!.addTab(cls = UserMediaTimelineFragment::class.java, args = tabArgs, name = getString(R.string.media),
+                icon = DrawableHolder.resource(R.drawable.ic_action_gallery), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
         if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
-            pagerAdapter!!.addTab(UserFavoritesFragment::class.java, tabArgs, getString(R.string.favorites),
-                    R.drawable.ic_action_star, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null)
+            pagerAdapter!!.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.favorites),
+                    icon = DrawableHolder.resource(R.drawable.ic_action_star), type = TAB_TYPE_FAVORITES, position = TAB_POSITION_FAVORITES)
         } else {
-            pagerAdapter!!.addTab(UserFavoritesFragment::class.java, tabArgs, getString(R.string.likes),
-                    R.drawable.ic_action_heart, TAB_TYPE_FAVORITES, TAB_POSITION_FAVORITES, null)
+            pagerAdapter!!.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.likes),
+                    icon = DrawableHolder.resource(R.drawable.ic_action_heart), type = TAB_TYPE_FAVORITES, position = TAB_POSITION_FAVORITES)
         }
     }
 

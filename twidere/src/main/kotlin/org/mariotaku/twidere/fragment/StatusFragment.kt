@@ -446,7 +446,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             setState(STATE_ERROR)
             errorText.text = Utils.getErrorMessage(context, data.exception)
         }
-        invalidateOptionsMenu()
+        activity.supportInvalidateOptionsMenu()
     }
 
     override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableStatus>>) {

@@ -104,7 +104,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     sourceValues.add(values)
                 }
             }
-            val resolver = contentResolver
+            val resolver = context.contentResolver
             ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeys, null)
             ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywords, null)
             ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, sources, null)

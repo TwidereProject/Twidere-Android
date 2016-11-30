@@ -19,11 +19,9 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.content.ContentResolver
 import android.content.Context
 import android.support.v4.app.DialogFragment
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -40,23 +38,6 @@ open class BaseDialogFragment : DialogFragment(), Constants {
     lateinit var validator: TwidereValidator
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
-
-
-    val application: TwidereApplication?
-        get() {
-            val activity = activity
-            if (activity != null) return activity.application as TwidereApplication
-            return null
-        }
-
-    val contentResolver: ContentResolver
-        get() = activity.contentResolver
-
-    fun getSystemService(name: String): Any? {
-        val activity = activity
-        if (activity != null) return activity.getSystemService(name)
-        return null
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

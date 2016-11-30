@@ -250,7 +250,7 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>,
 
         override fun onClick(dialog: DialogInterface, which: Int) {
             val id = arguments.getLong(EXTRA_ID)
-            val resolver = contentResolver
+            val resolver = context.contentResolver
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val where = Expression.equalsArgs(Accounts._ID).sql

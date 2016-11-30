@@ -17,7 +17,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -35,8 +36,9 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:maxLines="1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"/>
 
     <CheckBox
         android:id="@android:id/checkbox"
@@ -49,6 +51,6 @@
         android:layout_weight="0"
         android:clickable="false"
         android:focusable="false"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

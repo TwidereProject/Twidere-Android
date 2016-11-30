@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeightSmall"
+    android:minHeight="?android:listPreferredItemHeight"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
