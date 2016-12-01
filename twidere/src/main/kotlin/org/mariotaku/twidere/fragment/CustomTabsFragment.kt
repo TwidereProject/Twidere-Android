@@ -34,6 +34,7 @@ import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
+import android.util.SparseArray
 import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
@@ -60,6 +61,7 @@ import org.mariotaku.twidere.model.TabCursorIndices
 import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
+import org.mariotaku.twidere.model.tab.iface.AccountCallback
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -165,7 +167,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             val subMenu = itemAdd.subMenu
             subMenu.clear()
             for ((type, conf) in TabConfiguration.all()) {
-                val accountIdRequired = (conf.accountRequirement and TabConfiguration.FLAG_ACCOUNT_REQUIRED) != 0
+                val accountIdRequired = (conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_REQUIRED) != 0
                 val subItem = subMenu.add(0, 0, conf.sortPosition, conf.name.createString(context))
                 val disabledByNoAccount = accountIdRequired && accountIds.isEmpty()
                 val disabledByDuplicateTab = conf.isSingleTab && CustomTabUtils.isTabAdded(context, type)
@@ -259,16 +261,12 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         mode.title = resources.getQuantityString(R.plurals.Nitems_selected, count, count)
     }
 
-    class TabEditorDialogFragment : BaseDialogFragment() {
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
+    class TabEditorDialogFragment : BaseDialogFragment(), DialogInterface.OnShowListener, AccountCallback {
 
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
-            builder.setView(R.layout.dialog_custom_tab_editor)
-            builder.setPositiveButton(R.string.save, null)
-            builder.setNegativeButton(android.R.string.cancel, null)
+        private val activityResultMap: SparseArray<TabConfiguration.ExtraConfiguration> = SparseArray()
+
+        override fun onShow(dialog: DialogInterface) {
+            dialog as AlertDialog
             @CustomTabType
             val tabType: String
             val tab: Tab
@@ -292,87 +290,131 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 }
             }
 
-            val dialog = builder.create()
-            dialog.setOnShowListener {
-                val tabName = dialog.findViewById(R.id.tabName) as EditText
-                val iconSpinner = dialog.findViewById(R.id.tab_icon_spinner) as Spinner
-                val accountSpinner = dialog.findViewById(R.id.account_spinner) as Spinner
-                val accountContainer = dialog.findViewById(R.id.account_container)!!
-                val accountSectionHeader = accountContainer.sectionHeader
-                val extraConfigContainer = dialog.findViewById(R.id.extra_config_container) as LinearLayout
+            val tabName = dialog.findViewById(R.id.tabName) as EditText
+            val iconSpinner = dialog.findViewById(R.id.tab_icon_spinner) as Spinner
+            val accountSpinner = dialog.findViewById(R.id.account_spinner) as Spinner
+            val accountContainer = dialog.findViewById(R.id.account_container)!!
+            val accountSectionHeader = accountContainer.sectionHeader
+            val extraConfigContainer = dialog.findViewById(R.id.extra_config_container) as LinearLayout
 
-                val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
-                val iconsAdapter = TabIconsAdapter(context)
-                val accountsAdapter = AccountsSpinnerAdapter(context)
-                iconSpinner.adapter = iconsAdapter
-                accountSpinner.adapter = accountsAdapter
+            val iconsAdapter = TabIconsAdapter(context)
+            val accountsAdapter = AccountsSpinnerAdapter(context)
+            iconSpinner.adapter = iconsAdapter
+            accountSpinner.adapter = accountsAdapter
 
-                iconsAdapter.setData(DrawableHolder.builtins())
+            iconsAdapter.setData(DrawableHolder.builtins())
 
-                tabName.setText(tab.name ?: conf.name.createString(context))
-                iconSpinner.setSelection(iconsAdapter.findPositionByKey(tab.icon))
-                accountSectionHeader.setText(R.string.account)
+            tabName.hint = conf.name.createString(context)
+            tabName.setText(tab.name)
+            iconSpinner.setSelection(iconsAdapter.findPositionByKey(tab.icon))
+            accountSectionHeader.setText(R.string.account)
 
-                val hasAccount = conf.accountRequirement and TabConfiguration.FLAG_HAS_ACCOUNT != 0
-                if (hasAccount) {
-                    accountContainer.visibility = View.VISIBLE
-                    val accountIdRequired = conf.accountRequirement and TabConfiguration.FLAG_ACCOUNT_REQUIRED != 0
-                    accountsAdapter.clear()
-                    if (!accountIdRequired) {
-                        accountsAdapter.add(ParcelableAccount.dummyCredentials())
-                    }
-                    val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
-                    accountsAdapter.addAll(DataStoreUtils.getCredentialsList(context, false, officialKeyOnly))
-                    accountsAdapter.setDummyItemText(R.string.activated_accounts)
+            val editMode = tag == TAG_EDIT_TAB
 
-                    tab.arguments?.accountKeys?.firstOrNull()?.let { key ->
-                        accountSpinner.setSelection(accountsAdapter.findPositionByKey(key))
-                    }
-                } else {
-                    accountContainer.visibility = View.GONE
+            val hasAccount = conf.accountFlags and TabConfiguration.FLAG_HAS_ACCOUNT != 0
+            val accountMutable = conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_MUTABLE != 0
+            if (hasAccount && (accountMutable || !editMode)) {
+                accountContainer.visibility = View.VISIBLE
+                val accountIdRequired = conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_REQUIRED != 0
+                accountsAdapter.clear()
+                if (!accountIdRequired) {
+                    accountsAdapter.add(ParcelableAccount.dummyCredentials())
                 }
+                val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
+                accountsAdapter.addAll(DataStoreUtils.getCredentialsList(context, false, officialKeyOnly))
+                accountsAdapter.setDummyItemText(R.string.activated_accounts)
 
-                val extraConfigurations = conf.getExtraConfigurations(context).orEmpty()
-
-                fun inflateHeader(title: String): View {
-                    val headerView = LayoutInflater.from(context).inflate(R.layout.list_item_section_header,
-                            extraConfigContainer, false)
-                    headerView.sectionHeader.text = title
-                    return headerView
+                tab.arguments?.accountKeys?.firstOrNull()?.let { key ->
+                    accountSpinner.setSelection(accountsAdapter.findPositionByKey(key))
                 }
-
-                extraConfigurations.forEachIndexed { idx, extraConf ->
-                    extraConf.headerTitle?.let {
-                        extraConfigContainer.addView(inflateHeader(it.createString(context)))
-                    }
-                    val view = extraConf.onCreateView(context, extraConfigContainer)
-                    extraConf.onViewCreated(context, view, this)
-                    conf.readExtraConfigurationFrom(tab, extraConf)
-                    extraConfigContainer.addView(view)
-                }
-
-                positiveButton.setOnClickListener {
-                    tab.name = tabName.text.toString()
-                    tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
-                    tab.arguments = CustomTabUtils.newTabArguments(tabType)
-                    if (hasAccount) {
-                        val account = accountSpinner.selectedItem as ParcelableAccount
-                        if (!account.is_dummy) {
-                            tab.arguments?.accountKeys = arrayOf(account.account_key)
-                        } else {
-                            tab.arguments?.accountKeys = null
-                        }
-                    }
-                    tab.extras = CustomTabUtils.newTabExtras(tabType)
-                    extraConfigurations.forEach {
-                        conf.applyExtraConfigurationTo(tab, it)
-                    }
-                    context.contentResolver.insert(Tabs.CONTENT_URI, TabValuesCreator.create(tab))
-                    dismiss()
-                }
+            } else {
+                accountContainer.visibility = View.GONE
             }
+
+            val extraConfigurations = conf.getExtraConfigurations(context).orEmpty()
+
+            fun inflateHeader(title: String): View {
+                val headerView = LayoutInflater.from(context).inflate(R.layout.list_item_section_header,
+                        extraConfigContainer, false)
+                headerView.sectionHeader.text = title
+                return headerView
+            }
+
+            extraConfigurations.forEachIndexed { idx, extraConf ->
+                extraConf.onCreate(context)
+                extraConf.position = idx + 1
+                // Hide immutable settings in edit mode
+                if (editMode && !extraConf.isMutable) return@forEachIndexed
+                extraConf.headerTitle?.let {
+                    // Inflate header with headerTitle
+                    extraConfigContainer.addView(inflateHeader(it.createString(context)))
+                }
+                val view = extraConf.onCreateView(context, extraConfigContainer)
+                extraConf.onViewCreated(context, view, this)
+                conf.readExtraConfigurationFrom(tab, extraConf)
+                extraConfigContainer.addView(view)
+            }
+
+            positiveButton.setOnClickListener {
+                tab.name = tabName.text.toString()
+                tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
+                tab.arguments = CustomTabUtils.newTabArguments(tabType)
+                if (hasAccount) {
+                    val account = accountSpinner.selectedItem as ParcelableAccount
+                    if (!account.is_dummy) {
+                        tab.arguments?.accountKeys = arrayOf(account.account_key)
+                    } else {
+                        tab.arguments?.accountKeys = null
+                    }
+                }
+                tab.extras = CustomTabUtils.newTabExtras(tabType)
+                extraConfigurations.forEach {
+                    // Make sure immutable configuration skipped in edit mode
+                    if (editMode && !it.isMutable) return@forEach
+                    if (!conf.applyExtraConfigurationTo(tab, it)) {
+                        return@setOnClickListener
+                    }
+                }
+                when (tag) {
+                    TAG_EDIT_TAB -> {
+                        val where = Expression.equalsArgs(Tabs._ID).sql
+                        val whereArgs = arrayOf(tab.id.toString())
+                        context.contentResolver.update(Tabs.CONTENT_URI, TabValuesCreator.create(tab), where, whereArgs)
+                    }
+                    TAG_ADD_TAB -> {
+                        context.contentResolver.insert(Tabs.CONTENT_URI, TabValuesCreator.create(tab))
+                    }
+                }
+                dismiss()
+            }
+        }
+
+        override fun getAccount(): ParcelableAccount {
+            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as ParcelableAccount
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            builder.setView(R.layout.dialog_custom_tab_editor)
+            builder.setPositiveButton(R.string.save, null)
+            builder.setNegativeButton(android.R.string.cancel, null)
+            val dialog = builder.create()
+            dialog.setOnShowListener(this)
             return dialog
+        }
+
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            val extraConf = activityResultMap.get(requestCode)
+            activityResultMap.remove(requestCode)
+            extraConf?.onActivityResult(requestCode and 0xFF, resultCode, data)
+        }
+
+        fun startExtraConfigurationActivityForResult(extraConf: TabConfiguration.ExtraConfiguration, intent: Intent, requestCode: Int) {
+            val requestCodeInternal = extraConf.position shl 8 and 0xFF00 or (requestCode and 0xFF)
+            activityResultMap.put(requestCodeInternal, extraConf)
+            startActivityForResult(intent, requestCodeInternal)
         }
 
         companion object {

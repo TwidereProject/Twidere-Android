@@ -18,12 +18,13 @@
   -->
 
 <LinearLayout
+    android:id="@+id/listItem"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeight"
+    android:minHeight="?listPreferredItemHeight"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
@@ -50,7 +51,7 @@
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             tools:text="User name"/>
@@ -59,7 +60,7 @@
             android:id="@android:id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="\@screenname"/>
     </LinearLayout>

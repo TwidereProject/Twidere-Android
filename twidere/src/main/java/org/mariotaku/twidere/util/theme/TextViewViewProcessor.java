@@ -4,11 +4,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.TextView;
 
 import com.afollestad.appthemeengine.Config;
 import com.afollestad.appthemeengine.viewprocessors.ViewProcessor;
+
+import org.mariotaku.twidere.util.view.SimpleTextWatcher;
 
 import static org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_DARK;
 
@@ -52,21 +53,4 @@ public class TextViewViewProcessor implements ViewProcessor<TextView, Void> {
         }
     }
 
-    abstract static class SimpleTextWatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    }
 }

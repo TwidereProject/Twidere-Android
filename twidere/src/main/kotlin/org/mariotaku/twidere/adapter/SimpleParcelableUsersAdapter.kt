@@ -27,7 +27,7 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Utils.configBaseAdapter
-import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
+import org.mariotaku.twidere.util.display
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 
 class SimpleParcelableUsersAdapter @JvmOverloads constructor(
@@ -61,16 +61,7 @@ class SimpleParcelableUsersAdapter @JvmOverloads constructor(
 
         val user = getItem(position)
 
-        holder.text1.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-                getUserTypeIconRes(user.is_verified, user.is_protected), 0)
-        holder.text1.text = userColorNameManager.getUserNickname(user.key, user.name)
-        holder.text2.text = String.format("@%s", user.screen_name)
-        holder.icon.visibility = if (isProfileImageDisplayed) View.VISIBLE else View.GONE
-        if (isProfileImageDisplayed) {
-            mediaLoader.displayProfileImage(holder.icon, user)
-        } else {
-            mediaLoader.cancelDisplayTask(holder.icon)
-        }
+        holder.display(user, mediaLoader, userColorNameManager, isProfileImageDisplayed)
         return view
     }
 

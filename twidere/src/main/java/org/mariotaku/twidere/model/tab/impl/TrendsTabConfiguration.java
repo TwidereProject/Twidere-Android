@@ -26,9 +26,9 @@ public class TrendsTabConfiguration extends TabConfiguration {
         return DrawableHolder.Builtin.TRENDS;
     }
 
-    @AccountRequirement
+    @AccountFlags
     @Override
-    public int getAccountRequirement() {
+    public int getAccountFlags() {
         return FLAG_HAS_ACCOUNT;
     }
 

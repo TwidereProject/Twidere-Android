@@ -33,23 +33,23 @@ public class InteractionsTabConfiguration extends TabConfiguration {
         return DrawableHolder.Builtin.NOTIFICATIONS;
     }
 
-    @AccountRequirement
+    @AccountFlags
     @Override
-    public int getAccountRequirement() {
-        return FLAG_HAS_ACCOUNT | FLAG_ACCOUNT_MULTIPLE;
+    public int getAccountFlags() {
+        return FLAG_HAS_ACCOUNT | FLAG_ACCOUNT_MULTIPLE | FLAG_ACCOUNT_MUTABLE;
     }
 
     @Nullable
     @Override
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return new ExtraConfiguration[]{
-                new BooleanExtraConfiguration(EXTRA_MY_FOLLOWING_ONLY, false).title(R.string.following_only),
-                new BooleanExtraConfiguration(EXTRA_MENTIONS_ONLY, false).title(R.string.mentions_only),
+                new BooleanExtraConfiguration(EXTRA_MY_FOLLOWING_ONLY, false).title(R.string.following_only).mutable(true),
+                new BooleanExtraConfiguration(EXTRA_MENTIONS_ONLY, false).title(R.string.mentions_only).mutable(true),
         };
     }
 
     @Override
-    public void applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final InteractionsTabExtras extras = (InteractionsTabExtras) tab.getExtras();
         assert extras != null;
         switch (extraConf.getKey()) {
@@ -62,12 +62,13 @@ public class InteractionsTabConfiguration extends TabConfiguration {
                 break;
             }
         }
+        return true;
     }
 
     @Override
-    public void readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final InteractionsTabExtras extras = (InteractionsTabExtras) tab.getExtras();
-        if (extras == null) return;
+        if (extras == null) return false;
         switch (extraConf.getKey()) {
             case EXTRA_MY_FOLLOWING_ONLY: {
                 ((BooleanExtraConfiguration) extraConf).setValue(extras.isMyFollowingOnly());
@@ -78,6 +79,7 @@ public class InteractionsTabConfiguration extends TabConfiguration {
                 break;
             }
         }
+        return true;
     }
 
     @NonNull

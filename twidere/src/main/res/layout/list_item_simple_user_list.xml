@@ -23,6 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
+    android:minHeight="?listPreferredItemHeight"
     android:orientation="horizontal"
     android:padding="@dimen/element_spacing_normal">
 
@@ -41,8 +42,8 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:paddingBottom="@dimen/element_spacing_xsmall"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
@@ -52,11 +53,11 @@
             android:id="@+id/createdBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:paddingTop="@dimen/element_spacing_xsmall"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="Created by Mariotaku"/>
+            tools:text="Created by User"/>
     </LinearLayout>
 
     <org.mariotaku.twidere.view.ProfileImageView
@@ -64,7 +65,10 @@
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_card_list_item"
         android:layout_height="@dimen/icon_size_card_list_item"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="0"
         android:contentDescription="@string/profile_image"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        tools:src="@mipmap/ic_launcher"/>
 </LinearLayout>

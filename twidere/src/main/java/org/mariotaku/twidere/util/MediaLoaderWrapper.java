@@ -35,6 +35,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
+import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.imageloader.OvalBitmapDisplayer;
@@ -174,6 +175,10 @@ public class MediaLoaderWrapper {
         } else {
             displayProfileImage(view, user.profile_image_url);
         }
+    }
+
+    public void displayProfileImage(final ImageView view, final ParcelableUserList userList) {
+        displayProfileImage(view, userList.user_profile_image_url);
     }
 
     public void displayProfileImage(final ImageView view, final ParcelableAccount account) {

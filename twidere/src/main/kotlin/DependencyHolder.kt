@@ -62,6 +62,12 @@ class DependencyHolder internal constructor(context: Context) {
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
         internal set
+    @Inject
+    lateinit var mediaLoader: MediaLoaderWrapper
+        internal set
+    @Inject
+    lateinit var userColorNameManager: UserColorNameManager
+        internal set
 
     init {
         GeneralComponentHelper.build(context).inject(this)

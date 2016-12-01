@@ -1,11 +1,12 @@
 package org.mariotaku.twidere.model.tab;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.annotation.CallSuper;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment;
 import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.model.tab.impl.DMTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.FavoriteTimelineTabConfiguration;
@@ -38,9 +40,10 @@ import kotlin.Pair;
 
 public abstract class TabConfiguration {
 
-    public static final int FLAG_HAS_ACCOUNT = 0b001;
-    public static final int FLAG_ACCOUNT_REQUIRED = 0b010;
-    public static final int FLAG_ACCOUNT_MULTIPLE = 0b100;
+    public static final int FLAG_HAS_ACCOUNT = 0b0001;
+    public static final int FLAG_ACCOUNT_REQUIRED = 0b0010;
+    public static final int FLAG_ACCOUNT_MULTIPLE = 0b0100;
+    public static final int FLAG_ACCOUNT_MUTABLE = 0b1000;
 
     @NonNull
     public abstract StringHolder getName();
@@ -48,8 +51,8 @@ public abstract class TabConfiguration {
     @NonNull
     public abstract DrawableHolder getIcon();
 
-    @AccountRequirement
-    public abstract int getAccountRequirement();
+    @AccountFlags
+    public abstract int getAccountFlags();
 
     public boolean isSingleTab() {
         return false;
@@ -67,16 +70,17 @@ public abstract class TabConfiguration {
     @NonNull
     public abstract Class<? extends Fragment> getFragmentClass();
 
-    public void applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
-
+    public boolean applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+        return true;
     }
 
-    public void readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
-
+    public boolean readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+        return false;
     }
 
-    @IntDef(value = {FLAG_HAS_ACCOUNT, FLAG_ACCOUNT_REQUIRED, FLAG_ACCOUNT_MULTIPLE}, flag = true)
-    protected @interface AccountRequirement {
+    @IntDef(value = {FLAG_HAS_ACCOUNT, FLAG_ACCOUNT_REQUIRED, FLAG_ACCOUNT_MULTIPLE,
+            FLAG_ACCOUNT_MUTABLE}, flag = true)
+    protected @interface AccountFlags {
 
     }
 
@@ -133,6 +137,9 @@ public abstract class TabConfiguration {
         private StringHolder title;
         @Nullable
         private StringHolder headerTitle;
+        private int position;
+        private boolean mutable;
+        private Context context;
 
         protected ExtraConfiguration(String key) {
             this.key = key;
@@ -179,10 +186,44 @@ public abstract class TabConfiguration {
             return this;
         }
 
+        public int getPosition() {
+            return position;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public boolean isMutable() {
+            return mutable;
+        }
+
+        public void setMutable(boolean mutable) {
+            this.mutable = mutable;
+        }
+
+        public ExtraConfiguration mutable(boolean mutable) {
+            setMutable(mutable);
+            return this;
+        }
+
         @NonNull
         public abstract View onCreateView(Context context, ViewGroup parent);
 
-        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull DialogFragment fragment) {
+        @CallSuper
+        public void onCreate(Context context) {
+            this.context = context;
+        }
+
+        public final Context getContext() {
+            return context;
+        }
+
+        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull TabEditorDialogFragment fragment) {
+
+        }
+
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         }
     }
@@ -200,11 +241,11 @@ public abstract class TabConfiguration {
         @NonNull
         @Override
         public View onCreateView(Context context, ViewGroup parent) {
-            return LayoutInflater.from(context).inflate(R.layout.list_item_extra_config, parent, false);
+            return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_checkbox, parent, false);
         }
 
         @Override
-        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull DialogFragment fragment) {
+        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull TabEditorDialogFragment fragment) {
             final TextView titleView = (TextView) view.findViewById(android.R.id.title);
             titleView.setText(getTitle().createString(context));
 
@@ -247,7 +288,7 @@ public abstract class TabConfiguration {
         }
 
         @Override
-        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull DialogFragment fragment) {
+        public void onViewCreated(@NonNull Context context, @NonNull View view, @NonNull final TabEditorDialogFragment fragment) {
             editText = (EditText) view.findViewById(R.id.editText);
             editText.setHint(getTitle().createString(context));
             editText.setText(def);

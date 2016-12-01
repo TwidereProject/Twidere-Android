@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
+import org.mariotaku.twidere.fragment.StatusesSearchFragment;
 import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
@@ -32,9 +32,9 @@ public class SearchTabConfiguration extends TabConfiguration {
         return DrawableHolder.Builtin.SEARCH;
     }
 
-    @AccountRequirement
+    @AccountFlags
     @Override
-    public int getAccountRequirement() {
+    public int getAccountFlags() {
         return FLAG_HAS_ACCOUNT | FLAG_ACCOUNT_REQUIRED;
     }
 
@@ -47,32 +47,36 @@ public class SearchTabConfiguration extends TabConfiguration {
     }
 
     @Override
-    public void applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final TextQueryArguments arguments = (TextQueryArguments) tab.getArguments();
         assert arguments != null;
         switch (extraConf.getKey()) {
             case EXTRA_QUERY: {
-                arguments.setQuery(((StringExtraConfiguration) extraConf).getValue());
+                final String query = ((StringExtraConfiguration) extraConf).getValue();
+                if (query == null) return false;
+                arguments.setQuery(query);
                 break;
             }
         }
+        return true;
     }
 
     @Override
-    public void readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final TextQueryArguments arguments = (TextQueryArguments) tab.getArguments();
-        if (arguments == null) return;
+        if (arguments == null) return false;
         switch (extraConf.getKey()) {
             case EXTRA_QUERY: {
                 ((StringExtraConfiguration) extraConf).setValue(arguments.getQuery());
                 break;
             }
         }
+        return true;
     }
 
     @NonNull
     @Override
     public Class<? extends Fragment> getFragmentClass() {
-        return TrendsSuggestionsFragment.class;
+        return StatusesSearchFragment.class;
     }
 }

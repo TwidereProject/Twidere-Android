@@ -34,24 +34,24 @@ public class HomeTabConfiguration extends TabConfiguration {
         return DrawableHolder.Builtin.HOME;
     }
 
-    @AccountRequirement
+    @AccountFlags
     @Override
-    public int getAccountRequirement() {
-        return FLAG_HAS_ACCOUNT | FLAG_ACCOUNT_MULTIPLE;
+    public int getAccountFlags() {
+        return FLAG_HAS_ACCOUNT | FLAG_ACCOUNT_MULTIPLE | FLAG_ACCOUNT_MUTABLE;
     }
 
     @Nullable
     @Override
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return new ExtraConfiguration[]{
-                new BooleanExtraConfiguration(EXTRA_HIDE_RETWEETS, false).title(R.string.hide_retweets),
-                new BooleanExtraConfiguration(EXTRA_HIDE_QUOTES, false).title(R.string.hide_quotes),
-                new BooleanExtraConfiguration(EXTRA_HIDE_REPLIES, false).title(R.string.hide_replies),
+                new BooleanExtraConfiguration(EXTRA_HIDE_RETWEETS, false).title(R.string.hide_retweets).mutable(true),
+                new BooleanExtraConfiguration(EXTRA_HIDE_QUOTES, false).title(R.string.hide_quotes).mutable(true),
+                new BooleanExtraConfiguration(EXTRA_HIDE_REPLIES, false).title(R.string.hide_replies).mutable(true),
         };
     }
 
     @Override
-    public void applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean applyExtraConfigurationTo(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final HomeTabExtras extras = (HomeTabExtras) tab.getExtras();
         assert extras != null;
         switch (extraConf.getKey()) {
@@ -68,12 +68,13 @@ public class HomeTabConfiguration extends TabConfiguration {
                 break;
             }
         }
+        return true;
     }
 
     @Override
-    public void readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
+    public boolean readExtraConfigurationFrom(@NonNull Tab tab, @NonNull ExtraConfiguration extraConf) {
         final HomeTabExtras extras = (HomeTabExtras) tab.getExtras();
-        if (extras == null) return;
+        if (extras == null) return false;
         switch (extraConf.getKey()) {
             case EXTRA_HIDE_RETWEETS: {
                 ((BooleanExtraConfiguration) extraConf).setValue(extras.isHideRetweets());
@@ -88,6 +89,7 @@ public class HomeTabConfiguration extends TabConfiguration {
                 break;
             }
         }
+        return true;
     }
 
     @NonNull

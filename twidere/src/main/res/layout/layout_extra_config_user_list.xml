@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?selectableItemBackground"
+    android:minHeight="?listPreferredItemHeight">
+
+    <include layout="@layout/list_item_simple_user_list"/>
+
+    <TextView
+        android:id="@+id/selectUserListHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/element_spacing_normal"
+        android:text="@string/select_user_list"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"/>
+</FrameLayout>
