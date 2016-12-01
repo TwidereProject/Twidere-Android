@@ -35,8 +35,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 214
-        versionName '3.2.10'
+        versionCode 215
+        versionName '3.2.11'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
