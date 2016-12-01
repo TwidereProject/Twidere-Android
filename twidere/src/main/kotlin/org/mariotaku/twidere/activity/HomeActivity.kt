@@ -71,6 +71,7 @@ import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.SupportTabSpec
+import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent
@@ -681,7 +682,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             val accountKey = UserKey.valueOf(uri!!.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY))
             for (i in 0 until pagerAdapter!!.count) {
                 val tab = pagerAdapter!!.getTab(i)
-                if (tabType == CustomTabUtils.getTabTypeAlias(tab.type)) {
+                if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
                     if (args != null && CustomTabUtils.hasAccountId(this, args,
                             activatedAccountKeys, accountKey)) {

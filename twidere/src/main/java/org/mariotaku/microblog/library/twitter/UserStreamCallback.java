@@ -167,9 +167,9 @@ public abstract class UserStreamCallback implements RawCallback {
 
     public abstract void onConnected();
 
-    public abstract void onStatus(Status status);
+    public abstract void onStatus(Status status) throws IOException;
 
-    public abstract void onDirectMessage(DirectMessage directMessage);
+    public abstract void onDirectMessage(DirectMessage directMessage) throws IOException;
 
     public abstract void onBlock(User source, User blockedUser);
 

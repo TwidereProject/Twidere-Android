@@ -310,6 +310,7 @@ public class DMResponse implements Parcelable {
         }
 
         @StringDef({Type.ONE_TO_ONE, Type.GROUP_DM})
+        @Retention(RetentionPolicy.SOURCE)
         public @interface Type {
             String ONE_TO_ONE = "one_to_one", GROUP_DM = "group_dm";
         }

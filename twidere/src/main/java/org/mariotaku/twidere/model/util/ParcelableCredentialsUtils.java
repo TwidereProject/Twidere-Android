@@ -11,6 +11,8 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 
+import java.io.IOException;
+
 /**
  * Created by mariotaku on 16/3/4.
  */
@@ -38,6 +40,8 @@ public class ParcelableCredentialsUtils {
             if (c.moveToFirst()) {
                 return i.newObject(c);
             }
+        } catch (IOException e) {
+            return null;
         } finally {
             c.close();
         }
@@ -56,7 +60,9 @@ public class ParcelableCredentialsUtils {
                 cursor.moveToNext();
             }
             return credentialses;
-        } finally {
+        }  catch (IOException e) {
+            return new ParcelableCredentials[0];
+        }finally {
             cursor.close();
         }
     }

@@ -26,6 +26,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.JsonSerializer;
 
+import java.io.IOException;
+
 import kotlin.Pair;
 
 /**
@@ -108,6 +110,8 @@ public class UpdateAccountInfoTask extends AbstractTask<Pair<ParcelableAccount, 
                 final String[] whereArgs = {String.valueOf(values.keyAt(i))};
                 resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, whereArgs);
             }
+        } catch (IOException e) {
+            // Ignore
         } finally {
             tabsCursor.close();
         }

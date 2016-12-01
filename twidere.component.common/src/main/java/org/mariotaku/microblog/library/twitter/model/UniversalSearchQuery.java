@@ -24,6 +24,9 @@ import android.support.annotation.StringDef;
 import org.mariotaku.microblog.library.twitter.util.InternalArrayUtil;
 import org.mariotaku.restfu.http.SimpleValueMap;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 15/10/21.
  */
@@ -58,6 +61,7 @@ public class UniversalSearchQuery extends SimpleValueMap {
     }
 
     @StringDef({Filter.IMAGES, Filter.VIDEOS, Filter.PERISCOPE, Filter.NEWS})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
         String IMAGES = "images";
         String VIDEOS = "videos";
@@ -68,6 +72,7 @@ public class UniversalSearchQuery extends SimpleValueMap {
     @StringDef({Module.TWEET, Module.USER_GALLERY, Module.NEWS, Module.MEDIA_GALLERY,
             Module.SUGGESTION, Module.EVENT, Module.TWEET_GALLERY, Module.FOLLOWS_TWEET_GALLERY,
             Module.NEARBY_TWEET_GALLERY, Module.SUMMARY, Module.EVENT_SUMMARY})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Module {
         String TWEET = "tweet";
         String USER_GALLERY = "user_gallery";
@@ -83,6 +88,7 @@ public class UniversalSearchQuery extends SimpleValueMap {
     }
 
     @StringDef({ResultType.RECENT, ResultType.FOLLOWS})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface ResultType {
         String RECENT = "recent";
         String FOLLOWS = "follows";

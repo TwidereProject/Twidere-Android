@@ -16,6 +16,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -45,6 +46,8 @@ public class ParcelableAccountUtils {
             if (c.moveToFirst()) {
                 return i.newObject(c);
             }
+        } catch (IOException e) {
+            return null;
         } finally {
             c.close();
         }
@@ -93,6 +96,8 @@ public class ParcelableAccountUtils {
                 cursor.moveToNext();
             }
             return names;
+        } catch (IOException e) {
+            return new ParcelableAccount[0];
         } finally {
             cursor.close();
         }

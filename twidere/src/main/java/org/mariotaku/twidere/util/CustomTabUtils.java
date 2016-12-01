@@ -44,14 +44,10 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.argument.TabArguments;
-import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
-import org.mariotaku.twidere.model.tab.argument.UserArguments;
-import org.mariotaku.twidere.model.tab.argument.UserListArguments;
-import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
-import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,14 +73,20 @@ public class CustomTabUtils implements Constants {
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = resolver.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER);
         if (cur == null) return Collections.emptyList();
-        final ArrayList<Tab> tabs = new ArrayList<>();
-        cur.moveToFirst();
-        TabCursorIndices indices = new TabCursorIndices(cur);
-        while (!cur.isAfterLast()) {
-            tabs.add(indices.newObject(cur));
-            cur.moveToNext();
+        try {
+            final ArrayList<Tab> tabs = new ArrayList<>();
+            cur.moveToFirst();
+            TabCursorIndices indices = new TabCursorIndices(cur);
+            while (!cur.isAfterLast()) {
+                tabs.add(indices.newObject(cur));
+                cur.moveToNext();
+            }
+            return tabs;
+        } catch (IOException e) {
+            return Collections.emptyList();
+        } finally {
+            cur.close();
         }
-        return tabs;
     }
 
     public static List<SupportTabSpec> getHomeTabs(@NonNull final Context context) {
@@ -120,47 +122,20 @@ public class CustomTabUtils implements Constants {
 
     @Nullable
     public static TabArguments newTabArguments(@NonNull @CustomTabType String type) {
-        return parseTabArguments(type, "{}");
+        try {
+            return TabArguments.parse(type, "{}");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Nullable
     public static TabExtras newTabExtras(@NonNull @CustomTabType String type) {
-        return parseTabExtras(type, "{}");
-    }
-
-    @Nullable
-    public static TabArguments parseTabArguments(@NonNull @CustomTabType String type, String json) {
-        switch (type) {
-            case CustomTabType.HOME_TIMELINE:
-            case CustomTabType.NOTIFICATIONS_TIMELINE:
-            case CustomTabType.DIRECT_MESSAGES: {
-                return JsonSerializer.parse(json, TabArguments.class);
-            }
-            case CustomTabType.USER_TIMELINE:
-            case CustomTabType.FAVORITES: {
-                return JsonSerializer.parse(json, UserArguments.class);
-            }
-            case CustomTabType.LIST_TIMELINE: {
-                return JsonSerializer.parse(json, UserListArguments.class);
-            }
-            case CustomTabType.SEARCH_STATUSES: {
-                return JsonSerializer.parse(json, TextQueryArguments.class);
-            }
+        try {
+            return TabExtras.parse(type, "{}");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return null;
-    }
-
-    @Nullable
-    public static TabExtras parseTabExtras(@NonNull @CustomTabType String type, String json) {
-        switch (type) {
-            case CustomTabType.NOTIFICATIONS_TIMELINE: {
-                return JsonSerializer.parse(json, InteractionsTabExtras.class);
-            }
-            case CustomTabType.HOME_TIMELINE: {
-                return JsonSerializer.parse(json, HomeTabExtras.class);
-            }
-        }
-        return null;
     }
 
     @Nullable
@@ -180,18 +155,7 @@ public class CustomTabUtils implements Constants {
 
     public static TabConfiguration getTabConfiguration(final String tabType) {
         if (tabType == null) return null;
-        return TabConfiguration.ofType(getTabTypeAlias(tabType));
-    }
-
-    @CustomTabType
-    public static String getTabTypeAlias(String key) {
-        if (key == null) return null;
-        switch (key) {
-            case "mentions_timeline":
-            case "activities_about_me":
-                return CustomTabType.NOTIFICATIONS_TIMELINE;
-        }
-        return key;
+        return TabConfiguration.ofType(Tab.getTypeAlias(tabType));
     }
 
     public static Drawable getTabIconDrawable(final Context context, final DrawableHolder icon) {
@@ -221,7 +185,7 @@ public class CustomTabUtils implements Constants {
     }
 
     public static boolean isTabTypeValid(final String tabType) {
-        return tabType != null && TabConfiguration.ofType(getTabTypeAlias(tabType)) != null;
+        return tabType != null && TabConfiguration.ofType(Tab.getTypeAlias(tabType)) != null;
     }
 
     public static boolean hasAccountId(final Context context, @NonNull final Bundle args,

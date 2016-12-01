@@ -29,6 +29,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -315,6 +317,7 @@ public class UniversalSearchResult {
         }
 
         @StringDef({ResultType.NORMAL, ResultType.TOP})
+        @Retention(RetentionPolicy.SOURCE)
         public @interface ResultType {
             String NORMAL = "normal";
             String TOP = "top";

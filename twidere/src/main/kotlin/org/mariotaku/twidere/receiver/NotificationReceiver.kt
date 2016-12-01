@@ -32,6 +32,7 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
 import org.mariotaku.twidere.model.StringLongPair
+import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.UriExtraUtils
@@ -56,7 +57,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 val itemUserId = UriExtraUtils.getExtra(uri, "item_user_id")?.toLong(-1) ?: -1
                 val itemUserFollowing = UriExtraUtils.getExtra(uri, "item_user_following")?.toBoolean() ?: false
                 val timestamp = uri.getQueryParameter(QUERY_PARAM_TIMESTAMP)?.toLong() ?: -1
-                if (CustomTabType.NOTIFICATIONS_TIMELINE == CustomTabUtils.getTabTypeAlias(notificationType)
+                if (CustomTabType.NOTIFICATIONS_TIMELINE == Tab.getTypeAlias(notificationType)
                         && accountKey != null && itemId != -1L && timestamp != -1L) {
                     val logger = holder.hotMobiLogger
                     logger.log(accountKey, NotificationEvent.deleted(context, timestamp, notificationType, accountKey,

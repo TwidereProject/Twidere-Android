@@ -25,6 +25,9 @@ import android.support.annotation.StringDef;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 15/5/7.
  */
@@ -163,6 +166,7 @@ public class MediaUploadResponse extends TwitterResponseObject implements Twitte
 
 
         @StringDef({State.PENDING, State.IN_PROGRESS, State.FAILED, State.SUCCEEDED})
+        @Retention(RetentionPolicy.SOURCE)
         public @interface State {
             String PENDING = "pending";
             String IN_PROGRESS = "in_progress";

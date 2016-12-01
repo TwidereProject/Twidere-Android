@@ -111,6 +111,7 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -422,10 +423,15 @@ public final class Utils implements Constants {
             if (cur == null) {
                 continue;
             }
-            if (cur.getCount() > 0 && cur.moveToFirst()) {
-                message = ParcelableDirectMessageCursorIndices.fromCursor(cur);
+            try {
+                if (cur.getCount() > 0 && cur.moveToFirst()) {
+                    message = ParcelableDirectMessageCursorIndices.fromCursor(cur);
+                }
+            } catch (IOException e) {
+                // Ignore
+            } finally {
+                cur.close();
             }
-            cur.close();
         }
         return message;
     }
@@ -440,14 +446,19 @@ public final class Utils implements Constants {
         if (cached != null) return cached;
         final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
         if (twitter == null) throw new MicroBlogException("Account does not exist");
-        final Status status = twitter.showStatus(statusId);
+        final Status result = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
         final String[] whereArgs = {accountKey.toString(), statusId};
         final ContentResolver resolver = context.getContentResolver();
+        final ParcelableStatus status = ParcelableStatusUtils.INSTANCE.fromStatus(result, accountKey, false);
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs);
-        resolver.insert(CachedStatuses.CONTENT_URI, ContentValuesCreator.createStatus(status, accountKey));
-        return ParcelableStatusUtils.INSTANCE.fromStatus(status, accountKey, false);
+        try {
+            resolver.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(status));
+        } catch (IOException e) {
+            // Ignore
+        }
+        return status;
     }
 
     @Nullable
@@ -465,11 +476,15 @@ public final class Utils implements Constants {
             if (cur == null) {
                 continue;
             }
-            if (cur.getCount() > 0) {
-                cur.moveToFirst();
-                status = ParcelableStatusCursorIndices.fromCursor(cur);
+            try {
+                if (cur.getCount() > 0 && cur.moveToFirst()) {
+                    status = ParcelableStatusCursorIndices.fromCursor(cur);
+                }
+            } catch (IOException e) {
+                // Ignore
+            } finally {
+                cur.close();
             }
-            cur.close();
         }
         return status;
     }

@@ -5,14 +5,15 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.model.UserKey;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -43,14 +44,18 @@ public class TabArguments implements TwidereConstants {
     @CallSuper
     public void copyToBundle(@NonNull Bundle bundle) {
         final UserKey[] accountKeys = this.accountKeys;
-        if (!ArrayUtils.isEmpty(accountKeys)) {
-            assert accountKeys != null;
+        if (accountKeys != null && accountKeys.length > 0) {
             for (UserKey key : accountKeys) {
                 if (key == null) return;
             }
             bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountKeys);
         } else if (accountId != null) {
-            final long id = NumberUtils.toLong(accountId, Long.MIN_VALUE);
+            long id = Long.MIN_VALUE;
+            try {
+                id = Long.parseLong(accountId);
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
             if (id != Long.MIN_VALUE && id <= 0) {
                 // account_id = -1, means no account selected
                 bundle.putParcelableArray(EXTRA_ACCOUNT_KEYS, null);
@@ -66,5 +71,27 @@ public class TabArguments implements TwidereConstants {
                 "accountId=" + accountId +
                 ", accountKeys=" + Arrays.toString(accountKeys) +
                 '}';
+    }
+
+    @Nullable
+    public static TabArguments parse(@NonNull @CustomTabType String type, String json) throws IOException {
+        switch (type) {
+            case CustomTabType.HOME_TIMELINE:
+            case CustomTabType.NOTIFICATIONS_TIMELINE:
+            case CustomTabType.DIRECT_MESSAGES: {
+                return LoganSquare.parse(json, TabArguments.class);
+            }
+            case CustomTabType.USER_TIMELINE:
+            case CustomTabType.FAVORITES: {
+                return LoganSquare.parse(json, UserArguments.class);
+            }
+            case CustomTabType.LIST_TIMELINE: {
+                return LoganSquare.parse(json, UserListArguments.class);
+            }
+            case CustomTabType.SEARCH_STATUSES: {
+                return LoganSquare.parse(json, TextQueryArguments.class);
+            }
+        }
+        return null;
     }
 }

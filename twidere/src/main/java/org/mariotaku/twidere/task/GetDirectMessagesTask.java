@@ -31,6 +31,7 @@ import org.mariotaku.twidere.util.UriUtils;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +124,11 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
 
         for (int i = 0, j = messages.size(); i < j; i++) {
             final DirectMessage message = messages.get(i);
-            valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountKey, isOutgoing);
+            try {
+                valuesArray[i] = ContentValuesCreator.createDirectMessage(message, accountKey, isOutgoing);
+            } catch (IOException e) {
+                return false;
+            }
         }
 
         // Delete all rows conflicting before new data inserted.

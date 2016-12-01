@@ -243,7 +243,7 @@ public class StreamingService extends Service implements Constants {
         }
 
         @Override
-        public void onDirectMessage(final DirectMessage directMessage) {
+        public void onDirectMessage(final DirectMessage directMessage) throws IOException {
             if (directMessage == null || directMessage.getId() == null) return;
             final String where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
                     Expression.equalsArgs(DirectMessages.MESSAGE_ID)).getSQL();
@@ -340,7 +340,7 @@ public class StreamingService extends Service implements Constants {
         }
 
         @Override
-        public void onStatus(final Status status) {
+        public void onStatus(final Status status) throws IOException {
             final ContentValues values = ContentValuesCreator.createStatus(status, account.account_key);
             if (!statusStreamStarted) {
                 statusStreamStarted = true;

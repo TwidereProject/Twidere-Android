@@ -274,8 +274,8 @@
 
         <FrameLayout
             android:id="@+id/quotedMediaPreviewContainer"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="@dimen/element_spacing_normal"
             android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -300,13 +300,15 @@
 
             </org.mariotaku.twidere.view.CardMediaContainer>
 
-            <ImageView
+            <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/quotedMediaPreviewPlaceholder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray"
                 android:scaleType="center"
-                android:src="@drawable/ic_action_gallery"/>
+                android:src="@drawable/ic_action_gallery"
+                android:visibility="visible"
+                app:iabColor="?android:textColorSecondary"
+                tools:visibility="gone"/>
         </FrameLayout>
 
         <LinearLayout
@@ -362,8 +364,8 @@
         android:drawablePadding="4dp"
         android:drawableStart="@drawable/ic_indicator_location"
         android:gravity="center_vertical"
+        android:maxLines="1"
         android:padding="@dimen/element_spacing_normal"
-        android:singleLine="true"
         android:tag="font_family|user"
         android:text="@string/view_map"
         android:textAppearance="?android:attr/textAppearanceSmall"

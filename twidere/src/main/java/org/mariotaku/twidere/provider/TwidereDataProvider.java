@@ -548,6 +548,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         try {
             if (!c.moveToFirst()) return -1;
             item = i.newObject(c);
+        } catch (IOException e) {
+            return -1;
         } finally {
             c.close();
         }
@@ -1462,6 +1464,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 builder.setDeleteIntent(getMarkReadDeleteIntent(context,
                         NotificationType.INTERACTIONS, accountKey, timestamp, false));
             }
+        } catch (IOException e) {
+            return;
         } finally {
             c.close();
         }

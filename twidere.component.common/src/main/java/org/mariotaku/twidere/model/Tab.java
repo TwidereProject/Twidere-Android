@@ -139,12 +139,12 @@ public class Tab implements Parcelable {
         this.internalExtras = InternalExtras.from(extras);
     }
 
-
     @OnPreJsonSerialize
     void beforeJsonSerialize() {
         internalArguments = InternalArguments.from(arguments);
         internalExtras = InternalExtras.from(extras);
     }
+
 
     @OnJsonParseComplete
     void onJsonParseComplete() {
@@ -167,6 +167,17 @@ public class Tab implements Parcelable {
                 ", arguments=" + arguments +
                 ", extras=" + extras +
                 '}';
+    }
+
+    @CustomTabType
+    public static String getTypeAlias(String key) {
+        if (key == null) return null;
+        switch (key) {
+            case "mentions_timeline":
+            case "activities_about_me":
+                return CustomTabType.NOTIFICATIONS_TIMELINE;
+        }
+        return key;
     }
 
     @ParcelablePlease(allFields = false)
