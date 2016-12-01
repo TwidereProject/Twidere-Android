@@ -39,7 +39,7 @@ object ParcelableStatusUtils {
         result.timestamp = getTime(orig.createdAt)
 
         result.extras = ParcelableStatus.Extras()
-        result.extras.external_url = orig.externalUrl
+        result.extras.external_url = orig.inferExternalUrl()
         result.extras.support_entities = orig.entities != null
         result.extras.statusnet_conversation_id = orig.statusnetConversationId
         result.is_pinned_status = orig.user.pinnedTweetIds?.contains(orig.id) ?: false
@@ -58,7 +58,7 @@ object ParcelableStatusUtils {
             result.retweeted_by_user_screen_name = retweetUser.screenName
             result.retweeted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(retweetUser)
 
-            result.extras.retweeted_external_url = retweetedStatus.externalUrl
+            result.extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
         } else {
             status = orig
         }
@@ -69,7 +69,7 @@ object ParcelableStatusUtils {
         if (quoted != null) {
             val quotedUser = quoted.user
             result.quoted_id = quoted.id
-            result.extras.quoted_external_url = quoted.externalUrl
+            result.extras.quoted_external_url = quoted.inferExternalUrl()
 
             val quotedText = quoted.htmlText
             // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
@@ -272,4 +272,18 @@ object ParcelableStatusUtils {
             status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_id!!)
         }
     }
+
+    fun Status.inferExternalUrl(): String? {
+        if (externalUrl != null) {
+            return externalUrl
+        }
+        if (uri != null) {
+            val r = Regex("tag:([\\w\\d\\.]+),(\\d{4}\\-\\d{2}\\-\\d{2}):noticeId=(\\d+):objectType=(\\w+)")
+            r.matchEntire(uri)?.let { result: MatchResult ->
+                return "https://%s/notice/%s".format(Locale.ROOT, result.groups[1]?.value, result.groups[3]?.value)
+            }
+        }
+        return null
+    }
 }
+

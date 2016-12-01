@@ -193,6 +193,13 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "display_text_range")
     int[] displayTextRange;
 
+    /**
+     * GNU social value
+     * Format: {@code "tag:[gnusocial.host],YYYY-MM-DD:noticeId=[noticeId]:objectType=[objectType]"}
+     */
+    @JsonField(name = "uri")
+    String uri;
+
     @ParcelableNoThanks
     private transient long sortId = -1;
 
@@ -445,6 +452,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     public String getQuotedStatusId() {
         return quotedStatusId;
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     @Override
