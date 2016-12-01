@@ -74,7 +74,8 @@ public class TabArguments implements TwidereConstants {
     }
 
     @Nullable
-    public static TabArguments parse(@NonNull @CustomTabType String type, String json) throws IOException {
+    public static TabArguments parse(@NonNull @CustomTabType String type, @Nullable String json) throws IOException {
+        if (json == null) return null;
         switch (type) {
             case CustomTabType.HOME_TIMELINE:
             case CustomTabType.NOTIFICATIONS_TIMELINE:

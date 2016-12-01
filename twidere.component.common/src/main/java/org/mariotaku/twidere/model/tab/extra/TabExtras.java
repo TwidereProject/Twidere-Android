@@ -24,7 +24,8 @@ public abstract class TabExtras implements Parcelable {
     }
 
     @Nullable
-    public static TabExtras parse(@NonNull @CustomTabType String type, String json) throws IOException {
+    public static TabExtras parse(@NonNull @CustomTabType String type, @Nullable String json) throws IOException {
+        if (json == null) return null;
         switch (type) {
             case CustomTabType.NOTIFICATIONS_TIMELINE: {
                 return LoganSquare.parse(json, InteractionsTabExtras.class);
