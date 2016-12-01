@@ -17,6 +17,11 @@ android:
     - extra-google-m2repository
     - extra-android-m2repository
 
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
     # - sys-img-armeabi-v7a-android-19
