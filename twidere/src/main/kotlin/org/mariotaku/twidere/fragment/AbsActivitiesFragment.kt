@@ -546,7 +546,6 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
                 if (item.itemId == R.id.share) {
                     val shareIntent = Utils.createStatusShareIntent(activity, status)
                     val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
-                    Utils.addCopyLinkIntent(context, chooser, LinkCreator.getStatusWebLink(status))
                     startActivity(chooser)
                     return true
                 }

@@ -101,7 +101,6 @@ import org.mariotaku.sqliteqb.library.Selectable;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.activity.CopyLinkActivity;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
@@ -111,8 +110,8 @@ import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
@@ -1079,14 +1078,6 @@ public final class Utils implements Constants {
     public static void scrollListToTop(final AbsListView list) {
         if (list == null) return;
         scrollListToPosition(list, 0);
-    }
-
-    public static void addCopyLinkIntent(Context context, Intent chooserIntent, Uri uri) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
-        final Intent copyLinkIntent = new Intent(context, CopyLinkActivity.class);
-        copyLinkIntent.setData(uri);
-        final Intent[] alternateIntents = {copyLinkIntent};
-        chooserIntent.putExtra(Intent.EXTRA_ALTERNATE_INTENTS, alternateIntents);
     }
 
     static boolean isMyStatus(ParcelableStatus status) {

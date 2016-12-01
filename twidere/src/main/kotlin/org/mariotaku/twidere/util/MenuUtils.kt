@@ -209,7 +209,6 @@ object MenuUtils {
         } else {
             val shareIntent = Utils.createStatusShareIntent(context, status)
             val chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status))
-            Utils.addCopyLinkIntent(context, chooserIntent, LinkCreator.getStatusWebLink(status))
             shareItem.intent = chooserIntent
         }
 
@@ -311,10 +310,13 @@ object MenuUtils {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     intent.`package` = null
-                    context.startActivity(Intent.createChooser(intent,
-                            context.getString(R.string.open_in_browser)))
+                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.open_in_browser)))
                 }
-
+            }
+            R.id.copy_url -> {
+                val uri = LinkCreator.getStatusWebLink(status)
+                ClipboardUtils.setText(context, uri.toString())
+                Utils.showOkMessage(context, R.string.link_copied_to_clipboard, false)
             }
             else -> {
                 if (item.intent != null) {

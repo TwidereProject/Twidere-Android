@@ -48,6 +48,7 @@
     <item name="up" type="id"/>
     <item name="down" type="id"/>
     <item name="copy" type="id"/>
+    <item name="copy_url" type="id"/>
     <item name="right_pane" type="id"/>
     <item name="right_pane_container" type="id"/>
     <item name="toggle_sensitive" type="id"/>

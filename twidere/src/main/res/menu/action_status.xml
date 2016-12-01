@@ -10,6 +10,10 @@
         android:icon="@drawable/ic_action_copy"
         android:title="@android:string/copy"/>
     <item
+        android:id="@id/copy_url"
+        android:icon="@drawable/ic_action_link"
+        android:title="@string/copy_link"/>
+    <item
         android:id="@id/add_to_filter"
         android:icon="@drawable/ic_action_speaker_muted"
         android:title="@string/add_to_filter"/>
