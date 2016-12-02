@@ -461,6 +461,15 @@
         <service
             android:name=".service.BackgroundOperationService"
             android:label="@string/label_background_operation_service"/>
+        <service android:name=".service.AccountAuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
+        </service>
+
         <service
             android:name=".nyan.NyanWallpaperService"
             android:enabled="false"
