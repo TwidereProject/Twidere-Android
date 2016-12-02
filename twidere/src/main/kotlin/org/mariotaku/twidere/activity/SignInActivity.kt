@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.activity
 
+import android.accounts.AccountAuthenticatorResponse
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.ContentValues
@@ -79,6 +81,7 @@ import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.lang.ref.WeakReference
 
+
 class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     private var apiUrlFormat: String? = null
     private var authType: Int = 0
@@ -89,15 +92,66 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     private var noVersionSuffix: Boolean = false
     private var signInTask: AbstractSignInTask? = null
 
-    override fun afterTextChanged(s: Editable) {
+    private var accountAuthenticatorResponse: AccountAuthenticatorResponse? = null
+    private var accountAuthenticatorResult: Bundle? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        accountAuthenticatorResponse = intent.getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE)
+        accountAuthenticatorResponse?.onRequestContinued()
+
+        setContentView(R.layout.activity_sign_in)
+
+        if (savedInstanceState != null) {
+            apiUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT)
+            authType = savedInstanceState.getInt(Accounts.AUTH_TYPE)
+            sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL)
+            consumerKey = savedInstanceState.getString(Accounts.CONSUMER_KEY)?.trim()
+            consumerSecret = savedInstanceState.getString(Accounts.CONSUMER_SECRET)?.trim()
+            apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
+        }
+
+        val isTwipOMode = authType == AuthType.TWIP_O_MODE
+        usernamePasswordContainer.visibility = if (isTwipOMode) View.GONE else View.VISIBLE
+        signInSignUpContainer.orientation = if (isTwipOMode) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
+
+        editUsername.addTextChangedListener(this)
+        editPassword.addTextChangedListener(this)
+
+        signIn.setOnClickListener(this)
+        signUp.setOnClickListener(this)
+        passwordSignIn.setOnClickListener(this)
+
+        val color = ColorStateList.valueOf(ContextCompat.getColor(this,
+                R.color.material_light_green))
+        ViewCompat.setBackgroundTintList(signIn, color)
+
+
+        val consumerKey = preferences.getString(KEY_CONSUMER_KEY, null)
+        val consumerSecret = preferences.getString(KEY_CONSUMER_SECRET, null)
+        if (BuildConfig.SHOW_CUSTOM_TOKEN_DIALOG && savedInstanceState == null &&
+                !preferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
+                !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
+            val df = SetConsumerKeySecretDialogFragment()
+            df.isCancelable = false
+            df.show(supportFragmentManager, "set_consumer_key_secret")
+        }
+
+        updateSignInType()
+        setSignInButton()
     }
 
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
+    override fun onDestroy() {
+        loaderManager.destroyLoader(0)
+        super.onDestroy()
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_sign_in, menu)
+        return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_EDIT_API -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -119,6 +173,27 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun finish() {
+        accountAuthenticatorResponse?.let { response ->
+            // send the result bundle back if set, otherwise send an error.
+            if (accountAuthenticatorResult != null) {
+                response.onResult(accountAuthenticatorResult)
+            } else {
+                response.onError(AccountManager.ERROR_CODE_CANCELED, "canceled")
+            }
+            accountAuthenticatorResponse = null
+        }
+        super.finish()
+    }
+
+    override fun afterTextChanged(s: Editable) {
+
+    }
+
+    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
     }
 
     internal fun updateSignInType() {
@@ -160,16 +235,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_sign_in, menu)
-        return true
-    }
-
-    public override fun onDestroy() {
-        loaderManager.destroyLoader(0)
-        super.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -237,51 +302,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         super.onSaveInstanceState(outState)
     }
 
+
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-        setSignInButton()
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_in)
-
-        if (savedInstanceState != null) {
-            apiUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT)
-            authType = savedInstanceState.getInt(Accounts.AUTH_TYPE)
-            sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL)
-            consumerKey = savedInstanceState.getString(Accounts.CONSUMER_KEY)?.trim()
-            consumerSecret = savedInstanceState.getString(Accounts.CONSUMER_SECRET)?.trim()
-            apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
-        }
-
-        val isTwipOMode = authType == AuthType.TWIP_O_MODE
-        usernamePasswordContainer.visibility = if (isTwipOMode) View.GONE else View.VISIBLE
-        signInSignUpContainer.orientation = if (isTwipOMode) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
-
-        editUsername.addTextChangedListener(this)
-        editPassword.addTextChangedListener(this)
-
-        signIn.setOnClickListener(this)
-        signUp.setOnClickListener(this)
-        passwordSignIn.setOnClickListener(this)
-
-        val color = ColorStateList.valueOf(ContextCompat.getColor(this,
-                R.color.material_light_green))
-        ViewCompat.setBackgroundTintList(signIn, color)
-
-
-        val consumerKey = preferences.getString(KEY_CONSUMER_KEY, null)
-        val consumerSecret = preferences.getString(KEY_CONSUMER_SECRET, null)
-        if (BuildConfig.SHOW_CUSTOM_TOKEN_DIALOG && savedInstanceState == null &&
-                !preferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
-                !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
-            val df = SetConsumerKeySecretDialogFragment()
-            df.isCancelable = false
-            df.show(supportFragmentManager, "set_consumer_key_secret")
-        }
-
-        updateSignInType()
         setSignInButton()
     }
 

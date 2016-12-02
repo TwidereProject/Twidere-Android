@@ -37,6 +37,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TWIDERE_PROJECT_EMAIL = "twidere.project@gmail.com";
     String TWIDERE_PACKAGE_NAME = "org.mariotaku.twidere";
 
+    String ACCOUNT_TYPE = "org.mariotaku.twidere.account";
+
     String LOGTAG = TWIDERE_APP_NAME;
 
     String USER_NICKNAME_PREFERENCES_NAME = "user_nicknames";

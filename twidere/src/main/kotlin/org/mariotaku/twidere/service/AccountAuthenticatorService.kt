@@ -10,7 +10,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import org.mariotaku.ktextension.set
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.activity.SignInActivity
+import org.mariotaku.twidere.util.support.AccountManagerSupport
 
 
 /**

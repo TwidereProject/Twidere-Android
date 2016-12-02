@@ -175,6 +175,7 @@ dependencies {
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
+    compile 'nl.komponents.kovenant:kovenant-combine:3.3.0'
 }
 
 task svgToDrawable(type: SvgDrawableTask) {
