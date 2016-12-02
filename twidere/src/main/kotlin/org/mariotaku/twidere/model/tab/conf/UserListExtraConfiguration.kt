@@ -6,6 +6,8 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.layout_extra_config_user_list.view.*
+import kotlinx.android.synthetic.main.list_item_simple_user_list.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -44,8 +46,8 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
             intent.setClass(context, UserListSelectorActivity::class.java)
             fragment.startExtraConfigurationActivityForResult(this@UserListExtraConfiguration, intent, 1)
         }
-        hintView = view.findViewById(R.id.selectUserHint)
-        viewHolder = SimpleUserListViewHolder(view.findViewById(R.id.listItem))
+        hintView = view.selectUserListHint
+        viewHolder = SimpleUserListViewHolder(view.listItem)
 
         viewHolder.itemView.visibility = View.GONE
         hintView.visibility = View.VISIBLE

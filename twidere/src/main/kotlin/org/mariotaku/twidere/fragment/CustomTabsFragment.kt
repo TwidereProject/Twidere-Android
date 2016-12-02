@@ -283,7 +283,10 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 TAG_EDIT_TAB -> {
                     tab = arguments.getParcelable(EXTRA_OBJECT)
                     tabType = tab.type
-                    conf = TabConfiguration.ofType(tabType)!!
+                    conf = TabConfiguration.ofType(tabType) ?: run {
+                        dismiss()
+                        return
+                    }
                 }
                 else -> {
                     throw AssertionError()
