@@ -36,7 +36,7 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
     }
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
-        return LayoutInflater.from(context).inflate(R.layout.list_item_simple_user_list, parent, false)
+        return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_user_list, parent, false)
     }
 
     override fun onViewCreated(context: Context, view: View, fragment: TabEditorDialogFragment) {
