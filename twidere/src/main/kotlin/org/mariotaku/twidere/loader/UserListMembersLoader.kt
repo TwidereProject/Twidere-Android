@@ -23,39 +23,33 @@ import android.content.Context
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.IDs
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 
-class IncomingFriendshipsLoader(
+class UserListMembersLoader(
         context: Context,
-        accountKey: UserKey?,
-        data: List<ParcelableUser>?,
+        accountKey: UserKey,
+        private val listId: String?,
+        private val userKey: UserKey?,
+        private val screenName: String?,
+        private val listName: String,
+        data: List<ParcelableUser>,
         fromUser: Boolean
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    override fun getIDs(twitter: MicroBlog, credentials: ParcelableCredentials, paging: Paging): IDs {
-        return twitter.getIncomingFriendships(paging)
+    public override fun getCursoredUsers(twitter: MicroBlog, details: AccountDetails, paging: Paging): PageableResponseList<User> {
+        if (listId != null)
+            return twitter.getUserListMembers(listId, paging)
+        else if (userKey != null)
+            return twitter.getUserListMembers(listName.replace(' ', '-'), userKey.id, paging)
+        else if (screenName != null)
+            return twitter.getUserListMembersByScreenName(listName.replace(' ', '-'), screenName, paging)
+        throw MicroBlogException("list_id or list_name and user_id (or screen_name) required")
     }
 
-    @Throws(MicroBlogException::class)
-    override fun getCursoredUsers(twitter: MicroBlog, credentials: ParcelableCredentials, paging: Paging): ResponseList<User> {
-        return twitter.getFriendshipsRequests(paging)
-    }
-
-    override fun useIDs(credentials: ParcelableCredentials): Boolean {
-        when (ParcelableAccountUtils.getAccountType(credentials)) {
-            AccountType.FANFOU -> {
-                return false
-            }
-        }
-        return true
-    }
 }

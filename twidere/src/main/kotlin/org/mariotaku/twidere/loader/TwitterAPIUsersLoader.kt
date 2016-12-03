@@ -19,19 +19,20 @@
 
 package org.mariotaku.twidere.loader
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.util.Log
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
-import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import java.util.*
 
 abstract class TwitterAPIUsersLoader(
@@ -45,14 +46,14 @@ abstract class TwitterAPIUsersLoader(
         if (accountKey == null) {
             return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
         }
-        val credentials = ParcelableCredentialsUtils.getCredentials(context,
-                accountKey) ?: return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
-        val twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
-                true) ?: return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
+        val am = AccountManager.get(context)
+        val details = AccountUtils.getAccountDetails(am, accountKey) ?:
+                return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
+        val twitter: MicroBlog = details.credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         val data = data
         val users: List<User>
         try {
-            users = getUsers(twitter, credentials)
+            users = getUsers(twitter, details)
         } catch (e: MicroBlogException) {
             Log.w(TwidereConstants.LOGTAG, e)
             return ListResponse.getListInstance(data)
@@ -71,6 +72,5 @@ abstract class TwitterAPIUsersLoader(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getUsers(twitter: MicroBlog,
-                                    credentials: ParcelableCredentials): List<User>
+    protected abstract fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User>
 }

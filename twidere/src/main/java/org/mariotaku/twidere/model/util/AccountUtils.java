@@ -40,6 +40,13 @@ public class AccountUtils {
         return details;
     }
 
+    @Nullable
+    public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull UserKey accountKey) {
+        final Account account = findByAccountKey(am, accountKey);
+        if (account == null) return null;
+        return getAccountDetails(am, account);
+    }
+
     public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull Account account) {
         AccountDetails details = new AccountDetails();
         details.key = AccountExtensionsKt.getAccountKey(account, am);

@@ -23,29 +23,26 @@ import android.content.Context
 
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.twitter.model.IDs
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
-class GroupMembersLoader(
+class StatusFavoritersLoader(
         context: Context,
-        accountKey: UserKey?,
-        private val groupId: String?,
-        private val groupName: String?,
+        accountKey: UserKey,
+        private val statusId: String,
         data: List<ParcelableUser>?,
         fromUser: Boolean
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    public override fun getCursoredUsers(twitter: MicroBlog, credentials: ParcelableCredentials, paging: Paging): ResponseList<User> {
-        if (groupId != null)
-            return twitter.getGroupMembers(groupId, paging)
-        else if (groupName != null)
-            return twitter.getGroupMembersByName(groupName, paging)
-        throw MicroBlogException("list_id or list_name and user_id (or screen_name) required")
+    override fun getIDs(twitter: MicroBlog, details: AccountDetails, paging: Paging): IDs {
+        return twitter.getStatusActivitySummary(statusId).favoriters
     }
 
+    override fun useIDs(details: AccountDetails): Boolean {
+        return true
+    }
 }

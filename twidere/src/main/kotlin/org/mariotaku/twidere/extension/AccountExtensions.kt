@@ -26,6 +26,7 @@ fun Account.getCredentials(am: AccountManager): Credentials {
     return creds
 }
 
+@Credentials.Type
 fun Account.getCredentialsType(am: AccountManager): String {
     return am.getUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE) ?: Credentials.Type.OAUTH
 }
