@@ -5,6 +5,7 @@ import android.accounts.AccountManager
 import android.graphics.Color
 import android.support.annotation.ColorInt
 import com.bluelinelabs.logansquare.LoganSquare
+import org.mariotaku.ktextension.toInt
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableUser
@@ -16,6 +17,7 @@ import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.util.toHexColor
 
 
 fun Account.getCredentials(am: AccountManager): Credentials {
@@ -41,6 +43,10 @@ fun Account.getColor(am: AccountManager): Int {
     return Color.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR))
 }
 
+fun Account.getPosition(am: AccountManager): Int {
+    return am.getUserData(this, ACCOUNT_USER_DATA_POSITION).toInt(-1)
+}
+
 fun Account.getAccountExtras(am: AccountManager): AccountExtras? {
     val json = am.getUserData(this, ACCOUNT_USER_DATA_EXTRAS) ?: return null
     when (getAccountType(am)) {
@@ -62,6 +68,11 @@ fun Account.getAccountType(am: AccountManager): String {
 fun Account.isAccountActivated(am: AccountManager): Boolean {
     return am.getUserData(this, ACCOUNT_USER_DATA_ACTIVATED).orEmpty().toBoolean()
 }
+
+fun Account.setColor(am: AccountManager, color: Int) {
+    am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(color))
+}
+
 
 private fun parseCredentials(authToken: String, @Credentials.Type authType: String): Credentials {
     when (authType) {

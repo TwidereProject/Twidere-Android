@@ -132,14 +132,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         homeMenu.closeDrawers()
     }
 
-    val activatedAccountKeys: Array<UserKey>
-        get() {
-            val fragment = leftDrawerFragment
-            if (fragment is AccountsDashboardFragment) {
-                return fragment.activatedAccountIds
-            }
-            return DataStoreUtils.getActivatedAccountKeys(this)
-        }
+    private val activatedAccountKeys: Array<UserKey>
+        get() = DataStoreUtils.getActivatedAccountKeys(this)
 
     override val currentVisibleFragment: Fragment?
         get() {

@@ -20,44 +20,31 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
-import android.database.Cursor
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-
-import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
-
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.ParcelableAccountCursorIndices
-import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
-import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.AccountViewHolder
-
 import javax.inject.Inject
 
-class AccountsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
-        R.layout.list_item_account, null, arrayOf(Accounts.NAME),
-        intArrayOf(android.R.id.text1), 0), IBaseAdapter {
+class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(context, R.layout.list_item_account), IBaseAdapter {
 
     @Inject
     lateinit override var mediaLoader: MediaLoaderWrapper
 
     override var isProfileImageDisplayed: Boolean = false
     private var sortEnabled: Boolean = false
-    private var indices: ParcelableAccountCursorIndices? = null
     private var switchEnabled: Boolean = false
     private var onAccountToggleListener: OnAccountToggleListener? = null
 
-    private val mCheckedChangeListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-        val tag = buttonView.tag
-        if (tag !is String) return@OnCheckedChangeListener
+    private val checkedChangeListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        val tag = buttonView.tag as? String ?: return@OnCheckedChangeListener
         val accountKey = UserKey.valueOf(tag) ?: return@OnCheckedChangeListener
         onAccountToggleListener?.onAccountToggle(accountKey, isChecked)
     }
@@ -66,43 +53,28 @@ class AccountsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
         GeneralComponentHelper.build(context).inject(this)
     }
 
-    fun getAccount(position: Int): ParcelableAccount? {
-        val c = cursor
-        if (c == null || c.isClosed || !c.moveToPosition(position)) return null
-        return indices!!.newObject(c)
-    }
-
-    override fun bindView(view: View, context: Context?, cursor: Cursor) {
-        val indices = indices!!
-        val color = cursor.getInt(indices.color)
-        val holder = view.tag as AccountViewHolder
-        holder.screenName.text = String.format("@%s", cursor.getString(indices.screen_name))
-        holder.setAccountColor(color)
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        val view = super.getView(position, convertView, parent)
+        val holder = view.tag as? AccountViewHolder ?: run {
+            val h = AccountViewHolder(view)
+            view.tag = h
+            return@run h
+        }
+        val details = getItem(position)
+        holder.screenName.text = String.format("@%s", details.user.screen_name)
+        holder.setAccountColor(details.color)
         if (isProfileImageDisplayed) {
-            val user = JsonSerializer.parse(cursor.getString(indices.account_user), ParcelableUser::class.java)
-            if (user != null) {
-                mediaLoader.displayProfileImage(holder.profileImage, user)
-            } else {
-                mediaLoader.displayProfileImage(holder.profileImage,
-                        cursor.getString(indices.profile_image_url))
-            }
+            mediaLoader.displayProfileImage(holder.profileImage, details.user)
         } else {
             mediaLoader.cancelDisplayTask(holder.profileImage)
         }
-        val accountType = cursor.getString(indices.account_type)
+        val accountType = details.type
         holder.accountType.setImageResource(ParcelableAccountUtils.getAccountTypeIcon(accountType))
-        holder.toggle.isChecked = cursor.getShort(indices.is_activated).toInt() == 1
-        holder.toggle.setOnCheckedChangeListener(mCheckedChangeListener)
-        holder.toggle.tag = cursor.getString(indices.account_key)
+        holder.toggle.isChecked = details.activated
+        holder.toggle.setOnCheckedChangeListener(checkedChangeListener)
+        holder.toggle.tag = details.user.key
         holder.toggleContainer.visibility = if (switchEnabled) View.VISIBLE else View.GONE
         holder.setSortEnabled(sortEnabled)
-        super.bindView(view, context, cursor)
-    }
-
-    override fun newView(context: Context?, cursor: Cursor?, parent: ViewGroup): View {
-        val view = super.newView(context, cursor, parent)
-        val holder = AccountViewHolder(view)
-        view.tag = holder
         return view
     }
 
@@ -139,13 +111,6 @@ class AccountsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
 
     fun setOnAccountToggleListener(listener: OnAccountToggleListener) {
         onAccountToggleListener = listener
-    }
-
-    override fun swapCursor(cursor: Cursor?): Cursor? {
-        if (cursor != null) {
-            indices = ParcelableAccountCursorIndices(cursor)
-        }
-        return super.swapCursor(cursor)
     }
 
     fun setSortEnabled(sortEnabled: Boolean) {

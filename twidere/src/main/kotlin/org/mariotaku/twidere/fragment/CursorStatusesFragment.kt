@@ -31,7 +31,6 @@ import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.HomeActivity
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -122,13 +121,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     override val accountKeys: Array<UserKey>
         get() {
             val args = arguments
-            val context = context
             val accountKeys = Utils.getAccountKeys(context, args)
             if (accountKeys != null) {
                 return accountKeys
-            }
-            if (context is HomeActivity) {
-                return context.activatedAccountKeys
             }
             return DataStoreUtils.getActivatedAccountKeys(context)
         }

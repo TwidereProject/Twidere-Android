@@ -75,7 +75,7 @@ interface GeneralComponent {
 
     fun inject(obj: BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
 
-    fun inject(obj: AccountsAdapter)
+    fun inject(obj: AccountDetailsAdapter)
 
     fun inject(obj: ComposeAutoCompleteAdapter)
 

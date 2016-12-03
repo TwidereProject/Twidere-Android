@@ -19,14 +19,9 @@
 
 package org.mariotaku.twidere.activity
 
+import android.accounts.AccountManager
 import android.app.Activity
-import android.app.LoaderManager.LoaderCallbacks
-import android.content.CursorLoader
 import android.content.Intent
-import android.content.Loader
-import android.database.ContentObserver
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
@@ -36,37 +31,18 @@ import android.widget.ListView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_account_selector.*
 import org.mariotaku.ktextension.toTypedArray
-import org.mariotaku.sqliteqb.library.Columns
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.adapter.AccountsAdapter
+import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
-import java.util.*
+import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.model.util.AccountUtils
 
-class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClickListener, OnItemClickListener {
+class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
 
-    private val mContentObserver = object : ContentObserver(null) {
-
-        override fun onChange(selfChange: Boolean) {
-            onChange(selfChange, null)
-        }
-
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            // Handle change.
-            if (!isFinishing) {
-                loaderManager.restartLoader(0, null, this@AccountSelectorActivity)
-            }
-        }
-    }
-
-
-    private var adapter: AccountsAdapter? = null
+    private var adapter: AccountDetailsAdapter? = null
 
     private var firstCreated: Boolean = false
 
@@ -74,7 +50,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         when (view.id) {
             R.id.save -> {
                 val checkedIds = accountsList.checkedItemIds
-                if (checkedIds.size == 0 && !isSelectNoneAllowed) {
+                if (checkedIds.isEmpty() && !isSelectNoneAllowed) {
                     Toast.makeText(this, R.string.no_account_selected, Toast.LENGTH_SHORT).show()
                     return
                 }
@@ -86,76 +62,20 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        val conditions = ArrayList<Expression>()
-        val conditionArgs = ArrayList<String>()
-        if (isOAuthOnly) {
-            conditions.add(Expression.equalsArgs(Accounts.AUTH_TYPE))
-            conditionArgs.add(ParcelableCredentials.AuthTypeInt.OAUTH.toString())
-        }
-        val accountHost = accountHost
-        if (accountHost != null) {
-            if (USER_TYPE_TWITTER_COM == accountHost) {
-                conditions.add(Expression.or(
-                        Expression.equalsArgs(Accounts.ACCOUNT_TYPE),
-                        Expression.isNull(Columns.Column(Accounts.ACCOUNT_TYPE)),
-                        Expression.likeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"),
-                        Expression.notLikeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@%'")))
-                conditionArgs.add(AccountType.TWITTER)
-                conditionArgs.add(accountHost)
-            } else {
-                conditions.add(Expression.likeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"))
-                conditionArgs.add(accountHost)
-            }
-        }
-        val where: String?
-        val whereArgs: Array<String>?
-        if (conditions.isEmpty()) {
-            where = null
-            whereArgs = null
-        } else {
-            where = Expression.and(*conditions.toTypedArray()).sql
-            whereArgs = conditionArgs.toTypedArray()
-        }
-        return CursorLoader(this, Accounts.CONTENT_URI, Accounts.COLUMNS, where, whereArgs,
-                Accounts.SORT_POSITION)
-    }
-
-    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
-        val adapter = adapter!!
-        adapter.swapCursor(cursor)
-        if (cursor != null && firstCreated) {
-            val activatedKeys = intentExtraIds
-            for (i in 0..adapter.count - 1) {
-                accountsList.setItemChecked(i, activatedKeys?.contains(adapter.getAccount(i)!!.account_key) ?: false)
-            }
-        }
-        if (adapter.count == 1 && shouldSelectOnlyItem()) {
-            selectSingleAccount(0)
-        } else if (adapter.isEmpty) {
-            Toast.makeText(this, R.string.no_account, Toast.LENGTH_SHORT).show()
-            finish()
-        }
-    }
-
-    override fun onLoaderReset(loader: Loader<Cursor?>) {
-        adapter!!.swapCursor(null)
-    }
-
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         selectSingleAccount(position)
     }
 
     fun selectSingleAccount(position: Int) {
         val adapter = adapter!!
-        val account = adapter.getAccount(position)
+        val account = adapter.getItem(position)
         val data = Intent()
-        data.putExtra(EXTRA_ID, account!!.account_key.id)
-        data.putExtra(EXTRA_ACCOUNT_KEY, account.account_key)
+        data.putExtra(EXTRA_ID, account.key.id)
+        data.putExtra(EXTRA_ACCOUNT_KEY, account.key)
 
         val startIntent = startIntent
         if (startIntent != null) {
-            startIntent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key)
+            startIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
             startActivity(startIntent)
         }
 
@@ -167,34 +87,30 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         super.onCreate(savedInstanceState)
         firstCreated = savedInstanceState == null
         setContentView(R.layout.activity_account_selector)
-        adapter = AccountsAdapter(this)
-        val isSingleSelection = isSingleSelection
+        adapter = AccountDetailsAdapter(this).apply {
+            setSwitchEnabled(isSingleSelection)
+            setSortEnabled(false)
+            isProfileImageDisplayed = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
+            val am = AccountManager.get(context)
+            val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am))
+            addAll(allAccountDetails.filter {
+                if (isOAuthOnly && it.credentials_type != Credentials.Type.OAUTH && it.credentials_type != Credentials.Type.XAUTH) {
+                    return@filter false
+                }
+                if (USER_TYPE_TWITTER_COM == accountHost) {
+                    if (it.key.host == null || it.type == AccountType.TWITTER) return@filter false
+                } else if (accountHost != null) {
+                    if (accountHost != it.key.host) return@filter false
+                }
+                return@filter true
+            })
+        }
         accountsList.choiceMode = if (isSingleSelection) ListView.CHOICE_MODE_NONE else ListView.CHOICE_MODE_MULTIPLE
-        adapter!!.setSwitchEnabled(!isSingleSelection)
-        adapter!!.setSortEnabled(false)
         if (isSingleSelection) {
             accountsList.onItemClickListener = this
         }
         selectAccountButtons.visibility = if (isSingleSelection) View.GONE else View.VISIBLE
         accountsList.adapter = adapter
-        loaderManager.initLoader(0, null, this)
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-        contentResolver.registerContentObserver(Accounts.CONTENT_URI, true, mContentObserver)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val displayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
-        adapter!!.isProfileImageDisplayed = displayProfileImage
-    }
-
-    override fun onStop() {
-        contentResolver.unregisterContentObserver(mContentObserver)
-        super.onStop()
     }
 
     private val intentExtraIds: Array<UserKey>?

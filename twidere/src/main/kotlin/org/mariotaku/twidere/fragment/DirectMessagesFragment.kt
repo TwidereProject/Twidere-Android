@@ -40,7 +40,6 @@ import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_DIRECT_MESSAGES
-import org.mariotaku.twidere.activity.HomeActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.MessageEntriesAdapter
@@ -290,11 +289,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
             if (accountKeys != null) {
                 return accountKeys
             }
-            val activity = activity
-            if (activity is HomeActivity) {
-                return activity.activatedAccountKeys
-            }
-            return DataStoreUtils.getActivatedAccountKeys(getActivity())
+            return DataStoreUtils.getActivatedAccountKeys(activity)
         }
 
     private fun addReadPosition(firstVisibleItem: Int) {

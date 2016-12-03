@@ -46,6 +46,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String ACCOUNT_USER_DATA_USER = "user";
     String ACCOUNT_USER_DATA_EXTRAS = "extras";
     String ACCOUNT_USER_DATA_COLOR = "color";
+    String ACCOUNT_USER_DATA_POSITION = "position";
 
     String LOGTAG = TWIDERE_APP_NAME;
 

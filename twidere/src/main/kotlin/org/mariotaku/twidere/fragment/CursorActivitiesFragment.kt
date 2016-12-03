@@ -32,7 +32,6 @@ import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.HomeActivity
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
@@ -110,14 +109,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override val accountKeys: Array<UserKey>
         get() {
-            val context = context!!
-            val args = arguments
-            val accountKeys = Utils.getAccountKeys(context, args)
+            val accountKeys = Utils.getAccountKeys(context, arguments)
             if (accountKeys != null) {
                 return accountKeys
-            }
-            if (context is HomeActivity) {
-                return context.activatedAccountKeys
             }
             return DataStoreUtils.getActivatedAccountKeys(context)
         }
