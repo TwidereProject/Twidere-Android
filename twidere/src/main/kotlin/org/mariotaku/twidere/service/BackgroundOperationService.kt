@@ -60,6 +60,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
@@ -358,7 +359,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
         try {
             val directMessage: ParcelableDirectMessage
             when (ParcelableAccountUtils.getAccountType(credentials)) {
-                ParcelableAccount.Type.FANFOU -> {
+                AccountType.FANFOU -> {
                     if (imageUri != null) {
                         throw MicroBlogException("Can't send image DM on Fanfou")
                     }

@@ -37,6 +37,7 @@ import com.twitter.Validator
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.DummyItemAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
 import org.mariotaku.twidere.model.*
@@ -212,7 +213,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             update.accounts = arrayOf(account)
             val editingComment = editComment.text.toString()
             when (ParcelableAccountUtils.getAccountType(account)) {
-                ParcelableAccount.Type.FANFOU -> {
+                AccountType.FANFOU -> {
                     if (!status.is_quote || !quoteOriginalStatus) {
                         if (status.user_is_protected && showProtectedConfirmation) {
                             QuoteProtectedStatusWarnFragment.show(this, account, status)
@@ -254,7 +255,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
     }
 
     private fun useQuote(preCondition: Boolean, account: ParcelableAccount): Boolean {
-        return preCondition || ParcelableAccount.Type.FANFOU == account.account_type
+        return preCondition || AccountType.FANFOU == account.account_type
     }
 
 

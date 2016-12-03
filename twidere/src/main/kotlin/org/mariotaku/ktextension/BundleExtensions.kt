@@ -25,7 +25,7 @@ operator fun Bundle.set(key: String, value: Long) {
     return putLong(key, value)
 }
 
-operator fun Bundle.set(key: String, value: String) {
+operator fun Bundle.set(key: String, value: String?) {
     return putString(key, value)
 }
 

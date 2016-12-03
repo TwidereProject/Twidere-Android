@@ -169,7 +169,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar.setCustomView(R.layout.layout_actionbar_message_user_picker)
-        val accounts = DataStoreUtils.getCredentialsList(activity, false)
+        val accounts = ParcelableCredentialsUtils.getCredentialses(activity, false, false)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(
                 actionBar.themedContext, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)

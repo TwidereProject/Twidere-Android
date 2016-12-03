@@ -87,6 +87,7 @@ import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
@@ -2059,7 +2060,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             val context = context
             val credentials = ParcelableCredentialsUtils.getCredentials(context,
                     mAccountKey)
-            if (credentials == null || ParcelableAccount.Type.TWITTER != ParcelableAccountUtils.getAccountType(credentials)) {
+            if (credentials == null || AccountType.TWITTER != ParcelableAccountUtils.getAccountType(credentials)) {
                 return null
             }
             val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false) ?: return null

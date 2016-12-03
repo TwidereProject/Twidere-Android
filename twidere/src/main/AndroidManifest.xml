@@ -2,7 +2,7 @@
 <manifest package="org.mariotaku.twidere"
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto">
+          android:installLocation="internalOnly">
 
     <uses-sdk tools:overrideLibrary="android.support.customtabs"/>
 
@@ -39,6 +39,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.NFC"/>
+
+    <!-- Used for account management -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"/>

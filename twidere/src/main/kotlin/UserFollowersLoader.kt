@@ -26,6 +26,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableUser
@@ -44,7 +45,7 @@ class UserFollowersLoader(
     @Throws(MicroBlogException::class)
     override fun getCursoredUsers(twitter: MicroBlog, credentials: ParcelableCredentials, paging: Paging): ResponseList<User> {
         when (ParcelableAccountUtils.getAccountType(credentials)) {
-            ParcelableAccount.Type.STATUSNET -> {
+            AccountType.STATUSNET -> {
                 run {
                     if (userKey != null) {
                         return twitter.getStatusesFollowersList(userKey.id, paging)
@@ -67,7 +68,7 @@ class UserFollowersLoader(
                     }
                 }
             }
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 run {
                     if (userKey != null) {
                         return twitter.getUsersFollowers(userKey.id, paging)

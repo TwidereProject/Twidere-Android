@@ -1,23 +1,24 @@
 package org.mariotaku.twidere.model.util;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.sqliteqb.library.ArgsArray;
-import org.mariotaku.sqliteqb.library.Columns;
-import org.mariotaku.sqliteqb.library.Expression;
+import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.annotation.AccountType;
+import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableAccountCursorIndices;
+import org.mariotaku.twidere.model.ParcelableAccountExtensionsKt;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.util.DataStoreUtils;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
+import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.twidere.model.account.cred.OAuthCredentials;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by mariotaku on 16/2/20.
@@ -38,88 +39,80 @@ public class ParcelableAccountUtils {
     @Nullable
     public static ParcelableAccount getAccount(@NonNull final Context context,
                                                @NonNull final UserKey accountKey) {
-        final Cursor c = DataStoreUtils.getAccountCursor(context,
-                Accounts.COLUMNS_NO_CREDENTIALS, accountKey);
-        if (c == null) return null;
-        try {
-            final ParcelableAccountCursorIndices i = new ParcelableAccountCursorIndices(c);
-            if (c.moveToFirst()) {
-                return i.newObject(c);
-            }
-        } catch (IOException e) {
-            return null;
-        } finally {
-            c.close();
-        }
-        return null;
+        final AccountManager am = AccountManager.get(context);
+        final Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
+        return ParcelableAccountExtensionsKt.toParcelableAccount(account, am);
     }
 
     @NonNull
     public static ParcelableAccount[] getAccounts(final Context context, final boolean activatedOnly,
                                                   final boolean officialKeyOnly) {
-        final List<ParcelableAccount> list = DataStoreUtils.getAccountsList(context, activatedOnly, officialKeyOnly);
-        return list.toArray(new ParcelableAccount[list.size()]);
+        ArrayList<Account> accounts = new ArrayList<>();
+        final AccountManager am = AccountManager.get(context);
+        for (Account account : am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE)) {
+            boolean activated = AccountExtensionsKt.isAccountActivated(account, am);
+            if (!activated && activatedOnly) continue;
+            boolean isOfficialKey = isOfficialKey(context, account, am);
+            if (!isOfficialKey && officialKeyOnly) continue;
+            accounts.add(account);
+        }
+        return getAccounts(am, accounts.toArray(new Account[accounts.size()]));
+    }
+
+    static boolean isOfficialKey(Context context, Account account, AccountManager am) {
+        final String credentialsType = AccountExtensionsKt.getCredentialsType(account, am);
+        if (!Credentials.Type.OAUTH.equals(credentialsType) && !Credentials.Type.XAUTH.equals(credentialsType)) {
+            return false;
+        }
+        final OAuthCredentials credentials = (OAuthCredentials) AccountExtensionsKt.getCredentials(account, am);
+        return TwitterContentUtils.isOfficialKey(context, credentials.consumer_key, credentials.consumer_secret);
     }
 
     public static ParcelableAccount[] getAccounts(@NonNull final Context context) {
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                Accounts.COLUMNS_NO_CREDENTIALS, null, null, Accounts.SORT_POSITION);
-        if (cur == null) return new ParcelableAccount[0];
-        return getAccounts(cur, new ParcelableAccountCursorIndices(cur));
+        final AccountManager am = AccountManager.get(context);
+        return getAccounts(am, am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE));
     }
 
     @NonNull
     public static ParcelableAccount[] getAccounts(@NonNull final Context context, @NonNull final UserKey... accountIds) {
-        final String where = Expression.in(new Columns.Column(Accounts.ACCOUNT_KEY),
-                new ArgsArray(accountIds.length)).getSQL();
-        final String[] whereArgs = TwidereArrayUtils.toStringArray(accountIds);
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                Accounts.COLUMNS_NO_CREDENTIALS, where, whereArgs, null);
-        if (cur == null) return new ParcelableAccount[0];
-        return getAccounts(cur, new ParcelableAccountCursorIndices(cur));
-    }
-
-    @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor) {
-        if (cursor == null) return new ParcelableAccount[0];
-        return getAccounts(cursor, new ParcelableAccountCursorIndices(cursor));
-    }
-
-    @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final Cursor cursor, @Nullable final ParcelableAccountCursorIndices indices) {
-        if (cursor == null || indices == null) return new ParcelableAccount[0];
-        try {
-            cursor.moveToFirst();
-            final ParcelableAccount[] names = new ParcelableAccount[cursor.getCount()];
-            while (!cursor.isAfterLast()) {
-                names[cursor.getPosition()] = indices.newObject(cursor);
-                cursor.moveToNext();
+        ArrayList<Account> accounts = new ArrayList<>();
+        final AccountManager am = AccountManager.get(context);
+        for (Account account : am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE)) {
+            if (ArrayUtils.contains(accountIds, AccountExtensionsKt.getAccountKey(account, am))) {
+                accounts.add(account);
             }
-            return names;
-        } catch (IOException e) {
-            return new ParcelableAccount[0];
-        } finally {
-            cursor.close();
         }
+        return getAccounts(am, accounts.toArray(new Account[accounts.size()]));
     }
 
     @NonNull
-    @ParcelableAccount.Type
+    public static ParcelableAccount[] getAccounts(@Nullable final AccountManager am, @Nullable final Account[] accounts) {
+        if (accounts == null) return new ParcelableAccount[0];
+        final ParcelableAccount[] parcelableAccounts = new ParcelableAccount[accounts.length];
+        for (int i = 0; i < accounts.length; i++) {
+            parcelableAccounts[i] = ParcelableAccountExtensionsKt.toParcelableAccount(accounts[i], am);
+        }
+        return parcelableAccounts;
+    }
+
+    @NonNull
+    @AccountType
     public static String getAccountType(@NonNull ParcelableAccount account) {
-        if (account.account_type == null) return ParcelableAccount.Type.TWITTER;
+        if (account.account_type == null) return AccountType.TWITTER;
         return account.account_type;
     }
 
     public static int getAccountTypeIcon(@Nullable String accountType) {
         if (accountType == null) return R.drawable.ic_account_logo_twitter;
         switch (accountType) {
-            case ParcelableAccount.Type.TWITTER: {
+            case AccountType.TWITTER: {
                 return R.drawable.ic_account_logo_twitter;
             }
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 return R.drawable.ic_account_logo_fanfou;
             }
-            case ParcelableAccount.Type.STATUSNET: {
+            case AccountType.STATUSNET: {
                 return R.drawable.ic_account_logo_statusnet;
             }
 

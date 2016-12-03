@@ -39,6 +39,7 @@ import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
@@ -128,7 +129,7 @@ public class StreamingService extends Service implements Constants {
     }
 
     private boolean setTwitterInstances() {
-        final List<ParcelableCredentials> accountsList = DataStoreUtils.getCredentialsList(this, true);
+        final List<ParcelableCredentials> accountsList = ParcelableCredentialsUtils.getCredentialses(this, true, false);
         final UserKey[] accountKeys = new UserKey[accountsList.size()];
         for (int i = 0, j = accountKeys.length; i < j; i++) {
             final ParcelableCredentials credentials = accountsList.get(i);

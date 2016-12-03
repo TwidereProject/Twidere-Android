@@ -22,7 +22,6 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -34,16 +33,15 @@ import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
-@CursorObject(valuesCreator = true)
+@CursorObject
 @ParcelablePlease(allFields = false)
 @JsonObject
+@Deprecated
 public class ParcelableAccount implements Parcelable {
 
     @ParcelableThisPlease
@@ -67,7 +65,7 @@ public class ParcelableAccount implements Parcelable {
     public String name;
 
     @Nullable
-    @Type
+    @AccountType
     @ParcelableThisPlease
     @JsonField(name = "account_type")
     @CursorField(Accounts.ACCOUNT_TYPE)
@@ -177,11 +175,4 @@ public class ParcelableAccount implements Parcelable {
         }
     }
 
-    @StringDef({Type.TWITTER, Type.STATUSNET, Type.FANFOU})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Type {
-        String TWITTER = "twitter";
-        String STATUSNET = "statusnet";
-        String FANFOU = "fanfou";
-    }
 }

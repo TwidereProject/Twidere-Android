@@ -56,8 +56,8 @@ import org.mariotaku.microblog.library.twitter.model.UserListUpdate;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ListResponse;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -753,7 +753,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final ParcelableStatus result;
                 switch (ParcelableAccountUtils.getAccountType(credentials)) {
-                    case ParcelableAccount.Type.FANFOU: {
+                    case AccountType.FANFOU: {
                         result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.createFanfouFavorite(mStatusId),
                                 mAccountKey, false);
                         break;
@@ -1237,7 +1237,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             try {
                 final ParcelableStatus result;
                 switch (ParcelableAccountUtils.getAccountType(credentials)) {
-                    case ParcelableAccount.Type.FANFOU: {
+                    case AccountType.FANFOU: {
                         result = ParcelableStatusUtils.INSTANCE.fromStatus(twitter.destroyFanfouFavorite(mStatusId),
                                 mAccountKey, false);
                         break;

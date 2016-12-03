@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.model.util;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -9,11 +8,8 @@ import android.text.TextUtils;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.UriUtils;
-
-import java.util.ArrayList;
 
 import static org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM;
 import static org.mariotaku.twidere.TwidereConstants.USER_TYPE_TWITTER_COM;
@@ -28,33 +24,7 @@ public class UserKeyUtils {
 
     @Nullable
     public static UserKey findById(Context context, String id) {
-        final String[] projection = {Accounts.ACCOUNT_KEY};
-        final Cursor cur = DataStoreUtils.findAccountCursorsById(context, projection, id);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) return UserKey.valueOf(cur.getString(0));
-        } finally {
-            cur.close();
-        }
-        return null;
-    }
-
-    @NonNull
-    public static UserKey[] findByIds(Context context, String... id) {
-        final String[] projection = {Accounts.ACCOUNT_KEY};
-        final Cursor cur = DataStoreUtils.findAccountCursorsById(context, projection, id);
-        if (cur == null) return new UserKey[0];
-        try {
-            final ArrayList<UserKey> accountKeys = new ArrayList<>();
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                accountKeys.add(UserKey.valueOf(cur.getString(0)));
-                cur.moveToNext();
-            }
-            return accountKeys.toArray(new UserKey[accountKeys.size()]);
-        } finally {
-            cur.close();
-        }
+        return DataStoreUtils.findAccountKey(context, id);
     }
 
     public static UserKey fromUser(User user) {

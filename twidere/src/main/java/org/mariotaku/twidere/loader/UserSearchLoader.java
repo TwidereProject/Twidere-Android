@@ -26,7 +26,7 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -60,7 +60,7 @@ public class UserSearchLoader extends TwitterAPIUsersLoader {
         final Paging paging = new Paging();
         paging.page(mPage);
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 return twitter.searchFanfouUsers(mQuery, paging);
             }
         }

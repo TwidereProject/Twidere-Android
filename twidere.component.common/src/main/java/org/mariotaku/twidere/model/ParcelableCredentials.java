@@ -40,8 +40,9 @@ import java.lang.annotation.RetentionPolicy;
  * Created by mariotaku on 15/5/26.
  */
 @JsonObject
-@CursorObject(valuesCreator = true)
+@CursorObject
 @ParcelablePlease
+@Deprecated
 public class ParcelableCredentials extends ParcelableAccount implements Parcelable {
 
     public static final Creator<ParcelableCredentials> CREATOR = new Creator<ParcelableCredentials>() {
@@ -61,7 +62,7 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
     @ParcelableThisPlease
     @JsonField(name = "auth_type")
     @CursorField(Accounts.AUTH_TYPE)
-    @AuthType
+    @AuthTypeInt
     public int auth_type;
     @ParcelableThisPlease
     @JsonField(name = "consumer_key")
@@ -136,10 +137,10 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
         ParcelableCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    @IntDef({AuthType.OAUTH, AuthType.XAUTH, AuthType.BASIC, AuthType.TWIP_O_MODE,
-            AuthType.OAUTH2})
+    @IntDef({AuthTypeInt.OAUTH, AuthTypeInt.XAUTH, AuthTypeInt.BASIC, AuthTypeInt.TWIP_O_MODE,
+            AuthTypeInt.OAUTH2})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface AuthType {
+    public @interface AuthTypeInt {
 
         int OAUTH = 0;
         int XAUTH = 1;
@@ -147,4 +148,5 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
         int TWIP_O_MODE = 3;
         int OAUTH2 = 4;
     }
+
 }

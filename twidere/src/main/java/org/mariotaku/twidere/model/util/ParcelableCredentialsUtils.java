@@ -1,17 +1,21 @@
 package org.mariotaku.twidere.model.util;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
+import org.mariotaku.twidere.model.ParcelableCredentials.AuthTypeInt;
+import org.mariotaku.twidere.model.ParcelableCredentialsExtensionsKt;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.twidere.util.TwitterContentUtils;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mariotaku on 16/3/4.
@@ -22,8 +26,8 @@ public class ParcelableCredentialsUtils {
 
     public static boolean isOAuth(int authType) {
         switch (authType) {
-            case ParcelableCredentials.AuthType.OAUTH:
-            case ParcelableCredentials.AuthType.XAUTH: {
+            case AuthTypeInt.OAUTH:
+            case AuthTypeInt.XAUTH: {
                 return true;
             }
         }
@@ -33,45 +37,52 @@ public class ParcelableCredentialsUtils {
     @Nullable
     public static ParcelableCredentials getCredentials(@NonNull final Context context,
                                                        @NonNull final UserKey accountKey) {
-        final Cursor c = DataStoreUtils.getAccountCursor(context, Accounts.COLUMNS, accountKey);
-        if (c == null) return null;
-        try {
-            final ParcelableCredentialsCursorIndices i = new ParcelableCredentialsCursorIndices(c);
-            if (c.moveToFirst()) {
-                return i.newObject(c);
-            }
-        } catch (IOException e) {
-            return null;
-        } finally {
-            c.close();
-        }
-        return null;
+        final AccountManager am = AccountManager.get(context);
+        final Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
+        return ParcelableCredentialsExtensionsKt.toParcelableCredentials(account, am);
     }
 
-
     @NonNull
-    public static ParcelableCredentials[] getCredentialses(@Nullable final Cursor cursor, @Nullable final ParcelableCredentialsCursorIndices indices) {
-        if (cursor == null || indices == null) return new ParcelableCredentials[0];
-        try {
-            cursor.moveToFirst();
-            final ParcelableCredentials[] credentialses = new ParcelableCredentials[cursor.getCount()];
-            while (!cursor.isAfterLast()) {
-                credentialses[cursor.getPosition()] = indices.newObject(cursor);
-                cursor.moveToNext();
-            }
-            return credentialses;
-        }  catch (IOException e) {
-            return new ParcelableCredentials[0];
-        }finally {
-            cursor.close();
+    public static List<ParcelableCredentials> getCredentialses(final Context context, final boolean activatedOnly,
+                                                               final boolean officialKeyOnly) {
+        ArrayList<ParcelableCredentials> credentialses = new ArrayList<>();
+        for (ParcelableCredentials credentials : getCredentialses(context)) {
+            boolean activated = credentials.is_activated;
+            if (!activated && activatedOnly) continue;
+            boolean isOfficialKey = TwitterContentUtils.isOfficialKey(context,
+                    credentials.consumer_key, credentials.consumer_secret);
+            if (!isOfficialKey && officialKeyOnly) continue;
+            credentialses.add(credentials);
         }
+        return credentialses;
     }
 
 
     public static ParcelableCredentials[] getCredentialses(@NonNull final Context context) {
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                Accounts.COLUMNS, null, null, null);
-        if (cur == null) return new ParcelableCredentials[0];
-        return getCredentialses(cur, new ParcelableCredentialsCursorIndices(cur));
+        final AccountManager am = AccountManager.get(context);
+        final Account[] accounts = am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE);
+        final ParcelableCredentials[] credentialses = new ParcelableCredentials[accounts.length];
+        for (int i = 0; i < accounts.length; i++) {
+            credentialses[i] = ParcelableCredentialsExtensionsKt.toParcelableCredentials(accounts[i], am);
+        }
+        return credentialses;
+    }
+
+
+    public static String getCredentialsType(@AuthTypeInt int authType) {
+        switch (authType) {
+            case AuthTypeInt.OAUTH:
+                return Credentials.Type.OAUTH;
+            case AuthTypeInt.BASIC:
+                return Credentials.Type.BASIC;
+            case AuthTypeInt.TWIP_O_MODE:
+                return Credentials.Type.EMPTY;
+            case AuthTypeInt.XAUTH:
+                return Credentials.Type.XAUTH;
+            case AuthTypeInt.OAUTH2:
+                return Credentials.Type.OAUTH2;
+        }
+        throw new UnsupportedOperationException();
     }
 }

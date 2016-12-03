@@ -34,7 +34,7 @@ public final class CustomAPIConfig {
     String localizedName;
     @JsonField(name = "api_url_format")
     String apiUrlFormat;
-    @ParcelableCredentials.AuthType
+    @ParcelableCredentials.AuthTypeInt
     @JsonField(name = "auth_type", typeConverter = AuthTypeConverter.class)
     int authType;
     @JsonField(name = "same_oauth_url")
@@ -116,46 +116,46 @@ public final class CustomAPIConfig {
 
     public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
         return Collections.singletonList(new CustomAPIConfig(context.getString(R.string.provider_default),
-                DEFAULT_TWITTER_API_URL_FORMAT, ParcelableCredentials.AuthType.OAUTH, true, false,
+                DEFAULT_TWITTER_API_URL_FORMAT, ParcelableCredentials.AuthTypeInt.OAUTH, true, false,
                 TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET));
     }
 
     static class AuthTypeConverter extends StringBasedTypeConverter<Integer> {
         @Override
-        @ParcelableCredentials.AuthType
+        @ParcelableCredentials.AuthTypeInt
         public Integer getFromString(String string) {
-            if (string == null) return ParcelableCredentials.AuthType.OAUTH;
+            if (string == null) return ParcelableCredentials.AuthTypeInt.OAUTH;
             switch (string) {
                 case "oauth": {
-                    return ParcelableCredentials.AuthType.OAUTH;
+                    return ParcelableCredentials.AuthTypeInt.OAUTH;
                 }
                 case "xauth": {
-                    return ParcelableCredentials.AuthType.XAUTH;
+                    return ParcelableCredentials.AuthTypeInt.XAUTH;
                 }
                 case "basic": {
-                    return ParcelableCredentials.AuthType.BASIC;
+                    return ParcelableCredentials.AuthTypeInt.BASIC;
                 }
                 case "twip_o_mode": {
-                    return ParcelableCredentials.AuthType.TWIP_O_MODE;
+                    return ParcelableCredentials.AuthTypeInt.TWIP_O_MODE;
                 }
             }
-            return ParcelableCredentials.AuthType.OAUTH;
+            return ParcelableCredentials.AuthTypeInt.OAUTH;
         }
 
         @Override
-        public String convertToString(@ParcelableCredentials.AuthType Integer object) {
+        public String convertToString(@ParcelableCredentials.AuthTypeInt Integer object) {
             if (object == null) return "oauth";
             switch (object) {
-                case ParcelableCredentials.AuthType.OAUTH: {
+                case ParcelableCredentials.AuthTypeInt.OAUTH: {
                     return "oauth";
                 }
-                case ParcelableCredentials.AuthType.XAUTH: {
+                case ParcelableCredentials.AuthTypeInt.XAUTH: {
                     return "xauth";
                 }
-                case ParcelableCredentials.AuthType.BASIC: {
+                case ParcelableCredentials.AuthTypeInt.BASIC: {
                     return "basic";
                 }
-                case ParcelableCredentials.AuthType.TWIP_O_MODE: {
+                case ParcelableCredentials.AuthTypeInt.TWIP_O_MODE: {
                     return "twip_o_mode";
                 }
             }

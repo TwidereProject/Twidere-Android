@@ -57,6 +57,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
@@ -387,13 +388,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         var hasGroups = false
         var hasPublicTimeline = false
         when (ParcelableAccountUtils.getAccountType(account)) {
-            ParcelableAccount.Type.TWITTER -> {
+            AccountType.TWITTER -> {
                 hasLists = true
             }
-            ParcelableAccount.Type.STATUSNET -> {
+            AccountType.STATUSNET -> {
                 hasGroups = true
             }
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 hasPublicTimeline = true
             }
         }

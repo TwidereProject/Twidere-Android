@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -59,15 +60,15 @@ open class TweetSearchLoader(
         if (query == null) throw MicroBlogException("Empty query")
         val processedQuery = processQuery(credentials, query)
         when (ParcelableAccountUtils.getAccountType(credentials)) {
-            ParcelableAccount.Type.TWITTER -> {
+            AccountType.TWITTER -> {
                 val query = SearchQuery(processedQuery)
                 query.paging(paging)
                 return microBlog.search(query)
             }
-            ParcelableAccount.Type.STATUSNET -> {
+            AccountType.STATUSNET -> {
                 return microBlog.searchStatuses(processedQuery, paging)
             }
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 return microBlog.searchPublicTimeline(processedQuery, paging)
             }
         }

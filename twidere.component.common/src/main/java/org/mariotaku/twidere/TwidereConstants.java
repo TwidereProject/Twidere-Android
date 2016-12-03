@@ -38,6 +38,14 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String TWIDERE_PACKAGE_NAME = "org.mariotaku.twidere";
 
     String ACCOUNT_TYPE = "org.mariotaku.twidere.account";
+    String ACCOUNT_AUTH_TOKEN_TYPE = "org.mariotaku.twidere.account.token";
+    String ACCOUNT_USER_DATA_KEY = "key";
+    String ACCOUNT_USER_DATA_TYPE = "type";
+    String ACCOUNT_USER_DATA_CREDS_TYPE = "creds_type";
+    String ACCOUNT_USER_DATA_ACTIVATED = "activated";
+    String ACCOUNT_USER_DATA_USER = "user";
+    String ACCOUNT_USER_DATA_EXTRAS = "extras";
+    String ACCOUNT_USER_DATA_COLOR = "color";
 
     String LOGTAG = TWIDERE_APP_NAME;
 

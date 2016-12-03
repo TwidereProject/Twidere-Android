@@ -66,12 +66,12 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
 
     override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
         val authType = getCheckedAuthType(checkedId)
-        val isOAuth = authType == ParcelableCredentials.AuthType.OAUTH || authType == ParcelableCredentials.AuthType.XAUTH
+        val isOAuth = authType == ParcelableCredentials.AuthTypeInt.OAUTH || authType == ParcelableCredentials.AuthTypeInt.XAUTH
         editSameOAuthSigningUrl.visibility = if (isOAuth) View.VISIBLE else View.GONE
         editConsumerKey.visibility = if (isOAuth) View.VISIBLE else View.GONE
         editConsumerSecret.visibility = if (isOAuth) View.VISIBLE else View.GONE
         if (!editNoVersionSuffixChanged) {
-            editNoVersionSuffix.isChecked = authType == ParcelableCredentials.AuthType.TWIP_O_MODE
+            editNoVersionSuffix.isChecked = authType == ParcelableCredentials.AuthTypeInt.TWIP_O_MODE
         }
     }
 
@@ -153,7 +153,7 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
 
         val pref = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val prefApiUrlFormat = Utils.getNonEmptyString(pref, KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT)
-        val prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH)
+        val prefAuthType = pref.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthTypeInt.OAUTH)
         val prefSameOAuthSigningUrl = pref.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false)
         val prefNoVersionSuffix = pref.getBoolean(KEY_NO_VERSION_SUFFIX, false)
         val prefConsumerKey = Utils.getNonEmptyString(pref, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY)
@@ -187,10 +187,10 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         editConsumerKey.setText(consumerKey)
         editConsumerSecret.setText(consumerSecret)
 
-        oauth.isChecked = authType == ParcelableCredentials.AuthType.OAUTH
-        xauth.isChecked = authType == ParcelableCredentials.AuthType.XAUTH
-        basic.isChecked = authType == ParcelableCredentials.AuthType.BASIC
-        twipO.isChecked = authType == ParcelableCredentials.AuthType.TWIP_O_MODE
+        oauth.isChecked = authType == ParcelableCredentials.AuthTypeInt.OAUTH
+        xauth.isChecked = authType == ParcelableCredentials.AuthTypeInt.XAUTH
+        basic.isChecked = authType == ParcelableCredentials.AuthTypeInt.BASIC
+        twipO.isChecked = authType == ParcelableCredentials.AuthTypeInt.TWIP_O_MODE
         if (editAuthType.checkedRadioButtonId == -1) {
             oauth.isChecked = true
         }
@@ -199,13 +199,13 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
 
     private fun getAuthTypeId(authType: Int): Int {
         when (authType) {
-            ParcelableCredentials.AuthType.XAUTH -> {
+            ParcelableCredentials.AuthTypeInt.XAUTH -> {
                 return R.id.xauth
             }
-            ParcelableCredentials.AuthType.BASIC -> {
+            ParcelableCredentials.AuthTypeInt.BASIC -> {
                 return R.id.basic
             }
-            ParcelableCredentials.AuthType.TWIP_O_MODE -> {
+            ParcelableCredentials.AuthTypeInt.TWIP_O_MODE -> {
                 return R.id.twipO
             }
             else -> {
@@ -310,16 +310,16 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         fun getCheckedAuthType(checkedId: Int): Int {
             when (checkedId) {
                 R.id.xauth -> {
-                    return ParcelableCredentials.AuthType.XAUTH
+                    return ParcelableCredentials.AuthTypeInt.XAUTH
                 }
                 R.id.basic -> {
-                    return ParcelableCredentials.AuthType.BASIC
+                    return ParcelableCredentials.AuthTypeInt.BASIC
                 }
                 R.id.twipO -> {
-                    return ParcelableCredentials.AuthType.TWIP_O_MODE
+                    return ParcelableCredentials.AuthTypeInt.TWIP_O_MODE
                 }
                 else -> {
-                    return ParcelableCredentials.AuthType.OAUTH
+                    return ParcelableCredentials.AuthTypeInt.OAUTH
                 }
             }
         }

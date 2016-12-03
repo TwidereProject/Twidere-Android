@@ -29,6 +29,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
@@ -226,7 +227,7 @@ class UpdateStatusTask(
             var bodyAndSize: Pair<Body, Point>? = null
             try {
                 when (ParcelableAccountUtils.getAccountType(account)) {
-                    ParcelableAccount.Type.FANFOU -> {
+                    AccountType.FANFOU -> {
                         // Call uploadPhoto if media present
                         if (!ArrayUtils.isEmpty(statusUpdate.media)) {
                             // Fanfou only allow one photo
@@ -281,7 +282,7 @@ class UpdateStatusTask(
         // Return empty array if no media attached
         if (ArrayUtils.isEmpty(update.media)) return
         val ownersList = update.accounts.filter {
-            ParcelableAccount.Type.TWITTER == ParcelableAccountUtils.getAccountType(it)
+            AccountType.TWITTER == ParcelableAccountUtils.getAccountType(it)
         }.map(ParcelableAccount::account_key)
         val ownerIds = ownersList.map {
             it.id
@@ -290,7 +291,7 @@ class UpdateStatusTask(
             val account = update.accounts[i]
             val mediaIds: Array<String>?
             when (ParcelableAccountUtils.getAccountType(account)) {
-                ParcelableAccount.Type.TWITTER -> {
+                AccountType.TWITTER -> {
                     val upload = MicroBlogAPIFactory.getInstance(context,
                             account.account_key, true, true, TwitterUpload::class.java)!!
                     if (pendingUpdate.sharedMediaIds != null) {
@@ -300,11 +301,11 @@ class UpdateStatusTask(
                         pendingUpdate.sharedMediaIds = mediaIds
                     }
                 }
-                ParcelableAccount.Type.FANFOU -> {
+                AccountType.FANFOU -> {
                     // Nope, fanfou uses photo uploading API
                     mediaIds = null
                 }
-                ParcelableAccount.Type.STATUSNET -> {
+                AccountType.STATUSNET -> {
                     // TODO use their native API
                     val upload = MicroBlogAPIFactory.getInstance(context,
                             account.account_key, true, true, TwitterUpload::class.java)!!

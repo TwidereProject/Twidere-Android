@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.model;
+package org.mariotaku.twidere.model.account;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,19 +13,19 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
  */
 @ParcelablePlease
 @JsonObject
-public class StatusNetAccountExtra implements Parcelable, AccountExtras {
+public class StatusNetAccountExtras implements Parcelable, AccountExtras {
 
-    public static final Creator<StatusNetAccountExtra> CREATOR = new Creator<StatusNetAccountExtra>() {
+    public static final Creator<StatusNetAccountExtras> CREATOR = new Creator<StatusNetAccountExtras>() {
         @Override
-        public StatusNetAccountExtra createFromParcel(Parcel source) {
-            StatusNetAccountExtra target = new StatusNetAccountExtra();
-            StatusNetAccountExtraParcelablePlease.readFromParcel(target, source);
+        public StatusNetAccountExtras createFromParcel(Parcel source) {
+            StatusNetAccountExtras target = new StatusNetAccountExtras();
+            StatusNetAccountExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
         @Override
-        public StatusNetAccountExtra[] newArray(int size) {
-            return new StatusNetAccountExtra[size];
+        public StatusNetAccountExtras[] newArray(int size) {
+            return new StatusNetAccountExtras[size];
         }
     };
 
@@ -48,6 +48,6 @@ public class StatusNetAccountExtra implements Parcelable, AccountExtras {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        StatusNetAccountExtraParcelablePlease.writeToParcel(this, dest, flags);
+        StatusNetAccountExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 }

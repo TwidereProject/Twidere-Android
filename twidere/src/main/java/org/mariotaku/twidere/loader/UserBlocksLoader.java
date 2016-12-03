@@ -26,7 +26,7 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -48,7 +48,7 @@ public class UserBlocksLoader extends CursorSupportUsersLoader {
                                                 @NonNull final Paging paging)
             throws MicroBlogException {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 return twitter.getFanfouBlocking(paging);
             }
         }

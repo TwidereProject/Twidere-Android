@@ -39,7 +39,7 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
 
     override fun read(preferences: SharedPreferences): CustomAPIConfig {
         val apiUrlFormat = preferences.getNonEmptyString(KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT)
-        val authType = preferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthType.OAUTH)
+        val authType = preferences.getInt(KEY_AUTH_TYPE, ParcelableCredentials.AuthTypeInt.OAUTH)
         val sameOAuthSigningUrl = preferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false)
         val noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false)
         val consumerKey = preferences.getNonEmptyString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY).trim()

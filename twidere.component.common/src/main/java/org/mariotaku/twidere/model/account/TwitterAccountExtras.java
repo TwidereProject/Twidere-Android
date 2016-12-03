@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.model;
+package org.mariotaku.twidere.model.account;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -13,19 +13,19 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
  */
 @ParcelablePlease
 @JsonObject
-public class TwitterAccountExtra implements Parcelable, AccountExtras {
+public class TwitterAccountExtras implements Parcelable, AccountExtras {
 
-    public static final Creator<TwitterAccountExtra> CREATOR = new Creator<TwitterAccountExtra>() {
+    public static final Creator<TwitterAccountExtras> CREATOR = new Creator<TwitterAccountExtras>() {
         @Override
-        public TwitterAccountExtra createFromParcel(Parcel source) {
-            TwitterAccountExtra target = new TwitterAccountExtra();
-            TwitterAccountExtraParcelablePlease.readFromParcel(target, source);
+        public TwitterAccountExtras createFromParcel(Parcel source) {
+            TwitterAccountExtras target = new TwitterAccountExtras();
+            TwitterAccountExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
         @Override
-        public TwitterAccountExtra[] newArray(int size) {
-            return new TwitterAccountExtra[size];
+        public TwitterAccountExtras[] newArray(int size) {
+            return new TwitterAccountExtras[size];
         }
     };
 
@@ -48,6 +48,6 @@ public class TwitterAccountExtra implements Parcelable, AccountExtras {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        TwitterAccountExtraParcelablePlease.writeToParcel(this, dest, flags);
+        TwitterAccountExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 }

@@ -95,6 +95,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
@@ -769,9 +770,6 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
         MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.scheduled_statuses, isMyself &&
-                MicroBlogAPIFactory.getOfficialKeyType(activity, user.account_key)
-                        == ConsumerKeyType.TWEETDECK)
 
         MenuUtils.setItemAvailability(menu, R.id.blocked_users, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.block, !isMyself)
@@ -780,7 +778,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val isTwitter: Boolean
 
         if (account != null) {
-            isTwitter = TextUtils.equals(ParcelableAccount.Type.TWITTER,
+            isTwitter = TextUtils.equals(AccountType.TWITTER,
                     ParcelableAccountUtils.getAccountType(account))
         } else {
             isTwitter = false

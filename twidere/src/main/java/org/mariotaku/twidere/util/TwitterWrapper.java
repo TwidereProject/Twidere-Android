@@ -38,8 +38,8 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.restfu.http.ContentType;
 import org.mariotaku.restfu.http.mime.FileBody;
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ListResponse;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
@@ -114,12 +114,12 @@ public class TwitterWrapper implements Constants {
     public static User showUser(final MicroBlog twitter, final String id, final String screenName,
                                 final String accountType) throws MicroBlogException {
         if (id != null) {
-            if (ParcelableAccount.Type.FANFOU.equals(accountType)) {
+            if (AccountType.FANFOU.equals(accountType)) {
                 return twitter.showFanfouUser(id);
             }
             return twitter.showUser(id);
         } else if (screenName != null) {
-            if (ParcelableAccount.Type.FANFOU.equals(accountType)) {
+            if (AccountType.FANFOU.equals(accountType)) {
                 return twitter.showFanfouUser(screenName);
             }
             return twitter.showUserByScreenName(screenName);

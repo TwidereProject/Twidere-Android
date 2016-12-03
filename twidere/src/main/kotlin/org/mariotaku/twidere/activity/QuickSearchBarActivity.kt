@@ -49,6 +49,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVI
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.*
@@ -165,7 +166,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quick_search_bar)
-        val accounts = DataStoreUtils.getCredentialsList(this, false)
+        val accounts = ParcelableCredentialsUtils.getCredentialses(this, false, false)
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)

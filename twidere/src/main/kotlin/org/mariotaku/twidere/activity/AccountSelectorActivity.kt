@@ -41,6 +41,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountsAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
@@ -90,7 +91,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
         val conditionArgs = ArrayList<String>()
         if (isOAuthOnly) {
             conditions.add(Expression.equalsArgs(Accounts.AUTH_TYPE))
-            conditionArgs.add(ParcelableCredentials.AuthType.OAUTH.toString())
+            conditionArgs.add(ParcelableCredentials.AuthTypeInt.OAUTH.toString())
         }
         val accountHost = accountHost
         if (accountHost != null) {
@@ -100,7 +101,7 @@ class AccountSelectorActivity : BaseActivity(), LoaderCallbacks<Cursor?>, OnClic
                         Expression.isNull(Columns.Column(Accounts.ACCOUNT_TYPE)),
                         Expression.likeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"),
                         Expression.notLikeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@%'")))
-                conditionArgs.add(ParcelableAccount.Type.TWITTER)
+                conditionArgs.add(AccountType.TWITTER)
                 conditionArgs.add(accountHost)
             } else {
                 conditions.add(Expression.likeRaw(Columns.Column(Accounts.ACCOUNT_KEY), "'%@'||?"))

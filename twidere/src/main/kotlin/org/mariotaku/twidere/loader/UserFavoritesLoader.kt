@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -68,7 +69,7 @@ class UserFavoritesLoader(
 
     override fun processPaging(credentials: ParcelableCredentials, loadItemLimit: Int, paging: Paging) {
         when (ParcelableAccountUtils.getAccountType(credentials)) {
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 paging.setCount(loadItemLimit)
                 if (page > 0) {
                     paging.setPage(page)

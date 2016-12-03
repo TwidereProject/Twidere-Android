@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.model;
+package org.mariotaku.twidere.model.account;
 
 import android.os.Parcelable;
 

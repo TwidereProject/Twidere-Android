@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.util;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,6 +40,7 @@ import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
@@ -51,18 +54,18 @@ import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
-import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserFollowState;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
@@ -90,7 +93,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -379,92 +381,39 @@ public class DataStoreUtils implements Constants {
         return name;
     }
 
-    public static String getAccountName(final Context context, final UserKey accountKey) {
-        if (context == null) return null;
+    public static String getAccountName(@NonNull final Context context, final UserKey accountKey) {
         final String cached = sAccountNames.get(accountKey);
         if (!isEmpty(cached)) return cached;
-        final String[] projection = {Accounts.SCREEN_NAME};
-        final Cursor cur = getAccountCursor(context, projection, accountKey);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) {
-                final String name = cur.getString(0);
-                sAccountNames.put(accountKey, name);
-                return name;
-            }
-            return null;
-        } finally {
-            cur.close();
-        }
+
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
+
+        return AccountExtensionsKt.getAccountUser(account, am).name;
     }
 
     public static String getAccountScreenName(final Context context, final UserKey accountKey) {
         if (context == null) return null;
         final String cached = sAccountScreenNames.get(accountKey);
         if (!isEmpty(cached)) return cached;
-        final String[] projection = {Accounts.SCREEN_NAME};
-        final Cursor cur = getAccountCursor(context, projection, accountKey);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) {
-                final String name = cur.getString(0);
-                sAccountScreenNames.put(accountKey, name);
-                return name;
-            }
-            return null;
-        } finally {
-            cur.close();
-        }
-    }
 
-    public static String[] getAccountScreenNames(final Context context) {
-        return getAccountScreenNames(context, null);
-    }
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
 
-    public static String[] getAccountScreenNames(@NonNull final Context context, @Nullable final UserKey[] accountKeys) {
-        final String[] cols = new String[]{Accounts.SCREEN_NAME};
-        final String where;
-        final String[] whereArgs;
-        if (accountKeys != null) {
-            where = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), accountKeys.length).getSQL();
-            whereArgs = TwidereArrayUtils.toStringArray(accountKeys);
-        } else {
-            where = null;
-            whereArgs = null;
-        }
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where, whereArgs, null);
-        if (cur == null) return new String[0];
-        try {
-            cur.moveToFirst();
-            final String[] screen_names = new String[cur.getCount()];
-            int i = 0;
-            while (!cur.isAfterLast()) {
-                screen_names[i++] = cur.getString(0);
-                cur.moveToNext();
-            }
-            return screen_names;
-        } finally {
-            cur.close();
-        }
+        return AccountExtensionsKt.getAccountUser(account, am).screen_name;
     }
 
     @NonNull
     public static UserKey[] getActivatedAccountKeys(@NonNull final Context context) {
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI,
-                new String[]{Accounts.ACCOUNT_KEY}, Accounts.IS_ACTIVATED + " = 1", null, null);
-        if (cur == null) return new UserKey[0];
-        try {
-            cur.moveToFirst();
-            final UserKey[] ids = new UserKey[cur.getCount()];
-            int i = 0;
-            while (!cur.isAfterLast()) {
-                ids[i++] = UserKey.valueOf(cur.getString(0));
-                cur.moveToNext();
+        AccountManager am = AccountManager.get(context);
+        List<UserKey> keys = new ArrayList<>();
+        for (Account account : AccountUtils.getAccounts(am)) {
+            if (AccountExtensionsKt.isAccountActivated(account, am)) {
+                keys.add(AccountExtensionsKt.getAccountKey(account, am));
             }
-            return ids;
-        } finally {
-            cur.close();
         }
+        return keys.toArray(new UserKey[keys.size()]);
     }
 
     public static int getStatusesCount(@NonNull final Context context, final Uri uri,
@@ -702,90 +651,54 @@ public class DataStoreUtils implements Constants {
 
     @NonNull
     public static int[] getAccountColors(@NonNull final Context context, @NonNull final UserKey[] accountKeys) {
-        final String[] cols = new String[]{Accounts.ACCOUNT_KEY, Accounts.COLOR};
-        final String where = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), accountKeys.length).getSQL();
-        final String[] whereArgs = TwidereArrayUtils.toStringArray(accountKeys);
+        AccountManager am = AccountManager.get(context);
         final int[] colors = new int[accountKeys.length];
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, cols, where,
-                whereArgs, null);
-        if (cur == null) return colors;
-        try {
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                final int idx = ArrayUtils.indexOf(accountKeys, UserKey.valueOf(cur.getString(0)));
-                if (idx >= 0) {
-                    colors[idx] = cur.getInt(1);
-                }
-                cur.moveToNext();
+        for (int i = 0; i < accountKeys.length; i++) {
+            Account account = AccountUtils.findByAccountKey(am, accountKeys[i]);
+            if (account != null) {
+                colors[i] = AccountExtensionsKt.getColor(account, am);
             }
-            return colors;
-        } finally {
-            cur.close();
         }
+        return colors;
     }
 
+    @Nullable
     public static UserKey findAccountKeyByScreenName(@NonNull final Context context, @NonNull final String screenName) {
-        final String[] projection = {Accounts.ACCOUNT_KEY};
-        final String where = Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL();
-        final String[] whereArgs = {screenName};
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                where, whereArgs, null);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) {
-                return UserKey.valueOf(cur.getString(0));
+        AccountManager am = AccountManager.get(context);
+        for (Account account : AccountUtils.getAccounts(am)) {
+            ParcelableUser user = AccountExtensionsKt.getAccountUser(account, am);
+            if (StringUtils.equalsIgnoreCase(screenName, user.screen_name)) {
+                return user.key;
             }
-            return null;
-        } finally {
-            cur.close();
         }
-    }
-
-    public static UserKey findAccountKey(@NonNull final Context context, final String accountId) {
-        final String[] projection = {Accounts.ACCOUNT_KEY};
-        final Cursor cur = findAccountCursorsById(context, projection, accountId);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) {
-                return UserKey.valueOf(cur.getString(0));
-            }
-            return null;
-        } finally {
-            cur.close();
-        }
+        return null;
     }
 
     @NonNull
     public static UserKey[] getAccountKeys(final Context context) {
-        if (context == null) return new UserKey[0];
-        final String[] projection = {Accounts.ACCOUNT_KEY};
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, projection,
-                null, null, null);
-        if (cur == null) return new UserKey[0];
-        try {
-            cur.moveToFirst();
-            final UserKey[] ids = new UserKey[cur.getCount()];
-            int i = 0;
-            while (!cur.isAfterLast()) {
-                ids[i++] = UserKey.valueOf(cur.getString(0));
-                cur.moveToNext();
-            }
-            return ids;
-        } finally {
-            cur.close();
+        AccountManager am = AccountManager.get(context);
+        final Account[] accounts = AccountUtils.getAccounts(am);
+        final UserKey[] keys = new UserKey[accounts.length];
+        for (int i = 0; i < accounts.length; i++) {
+            keys[i] = AccountExtensionsKt.getAccountKey(accounts[i], am);
         }
+        return keys;
     }
 
-    public static boolean hasAccount(final Context context) {
-        if (context == null) return false;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, new String[]{SQLFunctions.COUNT()}, null, null, null);
-        if (cur == null) return false;
-        try {
-            cur.moveToFirst();
-            return cur.getInt(0) > 0;
-        } finally {
-            cur.close();
+    @Nullable
+    public static UserKey findAccountKey(@NonNull final Context context, @NonNull final String accountId) {
+        AccountManager am = AccountManager.get(context);
+        for (Account account : AccountUtils.getAccounts(am)) {
+            UserKey key = AccountExtensionsKt.getAccountKey(account, am);
+            if (accountId.equals(key.getId())) {
+                return key;
+            }
         }
+        return null;
+    }
+
+    public static boolean hasAccount(@NonNull final Context context) {
+        return AccountUtils.getAccounts(AccountManager.get(context)).length > 0;
     }
 
     public static synchronized void cleanDatabasesByItemLimit(final Context context) {
@@ -1122,130 +1035,12 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly) {
-        return getAccountsList(context, activatedOnly, false);
-    }
-
-    public static List<ParcelableAccount> getAccountsList(final Context context, final boolean activatedOnly,
-                                                          final boolean officialKeyOnly) {
-        if (context == null) return Collections.emptyList();
-        final ArrayList<ParcelableAccount> accounts = new ArrayList<>();
-        final String selection = activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS, selection, null, Accounts.SORT_POSITION);
-        if (cur == null) return accounts;
-        final ParcelableCredentialsCursorIndices indices = new ParcelableCredentialsCursorIndices(cur);
-        try {
-            cur.moveToFirst();
-            while (!cur.isAfterLast()) {
-                if (!officialKeyOnly) {
-                    accounts.add(indices.newObject(cur));
-                } else {
-                    final String consumerKey = cur.getString(indices.consumer_key);
-                    final String consumerSecret = cur.getString(indices.consumer_secret);
-                    if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
-                        accounts.add(indices.newObject(cur));
-                    }
-                }
-                cur.moveToNext();
-            }
-        } catch (IOException e) {
-            return Collections.emptyList();
-        } finally {
-            cur.close();
-        }
-        return accounts;
-    }
-
-    @Nullable
-    public static Cursor getAccountCursor(@NonNull final Context context, final String[] columns,
-                                          @NonNull final UserKey accountKey) {
-        final ContentResolver cr = context.getContentResolver();
-        final String accountId = accountKey.getId();
-        final String accountHost = accountKey.getHost();
-        final String where;
-        final String[] whereArgs;
-        if (TextUtils.isEmpty(accountHost)) {
-            where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
-                    Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'")).getSQL();
-            whereArgs = new String[]{accountId, accountId};
-        } else {
-            where = Expression.or(Expression.equalsArgs(Accounts.ACCOUNT_KEY),
-                    Expression.equalsArgs(Accounts.ACCOUNT_KEY)).getSQL();
-            whereArgs = new String[]{String.valueOf(accountKey.toString()),
-                    accountId};
-        }
-        return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
-    }
-
-    @Nullable
-    public static Cursor findAccountCursorsById(@NonNull final Context context, final String[] columns,
-                                                final String... ids) {
-        if (ids == null) return null;
-        final ContentResolver cr = context.getContentResolver();
-        Expression[] expressions = new Expression[ids.length + 1];
-        for (int i = 0, j = ids.length; i < j; i++) {
-            expressions[i] = Expression.likeRaw(new Column(Accounts.ACCOUNT_KEY), "?||\'@%\'");
-        }
-        expressions[ids.length] = Expression.inArgs(new Column(Accounts.ACCOUNT_KEY), ids.length);
-        final String where = Expression.or(expressions).getSQL();
-        final String[] whereArgs = new String[ids.length * 2];
-        System.arraycopy(TwidereArrayUtils.toStringArray(ids), 0, whereArgs, 0, ids.length);
-        System.arraycopy(whereArgs, 0, whereArgs, ids.length, ids.length);
-        return cr.query(Accounts.CONTENT_URI, columns, where, whereArgs, null);
-    }
-
     public static String getAccountType(@NonNull final Context context, @NonNull final UserKey accountKey) {
-        final String[] projection = {Accounts.ACCOUNT_TYPE};
-        final Cursor cur = getAccountCursor(context, projection, accountKey);
-        if (cur == null) return null;
-        try {
-            if (cur.moveToFirst()) {
-                return cur.getString(0);
-            }
-        } finally {
-            cur.close();
-        }
-        return null;
-    }
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
 
-    public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly) {
-        return getCredentialsList(context, activatedOnly, false);
-    }
-
-    public static ParcelableCredentials[] getCredentialsArray(final Context context, final boolean activatedOnly,
-                                                              final boolean officialKeyOnly) {
-        final List<ParcelableCredentials> credentialsList = getCredentialsList(context, activatedOnly, officialKeyOnly);
-        return credentialsList.toArray(new ParcelableCredentials[credentialsList.size()]);
-    }
-
-    public static List<ParcelableCredentials> getCredentialsList(final Context context, final boolean activatedOnly,
-                                                                 final boolean officialKeyOnly) {
-        if (context == null) return Collections.emptyList();
-        final ArrayList<ParcelableCredentials> accounts = new ArrayList<>();
-        final String selection = activatedOnly ? Accounts.IS_ACTIVATED + " = 1" : null;
-        final Cursor cur = context.getContentResolver().query(Accounts.CONTENT_URI, Accounts.COLUMNS, selection, null, Accounts.SORT_POSITION);
-        if (cur == null) return accounts;
-        ParcelableCredentialsCursorIndices indices = new ParcelableCredentialsCursorIndices(cur);
-        cur.moveToFirst();
-        try {
-            while (!cur.isAfterLast()) {
-                if (officialKeyOnly) {
-                    final String consumerKey = cur.getString(indices.consumer_key);
-                    final String consumerSecret = cur.getString(indices.consumer_secret);
-                    if (TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret)) {
-                        accounts.add(indices.newObject(cur));
-                    }
-                } else {
-                    accounts.add(indices.newObject(cur));
-                }
-                cur.moveToNext();
-            }
-        } catch (IOException e) {
-            return Collections.emptyList();
-        } finally {
-            cur.close();
-        }
-        return accounts;
+        return AccountExtensionsKt.getAccountType(account, am);
     }
 
     public static int getInteractionsCount(@NonNull final Context context, @Nullable final Bundle extraArgs,

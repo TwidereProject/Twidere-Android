@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -67,7 +68,7 @@ class ConversationLoader(
                                     paging: Paging): List<Status> {
         canLoadAllReplies = false
         when (ParcelableAccountUtils.getAccountType(credentials)) {
-            ParcelableAccount.Type.TWITTER -> {
+            AccountType.TWITTER -> {
                 val isOfficial = Utils.isOfficialCredentials(context, credentials)
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
@@ -76,14 +77,14 @@ class ConversationLoader(
                     return showConversationCompat(microBlog, credentials, status, true)
                 }
             }
-            ParcelableAccount.Type.STATUSNET -> {
+            AccountType.STATUSNET -> {
                 canLoadAllReplies = true
                 if (status.extras != null && status.extras.statusnet_conversation_id != null) {
                     return microBlog.getStatusNetConversation(status.extras.statusnet_conversation_id, paging)
                 }
                 return microBlog.showConversation(status.id, paging)
             }
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 canLoadAllReplies = true
                 return microBlog.getContextTimeline(status.id, paging)
             }

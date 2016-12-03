@@ -10,7 +10,7 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
@@ -33,7 +33,7 @@ public class DestroyUserBlockTask extends AbsFriendshipOperationTask {
     protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
                            @NonNull Arguments args) throws MicroBlogException {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 return twitter.destroyFanfouBlock(args.userKey.getId());
             }
         }

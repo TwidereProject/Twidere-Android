@@ -44,12 +44,10 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -75,7 +73,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         a.recycle();
     }
 
-    public void setAccountsData(final List<ParcelableAccount> accounts) {
+    public void setAccountsData(final ParcelableAccount[] accounts) {
         removeAll();
         for (final ParcelableAccount account : accounts) {
             final AccountItemPreference preference = new AccountItemPreference(getContext(), account,
@@ -92,7 +90,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         if (getPreferenceCount() > 0) return;
-        setAccountsData(DataStoreUtils.getAccountsList(getContext(), false));
+        setAccountsData(ParcelableAccountUtils.getAccounts(getContext()));
     }
 
     protected abstract void setupPreference(AccountItemPreference preference, ParcelableAccount account);

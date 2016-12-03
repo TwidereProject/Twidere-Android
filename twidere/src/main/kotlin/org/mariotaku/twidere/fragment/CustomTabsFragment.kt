@@ -62,6 +62,7 @@ import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.iface.AccountCallback
+import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -326,7 +327,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                     accountsAdapter.add(ParcelableAccount.dummyCredentials())
                 }
                 val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
-                accountsAdapter.addAll(DataStoreUtils.getCredentialsList(context, false, officialKeyOnly))
+                accountsAdapter.addAll(ParcelableCredentialsUtils.getCredentialses(context, false, officialKeyOnly))
                 accountsAdapter.setDummyItemText(R.string.activated_accounts)
 
                 tab.arguments?.accountKeys?.firstOrNull()?.let { key ->

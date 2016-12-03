@@ -11,8 +11,8 @@ import org.mariotaku.microblog.library.twitter.model.CursorTimestampResponse;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.ReadPositionTag;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
@@ -38,7 +38,7 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
 
     @Override
     protected void saveReadPosition(@NonNull UserKey accountKey, ParcelableCredentials credentials, @NonNull MicroBlog twitter) {
-        if (ParcelableAccount.Type.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
+        if (AccountType.TWITTER.equals(ParcelableAccountUtils.getAccountType(credentials))) {
             if (Utils.isOfficialCredentials(getContext(), credentials)) {
                 try {
                     CursorTimestampResponse response = twitter.getActivitiesAboutMeUnread(true);
@@ -62,7 +62,7 @@ public class GetActivitiesAboutMeTask extends GetActivitiesTask {
         final ResponseList<Activity> activities = new ResponseList<>();
         final ResponseList<Status> statuses;
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 statuses = twitter.getMentions(paging);
                 break;
             }

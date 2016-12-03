@@ -29,7 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.IDs;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
@@ -59,7 +59,7 @@ public class IncomingFriendshipsLoader extends CursorSupportUsersLoader {
     @Override
     protected boolean useIDs(@NonNull ParcelableCredentials credentials) {
         switch (ParcelableAccountUtils.getAccountType(credentials)) {
-            case ParcelableAccount.Type.FANFOU: {
+            case AccountType.FANFOU: {
                 return false;
             }
         }

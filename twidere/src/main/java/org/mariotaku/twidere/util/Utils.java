@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util;
 
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -86,6 +87,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
 import org.mariotaku.microblog.library.MicroBlog;
@@ -96,12 +98,12 @@ import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.sqliteqb.library.Selectable;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountPreferences;
@@ -115,14 +117,14 @@ import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
-import org.mariotaku.twidere.model.TwitterAccountExtra;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.account.TwitterAccountExtras;
+import org.mariotaku.twidere.model.util.AccountUtils;
+import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.model.util.UserKeyUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
@@ -386,7 +388,7 @@ public final class Utils implements Constants {
             } catch (NumberFormatException e) {
                 // Ignore
             }
-            final UserKey accountKey = UserKeyUtils.findById(context, accountId);
+            final UserKey accountKey = DataStoreUtils.findAccountKey(context, accountId);
             args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
             if (accountKey == null) return new UserKey[]{new UserKey(accountId, null)};
             return new UserKey[]{accountKey};
@@ -397,7 +399,7 @@ public final class Utils implements Constants {
     @Nullable
     public static UserKey getAccountKey(@NonNull Context context, @Nullable Bundle args) {
         final UserKey[] accountKeys = getAccountKeys(context, args);
-        if (ArrayUtils.isEmpty(accountKeys)) return null;
+        if (accountKeys == null || accountKeys.length == 0) return null;
         return accountKeys[0];
     }
 
@@ -519,9 +521,9 @@ public final class Utils implements Constants {
 
     public static boolean isOfficialCredentials(@NonNull final Context context,
                                                 @NonNull final ParcelableCredentials account) {
-        if (ParcelableAccount.Type.TWITTER.equals(account.account_type)) {
-            final TwitterAccountExtra extra = JsonSerializer.parse(account.account_extras,
-                    TwitterAccountExtra.class);
+        if (AccountType.TWITTER.equals(account.account_type)) {
+            final TwitterAccountExtras extra = JsonSerializer.parse(account.account_extras,
+                    TwitterAccountExtras.class);
             if (extra != null) {
                 return extra.isOfficialCredentials();
             }
@@ -924,32 +926,19 @@ public final class Utils implements Constants {
         return plugged || level / scale > 0.15f;
     }
 
-    public static boolean isMyAccount(final Context context, @Nullable final UserKey accountKey) {
-        if (context == null || accountKey == null) return false;
-        final String[] projection = new String[]{SQLFunctions.COUNT()};
-        final Cursor cur = DataStoreUtils.getAccountCursor(context, projection, accountKey);
-        if (cur == null) return false;
-        try {
-            if (cur.moveToFirst()) return cur.getLong(0) > 0;
-        } finally {
-            cur.close();
-        }
-        return false;
+    public static boolean isMyAccount(@NonNull final Context context, @Nullable final UserKey accountKey) {
+        if (accountKey == null) return false;
+        final AccountManager am = AccountManager.get(context);
+        return AccountUtils.findByAccountKey(am, accountKey) != null;
     }
 
-    public static boolean isMyAccount(final Context context, final String screen_name) {
-        if (context == null) return false;
-        final ContentResolver resolver = context.getContentResolver();
-        final String where = Expression.equalsArgs(Accounts.SCREEN_NAME).getSQL();
-        final String[] projection = new String[0];
-        final Cursor cur = resolver.query(Accounts.CONTENT_URI, projection, where, new String[]{screen_name}, null);
-        try {
-            return cur != null && cur.getCount() > 0;
-        } finally {
-            if (cur != null) {
-                cur.close();
+    public static boolean isMyAccount(final Context context, final String screenName) {
+        for (ParcelableAccount account : ParcelableAccountUtils.getAccounts(context)) {
+            if (StringUtils.equalsIgnoreCase(account.screen_name, screenName)) {
+                return true;
             }
         }
+        return false;
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {

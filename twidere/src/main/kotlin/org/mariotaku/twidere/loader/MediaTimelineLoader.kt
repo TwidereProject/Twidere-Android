@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -58,7 +59,7 @@ class MediaTimelineLoader(
                              paging: Paging): ResponseList<Status> {
         val context = context
         when (ParcelableAccountUtils.getAccountType(credentials)) {
-            ParcelableAccount.Type.TWITTER -> {
+            AccountType.TWITTER -> {
                 if (Utils.isOfficialCredentials(context, credentials)) {
                     if (userKey != null) {
                         return microBlog.getMediaTimeline(userKey.id, paging)
@@ -97,7 +98,7 @@ class MediaTimelineLoader(
                 }
                 throw MicroBlogException("Wrong user")
             }
-            ParcelableAccount.Type.FANFOU -> {
+            AccountType.FANFOU -> {
                 if (userKey != null) {
                     return microBlog.getPhotosUserTimeline(userKey.id, paging)
                 }
