@@ -30,7 +30,10 @@ internal fun Account.writeParcelableCredentials(am: AccountManager, credentials:
         Credentials.Type.OAUTH2 -> ParcelableCredentials.AuthTypeInt.OAUTH2
         else -> ParcelableCredentials.AuthTypeInt.OAUTH
     }
-    credentials.account_extras = LoganSquare.serialize(getAccountExtras(am))
+    val extras = getAccountExtras(am)
+    if (extras != null) {
+        credentials.account_extras = LoganSquare.serialize(extras)
+    }
 
     val creds = getCredentials(am)
     credentials.api_url_format = creds.api_url_format

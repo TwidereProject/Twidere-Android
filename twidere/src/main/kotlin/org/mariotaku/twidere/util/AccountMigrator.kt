@@ -2,7 +2,7 @@ package org.mariotaku.twidere.util
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.annotation.ColorInt
 import com.bluelinelabs.logansquare.LoganSquare
@@ -23,14 +23,12 @@ import java.util.*
 /**
  * Created by mariotaku on 2016/12/3.
  */
-fun migrateAccounts(context: Context) {
-    val am = AccountManager.get(context)
-
+fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
     am.getAccountsByType(ACCOUNT_TYPE).map { account ->
         AccountManagerSupport.removeAccount(am, account, null, null, null)
     }
 
-    val cur = context.contentResolver.query(Accounts.CONTENT_URI, Accounts.COLUMNS, null, null, null) ?: return
+    val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null, null, null, null) ?: return
     try {
         val indices = ParcelableCredentialsCursorIndices(cur)
         cur.moveToFirst()

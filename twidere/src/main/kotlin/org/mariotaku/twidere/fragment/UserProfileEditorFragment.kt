@@ -395,7 +395,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
                 val account = result.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
                 if (account != null) {
                     val task = UpdateAccountInfoTask(activity)
-                    task.params = Pair(account, result.data)
+                    task.params = Pair(account, result.data!!)
                     TaskStarter.execute(task)
                 }
             }

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.ParcelableAccount;
@@ -50,7 +49,7 @@ public class ParcelableAccountUtils {
                                                   final boolean officialKeyOnly) {
         ArrayList<Account> accounts = new ArrayList<>();
         final AccountManager am = AccountManager.get(context);
-        for (Account account : am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE)) {
+        for (Account account : AccountUtils.getAccounts(am)) {
             boolean activated = AccountExtensionsKt.isAccountActivated(account, am);
             if (!activated && activatedOnly) continue;
             boolean isOfficialKey = isOfficialKey(context, account, am);
@@ -71,14 +70,14 @@ public class ParcelableAccountUtils {
 
     public static ParcelableAccount[] getAccounts(@NonNull final Context context) {
         final AccountManager am = AccountManager.get(context);
-        return getAccounts(am, am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE));
+        return getAccounts(am, AccountUtils.getAccounts(am));
     }
 
     @NonNull
     public static ParcelableAccount[] getAccounts(@NonNull final Context context, @NonNull final UserKey... accountIds) {
         ArrayList<Account> accounts = new ArrayList<>();
         final AccountManager am = AccountManager.get(context);
-        for (Account account : am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE)) {
+        for (Account account : AccountUtils.getAccounts(am)) {
             if (ArrayUtils.contains(accountIds, AccountExtensionsKt.getAccountKey(account, am))) {
                 accounts.add(account);
             }
@@ -87,7 +86,7 @@ public class ParcelableAccountUtils {
     }
 
     @NonNull
-    public static ParcelableAccount[] getAccounts(@Nullable final AccountManager am, @Nullable final Account[] accounts) {
+    public static ParcelableAccount[] getAccounts(@NonNull final AccountManager am, @Nullable final Account[] accounts) {
         if (accounts == null) return new ParcelableAccount[0];
         final ParcelableAccount[] parcelableAccounts = new ParcelableAccount[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
