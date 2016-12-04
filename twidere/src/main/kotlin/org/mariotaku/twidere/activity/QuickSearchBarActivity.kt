@@ -48,7 +48,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
-import org.mariotaku.twidere.model.ParcelableAccount
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
@@ -122,22 +122,22 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val adapter = (suggestionsList.adapter ?: return) as SuggestionsAdapter
-        val item = adapter.getSuggestionItem(position)
+        val item = adapter.getSuggestionItem(position)!!
         when (adapter.getItemViewType(position)) {
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, selectedAccountKey,
-                        UserKey.valueOf(item!!.extra_id), item.summary, null,
+                        UserKey.valueOf(item.extra_id!!), item.summary, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                         Referral.DIRECT)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
-                IntentUtils.openUserProfile(this, selectedAccountKey, null, item!!.title, null,
+                IntentUtils.openUserProfile(this, selectedAccountKey, null, item.title, null,
                         preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.DIRECT)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {
-                IntentUtils.openSearch(this, selectedAccountKey, item!!.title)
+                IntentUtils.openSearch(this, selectedAccountKey, item.title)
                 finish()
             }
         }
@@ -237,8 +237,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     private val selectedAccountKey: UserKey?
         get() {
-            val account = accountSpinner.selectedItem as ParcelableAccount
-            return account.account_key
+            val account = accountSpinner.selectedItem as AccountDetails
+            return account.key
         }
 
     private fun updateWindowAttributes() {
@@ -332,7 +332,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 }
                 VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                     val holder = view.tag as UserViewHolder
-                    val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))!!
+                    val userKey = UserKey.valueOf(cursor.getString(indices.extra_id))
                     holder.text1.text = userColorNameManager.getUserNickname(userKey,
                             cursor.getString(indices.title))
                     holder.text2.visibility = View.VISIBLE

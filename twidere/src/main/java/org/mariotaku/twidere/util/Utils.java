@@ -1348,7 +1348,8 @@ public final class Utils implements Constants {
     public static void logOpenNotificationFromUri(Context context, Uri uri) {
         if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
         final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-        final UserKey accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY));
+        final String paramAccountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY);
+        final UserKey accountKey = paramAccountKey != null ? UserKey.valueOf(paramAccountKey) : null;
         final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
         final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
         final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));

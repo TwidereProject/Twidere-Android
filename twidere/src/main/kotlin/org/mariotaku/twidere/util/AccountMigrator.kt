@@ -7,15 +7,15 @@ import android.os.Bundle
 import android.support.annotation.ColorInt
 import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.extension.model.account_name
-import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.annotation.AuthTypeInt
+import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.util.support.AccountManagerSupport
 import java.util.*
@@ -65,7 +65,7 @@ private fun ParcelableCredentials.toCredentials(): Credentials {
 
 @Credentials.Type
 private fun ParcelableCredentials.getCredentialsType(): String {
-    return ParcelableCredentialsUtils.getCredentialsType(auth_type)
+    return AccountUtils.getCredentialsType(auth_type)
 }
 
 
@@ -98,3 +98,6 @@ private fun ParcelableCredentials.applyCommonProperties(credentials: Credentials
     credentials.api_url_format = api_url_format
     credentials.no_version_suffix = no_version_suffix
 }
+
+private val ParcelableCredentials.account_name: String
+    get() = UserKey(screen_name, account_key.host).toString()

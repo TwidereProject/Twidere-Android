@@ -178,11 +178,11 @@ class ParcelableUserLoader(
         super.deliverResult(data)
         val user = data.data ?: return
         if (user.is_cache) return
-        val account = data.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
+        val account = data.extras.getParcelable<AccountDetails>(EXTRA_ACCOUNT)
         if (account != null) {
             val task = UpdateAccountInfoTask(context)
             task.params = Pair(account, user)
-            TaskStarter.execute<Pair<ParcelableAccount, ParcelableUser>, Any, Any>(task)
+            TaskStarter.execute<Pair<AccountDetails, ParcelableUser>, Any, Any>(task)
         }
     }
 }

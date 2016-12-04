@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.animation.ArgbEvaluator
 import android.annotation.TargetApi
 import android.app.Activity
@@ -778,8 +779,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         val isTwitter: Boolean
 
         if (account != null) {
-            isTwitter = TextUtils.equals(AccountType.TWITTER,
-                    AccountUtils.getAccountType(account))
+            isTwitter = AccountType.TWITTER == account.type
         } else {
             isTwitter = false
         }
@@ -888,7 +888,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString())
                 builder.appendQueryParameter(QUERY_PARAM_USER_KEY, user.key.toString())
                 val intent = Intent(Intent.ACTION_VIEW, builder.build())
-                intent.putExtra(EXTRA_ACCOUNT, ParcelableCredentialsUtils.getCredentials(activity, user.account_key))
+                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(AccountManager.get(activity), user.account_key))
                 intent.putExtra(EXTRA_USER, user)
                 startActivity(intent)
             }
@@ -1537,9 +1537,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 return SingleResponse.getInstance(ParcelableRelationshipUtils.create(accountKey, userKey,
                         null, isFiltering))
             }
-            val credentials = ParcelableCredentialsUtils.getCredentials(context,
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                     accountKey) ?: return SingleResponse.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
-            if (MicroBlogAPIFactory.isStatusNetCredentials(credentials)) {
+            if (details.type == AccountType.TWITTER) {
                 if (!UserKeyUtils.isSameHost(accountKey, user.key)) {
                     return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
                 }

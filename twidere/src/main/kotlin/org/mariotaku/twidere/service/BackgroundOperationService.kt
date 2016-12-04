@@ -64,7 +64,6 @@ import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
@@ -356,7 +355,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
         val twitterUpload = details.credentials.newMicroBlogInstance(context = this, cls = TwitterUpload::class.java)
         try {
             val directMessage: ParcelableDirectMessage
-            when (AccountUtils.getAccountType(details)) {
+            when (details.type) {
                 AccountType.FANFOU -> {
                     if (imageUri != null) {
                         throw MicroBlogException("Can't send image DM on Fanfou")

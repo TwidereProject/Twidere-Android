@@ -21,11 +21,8 @@ package org.mariotaku.twidere.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.content.Intent.ShortcutIconResource
 import android.os.Bundle
-
 import org.mariotaku.twidere.R
-
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_COMPOSE
 
 class CreateComposeShortcutActivity : Activity() {

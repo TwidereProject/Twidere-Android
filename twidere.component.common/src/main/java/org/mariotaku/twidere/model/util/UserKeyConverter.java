@@ -11,6 +11,7 @@ public class UserKeyConverter extends StringBasedTypeConverter<UserKey> {
 
     @Override
     public UserKey getFromString(String string) {
+        if (string == null) return null;
         return UserKey.valueOf(string);
     }
 

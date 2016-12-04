@@ -28,7 +28,6 @@ import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.AccountViewHolder

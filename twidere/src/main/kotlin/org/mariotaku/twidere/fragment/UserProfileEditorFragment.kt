@@ -51,7 +51,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity
 import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
-import org.mariotaku.twidere.model.ParcelableAccount
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
@@ -394,7 +394,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
             if (callback == null) return
             val activity = callback.activity ?: return
             if (result.hasData()) {
-                val account = result.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
+                val account: AccountDetails? = result.extras.getParcelable(EXTRA_ACCOUNT)
                 if (account != null) {
                     val task = UpdateAccountInfoTask(activity)
                     task.params = Pair(account, result.data!!)

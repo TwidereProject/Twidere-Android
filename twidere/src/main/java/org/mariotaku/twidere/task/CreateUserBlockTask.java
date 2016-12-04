@@ -17,7 +17,6 @@ import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -36,7 +35,7 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask implements C
     @Override
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
-        switch (AccountUtils.getAccountType(details)) {
+        switch (details.type) {
             case AccountType.FANFOU: {
                 return twitter.createFanfouBlock(args.userKey.getId());
             }

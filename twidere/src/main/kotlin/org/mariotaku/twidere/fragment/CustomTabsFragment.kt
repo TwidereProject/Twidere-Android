@@ -57,7 +57,10 @@ import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.Tab
+import org.mariotaku.twidere.model.TabCursorIndices
+import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.iface.AccountCallback
@@ -370,9 +373,9 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
                 tab.arguments = CustomTabUtils.newTabArguments(tabType)
                 if (hasAccount) {
-                    val account = accountSpinner.selectedItem as ParcelableAccount
-                    if (!account.is_dummy) {
-                        tab.arguments?.accountKeys = arrayOf(account.account_key)
+                    val account = accountSpinner.selectedItem as AccountDetails
+                    if (!account.dummy) {
+                        tab.arguments?.accountKeys = arrayOf(account.key)
                     } else {
                         tab.arguments?.accountKeys = null
                     }
@@ -399,8 +402,8 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             }
         }
 
-        override fun getAccount(): ParcelableAccount {
-            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as ParcelableAccount
+        override fun getAccount(): AccountDetails {
+            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as AccountDetails
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

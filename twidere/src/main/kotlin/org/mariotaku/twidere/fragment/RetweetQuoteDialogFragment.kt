@@ -46,7 +46,6 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.service.BackgroundOperationService
 import org.mariotaku.twidere.util.BugReporter
 import org.mariotaku.twidere.util.EditTextEnterHandler
@@ -215,7 +214,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val update = ParcelableStatusUpdate()
             update.accounts = arrayOf(account)
             val editingComment = editComment.text.toString()
-            when (AccountUtils.getAccountType(account)) {
+            when (account.type) {
                 AccountType.FANFOU -> {
                     if (!status.is_quote || !quoteOriginalStatus) {
                         if (status.user_is_protected && showProtectedConfirmation) {

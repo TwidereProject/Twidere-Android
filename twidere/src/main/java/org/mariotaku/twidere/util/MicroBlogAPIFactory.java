@@ -2,7 +2,6 @@ package org.mariotaku.twidere.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -17,17 +16,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.Twitter;
-import org.mariotaku.microblog.library.twitter.TwitterCaps;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth;
-import org.mariotaku.microblog.library.twitter.TwitterOAuth2;
-import org.mariotaku.microblog.library.twitter.TwitterUpload;
-import org.mariotaku.microblog.library.twitter.TwitterUserStream;
-import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization;
-import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization;
 import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory;
 import org.mariotaku.restfu.ExceptionFactory;
-import org.mariotaku.restfu.RestAPIFactory;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.RestFuUtils;
 import org.mariotaku.restfu.RestMethod;
@@ -43,22 +33,17 @@ import org.mariotaku.restfu.http.RawValue;
 import org.mariotaku.restfu.http.SimpleValueMap;
 import org.mariotaku.restfu.http.ValueMap;
 import org.mariotaku.restfu.http.mime.Body;
-import org.mariotaku.restfu.oauth.OAuthAuthorization;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
 import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.AccountType;
-import org.mariotaku.twidere.annotation.AuthTypeInt;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.extension.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ConsumerKeyType;
-import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -148,7 +133,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                                     final boolean includeEntities, final boolean includeRetweets,
                                     @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
-        switch (AccountUtils.getAccountType(details)) {
+        switch (details.type) {
             case AccountType.FANFOU: {
                 extraParams.put("format", "html");
                 break;
@@ -166,150 +151,10 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
     @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
-                                    final Authorization auth, final Map<String, String> extraRequestParams,
-                                    final Class<T> cls, boolean twitterExtraQueries) {
-        final RestAPIFactory<MicroBlogException> factory = new RestAPIFactory<>();
-        final String userAgent;
-        if (auth instanceof OAuthAuthorization) {
-            final String consumerKey = ((OAuthAuthorization) auth).getConsumerKey();
-            final String consumerSecret = ((OAuthAuthorization) auth).getConsumerSecret();
-            final ConsumerKeyType officialKeyType = TwitterContentUtils.getOfficialKeyType(context, consumerKey, consumerSecret);
-            if (officialKeyType != ConsumerKeyType.UNKNOWN) {
-                userAgent = getUserAgentName(context, officialKeyType);
-            } else {
-                userAgent = getTwidereUserAgent(context);
-            }
-        } else {
-            userAgent = getTwidereUserAgent(context);
-        }
-        DependencyHolder holder = DependencyHolder.Companion.get(context);
-        factory.setHttpClient(holder.getRestHttpClient());
-        factory.setAuthorization(auth);
-        factory.setEndpoint(endpoint);
-        if (twitterExtraQueries) {
-            factory.setConstantPool(sConstantPoll);
-        } else {
-            factory.setConstantPool(new SimpleValueMap());
-        }
-        final TwitterConverterFactory converterFactory = new TwitterConverterFactory();
-        factory.setRestConverterFactory(converterFactory);
-        factory.setRestRequestFactory(new TwidereRestRequestFactory(extraRequestParams));
-        factory.setHttpRequestFactory(new TwidereHttpRequestFactory(userAgent));
-        factory.setExceptionFactory(new TwidereExceptionFactory(converterFactory));
-        return factory.build(cls);
-    }
-
-    @WorkerThread
-    public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final Authorization auth, final Class<T> cls) {
-        return getInstance(context, endpoint, auth, null, cls, true);
+        return CredentialsExtensionsKt.newMicroBlogInstance(context, auth, endpoint, true, null, cls);
     }
 
-    @WorkerThread
-    public static <T> T getInstance(final Context context, final Endpoint endpoint,
-                                    final ParcelableCredentials credentials,
-                                    final Map<String, String> extraRequestParams, final Class<T> cls) {
-        return getInstance(context, endpoint, getAuthorization(credentials), extraRequestParams, cls,
-                isTwitterCredentials(credentials));
-    }
-
-    public static boolean isTwitterCredentials(ParcelableAccount account) {
-        if (account.account_type == null) {
-            final String accountHost = account.account_key.getHost();
-            if (accountHost == null) return true;
-            return USER_TYPE_TWITTER_COM.equals(accountHost);
-        }
-        return AccountType.TWITTER.equals(account.account_type);
-    }
-
-    public static boolean isStatusNetCredentials(ParcelableAccount account) {
-        return AccountType.STATUSNET.equals(account.account_type);
-    }
-
-    @WorkerThread
-    static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
-                             final Map<String, String> extraRequestParams, final Class<T> cls) {
-        if (credentials == null) return null;
-        return MicroBlogAPIFactory.getInstance(context, getEndpoint(credentials, cls), credentials,
-                extraRequestParams, cls);
-    }
-
-    public static Endpoint getEndpoint(ParcelableCredentials credentials, Class<?> cls) {
-        final String apiUrlFormat;
-        final boolean sameOAuthSigningUrl = credentials.same_oauth_signing_url;
-        final boolean noVersionSuffix = credentials.no_version_suffix;
-        if (!TextUtils.isEmpty(credentials.api_url_format)) {
-            apiUrlFormat = credentials.api_url_format;
-        } else {
-            apiUrlFormat = DEFAULT_TWITTER_API_URL_FORMAT;
-        }
-        final String domain, versionSuffix;
-        if (MicroBlog.class.isAssignableFrom(cls)) {
-            domain = "api";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
-        } else if (Twitter.class.isAssignableFrom(cls)) {
-            domain = "api";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
-        } else if (TwitterUpload.class.isAssignableFrom(cls)) {
-            domain = "upload";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
-        } else if (TwitterOAuth.class.isAssignableFrom(cls)) {
-            domain = "api";
-            versionSuffix = null;
-        } else if (TwitterOAuth2.class.isAssignableFrom(cls)) {
-            domain = "api";
-            versionSuffix = null;
-        } else if (TwitterUserStream.class.isAssignableFrom(cls)) {
-            domain = "userstream";
-            versionSuffix = noVersionSuffix ? null : "/1.1/";
-        } else if (TwitterCaps.class.isAssignableFrom(cls)) {
-            domain = "caps";
-            versionSuffix = null;
-        } else {
-            throw new TwitterConverterFactory.UnsupportedTypeException(cls);
-        }
-        final String endpointUrl;
-        endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
-        if (credentials.auth_type == AuthTypeInt.XAUTH || credentials.auth_type == AuthTypeInt.OAUTH) {
-            final String signEndpointUrl;
-            if (!sameOAuthSigningUrl) {
-                signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
-            } else {
-                signEndpointUrl = endpointUrl;
-            }
-            return new OAuthEndpoint(endpointUrl, signEndpointUrl);
-        }
-        return new Endpoint(endpointUrl);
-    }
-
-    @SuppressLint("SwitchIntDef")
-    @Nullable
-    public static Authorization getAuthorization(@Nullable ParcelableCredentials credentials) {
-        if (credentials == null) return null;
-        switch (credentials.auth_type) {
-            case AuthTypeInt.OAUTH:
-            case AuthTypeInt.XAUTH: {
-                final String consumerKey = TextUtils.isEmpty(credentials.consumer_key) ?
-                        TWITTER_CONSUMER_KEY_LEGACY : credentials.consumer_key;
-                final String consumerSecret = TextUtils.isEmpty(credentials.consumer_secret) ?
-                        TWITTER_CONSUMER_SECRET_LEGACY : credentials.consumer_secret;
-                final OAuthToken accessToken = new OAuthToken(credentials.oauth_token,
-                        credentials.oauth_token_secret);
-                if (isValidConsumerKeySecret(consumerKey) && isValidConsumerKeySecret(consumerSecret))
-                    return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
-                return new OAuthAuthorization(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, accessToken);
-            }
-            case AuthTypeInt.BASIC: {
-                final String screenName = credentials.screen_name;
-                final String username = credentials.basic_auth_username;
-                final String loginName = username != null ? username : screenName;
-                final String password = credentials.basic_auth_password;
-                if (TextUtils.isEmpty(loginName) || TextUtils.isEmpty(password)) return null;
-                return new BasicAuthorization(loginName, password);
-            }
-        }
-        return new EmptyAuthorization();
-    }
 
     public static boolean verifyApiFormat(@NonNull String format) {
         final String url = getApiBaseUrl(format, "test");
@@ -335,7 +180,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    static String substituteLegacyApiBaseUrl(@NonNull String format, @Nullable String domain) {
+    private static String substituteLegacyApiBaseUrl(@NonNull String format, @Nullable String domain) {
         final int idxOfSlash = format.indexOf("://");
         // Not an url
         if (idxOfSlash < 0) return format;

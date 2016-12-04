@@ -42,7 +42,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
     override fun onViewCreated(context: Context, view: View, fragment: TabEditorDialogFragment) {
         view.setOnClickListener {
             val intent = Intent(INTENT_ACTION_SELECT_USER)
-            intent.putExtra(EXTRA_ACCOUNT_KEY, fragment.account.account_key)
+            intent.putExtra(EXTRA_ACCOUNT_KEY, fragment.account.key)
             intent.setClass(context, UserListSelectorActivity::class.java)
             fragment.startExtraConfigurationActivityForResult(this@UserExtraConfiguration, intent, 1)
         }

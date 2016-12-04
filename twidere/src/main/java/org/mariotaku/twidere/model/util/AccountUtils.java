@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
+import org.mariotaku.twidere.annotation.AuthTypeInt;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.account.cred.Credentials;
 
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE;
 
@@ -90,12 +92,6 @@ public class AccountUtils {
         return null;
     }
 
-    @NonNull
-    @AccountType
-    public static String getAccountType(@NonNull AccountDetails account) {
-        return account.type;
-    }
-
     public static int getAccountTypeIcon(@Nullable String accountType) {
         if (accountType == null) return R.drawable.ic_account_logo_twitter;
         switch (accountType) {
@@ -112,4 +108,21 @@ public class AccountUtils {
         }
         return R.drawable.ic_account_logo_twitter;
     }
+
+    public static String getCredentialsType(@AuthTypeInt int authType) {
+        switch (authType) {
+            case AuthTypeInt.OAUTH:
+                return Credentials.Type.OAUTH;
+            case AuthTypeInt.BASIC:
+                return Credentials.Type.BASIC;
+            case AuthTypeInt.TWIP_O_MODE:
+                return Credentials.Type.EMPTY;
+            case AuthTypeInt.XAUTH:
+                return Credentials.Type.XAUTH;
+            case AuthTypeInt.OAUTH2:
+                return Credentials.Type.OAUTH2;
+        }
+        throw new UnsupportedOperationException();
+    }
+
 }

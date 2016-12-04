@@ -34,7 +34,6 @@ import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DEL
 import org.mariotaku.twidere.model.StringLongPair
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.UriExtraUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder

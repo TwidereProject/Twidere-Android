@@ -45,7 +45,7 @@ fun Account.getColor(am: AccountManager): Int {
 }
 
 fun Account.getPosition(am: AccountManager): Int {
-    return am.getUserData(this, ACCOUNT_USER_DATA_POSITION).toInt(-1)
+    return am.getUserData(this, ACCOUNT_USER_DATA_POSITION)?.toInt(-1) ?: -1
 }
 
 fun Account.getAccountExtras(am: AccountManager): AccountExtras? {

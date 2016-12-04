@@ -69,7 +69,7 @@ import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.graphic.EmptyDrawable
-import org.mariotaku.twidere.model.ParcelableAccount
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
@@ -88,7 +88,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private val accountChangeObserver = AccountChangeObserver(this, handler)
 
-    private var selectedAccountToSearch: ParcelableAccount? = null
+    private var selectedAccountToSearch: AccountDetails? = null
     private var tabColumns: Int = 0
 
 
@@ -485,7 +485,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    fun openSearchView(account: ParcelableAccount?) {
+    fun openSearchView(account: AccountDetails?) {
         selectedAccountToSearch = account
         onSearchRequested()
     }

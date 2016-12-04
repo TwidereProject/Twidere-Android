@@ -24,7 +24,6 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ExtendedRecyclerView

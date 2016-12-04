@@ -370,8 +370,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 startActivityForResult(intent, REQUEST_PICK_IMAGE)
             }
             actionBarCustomView.queryButton -> {
-                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
-                searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
+                val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails
+                searchUsers(account.key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
             }
         }
     }
@@ -570,9 +570,9 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 val activity = activity
                 if (activity !is BaseActivity) return false
                 if (activity.keyMetaState != 0) return false
-                val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
-                editText.accountKey = account.account_key
-                searchUsers(account.account_key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
+                val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails
+                editText.accountKey = account.key
+                searchUsers(account.key, ParseUtils.parseString(actionBarCustomView.editUserQuery.text), false)
                 return true
             }
         }, true)
@@ -585,9 +585,9 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             }
 
             override fun afterTextChanged(s: Editable) {
-                val account = (actionBarCustomView.accountSpinner.selectedItem ?: return) as ParcelableCredentials
-                editText.accountKey = account.account_key
-                searchUsers(account.account_key, ParseUtils.parseString(s), true)
+                val account = (actionBarCustomView.accountSpinner.selectedItem ?: return) as AccountDetails
+                editText.accountKey = account.key
+                searchUsers(account.key, ParseUtils.parseString(s), true)
             }
         })
         actionBarCustomView.editUserQuery.addTextChangedListener(object : TextWatcher {
@@ -600,8 +600,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             }
 
             override fun afterTextChanged(s: Editable) {
-                //                Utils.removeLineBreaks(s);
-                queryTextChanged = s.length == 0
+                queryTextChanged = s.isEmpty()
             }
         })
     }
@@ -766,11 +765,11 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments
-                    val account = args.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
-                    val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
+                    val account: AccountDetails? = args.getParcelable(EXTRA_ACCOUNT)
+                    val user: ParcelableUser? = args.getParcelable(EXTRA_USER)
                     val twitter = twitterWrapper
                     if (account == null || user == null) return
-                    twitter.destroyMessageConversationAsync(account.account_key, user.key.id)
+                    twitter.destroyMessageConversationAsync(account.key, user.key.id)
                 }
             }
         }
@@ -791,11 +790,11 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val args = arguments
-                    val account = args.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
-                    val message = args.getParcelable<ParcelableDirectMessage>(EXTRA_MESSAGE)
+                    val account: AccountDetails? = args.getParcelable(EXTRA_ACCOUNT)
+                    val message: ParcelableDirectMessage? = args.getParcelable(EXTRA_MESSAGE)
                     val twitter = twitterWrapper
                     if (account == null || message == null) return
-                    twitter.destroyDirectMessageAsync(account.account_key, message.id)
+                    twitter.destroyDirectMessageAsync(account.key, message.id)
                 }
             }
         }

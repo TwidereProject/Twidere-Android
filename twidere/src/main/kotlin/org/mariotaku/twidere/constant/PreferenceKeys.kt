@@ -8,7 +8,6 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AuthTypeInt
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
-import org.mariotaku.twidere.model.ParcelableCredentials
 
 /**
  * Created by mariotaku on 16/8/25.

@@ -21,9 +21,6 @@ package org.mariotaku.twidere.model;
 
 import android.support.annotation.Nullable;
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.annotation.AuthTypeInt;
@@ -32,53 +29,51 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 /**
  * Created by mariotaku on 15/5/26.
  */
-@JsonObject
 @CursorObject
 @Deprecated
 public class ParcelableCredentials extends ParcelableAccount {
 
-    @JsonField(name = "auth_type")
+
     @CursorField(Accounts.AUTH_TYPE)
     @AuthTypeInt
     public int auth_type;
-    @JsonField(name = "consumer_key")
+
     @CursorField(Accounts.CONSUMER_KEY)
     public String consumer_key;
-    @JsonField(name = "consumer_secret")
+
     @CursorField(Accounts.CONSUMER_SECRET)
     public String consumer_secret;
 
-    @JsonField(name = "basic_auth_username")
+
     @CursorField(Accounts.BASIC_AUTH_USERNAME)
     public String basic_auth_username;
 
-    @JsonField(name = "basic_auth_password")
+
     @CursorField(Accounts.BASIC_AUTH_PASSWORD)
     public String basic_auth_password;
 
-    @JsonField(name = "oauth_token")
+
     @CursorField(Accounts.OAUTH_TOKEN)
     public String oauth_token;
 
-    @JsonField(name = "oauth_token_secret")
+
     @CursorField(Accounts.OAUTH_TOKEN_SECRET)
     public String oauth_token_secret;
 
-    @JsonField(name = "api_url_format")
+
     @CursorField(Accounts.API_URL_FORMAT)
     @Nullable
     public String api_url_format;
 
-    @JsonField(name = "same_oauth_signing_url")
+
     @CursorField(Accounts.SAME_OAUTH_SIGNING_URL)
     public boolean same_oauth_signing_url;
 
-    @JsonField(name = "no_version_suffix")
+
     @CursorField(Accounts.NO_VERSION_SUFFIX)
     public boolean no_version_suffix;
 
 
-    @JsonField(name = "account_extras")
     @CursorField(Accounts.ACCOUNT_EXTRAS)
     public String account_extras;
 
@@ -102,9 +97,5 @@ public class ParcelableCredentials extends ParcelableAccount {
                 "} " + super.toString();
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
 }

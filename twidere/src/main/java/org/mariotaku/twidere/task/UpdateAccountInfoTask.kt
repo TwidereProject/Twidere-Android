@@ -13,7 +13,6 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_KEY
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_USER
-import org.mariotaku.twidere.extension.model.account_name
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import java.io.IOException
@@ -21,9 +20,9 @@ import java.io.IOException
 /**
  * Created by mariotaku on 16/3/8.
  */
-class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<ParcelableAccount, ParcelableUser>, Any, Any>() {
+class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<AccountDetails, ParcelableUser>, Any, Any>() {
 
-    override fun doLongOperation(params: Pair<ParcelableAccount, ParcelableUser>): Any? {
+    override fun doLongOperation(params: Pair<AccountDetails, ParcelableUser>): Any? {
         val resolver = context.contentResolver
         val account = params.first
         val user = params.second
@@ -35,14 +34,14 @@ class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<Pa
         }
 
         val am = AccountManager.get(context)
-        val account1 = Account(account.account_name, TwidereConstants.ACCOUNT_TYPE)
+        val account1 = Account(account.user.name, TwidereConstants.ACCOUNT_TYPE)
         am.setUserData(account1, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
         am.setUserData(account1, ACCOUNT_USER_DATA_KEY, user.key.toString())
 
         val accountKeyValues = ContentValues()
         accountKeyValues.put(AccountSupportColumns.ACCOUNT_KEY, user.key.toString())
         val accountKeyWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
-        val accountKeyWhereArgs = arrayOf(account.account_key.toString())
+        val accountKeyWhereArgs = arrayOf(account.key.toString())
 
         resolver.update(Statuses.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Activities.AboutMe.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)

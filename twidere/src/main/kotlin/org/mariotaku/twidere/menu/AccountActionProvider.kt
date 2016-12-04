@@ -10,7 +10,6 @@ import android.view.View
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 
@@ -44,8 +43,8 @@ class AccountActionProvider(
             for (i in 0 until subMenu.size()) {
                 val item = subMenu.getItem(i)
                 val intent = item.intent
-                val account = intent.getParcelableExtra<ParcelableAccount>(EXTRA_ACCOUNT)
-                if (it.contains(account.account_key)) {
+                val account: AccountDetails = intent.getParcelableExtra(EXTRA_ACCOUNT)
+                if (it.contains(account.key)) {
                     item.isChecked = true
                 }
             }

@@ -712,7 +712,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         }
         var accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         if (accountKey == null) {
-            accountKey = UserKey.valueOf(uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY))
+            accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.convert(UserKey::valueOf)
         }
         if (accountKey == null) {
             val accountId = uri.getQueryParameter(CompatibilityConstants.QUERY_PARAM_ACCOUNT_ID)

@@ -21,12 +21,8 @@ package org.mariotaku.twidere.activity
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_RESID
 import org.mariotaku.twidere.fragment.SettingsDetailsFragment
 
 class HiddenSettingsActivity : BaseActivity() {

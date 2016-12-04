@@ -52,7 +52,6 @@ import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.AuthTypeInt
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.CustomAPIConfig
-import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.MicroBlogAPIFactory

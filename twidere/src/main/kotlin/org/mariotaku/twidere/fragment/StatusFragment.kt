@@ -2059,8 +2059,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun loadInBackground(): StatusActivity? {
             val context = context
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context),  mAccountKey)
-            if (details == null || AccountType.TWITTER != AccountUtils.getAccountType(details)) {
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey) ?: return null
+            if (AccountType.TWITTER != details.type) {
                 return null
             }
             val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false) ?: return null

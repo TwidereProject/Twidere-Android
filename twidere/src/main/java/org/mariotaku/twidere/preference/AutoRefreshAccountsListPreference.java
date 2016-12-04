@@ -23,29 +23,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.fragment.AccountRefreshSettingsFragment;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.AccountDetails;
 
-public class AutoRefreshAccountsListPreference extends AccountsListPreference implements TwidereConstants {
+public class AutoRefreshAccountsListPreference extends AccountsListPreference {
 
-	public AutoRefreshAccountsListPreference(final Context context) {
-		super(context);
-	}
+    public AutoRefreshAccountsListPreference(final Context context) {
+        super(context);
+    }
 
-	public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
+    public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-		super(context, attrs, defStyle);
-	}
+    public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
-	@Override
-	protected void setupPreference(final AccountItemPreference preference, final ParcelableAccount account) {
-		preference.setFragment(AccountRefreshSettingsFragment.class.getName());
-		final Bundle args = preference.getExtras();
-		args.putParcelable(EXTRA_ACCOUNT, account);
-	}
+    @Override
+    protected void setupPreference(final AccountItemPreference preference, final AccountDetails account) {
+        preference.setFragment(AccountRefreshSettingsFragment.class.getName());
+        final Bundle args = preference.getExtras();
+        args.putParcelable(EXTRA_ACCOUNT, account);
+    }
 
 }

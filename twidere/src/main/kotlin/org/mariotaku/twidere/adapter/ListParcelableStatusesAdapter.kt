@@ -2,9 +2,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.view.holder.StatusViewHolder

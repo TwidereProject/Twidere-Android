@@ -19,14 +19,11 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.app.Activity
 import android.content.SharedPreferences
-
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.util.Utils
-
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.DEFAULT_AUTO_REFRESH
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_AUTO_REFRESH
+import org.mariotaku.twidere.util.Utils
 
 class AccountRefreshSettingsFragment : BaseAccountPreferenceFragment() {
 

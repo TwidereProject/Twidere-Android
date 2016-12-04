@@ -13,7 +13,6 @@ import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.Utils;
 
 /**
@@ -28,7 +27,7 @@ public class AcceptFriendshipTask extends AbsFriendshipOperationTask implements 
     @NonNull
     @Override
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
-        switch (AccountUtils.getAccountType(details)) {
+        switch (details.type) {
             case AccountType.FANFOU: {
                 return twitter.acceptFanfouFriendship(args.userKey.getId());
             }
