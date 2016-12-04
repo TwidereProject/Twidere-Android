@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.activity
 
 import android.Manifest
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.*
@@ -77,8 +78,7 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
@@ -429,11 +429,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         displayNewDraftNotification(text, draftUri)
     }
 
-    fun setSelectedAccounts(vararg accounts: ParcelableAccount) {
+    fun setSelectedAccounts(vararg accounts: AccountDetails) {
         if (accounts.size == 1) {
             accountsCount.setText(null)
             val account = accounts[0]
-            mediaLoader.displayProfileImage(accountProfileImage, account)
+            mediaLoader.displayProfileImage(accountProfileImage, account.user)
             accountProfileImage.setBorderColor(account.color)
         } else {
             accountsCount.setText(accounts.size.toString())
@@ -456,7 +456,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         setContentView(R.layout.activity_compose)
         setFinishOnTouchOutside(false)
-        val accounts = ParcelableCredentialsUtils.getCredentialses(this, false, false)
+        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this))
         if (accounts.isEmpty()) {
             val intent = Intent(INTENT_ACTION_TWITTER_LOGIN)
             intent.setClass(this, SignInActivity::class.java)
@@ -464,7 +464,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             finish()
             return
         }
-        val defaultAccountIds = accounts.map { it.account_key }.toTypedArray()
+        val defaultAccountIds = accounts.map { it.key }.toTypedArray()
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
         accountSelectorContainer.setOnClickListener(this)
@@ -524,7 +524,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelector.itemAnimator = DefaultItemAnimator()
         accountsAdapter = AccountIconsAdapter(this)
         accountSelector.adapter = accountsAdapter
-        accountsAdapter!!.setAccounts(accounts.toTypedArray())
+        accountsAdapter!!.setAccounts(accounts)
 
 
         val adapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
@@ -971,7 +971,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
-        val account = ParcelableAccountUtils.getAccount(this, status.account_key) ?: return false
+        val account = AccountUtils.getAccountDetails(AccountManager.get(this), status.account_key) ?: return false
         var selectionStart = 0
         val mentions = TreeSet(String.CASE_INSENSITIVE_ORDER)
         editText.append("@" + status.user_screen_name + " ")
@@ -1006,7 +1006,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         for (mention in mentions) {
-            if (mention.equals(status.user_screen_name, ignoreCase = true) || mention.equals(account.screen_name, ignoreCase = true)) {
+            if (mention.equals(status.user_screen_name, ignoreCase = true) || mention.equals(account.user.screen_name, ignoreCase = true)) {
                 continue
             }
             editText.append("@$mention ")
@@ -1075,7 +1075,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (ArrayUtils.isEmpty(accounts)) {
             editText.accountKey = Utils.getDefaultAccountKey(this)
         } else {
-            editText.accountKey = accounts[0].account_key
+            editText.accountKey = accounts[0].key
         }
         statusTextCount.maxLength = TwidereValidator.getTextLimit(accounts)
         setMenu()
@@ -1121,12 +1121,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         get() {
             val accounts = accountsAdapter!!.selectedAccounts
             if (ArrayUtils.isEmpty(accounts)) return false
-            for (account in accounts) {
-                if (TwitterContentUtils.getOfficialKeyType(this, account.consumer_key, account.consumer_secret) != ConsumerKeyType.TWEETDECK) {
-                    return false
-                }
-            }
-            return true
+            return false
         }
 
     private fun setProgressVisible(visible: Boolean) {
@@ -1280,7 +1275,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         } else {
             action = getDraftAction(intent.action)
         }
-        update.accounts = ParcelableAccountUtils.getAccounts(this, *accountKeys)
+        update.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys)
         update.text = text
         if (attachLocation) {
             update.location = recentLocation
@@ -1362,16 +1357,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             itemView.setOnClickListener(this)
         }
 
-        fun showAccount(adapter: AccountIconsAdapter, account: ParcelableAccount, isSelected: Boolean) {
+        fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
             (itemView as CheckableLinearLayout).isChecked = isSelected
             val loader = adapter.imageLoader
             if (ObjectUtils.notEqual(account, iconView.tag) || iconView.drawable == null) {
                 iconView.tag = account
-                loader.displayProfileImage(iconView, account)
+                loader.displayProfileImage(iconView, account.user)
             }
             iconView.setBorderColor(account.color)
-            nameView.text = if (adapter.isNameFirst) account.name else "@" + account.screen_name
+            nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name
         }
 
         override fun onClick(v: View) {
@@ -1387,7 +1382,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         private val selection: MutableMap<UserKey, Boolean>
         val isNameFirst: Boolean
 
-        private var accounts: Array<ParcelableCredentials>? = null
+        private var accounts: Array<AccountDetails>? = null
 
         init {
             setHasStableIds(true)
@@ -1406,8 +1401,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val selectedAccountKeys: Array<UserKey>
             get() {
                 val accounts = accounts ?: return emptyArray()
-                return accounts.filter { selection[it.account_key] ?: false }
-                        .map { it.account_key!! }
+                return accounts.filter { selection[it.key] ?: false }
+                        .map { it.key }
                         .toTypedArray()
             }
 
@@ -1419,10 +1414,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             notifyDataSetChanged()
         }
 
-        val selectedAccounts: Array<ParcelableCredentials>
+        val selectedAccounts: Array<AccountDetails>
             get() {
                 val accounts = accounts ?: return emptyArray()
-                return accounts.filter { selection[it.account_key] ?: false }.toTypedArray()
+                return accounts.filter { selection[it.key] ?: false }.toTypedArray()
             }
 
         val isSelectionEmpty: Boolean
@@ -1435,7 +1430,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         override fun onBindViewHolder(holder: AccountIconViewHolder, position: Int) {
             val account = accounts!![position]
-            val isSelected = selection[account.account_key] ?: false
+            val isSelected = selection[account.key] ?: false
             holder.showAccount(this, account, isSelected)
         }
 
@@ -1443,7 +1438,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return if (accounts != null) accounts!!.size else 0
         }
 
-        fun setAccounts(accounts: Array<ParcelableCredentials>) {
+        fun setAccounts(accounts: Array<AccountDetails>) {
             this.accounts = accounts
             notifyDataSetChanged()
         }
@@ -1451,7 +1446,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         internal fun toggleSelection(position: Int) {
             if (accounts == null || position < 0) return
             val account = accounts!![position]
-            selection.put(account.account_key, java.lang.Boolean.TRUE != selection[account.account_key])
+            selection.put(account.key, true != selection[account.key])
             activity.notifyAccountSelectionChanged()
             notifyDataSetChanged()
         }

@@ -38,7 +38,7 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "accounts")
     @NonNull
     @ParcelableThisPlease
-    public ParcelableAccount[] accounts;
+    public AccountDetails[] accounts;
     @JsonField(name = "media")
     @ParcelableThisPlease
     public ParcelableMediaUpdate[] media;

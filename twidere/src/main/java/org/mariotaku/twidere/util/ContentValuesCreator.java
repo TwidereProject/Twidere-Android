@@ -29,10 +29,10 @@ import org.mariotaku.microblog.library.twitter.model.Trend;
 import org.mariotaku.microblog.library.twitter.model.Trends;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.TwidereConstants;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
-import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageValuesCreator;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
@@ -155,15 +155,15 @@ public final class ContentValuesCreator implements TwidereConstants {
 
     @NonNull
     public static ContentValues createActivity(final ParcelableActivity activity,
-                                               final ParcelableCredentials credentials,
+                                               final AccountDetails details,
                                                final UserColorNameManager manager) throws IOException {
         final ContentValues values = new ContentValues();
         final ParcelableStatus status = ParcelableActivityExtensionsKt.getActivityStatus(activity);
 
-        activity.account_color = credentials.color;
+        activity.account_color = details.color;
 
         if (status != null) {
-            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials, manager);
+            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, details, manager);
 
             activity.status_id = status.id;
             activity.status_retweet_id = status.retweet_id;

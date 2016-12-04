@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.service
 
+import android.accounts.AccountManager
 import android.app.IntentService
 import android.app.Notification
 import android.app.Service
@@ -40,31 +41,30 @@ import android.util.Pair
 import android.widget.Toast
 import com.twitter.Extractor
 import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaEvent
-import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.ktextension.toTypedArray
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse.ProcessingInfo
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
-import org.mariotaku.restfu.http.mime.FileBody
 import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
@@ -350,15 +350,13 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                                   recipientId: String,
                                   text: String,
                                   imageUri: String?): SingleResponse<ParcelableDirectMessage> {
-        val credentials = ParcelableCredentialsUtils.getCredentials(this,
+        val details = AccountUtils.getAccountDetails(AccountManager.get(this),
                 accountKey) ?: return SingleResponse.getInstance<ParcelableDirectMessage>()
-        val twitter = MicroBlogAPIFactory.getInstance(this, credentials, true, true)
-        val twitterUpload = MicroBlogAPIFactory.getInstance(this, credentials,
-                true, true, TwitterUpload::class.java)
-        if (twitter == null || twitterUpload == null) return SingleResponse.getInstance<ParcelableDirectMessage>()
+        val twitter = details.credentials.newMicroBlogInstance(context = this, cls = MicroBlog::class.java)
+        val twitterUpload = details.credentials.newMicroBlogInstance(context = this, cls = TwitterUpload::class.java)
         try {
             val directMessage: ParcelableDirectMessage
-            when (ParcelableAccountUtils.getAccountType(credentials)) {
+            when (AccountUtils.getAccountType(details)) {
                 AccountType.FANFOU -> {
                     if (imageUri != null) {
                         throw MicroBlogException("Can't send image DM on Fanfou")

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.preference;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -43,8 +44,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.AccountDetails;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.BitmapUtils;
 import org.mariotaku.twidere.util.MediaLoaderWrapper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
@@ -73,9 +74,9 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         a.recycle();
     }
 
-    public void setAccountsData(final ParcelableAccount[] accounts) {
+    public void setAccountsData(final AccountDetails[] accounts) {
         removeAll();
-        for (final ParcelableAccount account : accounts) {
+        for (final AccountDetails account : accounts) {
             final AccountItemPreference preference = new AccountItemPreference(getContext(), account,
                     mSwitchKey, mSwitchDefault);
             setupPreference(preference, account);
@@ -90,30 +91,30 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         if (getPreferenceCount() > 0) return;
-        setAccountsData(ParcelableAccountUtils.getAccounts(getContext()));
+        setAccountsData(AccountUtils.getAllAccountDetails(AccountManager.get(getContext())));
     }
 
-    protected abstract void setupPreference(AccountItemPreference preference, ParcelableAccount account);
+    protected abstract void setupPreference(AccountItemPreference preference, AccountDetails account);
 
     public static final class AccountItemPreference extends Preference implements ImageLoadingListener,
             OnSharedPreferenceChangeListener {
 
-        private final ParcelableAccount mAccount;
+        private final AccountDetails mAccount;
         private final SharedPreferences mSwitchPreference;
 
         @Inject
         MediaLoaderWrapper mImageLoader;
 
-        public AccountItemPreference(final Context context, final ParcelableAccount account, final String switchKey,
+        public AccountItemPreference(final Context context, final AccountDetails account, final String switchKey,
                                      final boolean switchDefault) {
             super(context);
             GeneralComponentHelper.build(context).inject(this);
-            final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.account_key;
+            final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.key;
             mAccount = account;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
-            setTitle(mAccount.name);
-            setSummary(String.format("@%s", mAccount.screen_name));
+            setTitle(mAccount.user.name);
+            setSummary(String.format("@%s", mAccount.user.screen_name));
             mImageLoader.loadProfileImage(mAccount, this);
         }
 

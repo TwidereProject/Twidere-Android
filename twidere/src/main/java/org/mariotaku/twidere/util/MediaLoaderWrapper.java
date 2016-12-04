@@ -32,7 +32,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import org.mariotaku.twidere.annotation.AccountType;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
@@ -146,18 +146,8 @@ public class MediaLoaderWrapper {
     }
 
 
-    public void displayProfileBanner(final ImageView view, final ParcelableAccount account, final int width) {
-        displayProfileBanner(view, getBestBannerUrl(getBannerUrl(account), width));
-    }
-
-    private String getBannerUrl(ParcelableAccount account) {
-        String bannerUrl = account.profile_banner_url;
-        if (bannerUrl == null && AccountType.FANFOU.equals(account.account_type)) {
-            if (account.account_user != null) {
-                bannerUrl = ParcelableUserUtils.getProfileBannerUrl(account.account_user);
-            }
-        }
-        return bannerUrl;
+    public void displayProfileBanner(final ImageView view, final AccountDetails account, final int width) {
+        displayProfileBanner(view, getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(account.user), width));
     }
 
     public void displayOriginalProfileImage(final ImageView view, final ParcelableUser user) {
@@ -220,14 +210,13 @@ public class MediaLoaderWrapper {
     }
 
     public void displayDashboardProfileImage(@NonNull final ImageView view,
-                                             @NonNull final ParcelableAccount account,
+                                             @NonNull final AccountDetails account,
                                              @Nullable final Drawable drawableOnLoading) {
-        if (account.account_user != null && account.account_user.extras != null
-                && !TextUtils.isEmpty(account.account_user.extras.profile_image_url_profile_size)) {
-            displayDashboardProfileImage(view, account.account_user.extras.profile_image_url_profile_size,
+        if (account.user.extras != null && !TextUtils.isEmpty(account.user.extras.profile_image_url_profile_size)) {
+            displayDashboardProfileImage(view, account.user.extras.profile_image_url_profile_size,
                     drawableOnLoading);
         } else {
-            displayDashboardProfileImage(view, account.profile_image_url, drawableOnLoading);
+            displayDashboardProfileImage(view, account.user.profile_image_url, drawableOnLoading);
         }
     }
 
@@ -252,12 +241,11 @@ public class MediaLoaderWrapper {
         mImageLoader.displayImage(url, view, mProfileImageDisplayOptions, listener);
     }
 
-    public void loadProfileImage(final ParcelableAccount account, final ImageLoadingListener listener) {
-        if (account.account_user != null && account.account_user.extras != null
-                && !TextUtils.isEmpty(account.account_user.extras.profile_image_url_profile_size)) {
-            loadProfileImage(account.account_user.extras.profile_image_url_profile_size, listener);
+    public void loadProfileImage(final AccountDetails account, final ImageLoadingListener listener) {
+        if (account.user.extras != null && !TextUtils.isEmpty(account.user.extras.profile_image_url_profile_size)) {
+            loadProfileImage(account.user.extras.profile_image_url_profile_size, listener);
         } else {
-            loadProfileImage(account.profile_image_url, listener);
+            loadProfileImage(account.user.profile_image_url, listener);
         }
     }
 

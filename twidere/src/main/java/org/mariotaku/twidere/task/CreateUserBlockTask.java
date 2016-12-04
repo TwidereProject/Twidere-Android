@@ -14,10 +14,10 @@ import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -34,9 +34,9 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask implements C
 
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
+    protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
-        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+        switch (AccountUtils.getAccountType(details)) {
             case AccountType.FANFOU: {
                 return twitter.createFanfouBlock(args.userKey.getId());
             }
@@ -46,7 +46,7 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask implements C
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter,
-                                   @NonNull ParcelableCredentials credentials,
+                                   @NonNull AccountDetails details,
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
         final ContentResolver resolver = context.getContentResolver();
         Utils.setLastSeen(context, args.userKey, -1);

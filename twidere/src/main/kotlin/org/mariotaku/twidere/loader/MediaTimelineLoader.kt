@@ -28,12 +28,13 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.twidere.util.TwitterWrapper
 
 
 class MediaTimelineLoader(
@@ -55,12 +56,12 @@ class MediaTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             credentials: ParcelableCredentials,
+                             details: AccountDetails,
                              paging: Paging): ResponseList<Status> {
         val context = context
-        when (ParcelableAccountUtils.getAccountType(credentials)) {
+        when (details.type) {
             AccountType.TWITTER -> {
-                if (Utils.isOfficialCredentials(context, credentials)) {
+                if (details.isOfficial(context)) {
                     if (userKey != null) {
                         return microBlog.getMediaTimeline(userKey.id, paging)
                     }
@@ -74,18 +75,13 @@ class MediaTimelineLoader(
                     } else if (userKey != null) {
                         if (user == null) {
                             user = TwitterWrapper.tryShowUser(microBlog, userKey.id, null,
-                                    credentials.account_type)
+                                    details.type)
                         }
                         screenName = user!!.screenName
                     } else {
                         throw MicroBlogException("Invalid parameters")
                     }
-                    val query: SearchQuery
-                    if (MicroBlogAPIFactory.isTwitterCredentials(credentials)) {
-                        query = SearchQuery("from:$screenName filter:media exclude:retweets")
-                    } else {
-                        query = SearchQuery("@$screenName pic.twitter.com -RT")
-                    }
+                    val query = SearchQuery("from:$screenName filter:media exclude:retweets")
                     query.paging(paging)
                     val result = ResponseList<Status>()
                     for (status in microBlog.search(query)) {

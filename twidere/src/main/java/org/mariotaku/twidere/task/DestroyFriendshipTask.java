@@ -11,11 +11,11 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.model.util.AccountUtils;
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST;
@@ -31,8 +31,8 @@ public class DestroyFriendshipTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws MicroBlogException {
-        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+    protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
+        switch (AccountUtils.getAccountType(details)) {
             case AccountType.FANFOU: {
                 return twitter.destroyFanfouFriendship(args.userKey.getId());
             }
@@ -41,16 +41,16 @@ public class DestroyFriendshipTask extends AbsFriendshipOperationTask {
     }
 
     @Override
-    protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
+    protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
         user.is_following = false;
         Utils.setLastSeen(context, user.key, -1);
-        final Expression where = Expression.and(Expression.equalsArgs(TwidereDataStore.Statuses.ACCOUNT_KEY),
-                Expression.or(Expression.equalsArgs(TwidereDataStore.Statuses.USER_KEY),
-                        Expression.equalsArgs(TwidereDataStore.Statuses.RETWEETED_BY_USER_KEY)));
+        final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                Expression.or(Expression.equalsArgs(Statuses.USER_KEY),
+                        Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)));
         final String[] whereArgs = {args.userKey.toString(), args.userKey.toString(),
                 args.userKey.toString()};
         final ContentResolver resolver = context.getContentResolver();
-        resolver.delete(TwidereDataStore.Statuses.CONTENT_URI, where.getSQL(), whereArgs);
+        resolver.delete(Statuses.CONTENT_URI, where.getSQL(), whereArgs);
     }
 
     @Override

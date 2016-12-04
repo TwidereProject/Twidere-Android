@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -69,7 +70,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.loader.UserSearchLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
@@ -127,7 +128,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private var navigateBackPressed: Boolean = false
     private var loaderInitialized: Boolean = false
     private var imageUri: String? = null
-    private var account: ParcelableCredentials? = null
+    private var account: AccountDetails? = null
     private var recipient: ParcelableUser? = null
     private var textChanged: Boolean = false
     private var queryTextChanged: Boolean = false
@@ -169,7 +170,8 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar.setCustomView(R.layout.layout_actionbar_message_user_picker)
-        val accounts = ParcelableCredentialsUtils.getCredentialses(activity, false, false)
+        val am = AccountManager.get(context)
+        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am)).asList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(
                 actionBar.themedContext, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
@@ -203,7 +205,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         usersSearchList.adapter = usersSearchAdapter
         usersSearchList.emptyView = usersSearchEmpty
         usersSearchList.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials
+            val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails
             showConversation(account, usersSearchAdapter!!.getItem(position))
             updateRecipientInfo()
         }
@@ -215,18 +217,18 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         addImage.setOnClickListener(this)
         sendMessage.isEnabled = false
         if (savedInstanceState != null) {
-            val account = savedInstanceState.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
-            val recipient = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)
+            val account: AccountDetails = savedInstanceState.getParcelable(EXTRA_ACCOUNT)
+            val recipient: ParcelableUser = savedInstanceState.getParcelable(EXTRA_USER)
             showConversation(account, recipient)
             editText.setText(savedInstanceState.getString(EXTRA_TEXT))
             imageUri = savedInstanceState.getString(EXTRA_IMAGE_URI)
         } else {
             val args = arguments
-            val account: ParcelableCredentials?
+            val account: AccountDetails?
             val recipient: ParcelableUser?
             if (args != null) {
                 if (args.containsKey(EXTRA_ACCOUNT)) {
-                    account = args.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
+                    account = args.getParcelable(EXTRA_ACCOUNT)
                     recipient = args.getParcelable<ParcelableUser>(EXTRA_USER)
                 } else if (args.containsKey(EXTRA_ACCOUNT_KEY) && args.containsKey(EXTRA_RECIPIENT_ID)) {
                     val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
@@ -242,7 +244,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                     if (accountPos >= 0) {
                         account = accountsSpinnerAdapter.getItem(accountPos)
                     } else {
-                        account = ParcelableCredentialsUtils.getCredentials(activity, accountKey)
+                        account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey)
                     }
                     if (userId != null) {
                         recipient = Utils.getUserForConversation(activity, accountKey, userId)
@@ -255,7 +257,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 }
                 showConversation(account, recipient)
                 if (account != null && recipient != null) {
-                    val key = getDraftsTextKey(account.account_key, recipient.key)
+                    val key = getDraftsTextKey(account.key, recipient.key)
                     editText.setText(messageDrafts!!.getString(key, null))
                 }
             }
@@ -304,7 +306,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         val account = account
         val recipient = recipient
         if (account != null && recipient != null) {
-            val key = getDraftsTextKey(account.account_key, recipient.key)
+            val key = getDraftsTextKey(account.key, recipient.key)
             val editor = messageDrafts!!.edit()
             val text = ParseUtils.parseString(editText.text)
             if (TextUtils.isEmpty(text)) {
@@ -375,7 +377,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
-        val account = actionBarCustomView.accountSpinner.selectedItem as ParcelableCredentials?
+        val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails?
         if (account != null) {
             this.account = account
             updateRecipientInfo()
@@ -462,13 +464,13 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     }
 
 
-    fun showConversation(account: ParcelableCredentials?, recipient: ParcelableUser?) {
+    fun showConversation(account: AccountDetails?, recipient: ParcelableUser?) {
         this.account = account
         this.recipient = recipient
         if (account == null || recipient == null) return
         val lm = loaderManager
         val args = Bundle()
-        args.putParcelable(EXTRA_ACCOUNT_KEY, account.account_key)
+        args.putParcelable(EXTRA_ACCOUNT_KEY, account.key)
         args.putString(EXTRA_RECIPIENT_ID, recipient.key.id)
         if (loaderInitialized) {
             lm.restartLoader(0, args, this)
@@ -548,7 +550,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         if (TextUtils.isEmpty(message)) {
             editText.error = getString(R.string.error_message_no_content)
         } else {
-            twitterWrapper.sendDirectMessageAsync(account.account_key, recipient.key.id,
+            twitterWrapper.sendDirectMessageAsync(account.key, recipient.key.id,
                     message, imageUri)
             editText.text = null
             imageUri = null
@@ -799,7 +801,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         }
     }
 
-    class SetReadStateTask(private val context: Context, private val account: ParcelableCredentials, private val recipient: ParcelableUser) : AsyncTask<Any, Any, Cursor>() {
+    class SetReadStateTask(private val context: Context, private val account: AccountDetails, private val recipient: ParcelableUser) : AsyncTask<Any, Any, Cursor>() {
 
         @Inject
         lateinit var readStateManager: ReadStateManager
@@ -814,7 +816,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
             val selection = Expression.and(
                     Expression.equalsArgs(ConversationEntries.ACCOUNT_KEY),
                     Expression.equalsArgs(ConversationEntries.CONVERSATION_ID)).sql
-            val selectionArgs = arrayOf(account.account_key.toString(), recipient.key.toString())
+            val selectionArgs = arrayOf(account.key.toString(), recipient.key.toString())
             val orderBy = OrderBy(ConversationEntries.MESSAGE_ID, false).sql
             return resolver.query(ConversationEntries.CONTENT_URI, projection, selection,
                     selectionArgs, orderBy)
@@ -823,7 +825,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         override fun onPostExecute(cursor: Cursor) {
             if (cursor.moveToFirst()) {
                 val messageIdIdx = cursor.getColumnIndex(ConversationEntries.MESSAGE_ID)
-                val key = "${account.account_key}-${recipient.key}"
+                val key = "${account.key}-${recipient.key}"
                 readStateManager.setPosition(CustomTabType.DIRECT_MESSAGES, key, cursor.getLong(messageIdIdx), false)
             }
             cursor.close()

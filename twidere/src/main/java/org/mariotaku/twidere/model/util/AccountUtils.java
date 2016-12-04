@@ -5,6 +5,9 @@ import android.accounts.AccountManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
@@ -40,6 +43,23 @@ public class AccountUtils {
         return details;
     }
 
+    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull UserKey[] accountKeys) {
+        AccountDetails[] details = new AccountDetails[accountKeys.length];
+        for (int i = 0; i < accountKeys.length; i++) {
+            details[i] = getAccountDetails(am, accountKeys[i]);
+        }
+        return details;
+    }
+
+    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am) {
+        Account[] accounts = getAccounts(am);
+        AccountDetails[] details = new AccountDetails[accounts.length];
+        for (int i = 0; i < accounts.length; i++) {
+            details[i] = getAccountDetails(am, accounts[i]);
+        }
+        return details;
+    }
+
     @Nullable
     public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull UserKey accountKey) {
         final Account account = findByAccountKey(am, accountKey);
@@ -59,5 +79,37 @@ public class AccountUtils {
         details.type = AccountExtensionsKt.getAccountType(account, am);
         details.credentials_type = AccountExtensionsKt.getCredentialsType(account, am);
         return details;
+    }
+
+    public static Account findByScreenName(AccountManager am, String screenName) {
+        for (Account account : getAccounts(am)) {
+            if (StringUtils.equalsIgnoreCase(UserKey.valueOf(account.name).getId(), screenName)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    @NonNull
+    @AccountType
+    public static String getAccountType(@NonNull AccountDetails account) {
+        return account.type;
+    }
+
+    public static int getAccountTypeIcon(@Nullable String accountType) {
+        if (accountType == null) return R.drawable.ic_account_logo_twitter;
+        switch (accountType) {
+            case AccountType.TWITTER: {
+                return R.drawable.ic_account_logo_twitter;
+            }
+            case AccountType.FANFOU: {
+                return R.drawable.ic_account_logo_fanfou;
+            }
+            case AccountType.STATUSNET: {
+                return R.drawable.ic_account_logo_statusnet;
+            }
+
+        }
+        return R.drawable.ic_account_logo_twitter;
     }
 }

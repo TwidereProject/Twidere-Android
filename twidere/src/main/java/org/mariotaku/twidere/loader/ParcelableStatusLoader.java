@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.loader;
 
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
@@ -27,12 +28,12 @@ import android.support.v4.content.AsyncTaskLoader;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.constant.IntentConstants;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.util.DataStoreUtils;
@@ -41,13 +42,13 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT;
 import static org.mariotaku.twidere.util.Utils.findStatus;
 
 /**
  * Created by mariotaku on 14/12/5.
  */
-public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<ParcelableStatus>>
-        implements Constants {
+public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<ParcelableStatus>> {
 
     private final boolean mOmitIntentExtra;
     private final Bundle mExtras;
@@ -83,13 +84,13 @@ public class ParcelableStatusLoader extends AsyncTaskLoader<SingleResponse<Parce
             }
         }
         try {
-            final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(getContext(), mAccountKey);
-            if (credentials == null) return SingleResponse.Companion.getInstance();
+            final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(getContext()), mAccountKey);
+            if (details == null) return SingleResponse.Companion.getInstance();
             final ParcelableStatus status = findStatus(getContext(), mAccountKey, mStatusId);
-            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, credentials, mUserColorNameManager);
+            ParcelableStatusUtils.INSTANCE.updateExtraInformation(status, details, mUserColorNameManager);
             final SingleResponse<ParcelableStatus> response = SingleResponse.Companion.getInstance(status);
             final Bundle extras = response.getExtras();
-            extras.putParcelable(EXTRA_ACCOUNT, credentials);
+            extras.putParcelable(EXTRA_ACCOUNT, details);
             return response;
         } catch (final MicroBlogException e) {
             if (e.getErrorCode() == ErrorInfo.STATUS_NOT_FOUND) {

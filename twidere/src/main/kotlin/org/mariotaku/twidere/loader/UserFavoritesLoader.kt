@@ -22,18 +22,15 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 class UserFavoritesLoader(
@@ -53,7 +50,7 @@ class UserFavoritesLoader(
         tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    public override fun getStatuses(microBlog: MicroBlog, credentials: ParcelableCredentials, paging: Paging): ResponseList<Status> {
+    public override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Status> {
         if (userKey != null) {
             return microBlog.getFavorites(userKey.id, paging)
         } else if (screenName != null) {
@@ -67,8 +64,8 @@ class UserFavoritesLoader(
         return InternalTwitterContentUtils.isFiltered(database, status, false)
     }
 
-    override fun processPaging(credentials: ParcelableCredentials, loadItemLimit: Int, paging: Paging) {
-        when (ParcelableAccountUtils.getAccountType(credentials)) {
+    override fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
+        when (details.type) {
             AccountType.FANFOU -> {
                 paging.setCount(loadItemLimit)
                 if (page > 0) {
@@ -76,7 +73,7 @@ class UserFavoritesLoader(
                 }
             }
             else -> {
-                super.processPaging(credentials, loadItemLimit, paging)
+                super.processPaging(details, loadItemLimit, paging)
             }
         }
     }

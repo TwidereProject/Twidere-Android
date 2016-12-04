@@ -12,7 +12,7 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -33,14 +33,14 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
+    protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
         return twitter.createMute(args.userKey.getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter,
-                                   @NonNull ParcelableCredentials credentials,
+                                   @NonNull AccountDetails details,
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
         final ContentResolver resolver = context.getContentResolver();
         Utils.setLastSeen(context, args.userKey, -1);

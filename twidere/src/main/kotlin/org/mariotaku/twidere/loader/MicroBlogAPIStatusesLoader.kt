@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.loader
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
@@ -32,13 +33,17 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
-import org.mariotaku.twidere.model.ParcelableCredentials
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.JsonSerializer
+import org.mariotaku.twidere.util.SharedPreferencesWrapper
+import org.mariotaku.twidere.util.TwidereArrayUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
 import java.io.PipedInputStream
@@ -86,8 +91,8 @@ abstract class MicroBlogAPIStatusesLoader(
     override fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
-        val credentials = ParcelableCredentialsUtils.getCredentials(context,
-                accountKey) ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?:
+                return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
 
         var data: MutableList<ParcelableStatus>? = data
         if (data == null) {
@@ -106,15 +111,15 @@ abstract class MicroBlogAPIStatusesLoader(
             }
         }
         if (!fromUser) return ListResponse.getListInstance(data)
-        val twitter = MicroBlogAPIFactory.getInstance(context, credentials, true,
-                true) ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
+        val microBlog = details.credentials.newMicroBlogInstance(context = context,
+                cls = MicroBlog::class.java)
         val statuses: List<Status>
         val noItemsBefore = data.isEmpty()
         val loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)
         try {
             val paging = Paging()
-            processPaging(credentials, loadItemLimit, paging)
-            statuses = getStatuses(twitter, credentials, paging)
+            processPaging(details, loadItemLimit, paging)
+            statuses = getStatuses(microBlog, details, paging)
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e
@@ -146,7 +151,7 @@ abstract class MicroBlogAPIStatusesLoader(
         for (i in 0 until statuses.size) {
             val status = statuses[i]
             val item = ParcelableStatusUtils.fromStatus(status, accountKey, insertGap && isGapEnabled && minIdx == i)
-            ParcelableStatusUtils.updateExtraInformation(item, credentials, userColorNameManager)
+            ParcelableStatusUtils.updateExtraInformation(item, details, userColorNameManager)
             data.add(item)
         }
 
@@ -177,7 +182,7 @@ abstract class MicroBlogAPIStatusesLoader(
 
     @Throws(MicroBlogException::class)
     protected abstract fun getStatuses(microBlog: MicroBlog,
-                                       credentials: ParcelableCredentials,
+                                       details: AccountDetails,
                                        paging: Paging): List<Status>
 
     @WorkerThread
@@ -189,7 +194,7 @@ abstract class MicroBlogAPIStatusesLoader(
         super.onStartLoading()
     }
 
-    protected open fun processPaging(credentials: ParcelableCredentials, loadItemLimit: Int, paging: Paging) {
+    protected open fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
         paging.setCount(loadItemLimit)
         if (maxId != null) {
             paging.setMaxId(maxId)

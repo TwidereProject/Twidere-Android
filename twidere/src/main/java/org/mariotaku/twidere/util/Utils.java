@@ -87,7 +87,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
 import org.mariotaku.microblog.library.MicroBlog;
@@ -103,12 +102,11 @@ import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter;
-import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.graphic.PaddingDrawable;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.AccountPreferences;
-import org.mariotaku.twidere.model.ParcelableAccount;
-import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -118,10 +116,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.account.TwitterAccountExtras;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -333,7 +328,7 @@ public final class Utils implements Constants {
         adapter.notifyDataSetChanged();
     }
 
-    public static int[] getAccountColors(@Nullable final ParcelableAccount[] accounts) {
+    public static int[] getAccountColors(@Nullable final AccountDetails[] accounts) {
         if (accounts == null) return null;
         final int[] colors = new int[accounts.length];
         for (int i = 0, j = accounts.length; i < j; i++) {
@@ -514,23 +509,15 @@ public final class Utils implements Constants {
     }
 
     public static boolean isOfficialCredentials(@NonNull final Context context, final UserKey accountKey) {
-        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
-        if (credentials == null) return false;
-        return isOfficialCredentials(context, credentials);
+        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey);
+        if (details == null) return false;
+        return AccountDetailsExtensionsKt.isOfficial(details, context);
     }
 
+
     public static boolean isOfficialCredentials(@NonNull final Context context,
-                                                @NonNull final ParcelableCredentials account) {
-        if (AccountType.TWITTER.equals(account.account_type)) {
-            final TwitterAccountExtras extra = JsonSerializer.parse(account.account_extras,
-                    TwitterAccountExtras.class);
-            if (extra != null) {
-                return extra.isOfficialCredentials();
-            }
-        }
-        final boolean isOAuth = ParcelableCredentialsUtils.isOAuth(account.auth_type);
-        final String consumerKey = account.consumer_key, consumerSecret = account.consumer_secret;
-        return isOAuth && TwitterContentUtils.isOfficialKey(context, consumerKey, consumerSecret);
+                                                @NonNull final AccountDetails account) {
+        return AccountDetailsExtensionsKt.isOfficial(account, context);
     }
 
     public static boolean setLastSeen(Context context, ParcelableUserMention[] entities, long time) {
@@ -926,19 +913,14 @@ public final class Utils implements Constants {
         return plugged || level / scale > 0.15f;
     }
 
-    public static boolean isMyAccount(@NonNull final Context context, @Nullable final UserKey accountKey) {
-        if (accountKey == null) return false;
+    public static boolean isMyAccount(@NonNull final Context context, @NonNull final UserKey accountKey) {
         final AccountManager am = AccountManager.get(context);
         return AccountUtils.findByAccountKey(am, accountKey) != null;
     }
 
-    public static boolean isMyAccount(final Context context, final String screenName) {
-        for (ParcelableAccount account : ParcelableAccountUtils.getAccounts(context)) {
-            if (StringUtils.equalsIgnoreCase(account.screen_name, screenName)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isMyAccount(@NonNull final Context context, @NonNull final String screenName) {
+        final AccountManager am = AccountManager.get(context);
+        return AccountUtils.findByScreenName(am, screenName) != null;
     }
 
     public static boolean isMyRetweet(final ParcelableStatus status) {

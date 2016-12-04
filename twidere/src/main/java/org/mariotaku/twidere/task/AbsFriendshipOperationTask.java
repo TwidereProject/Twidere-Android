@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.task;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,12 +11,12 @@ import org.mariotaku.abstask.library.AbstractTask;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
@@ -80,15 +81,14 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
 
     @Override
     public final SingleResponse<ParcelableUser> doLongOperation(final Arguments args) {
-        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context,
-                args.accountKey);
-        if (credentials == null) return SingleResponse.Companion.getInstance();
-        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, credentials, false, false);
+        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), args.accountKey);
+        if (details == null) return SingleResponse.Companion.getInstance();
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, details, false, false, MicroBlog.class);
         if (twitter == null) return SingleResponse.Companion.getInstance();
         try {
-            final User user = perform(twitter, credentials, args);
+            final User user = perform(twitter, details, args);
             final ParcelableUser parcelableUser = ParcelableUserUtils.fromUser(user, args.accountKey);
-            succeededWorker(twitter, credentials, args, parcelableUser);
+            succeededWorker(twitter, details, args, parcelableUser);
             return SingleResponse.Companion.getInstance(parcelableUser);
         } catch (final MicroBlogException e) {
             return SingleResponse.Companion.getInstance(e);
@@ -97,11 +97,11 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
 
     @NonNull
     protected abstract User perform(@NonNull MicroBlog twitter,
-                                    @NonNull ParcelableCredentials credentials,
+                                    @NonNull AccountDetails details,
                                     @NonNull Arguments args) throws MicroBlogException;
 
     protected abstract void succeededWorker(@NonNull MicroBlog twitter,
-                                            @NonNull ParcelableCredentials credentials,
+                                            @NonNull AccountDetails details,
                                             @NonNull Arguments args,
                                             @NonNull ParcelableUser user);
 

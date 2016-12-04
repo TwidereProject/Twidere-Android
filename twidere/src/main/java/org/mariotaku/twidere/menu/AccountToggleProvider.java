@@ -29,14 +29,14 @@ import android.view.SubMenu;
 import android.view.View;
 
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 
 public class AccountToggleProvider extends ActionProvider implements TwidereConstants {
 
     public static final int MENU_GROUP = 201;
 
-    private ParcelableAccount[] mAccounts;
+    private AccountDetails[] mAccounts;
 
     private boolean mExclusive;
 
@@ -44,11 +44,11 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         super(context);
     }
 
-    public ParcelableAccount[] getAccounts() {
+    public AccountDetails[] getAccounts() {
         return mAccounts;
     }
 
-    public void setAccounts(ParcelableAccount[] accounts) {
+    public void setAccounts(AccountDetails[] accounts) {
         mAccounts = accounts;
     }
 
@@ -57,9 +57,9 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         if (mAccounts == null) return new UserKey[0];
         UserKey[] temp = new UserKey[mAccounts.length];
         int len = 0;
-        for (ParcelableAccount account : mAccounts) {
-            if (account.is_activated) {
-                temp[len++] = account.account_key;
+        for (AccountDetails account : mAccounts) {
+            if (account.activated) {
+                temp[len++] = account.key;
             }
         }
         final UserKey[] result = new UserKey[len];
@@ -95,8 +95,8 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         subMenu.removeGroup(MENU_GROUP);
         if (mAccounts == null) return;
         for (int i = 0, j = mAccounts.length; i < j; i++) {
-            final ParcelableAccount account = mAccounts[i];
-            final MenuItem item = subMenu.add(MENU_GROUP, Menu.NONE, i, account.name);
+            final AccountDetails account = mAccounts[i];
+            final MenuItem item = subMenu.add(MENU_GROUP, Menu.NONE, i, account.user.name);
             final Intent intent = new Intent();
             intent.putExtra(EXTRA_ACCOUNT, account);
             item.setIntent(intent);
@@ -104,7 +104,7 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         subMenu.setGroupCheckable(MENU_GROUP, true, mExclusive);
         for (int i = 0, j = subMenu.size(); i < j; i++) {
             final MenuItem item = subMenu.getItem(i);
-            if (mAccounts[i].is_activated) {
+            if (mAccounts[i].activated) {
                 item.setChecked(true);
             }
         }
@@ -112,9 +112,9 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
 
     public void setAccountActivated(UserKey accountId, boolean isChecked) {
         if (mAccounts == null) return;
-        for (final ParcelableAccount account : mAccounts) {
-            if (account.account_key == accountId) {
-                account.is_activated = isChecked;
+        for (final AccountDetails account : mAccounts) {
+            if (account.key == accountId) {
+                account.activated = isChecked;
             }
         }
     }

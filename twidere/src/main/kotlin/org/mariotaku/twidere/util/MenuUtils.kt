@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -51,9 +52,9 @@ import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.menu.SupportStatusShareProvider
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 
 /**
@@ -113,7 +114,7 @@ object MenuUtils {
                        menu: Menu,
                        status: ParcelableStatus,
                        twitter: AsyncTwitterWrapper) {
-        val account = ParcelableCredentialsUtils.getCredentials(context,
+        val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                 status.account_key) ?: return
         setupForStatus(context, preferences, menu, status, account, twitter)
     }
@@ -123,7 +124,7 @@ object MenuUtils {
                        preferences: SharedPreferencesWrapper,
                        menu: Menu,
                        status: ParcelableStatus,
-                       account: ParcelableCredentials,
+                       details: AccountDetails,
                        twitter: AsyncTwitterWrapper) {
         if (menu is ContextMenu) {
             menu.setHeaderTitle(context.getString(R.string.status_menu_title_format,
@@ -187,8 +188,7 @@ object MenuUtils {
         }
         val translate = menu.findItem(R.id.translate)
         if (translate != null) {
-            val isOfficialKey = Utils.isOfficialCredentials(context, account)
-            val prefs = SharedPreferencesWrapper.getInstance(context, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val isOfficialKey = Utils.isOfficialCredentials(context, details)
             setItemAvailability(menu, R.id.translate, isOfficialKey)
         }
         menu.removeGroup(Constants.MENU_GROUP_STATUS_EXTENSION)

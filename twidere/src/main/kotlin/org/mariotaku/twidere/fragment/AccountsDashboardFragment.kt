@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorSet
@@ -63,9 +64,10 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
-import org.mariotaku.twidere.model.ParcelableAccount
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
@@ -181,13 +183,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             R.id.profileContainer -> {
                 val account = mAccountsAdapter!!.selectedAccount ?: return
                 val activity = activity
-                if (account.account_user != null) {
-                    IntentUtils.openUserProfile(activity, account.account_user!!, null,
+                if (account.user != null) {
+                    IntentUtils.openUserProfile(activity, account.user!!, null,
                             preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                             Referral.SELF_PROFILE)
                 } else {
-                    IntentUtils.openUserProfile(activity, account.account_key,
-                            account.account_key, account.screen_name, null,
+                    IntentUtils.openUserProfile(activity, account.key, account.key,
+                            account.user.screen_name, null,
                             preferences.getBoolean(KEY_NEW_DOCUMENT_API),
                             Referral.SELF_PROFILE)
                 }
@@ -207,7 +209,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         val menu = accountDashboardMenu.menu
         mAccountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
         val accounts = data.accounts
-        if (accounts.size > 0) {
+        if (accounts.isNotEmpty()) {
             noAccountContainer.visibility = View.GONE
             profileContainer.visibility = View.VISIBLE
         } else {
@@ -216,8 +218,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
         var defaultId: UserKey? = null
         for (account in accounts) {
-            if (account.is_activated) {
-                defaultId = account.account_key
+            if (account.activated) {
+                defaultId = account.key
                 break
             }
         }
@@ -228,9 +230,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         if (accountKey == null) {
             accountKey = defaultId
         }
-        var selectedAccount: ParcelableAccount? = null
+        var selectedAccount: AccountDetails? = null
         for (account in accounts) {
-            if (account.account_key.maybeEquals(accountKey)) {
+            if (account.key.maybeEquals(accountKey)) {
                 selectedAccount = account
                 break
             }
@@ -294,7 +296,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                         val account = mAccountsAdapter!!.selectedAccount ?: return@OnMenuItemClickListener true
                         val composeIntent = Intent(INTENT_ACTION_COMPOSE)
                         composeIntent.setClass(activity, ComposeActivity::class.java)
-                        composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key)
+                        composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                         startActivity(composeIntent)
                         return@OnMenuItemClickListener true
                     }
@@ -304,11 +306,11 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             val accounts = mAccountActionProvider!!.accounts
             val account = accounts[item.order]
             val values = ContentValues()
-            val newActivated = !account.is_activated
-            mAccountActionProvider!!.setAccountActivated(account.account_key, newActivated)
+            val newActivated = !account.activated
+            mAccountActionProvider!!.setAccountActivated(account.key, newActivated)
             values.put(Accounts.IS_ACTIVATED, newActivated)
             val where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).sql
-            val whereArgs = arrayOf(account.account_key.toString())
+            val whereArgs = arrayOf(account.key.toString())
             mResolver!!.update(Accounts.CONTENT_URI, values, where, whereArgs)
             true
         })
@@ -363,12 +365,12 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             when (tab.type) {
                 CustomTabType.DIRECT_MESSAGES -> {
                     if (!hasDmTab) {
-                        hasDmTab = hasAccountInTab(tab, account.account_key, account.is_activated)
+                        hasDmTab = hasAccountInTab(tab, account.key, account.activated)
                     }
                 }
                 CustomTabType.NOTIFICATIONS_TIMELINE -> {
                     if (!hasInteractionsTab) {
-                        hasInteractionsTab = hasAccountInTab(tab, account.account_key, account.is_activated)
+                        hasInteractionsTab = hasAccountInTab(tab, account.key, account.activated)
                     }
                 }
             }
@@ -387,7 +389,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         var hasLists = false
         var hasGroups = false
         var hasPublicTimeline = false
-        when (ParcelableAccountUtils.getAccountType(account)) {
+        when (AccountUtils.getAccountType(account)) {
             AccountType.TWITTER -> {
                 hasLists = true
             }
@@ -422,7 +424,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         rectF.set(location[0].toFloat(), location[1].toFloat(), (location[0] + view.width).toFloat(), (location[1] + view.height).toFloat())
     }
 
-    private fun onAccountSelected(holder: AccountProfileImageViewHolder, account: ParcelableAccount) {
+    private fun onAccountSelected(holder: AccountProfileImageViewHolder, account: AccountDetails) {
         if (mSwitchAccountAnimationPlaying) return
         val snapshotView = floatingProfileImageSnapshot
         val profileImageView = accountProfileImageView
@@ -495,7 +497,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
             private fun finishAnimation() {
                 val editor = preferences.edit()
-                editor.putString(KEY_DEFAULT_ACCOUNT_KEY, account.account_key.toString())
+                editor.putString(KEY_DEFAULT_ACCOUNT_KEY, account.key.toString())
                 editor.apply()
                 mAccountsAdapter!!.selectedAccount = account
                 updateAccountActions()
@@ -515,7 +517,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     }
 
-    protected fun displayAccountBanner(account: ParcelableAccount) {
+    protected fun displayAccountBanner(account: AccountDetails) {
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels
@@ -531,8 +533,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
         val account = mAccountsAdapter!!.selectedAccount ?: return
-        accountProfileNameView.text = account.name
-        accountProfileScreenNameView.text = String.format("@%s", account.screen_name)
+        accountProfileNameView.text = account.user.name
+        accountProfileScreenNameView.text = String.format("@%s", account.user.screen_name)
         mediaLoader.displayDashboardProfileImage(accountProfileImageView, account,
                 profileImageSnapshot)
         accountProfileImageView.setBorderColors(account.color)
@@ -547,39 +549,39 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         when (item.itemId) {
             R.id.search -> {
                 val intent = Intent(activity, QuickSearchBarActivity::class.java)
-                intent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key)
+                intent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                 startActivity(intent)
                 closeAccountsDrawer()
             }
             R.id.compose -> {
                 val composeIntent = Intent(INTENT_ACTION_COMPOSE)
                 composeIntent.setClass(activity, ComposeActivity::class.java)
-                composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.account_key)
+                composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                 startActivity(composeIntent)
             }
             R.id.favorites -> {
-                IntentUtils.openUserFavorites(activity, account.account_key,
-                        account.account_key, account.screen_name)
+                IntentUtils.openUserFavorites(activity, account.key,
+                        account.key, account.user.screen_name)
             }
             R.id.lists -> {
-                IntentUtils.openUserLists(activity, account.account_key,
-                        account.account_key, account.screen_name)
+                IntentUtils.openUserLists(activity, account.key,
+                        account.key, account.user.screen_name)
             }
             R.id.groups -> {
-                IntentUtils.openUserGroups(activity, account.account_key,
-                        account.account_key, account.screen_name)
+                IntentUtils.openUserGroups(activity, account.key,
+                        account.key, account.user.screen_name)
             }
             R.id.public_timeline -> {
-                IntentUtils.openPublicTimeline(activity, account.account_key)
+                IntentUtils.openPublicTimeline(activity, account.key)
             }
             R.id.messages -> {
-                IntentUtils.openDirectMessages(activity, account.account_key)
+                IntentUtils.openDirectMessages(activity, account.key)
             }
             R.id.interactions -> {
-                IntentUtils.openInteractions(activity, account.account_key)
+                IntentUtils.openInteractions(activity, account.key)
             }
             R.id.edit -> {
-                IntentUtils.openProfileEditor(activity, account.account_key)
+                IntentUtils.openProfileEditor(activity, account.key)
             }
             R.id.accounts -> {
                 IntentUtils.openAccountsManager(activity)
@@ -631,13 +633,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             private val fragment: AccountsDashboardFragment
     ) : Adapter<AccountProfileImageViewHolder>() {
         private val mediaLoader: MediaLoaderWrapper
-        var accounts: Array<ParcelableAccount>? = null
+        var accounts: Array<AccountDetails>? = null
             set(value) {
                 if (value != null) {
                     val previousAccounts = accounts
                     if (previousAccounts != null) {
                         val tmpList = arrayListOf(*value)
-                        val tmpResult = ArrayList<ParcelableAccount>()
+                        val tmpResult = ArrayList<AccountDetails>()
                         previousAccounts.forEach { previousAccount ->
                             val prefIndexOfTmp = tmpList.indexOfFirst { previousAccount == it }
                             if (prefIndexOfTmp >= 0) {
@@ -660,16 +662,16 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             setHasStableIds(true)
         }
 
-        fun getAdapterAccount(adapterPosition: Int): ParcelableAccount? {
-            if (accounts == null || accounts!!.size < 1) {
+        fun getAdapterAccount(adapterPosition: Int): AccountDetails? {
+            if (accounts == null || accounts!!.isEmpty()) {
                 return null
             }
             return accounts!![adapterPosition + 1]
         }
 
-        var selectedAccount: ParcelableAccount?
+        var selectedAccount: AccountDetails?
             get() {
-                if (accounts == null || accounts!!.size == 0) {
+                if (accounts == null || accounts!!.isEmpty()) {
                     return null
                 }
                 return accounts!![0]
@@ -683,7 +685,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         val selectedAccountKey: UserKey?
             get() {
                 val selectedAccount = selectedAccount ?: return null
-                return selectedAccount.account_key
+                return selectedAccount.key
             }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountProfileImageViewHolder {
@@ -702,7 +704,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
 
         override fun getItemCount(): Int {
-            if (accounts == null || accounts!!.size == 0) return 0
+            if (accounts == null || accounts!!.isEmpty()) return 0
             return accounts!!.size - 1
         }
 
@@ -710,7 +712,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             fragment.onAccountSelected(holder, getAdapterAccount(holder.adapterPosition)!!)
         }
 
-        private fun swap(from: ParcelableAccount, to: ParcelableAccount) {
+        private fun swap(from: AccountDetails, to: AccountDetails) {
             val accounts = accounts ?: return
             val fromIdx = accounts.indexOfFirst { it == from }
             val toIdx = accounts.indexOfFirst { it == to }
@@ -723,7 +725,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     data class AccountsInfo(
-            val accounts: Array<ParcelableAccount>,
+            val accounts: Array<AccountDetails>,
             val draftsCount: Int
     )
 
@@ -737,7 +739,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
 
         override fun loadInBackground(): AccountsInfo {
-            val accounts = ParcelableAccountUtils.getAccounts(context)
+            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context))
             val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
             return AccountsInfo(accounts, draftsCount)
         }

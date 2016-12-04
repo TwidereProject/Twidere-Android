@@ -9,7 +9,7 @@ import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.extension.model.account_name
 import org.mariotaku.twidere.model.ParcelableCredentials
-import org.mariotaku.twidere.model.ParcelableCredentials.AuthTypeInt
+import org.mariotaku.twidere.annotation.AuthTypeInt
 import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials

@@ -1,9 +1,10 @@
 package org.mariotaku.twidere.model.util;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.Draft;
-import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
 
@@ -17,9 +18,9 @@ public class ParcelableStatusUpdateUtils {
     public static ParcelableStatusUpdate fromDraftItem(final Context context, final Draft draft) {
         ParcelableStatusUpdate statusUpdate = new ParcelableStatusUpdate();
         if (draft.account_keys != null) {
-            statusUpdate.accounts = ParcelableAccountUtils.getAccounts(context, draft.account_keys);
+            statusUpdate.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), draft.account_keys);
         } else {
-            statusUpdate.accounts = new ParcelableAccount[0];
+            statusUpdate.accounts = new AccountDetails[0];
         }
         statusUpdate.text = draft.text;
         statusUpdate.location = draft.location;

@@ -145,7 +145,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     // Data fields
     var user: ParcelableUser? = null
         private set
-    private var account: ParcelableAccount? = null
+    private var account: AccountDetails? = null
     private var relationship: ParcelableRelationship? = null
     private var locale: Locale? = null
     private var mGetUserInfoLoaderInitialized: Boolean = false
@@ -225,7 +225,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 cardContent.visibility = View.VISIBLE
                 errorContainer.visibility = View.GONE
                 progressContainer.visibility = View.GONE
-                val account = data.extras.getParcelable<ParcelableAccount>(EXTRA_ACCOUNT)
+                val account: AccountDetails = data.extras.getParcelable(EXTRA_ACCOUNT)
                 displayUser(user, account)
                 if (user.is_cache) {
                     val args = Bundle()
@@ -422,7 +422,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     @UiThread
-    fun displayUser(user: ParcelableUser?, account: ParcelableAccount?) {
+    fun displayUser(user: ParcelableUser?, account: AccountDetails?) {
         val activity = activity ?: return
         this.user = user
         this.account = account
@@ -779,7 +779,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
 
         if (account != null) {
             isTwitter = TextUtils.equals(AccountType.TWITTER,
-                    ParcelableAccountUtils.getAccountType(account))
+                    AccountUtils.getAccountType(account))
         } else {
             isTwitter = false
         }

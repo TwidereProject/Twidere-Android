@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.model.ParcelableAccount;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -129,7 +129,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         return null;
     }
 
-    public static void updateExtraInformation(ParcelableUser user, ParcelableAccount account, UserColorNameManager manager) {
+    public static void updateExtraInformation(ParcelableUser user, AccountDetails account, UserColorNameManager manager) {
         user.account_color = account.color;
         user.color = manager.getUserColor(user.key);
         user.nickname = manager.getUserNickname(user.key);

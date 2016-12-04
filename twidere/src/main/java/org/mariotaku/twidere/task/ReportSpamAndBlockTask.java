@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 
 /**
  * Created by mariotaku on 16/3/11.
@@ -16,10 +16,9 @@ public class ReportSpamAndBlockTask extends CreateUserBlockTask {
         super(context);
     }
 
-
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials,
+    protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
         return twitter.reportSpam(args.userKey.getId());
     }

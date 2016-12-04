@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.model;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
@@ -29,7 +30,7 @@ import android.text.TextUtils;
 
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.AccountUtils;
 
 public class AccountPreferences implements Constants {
 
@@ -49,7 +50,7 @@ public class AccountPreferences implements Constants {
     }
 
     public int getDefaultNotificationLightColor() {
-        final ParcelableAccount a = ParcelableAccountUtils.getAccount(mContext, mAccountKey);
+        final AccountDetails a = AccountUtils.getAccountDetails(AccountManager.get(mContext), mAccountKey);
         if (a != null) {
             return a.color;
         } else {

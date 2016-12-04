@@ -1,10 +1,11 @@
 package org.mariotaku.twidere.util;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,17 +46,18 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.oauth.OAuthAuthorization;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
 import org.mariotaku.restfu.oauth.OAuthToken;
-import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.AccountType;
+import org.mariotaku.twidere.annotation.AuthTypeInt;
+import org.mariotaku.twidere.extension.AccountExtensionsKt;
+import org.mariotaku.twidere.extension.CredentialsExtensionsKt;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.ParcelableAccount;
 import org.mariotaku.twidere.model.ParcelableCredentials;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import java.io.IOException;
@@ -111,7 +113,11 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     public static MicroBlog getInstance(@NonNull final Context context,
                                         @NonNull final UserKey accountKey,
                                         final boolean includeEntities) {
-        return getInstance(context, accountKey, includeEntities, true);
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return null;
+        return CredentialsExtensionsKt.newMicroBlogInstance(AccountExtensionsKt.getCredentials(account,
+                am), context, true, null, MicroBlog.class);
     }
 
     @Nullable
@@ -123,13 +129,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         return getInstance(context, accountKey, includeEntities, includeRetweets, MicroBlog.class);
     }
 
-    @Nullable
-    public static MicroBlog getInstance(@NonNull final Context context,
-                                        @NonNull final ParcelableCredentials credentials,
-                                        final boolean includeEntities, final boolean includeRetweets) {
-        return getInstance(context, credentials, includeEntities, includeRetweets, MicroBlog.class);
-    }
-
 
     @Nullable
     @WorkerThread
@@ -138,18 +137,18 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                                     final boolean includeEntities,
                                     final boolean includeRetweets,
                                     @NonNull Class<T> cls) {
-        final ParcelableCredentials credentials = ParcelableCredentialsUtils.getCredentials(context, accountKey);
-        if (credentials == null) return null;
-        return getInstance(context, credentials, includeEntities, includeRetweets, cls);
+        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey);
+        if (details == null) return null;
+        return getInstance(context, details, includeEntities, includeRetweets, cls);
     }
 
     @Nullable
     public static <T> T getInstance(@NonNull final Context context,
-                                    @NonNull final ParcelableCredentials credentials,
+                                    @NonNull final AccountDetails details,
                                     final boolean includeEntities, final boolean includeRetweets,
                                     @NonNull Class<T> cls) {
         final HashMap<String, String> extraParams = new HashMap<>();
-        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+        switch (AccountUtils.getAccountType(details)) {
             case AccountType.FANFOU: {
                 extraParams.put("format", "html");
                 break;
@@ -160,7 +159,8 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                 break;
             }
         }
-        return getInstance(context, credentials, extraParams, cls);
+        return CredentialsExtensionsKt.newMicroBlogInstance(details.credentials, context,
+                AccountType.TWITTER.equals(details.type), extraParams, cls);
     }
 
 
@@ -208,20 +208,9 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     @WorkerThread
     public static <T> T getInstance(final Context context, final Endpoint endpoint,
                                     final ParcelableCredentials credentials,
-                                    final Class<T> cls) {
-        return getInstance(context, endpoint, credentials, null, cls);
-    }
-
-    @WorkerThread
-    public static <T> T getInstance(final Context context, final Endpoint endpoint,
-                                    final ParcelableCredentials credentials,
                                     final Map<String, String> extraRequestParams, final Class<T> cls) {
         return getInstance(context, endpoint, getAuthorization(credentials), extraRequestParams, cls,
                 isTwitterCredentials(credentials));
-    }
-
-    public static boolean isTwitterCredentials(Context context, UserKey accountId) {
-        return isTwitterCredentials(ParcelableAccountUtils.getAccount(context, accountId));
     }
 
     public static boolean isTwitterCredentials(ParcelableAccount account) {
@@ -235,12 +224,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
     public static boolean isStatusNetCredentials(ParcelableAccount account) {
         return AccountType.STATUSNET.equals(account.account_type);
-    }
-
-    @WorkerThread
-    static <T> T getInstance(final Context context, final ParcelableCredentials credentials,
-                             final Class<T> cls) {
-        return getInstance(context, credentials, null, cls);
     }
 
     @WorkerThread
@@ -287,7 +270,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
         }
         final String endpointUrl;
         endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
-        if (credentials.auth_type == ParcelableCredentials.AuthTypeInt.XAUTH || credentials.auth_type == ParcelableCredentials.AuthTypeInt.OAUTH) {
+        if (credentials.auth_type == AuthTypeInt.XAUTH || credentials.auth_type == AuthTypeInt.OAUTH) {
             final String signEndpointUrl;
             if (!sameOAuthSigningUrl) {
                 signEndpointUrl = getApiUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain, versionSuffix);
@@ -304,8 +287,8 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     public static Authorization getAuthorization(@Nullable ParcelableCredentials credentials) {
         if (credentials == null) return null;
         switch (credentials.auth_type) {
-            case ParcelableCredentials.AuthTypeInt.OAUTH:
-            case ParcelableCredentials.AuthTypeInt.XAUTH: {
+            case AuthTypeInt.OAUTH:
+            case AuthTypeInt.XAUTH: {
                 final String consumerKey = TextUtils.isEmpty(credentials.consumer_key) ?
                         TWITTER_CONSUMER_KEY_LEGACY : credentials.consumer_key;
                 final String consumerSecret = TextUtils.isEmpty(credentials.consumer_secret) ?
@@ -316,7 +299,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                     return new OAuthAuthorization(consumerKey, consumerSecret, accessToken);
                 return new OAuthAuthorization(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, accessToken);
             }
-            case ParcelableCredentials.AuthTypeInt.BASIC: {
+            case AuthTypeInt.BASIC: {
                 final String screenName = credentials.screen_name;
                 final String username = credentials.basic_auth_username;
                 final String loginName = username != null ? username : screenName;

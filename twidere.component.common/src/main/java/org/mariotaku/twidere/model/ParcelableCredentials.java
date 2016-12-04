@@ -19,90 +19,65 @@
 
 package org.mariotaku.twidere.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
-import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.annotation.AuthTypeInt;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by mariotaku on 15/5/26.
  */
 @JsonObject
 @CursorObject
-@ParcelablePlease
 @Deprecated
-public class ParcelableCredentials extends ParcelableAccount implements Parcelable {
+public class ParcelableCredentials extends ParcelableAccount {
 
-    public static final Creator<ParcelableCredentials> CREATOR = new Creator<ParcelableCredentials>() {
-        @Override
-        public ParcelableCredentials createFromParcel(Parcel source) {
-            ParcelableCredentials target = new ParcelableCredentials();
-            ParcelableCredentialsParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        @Override
-        public ParcelableCredentials[] newArray(int size) {
-            return new ParcelableCredentials[size];
-        }
-    };
-
-    @ParcelableThisPlease
     @JsonField(name = "auth_type")
     @CursorField(Accounts.AUTH_TYPE)
     @AuthTypeInt
     public int auth_type;
-    @ParcelableThisPlease
     @JsonField(name = "consumer_key")
     @CursorField(Accounts.CONSUMER_KEY)
     public String consumer_key;
-    @ParcelableThisPlease
     @JsonField(name = "consumer_secret")
     @CursorField(Accounts.CONSUMER_SECRET)
     public String consumer_secret;
-    @ParcelableThisPlease
+
     @JsonField(name = "basic_auth_username")
     @CursorField(Accounts.BASIC_AUTH_USERNAME)
     public String basic_auth_username;
-    @ParcelableThisPlease
+
     @JsonField(name = "basic_auth_password")
     @CursorField(Accounts.BASIC_AUTH_PASSWORD)
     public String basic_auth_password;
-    @ParcelableThisPlease
+
     @JsonField(name = "oauth_token")
     @CursorField(Accounts.OAUTH_TOKEN)
     public String oauth_token;
-    @ParcelableThisPlease
+
     @JsonField(name = "oauth_token_secret")
     @CursorField(Accounts.OAUTH_TOKEN_SECRET)
     public String oauth_token_secret;
-    @ParcelableThisPlease
+
     @JsonField(name = "api_url_format")
     @CursorField(Accounts.API_URL_FORMAT)
     @Nullable
     public String api_url_format;
-    @ParcelableThisPlease
+
     @JsonField(name = "same_oauth_signing_url")
     @CursorField(Accounts.SAME_OAUTH_SIGNING_URL)
     public boolean same_oauth_signing_url;
-    @ParcelableThisPlease
+
     @JsonField(name = "no_version_suffix")
     @CursorField(Accounts.NO_VERSION_SUFFIX)
     public boolean no_version_suffix;
 
-    @ParcelableThisPlease
+
     @JsonField(name = "account_extras")
     @CursorField(Accounts.ACCOUNT_EXTRAS)
     public String account_extras;
@@ -130,23 +105,6 @@ public class ParcelableCredentials extends ParcelableAccount implements Parcelab
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        ParcelableCredentialsParcelablePlease.writeToParcel(this, dest, flags);
-    }
-
-    @IntDef({AuthTypeInt.OAUTH, AuthTypeInt.XAUTH, AuthTypeInt.BASIC, AuthTypeInt.TWIP_O_MODE,
-            AuthTypeInt.OAUTH2})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface AuthTypeInt {
-
-        int OAUTH = 0;
-        int XAUTH = 1;
-        int BASIC = 2;
-        int TWIP_O_MODE = 3;
-        int OAUTH2 = 4;
     }
 
 }

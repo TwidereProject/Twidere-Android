@@ -37,7 +37,7 @@ class UserListMembersLoader(
         private val userKey: UserKey?,
         private val screenName: String?,
         private val listName: String,
-        data: List<ParcelableUser>,
+        data: List<ParcelableUser>?,
         fromUser: Boolean
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 

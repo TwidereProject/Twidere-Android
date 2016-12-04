@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.menu
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.view.ActionProvider
@@ -8,13 +9,14 @@ import android.view.SubMenu
 import android.view.View
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 
 class AccountActionProvider(
         context: Context,
-        var accounts: Array<ParcelableAccount>? = ParcelableAccountUtils.getAccounts(context, false, false)
+        var accounts: Array<AccountDetails>? = AccountUtils.getAllAccountDetails(AccountManager.get(context))
 ) : ActionProvider(context), TwidereConstants {
 
     var selectedAccountIds: Array<UserKey>? = null
@@ -32,7 +34,7 @@ class AccountActionProvider(
         subMenu.removeGroup(MENU_GROUP)
         if (accounts == null) return
         accounts?.forEachIndexed { idx, account ->
-            val item = subMenu.add(MENU_GROUP, Menu.NONE, idx, account.name)
+            val item = subMenu.add(MENU_GROUP, Menu.NONE, idx, account.user.name)
             val intent = Intent()
             intent.putExtra(EXTRA_ACCOUNT, account)
             item.intent = intent

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.activity
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
@@ -49,7 +50,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVI
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.model.ParcelableAccount
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.*
@@ -166,7 +167,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quick_search_bar)
-        val accounts = ParcelableCredentialsUtils.getCredentialses(this, false, false)
+        val am = AccountManager.get(this)
+        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am)).toList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)

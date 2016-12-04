@@ -9,10 +9,10 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
-import org.mariotaku.twidere.model.ParcelableCredentials;
+import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils;
+import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST;
@@ -28,8 +28,8 @@ public class DenyFriendshipTask extends AbsFriendshipOperationTask {
 
     @NonNull
     @Override
-    protected User perform(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args) throws MicroBlogException {
-        switch (ParcelableAccountUtils.getAccountType(credentials)) {
+    protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
+        switch (AccountUtils.getAccountType(details)) {
             case AccountType.FANFOU: {
                 return twitter.denyFanfouFriendship(args.userKey.getId());
             }
@@ -38,7 +38,7 @@ public class DenyFriendshipTask extends AbsFriendshipOperationTask {
     }
 
     @Override
-    protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull ParcelableCredentials credentials, @NonNull Arguments args, @NonNull ParcelableUser user) {
+    protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
         Utils.setLastSeen(context, user.key, -1);
     }
 

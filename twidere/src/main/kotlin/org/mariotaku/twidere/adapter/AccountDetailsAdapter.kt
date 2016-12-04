@@ -27,6 +27,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -69,7 +70,7 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
             mediaLoader.cancelDisplayTask(holder.profileImage)
         }
         val accountType = details.type
-        holder.accountType.setImageResource(ParcelableAccountUtils.getAccountTypeIcon(accountType))
+        holder.accountType.setImageResource(AccountUtils.getAccountTypeIcon(accountType))
         holder.toggle.isChecked = details.activated
         holder.toggle.setOnCheckedChangeListener(checkedChangeListener)
         holder.toggle.tag = details.user.key

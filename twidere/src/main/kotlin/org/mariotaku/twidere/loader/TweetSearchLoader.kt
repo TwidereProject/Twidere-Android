@@ -22,20 +22,16 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableAccountUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
 open class TweetSearchLoader(
         context: Context,
@@ -55,11 +51,11 @@ open class TweetSearchLoader(
 
     @Throws(MicroBlogException::class)
     public override fun getStatuses(microBlog: MicroBlog,
-                                    credentials: ParcelableCredentials,
+                                    details: AccountDetails,
                                     paging: Paging): List<Status> {
         if (query == null) throw MicroBlogException("Empty query")
-        val processedQuery = processQuery(credentials, query)
-        when (ParcelableAccountUtils.getAccountType(credentials)) {
+        val processedQuery = processQuery(details, query)
+        when (details.type) {
             AccountType.TWITTER -> {
                 val query = SearchQuery(processedQuery)
                 query.paging(paging)
@@ -75,8 +71,8 @@ open class TweetSearchLoader(
         throw MicroBlogException("Not implemented")
     }
 
-    protected open fun processQuery(credentials: ParcelableCredentials, query: String): String {
-        if (MicroBlogAPIFactory.isTwitterCredentials(credentials)) {
+    protected open fun processQuery(details: AccountDetails, query: String): String {
+        if (details.type == AccountType.TWITTER) {
             return String.format("%s exclude:retweets", query)
         }
         return query
@@ -87,15 +83,15 @@ open class TweetSearchLoader(
         return InternalTwitterContentUtils.isFiltered(database, status, true)
     }
 
-    override fun processPaging(credentials: ParcelableCredentials, loadItemLimit: Int, paging: Paging) {
-        if (MicroBlogAPIFactory.isStatusNetCredentials(credentials)) {
+    override fun processPaging(details: AccountDetails, loadItemLimit: Int, paging: Paging) {
+        if (details.type == AccountType.STATUSNET) {
             paging.setRpp(loadItemLimit)
             val page = page
             if (page > 0) {
                 paging.setPage(page)
             }
         } else {
-            super.processPaging(credentials, loadItemLimit, paging)
+            super.processPaging(details, loadItemLimit, paging)
         }
     }
 

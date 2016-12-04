@@ -22,13 +22,12 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
@@ -50,7 +49,7 @@ class GroupTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             credentials: ParcelableCredentials,
+                             details: AccountDetails,
                              paging: Paging): ResponseList<Status> {
         when {
             groupId != null -> {

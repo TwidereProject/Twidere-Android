@@ -6,9 +6,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableCredentials;
-import org.mariotaku.twidere.model.ParcelableCredentials.AuthTypeInt;
+import org.mariotaku.twidere.annotation.AuthTypeInt;
 import org.mariotaku.twidere.model.ParcelableCredentialsExtensionsKt;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
@@ -61,7 +60,7 @@ public class ParcelableCredentialsUtils {
 
     public static ParcelableCredentials[] getCredentialses(@NonNull final Context context) {
         final AccountManager am = AccountManager.get(context);
-        final Account[] accounts = am.getAccountsByType(TwidereConstants.ACCOUNT_TYPE);
+        final Account[] accounts = AccountUtils.getAccounts(am);
         final ParcelableCredentials[] credentialses = new ParcelableCredentials[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
             credentialses[i] = ParcelableCredentialsExtensionsKt.toParcelableCredentials(accounts[i], am);

@@ -122,9 +122,8 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
         return this.id.equals(accountId);
     }
 
-    @Nullable
-    public static UserKey valueOf(@Nullable String str) {
-        if (str == null) return null;
+    @NonNull
+    public static UserKey valueOf(@NonNull String str) {
         boolean escaping = false, idFinished = false;
         StringBuilder idBuilder = new StringBuilder(str.length()),
                 hostBuilder = new StringBuilder(str.length());

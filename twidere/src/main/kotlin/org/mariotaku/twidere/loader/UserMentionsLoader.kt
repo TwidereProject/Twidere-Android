@@ -20,10 +20,10 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
 class UserMentionsLoader(
         context: Context,
@@ -41,10 +41,9 @@ class UserMentionsLoader(
 ) : TweetSearchLoader(context, accountId, screenName, sinceId, maxId, page, data, savedStatusesArgs,
         tabPosition, fromUser, makeGap, loadingMore) {
 
-    override fun processQuery(credentials: ParcelableCredentials, query: String): String {
-        val accountKey = accountKey ?: return query
+    override fun processQuery(details: AccountDetails, query: String): String {
         val screenName = if (query.startsWith("@")) query.substring(1) else query
-        if (MicroBlogAPIFactory.isTwitterCredentials(context, accountKey)) {
+        if (details.type == AccountType.TWITTER) {
             return "to:$screenName exclude:retweets"
         }
         return "@$screenName -RT"

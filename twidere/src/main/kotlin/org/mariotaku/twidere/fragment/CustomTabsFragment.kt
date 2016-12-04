@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.ContentValues
@@ -55,14 +56,12 @@ import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
-import org.mariotaku.twidere.model.ParcelableAccount
-import org.mariotaku.twidere.model.Tab
-import org.mariotaku.twidere.model.TabCursorIndices
-import org.mariotaku.twidere.model.TabValuesCreator
+import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.iface.AccountCallback
-import org.mariotaku.twidere.model.util.ParcelableCredentialsUtils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -324,10 +323,15 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 val accountIdRequired = conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_REQUIRED != 0
                 accountsAdapter.clear()
                 if (!accountIdRequired) {
-                    accountsAdapter.add(ParcelableAccount.dummyCredentials())
+                    accountsAdapter.add(AccountDetails.dummy())
                 }
                 val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)
-                accountsAdapter.addAll(ParcelableCredentialsUtils.getCredentialses(context, false, officialKeyOnly))
+                accountsAdapter.addAll(AccountUtils.getAllAccountDetails(AccountManager.get(context)).filter {
+                    if (officialKeyOnly && !it.isOfficial(context)) {
+                        return@filter false
+                    }
+                    return@filter true
+                })
                 accountsAdapter.setDummyItemText(R.string.activated_accounts)
 
                 tab.arguments?.accountKeys?.firstOrNull()?.let { key ->

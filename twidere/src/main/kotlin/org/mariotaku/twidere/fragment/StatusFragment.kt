@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.ContentValues
@@ -219,7 +220,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun onLoadFinished(loader: Loader<StatusActivity?>, data: StatusActivity?) {
             adapter!!.updateItemDecoration()
-            adapter!!.setStatusActivity(data)
+            adapter!!.statusActivity = data
         }
 
         override fun onLoaderReset(loader: Loader<StatusActivity?>) {
@@ -418,8 +419,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         if (status != null) {
             val readPosition = saveReadPosition()
             val dataExtra = data.extras
-            val credentials = dataExtra.getParcelable<ParcelableCredentials>(EXTRA_ACCOUNT)
-            if (adapter!!.setStatus(status, credentials)) {
+            val details: AccountDetails = dataExtra.getParcelable(EXTRA_ACCOUNT)
+            if (adapter!!.setStatus(status, details)) {
                 val args = arguments
                 if (args.containsKey(EXTRA_STATUS)) {
                     args.putParcelable(EXTRA_STATUS, status)
@@ -436,7 +437,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
                 val event = TweetEvent.create(activity, status, TimelineType.OTHER)
                 event.action = TweetEvent.Action.OPEN
-                event.isHasTranslateFeature = Utils.isOfficialCredentials(context, credentials)
+                event.isHasTranslateFeature = Utils.isOfficialCredentials(context, details)
                 mStatusEvent = event
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition)
@@ -758,7 +759,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         }
 
         @UiThread
-        fun displayStatus(account: ParcelableCredentials?,
+        fun displayStatus(account: AccountDetails?,
                           status: ParcelableStatus?,
                           statusActivity: StatusActivity?,
                           translation: TranslationResult?) {
@@ -1451,9 +1452,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         private var mDetailMediaExpanded: Boolean = false
 
         var status: ParcelableStatus? = null
-            private set
+            internal set
         var translationResult: TranslationResult? = null
-            set(translation) {
+            internal set(translation) {
                 if (status == null || translation == null || !TextUtils.equals(InternalTwitterContentUtils.getOriginalId(status!!), translation.id)) {
                     field = null
                 } else {
@@ -1461,9 +1462,17 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 }
                 notifyDataSetChanged()
             }
-        private var mStatusActivity: StatusActivity? = null
-        var statusAccount: ParcelableCredentials? = null
-            private set
+        var statusActivity: StatusActivity? = null
+            internal set(value) {
+                val status = status ?: return
+                if (value != null && value.isStatus(status)) {
+                    return
+                }
+                field = value
+                notifyDataSetChanged()
+            }
+        var statusAccount: AccountDetails? = null
+            internal set
 
         private var data: List<ParcelableStatus>? = null
         private var replyError: CharSequence? = null
@@ -1687,7 +1696,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 VIEW_TYPE_DETAIL_STATUS -> {
                     val status = getStatus(position)
                     val detailHolder = holder as DetailStatusViewHolder
-                    detailHolder.displayStatus(statusAccount, status, mStatusActivity,
+                    detailHolder.displayStatus(statusAccount, status, statusActivity,
                             translationResult)
                 }
                 VIEW_TYPE_LIST_STATUS -> {
@@ -1814,10 +1823,10 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             updateItemDecoration()
         }
 
-        fun setStatus(status: ParcelableStatus, credentials: ParcelableCredentials): Boolean {
+        fun setStatus(status: ParcelableStatus, account: AccountDetails): Boolean {
             val old = this.status
             this.status = status
-            statusAccount = credentials
+            statusAccount = account
             notifyDataSetChanged()
             updateItemDecoration()
             return !CompareUtils.objectEquals(old, status)
@@ -1836,14 +1845,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             return RecyclerView.NO_POSITION
         }
 
-        fun setStatusActivity(activity: StatusActivity?) {
-            val status = status ?: return
-            if (activity != null && activity.isStatus(status)) {
-                return
-            }
-            mStatusActivity = activity
-            notifyDataSetChanged()
-        }
 
         fun getData(): List<ParcelableStatus>? {
             return data
@@ -2058,9 +2059,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun loadInBackground(): StatusActivity? {
             val context = context
-            val credentials = ParcelableCredentialsUtils.getCredentials(context,
-                    mAccountKey)
-            if (credentials == null || AccountType.TWITTER != ParcelableAccountUtils.getAccountType(credentials)) {
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context),  mAccountKey)
+            if (details == null || AccountType.TWITTER != AccountUtils.getAccountType(details)) {
                 return null
             }
             val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false) ?: return null

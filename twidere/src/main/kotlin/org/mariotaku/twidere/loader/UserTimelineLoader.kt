@@ -28,7 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.model.ParcelableCredentials
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
@@ -61,12 +61,12 @@ class UserTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             credentials: ParcelableCredentials,
+                             details: AccountDetails,
                              paging: Paging): ResponseList<Status> {
         if (pinnedStatusIds != null) {
             try {
                 pinnedStatuses = microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = ParcelableStatusUtils.fromStatus(status, credentials.account_key, false)
+                    val created = ParcelableStatusUtils.fromStatus(status, details.key, false)
                     created.sort_id = idx.toLong()
                     return@mapIndexed created
                 }
