@@ -81,6 +81,7 @@ public class CardMediaContainer extends ViewGroup implements Constants {
             progress.setVisibility(GONE);
             if (i < k) {
                 imageView.setImageResource(imageRes[i]);
+                child.setVisibility(VISIBLE);
             } else {
                 imageView.setImageDrawable(null);
                 child.setVisibility(GONE);

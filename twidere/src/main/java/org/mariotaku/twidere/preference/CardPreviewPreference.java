@@ -59,8 +59,8 @@ public class CardPreviewPreference extends Preference implements OnSharedPrefere
 
     @Override
     public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
-        if (mHolder == null) return;
         mAdapter.updateOptions();
+        mHolder = null;
         notifyChanged();
     }
 
