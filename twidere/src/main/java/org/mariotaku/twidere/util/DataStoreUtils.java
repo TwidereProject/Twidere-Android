@@ -851,7 +851,8 @@ public class DataStoreUtils implements Constants {
         if (cur == null) return messageIds;
         try {
             while (cur.moveToNext()) {
-                final UserKey accountKey = UserKey.valueOf(cur.getString(0));
+                final String string = cur.getString(0);
+                final UserKey accountKey = string != null ? UserKey.valueOf(string) : null;
                 int idx = ArrayUtils.indexOf(keys, accountKey);
                 if (idx < 0) continue;
                 creator.assign(messageIds, idx, cur, 1);
@@ -1033,14 +1034,6 @@ public class DataStoreUtils implements Constants {
         } finally {
             cur.close();
         }
-    }
-
-    public static String getAccountType(@NonNull final Context context, @NonNull final UserKey accountKey) {
-        AccountManager am = AccountManager.get(context);
-        Account account = AccountUtils.findByAccountKey(am, accountKey);
-        if (account == null) return null;
-
-        return AccountExtensionsKt.getAccountType(account, am);
     }
 
     public static int getInteractionsCount(@NonNull final Context context, @Nullable final Bundle extraArgs,

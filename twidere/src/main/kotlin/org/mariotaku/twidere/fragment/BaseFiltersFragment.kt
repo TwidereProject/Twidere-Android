@@ -396,7 +396,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 super.bindView(view, context, cursor)
                 val text1 = view.findViewById(android.R.id.text1) as TextView
                 val text2 = view.findViewById(android.R.id.text2) as TextView
-                val userId = UserKey.valueOf(cursor.getString(userIdIdx))!!
+                val userId = UserKey.valueOf(cursor.getString(userIdIdx))
                 val name = cursor.getString(nameIdx)
                 val screenName = cursor.getString(screenNameIdx)
                 val displayName = userColorNameManager.getDisplayName(userId, name, screenName,

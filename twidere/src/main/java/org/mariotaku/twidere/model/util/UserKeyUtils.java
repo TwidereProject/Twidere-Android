@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.model.util;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -8,7 +7,6 @@ import android.text.TextUtils;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.UriUtils;
 
 import static org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM;
@@ -22,12 +20,7 @@ public class UserKeyUtils {
     private UserKeyUtils() {
     }
 
-    @Nullable
-    public static UserKey findById(Context context, String id) {
-        return DataStoreUtils.findAccountKey(context, id);
-    }
-
-    public static UserKey fromUser(User user) {
+    public static UserKey fromUser(@NonNull User user) {
         return new UserKey(user.getId(), getUserHost(user));
     }
 
