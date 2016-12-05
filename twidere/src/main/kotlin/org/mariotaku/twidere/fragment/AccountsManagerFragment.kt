@@ -6,8 +6,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
@@ -37,10 +35,11 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 
 /**
+ * Sort and toggle account availability
  * Created by mariotaku on 14/10/26.
  */
 class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<List<AccountDetails>>,
-        OnSharedPreferenceChangeListener, AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener {
 
     private var adapter: AccountDetailsAdapter? = null
     private var selectedAccount: AccountDetails? = null
@@ -49,7 +48,6 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val activity = activity
-        preferences.registerOnSharedPreferenceChangeListener(this)
         adapter = AccountDetailsAdapter(activity).apply {
             Utils.configBaseAdapter(activity, this)
             setSortEnabled(true)
@@ -63,7 +61,6 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
         listView.onItemClickListener = this
         listView.setDropListener { from, to ->
             adapter?.drop(from, to)
-            // TODO sort list
         }
         listView.setOnCreateContextMenuListener(this)
         listView.emptyView = emptyView
@@ -138,11 +135,6 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
         saveAccountPositions()
     }
 
-    override fun onDestroyView() {
-        preferences.unregisterOnSharedPreferenceChangeListener(this)
-        super.onDestroyView()
-    }
-
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {
         return AccountDetailsLoader(context)
     }
@@ -193,16 +185,6 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
                 adapter.getItem(i).account.setPosition(am, i)
             }
         }
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        if (SharedPreferenceConstants.KEY_DEFAULT_ACCOUNT_KEY == key) {
-            updateDefaultAccount()
-        }
-    }
-
-    private fun updateDefaultAccount() {
-        adapter!!.notifyDataSetChanged()
     }
 
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {

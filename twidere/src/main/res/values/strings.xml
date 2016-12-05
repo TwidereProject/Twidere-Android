@@ -116,6 +116,7 @@
     <string name="likes">Likes</string>
     <string name="name">Name</string>
     <string name="refresh">Refresh</string>
+    <string name="settings_refresh">Refresh</string>
     <string name="retry">Retry</string>
     <string name="more">More</string>
     <string name="quote_format">Quote format</string>
@@ -159,6 +160,7 @@
     <string name="ringtone">Ringtone</string>
     <string name="vibration">Vibration</string>
     <string name="light">Light</string>
+    <string name="settings_notifications">Notifications</string>
     <string name="notifications">Notifications</string>
     <string name="refresh_on_start">Refresh on start</string>
     <string name="refresh_on_start_summary">Refresh timeline and mentions on start.</string>

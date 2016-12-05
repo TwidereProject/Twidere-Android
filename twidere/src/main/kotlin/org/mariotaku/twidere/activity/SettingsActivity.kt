@@ -125,7 +125,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 ExtensionsListFragment::class.java)
         mEntriesAdapter!!.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
                 R.xml.preferences_refresh)
-        mEntriesAdapter!!.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.notifications),
+        mEntriesAdapter!!.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
                 R.xml.preferences_notifications)
         mEntriesAdapter!!.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
                 R.xml.preferences_network)
@@ -220,8 +220,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     protected fun openDetails(position: Int) {
         if (isFinishing) return
-        val entry = mEntriesAdapter!!.getItem(position)
-        if (entry !is PreferenceEntry) return
+        val entry = mEntriesAdapter!!.getItem(position) as? PreferenceEntry ?: return
         val fm = supportFragmentManager
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val ft = fm.beginTransaction()
