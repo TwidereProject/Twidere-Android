@@ -19,9 +19,10 @@ public abstract class StringHolder implements Parcelable {
 
     private static class Resource extends StringHolder implements Parcelable {
 
+        @StringRes
         private final int resourceId;
 
-        Resource(int resourceId) {
+        Resource(@StringRes int resourceId) {
             this.resourceId = resourceId;
         }
 

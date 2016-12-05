@@ -11,6 +11,7 @@ import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
+import org.mariotaku.twidere.model.tab.conf.BooleanExtraConfiguration;
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_HIDE_QUOTES;

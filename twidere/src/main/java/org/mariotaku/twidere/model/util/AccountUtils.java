@@ -2,6 +2,7 @@ package org.mariotaku.twidere.model.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -10,6 +11,7 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.AuthTypeInt;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
+import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
@@ -91,6 +93,15 @@ public class AccountUtils {
             }
         }
         return null;
+    }
+
+    public static boolean hasOfficialKeyAccount(Context context) {
+        for (AccountDetails details : getAllAccountDetails(AccountManager.get(context))) {
+            if (AccountDetailsExtensionsKt.isOfficial(details, context)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getAccountTypeIcon(@Nullable String accountType) {

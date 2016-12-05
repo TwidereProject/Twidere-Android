@@ -12,6 +12,7 @@ import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
+import org.mariotaku.twidere.model.tab.conf.StringExtraConfiguration;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_QUERY;
 

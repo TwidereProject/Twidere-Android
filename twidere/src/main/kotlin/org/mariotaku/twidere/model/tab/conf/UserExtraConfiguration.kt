@@ -40,6 +40,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
     }
 
     override fun onViewCreated(context: Context, view: View, fragment: TabEditorDialogFragment) {
+        super.onViewCreated(context, view, fragment)
         view.setOnClickListener {
             val account = fragment.account ?: return@setOnClickListener
             val intent = Intent(INTENT_ACTION_SELECT_USER)
