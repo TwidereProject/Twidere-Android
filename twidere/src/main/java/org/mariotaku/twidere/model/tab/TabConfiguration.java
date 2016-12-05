@@ -226,7 +226,7 @@ public abstract class TabConfiguration {
             this.view = view;
         }
 
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         }
 

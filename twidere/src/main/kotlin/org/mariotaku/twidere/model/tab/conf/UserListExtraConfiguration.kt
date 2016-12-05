@@ -55,11 +55,11 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
         hintView.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val userList: ParcelableUserList = data.getParcelableExtra(EXTRA_USER_LIST)
+                    val userList: ParcelableUserList = data!!.getParcelableExtra(EXTRA_USER_LIST)
                     viewHolder.display(userList, dependencyHolder.mediaLoader,
                             dependencyHolder.userColorNameManager, true)
                     viewHolder.itemView.visibility = View.VISIBLE

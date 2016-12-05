@@ -55,11 +55,11 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
         hintView.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    val user: ParcelableUser = data.getParcelableExtra(EXTRA_USER)
+                    val user: ParcelableUser = data!!.getParcelableExtra(EXTRA_USER)
                     viewHolder.display(user, dependencyHolder.mediaLoader, dependencyHolder.userColorNameManager, true)
                     viewHolder.view.visibility = View.VISIBLE
                     hintView.visibility = View.GONE
