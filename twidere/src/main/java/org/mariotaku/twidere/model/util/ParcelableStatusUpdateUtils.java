@@ -30,6 +30,7 @@ public class ParcelableStatusUpdateUtils {
             statusUpdate.in_reply_to_status = extra.getInReplyToStatus();
             statusUpdate.is_possibly_sensitive = extra.isPossiblySensitive();
             statusUpdate.display_coordinates = extra.getDisplayCoordinates();
+            statusUpdate.attachment_url = extra.getAttachmentUrl();
         }
         return statusUpdate;
     }

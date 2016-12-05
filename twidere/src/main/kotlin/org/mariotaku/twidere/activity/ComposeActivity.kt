@@ -418,12 +418,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         draft.action_type = getDraftAction(intent.action)
         draft.account_keys = accountsAdapter!!.selectedAccountKeys
         draft.text = text
-        val extra = UpdateStatusActionExtra()
-        extra.inReplyToStatus = inReplyToStatus
-        extra.setIsPossiblySensitive(possiblySensitive)
-        draft.action_extras = extra
         draft.media = media
         draft.location = recentLocation
+        draft.action_extras = UpdateStatusActionExtra().apply {
+            this.inReplyToStatus = this@ComposeActivity.inReplyToStatus
+            this.isPossiblySensitive = this@ComposeActivity.possiblySensitive
+        }
         val values = DraftValuesCreator.create(draft)
         val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
         displayNewDraftNotification(text, draftUri)
@@ -1269,12 +1269,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accountKeys = accountsAdapter!!.selectedAccountKeys
         val isPossiblySensitive = hasMedia && possiblySensitive
         val update = ParcelableStatusUpdate()
-        @Draft.Action val action: String
-        if (draft != null) {
-            action = draft!!.action_type
-        } else {
-            action = getDraftAction(intent.action)
-        }
+        @Draft.Action val action = draft?.action_type ?: getDraftAction(intent.action)
         update.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys)
         update.text = text
         if (attachLocation) {
@@ -1284,6 +1279,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.media = media
         update.in_reply_to_status = inReplyToStatus
         update.is_possibly_sensitive = isPossiblySensitive
+        update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtra)?.attachmentUrl
         BackgroundOperationService.updateStatusesAsync(this, action, update)
         if (preferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false) && inReplyToStatus == null) {
             possiblySensitive = false

@@ -20,13 +20,16 @@ public class UpdateStatusActionExtra implements ActionExtra {
     ParcelableStatus inReplyToStatus;
     @ParcelableThisPlease
     @JsonField(name = "is_possibly_sensitive")
-    boolean isPossiblySensitive;
+    boolean possiblySensitive;
     @ParcelableThisPlease
     @JsonField(name = "repost_status_id")
     String repostStatusId;
     @ParcelableThisPlease
     @JsonField(name = "display_coordinates")
     boolean displayCoordinates;
+    @ParcelableThisPlease
+    @JsonField(name = "attachment_url")
+    String attachmentUrl;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -37,11 +40,11 @@ public class UpdateStatusActionExtra implements ActionExtra {
     }
 
     public boolean isPossiblySensitive() {
-        return isPossiblySensitive;
+        return possiblySensitive;
     }
 
-    public void setIsPossiblySensitive(boolean isPossiblySensitive) {
-        this.isPossiblySensitive = isPossiblySensitive;
+    public void setPossiblySensitive(boolean isPossiblySensitive) {
+        this.possiblySensitive = isPossiblySensitive;
     }
 
     public String isRepostStatusId() {
@@ -58,6 +61,14 @@ public class UpdateStatusActionExtra implements ActionExtra {
 
     public void setDisplayCoordinates(boolean displayCoordinates) {
         this.displayCoordinates = displayCoordinates;
+    }
+
+    public String getAttachmentUrl() {
+        return attachmentUrl;
+    }
+
+    public void setAttachmentUrl(String attachmentUrl) {
+        this.attachmentUrl = attachmentUrl;
     }
 
     @Override

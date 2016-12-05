@@ -373,7 +373,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
                 tab.arguments = CustomTabUtils.newTabArguments(tabType)
                 if (hasAccount) {
-                    val account = accountSpinner.selectedItem as AccountDetails
+                    val account = accountSpinner.selectedItem as? AccountDetails ?: return@setOnClickListener
                     if (!account.dummy) {
                         tab.arguments?.accountKeys = arrayOf(account.key)
                     } else {
@@ -402,8 +402,8 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             }
         }
 
-        override fun getAccount(): AccountDetails {
-            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as AccountDetails
+        override fun getAccount(): AccountDetails? {
+            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as? AccountDetails
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

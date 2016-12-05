@@ -511,20 +511,17 @@ class UpdateStatusTask(
     private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
         val draft = Draft()
         draft.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
-        if (draftAction != null) {
-            draft.action_type = draftAction
-        } else {
-            draft.action_type = Draft.Action.UPDATE_STATUS
-        }
+        draft.action_type = draftAction ?: Draft.Action.UPDATE_STATUS
         draft.text = statusUpdate.text
         draft.location = statusUpdate.location
         draft.media = statusUpdate.media
-        val extra = UpdateStatusActionExtra()
-        extra.inReplyToStatus = statusUpdate.in_reply_to_status
-        extra.setIsPossiblySensitive(statusUpdate.is_possibly_sensitive)
-        extra.isRepostStatusId = statusUpdate.repost_status_id
-        extra.displayCoordinates = statusUpdate.display_coordinates
-        draft.action_extras = extra
+        draft.action_extras = UpdateStatusActionExtra().apply {
+            inReplyToStatus = statusUpdate.in_reply_to_status
+            isPossiblySensitive = statusUpdate.is_possibly_sensitive
+            isRepostStatusId = statusUpdate.repost_status_id
+            displayCoordinates = statusUpdate.display_coordinates
+            attachmentUrl = statusUpdate.attachment_url
+        }
         val resolver = context.contentResolver
         val draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft)) ?: return -1
         return NumberUtils.toLong(draftUri.lastPathSegment, -1)
