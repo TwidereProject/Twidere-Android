@@ -757,10 +757,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         homeMenu.setShouldDisableDecider(HomeDrawerLayout.ShouldDisableDecider { e ->
             val fragment = leftDrawerFragment
             if (fragment is AccountsDashboardFragment) {
-                val accountsSelector = fragment.accountsSelector
-                if (accountsSelector != null) {
-                    return@ShouldDisableDecider TwidereViewUtils.hitView(e.rawX, e.rawY, accountsSelector)
-                }
+                return@ShouldDisableDecider fragment.shouldDisableDrawerSlide(e)
             }
             false
         })

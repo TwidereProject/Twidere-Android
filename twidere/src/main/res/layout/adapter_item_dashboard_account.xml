@@ -23,7 +23,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/element_spacing_msmall"
+    android:padding="@dimen/element_spacing_msmall"
     tools:layout_height="48dp">
 
     <org.mariotaku.twidere.view.ProfileImageView

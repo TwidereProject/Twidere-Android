@@ -68,7 +68,7 @@
                 app:sivBorderWidth="2dp"
                 tools:src="@mipmap/ic_launcher"/>
 
-            <org.mariotaku.twidere.view.ExtendedRecyclerView
+            <org.mariotaku.twidere.view.ExtendedViewPager
                 android:id="@+id/otherAccountsList"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,6 +77,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/profileImage"
                 android:layout_marginBottom="@dimen/element_spacing_large"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_toEndOf="@id/profileImage"
                 android:layout_toRightOf="@id/profileImage"
                 android:focusable="false"

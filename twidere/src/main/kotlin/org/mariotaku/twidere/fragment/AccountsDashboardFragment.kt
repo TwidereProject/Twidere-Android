@@ -40,12 +40,14 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
+import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView.Adapter
 import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.RecyclerViewAccessor
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
@@ -81,11 +83,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     private val mSystemWindowsInsets = Rect()
     private var mResolver: ContentResolver? = null
 
-    private var mAccountsAdapter: AccountSelectorAdapter? = null
+    private var accountsAdapter: AccountSelectorAdapter? = null
 
-    @Suppress("HasPlatformType")
-    val accountsSelector by lazy { accountsHeader.otherAccountsList }
-
+    private val accountsSelector by lazy { accountsHeader.otherAccountsList }
     private val navigationView by lazy { view as NavigationView }
     private val accountsHeader by lazy { navigationView.getHeaderView(0) }
     private val accountProfileBanner by lazy { accountsHeader.accountProfileBanner }
@@ -97,203 +97,29 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     private val profileContainer by lazy { accountsHeader.profileContainer }
     private val noAccountContainer by lazy { accountsHeader.noAccountContainer }
 
-    private var mAccountActionProvider: AccountToggleProvider? = null
+    private var accountActionProvider: AccountToggleProvider? = null
 
-    private var mSwitchAccountAnimationPlaying: Boolean = false
-    private var mUseStarsForLikes: Boolean = false
-    private var mLoaderInitialized: Boolean = false
-
-    val activatedAccountIds: Array<UserKey>
-        get() {
-            if (mAccountActionProvider != null) {
-                return mAccountActionProvider!!.activatedAccountIds
-            }
-            return DataStoreUtils.getActivatedAccountKeys(activity)
-        }
-
-    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        return false
-    }
-
-    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
-        return ACTION_NAVIGATION_PREVIOUS == action || ACTION_NAVIGATION_NEXT == action
-    }
-
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, repeatCount: Int,
-                                              event: KeyEvent, metaState: Int): Boolean {
-        val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState) ?: return false
-        val offset: Int
-        when (action) {
-            ACTION_NAVIGATION_PREVIOUS -> {
-                offset = -1
-            }
-            ACTION_NAVIGATION_NEXT -> {
-                offset = 1
-            }
-            else -> {
-                return false
-            }
-        }
-        //        final int selectedItem = mNavigationView.getSelectedItemPosition();
-        //        final int count = mNavigationView.getCount();
-        //        int resultPosition;
-        //        if (!mNavigationView.isFocused() || selectedItem == ListView.INVALID_POSITION) {
-        //            resultPosition = firstVisiblePosition;
-        //        } else {
-        //            resultPosition = selectedItem + offset;
-        //            while (resultPosition >= 0 && resultPosition < count && !mAdapter.isEnabled(resultPosition)) {
-        //                resultPosition += offset;
-        //            }
-        //        }
-        //        final View focusedChild = mNavigationView.getFocusedChild();
-        //        if (focusedChild == null) {
-        //            mNavigationView.requestChildFocus(mNavigationView.getChildAt(0), null);
-        //        }
-        //        if (resultPosition >= 0 && resultPosition < count) {
-        //            mNavigationView.setSelection(resultPosition);
-        //        }
-        return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            REQUEST_SETTINGS -> {
-                if (data == null) return
-                if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
-                    Utils.restartActivity(activity)
-                } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
-                    activity.recreate()
-                }
-                return
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        updateDefaultAccountState()
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.profileContainer -> {
-                val account = mAccountsAdapter!!.selectedAccount ?: return
-                val activity = activity
-                if (account.user != null) {
-                    IntentUtils.openUserProfile(activity, account.user!!, null,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            Referral.SELF_PROFILE)
-                } else {
-                    IntentUtils.openUserProfile(activity, account.key, account.key,
-                            account.user.screen_name, null,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            Referral.SELF_PROFILE)
-                }
-            }
-        }
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity)
-    }
-
-    override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
-        updateAccountProviderData(data)
-    }
-
-    private fun updateAccountProviderData(data: AccountsInfo) {
-        val menu = accountDashboardMenu.menu
-        mAccountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
-        val accounts = data.accounts
-        if (accounts.isNotEmpty()) {
-            noAccountContainer.visibility = View.GONE
-            profileContainer.visibility = View.VISIBLE
-        } else {
-            noAccountContainer.visibility = View.VISIBLE
-            profileContainer.visibility = View.INVISIBLE
-        }
-        var defaultId: UserKey? = null
-        for (account in accounts) {
-            if (account.activated) {
-                defaultId = account.key
-                break
-            }
-        }
-        mUseStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
-
-        mAccountsAdapter!!.accounts = accounts
-        var accountKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
-        if (accountKey == null) {
-            accountKey = defaultId
-        }
-        var selectedAccount: AccountDetails? = null
-        for (account in accounts) {
-            if (account.key.maybeEquals(accountKey)) {
-                selectedAccount = account
-                break
-            }
-        }
-        mAccountsAdapter!!.selectedAccount = selectedAccount
-
-        if (mAccountActionProvider != null) {
-            mAccountActionProvider!!.isExclusive = false
-            mAccountActionProvider!!.accounts = accounts
-        }
-        updateAccountActions()
-        val currentAccount = mAccountsAdapter!!.selectedAccount
-        if (currentAccount != null) {
-            displayAccountBanner(currentAccount)
-            displayCurrentAccount(null)
-        }
-        updateDefaultAccountState()
-
-        if (data.draftsCount > 0) {
-            navigationView.menu.findItem(R.id.drafts).title = "${getString(R.string.drafts)} (${data.draftsCount})"
-        } else {
-            navigationView.menu.findItem(R.id.drafts).title = getString(R.string.drafts)
-        }
-    }
-
-    override fun onLoaderReset(loader: Loader<AccountsInfo>) {
-    }
-
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        if (KEY_DEFAULT_ACCOUNT_KEY == key) {
-            updateDefaultAccountState()
-        }
-    }
-
-    override fun fitSystemWindows(insets: Rect) {
-        mSystemWindowsInsets.set(insets)
-        updateSystemWindowsInsets()
-    }
-
-    private fun updateSystemWindowsInsets() {
-    }
+    private var switchAccountAnimationPlaying: Boolean = false
+    private var useStarsForLikes: Boolean = false
+    private var loaderInitialized: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mResolver = contentResolver
         val inflater = getLayoutInflater(savedInstanceState)
-        mAccountsAdapter = AccountSelectorAdapter(inflater, this)
+        accountsAdapter = AccountSelectorAdapter(inflater, this)
         val layoutManager = FixedLinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         layoutManager.stackFromEnd = true
-        accountsSelector.layoutManager = layoutManager
-        accountsSelector.adapter = mAccountsAdapter
-        accountsSelector.itemAnimator = null
+        accountsSelector.adapter = accountsAdapter
+        accountsSelector.setPageTransformer(false, AccountsSelectorTransformer)
         val menuInflater = SupportMenuInflater(context)
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
         accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->
             if (item.groupId != AccountToggleProvider.MENU_GROUP) {
                 when (item.itemId) {
                     R.id.compose -> {
-                        val account = mAccountsAdapter!!.selectedAccount ?: return@OnMenuItemClickListener true
+                        val account = accountsAdapter!!.selectedAccount ?: return@OnMenuItemClickListener true
                         val composeIntent = Intent(INTENT_ACTION_COMPOSE)
                         composeIntent.setClass(activity, ComposeActivity::class.java)
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
@@ -303,11 +129,11 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 }
                 return@OnMenuItemClickListener false
             }
-            val accounts = mAccountActionProvider!!.accounts
+            val accounts = accountActionProvider!!.accounts
             val account = accounts[item.order]
             val values = ContentValues()
             val newActivated = !account.activated
-            mAccountActionProvider!!.setAccountActivated(account.key, newActivated)
+            accountActionProvider!!.setAccountActivated(account.key, newActivated)
             values.put(Accounts.IS_ACTIVATED, newActivated)
             val where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).sql
             val whereArgs = arrayOf(account.key.toString())
@@ -332,32 +158,165 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         updateSystemWindowsInsets()
     }
 
-    fun loadAccounts() {
-        if (!mLoaderInitialized) {
-            mLoaderInitialized = true
-            loaderManager.initLoader(0, null, this)
-        } else {
-            loaderManager.restartLoader(0, null, this)
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
-    }
-
     override fun onStart() {
         super.onStart()
         loaderManager.restartLoader(0, null, this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateDefaultAccountState()
     }
 
     override fun onStop() {
         super.onStop()
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_accounts_dashboard, container, false)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_SETTINGS -> {
+                if (data == null) return
+                if (data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)) {
+                    Utils.restartActivity(activity)
+                } else if (data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)) {
+                    activity.recreate()
+                }
+                return
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
+                                              keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+        return false
+    }
+
+    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+        val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
+        return ACTION_NAVIGATION_PREVIOUS == action || ACTION_NAVIGATION_NEXT == action
+    }
+
+    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
+                                              repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+        return true
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.profileContainer -> {
+                val account = accountsAdapter!!.selectedAccount ?: return
+                val activity = activity
+                if (account.user != null) {
+                    IntentUtils.openUserProfile(activity, account.user!!, null,
+                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                            Referral.SELF_PROFILE)
+                } else {
+                    IntentUtils.openUserProfile(activity, account.key, account.key,
+                            account.user.screen_name, null,
+                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                            Referral.SELF_PROFILE)
+                }
+            }
+        }
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
+        return AccountsInfoLoader(activity)
+    }
+
+
+    override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
+        updateAccountProviderData(data)
+    }
+
+    private fun updateAccountProviderData(data: AccountsInfo) {
+        val menu = accountDashboardMenu.menu
+        accountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
+        val accounts = data.accounts
+        if (accounts.isNotEmpty()) {
+            noAccountContainer.visibility = View.GONE
+            profileContainer.visibility = View.VISIBLE
+        } else {
+            noAccountContainer.visibility = View.VISIBLE
+            profileContainer.visibility = View.INVISIBLE
+        }
+        var defaultId: UserKey? = null
+        for (account in accounts) {
+            if (account.activated) {
+                defaultId = account.key
+                break
+            }
+        }
+        useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
+
+        accountsAdapter!!.accounts = accounts
+        var accountKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
+        if (accountKey == null) {
+            accountKey = defaultId
+        }
+        var selectedAccount: AccountDetails? = null
+        for (account in accounts) {
+            if (account.key.maybeEquals(accountKey)) {
+                selectedAccount = account
+                break
+            }
+        }
+        accountsAdapter!!.selectedAccount = selectedAccount
+
+        if (accountActionProvider != null) {
+            accountActionProvider!!.isExclusive = false
+            accountActionProvider!!.accounts = accounts
+        }
+        updateAccountActions()
+        val currentAccount = accountsAdapter!!.selectedAccount
+        if (currentAccount != null) {
+            displayAccountBanner(currentAccount)
+            displayCurrentAccount(null)
+        }
+        updateDefaultAccountState()
+
+        if (data.draftsCount > 0) {
+            navigationView.menu.findItem(R.id.drafts).title = "${getString(R.string.drafts)} (${data.draftsCount})"
+        } else {
+            navigationView.menu.findItem(R.id.drafts).title = getString(R.string.drafts)
+        }
+    }
+
+    override fun onLoaderReset(loader: Loader<AccountsInfo>) {
+    }
+
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
+        if (KEY_DEFAULT_ACCOUNT_KEY == key) {
+            updateDefaultAccountState()
+        }
+    }
+
+    override fun fitSystemWindows(insets: Rect) {
+        mSystemWindowsInsets.set(insets)
+        updateSystemWindowsInsets()
+    }
+
+    private fun updateSystemWindowsInsets() {
+    }
+
+    fun loadAccounts() {
+        if (!loaderInitialized) {
+            loaderInitialized = true
+            loaderManager.initLoader(0, null, this)
+        } else {
+            loaderManager.restartLoader(0, null, this)
+        }
+    }
+
     internal fun updateAccountActions() {
         val activity = activity as HomeActivity
         val tabs = activity.tabs
-        val account = mAccountsAdapter!!.selectedAccount ?: return
+        val account = accountsAdapter!!.selectedAccount ?: return
         var hasDmTab = false
         var hasInteractionsTab = false
         for (tab in tabs) {
@@ -379,7 +338,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         menu.setItemAvailability(R.id.interactions, !hasInteractionsTab)
         menu.setItemAvailability(R.id.messages, !hasDmTab)
 
-        if (mUseStarsForLikes) {
+        if (useStarsForLikes) {
             menu.setMenuItemTitle(R.id.favorites, R.string.favorites)
             menu.setMenuItemIcon(R.id.favorites, R.drawable.ic_action_star)
         } else {
@@ -412,10 +371,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun closeAccountsDrawer() {
-        val activity = activity
-        if (activity is HomeActivity) {
-            activity.closeAccountsDrawer()
-        }
+        val activity = activity as? HomeActivity ?: return
+        activity.closeAccountsDrawer()
     }
 
     private fun getLocationOnScreen(view: View, rectF: RectF) {
@@ -425,7 +382,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun onAccountSelected(holder: AccountProfileImageViewHolder, account: AccountDetails) {
-        if (mSwitchAccountAnimationPlaying) return
+        if (switchAccountAnimationPlaying) return
         val snapshotView = floatingProfileImageSnapshot
         val profileImageView = accountProfileImageView
         val clickedImageView = holder.iconView
@@ -473,14 +430,14 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 val profileDrawable = profileImageView.drawable
                 clickedDrawable = clickedImageView.drawable
                 clickedColors = clickedImageView.borderColors
-                val oldSelectedAccount = mAccountsAdapter!!.selectedAccount ?: return
+                val oldSelectedAccount = accountsAdapter!!.selectedAccount ?: return
                 mediaLoader.displayDashboardProfileImage(clickedImageView,
                         oldSelectedAccount, profileDrawable)
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
 
                 displayAccountBanner(account)
 
-                mSwitchAccountAnimationPlaying = true
+                switchAccountAnimationPlaying = true
             }
 
             override fun onAnimationEnd(animation: Animator) {
@@ -496,10 +453,10 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             }
 
             private fun finishAnimation() {
-                val editor = preferences.edit()
-                editor.putString(KEY_DEFAULT_ACCOUNT_KEY, account.key.toString())
-                editor.apply()
-                mAccountsAdapter!!.selectedAccount = account
+                preferences.edit()
+                        .putString(KEY_DEFAULT_ACCOUNT_KEY, account.key.toString())
+                        .apply()
+                accountsAdapter!!.selectedAccount = account
                 updateAccountActions()
                 displayCurrentAccount(clickedDrawable)
                 snapshotView.visibility = View.INVISIBLE
@@ -510,7 +467,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 clickedImageView.scaleX = 1f
                 clickedImageView.scaleY = 1f
                 clickedImageView.alpha = 1f
-                mSwitchAccountAnimationPlaying = false
+                switchAccountAnimationPlaying = false
             }
         })
         set.start()
@@ -532,7 +489,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
-        val account = mAccountsAdapter!!.selectedAccount ?: return
+        val account = accountsAdapter!!.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = String.format("@%s", account.user.screen_name)
         mediaLoader.displayDashboardProfileImage(accountProfileImageView, account,
@@ -545,7 +502,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val account = mAccountsAdapter!!.selectedAccount ?: return false
+        val account = accountsAdapter!!.selectedAccount ?: return false
         when (item.itemId) {
             R.id.search -> {
                 val intent = Intent(activity, QuickSearchBarActivity::class.java)
@@ -615,7 +572,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         profileContainer.setPadding(0, top, 0, 0)
     }
 
+    fun shouldDisableDrawerSlide(e: MotionEvent): Boolean {
+        if (accountsSelector == null) return false
+        return TwidereViewUtils.hitView(e.rawX, e.rawY, accountsSelector)
+    }
+
     internal class AccountProfileImageViewHolder(val adapter: AccountSelectorAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
+
         val iconView: ShapedImageView
 
         init {
@@ -626,13 +589,15 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         override fun onClick(v: View) {
             adapter.dispatchItemSelected(this)
         }
+
     }
 
     internal class AccountSelectorAdapter(
             private val inflater: LayoutInflater,
             private val fragment: AccountsDashboardFragment
-    ) : Adapter<AccountProfileImageViewHolder>() {
+    ) : PagerAdapter() {
         private val mediaLoader: MediaLoaderWrapper
+
         var accounts: Array<AccountDetails>? = null
             set(value) {
                 if (value != null) {
@@ -659,22 +624,15 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
         init {
             mediaLoader = fragment.mediaLoader
-            setHasStableIds(true)
         }
 
-        fun getAdapterAccount(adapterPosition: Int): AccountDetails? {
-            if (accounts == null || accounts!!.isEmpty()) {
-                return null
-            }
-            return accounts!![adapterPosition + 1]
+        fun getAdapterAccount(position: Int): AccountDetails? {
+            return accounts?.getOrNull(position + 1)
         }
 
         var selectedAccount: AccountDetails?
             get() {
-                if (accounts == null || accounts!!.isEmpty()) {
-                    return null
-                }
-                return accounts!![0]
+                return accounts?.firstOrNull()
             }
             set(account) {
                 val selectedAccount = selectedAccount
@@ -682,34 +640,35 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 swap(account, selectedAccount)
             }
 
-        val selectedAccountKey: UserKey?
-            get() {
-                val selectedAccount = selectedAccount ?: return null
-                return selectedAccount.key
-            }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountProfileImageViewHolder {
-            val view = inflater.inflate(R.layout.adapter_item_dashboard_account, parent, false)
-            return AccountProfileImageViewHolder(this, view)
-        }
-
-        override fun onBindViewHolder(holder: AccountProfileImageViewHolder, position: Int) {
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
+            container.addView(view)
+            val holder = AccountProfileImageViewHolder(this, view)
             val account = getAdapterAccount(position)
             mediaLoader.displayDashboardProfileImage(holder.iconView, account!!, null)
-            holder.iconView.setBorderColor(account.color)
+            RecyclerViewAccessor.setLayoutPosition(holder, position)
+            return holder
         }
 
-        override fun getItemId(position: Int): Long {
-            return getAdapterAccount(position)!!.hashCode().toLong()
+        override fun destroyItem(container: ViewGroup, position: Int, obj: Any?) {
+            container.removeView((obj as AccountProfileImageViewHolder).itemView)
         }
 
-        override fun getItemCount(): Int {
+        override fun isViewFromObject(view: View?, obj: Any?): Boolean {
+            return view == (obj as AccountProfileImageViewHolder).itemView
+        }
+
+        override fun getCount(): Int {
             if (accounts == null || accounts!!.isEmpty()) return 0
             return accounts!!.size - 1
         }
 
+        override fun getPageWidth(position: Int): Float {
+            return 1f / 3
+        }
+
         fun dispatchItemSelected(holder: AccountProfileImageViewHolder) {
-            fragment.onAccountSelected(holder, getAdapterAccount(holder.adapterPosition)!!)
+            fragment.onAccountSelected(holder, getAdapterAccount(holder.layoutPosition)!!)
         }
 
         private fun swap(from: AccountDetails, to: AccountDetails) {
@@ -722,6 +681,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             accounts[fromIdx] = temp
             notifyDataSetChanged()
         }
+
     }
 
     data class AccountsInfo(
@@ -730,8 +690,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     )
 
     class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
-
         private var contentObserver: ContentObserver? = null
+
         private var firstLoad: Boolean
 
         init {
@@ -797,5 +757,20 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             // Attempt to cancel the current load task if possible.
             cancelLoad()
         }
+
     }
+
+    object AccountsSelectorTransformer : ViewPager.PageTransformer {
+        override fun transformPage(page: View, position: Float) {
+            if (position < 0) {
+                page.alpha = 1 + position * 3
+            } else if (position > 2f / 3) {
+                page.alpha = (1 - position) * 3
+            } else {
+                page.alpha = 1f
+            }
+        }
+
+    }
+
 }
