@@ -52,8 +52,6 @@
             android:layout_height="wrap_content"
             android:focusable="false"
             android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_large"
-            android:paddingRight="@dimen/element_spacing_large"
             android:paddingTop="@dimen/element_spacing_normal">
 
             <org.mariotaku.twidere.view.ProfileImageView
@@ -62,6 +60,8 @@
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
+                android:layout_marginLeft="@dimen/element_spacing_large"
+                android:layout_marginStart="@dimen/element_spacing_large"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
                 android:focusable="false"
                 app:sivBorder="true"
@@ -73,24 +73,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/profileImage"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_alignTop="@id/profileImage"
                 android:layout_marginBottom="@dimen/element_spacing_large"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_toEndOf="@id/profileImage"
-                android:layout_toRightOf="@id/profileImage"
+                android:layout_toEndOf="@+id/hasPrevAccountIndicator"
+                android:layout_toLeftOf="@+id/hasNextAccountIndicator"
+                android:layout_toRightOf="@+id/hasPrevAccountIndicator"
+                android:layout_toStartOf="@+id/hasNextAccountIndicator"
                 android:focusable="false"
                 tools:listitem="@layout/adapter_item_dashboard_account"
                 tools:paddingStart="@dimen/element_spacing_large"
                 tools:visibility="visible"/>
+
+            <ImageButton
+                android:id="@+id/hasNextAccountIndicator"
+                android:layout_width="@dimen/element_spacing_large"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/otherAccountsList"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/otherAccountsList"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_indicator_arrow_next"/>
+
+            <ImageButton
+                android:id="@+id/hasPrevAccountIndicator"
+                android:layout_width="@dimen/element_spacing_large"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/otherAccountsList"
+                android:layout_alignTop="@+id/otherAccountsList"
+                android:layout_toEndOf="@id/profileImage"
+                android:layout_toRightOf="@id/profileImage"
+                android:background="?selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_indicator_arrow_prev"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_below="@id/profileImage"
+                android:layout_marginEnd="@dimen/element_spacing_large"
+                android:layout_marginLeft="@dimen/element_spacing_large"
+                android:layout_marginRight="@dimen/element_spacing_large"
+                android:layout_marginStart="@dimen/element_spacing_large"
                 android:baselineAligned="false"
                 android:focusable="false"
                 android:gravity="center_vertical"
@@ -108,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:focusable="false"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@android:color/white"
                         android:textStyle="bold"
@@ -119,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:focusable="false"
-                        android:singleLine="true"
+                        android:maxLines="1"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="@color/material_grey"
                         tools:text="\@username"/>

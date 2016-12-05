@@ -85,6 +85,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     private var accountsAdapter: AccountSelectorAdapter? = null
 
+    private val hasNextAccountIndicator by lazy { accountsHeader.hasNextAccountIndicator }
+    private val hasPrevAccountIndicator by lazy { accountsHeader.hasPrevAccountIndicator }
     private val accountsSelector by lazy { accountsHeader.otherAccountsList }
     private val navigationView by lazy { view as NavigationView }
     private val accountsHeader by lazy { navigationView.getHeaderView(0) }
@@ -112,6 +114,15 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         layoutManager.stackFromEnd = true
         accountsSelector.adapter = accountsAdapter
+        accountsSelector.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                val adapter = accountsAdapter ?: return
+                val pagePosition = position + positionOffset
+                hasPrevAccountIndicator.alpha = TwidereMathUtils.clamp(pagePosition, 0f, 1f)
+                hasNextAccountIndicator.alpha = TwidereMathUtils.clamp(adapter.count - (pagePosition
+                        + 1 / adapter.getPageWidth(position)), 0f, 1f)
+            }
+        })
         accountsSelector.setPageTransformer(false, AccountsSelectorTransformer)
         val menuInflater = SupportMenuInflater(context)
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
