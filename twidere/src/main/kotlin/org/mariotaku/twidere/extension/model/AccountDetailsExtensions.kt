@@ -3,6 +3,7 @@ package org.mariotaku.twidere.extension.model
 import android.content.Context
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
+import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.util.TwitterContentUtils
 
@@ -18,3 +19,6 @@ fun AccountDetails.isOfficial(context: Context): Boolean {
     }
     return false
 }
+
+val AccountDetails.is_oauth: Boolean
+    get() = credentials_type == Credentials.Type.OAUTH || credentials_type == Credentials.Type.XAUTH

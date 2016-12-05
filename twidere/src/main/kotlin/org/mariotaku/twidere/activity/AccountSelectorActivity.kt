@@ -36,8 +36,8 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.model.is_oauth
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.util.AccountUtils
 
 class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
@@ -45,6 +45,75 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
     private var adapter: AccountDetailsAdapter? = null
 
     private var firstCreated: Boolean = false
+
+
+    private val keysWhiteList: Array<UserKey>?
+        get() {
+            return intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS)?.toTypedArray(UserKey.CREATOR)
+        }
+
+    private val isOAuthOnly: Boolean
+        get() {
+            return intent.getBooleanExtra(EXTRA_OAUTH_ONLY, false)
+        }
+
+    private val accountHost: String?
+        get() {
+            return intent.getStringExtra(EXTRA_ACCOUNT_HOST)
+        }
+
+    private val isSelectNoneAllowed: Boolean
+        get() {
+            return intent.getBooleanExtra(EXTRA_ALLOW_SELECT_NONE, false)
+        }
+
+    private val isSingleSelection: Boolean
+        get() {
+            return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, false)
+        }
+
+    private val startIntent: Intent?
+        get() {
+            val startIntent = intent.getParcelableExtra<Intent>(EXTRA_START_INTENT)
+            startIntent?.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
+            return startIntent
+        }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        firstCreated = savedInstanceState == null
+        setContentView(R.layout.activity_account_selector)
+        adapter = AccountDetailsAdapter(this).apply {
+            setSwitchEnabled(!isSingleSelection)
+            setSortEnabled(false)
+            isProfileImageDisplayed = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
+            val am = AccountManager.get(context)
+            val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am))
+            val extraKeys = keysWhiteList
+            val oAuthOnly = isOAuthOnly
+            val accountHost = accountHost
+            addAll(allAccountDetails.filter {
+                if (extraKeys != null) {
+                    return@filter extraKeys.contains(it.key)
+                }
+                if (oAuthOnly && !it.is_oauth) {
+                    return@filter false
+                }
+                if (USER_TYPE_TWITTER_COM == accountHost) {
+                    if (it.key.host != null && it.type != AccountType.TWITTER) return@filter false
+                } else if (accountHost != null) {
+                    if (accountHost != it.key.host) return@filter false
+                }
+                return@filter true
+            })
+        }
+        accountsList.choiceMode = if (isSingleSelection) ListView.CHOICE_MODE_NONE else ListView.CHOICE_MODE_MULTIPLE
+        if (isSingleSelection) {
+            accountsList.onItemClickListener = this
+        }
+        selectAccountButtons.visibility = if (isSingleSelection) View.GONE else View.VISIBLE
+        accountsList.adapter = adapter
+    }
 
     override fun onClick(view: View) {
         when (view.id) {
@@ -82,71 +151,5 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         setResult(Activity.RESULT_OK, data)
         finish()
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        firstCreated = savedInstanceState == null
-        setContentView(R.layout.activity_account_selector)
-        adapter = AccountDetailsAdapter(this).apply {
-            setSwitchEnabled(isSingleSelection)
-            setSortEnabled(false)
-            isProfileImageDisplayed = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
-            val am = AccountManager.get(context)
-            val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am))
-            addAll(allAccountDetails.filter {
-                if (isOAuthOnly && it.credentials_type != Credentials.Type.OAUTH && it.credentials_type != Credentials.Type.XAUTH) {
-                    return@filter false
-                }
-                if (USER_TYPE_TWITTER_COM == accountHost) {
-                    if (it.key.host == null || it.type == AccountType.TWITTER) return@filter false
-                } else if (accountHost != null) {
-                    if (accountHost != it.key.host) return@filter false
-                }
-                return@filter true
-            })
-        }
-        accountsList.choiceMode = if (isSingleSelection) ListView.CHOICE_MODE_NONE else ListView.CHOICE_MODE_MULTIPLE
-        if (isSingleSelection) {
-            accountsList.onItemClickListener = this
-        }
-        selectAccountButtons.visibility = if (isSingleSelection) View.GONE else View.VISIBLE
-        accountsList.adapter = adapter
-    }
-
-    private val intentExtraIds: Array<UserKey>?
-        get() {
-            return intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS)?.toTypedArray(UserKey.CREATOR)
-        }
-
-    private val isOAuthOnly: Boolean
-        get() {
-            return intent.getBooleanExtra(EXTRA_OAUTH_ONLY, false)
-        }
-
-    private val accountHost: String?
-        get() {
-            return intent.getStringExtra(EXTRA_ACCOUNT_HOST)
-        }
-
-    private val isSelectNoneAllowed: Boolean
-        get() {
-            return intent.getBooleanExtra(EXTRA_ALLOW_SELECT_NONE, false)
-        }
-
-    private val isSingleSelection: Boolean
-        get() {
-            return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, false)
-        }
-
-    private fun shouldSelectOnlyItem(): Boolean {
-        return intent.getBooleanExtra(EXTRA_SELECT_ONLY_ITEM, false)
-    }
-
-    private val startIntent: Intent?
-        get() {
-            val startIntent = intent.getParcelableExtra<Intent>(EXTRA_START_INTENT)
-            startIntent?.setExtrasClassLoader(TwidereApplication::class.java.classLoader)
-            return startIntent
-        }
 
 }
