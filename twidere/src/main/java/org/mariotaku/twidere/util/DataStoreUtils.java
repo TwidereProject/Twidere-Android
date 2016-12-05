@@ -409,7 +409,7 @@ public class DataStoreUtils implements Constants {
         AccountManager am = AccountManager.get(context);
         List<UserKey> keys = new ArrayList<>();
         for (Account account : AccountUtils.getAccounts(am)) {
-            if (AccountExtensionsKt.isAccountActivated(account, am)) {
+            if (AccountExtensionsKt.isActivated(account, am)) {
                 keys.add(AccountExtensionsKt.getAccountKey(account, am));
             }
         }

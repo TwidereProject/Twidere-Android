@@ -66,12 +66,20 @@ fun Account.getAccountType(am: AccountManager): String {
     return am.getUserData(this, ACCOUNT_USER_DATA_TYPE) ?: AccountType.TWITTER
 }
 
-fun Account.isAccountActivated(am: AccountManager): Boolean {
+fun Account.isActivated(am: AccountManager): Boolean {
     return am.getUserData(this, ACCOUNT_USER_DATA_ACTIVATED).orEmpty().toBoolean()
+}
+
+fun Account.setActivated(am: AccountManager, activated: Boolean) {
+    am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, activated.toString())
 }
 
 fun Account.setColor(am: AccountManager, color: Int) {
     am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(color))
+}
+
+fun Account.setPosition(am: AccountManager, position: Int) {
+    am.setUserData(this, ACCOUNT_USER_DATA_POSITION, position.toString())
 }
 
 

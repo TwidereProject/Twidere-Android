@@ -77,7 +77,7 @@ public class AccountUtils {
         details.position = AccountExtensionsKt.getPosition(account, am);
         details.credentials = AccountExtensionsKt.getCredentials(account, am);
         details.user = AccountExtensionsKt.getAccountUser(account, am);
-        details.activated = AccountExtensionsKt.isAccountActivated(account, am);
+        details.activated = AccountExtensionsKt.isActivated(account, am);
         details.type = AccountExtensionsKt.getAccountType(account, am);
         details.credentials_type = AccountExtensionsKt.getCredentialsType(account, am);
         return details;

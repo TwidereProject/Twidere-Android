@@ -4,21 +4,19 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.util.SimpleArrayMap
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.Loader
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
-import org.mariotaku.sqliteqb.library.ArgsArray
-import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -27,46 +25,53 @@ import org.mariotaku.twidere.activity.SignInActivity
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.extension.setActivated
 import org.mariotaku.twidere.extension.setColor
+import org.mariotaku.twidere.extension.setPosition
+import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.TwidereCollectionUtils
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.collection.CompactHashSet
 
 /**
  * Created by mariotaku on 14/10/26.
  */
-class AccountsManagerFragment : BaseSupportFragment(), OnSharedPreferenceChangeListener,
-        AdapterView.OnItemClickListener, AccountDetailsAdapter.OnAccountToggleListener {
+class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<List<AccountDetails>>,
+        OnSharedPreferenceChangeListener, AdapterView.OnItemClickListener {
 
     private var adapter: AccountDetailsAdapter? = null
     private var selectedAccount: AccountDetails? = null
-    private val activatedState = SimpleArrayMap<UserKey, Boolean>()
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val activity = activity
         preferences.registerOnSharedPreferenceChangeListener(this)
-        adapter = AccountDetailsAdapter(activity)
-        Utils.configBaseAdapter(activity, adapter)
-        adapter!!.setSortEnabled(true)
-        adapter!!.setSwitchEnabled(true)
-        adapter!!.setOnAccountToggleListener(this)
+        adapter = AccountDetailsAdapter(activity).apply {
+            Utils.configBaseAdapter(activity, this)
+            setSortEnabled(true)
+            setSwitchEnabled(true)
+            accountToggleListener = { pos, checked ->
+                getItem(pos).activated = checked
+            }
+        }
         listView.adapter = adapter
         listView.isDragEnabled = true
         listView.onItemClickListener = this
+        listView.setDropListener { from, to ->
+            adapter?.drop(from, to)
+            // TODO sort list
+        }
         listView.setOnCreateContextMenuListener(this)
         listView.emptyView = emptyView
         emptyText.setText(R.string.no_account)
         emptyIcon.setImageResource(R.drawable.ic_info_error_generic)
         setListShown(false)
+
+        loaderManager.initLoader(0, null, this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -130,32 +135,38 @@ class AccountsManagerFragment : BaseSupportFragment(), OnSharedPreferenceChangeL
     override fun onStop() {
         super.onStop()
         saveActivatedState()
+        saveAccountPositions()
+    }
+
+    override fun onDestroyView() {
+        preferences.unregisterOnSharedPreferenceChangeListener(this)
+        super.onDestroyView()
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {
+        return AccountDetailsLoader(context)
+    }
+
+    override fun onLoaderReset(loader: Loader<List<AccountDetails>>) {
+
+    }
+
+    override fun onLoadFinished(loader: Loader<List<AccountDetails>>, data: List<AccountDetails>) {
+        adapter?.apply {
+            clear()
+            addAll(data)
+        }
+        setListShown(true)
     }
 
     private fun saveActivatedState() {
-        val trueIds = CompactHashSet<UserKey>()
-        val falseIds = CompactHashSet<UserKey>()
-        for (i in 0 until activatedState.size()) {
-            if (activatedState.valueAt(i)) {
-                trueIds.add(activatedState.keyAt(i))
-            } else {
-                falseIds.add(activatedState.keyAt(i))
+        val am = AccountManager.get(context)
+        adapter?.let { adapter ->
+            for (i in 0 until adapter.count) {
+                val item = adapter.getItem(i)
+                item.account.setActivated(am, item.activated)
             }
         }
-        val cr = contentResolver
-        val values = ContentValues()
-        values.put(Accounts.IS_ACTIVATED, true)
-        var where = Expression.`in`(Columns.Column(Accounts.ACCOUNT_KEY), ArgsArray(trueIds.size))
-        var whereArgs = TwidereCollectionUtils.toStringArray(trueIds)
-        cr.update(Accounts.CONTENT_URI, values, where.sql, whereArgs)
-        values.put(Accounts.IS_ACTIVATED, false)
-        where = Expression.`in`(Columns.Column(Accounts.ACCOUNT_KEY), ArgsArray(falseIds.size))
-        whereArgs = TwidereCollectionUtils.toStringArray(falseIds)
-        cr.update(Accounts.CONTENT_URI, values, where.sql, whereArgs)
-    }
-
-    override fun onAccountToggle(accountId: UserKey, state: Boolean) {
-        activatedState.put(accountId, state)
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
@@ -164,11 +175,6 @@ class AccountsManagerFragment : BaseSupportFragment(), OnSharedPreferenceChangeL
         menu.setHeaderTitle(account!!.user.name)
         val inflater = MenuInflater(v.context)
         inflater.inflate(R.menu.action_manager_account, menu)
-    }
-
-    override fun onDestroyView() {
-        preferences.unregisterOnSharedPreferenceChangeListener(this)
-        super.onDestroyView()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -181,7 +187,12 @@ class AccountsManagerFragment : BaseSupportFragment(), OnSharedPreferenceChangeL
     }
 
     private fun saveAccountPositions() {
-
+        val am = AccountManager.get(context)
+        adapter?.let { adapter ->
+            for (i in 0 until adapter.count) {
+                adapter.getItem(i).account.setPosition(am, i)
+            }
+        }
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {

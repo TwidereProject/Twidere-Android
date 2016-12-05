@@ -41,12 +41,11 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
     override var isProfileImageDisplayed: Boolean = false
     private var sortEnabled: Boolean = false
     private var switchEnabled: Boolean = false
-    private var onAccountToggleListener: OnAccountToggleListener? = null
+    var accountToggleListener: ((Int, Boolean) -> Unit)? = null
 
     private val checkedChangeListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-        val tag = buttonView.tag as? String ?: return@OnCheckedChangeListener
-        val accountKey = UserKey.valueOf(tag) ?: return@OnCheckedChangeListener
-        onAccountToggleListener?.onAccountToggle(accountKey, isChecked)
+        val position = buttonView.tag as? Int ?: return@OnCheckedChangeListener
+        accountToggleListener?.invoke(position, isChecked)
     }
 
     init {
@@ -61,6 +60,7 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
             return@run h
         }
         val details = getItem(position)
+        holder.name.text = details.user.name
         holder.screenName.text = String.format("@%s", details.user.screen_name)
         holder.setAccountColor(details.color)
         if (isProfileImageDisplayed) {
@@ -72,7 +72,7 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         holder.accountType.setImageResource(AccountUtils.getAccountTypeIcon(accountType))
         holder.toggle.isChecked = details.activated
         holder.toggle.setOnCheckedChangeListener(checkedChangeListener)
-        holder.toggle.tag = details.user.key
+        holder.toggle.tag = position
         holder.toggleContainer.visibility = if (switchEnabled) View.VISIBLE else View.GONE
         holder.setSortEnabled(sortEnabled)
         return view
@@ -103,14 +103,18 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
 
         }
 
+    override fun hasStableIds(): Boolean {
+        return true
+    }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).key.hashCode().toLong()
+    }
+
     fun setSwitchEnabled(enabled: Boolean) {
         if (switchEnabled == enabled) return
         switchEnabled = enabled
         notifyDataSetChanged()
-    }
-
-    fun setOnAccountToggleListener(listener: OnAccountToggleListener) {
-        onAccountToggleListener = listener
     }
 
     fun setSortEnabled(sortEnabled: Boolean) {
@@ -119,7 +123,10 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         notifyDataSetChanged()
     }
 
-    interface OnAccountToggleListener {
-        fun onAccountToggle(accountId: UserKey, state: Boolean)
+    fun drop(from: Int, to: Int) {
+        val fromItem = getItem(from)
+        removeAt(from)
+        insert(fromItem, to)
     }
+
 }
