@@ -644,8 +644,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
             container.addView(view)
             val holder = AccountProfileImageViewHolder(this, view)
-            val account = getAdapterAccount(position)
-            mediaLoader.displayDashboardProfileImage(holder.iconView, account!!, null)
+            val account = getAdapterAccount(position)!!
+            holder.iconView.setBorderColor(account.color)
+            mediaLoader.displayDashboardProfileImage(holder.iconView, account, null)
             RecyclerViewAccessor.setLayoutPosition(holder, position)
             return holder
         }
@@ -664,7 +665,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
 
         override fun getPageWidth(position: Int): Float {
-            return 1f / 3
+            return 1f / AccountsSelectorTransformer.selectorAccountsCount
         }
 
         fun dispatchItemSelected(holder: AccountProfileImageViewHolder) {
@@ -761,11 +762,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     object AccountsSelectorTransformer : ViewPager.PageTransformer {
+        const internal val selectorAccountsCount: Int = 3
+
         override fun transformPage(page: View, position: Float) {
             if (position < 0) {
-                page.alpha = 1 + position * 3
-            } else if (position > 2f / 3) {
-                page.alpha = (1 - position) * 3
+                page.alpha = 1 + position * selectorAccountsCount
+            } else if (position > (selectorAccountsCount - 1f) / selectorAccountsCount) {
+                page.alpha = (1 - position) * selectorAccountsCount
             } else {
                 page.alpha = 1f
             }
