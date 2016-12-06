@@ -181,7 +181,7 @@ class ParcelableUserLoader(
         if (account != null) {
             val task = UpdateAccountInfoTask(context)
             task.params = Pair(account, user)
-            TaskStarter.execute<Pair<AccountDetails, ParcelableUser>, Any, Any>(task)
+            TaskStarter.execute(task)
         }
     }
 }
