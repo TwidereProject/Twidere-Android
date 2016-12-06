@@ -32,7 +32,7 @@ fun Account.getCredentialsType(am: AccountManager): String {
 }
 
 fun Account.getAccountKey(am: AccountManager): UserKey {
-    return UserKey.valueOf(am.getUserData(this, ACCOUNT_USER_DATA_KEY))!!
+    return UserKey.valueOf(am.getUserData(this, ACCOUNT_USER_DATA_KEY))
 }
 
 fun Account.getAccountUser(am: AccountManager): ParcelableUser {

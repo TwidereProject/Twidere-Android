@@ -24,10 +24,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.database.Cursor
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -41,7 +38,8 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.MessageEntryViewHolder
 
-class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolder>(context), Constants, IContentCardAdapter, OnClickListener, OnReadStateChangeListener {
+class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolder>(context),
+        IContentCardAdapter, OnReadStateChangeListener {
 
     private val inflater: LayoutInflater
     override val textSize: Float
@@ -54,7 +52,7 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
     private var mShowAccountsColor: Boolean = false
     private var mCursor: Cursor? = null
     var listener: MessageEntriesAdapterListener? = null
-    private var mPositionPairs: Array<StringLongPair>? = null
+    private var positionPairs: Array<StringLongPair>? = null
 
     init {
         inflater = LayoutInflater.from(context)
@@ -71,24 +69,6 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
         val c = mCursor
         if (c == null || c.isClosed || !c.moveToPosition(position)) return null
         return DirectMessageEntry(c)
-    }
-
-    override fun onClick(view: View) {
-        //        if (mMultiSelectManager.isActive()) return;
-        //        final Object tag = view.getTag();
-        //        final int position = tag instanceof Integer ? (Integer) tag : -1;
-        //        if (position == -1) return;
-        //        switch (view.getId()) {
-        //            case R.id.profileImage: {
-        //                if (mContext instanceof Activity) {
-        //                    final long account_id = getAccountKey(position);
-        //                    final long user_id = getConversationId(position);
-        //                    final String screen_name = getScreenName(position);
-        //                    openUserProfile(mContext, account_id, user_id, screen_name, null);
-        //                }
-        //                break;
-        //            }
-        //        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -162,7 +142,7 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
 
 
     fun updateReadState() {
-        mPositionPairs = readStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES)
+        positionPairs = readStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES)
         notifyDataSetChanged()
     }
 
@@ -174,15 +154,13 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
         }
 
     private fun isUnread(c: Cursor): Boolean {
-        if (mPositionPairs == null) return true
+        val positionPairs = this.positionPairs ?: return true
         val accountId = c.getLong(ConversationEntries.IDX_ACCOUNT_KEY)
         val conversationId = c.getLong(ConversationEntries.IDX_CONVERSATION_ID)
         val messageId = c.getLong(ConversationEntries.IDX_MESSAGE_ID)
         val key = "$accountId-$conversationId"
-        for (pair in mPositionPairs!!) {
-            if (key == pair.key) return messageId > pair.value
-        }
-        return true
+        val match = positionPairs.find { key == it.key } ?: return true
+        return messageId > match.value
     }
 
     fun setShowAccountsColor(showAccountsColor: Boolean) {
@@ -209,7 +187,7 @@ class MessageEntriesAdapter(context: Context) : LoadMoreSupportAdapter<ViewHolde
         val name: String
 
         init {
-            account_key = UserKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY))!!
+            account_key = UserKey.valueOf(cursor.getString(ConversationEntries.IDX_ACCOUNT_KEY))
             conversation_id = cursor.getString(ConversationEntries.IDX_CONVERSATION_ID)
             screen_name = cursor.getString(ConversationEntries.IDX_SCREEN_NAME)
             name = cursor.getString(ConversationEntries.IDX_NAME)
