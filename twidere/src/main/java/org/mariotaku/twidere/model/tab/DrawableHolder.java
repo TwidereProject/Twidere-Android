@@ -148,23 +148,23 @@ public abstract class DrawableHolder {
     }
 
     public static class Builtin extends DrawableHolder {
-        public static final Builtin HOME = new Builtin("home", R.drawable.ic_action_home);
-        public static final Builtin HEART = new Builtin("heart", R.drawable.ic_action_heart);
-        public static final Builtin HASHTAG = new Builtin("hashtag", R.drawable.ic_action_hashtag);
-        public static final Builtin ACCOUNTS = new Builtin("accounts", R.drawable.ic_action_accounts);
-        public static final Builtin LIST = new Builtin("list", R.drawable.ic_action_list);
-        public static final Builtin MENTION = new Builtin("mention", R.drawable.ic_action_at);
-        public static final Builtin NOTIFICATIONS = new Builtin("notifications", R.drawable.ic_action_notification);
-        public static final Builtin GALLERY = new Builtin("gallery", R.drawable.ic_action_gallery);
-        public static final Builtin MESSAGE = new Builtin("message", R.drawable.ic_action_message);
-        public static final Builtin QUOTE = new Builtin("quote", R.drawable.ic_action_quote);
-        public static final Builtin SEARCH = new Builtin("search", R.drawable.ic_action_search);
-        public static final Builtin STAGGERED = new Builtin("staggered", R.drawable.ic_action_view_quilt);
-        public static final Builtin STAR = new Builtin("star", R.drawable.ic_action_star);
-        public static final Builtin TRENDS = new Builtin("trends", R.drawable.ic_action_trends);
-        public static final Builtin TWIDERE = new Builtin("twidere", R.drawable.ic_action_twidere);
-        public static final Builtin TWITTER = new Builtin("twitter", R.drawable.ic_action_twitter);
-        public static final Builtin USER = new Builtin("user", R.drawable.ic_action_user);
+        public static final DrawableHolder HOME = new Builtin("home", R.drawable.ic_action_home);
+        public static final DrawableHolder HEART = new Builtin("heart", R.drawable.ic_action_heart);
+        public static final DrawableHolder HASHTAG = new Builtin("hashtag", R.drawable.ic_action_hashtag);
+        public static final DrawableHolder ACCOUNTS = new Builtin("accounts", R.drawable.ic_action_accounts);
+        public static final DrawableHolder LIST = new Builtin("list", R.drawable.ic_action_list);
+        public static final DrawableHolder MENTION = new Builtin("mention", R.drawable.ic_action_at);
+        public static final DrawableHolder NOTIFICATIONS = new Builtin("notifications", R.drawable.ic_action_notification);
+        public static final DrawableHolder GALLERY = new Builtin("gallery", R.drawable.ic_action_gallery);
+        public static final DrawableHolder MESSAGE = new Builtin("message", R.drawable.ic_action_message);
+        public static final DrawableHolder QUOTE = new Builtin("quote", R.drawable.ic_action_quote);
+        public static final DrawableHolder SEARCH = new Builtin("search", R.drawable.ic_action_search);
+        public static final DrawableHolder STAGGERED = new Builtin("staggered", R.drawable.ic_action_view_quilt);
+        public static final DrawableHolder STAR = new Builtin("star", R.drawable.ic_action_star);
+        public static final DrawableHolder TRENDS = new Builtin("trends", R.drawable.ic_action_trends);
+        public static final DrawableHolder TWIDERE = new Builtin("twidere", R.drawable.ic_action_twidere);
+        public static final DrawableHolder TWITTER = new Builtin("twitter", R.drawable.ic_action_twitter);
+        public static final DrawableHolder USER = new Builtin("user", R.drawable.ic_action_user);
         public static final DrawableHolder FAVORITE = new DrawableHolder() {
             @NonNull
             @Override
@@ -185,7 +185,7 @@ public abstract class DrawableHolder {
         private final String key;
         private final int resId;
 
-        public Builtin(String key, int resId) {
+        private Builtin(String key, int resId) {
             this.key = key;
             this.resId = resId;
             setName(WordUtils.capitalize(key));

@@ -1746,6 +1746,14 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             return getItemViewTypeByItemType(getItemType(position))
         }
 
+        override fun addGapLoadingId(id: ObjectId) {
+
+        }
+
+        override fun removeGapLoadingId(id: ObjectId) {
+
+        }
+
         private fun getItemViewTypeByItemType(type: Int): Int {
             when (type) {
                 ITEM_IDX_CONVERSATION, ITEM_IDX_REPLY -> return VIEW_TYPE_LIST_STATUS

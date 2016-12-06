@@ -397,12 +397,12 @@ abstract class AbsStatusesFragment protected constructor() :
 
 
     override fun onGapClick(holder: GapViewHolder, position: Int) {
-        val adapter = adapter
-        val status = adapter!!.getStatus(position)
+        val adapter = this.adapter ?: return
+        val status = adapter.getStatus(position) ?: return
         if (BuildConfig.DEBUG) {
-            Log.v(TwidereConstants.LOGTAG, "Load activity gap " + status!!)
+            Log.v(TwidereConstants.LOGTAG, "Load activity gap " + status)
         }
-        if (status == null) return
+        adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
         val accountIds = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
         val maxSortIds = longArrayOf(status.sort_id)

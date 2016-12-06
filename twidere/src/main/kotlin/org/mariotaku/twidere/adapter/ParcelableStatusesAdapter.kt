@@ -29,10 +29,13 @@ import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
+import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
+import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices
 import org.mariotaku.twidere.model.UserKey
@@ -46,6 +49,7 @@ import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
+import java.util.*
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -72,9 +76,11 @@ abstract class ParcelableStatusesAdapter(
     final override val sensitiveContentEnabled: Boolean
     final override val useStarsForLikes: Boolean
     final override val isShowAbsoluteTime: Boolean
-    override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
-
     private val showCardActions: Boolean
+
+    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
+
+    override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
 
     override val gapClickListener: IGapSupportedAdapter.GapClickListener?
         get() = statusClickListener
@@ -245,12 +251,9 @@ abstract class ParcelableStatusesAdapter(
             changed = data != data
         }
         this.data = data
+        gapLoadingIds.clear()
         notifyDataSetChanged()
         return changed
-    }
-
-    fun getData(): List<ParcelableStatus>? {
-        return data
     }
 
     override fun isCardActionsShown(position: Int): Boolean {
@@ -272,21 +275,16 @@ abstract class ParcelableStatusesAdapter(
         }
     }
 
-
-    fun isStatus(position: Int): Boolean {
-        return position < statusCount
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
             ITEM_VIEW_TYPE_STATUS -> {
                 return onCreateStatusViewHolder(parent) as RecyclerView.ViewHolder
             }
-            IGapSupportedAdapter.ITEM_VIEW_TYPE_GAP -> {
-                val view = inflater.inflate(R.layout.card_item_gap, parent, false)
+            ITEM_VIEW_TYPE_GAP -> {
+                val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(this, view)
             }
-            ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+            ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
                 val view = inflater.inflate(R.layout.card_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
@@ -297,7 +295,6 @@ abstract class ParcelableStatusesAdapter(
         throw IllegalStateException("Unknown view type " + viewType)
     }
 
-    protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemCountIndex(position)) {
@@ -306,10 +303,14 @@ abstract class ParcelableStatusesAdapter(
                 (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
             }
             2 -> {
+                val status = data!![position - getItemStartPosition(2)]
                 when (holder.itemViewType) {
                     ITEM_VIEW_TYPE_STATUS -> {
-                        val status = data!![position - getItemStartPosition(2)]
                         (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
+                    }
+                    ITEM_VIEW_TYPE_GAP -> {
+                        val loading = gapLoadingIds.find { it.accountKey == status.account_key && it.id == status.id } != null
+                        (holder as GapViewHolder).display(loading)
                     }
                 }
             }
@@ -317,20 +318,38 @@ abstract class ParcelableStatusesAdapter(
 
     }
 
+    protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
+
+    override fun addGapLoadingId(id: ObjectId) {
+        gapLoadingIds.add(id)
+    }
+
+    override fun removeGapLoadingId(id: ObjectId) {
+        gapLoadingIds.remove(id)
+    }
+
+    fun getData(): List<ParcelableStatus>? {
+        return data
+    }
+
+    fun isStatus(position: Int): Boolean {
+        return position < statusCount
+    }
+
     override fun getItemViewType(position: Int): Int {
         if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
-            return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         when (getItemCountIndex(position)) {
             0, 3 -> {
-                return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
+                return ITEM_VIEW_TYPE_LOAD_INDICATOR
             }
             1 -> {
                 return ITEM_VIEW_TYPE_STATUS
             }
             2 -> {
                 if (isGapItem(position)) {
-                    return IGapSupportedAdapter.ITEM_VIEW_TYPE_GAP
+                    return ITEM_VIEW_TYPE_GAP
                 } else if (isFiltered(position)) {
                     return ITEM_VIEW_TYPE_EMPTY
                 } else {

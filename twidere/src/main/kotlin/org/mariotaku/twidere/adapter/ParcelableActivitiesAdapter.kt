@@ -36,11 +36,9 @@ import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
+import org.mariotaku.twidere.extension.model.id
 import org.mariotaku.twidere.fragment.CursorActivitiesFragment
-import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.model.ParcelableActivityCursorIndices
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.IntentUtils
@@ -50,6 +48,7 @@ import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.*
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.lang.ref.WeakReference
+import java.util.*
 
 /**
  * Created by mariotaku on 15/1/3.
@@ -66,6 +65,8 @@ class ParcelableActivitiesAdapter(
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null
     private var filteredUserIds: Array<UserKey>? = null
+    private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
+
     var followingOnly: Boolean = false
         set(value) {
             field = value
@@ -169,6 +170,7 @@ class ParcelableActivitiesAdapter(
             filteredUserIds = data.filteredUserIds
         }
         this.data = data
+        gapLoadingIds.clear()
         notifyDataSetChanged()
     }
 
@@ -217,7 +219,7 @@ class ParcelableActivitiesAdapter(
                 return holder
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val view = inflater.inflate(R.layout.card_item_gap, parent, false)
+                val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(this, view)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
@@ -247,6 +249,11 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_STUB -> {
                 (holder as StubViewHolder).displayActivity(getActivity(position)!!)
+            }
+            ITEM_VIEW_TYPE_GAP -> {
+                val activity = getActivity(position)!!
+                val loading = gapLoadingIds.find { it.accountKey == activity.account_key && it.id == activity.id } != null
+                (holder as GapViewHolder).display(loading)
             }
         }
     }
@@ -299,6 +306,13 @@ class ParcelableActivitiesAdapter(
         return ITEM_VIEW_TYPE_STUB
     }
 
+    override fun addGapLoadingId(id: ObjectId) {
+        gapLoadingIds.add(id)
+    }
+
+    override fun removeGapLoadingId(id: ObjectId) {
+        gapLoadingIds.remove(id)
+    }
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
@@ -388,16 +402,14 @@ class ParcelableActivitiesAdapter(
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener != null) {
-                adapter.activityAdapterListener!!.onGapClick(holder, position)
-            }
+            val activity = adapter.getActivity(position) ?: return
+            adapter.addGapLoadingId(ObjectId(activity.account_key, activity.id))
+            adapter.activityAdapterListener?.onGapClick(holder, position)
         }
 
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener != null) {
-                adapter.activityAdapterListener!!.onStatusActionClick(holder as IStatusViewHolder, id, position)
-            }
+            adapter.activityAdapterListener?.onStatusActionClick(holder as IStatusViewHolder, id, position)
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

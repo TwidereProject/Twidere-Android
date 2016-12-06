@@ -8,10 +8,7 @@ import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.iface.*
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -177,6 +174,14 @@ class DummyItemAdapter @JvmOverloads constructor(
 
     override fun isGapItem(position: Int): Boolean {
         return false
+    }
+
+    override fun addGapLoadingId(id: ObjectId) {
+
+    }
+
+    override fun removeGapLoadingId(id: ObjectId) {
+
     }
 
     fun updateOptions() {

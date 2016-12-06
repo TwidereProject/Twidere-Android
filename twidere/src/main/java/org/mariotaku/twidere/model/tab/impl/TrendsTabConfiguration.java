@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.fragment.TrendsSuggestionsFragment;
-import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
+import org.mariotaku.twidere.model.tab.TabConfiguration;
 
 /**
  * Created by mariotaku on 2016/11/27.
@@ -23,7 +23,7 @@ public class TrendsTabConfiguration extends TabConfiguration {
     @NonNull
     @Override
     public DrawableHolder getIcon() {
-        return DrawableHolder.Builtin.TRENDS;
+        return DrawableHolder.Builtin.HASHTAG;
     }
 
     @AccountFlags
