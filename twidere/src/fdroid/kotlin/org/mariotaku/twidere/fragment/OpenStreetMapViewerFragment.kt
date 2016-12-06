@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.content.Context
 import android.graphics.Point
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -58,7 +57,7 @@ class OpenStreetMapViewerFragment : BaseSupportFragment(), Constants {
         mapView.isTilesScaledToDpi = true
         val gp = GeoPoint(latitude, longitude)
         val d = ResourcesCompat.getDrawable(resources, R.drawable.ic_map_marker, null)!!
-        val markers = Itemization(context, d)
+        val markers = Itemization(d)
         val overlayItem = OverlayItem("", "", gp)
         markers.addOverlay(overlayItem)
         mapView.overlays.add(markers)
@@ -90,7 +89,9 @@ class OpenStreetMapViewerFragment : BaseSupportFragment(), Constants {
         mc.animateTo(gp)
     }
 
-    internal class Itemization(context: Context, defaultMarker: Drawable) : ItemizedOverlay<OverlayItem>(context, OpenStreetMapViewerFragment.Itemization.boundCenterBottom(defaultMarker)) {
+    internal class Itemization(defaultMarker: Drawable) : ItemizedOverlay<OverlayItem>(defaultMarker.apply {
+        setBounds(-intrinsicWidth / 2, -intrinsicHeight, intrinsicWidth / 2, 0)
+    }) {
 
         private val overlays = ArrayList<OverlayItem>()
 
@@ -109,14 +110,6 @@ class OpenStreetMapViewerFragment : BaseSupportFragment(), Constants {
 
         override fun createItem(i: Int): OverlayItem {
             return overlays[i]
-        }
-
-        companion object {
-
-            private fun boundCenterBottom(d: Drawable): Drawable {
-                d.setBounds(-d.intrinsicWidth / 2, -d.intrinsicHeight, d.intrinsicWidth / 2, 0)
-                return d
-            }
         }
 
     }

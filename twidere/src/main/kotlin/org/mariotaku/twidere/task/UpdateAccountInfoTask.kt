@@ -7,12 +7,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.support.v4.util.LongSparseArray
 import android.text.TextUtils
-import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_KEY
-import org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_USER
+import org.mariotaku.twidere.extension.setAccountKey
+import org.mariotaku.twidere.extension.setAccountUser
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import java.io.IOException
@@ -24,7 +23,7 @@ class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<Ac
 
     override fun doLongOperation(params: Pair<AccountDetails, ParcelableUser>): Any? {
         val resolver = context.contentResolver
-        val account = params.first
+        val details = params.first
         val user = params.second
         if (user.is_cache) {
             return null
@@ -34,14 +33,14 @@ class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<Ac
         }
 
         val am = AccountManager.get(context)
-        val account1 = Account(account.user.name, TwidereConstants.ACCOUNT_TYPE)
-        am.setUserData(account1, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
-        am.setUserData(account1, ACCOUNT_USER_DATA_KEY, user.key.toString())
+        val account = Account(details.account.name, TwidereConstants.ACCOUNT_TYPE)
+        account.setAccountUser(am, user)
+        account.setAccountKey(am, user.key)
 
         val accountKeyValues = ContentValues()
         accountKeyValues.put(AccountSupportColumns.ACCOUNT_KEY, user.key.toString())
         val accountKeyWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
-        val accountKeyWhereArgs = arrayOf(account.key.toString())
+        val accountKeyWhereArgs = arrayOf(details.key.toString())
 
         resolver.update(Statuses.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)
         resolver.update(Activities.AboutMe.CONTENT_URI, accountKeyValues, accountKeyWhere, accountKeyWhereArgs)

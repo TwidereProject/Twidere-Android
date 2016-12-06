@@ -35,8 +35,18 @@ fun Account.getAccountKey(am: AccountManager): UserKey {
     return UserKey.valueOf(am.getUserData(this, ACCOUNT_USER_DATA_KEY))
 }
 
+fun Account.setAccountKey(am: AccountManager, accountKey: UserKey) {
+    am.setUserData(this, ACCOUNT_USER_DATA_KEY, accountKey.toString())
+}
+
 fun Account.getAccountUser(am: AccountManager): ParcelableUser {
-    return LoganSquare.parse(am.getUserData(this, ACCOUNT_USER_DATA_USER), ParcelableUser::class.java)
+    val user = LoganSquare.parse(am.getUserData(this, ACCOUNT_USER_DATA_USER), ParcelableUser::class.java)
+    user.is_cache = true
+    return user
+}
+
+fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
+    am.setUserData(this, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
 }
 
 @ColorInt
