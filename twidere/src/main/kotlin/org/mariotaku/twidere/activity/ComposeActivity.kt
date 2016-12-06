@@ -81,6 +81,7 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
+import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.BackgroundOperationService
 import org.mariotaku.twidere.text.MarkForDeleteSpan
@@ -108,7 +109,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     lateinit var defaultFeatures: DefaultFeatures
 
     private var locationManager: LocationManager? = null
-    private var mTask: AsyncTask<Any, Any, *>? = null
+    private var currentTask: AsyncTask<Any, Any, *>? = null
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
     private var itemTouchHelper: ItemTouchHelper? = null
 
@@ -131,6 +132,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var textChanged: Boolean = false
     private var composeKeyMetaState: Int = 0
     private var draft: Draft? = null
+    private var draftUri: Uri? = null
 
     // Listeners
     private var mLocationListener: LocationListener? = null
@@ -142,7 +144,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (resultCode == Activity.RESULT_OK && intent != null) {
                     val src = arrayOf(intent.data)
                     val dst = arrayOf(createTempImageUri(0))
-                    mTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst,
+                    currentTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst,
                             ParcelableMedia.Type.IMAGE, true))
                 }
             }
@@ -174,10 +176,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
+
     override fun onBackPressed() {
-        if (mTask != null && mTask!!.status == AsyncTask.Status.RUNNING) return
+        if (currentTask != null && currentTask!!.status == AsyncTask.Status.RUNNING) return
         if (hasComposingStatus()) {
-            saveToDrafts()
+            draftUri = saveToDrafts()
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
             finish()
         } else {
@@ -185,9 +188,18 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+    override fun onDestroy() {
+        if (draftUri == null && hasComposingStatus()) {
+            saveToDrafts()
+            Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
+
+        }
+        super.onDestroy()
+    }
+
     protected fun discardTweet() {
-        if (isFinishing || mTask != null && mTask!!.status == AsyncTask.Status.RUNNING) return
-        mTask = AsyncTaskUtils.executeTask(DiscardTweetTask(this))
+        if (isFinishing || currentTask != null && currentTask!!.status == AsyncTask.Status.RUNNING) return
+        currentTask = AsyncTaskUtils.executeTask(DiscardTweetTask(this))
     }
 
     protected fun hasComposingStatus(): Boolean {
@@ -411,7 +423,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mediaPreviewAdapter!!.removeAll(list)
     }
 
-    fun saveToDrafts() {
+    fun saveToDrafts(): Uri {
         val text = editText.text.toString()
         val draft = Draft()
 
@@ -427,6 +439,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val values = DraftValuesCreator.create(draft)
         val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
         displayNewDraftNotification(text, draftUri)
+        return draftUri
     }
 
     fun setSelectedAccounts(vararg accounts: AccountDetails) {
@@ -1581,6 +1594,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         override fun onPreExecute() {
             val activity = activityRef.get() ?: return
+            activity.draftUri = TwidereDataStore.CONTENT_URI_EMPTY
             activity.setProgressVisible(true)
         }
     }
