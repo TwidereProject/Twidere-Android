@@ -225,7 +225,7 @@ object ParcelableStatusUtils {
 
     fun getInReplyToName(status: Status): String? {
         val inReplyToUserId = status.inReplyToUserId
-        status.userMentionEntities.firstOrNull { inReplyToUserId == it.id }?.let {
+        status.userMentionEntities?.firstOrNull { inReplyToUserId == it.id }?.let {
             return it.name
         }
         status.attentions?.firstOrNull { inReplyToUserId == it.id }?.let {
