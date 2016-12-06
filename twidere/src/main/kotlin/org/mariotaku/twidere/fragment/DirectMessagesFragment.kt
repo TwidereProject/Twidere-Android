@@ -137,7 +137,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         adapter.setShowAccountsColor(accountIds.size > 1)
         refreshEnabled = true
 
-        if (accountIds.size > 0) {
+        if (accountIds.isNotEmpty()) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
                     errorInfoStore.get(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountIds[0]))
             if (isEmpty && errorInfo != null) {
@@ -150,7 +150,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         }
     }
 
-    protected fun hasMoreData(cursor: Cursor?): Boolean {
+    private fun hasMoreData(cursor: Cursor?): Boolean {
         return cursor != null && cursor.count != 0
     }
 
@@ -265,7 +265,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         super.setUserVisibleHint(isVisibleToUser)
         val context = context
         if (isVisibleToUser && context != null) {
-            for (accountKey in accountKeys) {
+            accountKeys.forEach { accountKey ->
                 val tag = "messages_" + accountKey
                 notificationManager.cancel(tag, NOTIFICATION_ID_DIRECT_MESSAGES)
             }
@@ -282,7 +282,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         return itemDecoration
     }
 
-    protected val accountKeys: Array<UserKey>
+    private val accountKeys: Array<UserKey>
         get() {
             val args = arguments
             val accountKeys = Utils.getAccountKeys(context, args)

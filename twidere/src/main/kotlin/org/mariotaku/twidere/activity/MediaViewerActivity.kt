@@ -61,7 +61,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     @Inject
     lateinit var mMediaDownloader: MediaDownloader
 
-    private var mSaveToStoragePosition = -1
+    private var saveToStoragePosition = -1
     private var mShareMediaPosition = -1
 
 
@@ -120,8 +120,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         val adapter = viewPager.adapter
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
-        val obj = adapter.instantiateItem(viewPager, currentItem)
-        if (obj !is MediaViewerFragment) return false
+        val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
         when (item.itemId) {
             R.id.refresh -> {
                 if (obj is CacheDownloadMediaViewerFragment) {
@@ -288,14 +287,14 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         intent.getParcelableArrayExtra(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
     }
 
-    protected fun processShareIntent(intent: Intent) {
+    private fun processShareIntent(intent: Intent) {
         val status = status ?: return
         intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.getStatusShareSubject(this, status))
         intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(this, status))
     }
 
-    protected fun requestAndSaveToStorage(position: Int) {
-        mSaveToStoragePosition = position
+    private fun requestAndSaveToStorage(position: Int) {
+        saveToStoragePosition = position
         if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             saveToStorage()
         } else {
@@ -309,7 +308,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         }
     }
 
-    protected fun requestAndShareMedia(position: Int) {
+    private fun requestAndShareMedia(position: Int) {
         mShareMediaPosition = position
         if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             shareMedia()
@@ -324,12 +323,11 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         }
     }
 
-    protected fun shareMedia() {
+    private fun shareMedia() {
         if (mShareMediaPosition == -1) return
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
-        val f = adapter.instantiateItem(viewPager, mShareMediaPosition)
-        if (f !is CacheDownloadMediaViewerFragment) return
+        val f = adapter.instantiateItem(viewPager, mShareMediaPosition) as? CacheDownloadMediaViewerFragment ?: return
         val result = f.downloadResult
         if (result == null || result.cacheUri == null) {
             // TODO show error
@@ -393,12 +391,11 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         AsyncTaskUtils.executeTask<SaveFileTask, Any>(task)
     }
 
-    protected fun saveToStorage() {
-        if (mSaveToStoragePosition == -1) return
+    private fun saveToStorage() {
+        if (saveToStoragePosition == -1) return
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
-        val f = adapter.instantiateItem(viewPager, mSaveToStoragePosition)
-        if (f !is CacheDownloadMediaViewerFragment) return
+        val f = adapter.instantiateItem(viewPager, saveToStoragePosition) as? CacheDownloadMediaViewerFragment ?: return
         val result = f.downloadResult ?: return
         val cacheUri = result.cacheUri
         val hasMedia = cacheUri != null

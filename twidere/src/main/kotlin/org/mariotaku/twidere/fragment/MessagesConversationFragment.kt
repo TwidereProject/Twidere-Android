@@ -561,14 +561,12 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
     private fun setupEditQuery() {
         val queryEnterHandler = EditTextEnterHandler.attach(actionBarCustomView.editUserQuery, object : EnterListener {
             override fun shouldCallListener(): Boolean {
-                val activity = activity
-                if (activity !is BaseActivity) return false
+                val activity = activity as? BaseActivity ?: return false
                 return activity.keyMetaState == 0
             }
 
             override fun onHitEnter(): Boolean {
-                val activity = activity
-                if (activity !is BaseActivity) return false
+                val activity = activity as? BaseActivity ?: return false
                 if (activity.keyMetaState != 0) return false
                 val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails
                 editText.accountKey = account.key
@@ -619,7 +617,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
         editText.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                textChanged = s.length == 0
+                textChanged = s.isEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {

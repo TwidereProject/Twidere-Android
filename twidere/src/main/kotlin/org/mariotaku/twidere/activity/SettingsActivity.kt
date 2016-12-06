@@ -218,7 +218,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         openDetails(position)
     }
 
-    protected fun openDetails(position: Int) {
+    private fun openDetails(position: Int) {
         if (isFinishing) return
         val entry = mEntriesAdapter!!.getItem(position) as? PreferenceEntry ?: return
         val fm = supportFragmentManager
@@ -252,38 +252,38 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         return false
     }
 
-    internal class EntriesAdapter(private val mContext: Context) : BaseAdapter() {
-        private val mInflater: LayoutInflater
-        private val mEntries: MutableList<Entry>
+    internal class EntriesAdapter(context: Context) : BaseAdapter() {
+        private val inflater: LayoutInflater
+        private val entries: MutableList<Entry>
 
         init {
-            mInflater = LayoutInflater.from(mContext)
-            mEntries = ArrayList<Entry>()
+            inflater = LayoutInflater.from(context)
+            entries = ArrayList<Entry>()
         }
 
         fun addPreference(tag: String, @DrawableRes icon: Int, title: String, @XmlRes preference: Int) {
-            mEntries.add(PreferenceEntry(tag, icon, title, preference, null, null))
+            entries.add(PreferenceEntry(tag, icon, title, preference, null, null))
             notifyDataSetChanged()
         }
 
 
-        @JvmOverloads fun addPreference(tag: String, @DrawableRes icon: Int, title: String, cls: Class<out Fragment>,
-                                        args: Bundle? = null) {
-            mEntries.add(PreferenceEntry(tag, icon, title, 0, cls.name, args))
+        fun addPreference(tag: String, @DrawableRes icon: Int, title: String, cls: Class<out Fragment>,
+                          args: Bundle? = null) {
+            entries.add(PreferenceEntry(tag, icon, title, 0, cls.name, args))
             notifyDataSetChanged()
         }
 
         fun addHeader(title: String) {
-            mEntries.add(HeaderEntry(title))
+            entries.add(HeaderEntry(title))
             notifyDataSetChanged()
         }
 
         override fun getCount(): Int {
-            return mEntries.size
+            return entries.size
         }
 
         override fun getItem(position: Int): Entry {
-            return mEntries[position]
+            return entries[position]
         }
 
         override fun getItemId(position: Int): Long {
@@ -311,16 +311,13 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val viewType = getItemViewType(position)
             val entry = getItem(position)
-            val view: View
-            if (convertView != null) {
-                view = convertView
-            } else {
+            val view: View = convertView ?: let {
                 when (viewType) {
                     VIEW_TYPE_PREFERENCE_ENTRY -> {
-                        view = mInflater.inflate(R.layout.list_item_preference_header_item, parent, false)
+                        return@let inflater.inflate(R.layout.list_item_preference_header_item, parent, false)
                     }
                     VIEW_TYPE_HEADER_ENTRY -> {
-                        view = mInflater.inflate(R.layout.list_item_preference_header_category, parent, false)
+                        return@let inflater.inflate(R.layout.list_item_preference_header_category, parent, false)
                     }
                     else -> {
                         throw UnsupportedOperationException()

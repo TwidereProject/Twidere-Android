@@ -116,8 +116,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
 
     // Adapters
-    private var mediaPreviewAdapter: MediaPreviewAdapter? = null
-    private var accountsAdapter: AccountIconsAdapter? = null
+    private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
+    private lateinit var accountsAdapter: AccountIconsAdapter
 
     // Data fields
     private var recentLocation: ParcelableLocation? = null
@@ -197,12 +197,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         super.onDestroy()
     }
 
-    protected fun discardTweet() {
+    private fun discardTweet() {
         if (isFinishing || currentTask != null && currentTask!!.status == AsyncTask.Status.RUNNING) return
         currentTask = AsyncTaskUtils.executeTask(DiscardTweetTask(this))
     }
 
-    protected fun hasComposingStatus(): Boolean {
+    private fun hasComposingStatus(): Boolean {
         val text = if (editText != null) ParseUtils.parseString(editText.text) else null
         val textChanged = text != null && !text.isEmpty() && text != originalText
         val isEditingDraft = INTENT_ACTION_EDIT_DRAFT == intent.action
@@ -210,7 +210,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter!!.selectedAccountKeys)
+        outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter.selectedAccountKeys)
         outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList<Parcelable>(mediaList))
         outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, possiblySensitive)
         outState.putParcelable(EXTRA_STATUS, inReplyToStatus)
@@ -336,11 +336,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     try {
                         val action = intent.action
                         if (INTENT_ACTION_EXTENSION_COMPOSE == action) {
-                            val accountKeys = accountsAdapter!!.selectedAccountKeys
+                            val accountKeys = accountsAdapter.selectedAccountKeys
                             intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
                             intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
-                            if (accountKeys.size > 0) {
-                                val accountKey = accountKeys[0]
+                            if (accountKeys.isNotEmpty()) {
+                                val accountKey = accountKeys.first()
                                 intent.putExtra(EXTRA_NAME, DataStoreUtils.getAccountName(this, accountKey))
                                 intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(this, accountKey))
                             }
@@ -420,7 +420,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     fun removeAllMedia(list: List<ParcelableMediaUpdate>) {
-        mediaPreviewAdapter!!.removeAll(list)
+        mediaPreviewAdapter.removeAll(list)
     }
 
     fun saveToDrafts(): Uri {
@@ -428,7 +428,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val draft = Draft()
 
         draft.action_type = getDraftAction(intent.action)
-        draft.account_keys = accountsAdapter!!.selectedAccountKeys
+        draft.account_keys = accountsAdapter.selectedAccountKeys
         draft.text = text
         draft.media = media
         draft.location = recentLocation
@@ -537,7 +537,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelector.itemAnimator = DefaultItemAnimator()
         accountsAdapter = AccountIconsAdapter(this)
         accountSelector.adapter = accountsAdapter
-        accountsAdapter!!.setAccounts(accounts)
+        accountsAdapter.setAccounts(accounts)
 
 
         val adapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
@@ -557,7 +557,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (savedInstanceState != null) {
             // Restore from previous saved state
             val selected = savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
-            accountsAdapter!!.setSelectedAccountIds(*selected)
+            accountsAdapter.setSelectedAccountIds(*selected)
             possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
             if (mediaList != null) {
@@ -580,15 +580,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 handleDefaultIntent(intent)
             }
             setLabel(intent)
-            val selectedAccountIds = accountsAdapter!!.selectedAccountKeys
+            val selectedAccountIds = accountsAdapter.selectedAccountKeys
             if (ArrayUtils.isEmpty(selectedAccountIds)) {
                 val idsInPrefs: Array<UserKey> = UserKey.arrayOf(preferences.getString(KEY_COMPOSE_ACCOUNTS, null)) ?: emptyArray()
                 val intersection: Array<UserKey> = defaultAccountIds.intersect(listOf(*idsInPrefs)).toTypedArray()
 
                 if (intersection.isEmpty()) {
-                    accountsAdapter!!.setSelectedAccountIds(*defaultAccountIds)
+                    accountsAdapter.setSelectedAccountIds(*defaultAccountIds)
                 } else {
-                    accountsAdapter!!.setSelectedAccountIds(*intersection)
+                    accountsAdapter.setSelectedAccountIds(*intersection)
                 }
             }
             originalText = ParseUtils.parseString(editText.text)
@@ -642,7 +642,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             when (menuInfo.recyclerViewId) {
                 R.id.attachedMediaPreview -> {
                     val position = menuInfo.position
-                    val mediaUpdate = mediaPreviewAdapter!!.getItem(position)
+                    val mediaUpdate = mediaPreviewAdapter.getItem(position)
                     val args = Bundle()
                     args.putString(EXTRA_TEXT, mediaUpdate.alt_text)
                     args.putInt(EXTRA_POSITION, position)
@@ -684,7 +684,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
 
             override fun afterTextChanged(s: Editable) {
-                textChanged = s.length == 0
+                textChanged = s.isEmpty()
                 val deletes = s.getSpans(0, s.length, MarkForDeleteSpan::class.java)
                 for (delete in deletes) {
                     s.delete(s.getSpanStart(delete), s.getSpanEnd(delete))
@@ -730,17 +730,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun addMedia(media: ParcelableMediaUpdate) {
-        mediaPreviewAdapter!!.add(media)
+        mediaPreviewAdapter.add(media)
         updateAttachedMediaView()
     }
 
     private fun addMedia(media: List<ParcelableMediaUpdate>) {
-        mediaPreviewAdapter!!.addAll(media)
+        mediaPreviewAdapter.addAll(media)
         updateAttachedMediaView()
     }
 
     private fun clearMedia() {
-        mediaPreviewAdapter!!.clear()
+        mediaPreviewAdapter.clear()
         updateAttachedMediaView()
     }
 
@@ -770,7 +770,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         get() = mediaList.toTypedArray()
 
     private val mediaList: List<ParcelableMediaUpdate>
-        get() = mediaPreviewAdapter!!.asList
+        get() = mediaPreviewAdapter.asList
 
     private fun handleDefaultIntent(intent: Intent?): Boolean {
         if (intent == null) return false
@@ -778,11 +778,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val hasAccountIds: Boolean
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
             val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
-            accountsAdapter!!.setSelectedAccountIds(*accountKeys)
+            accountsAdapter.setSelectedAccountIds(*accountKeys)
             hasAccountIds = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
             val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter!!.setSelectedAccountIds(accountKey)
+            accountsAdapter.setSelectedAccountIds(accountKey)
             hasAccountIds = true
         } else {
             hasAccountIds = false
@@ -833,7 +833,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(draft.text)
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        accountsAdapter!!.setSelectedAccountIds(*draft.account_keys ?: emptyArray())
+        accountsAdapter.setSelectedAccountIds(*draft.account_keys ?: emptyArray())
         if (draft.media != null) {
             addMedia(Arrays.asList(*draft.media))
         }
@@ -942,7 +942,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(String.format("@%s ", user.screen_name))
         val selection_end = editText.length()
         editText.setSelection(selection_end)
-        accountsAdapter!!.setSelectedAccountIds(user.account_key)
+        accountsAdapter.setSelectedAccountIds(user.account_key)
         return true
     }
 
@@ -950,7 +950,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status == null) return false
         editText.setText(Utils.getQuoteStatus(this, status))
         editText.setSelection(0)
-        accountsAdapter!!.setSelectedAccountIds(status.account_key)
+        accountsAdapter.setSelectedAccountIds(status.account_key)
         showQuoteLabel(status)
         return true
     }
@@ -999,12 +999,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             mentions.add(status.quoted_user_screen_name)
         }
         if (!ArrayUtils.isEmpty(status.mentions)) {
-            for (mention in status.mentions) {
-                if (mention.key == status.account_key || TextUtils.isEmpty(mention.screen_name)) {
-                    continue
-                }
-                mentions.add(mention.screen_name)
-            }
+            status.mentions
+                    .filterNot { it.key == status.account_key || it.screen_name.isNullOrEmpty() }
+                    .mapTo(mentions) { it.screen_name }
             mentions.addAll(extractor.extractMentionedScreennames(status.quoted_text_plain))
         } else if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             addFanfouHtmlToMentions(status.text_unescaped, status.spans, mentions)
@@ -1018,15 +1015,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         }
 
-        for (mention in mentions) {
-            if (mention.equals(status.user_screen_name, ignoreCase = true) || mention.equals(account.user.screen_name, ignoreCase = true)) {
-                continue
-            }
-            editText.append("@$mention ")
-        }
+        mentions.filterNot { it.equals(status.user_screen_name, ignoreCase = true) || it.equals(account.user.screen_name, ignoreCase = true) }
+                .forEach { editText.append("@$it ") }
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
-        accountsAdapter!!.setSelectedAccountIds(status.account_key)
+        accountsAdapter.setSelectedAccountIds(status.account_key)
         showReplyLabel(status)
         return true
     }
@@ -1046,23 +1039,19 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountId: UserKey?,
                                           inReplyToStatus: ParcelableStatus): Boolean {
-        if (screenNames == null || screenNames.size == 0 || accountId == null) return false
+        if (screenNames == null || screenNames.isEmpty() || accountId == null) return false
         val myScreenName = DataStoreUtils.getAccountScreenName(this, accountId)
         if (TextUtils.isEmpty(myScreenName)) return false
-        for (screenName in screenNames) {
-            if (screenName.equals(myScreenName, ignoreCase = true)) {
-                continue
-            }
-            editText.append("@$screenName ")
-        }
+        screenNames.filterNot { it.equals(myScreenName, ignoreCase = true) }
+                .forEach { editText.append("@$it ") }
         editText.setSelection(editText.length())
-        accountsAdapter!!.setSelectedAccountIds(accountId)
+        accountsAdapter.setSelectedAccountIds(accountId)
         this.inReplyToStatus = inReplyToStatus
         return true
     }
 
     private fun hasMedia(): Boolean {
-        return mediaPreviewAdapter!!.itemCount > 0
+        return mediaPreviewAdapter.itemCount > 0
     }
 
     private val isQuote: Boolean
@@ -1083,7 +1072,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun notifyAccountSelectionChanged() {
-        val accounts = accountsAdapter!!.selectedAccounts
+        val accounts = accountsAdapter.selectedAccounts
         setSelectedAccounts(*accounts)
         if (ArrayUtils.isEmpty(accounts)) {
             editText.accountKey = Utils.getDefaultAccountKey(this)
@@ -1104,7 +1093,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (!shouldSaveAccounts) return
         val editor = preferences.edit()
 
-        editor.putString(KEY_COMPOSE_ACCOUNTS, accountsAdapter!!.selectedAccountKeys.joinToString(","))
+        editor.putString(KEY_COMPOSE_ACCOUNTS, accountsAdapter.selectedAccountKeys.joinToString(","))
         editor.apply()
     }
 
@@ -1132,7 +1121,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private val scheduleSupported: Boolean
         get() {
-            val accounts = accountsAdapter!!.selectedAccounts
+            val accounts = accountsAdapter.selectedAccounts
             if (ArrayUtils.isEmpty(accounts)) return false
             return false
         }
@@ -1265,7 +1254,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val text = if (editText != null) ParseUtils.parseString(editText.text) else null
         val tweetLength = validator.getTweetLength(text)
         val maxLength = statusTextCount.maxLength
-        if (accountsAdapter!!.isSelectionEmpty) {
+        if (accountsAdapter.isSelectionEmpty) {
             editText.error = getString(R.string.no_account_selected)
             return
         } else if (!hasMedia && (TextUtils.isEmpty(text) || noReplyContent(text))) {
@@ -1279,7 +1268,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
         val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
-        val accountKeys = accountsAdapter!!.selectedAccountKeys
+        val accountKeys = accountsAdapter.selectedAccountKeys
         val isPossiblySensitive = hasMedia && possiblySensitive
         val update = ParcelableStatusUpdate()
         @Draft.Action val action = draft?.action_type ?: getDraftAction(intent.action)
@@ -1573,17 +1562,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             this.media = activity.mediaList
         }
 
-        override fun doInBackground(vararg params: Any): Unit {
-            for (item in media) {
-                val uri = Uri.parse(item.uri)
-                if (ContentResolver.SCHEME_FILE == uri.scheme) {
-                    val file = File(uri.path)
-                    if (!file.delete()) {
-                        Log.d(LOGTAG, String.format("Unable to delete %s", file))
-                    }
+        override fun doInBackground(vararg params: Any) {
+            media.map { Uri.parse(it.uri) }.filter { ContentResolver.SCHEME_FILE == it.scheme }.forEach { uri ->
+                val file = File(uri.path)
+                if (!file.delete()) {
+                    Log.d(LOGTAG, String.format("Unable to delete %s", file))
                 }
             }
-            return Unit
         }
 
         override fun onPostExecute(result: Unit) {
@@ -1794,7 +1779,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun setMediaAltText(position: Int, altText: String?) {
-        mediaPreviewAdapter!!.setAltText(position, altText)
+        mediaPreviewAdapter.setAltText(position, altText)
     }
 
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {

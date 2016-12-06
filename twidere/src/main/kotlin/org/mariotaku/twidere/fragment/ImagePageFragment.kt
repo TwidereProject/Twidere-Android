@@ -129,7 +129,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         super.onDownloadFinished(nonce)
         if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
             mediaDownloadEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<MediaDownloadEvent>(accountKey, mediaDownloadEvent!!)
+            HotMobiLogger.getInstance(context).log(accountKey, mediaDownloadEvent!!)
             mediaDownloadEvent = null
         }
     }

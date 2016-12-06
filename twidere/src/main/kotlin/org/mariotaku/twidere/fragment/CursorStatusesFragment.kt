@@ -102,10 +102,10 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     private fun showContentOrError() {
         val accountKeys = accountKeys
-        val adapter = adapter
-        if (adapter!!.itemCount > 0) {
+        val adapter = adapter!!
+        if (adapter.itemCount > 0) {
             showContent()
-        } else if (accountKeys.size > 0) {
+        } else if (accountKeys.isNotEmpty()) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
                     errorInfoStore.get(errorInfoKey, accountKeys[0]))
             if (errorInfo != null) {
@@ -173,7 +173,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
         if (position and ILoadMoreSupportAdapter.START !== 0L) return
-        super.onLoadMoreContents(position.toLong())
+        super.onLoadMoreContents(position)
         if (position == 0L) return
         getStatuses(object : SimpleRefreshTaskParam() {
             override fun getAccountKeysWorker(): Array<UserKey> {

@@ -136,7 +136,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     override fun onLoadMoreContents(position: Long) {
         // Only supports load from end, skip START flag
         if (position and ILoadMoreSupportAdapter.START != 0L) return
-        super.onLoadMoreContents(position.toLong())
+        super.onLoadMoreContents(position)
         if (position == 0L) return
         val adapter = adapter ?: return
         val maxId = adapter.getStatusId(adapter.statusCount - 1)

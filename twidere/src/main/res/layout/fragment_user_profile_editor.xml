@@ -156,13 +156,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
-                    android:singleLine="true"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/name"
                     app:met_maxCharacters="20"
                     app:met_primaryColor="?colorAccent"
-                    tools:text="TwidereProject"/>
+                    tools:text="TwidereProject"
+                    android:maxLines="1"/>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/editDescription"
@@ -170,7 +170,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
                     android:minLines="4"
-                    android:singleLine="false"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/description"
@@ -183,26 +182,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPostalAddress"
-                    android:singleLine="true"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/location"
                     app:met_maxCharacters="30"
                     app:met_primaryColor="?colorAccent"
-                    tools:text="Earth"/>
+                    tools:text="Earth"
+                    android:maxLines="1"/>
 
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/editUrl"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textUri"
-                    android:singleLine="true"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
                     app:met_floatingLabelText="@string/url"
                     app:met_maxCharacters="100"
                     app:met_primaryColor="?colorAccent"
-                    tools:text="https://github.com/TwidereProject/"/>
+                    tools:text="https://github.com/TwidereProject/"
+                    android:maxLines="1"/>
             </LinearLayout>
 
             <Space

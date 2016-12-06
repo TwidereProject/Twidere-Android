@@ -515,10 +515,8 @@ abstract class AbsStatusesFragment protected constructor() :
         val status = adapter.getStatus(position) ?: return
         val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
         readPositionTagWithArguments?.let {
-            for (accountKey in accountKeys) {
-                val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
-                readStateManager.setPosition(tag, positionKey)
-            }
+            accountKeys.map { accountKey -> Utils.getReadPositionTagWithAccount(it, accountKey) }
+                    .forEach { readStateManager.setPosition(it, positionKey) }
         }
         currentReadPositionTag?.let {
             readStateManager.setPosition(it, positionKey, true)

@@ -12,7 +12,6 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
 import org.mariotaku.twidere.annotation.Referral;
-import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableUser;
 
 /**

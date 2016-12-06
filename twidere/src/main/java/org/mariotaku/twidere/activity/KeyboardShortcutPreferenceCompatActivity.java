@@ -86,7 +86,7 @@ public class KeyboardShortcutPreferenceCompatActivity extends BaseActivity imple
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if (KeyEvent.isModifierKey(keyCode)) {
             mMetaState |= KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode);
         }

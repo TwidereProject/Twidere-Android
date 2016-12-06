@@ -27,7 +27,6 @@ import org.mariotaku.twidere.activity.MediaViewerActivity;
 import org.mariotaku.twidere.annotation.Referral;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment;
-import org.mariotaku.twidere.fragment.UserFragment;
 import org.mariotaku.twidere.model.ParcelableDirectMessage;
 import org.mariotaku.twidere.model.ParcelableGroup;
 import org.mariotaku.twidere.model.ParcelableMedia;
@@ -80,11 +79,7 @@ public class IntentUtils implements Constants {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityCompat.startActivity(context, intent, activityOptions);
     }
 
     public static void openUserProfile(@NonNull final Context context, @Nullable final UserKey accountKey,
@@ -96,11 +91,7 @@ public class IntentUtils implements Constants {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityCompat.startActivity(context, intent, activityOptions);
     }
 
     public static Intent userProfile(@Nullable UserKey accountKey, UserKey userKey, String screenName,
@@ -266,11 +257,7 @@ public class IntentUtils implements Constants {
         if (newDocument && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         }
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, options);
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityCompat.startActivity(context, intent, options);
     }
 
     public static Uri getMediaViewerUri(@NonNull final String type, final String id,
@@ -412,11 +399,7 @@ public class IntentUtils implements Constants {
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
         intent.setExtrasClassLoader(context.getClassLoader());
         intent.putExtras(extras);
-        if (context instanceof Activity) {
-            ActivityCompat.startActivity((Activity) context, intent, activityOptions);
-        } else {
-            context.startActivity(intent);
-        }
+        ActivityCompat.startActivity(context, intent, activityOptions);
     }
 
     public static void openStatusFavoriters(@NonNull final Context context, @Nullable final UserKey accountKey,
@@ -429,7 +412,7 @@ public class IntentUtils implements Constants {
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
+        ActivityCompat.startActivity(context, intent, null);
     }
 
     public static void openStatusRetweeters(@NonNull final Context context, @Nullable final UserKey accountKey,
@@ -442,7 +425,7 @@ public class IntentUtils implements Constants {
         }
         builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, statusId);
         final Intent intent = new Intent(Intent.ACTION_VIEW, builder.build());
-        context.startActivity(intent);
+        ActivityCompat.startActivity(context, intent, null);
     }
 
     public static void openTweetSearch(@NonNull final Context context, @Nullable final UserKey accountKey,

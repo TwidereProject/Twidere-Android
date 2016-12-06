@@ -52,8 +52,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
--    googleCompile 'com.google.android.gms:play-services-maps:10.0.0'
--    googleCompile 'com.google.android.gms:play-services-auth:10.0.0'
+-    googleCompile 'com.google.android.gms:play-services-maps:10.0.1'
+-    googleCompile 'com.google.android.gms:play-services-auth:10.0.1'
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'

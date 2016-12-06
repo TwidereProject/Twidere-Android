@@ -439,7 +439,7 @@ public final class Utils implements Constants {
             throws MicroBlogException {
         final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
         if (cached != null) return cached;
-        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey);
         if (twitter == null) throw new MicroBlogException("Account does not exist");
         final Status result = twitter.showStatus(statusId);
         final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),

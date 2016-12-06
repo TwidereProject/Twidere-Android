@@ -78,8 +78,7 @@ open class BaseListFragment : ListFragment(), OnScrollListener, RefreshScrollTop
 
     val tabPosition: Int
         get() {
-            val args = arguments
-            return if (args != null) args.getInt(EXTRA_TAB_POSITION, -1) else -1
+            return arguments?.getInt(EXTRA_TAB_POSITION, -1) ?: -1
         }
 
     fun invalidateOptionsMenu() {

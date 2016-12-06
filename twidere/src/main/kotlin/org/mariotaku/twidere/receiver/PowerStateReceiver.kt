@@ -17,27 +17,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.receiver;
+package org.mariotaku.twidere.receiver
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 
-import edu.tsinghua.hotmobi.model.BatteryRecord;
+import edu.tsinghua.hotmobi.model.BatteryRecord
 
 /**
  * Created by mariotaku on 15/9/29.
  */
-public class PowerStateReceiver extends BroadcastReceiver {
-    private static boolean serviceReceiverStarted;
+class PowerStateReceiver : BroadcastReceiver() {
 
-    public static void setServiceReceiverStarted(boolean started) {
-        PowerStateReceiver.serviceReceiverStarted = started;
+    override fun onReceive(context: Context, intent: Intent) {
+        when (intent.action) {
+            Intent.ACTION_BATTERY_LOW, Intent.ACTION_BATTERY_OKAY, Intent.ACTION_POWER_CONNECTED,
+            Intent.ACTION_POWER_DISCONNECTED -> {
+                if (serviceReceiverStarted) return
+                BatteryRecord.log(context)
+            }
+        }
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (serviceReceiverStarted) return;
-        BatteryRecord.log(context);
+    companion object {
+        var serviceReceiverStarted: Boolean = false
     }
 }

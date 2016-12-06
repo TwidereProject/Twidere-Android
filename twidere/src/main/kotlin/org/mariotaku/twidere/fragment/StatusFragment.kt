@@ -136,25 +136,26 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
     // Listeners
     private val conversationsLoaderCallback = object : LoaderCallbacks<List<ParcelableStatus>> {
         override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>> {
-            adapter!!.isRepliesLoading = true
-            adapter!!.isConversationsLoading = true
-            adapter!!.updateItemDecoration()
-            val status = args.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+            val adapter = this@StatusFragment.adapter!!
+            adapter.isRepliesLoading = true
+            adapter.isConversationsLoading = true
+            adapter.updateItemDecoration()
+            val status: ParcelableStatus = args.getParcelable(EXTRA_STATUS)
             val maxId = args.getString(EXTRA_MAX_ID)
             val sinceId = args.getString(EXTRA_SINCE_ID)
             val maxSortId = args.getLong(EXTRA_MAX_SORT_ID)
             val sinceSortId = args.getLong(EXTRA_SINCE_SORT_ID)
             val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-            assert(status != null)
-            val loader = ConversationLoader(activity, status!!, sinceId,
-                    maxId, sinceSortId, maxSortId, adapter!!.getData(), true, loadingMore)
+            val loader = ConversationLoader(activity, status, sinceId, maxId, sinceSortId, maxSortId,
+                    adapter.getData(), true, loadingMore)
             // Setting comparator to null lets statuses sort ascending
             loader.comparator = null
             return loader
         }
 
         override fun onLoadFinished(loader: Loader<List<ParcelableStatus>>, data: List<ParcelableStatus>?) {
-            adapter!!.updateItemDecoration()
+            val adapter = this@StatusFragment.adapter!!
+            adapter.updateItemDecoration()
             val conversationLoader = loader as ConversationLoader
             var supportedPositions: Long = 0
             if (data != null && !data.isEmpty()) {
@@ -171,21 +172,16 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     supportedPositions = supportedPositions or ILoadMoreSupportAdapter.START
                 }
             }
-            adapter!!.loadMoreSupportedPosition = supportedPositions
+            adapter.loadMoreSupportedPosition = supportedPositions
             setConversation(data)
             val canLoadAllReplies = loader.canLoadAllReplies()
             if (canLoadAllReplies) {
-                adapter!!.setReplyError(null)
+                adapter.setReplyError(null)
             } else {
                 val error = SpannableStringBuilder.valueOf(
                         HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)))
-                var dialogSpan: ClickableSpan? = null
-                for (span in error.getSpans(0, error.length, URLSpan::class.java)) {
-                    if ("#dialog" == span.url) {
-                        dialogSpan = span
-                        break
-                    }
-                }
+                val dialogSpan: ClickableSpan? = error.getSpans(0, error.length, URLSpan::class.java)
+                        .firstOrNull { "#dialog" == it.url }
                 if (dialogSpan != null) {
                     val spanStart = error.getSpanStart(dialogSpan)
                     val spanEnd = error.getSpanEnd(dialogSpan)
@@ -200,10 +196,10 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                         }
                     }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                 }
-                adapter!!.setReplyError(error)
+                adapter.setReplyError(error)
             }
-            adapter!!.isConversationsLoading = false
-            adapter!!.isRepliesLoading = false
+            adapter.isConversationsLoading = false
+            adapter.isRepliesLoading = false
         }
 
         override fun onLoaderReset(loader: Loader<List<ParcelableStatus>>) {
@@ -564,7 +560,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         val context = this.context ?: return
         if (status != null) {
             val event = TranslateEvent.create(context, status, translation.translatedLang)
-            HotMobiLogger.getInstance(context).log(status.account_key, event);
+            HotMobiLogger.getInstance(context).log(status.account_key, event)
         }
     }
 
@@ -706,8 +702,8 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun doInBackground(vararg params: ParcelableStatus): SingleResponse<TranslationResult> {
             val status = params[0]
-            val twitter = MicroBlogAPIFactory.getInstance(context, status.account_key,
-                    true)
+            val twitter = MicroBlogAPIFactory.getInstance(context, status.account_key
+            )
             val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                     Context.MODE_PRIVATE)
             if (twitter == null) return SingleResponse.Companion.getInstance<TranslationResult>()
@@ -1260,7 +1256,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     return counts!!.size
                 }
 
-            protected val usersCount: Int
+            private val usersCount: Int
                 get() {
                     if (users == null) return 0
                     return users!!.size
@@ -1546,7 +1542,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun getStatusTimestamp(position: Int): Long {
             val status = getStatus(position)
-            return if (status != null) status.timestamp else -1
+            return status?.timestamp ?: -1
         }
 
         override fun getStatusPositionKey(position: Int): Long {
@@ -1563,11 +1559,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             if (status != null && accountKey == status!!.account_key && TextUtils.equals(statusId, status!!.id)) {
                 return status
             }
-            for (status in Nullables.list(data)) {
-                if (accountKey == status.account_key && TextUtils.equals(status.id, statusId))
-                    return status
-            }
-            return null
+            return data?.firstOrNull { accountKey == it.account_key && TextUtils.equals(it.id, statusId) }
         }
 
         override val statusCount: Int
@@ -2071,7 +2063,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             if (AccountType.TWITTER != details.type) {
                 return null
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey, false) ?: return null
+            val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey) ?: return null
             val paging = Paging()
             paging.setCount(10)
             val activitySummary = StatusActivity(mStatusId, emptyList())

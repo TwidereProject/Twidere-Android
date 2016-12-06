@@ -105,5 +105,6 @@ public interface Constants extends TwidereConstants {
     @Preference(type = STRING, exportable = false)
     String KEY_DEVICE_SERIAL = "device_serial";
 
+    @SuppressWarnings("SpellCheckingInspection")
     String GOOGLE_APIS_SERVER_CLIENT_ID = "223623398518-1p34hsndj7couh2c9c2f8909amh9euhf.apps.googleusercontent.com";
 }

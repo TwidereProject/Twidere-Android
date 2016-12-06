@@ -104,8 +104,8 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
                 val cache = extras.getParcelable<ParcelableGroup>(EXTRA_GROUP)
                 if (cache != null) return SingleResponse.getInstance(cache)
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey,
-                    true) ?: return SingleResponse.getInstance<ParcelableGroup>()
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey
+            ) ?: return SingleResponse.getInstance<ParcelableGroup>()
             try {
                 val group: Group
                 if (groupId != null) {

@@ -43,9 +43,9 @@
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?android:textColorPrimary" />
+        android:textColor="?android:textColorPrimary"
+        android:maxLines="1"/>
 
     <CheckBox
         android:id="@android:id/checkbox"

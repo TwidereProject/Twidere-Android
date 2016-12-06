@@ -302,9 +302,7 @@ public class ShapedImageView extends ImageView {
             BitmapDrawable bitmapDrawable = null;
             // support state list drawable by getting the current state
             if (drawable instanceof StateListDrawable) {
-                if (drawable.getCurrent() != null) {
-                    bitmapDrawable = (BitmapDrawable) drawable.getCurrent();
-                }
+                bitmapDrawable = (BitmapDrawable) drawable.getCurrent();
             } else if (drawable instanceof BitmapDrawable) {
                 bitmapDrawable = (BitmapDrawable) drawable;
             } else if (drawable instanceof ColorDrawable) {

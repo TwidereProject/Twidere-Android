@@ -25,7 +25,7 @@ import org.mariotaku.twidere.view.holder.UserViewHolder
 /**
  * Created by mariotaku on 15/4/16.
  */
-interface IUsersAdapter<Data> : IContentCardAdapter {
+interface IUsersAdapter<in Data> : IContentCardAdapter {
 
     val userCount: Int
 

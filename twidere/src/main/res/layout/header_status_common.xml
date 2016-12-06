@@ -27,7 +27,8 @@
     android:clipChildren="false"
     android:focusable="true"
     android:orientation="vertical"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    tools:ignore="Overdraw">
 
     <TextView
         android:id="@+id/retweetedBy"
@@ -40,11 +41,11 @@
         android:gravity="center_vertical"
         android:minHeight="@dimen/element_size_small"
         android:padding="@dimen/element_spacing_normal"
-        android:singleLine="true"
         android:tag="font_family|user"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        tools:text="Retweeted by Mariotaku"/>
+        tools:text="Retweeted by Mariotaku"
+        android:maxLines="1"/>
 
     <org.mariotaku.twidere.view.ColorLabelRelativeLayout
         android:id="@+id/profileContainer"
@@ -185,11 +186,11 @@
             android:drawableStart="@drawable/ic_indicator_web"
             android:gravity="center_vertical"
             android:padding="@dimen/element_spacing_normal"
-            android:singleLine="true"
             android:tag="font_family|user"
             android:text="@string/unknown_language"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:textColorSecondary"/>
+            android:textColor="?android:textColorSecondary"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/translateResult"
@@ -343,7 +344,6 @@
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:ellipsize="end"
                 android:maxLines="4"
-                android:singleLine="false"
                 android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="?android:textColorPrimary"

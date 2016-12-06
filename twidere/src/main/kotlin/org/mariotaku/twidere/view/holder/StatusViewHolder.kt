@@ -545,9 +545,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     private fun hasVideo(media: Array<ParcelableMedia?>?): Boolean {
         if (media == null) return false
-        for (item in media) {
-            if (item == null) continue
-            when (item.type) {
+        media.filterNotNull().forEach {
+            when (it.type) {
                 ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF, ParcelableMedia.Type.EXTERNAL_PLAYER -> return true
             }
         }

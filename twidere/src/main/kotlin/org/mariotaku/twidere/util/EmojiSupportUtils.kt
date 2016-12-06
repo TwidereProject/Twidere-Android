@@ -105,7 +105,7 @@ object EmojiSupportUtils {
                     continue
                 }
                 var spans = text.getSpans(textIdx + textIdxOffset, textEnd, EmojiSpan::class.java)
-                if (spans.size == 0) {
+                if (spans.isEmpty()) {
                     var drawable: Drawable? = emoji.getEmojiDrawableFor(*array[arrayIdx + arrayIdxOffset..arrayEnd])
                     if (drawable == null) {
                         // Not emoji combination, just use fallback
@@ -113,7 +113,7 @@ object EmojiSupportUtils {
                         arrayIdxOffset = 0
                         skippedIndex = 0
                         spans = text.getSpans(textIdx + textIdxOffset, textEnd, EmojiSpan::class.java)
-                        if (spans.size == 0) {
+                        if (spans.isEmpty()) {
                             drawable = emoji.getEmojiDrawableFor(*array[arrayIdx + arrayIdxOffset..arrayEnd])
                         }
                     }

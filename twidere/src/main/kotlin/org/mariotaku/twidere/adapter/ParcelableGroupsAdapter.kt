@@ -70,7 +70,7 @@ class ParcelableGroupsAdapter(context: Context) : LoadMoreSupportAdapter<Recycle
         notifyDataSetChanged()
     }
 
-    protected fun bindGroup(holder: GroupViewHolder, position: Int) {
+    private fun bindGroup(holder: GroupViewHolder, position: Int) {
         holder.displayGroup(getGroup(position))
     }
 

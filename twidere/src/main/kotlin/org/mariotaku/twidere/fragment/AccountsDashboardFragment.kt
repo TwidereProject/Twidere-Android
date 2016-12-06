@@ -267,13 +267,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             noAccountContainer.visibility = View.VISIBLE
             profileContainer.visibility = View.INVISIBLE
         }
-        var defaultId: UserKey? = null
-        for (account in accounts) {
-            if (account.activated) {
-                defaultId = account.key
-                break
-            }
-        }
+        val defaultId: UserKey? = accounts.firstOrNull { it.activated }?.convert { it.key }
         useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
 
         accountsAdapter!!.accounts = accounts
@@ -496,7 +490,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     }
 
-    protected fun displayAccountBanner(account: AccountDetails) {
+    private fun displayAccountBanner(account: AccountDetails) {
         val bannerWidth = accountProfileBanner.width
         val res = resources
         val defWidth = res.displayMetrics.widthPixels

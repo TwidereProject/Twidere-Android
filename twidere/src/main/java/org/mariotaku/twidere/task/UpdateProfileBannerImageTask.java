@@ -65,8 +65,8 @@ public class UpdateProfileBannerImageTask<ResultHandler> extends AbstractTask<Ob
     @Override
     protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
         try {
-            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey,
-                    true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey
+            );
             TwitterWrapper.updateProfileBannerImage(mContext, twitter, mImageUri, mDeleteImage);
             // Wait for 5 seconds, see
             // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image

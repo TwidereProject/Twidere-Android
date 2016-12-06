@@ -45,7 +45,6 @@
                 android:focusable="true"
                 android:hint="@string/comment_hint"
                 android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                android:singleLine="false"
                 android:visibility="visible">
 
                 <requestFocus/>

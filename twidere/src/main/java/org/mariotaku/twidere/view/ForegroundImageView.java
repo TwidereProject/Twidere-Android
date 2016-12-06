@@ -103,7 +103,7 @@ public class ForegroundImageView extends ImageView implements IForegroundView {
     }
 
     @Override
-    protected boolean verifyDrawable(final Drawable who) {
+    protected boolean verifyDrawable(@NonNull final Drawable who) {
         return super.verifyDrawable(who) || (mForegroundViewHelper != null && mForegroundViewHelper.verifyDrawable(who));
     }
 

@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/host_mapping_host"
         android:inputType="text|textUri"
-        android:singleLine="true"/>
+        android:maxLines="1"/>
 
     <EditText
         android:id="@+id/address"
@@ -46,6 +46,6 @@
         android:layout_marginTop="16dp"
         android:hint="@string/host_mapping_address"
         android:inputType="text|textUri"
-        android:singleLine="true"/>
+        android:maxLines="1"/>
 
 </LinearLayout>

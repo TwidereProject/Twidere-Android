@@ -15,7 +15,7 @@ fun AccountDetails.isOfficial(context: Context): Boolean {
     val credentials = this.credentials
     if (credentials is OAuthCredentials) {
         return TwitterContentUtils.isOfficialKey(context,
-                credentials.consumer_key, credentials.consumer_secret);
+                credentials.consumer_key, credentials.consumer_secret)
     }
     return false
 }

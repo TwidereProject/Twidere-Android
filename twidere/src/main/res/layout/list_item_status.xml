@@ -60,13 +60,13 @@
         android:ellipsize="end"
         android:gravity="center_vertical|start"
         android:minHeight="@dimen/element_size_small"
-        android:singleLine="true"
         android:tag="font_family|user"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone"
         tools:text="Retweeted by Mariotaku"
         tools:textSize="@dimen/text_size_extra_small"
-        tools:visibility="visible"/>
+        tools:visibility="visible"
+        android:maxLines="1"/>
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"
@@ -386,10 +386,10 @@
                 android:focusable="false"
                 android:gravity="center"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:singleLine="true"
                 android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
+                tools:text="255"
+                android:maxLines="1"/>
         </LinearLayout>
 
         <LinearLayout
@@ -425,10 +425,10 @@
                 android:focusable="false"
                 android:gravity="center"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:singleLine="true"
                 android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
+                tools:text="255"
+                android:maxLines="1"/>
 
         </LinearLayout>
 
@@ -465,10 +465,10 @@
                 android:focusable="false"
                 android:gravity="center"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:singleLine="true"
                 android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
-                tools:text="255"/>
+                tools:text="255"
+                android:maxLines="1"/>
         </LinearLayout>
     </LinearLayout>
 

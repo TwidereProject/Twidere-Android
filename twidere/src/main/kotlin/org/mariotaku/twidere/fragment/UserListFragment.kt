@@ -414,8 +414,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
                 val cache = extras.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
                 if (cache != null) return SingleResponse.Companion.getInstance(cache)
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey,
-                    true) ?: return SingleResponse.Companion.getInstance<ParcelableUserList>()
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey
+            ) ?: return SingleResponse.Companion.getInstance<ParcelableUserList>()
             try {
                 val list: UserList
                 when {

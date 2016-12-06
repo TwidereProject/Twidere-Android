@@ -36,8 +36,8 @@ class SavedSearchesLoader(
 ) : AsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
 
     override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId,
-                false) ?: return null
+        val twitter = MicroBlogAPIFactory.getInstance(context, accountId
+        ) ?: return null
         try {
             return twitter.savedSearches
         } catch (e: MicroBlogException) {

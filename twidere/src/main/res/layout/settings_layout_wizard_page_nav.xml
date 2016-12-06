@@ -23,7 +23,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:padding="@dimen/element_spacing_large">
+    android:padding="@dimen/element_spacing_large"
+    tools:ignore="Overdraw">
 
     <org.mariotaku.twidere.view.WizardHighlightTextView
         android:id="@android:id/title"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:fontFamily="sans-serif-condensed"
-        android:singleLine="true"
+        android:maxLines="1"
         android:tag="text_color|accent_color"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="@dimen/text_size_wizard_nav_item"

@@ -49,8 +49,8 @@
                     android:background="?android:panelColorBackground"
                     android:ellipsize="end"
                     android:padding="@dimen/element_spacing_normal"
-                    android:singleLine="true"
-                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
+                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"
+                    android:maxLines="1"/>
 
                 <View
                     android:id="@+id/replyLabelDivider"
@@ -68,7 +68,6 @@
                     android:inputType="textMultiLine|textLongMessage|textCapSentences"
                     android:minLines="@integer/default_compose_min_lines"
                     android:padding="@dimen/element_spacing_normal"
-                    android:singleLine="false"
                     tools:minLines="@integer/media_compose_min_lines"/>
 
                 <org.mariotaku.twidere.view.ExtendedRecyclerView
@@ -116,8 +115,8 @@
                         android:layout_toStartOf="@+id/locationSwitch"
                         android:paddingLeft="@dimen/element_spacing_normal"
                         android:paddingRight="@dimen/element_spacing_normal"
-                        android:singleLine="true"
-                        tools:text="11.4, 51.4"/>
+                        tools:text="11.4, 51.4"
+                        android:maxLines="1"/>
 
                     <org.mariotaku.twidere.view.ThemedMultiValueSwitch
                         android:id="@+id/locationSwitch"

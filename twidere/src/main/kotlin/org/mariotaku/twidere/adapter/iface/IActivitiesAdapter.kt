@@ -26,7 +26,7 @@ import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 /**
  * Created by mariotaku on 14/11/18.
  */
-interface IActivitiesAdapter<Data> : IContentCardAdapter, IGapSupportedAdapter {
+interface IActivitiesAdapter<in Data> : IContentCardAdapter, IGapSupportedAdapter {
 
     val activityCount: Int
 

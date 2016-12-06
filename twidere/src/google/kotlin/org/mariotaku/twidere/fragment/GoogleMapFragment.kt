@@ -134,7 +134,7 @@ class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFr
         actionHelper.executeAfterFragmentResumed(action)
     }
 
-    protected fun fitSystemWindows(insets: Rect) {
+    private fun fitSystemWindows(insets: Rect) {
         val view = view
         view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
     }

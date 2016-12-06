@@ -473,7 +473,8 @@
             android:label="@string/label_background_operation_service"/>
         <service
             android:name=".service.AccountAuthenticatorService"
-            android:exported="true">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -484,7 +485,8 @@
         <service
             android:name=".service.AccountSyncService"
             android:exported="true"
-            android:process=":sync">
+            android:process=":sync"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>

@@ -70,6 +70,7 @@ public abstract class AbsFriendshipOperationTask extends AbstractTask<AbsFriends
         event.setFinished(true);
         if (result.hasData()) {
             final ParcelableUser user = result.getData();
+            assert user != null;
             showSucceededMessage(params, user);
             event.setSucceeded(true);
             event.setUser(result.getData());

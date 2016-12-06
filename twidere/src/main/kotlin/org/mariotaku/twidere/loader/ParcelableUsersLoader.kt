@@ -47,10 +47,7 @@ abstract class ParcelableUsersLoader(
     }
 
     protected fun hasId(id: String): Boolean {
-        for (i in this.data.indices) {
-            if (TextUtils.equals(this.data[i].key.id, id)) return true
-        }
-        return false
+        return data.indices.any { TextUtils.equals(data[it].key.id, id) }
     }
 
 }

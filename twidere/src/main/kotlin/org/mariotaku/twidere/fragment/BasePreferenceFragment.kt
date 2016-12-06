@@ -89,7 +89,7 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
 
             val existingValue = preference.value // TODO
             if (existingValue != null) {
-                if (existingValue.length == 0) {
+                if (existingValue.isEmpty()) {
                     // Select "Silent"
                     intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, null as Uri)
                 } else {

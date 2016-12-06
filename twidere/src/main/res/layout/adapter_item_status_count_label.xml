@@ -20,18 +20,18 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/element_spacing_small"
         android:layout_marginRight="@dimen/element_spacing_small"
-        android:singleLine="true"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold"
-        tools:text="255"/>
+        tools:text="255"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
-        tools:text="Count"/>
+        tools:text="Count"
+        android:maxLines="1"/>
 </LinearLayout>

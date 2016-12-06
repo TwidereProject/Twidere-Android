@@ -256,6 +256,7 @@ public class BrowserSignInActivity extends BaseActivity {
             mActivity.setLoadProgressShown(false);
             if (result.hasData()) {
                 final OAuthToken token = result.getData();
+                assert token != null;
                 mActivity.setRequestToken(token);
                 final Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat, true);
                 mActivity.loadUrl(endpoint.construct("/oauth/authorize", new String[]{"oauth_token", token.getOauthToken()}));

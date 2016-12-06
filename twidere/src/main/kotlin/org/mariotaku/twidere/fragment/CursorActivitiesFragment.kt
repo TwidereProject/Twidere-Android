@@ -55,7 +55,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         val adapter = adapter
         if (adapter!!.itemCount > 0) {
             showContent()
-        } else if (accountKeys.size > 0) {
+        } else if (accountKeys.isNotEmpty()) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
                     errorInfoStore.get(errorInfoKey, accountKeys[0]))
             if (errorInfo != null) {
@@ -158,7 +158,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
         if (position and ILoadMoreSupportAdapter.START !== 0L || refreshing) return
-        super.onLoadMoreContents(position.toLong())
+        super.onLoadMoreContents(position)
         if (position == 0L) return
         getActivities(object : SimpleRefreshTaskParam() {
             override fun getAccountKeysWorker(): Array<UserKey> {
@@ -268,9 +268,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                     continue@loop
                 }
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
-                for (statusesArray in statusesMatrix) {
-                    if (statusesArray == null) continue
-                    for (status in statusesArray) {
+                statusesMatrix.filterNotNull().forEach { statuses ->
+                    for (status in statuses) {
                         if (result.id == status.id || result.id == status.retweet_id
                                 || result.id == status.my_retweet_id) {
                             status.is_favorite = result.is_favorite

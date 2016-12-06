@@ -71,7 +71,7 @@ class VariousItemsAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerVie
         return getItemViewType(getItem(position))
     }
 
-    protected fun getItemViewType(obj: Any): Int {
+    private fun getItemViewType(obj: Any): Int {
         if (obj is ParcelableStatus) {
             return VIEW_TYPE_STATUS
         } else if (obj is ParcelableUser) {

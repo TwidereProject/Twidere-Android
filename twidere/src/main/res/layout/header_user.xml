@@ -289,18 +289,18 @@
                         android:id="@+id/followersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="?android:textColorPrimary"
-                        tools:text="255"/>
+                        tools:text="255"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:text="@string/followers"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"/>
+                        android:textColor="?android:textColorSecondary"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -318,18 +318,18 @@
                         android:id="@+id/friendsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="?android:textColorPrimary"
-                        tools:text="255"/>
+                        tools:text="255"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:text="@string/following"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"/>
+                        android:textColor="?android:textColorSecondary"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -347,18 +347,18 @@
                         android:id="@+id/listedCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="?android:textColorPrimary"
-                        tools:text="255"/>
+                        tools:text="255"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:text="@string/listed"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"/>
+                        android:textColor="?android:textColorSecondary"
+                        android:maxLines="1"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -376,18 +376,18 @@
                         android:id="@+id/groupsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="?android:textColorPrimary"
-                        tools:text="255"/>
+                        tools:text="255"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:text="@string/groups"
                         android:textAppearance="?android:textAppearanceSmall"
-                        android:textColor="?android:textColorSecondary"/>
+                        android:textColor="?android:textColorSecondary"
+                        android:maxLines="1"/>
                 </LinearLayout>
             </LinearLayout>
 

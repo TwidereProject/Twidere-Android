@@ -13,11 +13,11 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
 /**
  * Created by mariotaku on 2016/12/5.
  */
-class StringExtraConfiguration(key: String, private val def: String) : TabConfiguration.ExtraConfiguration(key) {
+class StringExtraConfiguration(key: String, private val def: String?) : TabConfiguration.ExtraConfiguration(key) {
     var maxLines: Int = 0
 
-    var value: String
-        get() = editText.text.toString()
+    var value: String?
+        get() = editText.text?.toString()
         set(value) = editText.setText(value)
 
     private lateinit var editText: EditText

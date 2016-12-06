@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:inputType="textEmailAddress"
-                android:singleLine="true"
-                android:typeface="normal"/>
+                android:typeface="normal"
+                android:maxLines="1"/>
 
             <EditText
                 android:id="@+id/editPassword"
@@ -54,8 +54,8 @@
                 android:layout_marginTop="8dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:singleLine="true"
-                android:typeface="normal"/>
+                android:typeface="normal"
+                android:maxLines="1"/>
         </LinearLayout>
 
         <LinearLayout

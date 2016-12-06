@@ -259,7 +259,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                         mUserAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
                     } else {
                         val adapter = ComposeAutoCompleteAdapter(activity)
-                        adapter.setAccountKey(Utils.getDefaultAccountKey(activity))
+                        adapter.accountKey = Utils.getDefaultAccountKey(activity)
                         mUserAutoCompleteAdapter = adapter
                     }
                     editText.setAdapter(mUserAutoCompleteAdapter)
@@ -269,7 +269,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             return dialog
         }
 
-        protected val text: String
+        private val text: String
             get() {
                 val alertDialog = dialog as AlertDialog
                 val editText = (alertDialog.findViewById(R.id.edit_text) as AutoCompleteTextView?)!!

@@ -4,7 +4,6 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import java.util.*
 
 /**
  * Processing ParcelableActivity
@@ -28,16 +27,16 @@ object ParcelableActivityUtils {
         if (activity.sources == null) return false
         if (activity.after_filtered_source_ids != null) return false
         if (followingOnly || filteredUserIds.isNotEmpty()) {
-            val list = ArrayList<UserKey>()
-            for (user in activity.sources) {
+            val list = activity.sources.filter { user ->
                 if (followingOnly && !user.is_following) {
-                    continue
+                    return@filter false
                 }
 
                 if (!filteredUserIds.contains(user.key)) {
-                    list.add(user.key)
+                    return@filter true
                 }
-            }
+                return@filter false
+            }.map { it.key }
             activity.after_filtered_source_ids = list.toTypedArray()
             return true
         } else {
@@ -51,7 +50,7 @@ object ParcelableActivityUtils {
         if (activity.after_filtered_source_ids == null || activity.sources.size == activity.after_filtered_source_ids.size) {
             return activity.sources
         }
-        val result = Array<ParcelableUser>(activity.after_filtered_source_ids.size) { idx ->
+        val result = Array(activity.after_filtered_source_ids.size) { idx ->
             return@Array activity.sources.find { it.key == activity.after_filtered_source_ids[idx] }!!
         }
         activity.after_filtered_sources = result

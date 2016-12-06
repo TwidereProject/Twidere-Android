@@ -56,9 +56,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                 statuses = twitter.getMentionsTimeline(paging)
             }
         }
-        for (status in statuses) {
-            activities.add(Activity.fromMention(details.key.id, status))
-        }
+        statuses.mapTo(activities) { Activity.fromMention(details.key.id, it) }
         return activities
     }
 

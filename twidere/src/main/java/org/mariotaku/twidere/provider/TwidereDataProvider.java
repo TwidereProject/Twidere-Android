@@ -139,7 +139,6 @@ import org.mariotaku.twidere.util.UriExtraUtils;
 import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
-import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.net.TwidereDns;

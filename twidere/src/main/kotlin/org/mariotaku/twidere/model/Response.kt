@@ -24,7 +24,7 @@ import android.os.Bundle
 /**
  * Created by mariotaku on 15/10/11.
  */
-interface Response<Data> {
+interface Response<out Data> {
     val data: Data?
 
     val exception: Exception?

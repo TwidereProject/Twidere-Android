@@ -62,20 +62,20 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
-            tools:text="List"/>
+            tools:text="List"
+            android:maxLines="1"/>
 
         <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/createdBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="Created by user"/>
+            tools:text="Created by user"
+            android:maxLines="1"/>
     </LinearLayout>
 
     <TextView
@@ -106,8 +106,8 @@
             android:drawableLeft="@drawable/ic_indicator_following"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_following"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/subscribersCount"
@@ -117,8 +117,8 @@
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:maxLines="1"/>
     </LinearLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

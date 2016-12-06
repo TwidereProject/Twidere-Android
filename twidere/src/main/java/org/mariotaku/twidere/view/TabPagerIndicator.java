@@ -167,8 +167,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         mIndicatorAdapter.setStripColor(color);
     }
 
-    @DisplayOption
-    public void setTabDisplayOption(int flags) {
+    public void setTabDisplayOption(@DisplayOption int flags) {
         mOption = flags;
     }
 

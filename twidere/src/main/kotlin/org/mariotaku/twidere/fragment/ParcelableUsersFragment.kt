@@ -49,7 +49,7 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.util.RecyclerViewNavigationHelper
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>,
+abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<ParcelableUsersAdapter>(),
         LoaderCallbacks<List<ParcelableUser>?>, UserClickListener, KeyboardShortcutCallback,
         IUsersAdapter.FriendshipClickListener {
 
@@ -57,7 +57,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     private var navigationHelper: RecyclerViewNavigationHelper? = null
 
-    protected constructor() {
+    init {
         usersBusCallback = createMessageBusCallback()
     }
 

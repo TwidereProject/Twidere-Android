@@ -31,10 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/element_spacing_normal"
-        android:singleLine="true"
         android:tag="text_color|accent_color"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="@dimen/text_size_wizard_title"/>
+        android:textSize="@dimen/text_size_wizard_title"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@android:id/summary"

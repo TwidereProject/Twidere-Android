@@ -46,7 +46,7 @@ public abstract class GetTrendsTask extends AbstractTask<Object, Object, Object>
 
     @Override
     public Object doLongOperation(final Object param) {
-        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountId, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountId);
         if (twitter == null) return null;
         try {
             final List<Trends> trends = getTrends(twitter);

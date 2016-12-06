@@ -62,16 +62,16 @@
                         android:id="@+id/nameView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:maxLines="1"/>
 
                     <TextView
                         android:id="@+id/descriptionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textAppearance="?android:attr/textAppearanceSmall"/>
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:maxLines="1"/>
                 </LinearLayout>
             </LinearLayout>
 

@@ -43,7 +43,7 @@ class CacheUsersStatusesTask(private val context: Context) : AbstractTask<Twitte
             var idx = bulkIdx
             val end = Math.min(totalSize, bulkIdx + ContentResolverUtils.MAX_BULK_COUNT)
             while (idx < end) {
-                val status = list.get(idx)
+                val status = list[idx]
 
                 val usersValues = HashSet<ContentValues>()
                 val statusesValues = HashSet<ContentValues>()
@@ -51,17 +51,17 @@ class CacheUsersStatusesTask(private val context: Context) : AbstractTask<Twitte
 
                 val accountKey = params.accountKey
                 statusesValues.add(ContentValuesCreator.createStatus(status, accountKey))
-                val text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.getExtendedText())
+                val text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.extendedText)
                 for (hashtag in extractor.extractHashtags(text)) {
                     val values = ContentValues()
                     values.put(CachedHashtags.NAME, hashtag)
                     hashTagValues.add(values)
                 }
-                val cachedUser = ContentValuesCreator.createCachedUser(status.getUser())
+                val cachedUser = ContentValuesCreator.createCachedUser(status.user)
                 cachedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis())
                 usersValues.add(cachedUser)
-                if (status.isRetweet()) {
-                    val cachedRetweetedUser = ContentValuesCreator.createCachedUser(status.getRetweetedStatus().getUser())
+                if (status.isRetweet) {
+                    val cachedRetweetedUser = ContentValuesCreator.createCachedUser(status.retweetedStatus.user)
                     cachedRetweetedUser.put(CachedUsers.LAST_SEEN, System.currentTimeMillis())
                     usersValues.add(cachedRetweetedUser)
                 }

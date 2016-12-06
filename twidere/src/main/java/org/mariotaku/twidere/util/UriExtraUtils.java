@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.List;
@@ -33,8 +34,7 @@ public class UriExtraUtils {
     private UriExtraUtils() {
     }
 
-    @Nullable
-    public static void addExtra(Uri.Builder builder, String key, Object value) {
+    public static void addExtra(@NonNull Uri.Builder builder, String key, Object value) {
         builder.appendQueryParameter(QUERY_PARAM_EXTRA, key + "=" + String.valueOf(value));
     }
 

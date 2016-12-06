@@ -222,7 +222,7 @@ class UpdateStatusTask(
 
         for (i in 0 until pendingUpdate.length) {
             val account = statusUpdate.accounts[i]
-            val microBlog = MicroBlogAPIFactory.getInstance(context, account.key, true)
+            val microBlog = MicroBlogAPIFactory.getInstance(context, account.key)
             var bodyAndSize: Pair<Body, Point>? = null
             try {
                 when (account.type) {

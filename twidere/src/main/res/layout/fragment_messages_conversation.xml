@@ -126,7 +126,6 @@
                         android:hint="@string/type_to_compose"
                         android:inputType="textShortMessage|textMultiLine|textCapSentences"
                         android:maxHeight="140dp"
-                        android:singleLine="false"
                         android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="?android:textColorPrimary"
                         android:textColorHint="?android:textColorTertiary">

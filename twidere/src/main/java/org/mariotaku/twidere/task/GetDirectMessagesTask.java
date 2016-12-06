@@ -71,7 +71,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
         int idx = 0;
         final int loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT);
         for (final UserKey accountKey : accountKeys) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey);
             if (twitter == null) continue;
             try {
                 final Paging paging = new Paging();

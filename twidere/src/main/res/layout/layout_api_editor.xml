@@ -48,9 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:singleLine="true"
                 android:text="@string/api_url_format"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:maxLines="1"/>
 
             <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/apiUrlFormatHelp"
@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textUri"
-            android:singleLine="true"
-            tools:text="https://api.twitter.com/"/>
+            tools:text="https://api.twitter.com/"
+            android:maxLines="1"/>
 
         <TextView
             android:id="@+id/labelAuthType"

@@ -56,7 +56,7 @@ abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScroll
             val pageLimit = viewPager.offscreenPageLimit
             val currentItem = viewPager.currentItem
             val count = pagerAdapter!!.count
-            for (i in 0..count - 1) {
+            for (i in 0 until count) {
                 if (i > currentItem - pageLimit - 1 || i < currentItem + pageLimit) {
                     val obj = pagerAdapter!!.instantiateItem(viewPager, i)
                     if (obj is IBaseFragment) {
@@ -105,8 +105,7 @@ abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScroll
     }
 
     override fun scrollToStart(): Boolean {
-        val fragment = currentVisibleFragment
-        if (fragment !is RefreshScrollTopInterface) return false
+        val fragment = currentVisibleFragment as? RefreshScrollTopInterface ?: return false
         fragment.scrollToStart()
         return true
     }

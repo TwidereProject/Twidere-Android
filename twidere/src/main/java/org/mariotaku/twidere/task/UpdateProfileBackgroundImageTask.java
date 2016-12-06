@@ -69,8 +69,8 @@ public class UpdateProfileBackgroundImageTask<ResultHandler> extends AbstractTas
     @Override
     protected SingleResponse<ParcelableUser> doLongOperation(final Object params) {
         try {
-            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey,
-                    true);
+            final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, mAccountKey
+            );
             TwitterWrapper.updateProfileBackgroundImage(mContext, twitter, mImageUri, mTile,
                     mDeleteImage);
             // Wait for 5 seconds, see

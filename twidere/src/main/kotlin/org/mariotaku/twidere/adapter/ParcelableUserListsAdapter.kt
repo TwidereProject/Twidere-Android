@@ -70,7 +70,7 @@ class ParcelableUserListsAdapter(context: Context) : LoadMoreSupportAdapter<Recy
         return true
     }
 
-    protected fun bindUserList(holder: UserListViewHolder, position: Int) {
+    private fun bindUserList(holder: UserListViewHolder, position: Int) {
         holder.displayUserList(getUserList(position))
     }
 

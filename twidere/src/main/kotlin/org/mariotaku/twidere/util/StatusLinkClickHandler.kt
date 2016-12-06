@@ -49,12 +49,9 @@ open class StatusLinkClickHandler(context: Context, manager: MultiSelectManager,
 
         fun findByLink(media: Array<ParcelableMedia>?, link: String?): ParcelableMedia? {
             if (link == null || media == null) return null
-            for (mediaItem in media) {
-                if (link == mediaItem.media_url || link == mediaItem.url ||
-                        link == mediaItem.page_url || link == mediaItem.preview_url)
-                    return mediaItem
+            return media.firstOrNull {
+                link == it.media_url || link == it.url || link == it.page_url || link == it.preview_url
             }
-            return null
         }
     }
 }

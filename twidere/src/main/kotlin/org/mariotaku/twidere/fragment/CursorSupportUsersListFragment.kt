@@ -65,7 +65,7 @@ abstract class CursorSupportUsersListFragment : ParcelableUsersFragment() {
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
         if (position and ILoadMoreSupportAdapter.START !== 0L) return
-        super.onLoadMoreContents(position.toLong())
+        super.onLoadMoreContents(position)
         if (position == 0L) return
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)

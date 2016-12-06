@@ -46,10 +46,7 @@ abstract class ParcelableStatusesLoader(
     }
 
     protected fun containsStatus(statusId: String): Boolean {
-        for (status in this.data) {
-            if (TextUtils.equals(status.id, statusId)) return true
-        }
-        return false
+        return data.any { TextUtils.equals(it.id, statusId) }
     }
 
     protected fun deleteStatus(statuses: MutableList<ParcelableStatus>?, statusId: String): Boolean {

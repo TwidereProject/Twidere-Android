@@ -38,11 +38,11 @@ data class SingleResponse<Data>(
     companion object {
 
         fun <T> getInstance(): SingleResponse<T> {
-            return SingleResponse<T>(null, null)
+            return SingleResponse(null, null)
         }
 
         fun <T> getInstance(exception: Exception): SingleResponse<T> {
-            return SingleResponse<T>(null, exception)
+            return SingleResponse(null, exception)
         }
 
         fun <T> getInstance(data: T): SingleResponse<T> {

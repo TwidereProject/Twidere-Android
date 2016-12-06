@@ -117,7 +117,6 @@
         android:layout_toStartOf="@+id/time"
         android:gravity="center_vertical"
         android:minHeight="@dimen/element_size_small"
-        android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"
         tools:text="User and 15 others favorited your tweet."/>
@@ -137,7 +136,6 @@
         android:layout_alignLeft="@+id/title"
         android:layout_alignStart="@+id/title"
         android:layout_below="@+id/title"
-        android:singleLine="false"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"
         tools:text="@string/sample_status_text"

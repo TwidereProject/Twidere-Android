@@ -26,7 +26,6 @@ import android.widget.CompoundButton
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper

@@ -43,7 +43,6 @@ import android.widget.AdapterView.OnItemClickListener
 import com.afollestad.appthemeengine.ATEActivity
 import com.afollestad.appthemeengine.Config
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
-import kotlinx.android.synthetic.main.layout_actionbar_message_user_picker.view.*
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import kotlinx.android.synthetic.main.list_item_section_header.view.*
 import org.mariotaku.ktextension.Bundle

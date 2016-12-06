@@ -71,7 +71,7 @@ public class TwitterWrapper implements Constants {
 
     public static SingleResponse<Boolean> deleteProfileBannerImage(final Context context,
                                                                    final UserKey accountKey) {
-        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false);
+        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey);
         if (twitter == null) return SingleResponse.Companion.getInstance(false);
         try {
             twitter.removeProfileBannerImage();

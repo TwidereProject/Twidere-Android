@@ -2,7 +2,6 @@ package org.mariotaku.twidere.model.util
 
 import android.text.Spannable
 import android.text.Spanned
-import android.text.TextUtils
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
@@ -175,20 +174,16 @@ object ParcelableStatusUtils {
         val inReplyToUserId = status.inReplyToUserId ?: return null
         val entities = status.userMentionEntities
         if (entities != null) {
-            for (entity in entities) {
-                if (TextUtils.equals(inReplyToUserId, entity.id)) {
-                    return UserKey(inReplyToUserId, accountKey.host)
-                }
+            if (entities.any { inReplyToUserId == it.id }) {
+                return UserKey(inReplyToUserId, accountKey.host)
             }
         }
         val attentions = status.attentions
         if (attentions != null) {
-            for (attention in attentions) {
-                if (TextUtils.equals(inReplyToUserId, attention.id)) {
-                    val host = UserKeyUtils.getUserHost(attention.ostatusUri,
-                            accountKey.host)
-                    return UserKey(inReplyToUserId, host)
-                }
+            attentions.firstOrNull { inReplyToUserId == it.id }?.let {
+                val host = UserKeyUtils.getUserHost(it.ostatusUri,
+                        accountKey.host)
+                return UserKey(inReplyToUserId, host)
             }
         }
         return UserKey(inReplyToUserId, accountKey.host)
@@ -225,24 +220,16 @@ object ParcelableStatusUtils {
     }
 
     private fun getTime(date: Date?): Long {
-        return if (date != null) date.time else 0
+        return date?.time ?: 0
     }
 
     fun getInReplyToName(status: Status): String? {
         val inReplyToUserId = status.inReplyToUserId
-        val entities = status.userMentionEntities
-        if (entities != null) {
-            for (entity in entities) {
-                if (TextUtils.equals(inReplyToUserId, entity.id)) return entity.name
-            }
+        status.userMentionEntities.firstOrNull { inReplyToUserId == it.id }?.let {
+            return it.name
         }
-        val attentions = status.attentions
-        if (attentions != null) {
-            for (attention in attentions) {
-                if (TextUtils.equals(inReplyToUserId, attention.id)) {
-                    return attention.fullName
-                }
-            }
+        status.attentions?.firstOrNull { inReplyToUserId == it.id }?.let {
+            return it.fullName
         }
         return status.inReplyToScreenName
     }

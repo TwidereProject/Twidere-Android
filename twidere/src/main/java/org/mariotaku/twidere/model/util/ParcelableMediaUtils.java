@@ -259,8 +259,9 @@ public class ParcelableMediaUtils {
             case ParcelableMedia.Type.CARD_ANIMATED_GIF:
             case ParcelableMedia.Type.EXTERNAL_PLAYER:
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public static ParcelableMedia findByUrl(@Nullable ParcelableMedia[] media, @Nullable String url) {

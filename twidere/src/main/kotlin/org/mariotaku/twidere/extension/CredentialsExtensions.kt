@@ -104,7 +104,7 @@ fun <T> Credentials.newMicroBlogInstance(context: Context,
                                          extraRequestParams: Map<String, String>? = null,
                                          cls: Class<T>): T {
     return newMicroBlogInstance(context, getAuthorization(), getEndpoint(cls),
-            twitterExtraQueries, extraRequestParams, cls);
+            twitterExtraQueries, extraRequestParams, cls)
 }
 
 fun <T> newMicroBlogInstance(context: Context,

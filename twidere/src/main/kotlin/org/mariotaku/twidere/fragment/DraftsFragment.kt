@@ -214,7 +214,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                         continue@loop
                     }
                     val accountId = item.account_keys!![0]
-                    val imageUri = if (item.media != null && item.media.size > 0) item.media[0].uri else null
+                    val imageUri = item.media?.firstOrNull()?.uri
                     twitterWrapper.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri)
                 }
             }
@@ -307,7 +307,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                     f.dismiss()
                 }
             }
-            for (id in ids) {
+            ids.forEach { id ->
                 val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, id.toString()).toString()
                 notificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS)
             }

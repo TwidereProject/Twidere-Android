@@ -70,8 +70,7 @@ open class ContentScrollHandler(
         if (contentListSupport is Fragment) {
             if (contentListSupport.context == null) return
         }
-        val adapter = contentListSupport.adapter
-        if (adapter !is ILoadMoreSupportAdapter) return
+        val adapter = contentListSupport.adapter as? ILoadMoreSupportAdapter ?: return
         if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
                 && adapter.loadMoreIndicatorPosition == ILoadMoreSupportAdapter.NONE) {
             var position: Long = 0

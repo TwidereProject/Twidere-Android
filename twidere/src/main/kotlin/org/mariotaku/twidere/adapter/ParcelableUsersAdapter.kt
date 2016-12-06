@@ -67,7 +67,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
         return true
     }
 
-    protected fun bindUser(holder: UserViewHolder, position: Int) {
+    private fun bindUser(holder: UserViewHolder, position: Int) {
         holder.displayUser(getUser(position)!!)
     }
 
@@ -111,8 +111,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
         }
 
     fun removeUserAt(position: Int): Boolean {
-        val data = this.data
-        if (data !is MutableList) return false
+        val data = this.data as? MutableList ?: return false
         val dataPosition = position - userStartIndex
         if (dataPosition < 0 || dataPosition >= userCount) return false
         data.removeAt(dataPosition)
@@ -121,8 +120,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     }
 
     fun setUserAt(position: Int, user: ParcelableUser): Boolean {
-        val data = this.data
-        if (data !is MutableList) return false
+        val data = this.data as? MutableList ?: return false
         val dataPosition = position - userStartIndex
         if (dataPosition < 0 || dataPosition >= userCount) return false
         data[dataPosition] = user

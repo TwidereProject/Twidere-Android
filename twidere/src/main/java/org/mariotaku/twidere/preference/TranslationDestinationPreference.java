@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.text.TextUtils;
@@ -125,8 +126,9 @@ public class TranslationDestinationPreference extends Preference implements OnCl
             return -1;
         }
 
+        @NonNull
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
             final View view = super.getView(position, convertView, parent);
             final TextView text = (TextView) (view instanceof TextView ? view : view.findViewById(android.R.id.text1));
             final Language item = getItem(position);

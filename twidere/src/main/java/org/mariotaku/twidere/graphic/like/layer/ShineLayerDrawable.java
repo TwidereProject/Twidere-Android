@@ -20,7 +20,7 @@ public class ShineLayerDrawable extends AnimationLayerDrawable {
     }
 
     @Override
-    public void draw(Canvas canvas) {
+    public void draw(@NonNull Canvas canvas) {
         final ShineLayerState state = (ShineLayerState) mState;
         final float progress = getProgress();
         if (progress < 0) return;

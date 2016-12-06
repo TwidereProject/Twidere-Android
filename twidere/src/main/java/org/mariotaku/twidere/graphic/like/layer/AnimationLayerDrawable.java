@@ -3,6 +3,7 @@ package org.mariotaku.twidere.graphic.like.layer;
 import android.graphics.ColorFilter;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable;
 
@@ -61,6 +62,7 @@ public abstract class AnimationLayerDrawable extends Drawable implements LikeAni
         return mState;
     }
 
+    @NonNull
     @Override
     public Drawable mutate() {
         if (!mMutated && super.mutate() == this) {

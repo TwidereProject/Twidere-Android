@@ -168,14 +168,9 @@ class StreamingService : Service() {
             private val context: Context,
             private val account: AccountDetails
     ) : UserStreamCallback() {
-        private val resolver: ContentResolver
 
         private var statusStreamStarted: Boolean = false
         private val mentionsStreamStarted: Boolean = false
-
-        init {
-            resolver = context.contentResolver
-        }
 
         override fun onConnected() {
 
@@ -190,21 +185,23 @@ class StreamingService : Service() {
             val where = Expression.equalsArgs(DirectMessages.MESSAGE_ID).sql
             val whereArgs = arrayOf(event.id)
             for (uri in MESSAGES_URIS) {
-                resolver.delete(uri, where, whereArgs)
+                context.contentResolver.delete(uri, where, whereArgs)
             }
         }
 
         override fun onStatusDeleted(event: DeletionEvent) {
             val statusId = event.id
-            resolver.delete(Statuses.CONTENT_URI, Expression.equalsArgs(Statuses.STATUS_ID).sql,
+            context.contentResolver.delete(Statuses.CONTENT_URI, Expression.equalsArgs(Statuses.STATUS_ID).sql,
                     arrayOf(statusId))
-            resolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equalsArgs(Activities.STATUS_ID).sql,
+            context.contentResolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equalsArgs(Activities.STATUS_ID).sql,
                     arrayOf(statusId))
         }
 
         @Throws(IOException::class)
-        override fun onDirectMessage(directMessage: DirectMessage?) {
-            if (directMessage == null || directMessage.id == null) return
+        override fun onDirectMessage(directMessage: DirectMessage) {
+            if (directMessage.id == null) return
+
+            val resolver = context.contentResolver
             val where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
                     Expression.equalsArgs(DirectMessages.MESSAGE_ID)).sql
             val whereArgs = arrayOf(account.key.toString(), directMessage.id)
@@ -283,6 +280,8 @@ class StreamingService : Service() {
         }
 
         override fun onScrubGeo(userId: Long, upToStatusId: Long) {
+            val resolver = context.contentResolver
+
             val where = Expression.and(Expression.equalsArgs(Statuses.USER_KEY),
                     Expression.greaterEqualsArgs(Statuses.SORT_ID)).sql
             val whereArgs = arrayOf(userId.toString(), upToStatusId.toString())
@@ -297,6 +296,8 @@ class StreamingService : Service() {
 
         @Throws(IOException::class)
         override fun onStatus(status: Status) {
+            val resolver = context.contentResolver
+
             val values = ContentValuesCreator.createStatus(status, account.key)
             if (!statusStreamStarted) {
                 statusStreamStarted = true

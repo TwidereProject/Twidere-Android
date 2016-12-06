@@ -82,22 +82,14 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     @WorkerThread
     public static MicroBlog getDefaultTwitterInstance(final Context context, final boolean includeEntities) {
         if (context == null) return null;
-        return getDefaultTwitterInstance(context, includeEntities, true);
-    }
-
-    @WorkerThread
-    public static MicroBlog getDefaultTwitterInstance(final Context context, final boolean includeEntities,
-                                                      final boolean includeRetweets) {
-        if (context == null) return null;
         final UserKey accountKey = Utils.getDefaultAccountKey(context);
         if (accountKey == null) return null;
-        return getInstance(context, accountKey, includeEntities, includeRetweets);
+        return getInstance(context, accountKey, includeEntities, true);
     }
 
     @WorkerThread
     public static MicroBlog getInstance(@NonNull final Context context,
-                                        @NonNull final UserKey accountKey,
-                                        final boolean includeEntities) {
+                                        @NonNull final UserKey accountKey) {
         AccountManager am = AccountManager.get(context);
         Account account = AccountUtils.findByAccountKey(am, accountKey);
         if (account == null) return null;

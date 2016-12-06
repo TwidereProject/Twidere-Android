@@ -261,7 +261,7 @@ public class RefreshService extends Service implements Constants {
         screenFilter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(mPowerStateReceiver, batteryFilter);
         registerReceiver(mScreenStateReceiver, screenFilter);
-        PowerStateReceiver.setServiceReceiverStarted(true);
+        PowerStateReceiver.Companion.setServiceReceiverStarted(true);
         if (Utils.hasAutoRefreshAccounts(this)) {
             startAutoRefresh();
         } else {
@@ -271,7 +271,7 @@ public class RefreshService extends Service implements Constants {
 
     @Override
     public void onDestroy() {
-        PowerStateReceiver.setServiceReceiverStarted(false);
+        PowerStateReceiver.Companion.setServiceReceiverStarted(false);
         unregisterReceiver(mScreenStateReceiver);
         unregisterReceiver(mPowerStateReceiver);
         unregisterReceiver(mStateReceiver);

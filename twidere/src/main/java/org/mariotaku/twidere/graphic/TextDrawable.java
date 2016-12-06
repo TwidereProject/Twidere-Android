@@ -35,6 +35,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -153,7 +154,7 @@ public class TextDrawable extends Drawable {
 	}
 
 	@Override
-	public void draw(final Canvas canvas) {
+	public void draw(@NonNull final Canvas canvas) {
 		if (mTextPath == null) {
 			// Allow the layout to draw the text
 			mTextLayout.draw(canvas);

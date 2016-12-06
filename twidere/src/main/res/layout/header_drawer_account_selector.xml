@@ -93,6 +93,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/otherAccountsList"
                 android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/next_item"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_indicator_arrow_next"/>
 
@@ -105,6 +106,7 @@
                 android:layout_toEndOf="@id/profileImage"
                 android:layout_toRightOf="@id/profileImage"
                 android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/previous_item"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_indicator_arrow_prev"/>
 

@@ -22,6 +22,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 /**
  * This drawable that draws a simple white and gray chessboard pattern. It's
@@ -45,7 +46,7 @@ public class AlphaPatternDrawable extends Drawable {
     }
 
     @Override
-    public void draw(final Canvas canvas) {
+    public void draw(@NonNull final Canvas canvas) {
 
         boolean verticalStartWhite = true;
         for (int i = 0; i <= mNumRectanglesVertical; i++) {

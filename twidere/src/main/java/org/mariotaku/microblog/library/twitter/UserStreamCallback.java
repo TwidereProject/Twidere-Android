@@ -19,6 +19,7 @@
 
 package org.mariotaku.microblog.library.twitter;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -169,7 +170,7 @@ public abstract class UserStreamCallback implements RawCallback {
 
     public abstract void onStatus(Status status) throws IOException;
 
-    public abstract void onDirectMessage(DirectMessage directMessage) throws IOException;
+    public abstract void onDirectMessage(@NonNull  DirectMessage directMessage) throws IOException;
 
     public abstract void onBlock(User source, User blockedUser);
 

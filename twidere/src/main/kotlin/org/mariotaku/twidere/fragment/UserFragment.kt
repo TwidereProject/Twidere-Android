@@ -311,7 +311,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
 
         task {
-            val resolver = contentResolver;
+            val resolver = contentResolver
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
             resolver.insert(CachedRelationships.CONTENT_URI, ParcelableRelationshipValuesCreator.create(userRelationship))
         }
@@ -727,7 +727,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         if (userEvent != null && context != null && user != null) {
             userEvent!!.setUser(user!!)
             userEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log<UserEvent>(userEvent!!)
+            HotMobiLogger.getInstance(context).log(userEvent!!)
         }
         bus.unregister(this)
         super.onStop()
@@ -912,7 +912,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                         ProgressDialogFragment.show(fragmentManager, "get_list_progress")
                     }
                 }.then {
-                    val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key, true)
+                    val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key)
                     val paging = Paging()
                     val ownedLists = microBlog.getUserListOwnerships(paging)
                     var nextCursor = ownedLists.nextCursor
@@ -1241,15 +1241,13 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     override fun scrollToStart(): Boolean {
-        val fragment = currentVisibleFragment
-        if (fragment !is RefreshScrollTopInterface) return false
+        val fragment = currentVisibleFragment as? RefreshScrollTopInterface ?: return false
         fragment.scrollToStart()
         return true
     }
 
     override fun triggerRefresh(): Boolean {
-        val fragment = currentVisibleFragment
-        if (fragment !is RefreshScrollTopInterface) return false
+        val fragment = currentVisibleFragment as? RefreshScrollTopInterface ?: return false
         fragment.triggerRefresh()
         return true
     }
@@ -1322,8 +1320,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     }
 
     private fun setupBaseActionBar() {
-        val activity = activity
-        if (activity !is LinkHandlerActivity) return
+        val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
         val shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null)
         mActionBarBackground = ActionBarDrawable(shadow!!)
@@ -1544,7 +1541,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))
                 }
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false) ?: return SingleResponse.Companion.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.Companion.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
             try {
                 val relationship = twitter.showFriendship(user.key.id)
                 if (relationship.isSourceBlockingTarget || relationship.isSourceBlockedByTarget) {
@@ -1607,7 +1604,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                             ProgressDialogFragment.show(fragmentManager, "update_lists_progress")
                         }
                     }.then {
-                        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey, false)
+                        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
                         val successfulStates = SparseBooleanArray()
                         try {
                             for (i in 0 until checkedPositions.size()) {
