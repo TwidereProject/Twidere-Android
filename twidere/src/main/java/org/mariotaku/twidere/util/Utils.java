@@ -337,7 +337,6 @@ public final class Utils implements Constants {
         return colors;
     }
 
-
     public static class NoAccountException extends Exception {
         String accountHost;
 
@@ -559,7 +558,8 @@ public final class Utils implements Constants {
         if (context == null) return null;
         final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE);
-        UserKey accountKey = UserKey.valueOf(prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null));
+        final String string = prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null);
+        UserKey accountKey = string != null ? UserKey.valueOf(string) : null;
         final UserKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
         int idMatchIdx = -1;
         for (int i = 0, accountIdsLength = accountKeys.length; i < accountIdsLength; i++) {

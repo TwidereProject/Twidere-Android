@@ -203,7 +203,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int TABLE_ID_CACHED_STATUSES = 62;
     int TABLE_ID_CACHED_HASHTAGS = 63;
     int TABLE_ID_CACHED_RELATIONSHIPS = 64;
-    int VIRTUAL_TABLE_ID_DATABASE_READY = 100;
     int VIRTUAL_TABLE_ID_NOTIFICATIONS = 101;
     int VIRTUAL_TABLE_ID_PREFERENCES = 102;
     int VIRTUAL_TABLE_ID_ALL_PREFERENCES = 103;
@@ -220,7 +219,9 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE = 141;
     int VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH = 142;
 
-    int VIRTUAL_TABLE_ID_EMPTY = 200;
+    int VIRTUAL_TABLE_ID_NULL = 200;
+    int VIRTUAL_TABLE_ID_EMPTY = 201;
+    int VIRTUAL_TABLE_ID_DATABASE_PREPARE = 203;
 
     int VIRTUAL_TABLE_ID_RAW_QUERY = 300;
 

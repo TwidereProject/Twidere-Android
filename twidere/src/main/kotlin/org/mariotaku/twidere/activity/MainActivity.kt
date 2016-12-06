@@ -19,14 +19,13 @@
 
 package org.mariotaku.twidere.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.Utils
 
-open class MainActivity : Activity() {
+open class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (BuildConfig.DEBUG) {
@@ -34,14 +33,15 @@ open class MainActivity : Activity() {
             StrictModeUtils.detectAllThreadPolicy()
         }
         super.onCreate(savedInstanceState)
-        if (Utils.checkDeviceCompatible()) {
-            val intent = Intent(this, HomeActivity::class.java)
+        if (!Utils.checkDeviceCompatible()) {
+            val intent = Intent(this, IncompatibleAlertActivity::class.java)
             startActivity(intent)
         } else {
-            val intent = Intent(this, IncompatibleAlertActivity::class.java)
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
         }
         finish()
     }
 
 }
+

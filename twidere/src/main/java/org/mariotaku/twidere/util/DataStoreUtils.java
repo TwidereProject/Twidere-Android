@@ -185,8 +185,6 @@ public class DataStoreUtils implements Constants {
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.ByType.CONTENT_PATH + "/*",
                 VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE);
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_READY,
-                VIRTUAL_TABLE_ID_DATABASE_READY);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
@@ -201,6 +199,10 @@ public class DataStoreUtils implements Constants {
                 VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Suggestions.Search.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_DATABASE_PREPARE,
+                VIRTUAL_TABLE_ID_DATABASE_PREPARE);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_NULL,
+                VIRTUAL_TABLE_ID_NULL);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_EMPTY,
                 VIRTUAL_TABLE_ID_EMPTY);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, TwidereDataStore.CONTENT_PATH_RAW_QUERY + "/*",
@@ -1012,6 +1014,11 @@ public class DataStoreUtils implements Constants {
         if (extras.isHideReplies()) {
             expressions.add(Expression.isNull(new Column(Statuses.IN_REPLY_TO_STATUS_ID)));
         }
+    }
+
+    public static void prepareDatabase(@NonNull Context context) {
+        context.getContentResolver().query(TwidereDataStore.CONTENT_URI_DATABASE_PREPARE, null,
+                null, null, null);
     }
 
     interface FieldArrayCreator<T> {

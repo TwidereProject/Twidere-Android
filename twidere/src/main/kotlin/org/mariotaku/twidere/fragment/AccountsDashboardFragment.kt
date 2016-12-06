@@ -118,12 +118,23 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 val adapter = accountsAdapter ?: return
                 val pagePosition = position + positionOffset
-                hasPrevAccountIndicator.alpha = TwidereMathUtils.clamp(pagePosition, 0f, 1f)
-                hasNextAccountIndicator.alpha = TwidereMathUtils.clamp(adapter.count - (pagePosition
-                        + 1 / adapter.getPageWidth(position)), 0f, 1f)
+                val pageCount = adapter.count
+                val visiblePages = 1 / adapter.getPageWidth(position)
+                if (pageCount < visiblePages) {
+                    hasPrevAccountIndicator.alpha = 0f
+                    hasNextAccountIndicator.alpha = 0f
+                } else {
+                    hasPrevAccountIndicator.alpha = TwidereMathUtils.clamp(pagePosition, 0f, 1f)
+                    hasNextAccountIndicator.alpha = TwidereMathUtils.clamp(pageCount - (pagePosition
+                            + visiblePages), 0f, 1f)
+                }
             }
         })
         accountsSelector.setPageTransformer(false, AccountsSelectorTransformer)
+
+        hasPrevAccountIndicator.alpha = 0f
+        hasNextAccountIndicator.alpha = 0f
+
         val menuInflater = SupportMenuInflater(context)
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
         accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->

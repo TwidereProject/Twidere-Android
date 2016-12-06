@@ -23,20 +23,26 @@ import android.app.Dialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
 
 class ProgressDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = ProgressDialog(activity)
-        dialog.setMessage(getString(R.string.please_wait))
+        dialog.setMessage(arguments?.getString(EXTRA_MESSAGE) ?: getString(R.string.please_wait))
         return dialog
     }
 
     companion object {
 
-        fun show(fm: FragmentManager, tag: String): ProgressDialogFragment {
+        fun show(fm: FragmentManager, tag: String, message: String? = null): ProgressDialogFragment {
             val f = ProgressDialogFragment()
+            f.arguments = Bundle {
+                this[EXTRA_MESSAGE] = message
+            }
             f.show(fm, tag)
             return f
         }

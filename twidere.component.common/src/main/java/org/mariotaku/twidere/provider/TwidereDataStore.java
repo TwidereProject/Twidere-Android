@@ -51,7 +51,7 @@ public interface TwidereDataStore {
 
     String CONTENT_PATH_RAW_QUERY = "raw_query";
 
-    String CONTENT_PATH_DATABASE_READY = "database_ready";
+    String CONTENT_PATH_DATABASE_PREPARE = "database_prepare";
 
     Uri BASE_CONTENT_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
             .authority(AUTHORITY).build();
@@ -62,8 +62,8 @@ public interface TwidereDataStore {
 
     Uri CONTENT_URI_RAW_QUERY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_RAW_QUERY);
 
-    Uri CONTENT_URI_DATABASE_READY = Uri.withAppendedPath(BASE_CONTENT_URI,
-            CONTENT_PATH_DATABASE_READY);
+    Uri CONTENT_URI_DATABASE_PREPARE = Uri.withAppendedPath(BASE_CONTENT_URI,
+            CONTENT_PATH_DATABASE_PREPARE);
 
     Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI};
     Uri[] CACHE_URIS = new Uri[]{CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI,
