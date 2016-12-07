@@ -254,6 +254,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PERMISSION_READ = "read";
     String PERMISSION_WRITE = "write";
     String PERMISSION_DIRECT_MESSAGES = "direct_messages";
+    @Deprecated
     String PERMISSION_ACCOUNTS = "accounts";
     String PERMISSION_PREFERENCES = "preferences";
 

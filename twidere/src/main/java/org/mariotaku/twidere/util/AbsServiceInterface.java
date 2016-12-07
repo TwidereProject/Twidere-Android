@@ -89,6 +89,7 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
         mDisconnected = true;
         mToken = ServiceUtils.bindToService(mContext, intent, mConnection);
         if (mToken == null) return false;
+        mDisconnected = false;
         while (mIInterface == null && !mDisconnected) {
             try {
                 Thread.sleep(50L);

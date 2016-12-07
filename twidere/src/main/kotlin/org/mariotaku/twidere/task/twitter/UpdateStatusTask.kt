@@ -164,10 +164,11 @@ class UpdateStatusTask(
             val accountKey = account.key
             var uploadResult: MediaUploadResult? = sharedMedia[accountKey]
             if (uploadResult == null) {
-                uploadResult = uploader.upload(update, accountKey, media)
-                if (uploadResult == null) {
-                    // TODO error handling
-                    continue
+                uploadResult = uploader.upload(update, accountKey, media) ?: run {
+                    throw UploadException()
+                }
+                if (uploadResult.media_uris == null) {
+                    throw UploadException(uploadResult.error_message ?: "Unknown error")
                 }
                 pending.mediaUploadResults[i] = uploadResult
                 if (uploadResult.shared_owners != null) {
@@ -182,6 +183,7 @@ class UpdateStatusTask(
         }
     }
 
+    @Throws(UpdateStatusException::class)
     private fun shortenStatus(shortener: StatusShortenerInterface?,
                               update: ParcelableStatusUpdate,
                               pending: PendingStatusUpdate) {
@@ -194,10 +196,11 @@ class UpdateStatusTask(
             val accountKey = account.key
             var shortenResult: StatusShortenResult? = sharedShortened[accountKey]
             if (shortenResult == null) {
-                shortenResult = shortener.shorten(update, accountKey, pending.overrideTexts[i])
-                if (shortenResult == null) {
-                    // TODO error handling
-                    continue
+                shortenResult = shortener.shorten(update, accountKey, pending.overrideTexts[i]) ?: run {
+                    throw ShortenException()
+                }
+                if (shortenResult.shortened == null) {
+                    throw ShortenException(shortenResult.error_message ?: "Unknown error")
                 }
                 pending.statusShortenResults[i] = shortenResult
                 if (shortenResult.shared_owners != null) {
@@ -347,8 +350,7 @@ class UpdateStatusTask(
     }
 
     private fun statusShortenCallback(shortener: StatusShortenerInterface?, pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
-        if (shortener == null) return
-        shortener.waitForService()
+        if (shortener == null || !shortener.waitForService()) return
         for (i in 0..pendingUpdate.length - 1) {
             val shortenResult = pendingUpdate.statusShortenResults[i]
             val status = updateResult.statuses[i]
@@ -358,8 +360,7 @@ class UpdateStatusTask(
     }
 
     private fun mediaUploadCallback(uploader: MediaUploaderInterface?, pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
-        if (uploader == null) return
-        uploader.waitForService()
+        if (uploader == null || !uploader.waitForService()) return
         for (i in 0..pendingUpdate.length - 1) {
             val uploadResult = pendingUpdate.mediaUploadResults[i]
             val status = updateResult.statuses[i]
