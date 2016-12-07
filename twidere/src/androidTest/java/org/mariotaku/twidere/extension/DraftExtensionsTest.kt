@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.test.extension
+package org.mariotaku.twidere
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

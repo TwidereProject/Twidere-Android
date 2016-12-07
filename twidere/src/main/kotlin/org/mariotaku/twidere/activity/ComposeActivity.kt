@@ -131,12 +131,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var textChanged: Boolean = false
     private var composeKeyMetaState: Int = 0
     private var draft: Draft? = null
-    private var draftUri: Uri? = null
+    private var nameFirst: Boolean = false
+    private var shouldSkipDraft: Boolean = false
 
     // Listeners
     private var locationListener: LocationListener? = null
-    private var nameFirst: Boolean = false
-    private var shouldSkipDraft: Boolean = false
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         when (requestCode) {
@@ -188,7 +187,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun onDestroy() {
-        if (draftUri == null && hasComposingStatus()) {
+        if (!shouldSkipDraft && hasComposingStatus()) {
             saveToDrafts()
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
         }

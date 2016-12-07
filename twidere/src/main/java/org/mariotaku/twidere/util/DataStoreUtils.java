@@ -109,9 +109,9 @@ public class DataStoreUtils implements Constants {
     public static final Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI, DirectMessages.Outbox.CONTENT_URI};
     public static final Uri[] ACTIVITIES_URIS = new Uri[]{Activities.AboutMe.CONTENT_URI};
 
-    static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
-    static Map<UserKey, String> sAccountNames = new HashMap<>();
+    private static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
+    private static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
+    private static Map<UserKey, String> sAccountNames = new HashMap<>();
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
