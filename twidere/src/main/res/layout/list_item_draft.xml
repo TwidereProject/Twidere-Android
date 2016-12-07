@@ -17,16 +17,18 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<org.mariotaku.twidere.view.ColorLabelLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.mariotaku.twidere.view.ColorLabelLinearLayout
+    android:id="@+id/content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:activatedBackgroundIndicator"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     android:padding="@dimen/element_spacing_normal"
+    android:tag="tint_background|accent_color"
     app:ignorePadding="true"
     tools:context=".adapter.DraftsAdapter">
 
@@ -41,7 +43,7 @@
         android:horizontalSpacing="@dimen/element_spacing_xsmall"
         android:verticalSpacing="@dimen/element_spacing_xsmall">
 
-        <include layout="@layout/layout_card_media_preview" />
+        <include layout="@layout/layout_card_media_preview"/>
 
     </org.mariotaku.twidere.view.CardMediaContainer>
 
@@ -55,7 +57,7 @@
         android:paddingRight="@dimen/element_spacing_normal"
         android:paddingTop="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="?android:textColorPrimary" />
+        android:textColor="?android:textColorPrimary"/>
 
     <TextView
         android:id="@+id/time"
@@ -65,7 +67,7 @@
         android:paddingLeft="@dimen/element_spacing_normal"
         android:paddingRight="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceSmall"
-        android:textColor="?android:textColorPrimary" />
+        android:textColor="?android:textColorPrimary"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,12 +80,12 @@
             style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/delete" />
+            android:text="@string/delete"/>
 
         <Button
             style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send" />
+            android:text="@string/send"/>
     </LinearLayout>
 </org.mariotaku.twidere.view.ColorLabelLinearLayout>

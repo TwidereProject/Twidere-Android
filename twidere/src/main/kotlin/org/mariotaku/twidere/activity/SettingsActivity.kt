@@ -29,7 +29,6 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.XmlRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.widget.SlidingPaneLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
@@ -41,6 +40,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import kotlinx.android.synthetic.main.activity_settings.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
@@ -52,20 +52,9 @@ import java.util.*
 
 class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartFragmentCallback {
 
-    private var mEntriesListView: ListView? = null
-    private var mSlidingPaneLayout: SlidingPaneLayout? = null
-
     var shouldRecreate: Boolean = false
     var shouldRestart: Boolean = false
-    private var mEntriesAdapter: EntriesAdapter? = null
-    private var mDetailFragmentContainer: View? = null
-
-    override fun onContentChanged() {
-        super.onContentChanged()
-        mEntriesListView = findViewById(R.id.entries_list) as ListView
-        mSlidingPaneLayout = findViewById(R.id.sliding_pane) as SlidingPaneLayout
-        mDetailFragmentContainer = findViewById(R.id.detail_fragment_container)
-    }
+    private lateinit var entriesAdapter: EntriesAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,23 +63,23 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
         val backgroundAlpha = currentThemeBackgroundAlpha
 
-        mDetailFragmentContainer!!.setBackgroundColor(backgroundAlpha shl 24 or 0xFFFFFF and ThemeUtils.getThemeBackgroundColor(this))
+        detailFragmentContainer.setBackgroundColor(backgroundAlpha shl 24 or 0xFFFFFF and ThemeUtils.getThemeBackgroundColor(this))
 
-        mSlidingPaneLayout!!.setShadowResourceLeft(R.drawable.sliding_pane_shadow_left)
-        mSlidingPaneLayout!!.setShadowResourceRight(R.drawable.sliding_pane_shadow_right)
-        mSlidingPaneLayout!!.sliderFadeColor = 0
-        mEntriesAdapter = EntriesAdapter(this)
+        slidingPane.setShadowResourceLeft(R.drawable.sliding_pane_shadow_left)
+        slidingPane.setShadowResourceRight(R.drawable.sliding_pane_shadow_right)
+        slidingPane.sliderFadeColor = 0
+        entriesAdapter = EntriesAdapter(this)
         initEntries()
-        mEntriesListView!!.adapter = mEntriesAdapter
-        mEntriesListView!!.choiceMode = AbsListView.CHOICE_MODE_SINGLE
-        mEntriesListView!!.onItemClickListener = this
+        entriesList.adapter = entriesAdapter
+        entriesList.choiceMode = AbsListView.CHOICE_MODE_SINGLE
+        entriesList.onItemClickListener = this
 
         if (savedInstanceState == null) {
             val initialTag = intent.getStringExtra(EXTRA_INITIAL_TAG)
             var initialItem = -1
             var firstEntry = -1
-            for (i in 0 until mEntriesAdapter!!.count) {
-                val entry = mEntriesAdapter!!.getItem(i)
+            for (i in 0 until entriesAdapter.count) {
+                val entry = entriesAdapter.getItem(i)
                 if (entry is PreferenceEntry) {
                     if (firstEntry == -1) {
                         firstEntry = i
@@ -106,44 +95,44 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             }
             if (initialItem != -1) {
                 openDetails(initialItem)
-                mEntriesListView!!.setItemChecked(initialItem, true)
+                entriesList.setItemChecked(initialItem, true)
             }
         }
     }
 
     private fun initEntries() {
-        mEntriesAdapter!!.addHeader(getString(R.string.appearance))
-        mEntriesAdapter!!.addPreference("theme", R.drawable.ic_action_color_palette, getString(R.string.theme),
+        entriesAdapter.addHeader(getString(R.string.appearance))
+        entriesAdapter.addPreference("theme", R.drawable.ic_action_color_palette, getString(R.string.theme),
                 R.xml.preferences_theme)
-        mEntriesAdapter!!.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
+        entriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
                 R.xml.preferences_cards)
 
-        mEntriesAdapter!!.addHeader(getString(R.string.function))
-        mEntriesAdapter!!.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
+        entriesAdapter.addHeader(getString(R.string.function))
+        entriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
                 CustomTabsFragment::class.java)
-        mEntriesAdapter!!.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
+        entriesAdapter.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
                 ExtensionsListFragment::class.java)
-        mEntriesAdapter!!.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
+        entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
                 R.xml.preferences_refresh)
-        mEntriesAdapter!!.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
+        entriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
                 R.xml.preferences_notifications)
-        mEntriesAdapter!!.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
+        entriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
                 R.xml.preferences_network)
-        mEntriesAdapter!!.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.compose),
+        entriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.compose),
                 R.xml.preferences_compose)
-        mEntriesAdapter!!.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
+        entriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
                 R.xml.preferences_content)
-        mEntriesAdapter!!.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.storage),
+        entriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.storage),
                 R.xml.preferences_storage)
-        mEntriesAdapter!!.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
+        entriesAdapter.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
                 R.xml.preferences_other)
 
-        mEntriesAdapter!!.addHeader(getString(R.string.about))
-        mEntriesAdapter!!.addPreference("about", R.drawable.ic_action_info, getString(R.string.about),
+        entriesAdapter.addHeader(getString(R.string.about))
+        entriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.about),
                 R.xml.preferences_about)
         val browserArgs = Bundle()
         browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html")
-        mEntriesAdapter!!.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.open_source_license),
+        entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.open_source_license),
                 SupportBrowserFragment::class.java, browserArgs)
     }
 
@@ -208,7 +197,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         val fm = supportFragmentManager
         val ft = fm.beginTransaction()
         val f = Fragment.instantiate(this, preference.fragment, preference.extras)
-        ft.replace(R.id.detail_fragment_container, f)
+        ft.replace(R.id.detailFragmentContainer, f)
         ft.addToBackStack(preference.title.toString())
         ft.commit()
         return true
@@ -220,7 +209,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     private fun openDetails(position: Int) {
         if (isFinishing) return
-        val entry = mEntriesAdapter!!.getItem(position) as? PreferenceEntry ?: return
+        val entry = entriesAdapter.getItem(position) as? PreferenceEntry ?: return
         val fm = supportFragmentManager
         fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val ft = fm.beginTransaction()
@@ -229,14 +218,14 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             args.putInt(EXTRA_RESID, entry.preference)
             val f = Fragment.instantiate(this, SettingsDetailsFragment::class.java.name,
                     args)
-            ft.replace(R.id.detail_fragment_container, f)
+            ft.replace(R.id.detailFragmentContainer, f)
         } else if (entry.fragment != null) {
-            ft.replace(R.id.detail_fragment_container, Fragment.instantiate(this, entry.fragment,
+            ft.replace(R.id.detailFragmentContainer, Fragment.instantiate(this, entry.fragment,
                     entry.args))
         }
         ft.setBreadCrumbTitle(entry.title)
         ft.commit()
-        mSlidingPaneLayout!!.closePane()
+        slidingPane.closePane()
     }
 
     private fun notifyUnsavedChange(): Boolean {

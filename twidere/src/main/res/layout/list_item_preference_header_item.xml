@@ -25,7 +25,8 @@
     android:background="?android:activatedBackgroundIndicator"
     android:gravity="center_vertical"
     android:minHeight="?listPreferredItemHeightSmall"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:tag="tint_background|accent_color">
 
     <org.mariotaku.twidere.view.IconActionView
         android:id="@android:id/icon"
@@ -47,10 +48,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ellipsize="marquee"
+        android:maxLines="1"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
         android:textSize="16sp"
-        tools:text="@string/settings"
-        android:maxLines="1"/>
+        tools:text="@string/settings"/>
 
 </LinearLayout>

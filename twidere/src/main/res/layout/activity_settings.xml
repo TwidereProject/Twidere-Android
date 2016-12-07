@@ -18,7 +18,7 @@
   -->
 
 <android.support.v4.widget.SlidingPaneLayout
-    android:id="@+id/sliding_pane"
+    android:id="@+id/slidingPane"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -30,7 +30,7 @@
         android:layout_gravity="start">
 
         <ListView
-            android:id="@+id/entries_list"
+            android:id="@+id/entriesList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@null"
@@ -39,7 +39,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/detail_fragment_container"
+        android:id="@+id/detailFragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
