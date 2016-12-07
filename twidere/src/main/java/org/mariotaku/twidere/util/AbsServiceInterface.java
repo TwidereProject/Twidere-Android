@@ -27,9 +27,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.constant.IntentConstants;
 import org.mariotaku.twidere.util.ServiceUtils.ServiceToken;
 
@@ -42,23 +40,27 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     private I mIInterface;
 
     private ServiceToken mToken;
+    private boolean mDisconnected;
 
     private final ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(final ComponentName service, final IBinder obj) {
             mIInterface = AbsServiceInterface.this.onServiceConnected(service, obj);
+            mDisconnected = false;
         }
 
         @Override
         public void onServiceDisconnected(final ComponentName service) {
             mIInterface = null;
+            mDisconnected = true;
         }
     };
 
     protected abstract I onServiceConnected(ComponentName service, IBinder obj);
 
     protected AbsServiceInterface(final Context context, final String componentName, @Nullable final Bundle metaData) {
+        mDisconnected = true;
         mContext = context;
         mShortenerName = componentName;
         mMetaData = metaData;
@@ -75,21 +77,27 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     }
 
     public final void unbindService() {
+        if (mIInterface == null || mToken == null) return;
         ServiceUtils.unbindFromService(mToken);
     }
 
-    public final void waitForService() {
+    public final boolean waitForService() {
+        if (mIInterface != null || mToken != null) return true;
         final Intent intent = new Intent(IntentConstants.INTENT_ACTION_EXTENSION_SHORTEN_STATUS);
         final ComponentName component = ComponentName.unflattenFromString(mShortenerName);
         intent.setComponent(component);
+        mDisconnected = true;
         mToken = ServiceUtils.bindToService(mContext, intent, mConnection);
-        while (mIInterface == null) {
+        if (mToken == null) return false;
+        while (mIInterface == null && !mDisconnected) {
             try {
-                Thread.sleep(100L);
-            } catch (final InterruptedException e) {
-                Log.w(TwidereConstants.LOGTAG, e);
+                Thread.sleep(50L);
+            } catch (InterruptedException e) {
+                // Ignore
+                return false;
             }
         }
+        return true;
     }
 
     public final void checkService(CheckServiceAction action) throws CheckServiceException {

@@ -149,6 +149,7 @@ class UpdateStatusTask(
     private fun uploadMediaWithExtension(uploader: MediaUploaderInterface,
                                          update: ParcelableStatusUpdate,
                                          pending: PendingStatusUpdate) {
+        uploader.waitForService()
         val media: Array<UploaderMediaItem>
         try {
             media = UploaderMediaItem.getFromStatusUpdate(context, update)
@@ -184,7 +185,7 @@ class UpdateStatusTask(
     private fun shortenStatus(shortener: StatusShortenerInterface?,
                               update: ParcelableStatusUpdate,
                               pending: PendingStatusUpdate) {
-        if (shortener == null) return
+        if (shortener == null || !shortener.waitForService()) return
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
         for (i in 0..pending.length - 1) {
@@ -347,6 +348,7 @@ class UpdateStatusTask(
 
     private fun statusShortenCallback(shortener: StatusShortenerInterface?, pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
         if (shortener == null) return
+        shortener.waitForService()
         for (i in 0..pendingUpdate.length - 1) {
             val shortenResult = pendingUpdate.statusShortenResults[i]
             val status = updateResult.statuses[i]
@@ -357,6 +359,7 @@ class UpdateStatusTask(
 
     private fun mediaUploadCallback(uploader: MediaUploaderInterface?, pendingUpdate: PendingStatusUpdate, updateResult: UpdateStatusResult) {
         if (uploader == null) return
+        uploader.waitForService()
         for (i in 0..pendingUpdate.length - 1) {
             val uploadResult = pendingUpdate.mediaUploadResults[i]
             val status = updateResult.statuses[i]

@@ -52,7 +52,7 @@ public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUplo
                                     final UserKey currentAccountKey,
                                     final UploaderMediaItem[] media) {
         final IMediaUploader iface = getInterface();
-        if (iface == null) return null;
+        if (iface == null) return MediaUploadResult.error(1, "Uploader not ready");
         try {
             final String statusJson = JsonSerializer.serialize(status, ParcelableStatusUpdate.class);
             final String mediaJson = JsonSerializer.serialize(media, UploaderMediaItem.class);

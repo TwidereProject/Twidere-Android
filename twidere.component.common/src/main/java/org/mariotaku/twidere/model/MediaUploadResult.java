@@ -81,11 +81,11 @@ public class MediaUploadResult implements Parcelable {
         MediaUploadResultParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static MediaUploadResult getInstance(final int errorCode, final String errorMessage) {
+    public static MediaUploadResult error(final int errorCode, final String errorMessage) {
         return new MediaUploadResult(errorCode, errorMessage);
     }
 
-    public static MediaUploadResult getInstance(final String... mediaUris) {
+    public static MediaUploadResult uploaded(final String... mediaUris) {
         return new MediaUploadResult(mediaUris);
     }
 }

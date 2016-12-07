@@ -40,24 +40,16 @@ import android.support.annotation.RequiresPermission;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
-import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ComposingStatus;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.account.AccountExtras;
-import org.mariotaku.twidere.model.account.StatusNetAccountExtras;
-import org.mariotaku.twidere.model.account.TwitterAccountExtras;
-import org.mariotaku.twidere.model.account.cred.BasicCredentials;
-import org.mariotaku.twidere.model.account.cred.Credentials;
-import org.mariotaku.twidere.model.account.cred.EmptyCredentials;
-import org.mariotaku.twidere.model.account.cred.OAuth2Credentials;
-import org.mariotaku.twidere.model.account.cred.OAuthCredentials;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
+import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -281,12 +273,12 @@ public final class Twidere implements TwidereConstants {
         details.activated = Boolean.parseBoolean(am.getUserData(account, ACCOUNT_USER_DATA_ACTIVATED));
 
         try {
-            details.credentials = parseCredentials(am.peekAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE),
+            details.credentials = AccountDetailsUtils.parseCredentials(am.peekAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE),
                     details.credentials_type);
         } catch (SecurityException e) {
             // Ignore
         }
-        details.extras = parseAccountExtras(am.getUserData(account, ACCOUNT_USER_DATA_EXTRAS), details.type);
+        details.extras = AccountDetailsUtils.parseAccountExtras(am.getUserData(account, ACCOUNT_USER_DATA_EXTRAS), details.type);
 
         details.user.color = details.color;
 
@@ -297,46 +289,6 @@ public final class Twidere implements TwidereConstants {
     @RequiresPermission(allOf = {"android.permission.AUTHENTICATE_ACCOUNTS"}, conditional = true)
     private static UserKey getAccountKey(Account account, AccountManager am) {
         return UserKey.valueOf(am.getUserData(account, ACCOUNT_USER_DATA_KEY));
-    }
-
-    private static Credentials parseCredentials(String json, @Credentials.Type String type) {
-        try {
-            switch (type) {
-                case Credentials.Type.OAUTH:
-                case Credentials.Type.XAUTH: {
-                    return LoganSquare.parse(json, OAuthCredentials.class);
-                }
-                case Credentials.Type.BASIC: {
-                    return LoganSquare.parse(json, BasicCredentials.class);
-                }
-                case Credentials.Type.EMPTY: {
-                    return LoganSquare.parse(json, EmptyCredentials.class);
-                }
-                case Credentials.Type.OAUTH2: {
-                    return LoganSquare.parse(json, OAuth2Credentials.class);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        throw new UnsupportedOperationException(type);
-    }
-
-    private static AccountExtras parseAccountExtras(String json, @AccountType String type) {
-        if (json == null) return null;
-        try {
-            switch (type) {
-                case AccountType.TWITTER: {
-                    return LoganSquare.parse(json, TwitterAccountExtras.class);
-                }
-                case AccountType.STATUSNET: {
-                    return LoganSquare.parse(json, StatusNetAccountExtras.class);
-                }
-            }
-        } catch (IOException e) {
-            return null;
-        }
-        return null;
     }
 
     private static int indexOf(String[] input, String find) {
