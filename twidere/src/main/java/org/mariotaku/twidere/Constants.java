@@ -109,4 +109,6 @@ public interface Constants extends TwidereConstants {
     String GOOGLE_APIS_SERVER_CLIENT_ID = "223623398518-1p34hsndj7couh2c9c2f8909amh9euhf.apps.googleusercontent.com";
     @SuppressWarnings("SpellCheckingInspection")
     String GOOGLE_PLAY_LICENCING_PUBKEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgiWSUKjOMgIAYKH0BLPIN4shhldgg1B0bYk8rXtWqIuiE15Ei+3YmoGBzYGrMzuaCwAZzRuWbg17xBBU6OnNYpQ5ncR133l9Cuor8z3nU2k4Jdxl2cv9P+fqdBFBi+VZ7BT+cROEoNnAD6sTOwfD2X+zykpFFbaOGyl5CQr1gdqWktf4BwihzCIrZ4PkT+2HKSFo/GEluFE60O7bAKqZmlRJ8RqlJimXtv9VtJQXqVIRDm5GkTRfcwkAg5rhmMRvsUxotYlnvtcMBidA9tT1zkSKF4X6gtrThvZndkZZgkSxCtTxJfkFIGmwrZoH66155+i2Qnk0XEB8NOt1e8N1AwIDAQAB";
+    @SuppressWarnings("SpellCheckingInspection")
+    String DROPBOX_APP_KEY = "lflrwypk2e5pjm6";
 }

@@ -2,7 +2,6 @@ package org.mariotaku.twidere.extension
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.graphics.Color
 import android.support.annotation.ColorInt
 import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.ktextension.toInt
@@ -17,6 +16,7 @@ import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.toHexColor
 
 
@@ -51,7 +51,7 @@ fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
 
 @ColorInt
 fun Account.getColor(am: AccountManager): Int {
-    return Color.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR))
+    return ParseUtils.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR), 0)
 }
 
 fun Account.getPosition(am: AccountManager): Int {
