@@ -148,8 +148,8 @@ import javax.net.ssl.SSLException;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
 
-import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
+import static org.mariotaku.twidere.util.DataStoreUtils.DIRECT_MESSAGES_URIS;
+import static org.mariotaku.twidere.util.DataStoreUtils.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 
 public final class Utils implements Constants {

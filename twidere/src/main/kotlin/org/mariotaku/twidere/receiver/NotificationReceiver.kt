@@ -52,8 +52,8 @@ class NotificationReceiver : BroadcastReceiver() {
                 @NotificationType
                 val notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE)
                 val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.convert(UserKey::valueOf)
-                val itemId = UriExtraUtils.getExtra(uri, "item_id")?.toLong(-1) ?: -1
-                val itemUserId = UriExtraUtils.getExtra(uri, "item_user_id")?.toLong(-1) ?: -1
+                val itemId = UriExtraUtils.getExtra(uri, "item_id").toLong(-1)
+                val itemUserId = UriExtraUtils.getExtra(uri, "item_user_id").toLong(-1)
                 val itemUserFollowing = UriExtraUtils.getExtra(uri, "item_user_following")?.toBoolean() ?: false
                 val timestamp = uri.getQueryParameter(QUERY_PARAM_TIMESTAMP)?.toLong() ?: -1
                 if (CustomTabType.NOTIFICATIONS_TIMELINE == Tab.getTypeAlias(notificationType)

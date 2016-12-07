@@ -782,7 +782,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return null;
                 }
                 case VIRTUAL_TABLE_ID_EMPTY: {
-                    return new MatrixCursor(projection);
+                    return new MatrixCursor(projection != null ? projection : new String[0]);
                 }
                 case VIRTUAL_TABLE_ID_RAW_QUERY: {
                     if (projection != null || selection != null || sortOrder != null) {

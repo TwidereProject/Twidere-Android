@@ -17,10 +17,10 @@ import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.Utils;
 
 /**
@@ -49,7 +49,7 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask implements C
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
         final ContentResolver resolver = context.getContentResolver();
         Utils.setLastSeen(context, args.userKey, -1);
-        for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+        for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.USER_KEY)
@@ -57,7 +57,7 @@ public class CreateUserBlockTask extends AbsFriendshipOperationTask implements C
             final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
             resolver.delete(uri, where.getSQL(), whereArgs);
         }
-        for (final Uri uri : TwidereDataStore.ACTIVITIES_URIS) {
+        for (final Uri uri : DataStoreUtils.ACTIVITIES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Activities.ACCOUNT_KEY),
                     Expression.equalsArgs(Activities.STATUS_USER_KEY)

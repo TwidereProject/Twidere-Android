@@ -817,4 +817,5 @@
     <string name="no_extension_installed">No extension installed</string>
     <string name="pinned_status">Pinned tweet</string>
     <string name="add_or_remove_from_list">Add or remove from list</string>
+    <string name="title_extra_features">Extra features</string>
 </resources>

@@ -98,15 +98,17 @@ import java.util.List;
 import java.util.Map;
 
 import static android.text.TextUtils.isEmpty;
-import static org.mariotaku.twidere.provider.TwidereDataStore.ACTIVITIES_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
 
 /**
  * Created by mariotaku on 15/11/28.
  */
 public class DataStoreUtils implements Constants {
+
+    public static final Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI};
+    public static final Uri[] CACHE_URIS = new Uri[]{CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI, CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI};
+    public static final Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI, DirectMessages.Outbox.CONTENT_URI};
+    public static final Uri[] ACTIVITIES_URIS = new Uri[]{Activities.AboutMe.CONTENT_URI};
+
     static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
     static Map<UserKey, String> sAccountNames = new HashMap<>();

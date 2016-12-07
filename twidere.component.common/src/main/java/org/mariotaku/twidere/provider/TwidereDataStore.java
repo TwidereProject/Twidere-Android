@@ -46,31 +46,16 @@ public interface TwidereDataStore {
     String TYPE_TEXT_NOT_NULL_UNIQUE = "TEXT NOT NULL UNIQUE";
 
     String CONTENT_PATH_NULL = "null_content";
-
     String CONTENT_PATH_EMPTY = "empty_content";
-
     String CONTENT_PATH_RAW_QUERY = "raw_query";
-
     String CONTENT_PATH_DATABASE_PREPARE = "database_prepare";
 
-    Uri BASE_CONTENT_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT)
-            .authority(AUTHORITY).build();
+    Uri BASE_CONTENT_URI = Uri.parse(ContentResolver.SCHEME_CONTENT + "://" + AUTHORITY);
 
     Uri CONTENT_URI_NULL = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_NULL);
-
     Uri CONTENT_URI_EMPTY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_EMPTY);
-
     Uri CONTENT_URI_RAW_QUERY = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_RAW_QUERY);
-
-    Uri CONTENT_URI_DATABASE_PREPARE = Uri.withAppendedPath(BASE_CONTENT_URI,
-            CONTENT_PATH_DATABASE_PREPARE);
-
-    Uri[] STATUSES_URIS = new Uri[]{Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI};
-    Uri[] CACHE_URIS = new Uri[]{CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI,
-            CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI};
-    Uri[] DIRECT_MESSAGES_URIS = new Uri[]{DirectMessages.Inbox.CONTENT_URI,
-            DirectMessages.Outbox.CONTENT_URI};
-    Uri[] ACTIVITIES_URIS = new Uri[]{Activities.AboutMe.CONTENT_URI};
+    Uri CONTENT_URI_DATABASE_PREPARE = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH_DATABASE_PREPARE);
 
     interface InsertedDateColumns {
         String INSERTED_DATE = "inserted_date";
@@ -474,8 +459,7 @@ public interface TwidereDataStore {
             String CONTENT_PATH_SEGMENT = "inbox";
             String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
 
-            Uri CONTENT_URI = Uri
-                    .withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
+            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
         }
 
@@ -486,8 +470,7 @@ public interface TwidereDataStore {
             String CONTENT_PATH_SEGMENT = "outbox";
             String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
 
-            Uri CONTENT_URI = Uri
-                    .withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
+            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
         }
 

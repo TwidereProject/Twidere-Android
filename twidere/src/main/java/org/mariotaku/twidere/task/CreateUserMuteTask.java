@@ -15,10 +15,10 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent;
-import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.Utils;
 
 import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST;
@@ -44,7 +44,7 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
         final ContentResolver resolver = context.getContentResolver();
         Utils.setLastSeen(context, args.userKey, -1);
-        for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+        for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.USER_KEY)
@@ -53,7 +53,7 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
             resolver.delete(uri, where.getSQL(), whereArgs);
         }
         if (!user.is_following) {
-            for (final Uri uri : TwidereDataStore.ACTIVITIES_URIS) {
+            for (final Uri uri : DataStoreUtils.ACTIVITIES_URIS) {
                 final Expression where = Expression.and(
                         Expression.equalsArgs(Activities.ACCOUNT_KEY),
                         Expression.equalsArgs(Activities.STATUS_USER_KEY)

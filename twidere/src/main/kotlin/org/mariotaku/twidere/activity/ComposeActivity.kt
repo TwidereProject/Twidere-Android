@@ -81,7 +81,6 @@ import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.BackgroundOperationService
 import org.mariotaku.twidere.text.MarkForDeleteSpan
@@ -111,7 +110,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var locationManager: LocationManager? = null
     private var currentTask: AsyncTask<Any, Any, *>? = null
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
-    private var itemTouchHelper: ItemTouchHelper? = null
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
 
@@ -135,8 +134,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var draftUri: Uri? = null
 
     // Listeners
-    private var mLocationListener: LocationListener? = null
-    private var mNameFirst: Boolean = false
+    private var locationListener: LocationListener? = null
+    private var nameFirst: Boolean = false
+    private var shouldSkipDraft: Boolean = false
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         when (requestCode) {
@@ -180,10 +180,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onBackPressed() {
         if (currentTask != null && currentTask!!.status == AsyncTask.Status.RUNNING) return
         if (hasComposingStatus()) {
-            draftUri = saveToDrafts()
-            Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
-            finish()
+            shouldSkipDraft = false
         } else {
+            shouldSkipDraft = true
             discardTweet()
         }
     }
@@ -192,7 +191,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (draftUri == null && hasComposingStatus()) {
             saveToDrafts()
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
-
         }
         super.onDestroy()
     }
@@ -237,9 +235,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onStop() {
         saveAccountSelection()
         try {
-            if (mLocationListener != null) {
-                locationManager!!.removeUpdates(mLocationListener)
-                mLocationListener = null
+            if (locationListener != null) {
+                locationManager!!.removeUpdates(locationListener)
+                locationListener = null
             }
         } catch (ignore: SecurityException) {
             // That should not happen
@@ -466,14 +464,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        mNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+        nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         setContentView(R.layout.activity_compose)
+
+
+        mediaPreviewAdapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
+        itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(mediaPreviewAdapter))
+
         setFinishOnTouchOutside(false)
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this))
         if (accounts.isEmpty()) {
             val intent = Intent(INTENT_ACTION_TWITTER_LOGIN)
             intent.setClass(this, SignInActivity::class.java)
             startActivity(intent)
+            shouldSkipDraft = true
             finish()
             return
         }
@@ -510,16 +514,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     attachPreciseLocationChecked = false
                 }
             }
-            val editor = preferences.edit()
-            editor.putBoolean(KEY_ATTACH_LOCATION, attachLocationChecked)
-            editor.putBoolean(KEY_ATTACH_PRECISE_LOCATION, attachPreciseLocationChecked)
-            editor.apply()
+            preferences.edit()
+                    .putBoolean(KEY_ATTACH_LOCATION, attachLocationChecked)
+                    .putBoolean(KEY_ATTACH_PRECISE_LOCATION, attachPreciseLocationChecked)
+                    .apply()
             if (attachLocationChecked) {
                 requestOrUpdateLocation()
-            } else if (mLocationListener != null) {
+            } else if (locationListener != null) {
                 try {
-                    locationManager!!.removeUpdates(mLocationListener)
-                    mLocationListener = null
+                    locationManager!!.removeUpdates(locationListener)
+                    locationListener = null
                 } catch (e: SecurityException) {
                     //Ignore
                 }
@@ -530,29 +534,25 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             updateTextCount()
         }
 
-        val linearLayoutManager = FixedLinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        linearLayoutManager.stackFromEnd = true
-        accountSelector.layoutManager = linearLayoutManager
+        accountSelector.layoutManager = FixedLinearLayoutManager(this).apply {
+            orientation = LinearLayoutManager.VERTICAL
+            stackFromEnd = true
+        }
         accountSelector.itemAnimator = DefaultItemAnimator()
-        accountsAdapter = AccountIconsAdapter(this)
+        accountsAdapter = AccountIconsAdapter(this).apply {
+            setAccounts(accounts)
+        }
         accountSelector.adapter = accountsAdapter
-        accountsAdapter.setAccounts(accounts)
 
 
-        val adapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
-        mediaPreviewAdapter = adapter
-        itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(adapter))
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        attachedMediaPreview.layoutManager = layoutManager
+        attachedMediaPreview.layoutManager = LinearLayoutManager(this).apply {
+            orientation = HORIZONTAL
+        }
         attachedMediaPreview.adapter = mediaPreviewAdapter
         registerForContextMenu(attachedMediaPreview)
-        itemTouchHelper!!.attachToRecyclerView(attachedMediaPreview)
+        itemTouchHelper.attachToRecyclerView(attachedMediaPreview)
         val previewGridSpacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small)
         attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(previewGridSpacing))
-
-        val intent = intent
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
@@ -960,7 +960,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             hideLabel()
             return
         }
-        val replyToName = userColorNameManager.getDisplayName(status, mNameFirst)
+        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
         replyLabel.text = getString(R.string.quote_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         replyLabelDivider!!.visibility = View.VISIBLE
@@ -971,7 +971,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             hideLabel()
             return
         }
-        val replyToName = userColorNameManager.getDisplayName(status, mNameFirst)
+        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
         replyLabel.text = getString(R.string.reply_to_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
         replyLabelDivider!!.visibility = View.VISIBLE
@@ -1189,7 +1189,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
      */
     @Throws(SecurityException::class)
     private fun startLocationUpdateIfEnabled(): Boolean {
-        if (mLocationListener != null) return true
+        if (locationListener != null) return true
         val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
         if (!attachLocation) {
             return false
@@ -1204,11 +1204,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val provider = locationManager!!.getBestProvider(criteria, true)
         if (provider != null) {
             locationText!!.setText(R.string.getting_location)
-            mLocationListener = ComposeLocationListener(this)
-            locationManager!!.requestLocationUpdates(provider, 0, 0f, mLocationListener)
+            locationListener = ComposeLocationListener(this)
+            locationManager!!.requestLocationUpdates(provider, 0, 0f, locationListener)
             val location = Utils.getCachedLocation(this)
             if (location != null) {
-                mLocationListener!!.onLocationChanged(location)
+                locationListener!!.onLocationChanged(location)
             }
         } else {
             Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
@@ -1298,8 +1298,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             setLabel(intent)
             setMenu()
             updateTextCount()
+            shouldSkipDraft = false
         } else {
             setResult(Activity.RESULT_OK)
+            shouldSkipDraft = true
             finish()
         }
     }
@@ -1574,12 +1576,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun onPostExecute(result: Unit) {
             val activity = activityRef.get() ?: return
             activity.setProgressVisible(false)
+            activity.shouldSkipDraft = true
             activity.finish()
         }
 
         override fun onPreExecute() {
             val activity = activityRef.get() ?: return
-            activity.draftUri = TwidereDataStore.CONTENT_URI_EMPTY
             activity.setProgressVisible(true)
         }
     }

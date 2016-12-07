@@ -89,7 +89,6 @@ import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -783,7 +782,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 ).getSQL();
                 final String[] statusWhereArgs = {mAccountKey.toString(), String.valueOf(mStatusId),
                         String.valueOf(mStatusId)};
-                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+                for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
                     resolver.update(uri, values, statusWhere, statusWhereArgs);
                 }
                 DataStoreUtils.updateActivityStatus(resolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {
@@ -861,7 +860,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private void deleteCaches(final List<String> list) {
-            for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+            for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
                 // TODO delete caches
                 // ContentResolverUtils.bulkDelete(mResolver, uri, Statuses.USER_ID, list,
                 // Statuses.ACCOUNT_ID + " = " + mAccountKey, false);
@@ -1262,7 +1261,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         Expression.or(Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)));
                 final String[] whereArgs = {mAccountKey.toString(), mStatusId, mStatusId};
-                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+                for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
                     resolver.update(uri, values, where.getSQL(), whereArgs);
                 }
 
@@ -1621,7 +1620,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                         Expression.equalsArgs(Statuses.RETWEET_ID)
                 );
                 final String[] whereArgs = {mStatusId, mStatusId};
-                for (final Uri uri : TwidereDataStore.STATUSES_URIS) {
+                for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
                     resolver.update(uri, values, where.getSQL(), whereArgs);
                 }
                 DataStoreUtils.updateActivityStatus(resolver, mAccountKey, mStatusId, new DataStoreUtils.UpdateActivityAction() {

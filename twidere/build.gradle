@@ -151,6 +151,8 @@ dependencies {
     compile 'com.squareup:tape:1.2.3'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-primitives:commons-primitives:1.0'
+    compile 'org.apache.james:apache-mime4j-core:0.7.2'
+    compile 'org.apache.james:apache-mime4j-storage:0.7.2'
     compile 'com.bluelinelabs:logansquare:1.3.7'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'

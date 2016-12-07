@@ -33,9 +33,9 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
-import static org.mariotaku.twidere.provider.TwidereDataStore.CACHE_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.DIRECT_MESSAGES_URIS;
-import static org.mariotaku.twidere.provider.TwidereDataStore.STATUSES_URIS;
+import static org.mariotaku.twidere.util.DataStoreUtils.CACHE_URIS;
+import static org.mariotaku.twidere.util.DataStoreUtils.DIRECT_MESSAGES_URIS;
+import static org.mariotaku.twidere.util.DataStoreUtils.STATUSES_URIS;
 
 public class ClearDatabasesPreference extends AsyncTaskPreference implements Constants {
 

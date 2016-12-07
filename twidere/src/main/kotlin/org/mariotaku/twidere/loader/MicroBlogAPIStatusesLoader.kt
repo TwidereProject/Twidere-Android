@@ -231,9 +231,8 @@ abstract class MicroBlogAPIStatusesLoader(
             val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
             val pos = PipedOutputStream()
             val pis = PipedInputStream(pos)
-            val future = pool.submit(Callable<kotlin.Any> {
+            val future = pool.submit(Callable<Unit> {
                 LoganSquare.serialize(statuses, pos)
-                null
             })
             val saved = fileCache.save(key, pis) { current, total -> !future.isDone }
             if (BuildConfig.DEBUG) {
