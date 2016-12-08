@@ -77,7 +77,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
+import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
@@ -178,8 +178,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onBackPressed() {
         if (currentTask != null && currentTask!!.status == AsyncTask.Status.RUNNING) return
-        if (hasComposingStatus()) {
-            shouldSkipDraft = false
+        if (!shouldSkipDraft && hasComposingStatus() ) {
+            saveToDrafts()
+            Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
+            shouldSkipDraft = true
+            finish()
         } else {
             shouldSkipDraft = true
             discardTweet()
@@ -429,7 +432,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         draft.text = text
         draft.media = media
         draft.location = recentLocation
-        draft.action_extras = UpdateStatusActionExtra().apply {
+        draft.timestamp = System.currentTimeMillis()
+        draft.action_extras = UpdateStatusActionExtras().apply {
             this.inReplyToStatus = this@ComposeActivity.inReplyToStatus
             this.isPossiblySensitive = this@ComposeActivity.possiblySensitive
         }
@@ -837,8 +841,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             addMedia(Arrays.asList(*draft.media))
         }
         recentLocation = draft.location
-        if (draft.action_extras is UpdateStatusActionExtra) {
-            val extra = draft.action_extras as UpdateStatusActionExtra?
+        if (draft.action_extras is UpdateStatusActionExtras) {
+            val extra = draft.action_extras as UpdateStatusActionExtras?
             possiblySensitive = extra!!.isPossiblySensitive
             inReplyToStatus = extra.inReplyToStatus
         }
@@ -871,16 +875,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
                 when (draft.action_type) {
                     Draft.Action.REPLY -> {
-                        if (draft.action_extras is UpdateStatusActionExtra) {
-                            showReplyLabel((draft.action_extras as UpdateStatusActionExtra).inReplyToStatus)
+                        if (draft.action_extras is UpdateStatusActionExtras) {
+                            showReplyLabel((draft.action_extras as UpdateStatusActionExtras).inReplyToStatus)
                         } else {
                             hideLabel()
                             return false
                         }
                     }
                     Draft.Action.QUOTE -> {
-                        if (draft.action_extras is UpdateStatusActionExtra) {
-                            showQuoteLabel((draft.action_extras as UpdateStatusActionExtra).inReplyToStatus)
+                        if (draft.action_extras is UpdateStatusActionExtras) {
+                            showQuoteLabel((draft.action_extras as UpdateStatusActionExtras).inReplyToStatus)
                         } else {
                             hideLabel()
                             return false
@@ -1280,7 +1284,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.media = media
         update.in_reply_to_status = inReplyToStatus
         update.is_possibly_sensitive = isPossiblySensitive
-        update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtra)?.attachmentUrl
+        update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtras)?.attachmentUrl
         BackgroundOperationService.updateStatusesAsync(this, action, update)
         if (preferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false) && inReplyToStatus == null) {
             possiblySensitive = false

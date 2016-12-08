@@ -42,7 +42,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.ParcelableUserValuesCreator;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra;
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras;
 import org.mariotaku.twidere.model.util.ParcelableActivityExtensionsKt;
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
@@ -121,7 +121,7 @@ public final class ContentValuesCreator implements TwidereConstants {
             values.put(Drafts.MEDIA, JsonSerializer.serialize(Arrays.asList(mediaArray),
                     ParcelableMediaUpdate.class));
         }
-        final SendDirectMessageActionExtra extra = new SendDirectMessageActionExtra();
+        final SendDirectMessageActionExtras extra = new SendDirectMessageActionExtras();
         extra.setRecipientId(recipientId);
         values.put(Drafts.ACTION_EXTRAS, JsonSerializer.serialize(extra));
         return values;

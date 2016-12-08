@@ -31,7 +31,6 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.IStatusShortener;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
@@ -40,8 +39,10 @@ import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-public final class StatusShortenerInterface extends AbsServiceInterface<IStatusShortener>
-        implements Constants {
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_SHORTEN_STATUS;
+
+public final class StatusShortenerInterface extends AbsServiceInterface<IStatusShortener> {
 
     protected StatusShortenerInterface(Context context, String shortenerName, Bundle metaData) {
         super(context, shortenerName, metaData);

@@ -6,7 +6,7 @@ import android.content.Context;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.Draft;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
-import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra;
+import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras;
 
 /**
  * Created by mariotaku on 16/2/12.
@@ -25,8 +25,8 @@ public class ParcelableStatusUpdateUtils {
         statusUpdate.text = draft.text;
         statusUpdate.location = draft.location;
         statusUpdate.media = draft.media;
-        if (draft.action_extras instanceof UpdateStatusActionExtra) {
-            final UpdateStatusActionExtra extra = (UpdateStatusActionExtra) draft.action_extras;
+        if (draft.action_extras instanceof UpdateStatusActionExtras) {
+            final UpdateStatusActionExtras extra = (UpdateStatusActionExtras) draft.action_extras;
             statusUpdate.in_reply_to_status = extra.getInReplyToStatus();
             statusUpdate.is_possibly_sensitive = extra.isPossiblySensitive();
             statusUpdate.display_coordinates = extra.getDisplayCoordinates();

@@ -31,7 +31,6 @@ class AccountAuthenticatorService : Service() {
 
     internal class TwidereAccountAuthenticator(val context: Context) : AbstractAccountAuthenticator(context) {
 
-        // TODO: Make SignInActivity comply with AccountAuthenticatorActivity
         override fun addAccount(response: AccountAuthenticatorResponse, accountType: String,
                                 authTokenType: String?, requiredFeatures: Array<String>?,
                                 options: Bundle?): Bundle {

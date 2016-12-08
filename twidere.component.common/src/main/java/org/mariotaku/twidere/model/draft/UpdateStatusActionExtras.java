@@ -14,7 +14,7 @@ import org.mariotaku.twidere.model.ParcelableStatus;
  */
 @ParcelablePlease
 @JsonObject
-public class UpdateStatusActionExtra implements ActionExtra {
+public class UpdateStatusActionExtras implements ActionExtras {
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_status")
     ParcelableStatus inReplyToStatus;
@@ -78,20 +78,47 @@ public class UpdateStatusActionExtra implements ActionExtra {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        UpdateStatusActionExtraParcelablePlease.writeToParcel(this, dest, flags);
+        UpdateStatusActionExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<UpdateStatusActionExtra> CREATOR = new Creator<UpdateStatusActionExtra>() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UpdateStatusActionExtras that = (UpdateStatusActionExtras) o;
+
+        if (possiblySensitive != that.possiblySensitive) return false;
+        if (displayCoordinates != that.displayCoordinates) return false;
+        if (inReplyToStatus != null ? !inReplyToStatus.equals(that.inReplyToStatus) : that.inReplyToStatus != null)
+            return false;
+        if (repostStatusId != null ? !repostStatusId.equals(that.repostStatusId) : that.repostStatusId != null)
+            return false;
+        return attachmentUrl != null ? attachmentUrl.equals(that.attachmentUrl) : that.attachmentUrl == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = inReplyToStatus != null ? inReplyToStatus.hashCode() : 0;
+        result = 31 * result + (possiblySensitive ? 1 : 0);
+        result = 31 * result + (repostStatusId != null ? repostStatusId.hashCode() : 0);
+        result = 31 * result + (displayCoordinates ? 1 : 0);
+        result = 31 * result + (attachmentUrl != null ? attachmentUrl.hashCode() : 0);
+        return result;
+    }
+
+    public static final Creator<UpdateStatusActionExtras> CREATOR = new Creator<UpdateStatusActionExtras>() {
         @Override
-        public UpdateStatusActionExtra createFromParcel(Parcel source) {
-            UpdateStatusActionExtra target = new UpdateStatusActionExtra();
-            UpdateStatusActionExtraParcelablePlease.readFromParcel(target, source);
+        public UpdateStatusActionExtras createFromParcel(Parcel source) {
+            UpdateStatusActionExtras target = new UpdateStatusActionExtras();
+            UpdateStatusActionExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
         @Override
-        public UpdateStatusActionExtra[] newArray(int size) {
-            return new UpdateStatusActionExtra[size];
+        public UpdateStatusActionExtras[] newArray(int size) {
+            return new UpdateStatusActionExtras[size];
         }
     };
 }

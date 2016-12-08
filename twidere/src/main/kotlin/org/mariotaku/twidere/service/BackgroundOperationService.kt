@@ -62,7 +62,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtra
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
@@ -173,7 +173,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                 updateStatuses(item.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, item))
             }
             Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {
-                val recipientId = (item.action_extras as? SendDirectMessageActionExtra)?.recipientId ?: return
+                val recipientId = (item.action_extras as? SendDirectMessageActionExtras)?.recipientId ?: return
                 if (item.account_keys?.isEmpty() ?: true) {
                     return
                 }

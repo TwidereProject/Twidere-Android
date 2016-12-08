@@ -32,7 +32,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.draft.UpdateStatusActionExtra
+import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
@@ -519,7 +519,8 @@ class UpdateStatusTask(
         draft.text = statusUpdate.text
         draft.location = statusUpdate.location
         draft.media = statusUpdate.media
-        draft.action_extras = UpdateStatusActionExtra().apply {
+        draft.timestamp = System.currentTimeMillis()
+        draft.action_extras = UpdateStatusActionExtras().apply {
             inReplyToStatus = statusUpdate.in_reply_to_status
             isPossiblySensitive = statusUpdate.is_possibly_sensitive
             isRepostStatusId = statusUpdate.repost_status_id

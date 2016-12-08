@@ -2,27 +2,30 @@ package org.mariotaku.twidere.extension
 
 import android.content.Context
 import android.net.Uri
+import com.bluelinelabs.logansquare.LoganSquare
+import com.nostra13.universalimageloader.utils.IoUtils
 import org.apache.james.mime4j.dom.Header
 import org.apache.james.mime4j.dom.MessageServiceFactory
 import org.apache.james.mime4j.dom.address.Mailbox
 import org.apache.james.mime4j.dom.field.*
-import org.apache.james.mime4j.message.AbstractMessage
-import org.apache.james.mime4j.message.BodyPart
-import org.apache.james.mime4j.message.MultipartImpl
-import org.apache.james.mime4j.message.SimpleContentHandler
+import org.apache.james.mime4j.message.*
 import org.apache.james.mime4j.parser.MimeStreamParser
 import org.apache.james.mime4j.storage.StorageBodyFactory
 import org.apache.james.mime4j.stream.BodyDescriptor
 import org.apache.james.mime4j.stream.MimeConfig
+import org.apache.james.mime4j.stream.RawField
+import org.apache.james.mime4j.util.MimeUtil
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.extension.model.getMimeType
-import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableMediaUpdate
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.Draft.Action
+import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
+import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.util.collection.NonEmptyHashMap
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.nio.charset.Charset
@@ -45,44 +48,64 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
 
     message.date = Date(this.timestamp)
     message.setFrom(this.account_keys?.map { Mailbox(it.id, it.host) })
+    if (message.header == null) {
+        message.header = HeaderImpl()
+    }
+
+    this.location?.let { location ->
+        message.header.addField(RawField("X-GeoLocation", location.toString()))
+    }
+    this.action_type?.let { type ->
+        message.header.addField(RawField("X-Action-Type", type))
+    }
 
     val multipart = MultipartImpl("mixed")
     multipart.addBodyPart(BodyPart().apply {
-        setText(bodyFactory.textBody(this@writeMimeMessageTo.text))
+        setText(bodyFactory.textBody(this@writeMimeMessageTo.text, Charsets.UTF_8.name()))
     })
+
+    this.action_extras?.let { extras ->
+        multipart.addBodyPart(BodyPart().apply {
+            setText(bodyFactory.textBody(LoganSquare.serialize(extras)), "json")
+            this.filename = "twidere.action.extras.json"
+        })
+    }
     this.media?.forEach { mediaItem ->
         multipart.addBodyPart(BodyPart().apply {
             val uri = Uri.parse(mediaItem.uri)
-            val storage = storageProvider.store(contentResolver.openInputStream(uri))
             val mimeType = mediaItem.getMimeType(contentResolver) ?: "application/octet-stream"
             val parameters = NonEmptyHashMap<String, String?>()
             parameters["alt_text"] = mediaItem.alt_text
             parameters["media_type"] = mediaItem.type.toString()
-            this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)
+            val storage = storageProvider.store(contentResolver.openInputStream(uri))
             this.filename = uri.lastPathSegment
+            this.contentTransferEncoding = MimeUtil.ENC_BASE64
+            this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)
         })
     }
 
     message.setMultipart(multipart)
     writer.writeMessage(message, st)
+    st.flush()
 }
 
 fun Draft.readMimeMessageFrom(context: Context, st: InputStream) {
     val config = MimeConfig()
     val parser = MimeStreamParser(config)
-    parser.setContentHandler(DraftContentHandler(this))
+    parser.isContentDecoding = true
+    parser.setContentHandler(DraftContentHandler(context, this))
     parser.parse(st)
 }
 
-private class DraftContentHandler(private val draft: Draft) : SimpleContentHandler() {
+private class DraftContentHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
     private val processingStack = Stack<SimpleContentHandler>()
     private val mediaList: MutableList<ParcelableMediaUpdate> = ArrayList()
     override fun headers(header: Header) {
         if (processingStack.isEmpty()) {
-            draft.timestamp = header.getField("Date").convert {
+            draft.timestamp = header.getField("Date")?.convert {
                 (it as DateTimeField).date.time
-            }
-            draft.account_keys = header.getField("From").convert { field ->
+            } ?: 0
+            draft.account_keys = header.getField("From")?.convert { field ->
                 when (field) {
                     is MailboxField -> {
                         return@convert arrayOf(field.mailbox.convert { UserKey(it.localPart, it.domain) })
@@ -95,6 +118,8 @@ private class DraftContentHandler(private val draft: Draft) : SimpleContentHandl
                     }
                 }
             }
+            draft.location = header.getField("X-GeoLocation")?.body?.convert(ParcelableLocation::valueOf)
+            draft.action_type = header.getField("X-Action-Type")?.body
         } else {
             processingStack.peek().headers(header)
         }
@@ -108,7 +133,7 @@ private class DraftContentHandler(private val draft: Draft) : SimpleContentHandl
     }
 
     override fun startBodyPart() {
-        processingStack.push(BodyPartHandler(draft))
+        processingStack.push(BodyPartHandler(context, draft))
     }
 
     override fun body(bd: BodyDescriptor?, `is`: InputStream?) {
@@ -131,7 +156,7 @@ private class DraftContentHandler(private val draft: Draft) : SimpleContentHandl
     }
 }
 
-private class BodyPartHandler(private val draft: Draft) : SimpleContentHandler() {
+private class BodyPartHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
     internal lateinit var header: Header
     internal var media: ParcelableMediaUpdate? = null
 
@@ -147,11 +172,32 @@ private class BodyPartHandler(private val draft: Draft) : SimpleContentHandler()
         val contentDisposition = header.getField("Content-Disposition") as? ContentDispositionField
         if (contentDisposition != null && contentDisposition.isAttachment) {
             when (contentDisposition.filename) {
+                "twidere.action.extras.json" -> {
+                    draft.action_extras = when (draft.action_type) {
+                        "0", "1", Action.UPDATE_STATUS, Action.REPLY, Action.QUOTE -> {
+                            LoganSquare.parse(st, UpdateStatusActionExtras::class.java)
+                        }
+                        "2", Action.SEND_DIRECT_MESSAGE -> {
+                            LoganSquare.parse(st, SendDirectMessageActionExtras::class.java)
+                        }
+                        else -> {
+                            null
+                        }
+                    }
+                }
                 else -> {
                     val contentType = header.getField("Content-Type") as? ContentTypeField
+                    val filename = contentDisposition.filename ?: return
+                    val mediaFile = File(context.filesDir, filename)
                     media = ParcelableMediaUpdate().apply {
+                        bd.transferEncoding
                         this.type = contentType?.getParameter("media_type").toInt(ParcelableMedia.Type.UNKNOWN)
                         this.alt_text = contentType?.getParameter("alt_text")
+                        FileOutputStream(mediaFile).use {
+                            IoUtils.copyStream(st, it, null)
+                            it.flush()
+                        }
+                        this.uri = Uri.fromFile(mediaFile).toString()
                     }
                 }
             }

@@ -125,6 +125,7 @@ dependencies {
     androidTestCompile "com.android.support:support-annotations:$android_support_lib_version"
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'commons-io:commons-io:2.5'
 
     compile 'com.android.support:multidex:1.0.1'
     compile "com.android.support:support-v4:$android_support_lib_version"

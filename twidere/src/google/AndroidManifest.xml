@@ -30,6 +30,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="org.mariotaku.twidere.activity.DropboxAuthStarterActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
+        <activity
             android:name="com.dropbox.core.android.AuthActivity"
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask">
@@ -42,5 +45,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <service android:name="org.mariotaku.twidere.service.DropboxDataSyncService"/>
     </application>
 </manifest>
