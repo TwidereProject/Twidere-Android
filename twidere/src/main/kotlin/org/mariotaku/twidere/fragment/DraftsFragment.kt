@@ -73,8 +73,7 @@ import java.util.*
 
 class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemClickListener, MultiChoiceModeListener {
 
-    private var adapter: DraftsAdapter? = null
-
+    private lateinit var adapter: DraftsAdapter
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_multi_select_drafts, menu)
@@ -101,7 +100,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                 for (i in 0 until checked.size()) {
                     val position = checked.keyAt(i)
                     if (checked.valueAt(i)) {
-                        list.add(adapter!!.getDraft(position))
+                        list.add(adapter.getDraft(position))
                     }
                 }
                 if (sendDrafts(list)) {
@@ -116,7 +115,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                 for (i in 0 until checked.size()) {
                     val position = checked.keyAt(i)
                     if (checked.valueAt(i)) {
-                        drafts.add(adapter!!.getDraft(position))
+                        drafts.add(adapter.getDraft(position))
                     }
                 }
                 task {
@@ -157,12 +156,12 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
-        adapter!!.swapCursor(cursor)
+        adapter.swapCursor(cursor)
         setListShown(true)
     }
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {
-        adapter!!.swapCursor(null)
+        adapter.swapCursor(null)
     }
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
@@ -171,7 +170,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
-        val item = adapter!!.getDraft(position)
+        val item = adapter.getDraft(position)
         if (TextUtils.isEmpty(item.action_type)) {
             editDraft(item)
             return
@@ -183,14 +182,16 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_drafts, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_drafts, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = DraftsAdapter(activity)
-        adapter!!.setTextSize(preferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(activity)).toFloat())
+        adapter = DraftsAdapter(activity).apply {
+            textSize = preferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(activity)).toFloat()
+        }
+
         listView.adapter = adapter
         listView.emptyView = emptyView
         listView.onItemClickListener = this
@@ -212,9 +213,9 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     }
 
     fun setListShown(listShown: Boolean) {
-        listContainer!!.visibility = if (listShown) View.VISIBLE else View.GONE
-        progressContainer!!.visibility = if (listShown) View.GONE else View.VISIBLE
-        emptyView!!.visibility = if (listShown && adapter!!.isEmpty) View.VISIBLE else View.GONE
+        listContainer.visibility = if (listShown) View.VISIBLE else View.GONE
+        progressContainer.visibility = if (listShown) View.GONE else View.VISIBLE
+        emptyView.visibility = if (listShown && adapter.isEmpty) View.VISIBLE else View.GONE
     }
 
     private fun editDraft(draft: Draft) {
@@ -242,7 +243,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                     if (item.account_keys?.isEmpty() ?: true || recipientId == null) {
                         continue@loop
                     }
-                    val accountId = item.account_keys!![0]
+                    val accountId = item.account_keys?.firstOrNull()
                     val imageUri = item.media?.firstOrNull()?.uri
                     twitterWrapper.sendDirectMessageAsync(accountId, recipientId, item.text, imageUri)
                 }

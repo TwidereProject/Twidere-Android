@@ -53,6 +53,7 @@ import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
@@ -88,6 +89,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.lang.ref.WeakReference
+import java.util.*
 
 
 class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
@@ -730,37 +732,49 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
     internal data class SignInResponse(
             val alreadyLoggedIn: Boolean,
-            @Credentials.Type val authType: String = Credentials.Type.EMPTY,
+            @Credentials.Type val credsType: String = Credentials.Type.EMPTY,
             val credentials: Credentials,
             val user: ParcelableUser,
             val color: Int = 0,
-            val accountType: Pair<String, String>? = null
+            val accountType: Pair<String, String>
     ) {
 
-        fun writeAccountInfo(am: AccountManager, account: Account) {
-            am.setUserData(account, ACCOUNT_USER_DATA_KEY, user.key.toString())
-            am.setUserData(account, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
+        private fun writeAccountInfo(map: MutableMap<String, String?>) {
+            map[ACCOUNT_USER_DATA_KEY] = user.key.toString()
+            map[ACCOUNT_USER_DATA_TYPE] = accountType.first
+            map[ACCOUNT_USER_DATA_CREDS_TYPE] = credsType
 
-            am.setUserData(account, ACCOUNT_USER_DATA_COLOR, toHexColor(color))
-            am.setUserData(account, ACCOUNT_USER_DATA_ACTIVATED, true.toString())
+            map[ACCOUNT_USER_DATA_ACTIVATED] = true.toString()
+            map[ACCOUNT_USER_DATA_COLOR] = toHexColor(color)
 
+            map[ACCOUNT_USER_DATA_USER] = LoganSquare.serialize(user)
+            map[ACCOUNT_USER_DATA_EXTRAS] = accountType.second
+        }
+
+        private fun writeAuthToken(am: AccountManager, account: Account) {
             am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(credentials))
-
-            if (accountType != null) {
-                am.setUserData(account, ACCOUNT_USER_DATA_TYPE, accountType.first)
-                am.setUserData(account, ACCOUNT_USER_DATA_EXTRAS, accountType.second)
-            }
         }
 
         fun updateAccount(am: AccountManager) {
             val account = AccountUtils.findByAccountKey(am, user.key) ?: return
-            writeAccountInfo(am, account)
+            val map: MutableMap<String, String?> = HashMap()
+            writeAccountInfo(map)
+            for ((k, v) in map) {
+                am.setUserData(account, k, v)
+            }
+            writeAuthToken(am, account)
         }
 
-        fun insertAccount(am: AccountManager) {
+        fun insertAccount(am: AccountManager): Account {
             val account = Account(UserKey(user.screen_name, user.key.host).toString(), ACCOUNT_TYPE)
-            am.addAccountExplicitly(account, null, null)
-            writeAccountInfo(am, account)
+            val map: MutableMap<String, String?> = HashMap()
+            writeAccountInfo(map)
+            val userData = Bundle()
+            for ((k, v) in map) {
+                userData[k] = v
+            }
+            am.addAccountExplicitly(account, null, userData)
+            return account
         }
     }
 

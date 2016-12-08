@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.SyncResult
 import android.os.Bundle
 import android.os.IBinder
+import org.mariotaku.ktextension.convert
 import org.mariotaku.twidere.IDataSyncService
 import org.mariotaku.twidere.activity.DropboxAuthStarterActivity
 import org.mariotaku.twidere.model.SyncAuthInfo
+import org.mariotaku.twidere.util.JsonSerializer
 import java.lang.ref.WeakReference
 
 /**
@@ -39,15 +41,18 @@ class DropboxDataSyncService : Service() {
 
     internal class ServiceInterface(val service: WeakReference<DropboxDataSyncService>) : IDataSyncService.Stub() {
 
-        override fun getAuthInfo(): SyncAuthInfo? {
-            return service.get().getAuthInfo()
+        override fun getAuthInfo(): String? {
+            val info = service.get().getAuthInfo() ?: return null
+            return JsonSerializer.serialize(info)
         }
 
-        override fun getAuthRequestIntent(info: SyncAuthInfo?): Intent {
+        override fun getAuthRequestIntent(infoJson: String?): Intent {
+            val info = infoJson?.convert { JsonSerializer.parse(infoJson, SyncAuthInfo::class.java) }
             return service.get().getAuthRequestIntent(info)
         }
 
-        override fun onPerformSync(info: SyncAuthInfo, extras: Bundle?, syncResult: SyncResult) {
+        override fun onPerformSync(infoJson: String, extras: Bundle?, syncResult: SyncResult) {
+            val info = infoJson.convert { JsonSerializer.parse(infoJson, SyncAuthInfo::class.java) }!!
             service.get().onPerformSync(info, extras, syncResult)
         }
 

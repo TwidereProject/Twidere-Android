@@ -28,10 +28,9 @@ import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE
+import org.mariotaku.twidere.extension.getActionName
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.DraftCursorIndices
-import org.mariotaku.twidere.model.ParcelableMediaUpdate
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -47,7 +46,11 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
     private val mediaLoadingHandler: MediaLoadingHandler
     private val mediaPreviewStyle: Int
 
-    private var mTextSize: Float = 0.toFloat()
+    var textSize: Float = 0f
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
     private var indices: DraftCursorIndices? = null
 
     init {
@@ -57,17 +60,18 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
     }
 
     override fun bindView(view: View, context: Context, cursor: Cursor) {
+        val draft = indices?.newObject(cursor) ?: return
         val holder = view.tag as DraftViewHolder
-        val indices = indices!!
-        val accountKeys = UserKey.arrayOf(cursor.getString(indices.account_keys))
-        val text = cursor.getString(indices.text)
-        val mediaUpdates = JsonSerializer.parseArray(cursor.getString(indices.media), ParcelableMediaUpdate::class.java)
-        val timestamp = cursor.getLong(indices.timestamp)
-        val actionType: String = cursor.getString(indices.action_type) ?: Draft.Action.UPDATE_STATUS
-        val actionName = getActionName(context, actionType)
+        val accountKeys = draft.account_keys
+        val text = draft.text
+        val mediaUpdates = draft.media
+        val timestamp = draft.timestamp
+        val actionType: String = draft.action_type ?: Draft.Action.UPDATE_STATUS
+        val actionName = draft.getActionName(context)
         holder.media_preview_container.setStyle(mediaPreviewStyle)
         when (actionType) {
-            Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
+            Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
+            Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(mediaUpdates)
                 holder.media_preview_container.visibility = View.VISIBLE
                 holder.media_preview_container.displayMedia(media, imageLoader, null, -1, null,
@@ -82,7 +86,7 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         } else {
             holder.content.drawEnd()
         }
-        holder.setTextSize(mTextSize)
+        holder.setTextSize(textSize)
         val emptyContent = TextUtils.isEmpty(text)
         if (emptyContent) {
             holder.text.setText(R.string.empty_content)
@@ -108,10 +112,6 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         return view
     }
 
-    fun setTextSize(text_size: Float) {
-        mTextSize = text_size
-    }
-
     override fun swapCursor(c: Cursor?): Cursor? {
         val old = super.swapCursor(c)
         if (c != null) {
@@ -123,24 +123,5 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
     fun getDraft(position: Int): Draft {
         cursor.moveToPosition(position)
         return indices!!.newObject(cursor)
-    }
-
-    private fun getActionName(context: Context, actionType: String): String? {
-        if (TextUtils.isEmpty(actionType)) return context.getString(R.string.update_status)
-        when (actionType) {
-            Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2 -> {
-                return context.getString(R.string.update_status)
-            }
-            Draft.Action.REPLY -> {
-                return context.getString(R.string.reply)
-            }
-            Draft.Action.QUOTE -> {
-                return context.getString(R.string.quote)
-            }
-            Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT -> {
-                return context.getString(R.string.send_direct_message)
-            }
-        }
-        return null
     }
 }
