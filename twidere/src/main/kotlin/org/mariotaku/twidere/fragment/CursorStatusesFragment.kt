@@ -27,14 +27,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
-import android.util.Log
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
@@ -86,7 +84,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         } else {
             where = accountWhere
         }
-        val adapter = adapter
         adapter.showAccountsColor = accountKeys.size > 1
         val projection = Statuses.COLUMNS
         val selectionArgs = Array(accountKeys.size) {
@@ -103,8 +100,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
 
     private fun showContentOrError() {
-        val accountKeys = accountKeys
-        val adapter = adapter
+        val accountKeys = this.accountKeys
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
@@ -270,7 +266,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 val status = event.status
                 val data = adapterData
                 if (status == null || data == null || data.isEmpty()) return
-                val adapter = adapter
                 val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
                 val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
                 val startIndex = adapter.statusStartIndex

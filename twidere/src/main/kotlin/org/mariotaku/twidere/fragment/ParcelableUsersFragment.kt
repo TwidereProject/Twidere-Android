@@ -63,7 +63,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = adapter
         adapter.userClickListener = this
 
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
@@ -99,7 +98,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
-        val adapter = adapter
         adapter.setData(data)
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
@@ -183,7 +181,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
                                       layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val adapter = adapter
         val itemDecoration = DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
@@ -227,7 +224,6 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
         @Subscribe
         fun onFriendshipTaskEvent(event: FriendshipTaskEvent) {
-            val adapter = adapter
             val position = findPosition(event.accountKey, event.userKey)
             val data = adapter.getData() ?: return
             if (position < 0 || position >= data.size) return

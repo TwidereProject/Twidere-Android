@@ -99,7 +99,6 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         val timelineLoader = loader as UserTimelineLoader
-        val adapter = adapter
         if (!adapter.hasPinnedStatuses) {
             adapter.pinnedStatuses = timelineLoader.pinnedStatuses
         }

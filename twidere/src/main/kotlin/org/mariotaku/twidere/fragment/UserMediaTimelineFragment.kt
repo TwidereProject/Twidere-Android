@@ -47,7 +47,6 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = adapter
         adapter.statusClickListener = this
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
@@ -99,7 +98,6 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>>, data: List<ParcelableStatus>?) {
-        val adapter = adapter
         val changed = adapter.setData(data)
         if ((loader as IExtendedLoader).fromUser && loader is MediaTimelineLoader) {
             val maxId = loader.maxId
@@ -138,7 +136,6 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         if (position and ILoadMoreSupportAdapter.START != 0L) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
-        val adapter = adapter
         val maxId = adapter.getStatusId(adapter.statusCount - 1)
         getStatuses(maxId, null)
     }

@@ -78,7 +78,6 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>, data: List<ParcelableUserList>) {
-        val adapter = adapter
         adapter.setData(data)
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
@@ -129,7 +128,6 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = adapter
         val layoutManager = layoutManager
         adapter.userListClickListener = this
 

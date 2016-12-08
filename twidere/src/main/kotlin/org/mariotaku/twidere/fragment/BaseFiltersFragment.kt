@@ -169,7 +169,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
-        val adapter = adapter
         adapter!!.swapCursor(data)
         if (data != null && data.count > 0) {
             showContent()
@@ -179,7 +178,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {
-        val adapter = adapter
         adapter!!.swapCursor(null)
     }
 
@@ -254,15 +252,15 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 val autoCompleteType: Int
                 autoCompleteType = args.getInt(EXTRA_AUTO_COMPLETE_TYPE, 0)
                 if (autoCompleteType != 0) {
-                    val mUserAutoCompleteAdapter: SimpleCursorAdapter
+                    val userAutoCompleteAdapter: SimpleCursorAdapter
                     if (autoCompleteType == AUTO_COMPLETE_TYPE_SOURCES) {
-                        mUserAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
+                        userAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
                     } else {
                         val adapter = ComposeAutoCompleteAdapter(activity)
                         adapter.accountKey = Utils.getDefaultAccountKey(activity)
-                        mUserAutoCompleteAdapter = adapter
+                        userAutoCompleteAdapter = adapter
                     }
-                    editText.setAdapter(mUserAutoCompleteAdapter)
+                    editText.setAdapter(userAutoCompleteAdapter)
                     editText.threshold = 1
                 }
             }

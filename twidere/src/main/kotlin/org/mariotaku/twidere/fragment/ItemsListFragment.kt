@@ -116,7 +116,6 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
-        val adapter = adapter
         when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
@@ -132,7 +131,6 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         if (!userVisibleHint) return false
         val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
-        val adapter = adapter
         when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter

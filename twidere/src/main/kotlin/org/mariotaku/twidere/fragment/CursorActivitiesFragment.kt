@@ -55,7 +55,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override fun onLoadingFinished() {
         val accountKeys = accountKeys
-        val adapter = adapter
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
@@ -100,7 +99,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         }
         val expression = processWhere(where, accountSelectionArgs)
         val selection = expression.sql
-        val adapter = adapter
         adapter.showAccountsColor = accountKeys.size > 1
         val projection = Activities.COLUMNS
         return CursorActivitiesLoader(context, uri, projection, selection, expression.parameters,
@@ -258,7 +256,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     fun replaceStatusStates(result: ParcelableStatus?) {
         if (result == null) return
         val lm = layoutManager
-        val adapter = adapter
         val rangeStart = Math.max(adapter.activityStartIndex, lm.findFirstVisibleItemPosition())
         val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.activityCount - 1)
         loop@ for (i in rangeStart..rangeEnd) {

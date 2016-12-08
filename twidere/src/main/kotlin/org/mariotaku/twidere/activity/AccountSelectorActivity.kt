@@ -42,7 +42,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 
 class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
 
-    private var adapter: AccountDetailsAdapter? = null
+    private lateinit var adapter: AccountDetailsAdapter
 
     private var firstCreated: Boolean = false
 
@@ -136,7 +136,6 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
     }
 
     fun selectSingleAccount(position: Int) {
-        val adapter = adapter!!
         val account = adapter.getItem(position)
         val data = Intent()
         data.putExtra(EXTRA_ID, account.key.id)

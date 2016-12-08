@@ -42,12 +42,12 @@ import org.mariotaku.twidere.util.TwidereColorUtils
  * Created by mariotaku on 15/4/16.
  */
 abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment(), OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport, AbsListView.OnScrollListener {
-    private var scrollHandler: ListViewScrollHandler? = null
+    private lateinit var scrollHandler: ListViewScrollHandler
 
-    override var adapter: A? = null
+    override lateinit var adapter: A
 
     // Data fields
-    private val mSystemWindowsInsets = Rect()
+    private val systemWindowsInsets = Rect()
 
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
         updateRefreshProgressOffset()
@@ -128,9 +128,10 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment
         }
         listView.adapter = adapter
         listView.clipToPadding = false
-        scrollHandler = ListViewScrollHandler(this, ListViewScrollHandler.ListViewCallback(listView))
-        scrollHandler!!.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        scrollHandler!!.onScrollListener = this
+        scrollHandler = ListViewScrollHandler(this, ListViewScrollHandler.ListViewCallback(listView)).apply {
+            this.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+            this.onScrollListener = this@AbsContentListViewFragment
+        }
     }
 
 
@@ -148,7 +149,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment
         listView.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         errorContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
         progressContainer.setPadding(insets.left, insets.top, insets.right, insets.bottom)
-        mSystemWindowsInsets.set(insets)
+        systemWindowsInsets.set(insets)
         updateRefreshProgressOffset()
     }
 
@@ -192,14 +193,14 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment
 
     protected fun updateRefreshProgressOffset() {
         val activity = activity
-        if (activity !is IControlBarActivity || mSystemWindowsInsets.top == 0 || swipeLayout == null
+        if (activity !is IControlBarActivity || systemWindowsInsets.top == 0 || swipeLayout == null
                 || refreshing) {
             return
         }
         val density = resources.displayMetrics.density
         val progressCircleDiameter = swipeLayout.progressCircleDiameter
         val controlBarOffsetPixels = Math.round(activity.controlBarHeight * (1 - activity.controlBarOffset))
-        val swipeStart = mSystemWindowsInsets.top - controlBarOffsetPixels - progressCircleDiameter
+        val swipeStart = systemWindowsInsets.top - controlBarOffsetPixels - progressCircleDiameter
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
         val swipeDistance = Math.round(64 * density)
         swipeLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance)

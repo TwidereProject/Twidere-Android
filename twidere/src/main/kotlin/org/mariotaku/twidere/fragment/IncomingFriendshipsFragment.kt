@@ -59,13 +59,11 @@ class IncomingFriendshipsFragment : CursorSupportUsersListFragment(), IUsersAdap
     }
 
     override fun onAcceptClicked(holder: UserViewHolder, position: Int) {
-        val adapter = adapter
         val user = adapter.getUser(position) ?: return
         twitterWrapper.acceptFriendshipAsync(user.account_key, user.key)
     }
 
     override fun onDenyClicked(holder: UserViewHolder, position: Int) {
-        val adapter = adapter
         val user = adapter.getUser(position) ?: return
         twitterWrapper.denyFriendshipAsync(user.account_key, user.key)
     }

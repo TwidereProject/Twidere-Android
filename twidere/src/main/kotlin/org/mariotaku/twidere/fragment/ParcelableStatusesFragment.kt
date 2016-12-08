@@ -128,7 +128,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         refreshEnabled = true
         refreshing = false
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
-        val adapter = adapter
         if (adapter.itemCount > 0) {
             showContent()
         } else if (loader is MicroBlogAPIStatusesLoader) {
@@ -149,7 +148,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (position and ILoadMoreSupportAdapter.START !== 0L || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
-        val adapter = adapter
         // Load the last item
         val idx = adapter.statusStartIndex + adapter.rawStatusCount - 1
         if (idx < 0) return
@@ -165,7 +163,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     fun replaceStatusStates(status: ParcelableStatus?) {
         if (status == null) return
         val lm = layoutManager
-        val adapter = adapter
         val rangeStart = Math.max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
         val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.statusCount - 1)
         for (i in rangeStart..rangeEnd) {
@@ -183,7 +180,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
-        val adapter = adapter
         val accountKeys = accountKeys
         if (adapter.statusCount > 0) {
             val firstStatus = adapter.getStatus(0)!!

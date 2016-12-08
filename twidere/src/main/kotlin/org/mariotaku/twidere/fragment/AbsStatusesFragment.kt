@@ -170,7 +170,6 @@ abstract class AbsStatusesFragment protected constructor() :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         scrollListener?.reversed = preferences.getBoolean(SharedPreferenceConstants.KEY_READ_FROM_BOTTOM)
-        val adapter = adapter
         adapter.statusClickListener = this
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
@@ -223,7 +222,6 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onDestroy() {
-        val adapter = adapter
         adapter.statusClickListener = null
         super.onDestroy()
     }
@@ -316,7 +314,6 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
-        val adapter = adapter
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, false)
         val readFromBottom = preferences.getBoolean(SharedPreferenceConstants.KEY_READ_FROM_BOTTOM, false)
         var lastReadPositionKey: Long
@@ -410,7 +407,6 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
-        val adapter = adapter
         val status = adapter.getStatus(statusPosition) ?: return
         IntentUtils.openMedia(activity, status, media, null,
                 preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
@@ -422,16 +418,12 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-        val context = context ?: return
-        val adapter = adapter
         val status = adapter.getStatus(position) ?: return
         handleStatusActionClick(context, fragmentManager, twitterWrapper, holder as StatusViewHolder, status, id)
     }
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val adapter = adapter
-        val itemDecoration = DividerItemDecoration(context,
-                (recyclerView.layoutManager as LinearLayoutManager).orientation)
+        val itemDecoration = DividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
         if (adapter.profileImageEnabled) {
             val decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image)
@@ -511,7 +503,6 @@ abstract class AbsStatusesFragment protected constructor() :
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION) return
-        val adapter = adapter
         val status = adapter.getStatus(position) ?: return
         val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
         readPositionTagWithArguments?.let {
@@ -534,7 +525,6 @@ abstract class AbsStatusesFragment protected constructor() :
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
-        val adapter = adapter
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val status = adapter.getStatus(contextMenuInfo!!.position)
@@ -542,9 +532,9 @@ abstract class AbsStatusesFragment protected constructor() :
         MenuUtils.setupForStatus(context, preferences, menu, status!!, twitterWrapper)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
-        val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val status = adapter.getStatus(contextMenuInfo.position) ?: return false
         if (item.itemId == R.id.share) {
             val shareIntent = Utils.createStatusShareIntent(activity, status)
