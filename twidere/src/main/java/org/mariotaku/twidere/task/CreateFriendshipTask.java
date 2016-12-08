@@ -30,45 +30,45 @@ public class CreateFriendshipTask extends AbsFriendshipOperationTask implements 
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
         switch (details.type) {
             case AccountType.FANFOU: {
-                return twitter.createFanfouFriendship(args.userKey.getId());
+                return twitter.createFanfouFriendship(args.getUserKey().getId());
             }
         }
-        return twitter.createFriendship(args.userKey.getId());
+        return twitter.createFriendship(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
         user.is_following = true;
-        Utils.setLastSeen(context, user.key, System.currentTimeMillis());
+        Utils.setLastSeen(getContext(), user.key, System.currentTimeMillis());
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        if (USER_TYPE_FANFOU_COM.equals(params.accountKey.getHost())) {
+        if (USER_TYPE_FANFOU_COM.equals(params.getAccountKey().getHost())) {
             // Fanfou returns 403 for follow request
             if (exception instanceof MicroBlogException) {
                 MicroBlogException te = (MicroBlogException) exception;
                 if (te.getStatusCode() == 403 && !TextUtils.isEmpty(te.getErrorMessage())) {
-                    Utils.showErrorMessage(context, te.getErrorMessage(), false);
+                    Utils.showErrorMessage(getContext(), te.getErrorMessage(), false);
                     return;
                 }
             }
         }
-        Utils.showErrorMessage(context, R.string.action_following, exception, false);
+        Utils.showErrorMessage(getContext(), R.string.action_following, exception, false);
     }
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
         final String message;
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
         if (user.is_protected) {
-            message = context.getString(R.string.sent_follow_request_to_user,
-                    manager.getDisplayName(user, nameFirst));
+            message = getContext().getString(R.string.sent_follow_request_to_user,
+                    getManager().getDisplayName(user, nameFirst));
         } else {
-            message = context.getString(R.string.followed_user,
-                    manager.getDisplayName(user, nameFirst));
+            message = getContext().getString(R.string.followed_user,
+                    getManager().getDisplayName(user, nameFirst));
         }
-        Utils.showOkMessage(context, message, false);
+        Utils.showOkMessage(getContext(), message, false);
     }
 
 }

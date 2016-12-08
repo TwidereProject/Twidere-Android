@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.card
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -47,10 +48,12 @@ import org.mariotaku.twidere.Constants.LOGTAG
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseSupportFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.support.ViewSupport
@@ -136,8 +139,9 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
                             }
 
                             public override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {
-                                val caps = MicroBlogAPIFactory.getInstance(context, card.account_key,
-                                        true, true, TwitterCaps::class.java) ?: return null
+                                val details = AccountUtils.getAccountDetails(AccountManager.get(context),
+                                        card.account_key) ?: return null
+                                val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)
                                 try {
                                     val cardEntity = caps.sendPassThrough(cardDataMap).card
                                     return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
@@ -229,7 +233,8 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ParcelableCardEntity?> {
         val card = card
-        return ParcelableCardEntityLoader(context, card.account_key, card.url, card.name)
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), card.account_key)!!
+        return ParcelableCardEntityLoader(context, details, card.url, card.name)
     }
 
     override fun onLoadFinished(loader: Loader<ParcelableCardEntity?>, data: ParcelableCardEntity?) {
@@ -281,14 +286,13 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
 
     class ParcelableCardEntityLoader(
             context: Context,
-            private val accountKey: UserKey,
+            private val details: AccountDetails,
             private val cardUri: String,
             private val cardName: String
     ) : AsyncTaskLoader<ParcelableCardEntity?>(context) {
 
         override fun loadInBackground(): ParcelableCardEntity? {
-            val caps = MicroBlogAPIFactory.getInstance(context, accountKey,
-                    true, true, TwitterCaps::class.java) ?: return null
+            val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)
             try {
                 val params = CardDataMap()
                 params.putString("card_uri", cardUri)
@@ -298,7 +302,7 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
                 if (card == null || card.name == null) {
                     return null
                 }
-                return ParcelableCardEntityUtils.fromCardEntity(card, accountKey)
+                return ParcelableCardEntityUtils.fromCardEntity(card, details.key)
             } catch (e: MicroBlogException) {
                 return null
             }

@@ -270,7 +270,7 @@ public class TrendsLocationPreference extends Preference {
 
         @Override
         protected SimpleArrayMap<Location, List<Location>> doInBackground(final Object... args) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext(), false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext());
             if (twitter == null) return null;
             try {
                 LocationsMap map = new LocationsMap(Locale.getDefault());

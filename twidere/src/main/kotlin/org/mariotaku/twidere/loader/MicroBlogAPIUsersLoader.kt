@@ -26,7 +26,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableUser
@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import java.util.*
 
-abstract class TwitterAPIUsersLoader(
+abstract class MicroBlogAPIUsersLoader(
         context: Context,
         val accountKey: UserKey?,
         data: List<ParcelableUser>?,
@@ -49,7 +49,7 @@ abstract class TwitterAPIUsersLoader(
         val am = AccountManager.get(context)
         val details = AccountUtils.getAccountDetails(am, accountKey) ?:
                 return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
-        val twitter: MicroBlog = details.credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
+        val twitter: MicroBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         val data = data
         val users: List<User>
         try {

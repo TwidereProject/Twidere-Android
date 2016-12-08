@@ -36,7 +36,7 @@ open class UserSearchLoader(
         val page: Int,
         data: List<ParcelableUser>?,
         fromUser: Boolean
-) : TwitterAPIUsersLoader(context, accountKey, data, fromUser) {
+) : MicroBlogAPIUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
     public override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {

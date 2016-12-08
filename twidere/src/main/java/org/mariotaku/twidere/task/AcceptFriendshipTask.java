@@ -29,28 +29,28 @@ public class AcceptFriendshipTask extends AbsFriendshipOperationTask implements 
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
         switch (details.type) {
             case AccountType.FANFOU: {
-                return twitter.acceptFanfouFriendship(args.userKey.getId());
+                return twitter.acceptFanfouFriendship(args.getUserKey().getId());
             }
         }
-        return twitter.acceptFriendship(args.userKey.getId());
+        return twitter.acceptFriendship(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
-        Utils.setLastSeen(context, user.key, System.currentTimeMillis());
+        Utils.setLastSeen(getContext(), user.key, System.currentTimeMillis());
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        Utils.showErrorMessage(context, R.string.action_accepting_follow_request, exception, false);
+        Utils.showErrorMessage(getContext(), R.string.action_accepting_follow_request, exception, false);
     }
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
-        final String message = context.getString(R.string.accepted_users_follow_request,
-                manager.getDisplayName(user, nameFirst));
-        Utils.showOkMessage(context, message, false);
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
+        final String message = getContext().getString(R.string.accepted_users_follow_request,
+                getManager().getDisplayName(user, nameFirst));
+        Utils.showOkMessage(getContext(), message, false);
     }
 
 }

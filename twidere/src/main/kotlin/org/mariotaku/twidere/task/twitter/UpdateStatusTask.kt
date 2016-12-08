@@ -31,6 +31,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -301,8 +302,7 @@ class UpdateStatusTask(
             val mediaIds: Array<String>?
             when (account.type) {
                 AccountType.TWITTER -> {
-                    val upload = MicroBlogAPIFactory.getInstance(context,
-                            account.key, true, true, TwitterUpload::class.java)!!
+                    val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                     if (pendingUpdate.sharedMediaIds != null) {
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
@@ -316,8 +316,7 @@ class UpdateStatusTask(
                 }
                 AccountType.STATUSNET -> {
                     // TODO use their native API
-                    val upload = MicroBlogAPIFactory.getInstance(context,
-                            account.key, true, true, TwitterUpload::class.java)!!
+                    val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                     mediaIds = uploadAllMediaShared(upload, update, ownerIds, false)
                 }
                 else -> {

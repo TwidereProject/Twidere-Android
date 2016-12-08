@@ -33,7 +33,7 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -111,8 +111,7 @@ abstract class MicroBlogAPIStatusesLoader(
             }
         }
         if (!fromUser) return ListResponse.getListInstance(data)
-        val microBlog = details.credentials.newMicroBlogInstance(context = context,
-                cls = MicroBlog::class.java)
+        val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         val statuses: List<Status>
         val noItemsBefore = data.isEmpty()
         val loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)

@@ -60,7 +60,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -351,8 +351,8 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                                   imageUri: String?): SingleResponse<ParcelableDirectMessage> {
         val details = AccountUtils.getAccountDetails(AccountManager.get(this),
                 accountKey) ?: return SingleResponse.getInstance<ParcelableDirectMessage>()
-        val twitter = details.credentials.newMicroBlogInstance(context = this, cls = MicroBlog::class.java)
-        val twitterUpload = details.credentials.newMicroBlogInstance(context = this, cls = TwitterUpload::class.java)
+        val twitter = details.newMicroBlogInstance(context = this, cls = MicroBlog::class.java)
+        val twitterUpload = details.newMicroBlogInstance(context = this, cls = TwitterUpload::class.java)
         try {
             val directMessage: ParcelableDirectMessage
             when (details.type) {

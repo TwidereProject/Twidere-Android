@@ -49,7 +49,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedImagePickerActivity
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
@@ -349,7 +349,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
 
         override fun doLongOperation(context: Context): SingleResponse<ParcelableUser> {
             val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?: return SingleResponse.getInstance()
-            val microBlog = details.credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
+            val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             try {
                 var user: User? = null
                 if (isProfileChanged) {

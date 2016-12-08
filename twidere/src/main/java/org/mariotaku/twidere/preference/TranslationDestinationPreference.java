@@ -164,7 +164,7 @@ public class TranslationDestinationPreference extends Preference implements OnCl
 
         @Override
         protected ResponseList<Language> doInBackground(final Object... args) {
-            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext(), false);
+            final MicroBlog twitter = MicroBlogAPIFactory.getDefaultTwitterInstance(getContext());
             if (twitter == null) return null;
             try {
                 mSelectedLanguageCode = twitter.getAccountSettings().getLanguage();

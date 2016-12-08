@@ -20,6 +20,6 @@ public class ReportSpamAndBlockTask extends CreateUserBlockTask {
     @Override
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
-        return twitter.reportSpam(args.userKey.getId());
+        return twitter.reportSpam(args.getUserKey().getId());
     }
 }

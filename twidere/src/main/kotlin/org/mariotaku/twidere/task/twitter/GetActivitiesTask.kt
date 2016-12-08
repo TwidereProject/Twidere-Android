@@ -20,7 +20,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LOAD_ITEM_LIMIT
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
@@ -67,7 +67,7 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
             val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri,
                     accountKey) <= 0
             val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?: continue
-            val microBlog = credentials.credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
+            val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val paging = Paging()
             paging.count(loadItemLimit)
             var maxId: String? = null

@@ -35,21 +35,21 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
     @Override
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details,
                            @NonNull Arguments args) throws MicroBlogException {
-        return twitter.createMute(args.userKey.getId());
+        return twitter.createMute(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter,
                                    @NonNull AccountDetails details,
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
-        final ContentResolver resolver = context.getContentResolver();
-        Utils.setLastSeen(context, args.userKey, -1);
+        final ContentResolver resolver = getContext().getContentResolver();
+        Utils.setLastSeen(getContext(), args.getUserKey(), -1);
         for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
             final Expression where = Expression.and(
                     Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                     Expression.equalsArgs(Statuses.USER_KEY)
             );
-            final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
+            final String[] whereArgs = {args.getAccountKey().toString(), args.getUserKey().toString()};
             resolver.delete(uri, where.getSQL(), whereArgs);
         }
         if (!user.is_following) {
@@ -58,29 +58,29 @@ public class CreateUserMuteTask extends AbsFriendshipOperationTask {
                         Expression.equalsArgs(Activities.ACCOUNT_KEY),
                         Expression.equalsArgs(Activities.STATUS_USER_KEY)
                 );
-                final String[] whereArgs = {args.accountKey.toString(), args.userKey.toString()};
+                final String[] whereArgs = {args.getAccountKey().toString(), args.getUserKey().toString()};
                 resolver.delete(uri, where.getSQL(), whereArgs);
             }
         }
         // I bet you don't want to see this user in your auto complete list.
         final ContentValues values = new ContentValues();
-        values.put(CachedRelationships.ACCOUNT_KEY, args.accountKey.toString());
-        values.put(CachedRelationships.USER_KEY, args.userKey.toString());
+        values.put(CachedRelationships.ACCOUNT_KEY, args.getAccountKey().toString());
+        values.put(CachedRelationships.USER_KEY, args.getUserKey().toString());
         values.put(CachedRelationships.MUTING, true);
         resolver.insert(CachedRelationships.CONTENT_URI, values);
     }
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
-        final String message = context.getString(R.string.muted_user, manager.getDisplayName(user,
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
+        final String message = getContext().getString(R.string.muted_user, getManager().getDisplayName(user,
                 nameFirst));
-        Utils.showInfoMessage(context, message, false);
+        Utils.showInfoMessage(getContext(), message, false);
 
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        Utils.showErrorMessage(context, R.string.action_muting, exception, true);
+        Utils.showErrorMessage(getContext(), R.string.action_muting, exception, true);
     }
 }

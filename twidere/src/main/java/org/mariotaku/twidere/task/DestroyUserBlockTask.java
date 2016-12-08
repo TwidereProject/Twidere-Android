@@ -33,21 +33,21 @@ public class DestroyUserBlockTask extends AbsFriendshipOperationTask {
                            @NonNull Arguments args) throws MicroBlogException {
         switch (details.type) {
             case AccountType.FANFOU: {
-                return twitter.destroyFanfouBlock(args.userKey.getId());
+                return twitter.destroyFanfouBlock(args.getUserKey().getId());
             }
         }
-        return twitter.destroyBlock(args.userKey.getId());
+        return twitter.destroyBlock(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter,
                                    @NonNull AccountDetails details,
                                    @NonNull Arguments args, @NonNull ParcelableUser user) {
-        final ContentResolver resolver = context.getContentResolver();
+        final ContentResolver resolver = getContext().getContentResolver();
         // I bet you don't want to see this user in your auto complete list.
         final ContentValues values = new ContentValues();
-        values.put(CachedRelationships.ACCOUNT_KEY, args.accountKey.toString());
-        values.put(CachedRelationships.USER_KEY, args.userKey.toString());
+        values.put(CachedRelationships.ACCOUNT_KEY, args.getAccountKey().toString());
+        values.put(CachedRelationships.USER_KEY, args.getUserKey().toString());
         values.put(CachedRelationships.BLOCKING, false);
         values.put(CachedRelationships.FOLLOWING, false);
         values.put(CachedRelationships.FOLLOWED_BY, false);
@@ -56,15 +56,15 @@ public class DestroyUserBlockTask extends AbsFriendshipOperationTask {
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
-        final String message = context.getString(R.string.unblocked_user, manager.getDisplayName(user,
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
+        final String message = getContext().getString(R.string.unblocked_user, getManager().getDisplayName(user,
                 nameFirst));
-        Utils.showInfoMessage(context, message, false);
+        Utils.showInfoMessage(getContext(), message, false);
 
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        Utils.showErrorMessage(context, R.string.action_unblocking, exception, true);
+        Utils.showErrorMessage(getContext(), R.string.action_unblocking, exception, true);
     }
 }

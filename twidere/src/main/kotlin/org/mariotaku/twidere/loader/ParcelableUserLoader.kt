@@ -35,7 +35,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
@@ -89,7 +89,7 @@ class ParcelableUserLoader(
                 return response
             }
         }
-        val twitter = details.credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
+        val twitter = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         if (loadFromCache) {
             val where: Expression
             val whereArgs: Array<String>

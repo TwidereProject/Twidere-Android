@@ -45,6 +45,7 @@ import org.mariotaku.restfu.oauth.OAuthAuthorization;
 import org.mariotaku.restfu.oauth.OAuthToken;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.extension.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.util.AsyncTaskUtils;
@@ -243,8 +244,8 @@ public class BrowserSignInActivity extends BaseActivity {
                 final Endpoint endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(mAPIUrlFormat,
                         mSameOAuthSigningUrl);
                 final Authorization auth = new OAuthAuthorization(mConsumerKey, mConsumerSecret);
-                final TwitterOAuth oauth = MicroBlogAPIFactory.getInstance(mActivity, endpoint,
-                        auth, TwitterOAuth.class);
+                final TwitterOAuth oauth = CredentialsExtensionsKt.newMicroBlogInstance(mActivity, endpoint,
+                        auth, true, null, TwitterOAuth.class);
                 return new SingleResponse<>(oauth.getRequestToken(OAUTH_CALLBACK_OOB), null, new Bundle());
             } catch (final MicroBlogException e) {
                 return new SingleResponse<>(null, e, new Bundle());

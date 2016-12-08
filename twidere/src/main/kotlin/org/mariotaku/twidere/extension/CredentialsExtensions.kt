@@ -22,7 +22,7 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.util.MicroBlogAPIFactory.sConstantPoll
+import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.TwitterContentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
@@ -103,13 +103,13 @@ fun <T> Credentials.newMicroBlogInstance(context: Context,
                                          twitterExtraQueries: Boolean = true,
                                          extraRequestParams: Map<String, String>? = null,
                                          cls: Class<T>): T {
-    return newMicroBlogInstance(context, getAuthorization(), getEndpoint(cls),
+    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(),
             twitterExtraQueries, extraRequestParams, cls)
 }
 
 fun <T> newMicroBlogInstance(context: Context,
-                             auth: Authorization,
                              endpoint: Endpoint,
+                             auth: Authorization,
                              twitterExtraQueries: Boolean = true,
                              extraRequestParams: Map<String, String>? = null,
                              cls: Class<T>): T {
@@ -131,7 +131,7 @@ fun <T> newMicroBlogInstance(context: Context,
     factory.setAuthorization(auth)
     factory.setEndpoint(endpoint)
     if (twitterExtraQueries) {
-        factory.setConstantPool(sConstantPoll)
+        factory.setConstantPool(sTwitterConstantPool)
     } else {
         factory.setConstantPool(SimpleValueMap())
     }

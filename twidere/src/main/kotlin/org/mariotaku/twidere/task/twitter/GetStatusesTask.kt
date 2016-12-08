@@ -25,7 +25,7 @@ import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.constant.loadItemLimitKey
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
 import org.mariotaku.twidere.model.RefreshTaskParam
@@ -92,8 +92,7 @@ abstract class GetStatusesTask(protected val context: Context) : AbstractTask<Re
             val accountKey = accountKeys[i]
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                     accountKey) ?: continue
-            val microBlog = details.credentials.newMicroBlogInstance(context = context,
-                    cls = MicroBlog::class.java)
+            val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             try {
                 val paging = Paging()
                 paging.count(loadItemLimit)

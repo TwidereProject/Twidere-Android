@@ -23,7 +23,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.activity.SettingsActivity
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
@@ -106,7 +106,7 @@ class StreamingService : Service() {
             if (!preferences.isStreamingEnabled) {
                 return@forEachIndexed
             }
-            val twitter = account.credentials.newMicroBlogInstance(context = this, cls = TwitterUserStream::class.java)
+            val twitter = account.newMicroBlogInstance(context = this, cls = TwitterUserStream::class.java)
             val callback = TwidereUserStreamCallback(this, account)
             callbacks.put(account.key, callback)
             object : Thread() {

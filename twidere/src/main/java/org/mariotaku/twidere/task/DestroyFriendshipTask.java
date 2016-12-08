@@ -33,36 +33,36 @@ public class DestroyFriendshipTask extends AbsFriendshipOperationTask {
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
         switch (details.type) {
             case AccountType.FANFOU: {
-                return twitter.destroyFanfouFriendship(args.userKey.getId());
+                return twitter.destroyFanfouFriendship(args.getUserKey().getId());
             }
         }
-        return twitter.destroyFriendship(args.userKey.getId());
+        return twitter.destroyFriendship(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
         user.is_following = false;
-        Utils.setLastSeen(context, user.key, -1);
+        Utils.setLastSeen(getContext(), user.key, -1);
         final Expression where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.or(Expression.equalsArgs(Statuses.USER_KEY),
                         Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)));
-        final String[] whereArgs = {args.userKey.toString(), args.userKey.toString(),
-                args.userKey.toString()};
-        final ContentResolver resolver = context.getContentResolver();
+        final String[] whereArgs = {args.getUserKey().toString(), args.getUserKey().toString(),
+                args.getUserKey().toString()};
+        final ContentResolver resolver = getContext().getContentResolver();
         resolver.delete(Statuses.CONTENT_URI, where.getSQL(), whereArgs);
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        Utils.showErrorMessage(context, R.string.action_unfollowing, exception, false);
+        Utils.showErrorMessage(getContext(), R.string.action_unfollowing, exception, false);
     }
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
-        final String message = context.getString(R.string.unfollowed_user,
-                manager.getDisplayName(user, nameFirst));
-        Utils.showInfoMessage(context, message, false);
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
+        final String message = getContext().getString(R.string.unfollowed_user,
+                getManager().getDisplayName(user, nameFirst));
+        Utils.showInfoMessage(getContext(), message, false);
     }
 
 }

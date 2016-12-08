@@ -30,28 +30,28 @@ public class DenyFriendshipTask extends AbsFriendshipOperationTask {
     protected User perform(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args) throws MicroBlogException {
         switch (details.type) {
             case AccountType.FANFOU: {
-                return twitter.denyFanfouFriendship(args.userKey.getId());
+                return twitter.denyFanfouFriendship(args.getUserKey().getId());
             }
         }
-        return twitter.denyFriendship(args.userKey.getId());
+        return twitter.denyFriendship(args.getUserKey().getId());
     }
 
     @Override
     protected void succeededWorker(@NonNull MicroBlog twitter, @NonNull AccountDetails details, @NonNull Arguments args, @NonNull ParcelableUser user) {
-        Utils.setLastSeen(context, user.key, -1);
+        Utils.setLastSeen(getContext(), user.key, -1);
     }
 
     @Override
     protected void showErrorMessage(@NonNull Arguments params, @Nullable Exception exception) {
-        Utils.showErrorMessage(context, R.string.action_denying_follow_request, exception, false);
+        Utils.showErrorMessage(getContext(), R.string.action_denying_follow_request, exception, false);
     }
 
     @Override
     protected void showSucceededMessage(@NonNull Arguments params, @NonNull ParcelableUser user) {
-        final boolean nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
-        final String message = context.getString(R.string.denied_users_follow_request,
-                manager.getDisplayName(user, nameFirst));
-        Utils.showOkMessage(context, message, false);
+        final boolean nameFirst = getPreferences().getBoolean(KEY_NAME_FIRST);
+        final String message = getContext().getString(R.string.denied_users_follow_request,
+                getManager().getDisplayName(user, nameFirst));
+        Utils.showOkMessage(getContext(), message, false);
     }
 
 }
