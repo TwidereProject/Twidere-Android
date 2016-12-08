@@ -48,6 +48,7 @@ import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.RecyclerViewAccessor
+import android.util.SparseArray
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
@@ -267,22 +268,12 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             noAccountContainer.visibility = View.VISIBLE
             profileContainer.visibility = View.INVISIBLE
         }
-        val defaultId: UserKey? = accounts.firstOrNull { it.activated }?.convert { it.key }
         useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
-
         accountsAdapter!!.accounts = accounts
-        var accountKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
-        if (accountKey == null) {
-            accountKey = defaultId
-        }
-        var selectedAccount: AccountDetails? = null
-        for (account in accounts) {
-            if (account.key.maybeEquals(accountKey)) {
-                selectedAccount = account
-                break
-            }
-        }
-        accountsAdapter!!.selectedAccount = selectedAccount
+        val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
+                ?: accounts.firstOrNull { it.activated }?.key
+        val defaultAccount = accounts.firstOrNull { it.key.maybeEquals(defaultKey) }
+        accountsAdapter!!.selectedAccount = defaultAccount
 
         if (accountActionProvider != null) {
             accountActionProvider!!.isExclusive = false
@@ -613,6 +604,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             private val fragment: AccountsDashboardFragment
     ) : PagerAdapter() {
         private val mediaLoader: MediaLoaderWrapper
+        private val viewHolders: SparseArray<AccountProfileImageViewHolder> = SparseArray()
 
         var accounts: Array<AccountDetails>? = null
             set(value) {
@@ -651,24 +643,46 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 return accounts?.firstOrNull()
             }
             set(account) {
-                val selectedAccount = selectedAccount
-                if (selectedAccount == null || account == null) return
-                swap(account, selectedAccount)
+                val from = account ?: return
+                val to = selectedAccount ?: return
+                swap(from, to)
             }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
             container.addView(view)
             val holder = AccountProfileImageViewHolder(this, view)
-            val account = getAdapterAccount(position)!!
-            holder.iconView.setBorderColor(account.color)
-            mediaLoader.displayDashboardProfileImage(holder.iconView, account, null)
             RecyclerViewAccessor.setLayoutPosition(holder, position)
+            viewHolders.put(position, holder)
+            val account = getAdapterAccount(position)!!
+            bindHolder(holder, account)
             return holder
         }
 
+        override fun getItemPosition(obj: Any?): Int {
+            for (i in 0 until viewHolders.size()) {
+                val holder = viewHolders.valueAt(i)
+                if (holder === obj) {
+                    val account = getAdapterAccount(viewHolders.keyAt(i))!!
+                    bindHolder(holder, account)
+                    break
+                }
+            }
+            return POSITION_UNCHANGED
+        }
+
+        private fun bindHolder(holder: AccountProfileImageViewHolder, account: AccountDetails) {
+            holder.iconView.setBorderColor(account.color)
+            if (holder.iconView.tag != account && holder.iconView.drawable == null) {
+                mediaLoader.displayDashboardProfileImage(holder.iconView, account, null)
+            }
+            holder.iconView.tag = account
+        }
+
         override fun destroyItem(container: ViewGroup, position: Int, obj: Any?) {
-            container.removeView((obj as AccountProfileImageViewHolder).itemView)
+            val holder = obj as AccountProfileImageViewHolder
+            viewHolders.remove(position)
+            container.removeView(holder.itemView)
         }
 
         override fun isViewFromObject(view: View?, obj: Any?): Boolean {
