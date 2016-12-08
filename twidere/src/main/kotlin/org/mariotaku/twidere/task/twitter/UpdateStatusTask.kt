@@ -187,16 +187,22 @@ class UpdateStatusTask(
     private fun shortenStatus(shortener: StatusShortenerInterface?,
                               update: ParcelableStatusUpdate,
                               pending: PendingStatusUpdate) {
-        if (shortener == null || !shortener.waitForService()) return
+        if (shortener == null) return
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
-        for (i in 0..pending.length - 1) {
+        for (i in 0 until pending.length) {
             val account = update.accounts[i]
+            val text = pending.overrideTexts[i]
+            val textLimit = TwidereValidator.getTextLimit(account)
+            if (textLimit >= 0 && text.length <= textLimit) {
+                continue
+            }
+            shortener.waitForService()
             // Skip upload if this shared media found
             val accountKey = account.key
             var shortenResult: StatusShortenResult? = sharedShortened[accountKey]
             if (shortenResult == null) {
-                shortenResult = shortener.shorten(update, accountKey, pending.overrideTexts[i]) ?: run {
+                shortenResult = shortener.shorten(update, accountKey, text) ?: run {
                     throw ShortenException()
                 }
                 if (shortenResult.shortened == null) {

@@ -94,12 +94,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.setScreenName("@" + Constants.TWIDERE_PREVIEW_SCREEN_NAME)
         nameView.updateText(adapter.bidiFormatter)
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
+            textView.text = toPlainText(Constants.TWIDERE_PREVIEW_TEXT_HTML)
+        } else {
             val linkify = adapter.twidereLinkify
             val text = HtmlSpanBuilder.fromHtml(Constants.TWIDERE_PREVIEW_TEXT_HTML)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
             textView.text = text
-        } else {
-            textView.text = toPlainText(Constants.TWIDERE_PREVIEW_TEXT_HTML)
         }
         timeView.setTime(System.currentTimeMillis())
         val showCardActions = isCardActionsShown
