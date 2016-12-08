@@ -35,7 +35,7 @@ class UserListSubscribersFragment : CursorSupportUsersListFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val listName = args.getString(EXTRA_LIST_NAME)
         val loader = UserListSubscribersLoader(context, accountKey,
-                listId, userKey, screenName, listName, adapter!!.getData(), fromUser)
+                listId, userKey, screenName, listName, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

@@ -1864,7 +1864,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private class PreviewGridOnStartDragListener(private val activity: ComposeActivity) : SimpleItemTouchHelperCallback.OnStartDragListener {
 
         override fun onStartDrag(viewHolder: ViewHolder) {
-            val helper = activity.itemTouchHelper ?: return
+            val helper = activity.itemTouchHelper
             helper.startDrag(viewHolder)
         }
     }

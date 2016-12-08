@@ -33,7 +33,7 @@ class StatusFavoritersListFragment : CursorSupportUsersListFragment() {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val statusId = args.getString(EXTRA_STATUS_ID)
         val loader = StatusFavoritersLoader(context, accountKey,
-                statusId, adapter!!.getData(), false)
+                statusId, adapter.getData(), false)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

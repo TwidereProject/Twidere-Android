@@ -68,7 +68,6 @@ import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -114,8 +113,6 @@ public class DataStoreUtils implements Constants {
     private static Map<UserKey, String> sAccountNames = new HashMap<>();
 
     static {
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Accounts.CONTENT_PATH,
-                TABLE_ID_ACCOUNTS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH,
                 TABLE_ID_STATUSES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Activities.AboutMe.CONTENT_PATH,
@@ -549,8 +546,6 @@ public class DataStoreUtils implements Constants {
 
     public static String getTableNameById(final int id) {
         switch (id) {
-            case TwidereConstants.TABLE_ID_ACCOUNTS:
-                return Accounts.TABLE_NAME;
             case TwidereConstants.TABLE_ID_STATUSES:
                 return Statuses.TABLE_NAME;
             case TwidereConstants.TABLE_ID_ACTIVITIES_ABOUT_ME:

@@ -60,7 +60,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
 
             override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
                 if (activity == null) return
-                val view = layoutManager!!.findViewByPosition(position) ?: return
+                val view = layoutManager.findViewByPosition(position) ?: return
                 recyclerView.showContextMenuForChild(view)
             }
 
@@ -99,11 +99,11 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
     }
 
     override fun onLoadFinished(loader: Loader<List<*>?>, data: List<*>?) {
-        adapter!!.setData(data)
+        adapter.setData(data)
     }
 
     override fun onLoaderReset(loader: Loader<List<*>?>) {
-        adapter!!.setData(null)
+        adapter.setData(null)
     }
 
     override var refreshing: Boolean
@@ -117,7 +117,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
         val adapter = adapter
-        when (adapter!!.getItemViewType(position)) {
+        when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position) ?: return
@@ -133,7 +133,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
         val adapter = adapter
-        when (adapter!!.getItemViewType(position)) {
+        when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(position) ?: return false

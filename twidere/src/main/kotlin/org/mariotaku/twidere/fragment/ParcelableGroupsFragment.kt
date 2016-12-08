@@ -77,7 +77,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
 
     override fun onLoadFinished(loader: Loader<List<ParcelableGroup>?>, data: List<ParcelableGroup>?) {
         val adapter = adapter
-        adapter!!.setData(data)
+        adapter.setData(data)
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
             refreshEnabled = true
@@ -107,7 +107,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     val data: List<ParcelableGroup>?
-        get() = adapter!!.getData()
+        get() = adapter.getData()
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         return mNavigationHelper!!.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
@@ -125,9 +125,9 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         super.onActivityCreated(savedInstanceState)
         val adapter = adapter
         val layoutManager = layoutManager
-        adapter!!.groupAdapterListener = this
+        adapter.groupAdapterListener = this
 
-        mNavigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager!!, adapter,
+        mNavigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
@@ -147,7 +147,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     override fun onGroupClick(holder: GroupViewHolder, position: Int) {
-        IntentUtils.openGroupDetails(context, adapter!!.getGroup(position)!!)
+        IntentUtils.openGroupDetails(context, adapter.getGroup(position)!!)
     }
 
     override fun onGroupLongClick(holder: GroupViewHolder, position: Int): Boolean {

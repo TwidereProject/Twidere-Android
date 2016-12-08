@@ -34,7 +34,7 @@ class GroupMembersFragment : CursorSupportUsersListFragment() {
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val loader = GroupMembersLoader(context, accountId, groupId,
-                groupName, adapter!!.getData(), fromUser)
+                groupName, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

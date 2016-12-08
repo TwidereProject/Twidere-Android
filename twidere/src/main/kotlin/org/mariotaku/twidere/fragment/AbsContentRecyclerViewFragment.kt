@@ -46,9 +46,10 @@ import org.mariotaku.twidere.view.iface.IExtendedView
 abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>, L : RecyclerView.LayoutManager> : BaseSupportFragment(), SwipeRefreshLayout.OnRefreshListener, HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener, ContentScrollHandler.ContentListSupport, ControlBarShowHideHelper.ControlBarAnimationListener {
 
 
-    var layoutManager: L? = null
-        private set
-    override var adapter: A? = null
+    lateinit var layoutManager: L
+        protected set
+    override lateinit var adapter: A
+        protected set
     var itemDecoration: ItemDecoration? = null
         private set
 
@@ -110,7 +111,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         val activity = activity
         if (activity is IControlBarActivity) {
             //TODO hide only if top > actionBar.height
-            val manager = layoutManager!!
+            val manager = layoutManager
             if (manager.childCount == 0) return
             val firstView = manager.getChildAt(0)
             if (manager.getPosition(firstView) != 0) {
@@ -138,7 +139,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 updateRefreshProgressOffset()
             }
             if (value == currentRefreshing) return
-            val layoutRefreshing = value && adapter?.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
+            val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
             swipeLayout.isRefreshing = layoutRefreshing
         }
 
@@ -207,7 +208,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {
-        itemDecoration = createItemDecoration(context, recyclerView, layoutManager!!)
+        itemDecoration = createItemDecoration(context, recyclerView, layoutManager)
         if (itemDecoration != null) {
             recyclerView.addItemDecoration(itemDecoration)
         }
@@ -248,7 +249,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     open fun setLoadMoreIndicatorPosition(@IndicatorPosition position: Long) {
-        adapter?.loadMoreIndicatorPosition = position
+        adapter.loadMoreIndicatorPosition = position
     }
 
     override fun triggerRefresh(): Boolean {

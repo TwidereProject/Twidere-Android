@@ -20,11 +20,15 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.*
+import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.database.ContentObserver
 import android.graphics.Matrix
@@ -58,7 +62,6 @@ import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.setMenuItemIcon
 import org.mariotaku.ktextension.setMenuItemTitle
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
@@ -66,13 +69,13 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.extension.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -139,7 +142,14 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         val menuInflater = SupportMenuInflater(context)
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
         accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->
-            if (item.groupId != AccountToggleProvider.MENU_GROUP) {
+            if (item.groupId == AccountToggleProvider.MENU_GROUP) {
+                val accounts = accountActionProvider!!.accounts
+                val account = accounts[item.order]
+                val newActivated = !account.activated
+                accountActionProvider!!.setAccountActivated(account.key, newActivated)
+                account.account.setActivated(AccountManager.get(context), newActivated)
+                return@OnMenuItemClickListener true
+            } else {
                 when (item.itemId) {
                     R.id.compose -> {
                         val account = accountsAdapter!!.selectedAccount ?: return@OnMenuItemClickListener true
@@ -150,18 +160,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                         return@OnMenuItemClickListener true
                     }
                 }
-                return@OnMenuItemClickListener false
             }
-            val accounts = accountActionProvider!!.accounts
-            val account = accounts[item.order]
-            val values = ContentValues()
-            val newActivated = !account.activated
-            accountActionProvider!!.setAccountActivated(account.key, newActivated)
-            values.put(Accounts.IS_ACTIVATED, newActivated)
-            val where = Expression.equalsArgs(Accounts.ACCOUNT_KEY).sql
-            val whereArgs = arrayOf(account.key.toString())
-            mResolver!!.update(Accounts.CONTENT_URI, values, where, whereArgs)
-            true
+            return@OnMenuItemClickListener false
         })
 
         profileContainer.setOnClickListener(this)
@@ -722,6 +722,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
         private var contentObserver: ContentObserver? = null
+        private var accountListener: OnAccountsUpdateListener? = null
 
         private var firstLoad: Boolean
 
@@ -746,9 +747,12 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
             // Stop monitoring for changes.
             if (contentObserver != null) {
-                val cr = context.contentResolver
-                cr.unregisterContentObserver(contentObserver)
+                context.contentResolver.unregisterContentObserver(contentObserver)
                 contentObserver = null
+            }
+            if (accountListener != null) {
+                AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+                accountListener = null
             }
         }
 
@@ -768,9 +772,13 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                         onContentChanged()
                     }
                 }
-                val cr = context.contentResolver
-                cr.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver)
-                cr.registerContentObserver(Drafts.CONTENT_URI, true, contentObserver)
+                context.contentResolver.registerContentObserver(Drafts.CONTENT_URI, true, contentObserver)
+            }
+            if (accountListener == null) {
+                accountListener = OnAccountsUpdateListener { accounts ->
+                    onContentChanged()
+                }
+                AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
             }
 
             if (takeContentChanged() || firstLoad) {

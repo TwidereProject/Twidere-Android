@@ -71,8 +71,6 @@ public interface TwidereDataStore {
     interface Accounts extends BaseColumns, AccountSupportColumns {
 
         String TABLE_NAME = "accounts";
-        String CONTENT_PATH = TABLE_NAME;
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
         /**
          * Login name of the account<br>

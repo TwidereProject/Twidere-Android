@@ -19,27 +19,31 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
+import android.util.Log
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
-import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.message.*
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DataStoreUtils.buildStatusFilterWhereClause
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
@@ -52,6 +56,7 @@ import org.mariotaku.twidere.util.Utils
 abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     private var contentObserver: ContentObserver? = null
+    private var accountListener: OnAccountsUpdateListener? = null
 
     abstract val errorInfoKey: String
     abstract val isFilterEnabled: Boolean
@@ -67,13 +72,11 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         showContentOrError()
     }
 
-    override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+    override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         val uri = contentUri
         val table = getTableNameByUri(uri)
         val sortOrder = Statuses.DEFAULT_SORT_ORDER
-        val accountKeys = accountKeys
+        val accountKeys = this.accountKeys
         val accountWhere = Expression.`in`(Column(Statuses.ACCOUNT_KEY),
                 ArgsArray(accountKeys.size))
         val filterWhere = getFiltersWhere(table)
@@ -84,15 +87,14 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             where = accountWhere
         }
         val adapter = adapter
-        adapter!!.showAccountsColor = accountKeys.size > 1
+        adapter.showAccountsColor = accountKeys.size > 1
         val projection = Statuses.COLUMNS
         val selectionArgs = Array(accountKeys.size) {
             accountKeys[it].toString()
         }
         val expression = processWhere(where, selectionArgs)
         return ExtendedObjectCursorLoader(context, ParcelableStatusCursorIndices::class.java, uri,
-                projection, expression.sql, expression.parameters,
-                sortOrder, fromUser)
+                projection, expression.sql, expression.parameters, sortOrder, fromUser)
     }
 
     override fun createMessageBusCallback(): Any {
@@ -102,7 +104,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     private fun showContentOrError() {
         val accountKeys = accountKeys
-        val adapter = adapter!!
+        val adapter = adapter
         if (adapter.itemCount > 0) {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
@@ -119,27 +121,28 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override val accountKeys: Array<UserKey>
-        get() {
-            val args = arguments
-            val accountKeys = Utils.getAccountKeys(context, args)
-            if (accountKeys != null) {
-                return accountKeys
-            }
-            return DataStoreUtils.getActivatedAccountKeys(context)
-        }
+        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
 
     override fun onStart() {
         super.onStart()
-        val cr = contentResolver
         contentObserver = object : ContentObserver(Handler()) {
             override fun onChange(selfChange: Boolean) {
                 reloadStatuses()
             }
         }
-        cr.registerContentObserver(Accounts.CONTENT_URI, true, contentObserver!!)
-        cr.registerContentObserver(Filters.CONTENT_URI, true, contentObserver!!)
+        accountListener = OnAccountsUpdateListener { accounts ->
+            reloadStatuses()
+        }
+        context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
+        AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
         updateRefreshState()
         reloadStatuses()
+    }
+
+    override fun onStop() {
+        context.contentResolver.unregisterContentObserver(contentObserver)
+        AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+        super.onStop()
     }
 
     protected fun reloadStatuses() {
@@ -153,11 +156,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         loaderManager.restartLoader(0, args, this)
     }
 
-    override fun onStop() {
-        contentResolver.unregisterContentObserver(contentObserver!!)
-        super.onStop()
-    }
-
     override fun hasMoreData(data: List<ParcelableStatus>?): Boolean {
         return data?.size != 0
     }
@@ -167,7 +165,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {
-        adapter!!.setData(null)
+        adapter.setData(null)
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
@@ -272,9 +270,9 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 val status = event.status
                 val data = adapterData
                 if (status == null || data == null || data.isEmpty()) return
-                val adapter = adapter as ParcelableStatusesAdapter
-                val firstVisiblePosition = layoutManager!!.findFirstVisibleItemPosition()
-                val lastVisiblePosition = layoutManager!!.findLastVisibleItemPosition()
+                val adapter = adapter
+                val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
+                val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
                 val startIndex = adapter.statusStartIndex
                 for (i in firstVisiblePosition..lastVisiblePosition) {
                     if (status.account_key == adapter.getAccountKey(i) && status.id == adapter.getStatusId(i)) {
@@ -294,7 +292,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
         @Subscribe
         fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            adapter!!.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
         }
 
         @Subscribe

@@ -35,7 +35,7 @@ class UserFriendsFragment : CursorSupportUsersListFragment() {
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val loader = UserFriendsLoader(context, accountKey, userKey,
-                screenName, adapter!!.getData(), fromUser)
+                screenName, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

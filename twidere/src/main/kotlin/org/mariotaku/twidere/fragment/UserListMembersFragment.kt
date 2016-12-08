@@ -50,7 +50,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val listName = args.getString(EXTRA_LIST_NAME)
         val loader = UserListMembersLoader(context, accountId, listId,
-                userKey, screenName, listName, adapter!!.getData(), fromUser)
+                userKey, screenName, listName, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader
@@ -91,7 +91,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         inflater.inflate(R.menu.action_user_list_member, menu)
-        val user = adapter!!.getUser(contextMenuInfo!!.position)
+        val user = adapter.getUser(contextMenuInfo!!.position)
         menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences.getBoolean(KEY_NAME_FIRST)))
     }
 
@@ -99,7 +99,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
         if (!userVisibleHint) return false
         val userList = userList ?: return false
         val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
-        val user = adapter!!.getUser(contextMenuInfo.position) ?: return false
+        val user = adapter.getUser(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.delete_from_list -> {
                 DeleteUserListMembersDialogFragment.show(fragmentManager, userList, user)
@@ -134,7 +134,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
             UserListMembersChangedEvent.Action.ADDED -> {
                 val adapter = adapter
                 val newUsers = Arrays.asList(*event.users)
-                val users = adapter!!.getData() ?: return
+                val users = adapter.getData() ?: return
                 if (users is MutableList) {
                     users.removeAll(newUsers)
                     users.addAll(0, newUsers)
@@ -145,7 +145,7 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
             UserListMembersChangedEvent.Action.REMOVED -> {
                 val adapter = adapter
                 val removedUsers = Arrays.asList(*event.users)
-                val users = adapter!!.getData() ?: return
+                val users = adapter.getData() ?: return
                 if (users is MutableList) {
                     users.removeAll(removedUsers)
                 }

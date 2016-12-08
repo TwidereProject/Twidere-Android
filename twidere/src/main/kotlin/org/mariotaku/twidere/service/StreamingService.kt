@@ -1,16 +1,13 @@
 package org.mariotaku.twidere.service
 
 import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.database.ContentObserver
-import android.net.Uri
-import android.os.Handler
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.support.v4.util.SimpleArrayMap
@@ -42,60 +39,50 @@ import java.nio.charset.Charset
 
 class StreamingService : Service() {
 
-    private val mCallbacks = SimpleArrayMap<UserKey, UserStreamCallback>()
-    private var mResolver: ContentResolver? = null
+    private val callbacks = SimpleArrayMap<UserKey, UserStreamCallback>()
 
-    private var mNotificationManager: NotificationManager? = null
+    private var notificationManager: NotificationManager? = null
 
-    private var mAccountKeys: Array<UserKey>? = null
+    private var accountKeys: Array<UserKey>? = null
 
-    private val mAccountChangeObserver = object : ContentObserver(Handler()) {
-
-        override fun onChange(selfChange: Boolean) {
-            onChange(selfChange, null)
+    private val accountChangeObserver = OnAccountsUpdateListener {
+        if (!TwidereArrayUtils.contentMatch(accountKeys, DataStoreUtils.getActivatedAccountKeys(this@StreamingService))) {
+            initStreaming()
         }
-
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            if (!TwidereArrayUtils.contentMatch(mAccountKeys, DataStoreUtils.getActivatedAccountKeys(this@StreamingService))) {
-                initStreaming()
-            }
-        }
-
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
     }
 
     override fun onCreate() {
         super.onCreate()
-        mResolver = contentResolver
-        mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Stream service started.")
         }
         initStreaming()
-        mResolver!!.registerContentObserver(Accounts.CONTENT_URI, true, mAccountChangeObserver)
+        AccountManager.get(this).addOnAccountsUpdatedListener(accountChangeObserver, null, false)
     }
 
     override fun onDestroy() {
         clearTwitterInstances()
-        mResolver!!.unregisterContentObserver(mAccountChangeObserver)
+        AccountManager.get(this).removeOnAccountsUpdatedListener(accountChangeObserver)
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Stream service stopped.")
         }
         super.onDestroy()
     }
 
+    override fun onBind(intent: Intent): IBinder? {
+        return null
+    }
+
     private fun clearTwitterInstances() {
         var i = 0
-        val j = mCallbacks.size()
+        val j = callbacks.size()
         while (i < j) {
-            Thread(ShutdownStreamTwitterRunnable(mCallbacks.valueAt(i))).start()
+            Thread(ShutdownStreamTwitterRunnable(callbacks.valueAt(i))).start()
             i++
         }
-        mCallbacks.clear()
-        mNotificationManager!!.cancel(NOTIFICATION_SERVICE_STARTED)
+        callbacks.clear()
+        notificationManager!!.cancel(NOTIFICATION_SERVICE_STARTED)
     }
 
     private fun initStreaming() {
@@ -111,7 +98,7 @@ class StreamingService : Service() {
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Setting up twitter stream instances")
         }
-        mAccountKeys = accountKeys
+        this.accountKeys = accountKeys
         clearTwitterInstances()
         var result = false
         accountsList.forEachIndexed { i, account ->
@@ -121,12 +108,12 @@ class StreamingService : Service() {
             }
             val twitter = account.credentials.newMicroBlogInstance(context = this, cls = TwitterUserStream::class.java)
             val callback = TwidereUserStreamCallback(this, account)
-            mCallbacks.put(account.key, callback)
+            callbacks.put(account.key, callback)
             object : Thread() {
                 override fun run() {
                     twitter.getUserStream(callback)
                     Log.d(LOGTAG, String.format("Stream %s disconnected", account.key))
-                    mCallbacks.remove(account.key)
+                    callbacks.remove(account.key)
                     updateStreamState()
                 }
             }.start()
@@ -136,7 +123,7 @@ class StreamingService : Service() {
     }
 
     private fun updateStreamState() {
-        if (mCallbacks.size() > 0) {
+        if (callbacks.size() > 0) {
             val intent = Intent(this, SettingsActivity::class.java)
             val contentIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT)
@@ -148,9 +135,9 @@ class StreamingService : Service() {
             builder.setContentTitle(contentTitle)
             builder.setContentText(contentText)
             builder.setContentIntent(contentIntent)
-            mNotificationManager!!.notify(NOTIFICATION_SERVICE_STARTED, builder.build())
+            notificationManager!!.notify(NOTIFICATION_SERVICE_STARTED, builder.build())
         } else {
-            mNotificationManager!!.cancel(NOTIFICATION_SERVICE_STARTED)
+            notificationManager!!.cancel(NOTIFICATION_SERVICE_STARTED)
         }
     }
 

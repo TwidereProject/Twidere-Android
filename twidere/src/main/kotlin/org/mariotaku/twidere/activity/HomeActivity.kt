@@ -19,19 +19,19 @@
 
 package org.mariotaku.twidere.activity
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.app.PendingIntent
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.res.Configuration
-import android.database.ContentObserver
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import android.preference.PreferenceActivity
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
@@ -76,7 +76,8 @@ import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -85,9 +86,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback, OnLongClickListener, DrawerLayout.DrawerListener {
 
-    private val handler = Handler()
-
-    private val accountChangeObserver = AccountChangeObserver(this, handler)
+    private val accountChangeObserver = AccountChangeObserver(this)
 
     private var selectedAccountToSearch: AccountDetails? = null
     private var tabColumns: Int = 0
@@ -95,12 +94,14 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private lateinit var multiSelectHandler: MultiSelectEventHandler
 
-    private var pagerAdapter: SupportTabsAdapter? = null
+    private lateinit var pagerAdapter: SupportTabsAdapter
+
+    private lateinit var drawerToggle: ActionBarDrawerToggle
 
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { sharedPreferences, key -> updateUnreadCount() }
     private val controlBarShowHideHelper = IControlBarActivity.ControlBarShowHideHelper(this)
-    private lateinit var drawerToggle: ActionBarDrawerToggle
+
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
             drawerToggleButton.setImageDrawable(upDrawable)
@@ -120,7 +121,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun getActionBarThemedContext(): Context {
-            return toolbar!!.context
+            return toolbar.context
         }
 
         override fun isNavigationVisible(): Boolean {
@@ -138,13 +139,13 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override val currentVisibleFragment: Fragment?
         get() {
-            val currentItem = mainPager!!.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter!!.count) return null
-            return pagerAdapter!!.instantiateItem(mainPager, currentItem) as Fragment
+            val currentItem = mainPager.currentItem
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            return pagerAdapter.instantiateItem(mainPager, currentItem) as Fragment
         }
 
     override fun triggerRefresh(position: Int): Boolean {
-        val f = pagerAdapter!!.instantiateItem(mainPager, position) as Fragment
+        val f = pagerAdapter.instantiateItem(mainPager, position) as Fragment
         if (f.activity == null || f.isDetached) return false
         if (f !is RefreshScrollTopInterface) return false
         return f.triggerRefresh()
@@ -221,29 +222,29 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (action != null) {
             when (action) {
                 KeyboardShortcutConstants.ACTION_NAVIGATION_PREVIOUS_TAB -> {
-                    val previous = mainPager!!.currentItem - 1
+                    val previous = mainPager.currentItem - 1
                     if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.START) != null) {
                         homeMenu.openDrawer(GravityCompat.START)
                         setControlBarVisibleAnimate(true)
-                    } else if (previous < pagerAdapter!!.count) {
+                    } else if (previous < pagerAdapter.count) {
                         if (homeMenu.isDrawerOpen(GravityCompat.END)) {
                             homeMenu.closeDrawers()
                         } else {
-                            mainPager!!.setCurrentItem(previous, true)
+                            mainPager.setCurrentItem(previous, true)
                         }
                     }
                     return true
                 }
                 KeyboardShortcutConstants.ACTION_NAVIGATION_NEXT_TAB -> {
-                    val next = mainPager!!.currentItem + 1
-                    if (next >= pagerAdapter!!.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
+                    val next = mainPager.currentItem + 1
+                    if (next >= pagerAdapter.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
                         homeMenu.openDrawer(GravityCompat.END)
                         setControlBarVisibleAnimate(true)
                     } else if (next >= 0) {
                         if (homeMenu.isDrawerOpen(GravityCompat.START)) {
                             homeMenu.closeDrawers()
                         } else {
-                            mainPager!!.setCurrentItem(next, true)
+                            mainPager.setCurrentItem(next, true)
                         }
                     }
                     return true
@@ -267,18 +268,16 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_MENU -> {
-                val drawer = homeMenu
                 if (isDrawerOpen) {
-                    drawer!!.closeDrawers()
+                    homeMenu.closeDrawers()
                 } else {
-                    drawer!!.openDrawer(GravityCompat.START)
+                    homeMenu.openDrawer(GravityCompat.START)
                 }
                 return true
             }
             KeyEvent.KEYCODE_BACK -> {
-                val drawer = homeMenu
                 if (isDrawerOpen) {
-                    drawer!!.closeDrawers()
+                    homeMenu.closeDrawers()
                     return true
                 }
             }
@@ -328,9 +327,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         drawerToggle = ActionBarDrawerToggle(this, homeMenu, R.string.open_accounts_dashboard,
                 R.string.close_accounts_dashboard)
-        homeContent!!.setOnFitSystemWindowsListener(this)
+        homeContent.setOnFitSystemWindowsListener(this)
         pagerAdapter = SupportTabsAdapter(this, supportFragmentManager, mainTabs, tabColumns)
-        mainPager!!.adapter = pagerAdapter
+        mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
         mainTabs.setColumns(tabColumns)
@@ -390,8 +389,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onStart() {
         super.onStart()
         multiSelectHandler.dispatchOnStart()
-        val resolver = contentResolver
-        resolver.registerContentObserver(Accounts.CONTENT_URI, true, accountChangeObserver)
+        AccountManager.get(this).addOnAccountsUpdatedListener(accountChangeObserver, null, false)
         bus.register(this)
 
         readStateManager.registerOnSharedPreferenceChangeListener(readStateChangeListener)
@@ -404,17 +402,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         updateActionsButton()
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onStop() {
         multiSelectHandler.dispatchOnStop()
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
         bus.unregister(this)
-        val resolver = contentResolver
-        resolver.unregisterContentObserver(accountChangeObserver)
-        preferences.edit().putInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, mainPager!!.currentItem).apply()
+        AccountManager.get(this).removeOnAccountsUpdatedListener(accountChangeObserver)
+        preferences.edit().putInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
 
         super.onStop()
     }
@@ -504,18 +497,18 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
             return
         updateUnreadCountTask = UpdateUnreadCountTask(this, readStateManager, mainTabs,
-                pagerAdapter!!.tabs.toTypedArray())
+                pagerAdapter.tabs.toTypedArray())
         AsyncTaskUtils.executeTask<UpdateUnreadCountTask, Any>(updateUnreadCountTask)
         mainTabs.setDisplayBadge(preferences.getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
     }
 
     val tabs: List<SupportTabSpec>
-        get() = pagerAdapter!!.tabs
+        get() = pagerAdapter.tabs
 
     override fun onNewIntent(intent: Intent) {
         val tabPosition = handleIntent(intent, false, false)
         if (tabPosition >= 0) {
-            mainPager!!.currentItem = TwidereMathUtils.clamp(tabPosition, pagerAdapter!!.count, 0)
+            mainPager.currentItem = TwidereMathUtils.clamp(tabPosition, pagerAdapter.count, 0)
         }
     }
 
@@ -559,7 +552,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             return 1 - actionsButton.translationY / total
         }
         val totalHeight = controlBarHeight.toFloat()
-        return 1 + toolbar!!.translationY / totalHeight
+        return 1 + toolbar.translationY / totalHeight
     }
 
     override fun setControlBarOffset(offset: Float) {
@@ -676,7 +669,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         var initialTab = -1
         if (tabType != null) {
             val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.convert(UserKey::valueOf)
-            val adapter = pagerAdapter!!
+            val adapter = pagerAdapter
             for (i in 0 until adapter.count) {
                 val tab = adapter.getTab(i)
                 if (tabType == Tab.getTypeAlias(tab.type)) {
@@ -730,10 +723,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setTabPosition(initialTab: Int) {
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
         if (initialTab >= 0) {
-            mainPager!!.currentItem = TwidereMathUtils.clamp(initialTab, pagerAdapter!!.count, 0)
+            mainPager.currentItem = TwidereMathUtils.clamp(initialTab, pagerAdapter.count, 0)
         } else if (rememberPosition) {
             val position = preferences.getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
-            mainPager!!.currentItem = TwidereMathUtils.clamp(position, pagerAdapter!!.count, 0)
+            mainPager.currentItem = TwidereMathUtils.clamp(position, pagerAdapter.count, 0)
         }
     }
 
@@ -745,11 +738,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun setupHomeTabs() {
-        pagerAdapter!!.clear()
-        pagerAdapter!!.addTabs(CustomTabUtils.getHomeTabs(this))
-        val hasNoTab = pagerAdapter!!.count == 0
+        pagerAdapter.clear()
+        pagerAdapter.addTabs(CustomTabUtils.getHomeTabs(this))
+        val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
-        mainPager!!.visibility = if (hasNoTab) View.GONE else View.VISIBLE
+        mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
         //        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() / 2);
     }
 
@@ -784,10 +777,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun triggerActionsClick() {
-        if (mainPager == null || pagerAdapter == null) return
-        val position = mainPager!!.currentItem
-        if (pagerAdapter!!.count == 0) return
-        val tab = pagerAdapter!!.getTab(position)
+        val position = mainPager.currentItem
+        if (pagerAdapter.count == 0) return
+        val tab = pagerAdapter.getTab(position)
         if (DirectMessagesFragment::class.java == tab.cls) {
             IntentUtils.openMessageConversation(this, null, null)
         } else if (MessagesEntriesFragment::class.java == tab.cls) {
@@ -800,12 +792,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun updateActionsButton() {
-        if (mainPager == null || pagerAdapter == null) return
         val icon: Int
         val title: Int
-        val position = mainPager!!.currentItem
-        if (pagerAdapter!!.count == 0) return
-        val tab = pagerAdapter!!.getTab(position)
+        val position = mainPager.currentItem
+        if (pagerAdapter.count == 0) return
+        val tab = pagerAdapter.getTab(position)
         if (DirectMessagesFragment::class.java == tab.cls) {
             icon = R.drawable.ic_action_add
             title = R.string.new_direct_message
@@ -823,15 +814,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         actionsButton.contentDescription = getString(title)
     }
 
-    private class AccountChangeObserver(private val mActivity: HomeActivity, handler: Handler) : ContentObserver(handler) {
+    private class AccountChangeObserver(private val activity: HomeActivity) : OnAccountsUpdateListener {
 
-        override fun onChange(selfChange: Boolean) {
-            onChange(selfChange, null)
-        }
-
-        override fun onChange(selfChange: Boolean, uri: Uri?) {
-            mActivity.notifyAccountsChanged()
-            mActivity.updateUnreadCount()
+        override fun onAccountsUpdated(accounts: Array<out Account>?) {
+            activity.notifyAccountsChanged()
+            activity.updateUnreadCount()
         }
     }
 

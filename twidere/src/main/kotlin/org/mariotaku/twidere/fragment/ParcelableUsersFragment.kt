@@ -63,10 +63,10 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val adapter = adapter!!
+        val adapter = adapter
         adapter.userClickListener = this
 
-        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager!!, adapter,
+        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
@@ -99,7 +99,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
-        val adapter = adapter ?: return
+        val adapter = adapter
         adapter.setData(data)
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
@@ -142,13 +142,13 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
-        val user = adapter?.getUser(position) ?: return
+        val user = adapter.getUser(position) ?: return
         IntentUtils.openUserProfile(activity, user, null,
                 preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API), userReferral)
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {
-        val user = adapter?.getUser(position) ?: return
+        val user = adapter.getUser(position) ?: return
         if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
         if (user.is_following) {
             DestroyFriendshipDialogFragment.show(fragmentManager, user)
@@ -158,13 +158,13 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun onUnblockClicked(holder: UserViewHolder, position: Int) {
-        val user = adapter?.getUser(position) ?: return
+        val user = adapter.getUser(position) ?: return
         if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
         twitterWrapper.destroyBlockAsync(user.account_key, user.key)
     }
 
     override fun onUnmuteClicked(holder: UserViewHolder, position: Int) {
-        val user = adapter?.getUser(position) ?: return
+        val user = adapter.getUser(position) ?: return
         if (twitterWrapper.isUpdatingRelationship(user.account_key, user.key)) return
         twitterWrapper.destroyMuteAsync(user.account_key, user.key)
     }
@@ -183,7 +183,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
                                       layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val adapter = adapter ?: return null
+        val adapter = adapter
         val itemDecoration = DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
@@ -208,7 +208,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     private fun findPosition(accountKey: UserKey, userKey: UserKey): Int {
-        return adapter?.findPosition(accountKey, userKey) ?: RecyclerView.NO_POSITION
+        return adapter.findPosition(accountKey, userKey)
     }
 
     protected open fun shouldRemoveUser(position: Int, event: FriendshipTaskEvent): Boolean {
@@ -227,7 +227,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
         @Subscribe
         fun onFriendshipTaskEvent(event: FriendshipTaskEvent) {
-            val adapter = adapter ?: return
+            val adapter = adapter
             val position = findPosition(event.accountKey, event.userKey)
             val data = adapter.getData() ?: return
             if (position < 0 || position >= data.size) return

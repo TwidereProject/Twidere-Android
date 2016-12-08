@@ -24,7 +24,7 @@ class StatusShortenerInterfaceTest {
     @Test
     @FlakyTest
     fun testConnection() {
-        val context = InstrumentationRegistry.getTargetContext();
+        val context = InstrumentationRegistry.getTargetContext()
         val application = context.applicationContext as Application
         val preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val shortenerComponent = preferences.getString(TwidereConstants.KEY_STATUS_SHORTENER, null) ?: return

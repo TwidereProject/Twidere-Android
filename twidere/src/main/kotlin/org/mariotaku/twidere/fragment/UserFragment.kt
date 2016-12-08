@@ -1322,7 +1322,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
     private fun setupBaseActionBar() {
         val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
-        val shadow = ResourcesCompat.getDrawable(activity.getResources(), R.drawable.shadow_user_banner_action_bar, null)
+        val shadow = ResourcesCompat.getDrawable(activity.resources, R.drawable.shadow_user_banner_action_bar, null)
         mActionBarBackground = ActionBarDrawable(shadow!!)
         if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
             //            mActionBarBackground.setAlpha(ThemeUtils.getActionBarAlpha(linkHandler.getCurrentThemeBackgroundAlpha()));

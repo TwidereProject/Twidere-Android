@@ -116,7 +116,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     private val onScrollListener = object : OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                val layoutManager = layoutManager ?: return
+                val layoutManager = layoutManager
                 saveReadPosition(layoutManager.findFirstVisibleItemPosition())
             }
         }
@@ -147,7 +147,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
             position = recyclerView!!.getChildLayoutPosition(focusedChild)
         }
         if (position != RecyclerView.NO_POSITION) {
-            val activity = adapter!!.getActivity(position) ?: return false
+            val activity = adapter.getActivity(position) ?: return false
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 openActivity(activity)
                 return true
@@ -233,11 +233,11 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         val tag = currentReadPositionTag
         val layoutManager = layoutManager
         if (readFromBottom) {
-            lastVisiblePos = layoutManager!!.findLastVisibleItemPosition()
+            lastVisiblePos = layoutManager.findLastVisibleItemPosition()
         } else {
-            lastVisiblePos = layoutManager!!.findFirstVisibleItemPosition()
+            lastVisiblePos = layoutManager.findFirstVisibleItemPosition()
         }
-        if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter!!.itemCount) {
+        if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.itemCount) {
             val activityStartIndex = adapter.activityStartIndex
             val activityEndIndex = activityStartIndex + adapter.activityCount
             val lastItemIndex = Math.min(activityEndIndex, lastVisiblePos)
@@ -251,7 +251,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
             lastReadId = -1
             lastVisibleTop = 0
         }
-        adapter!!.setData(data)
+        adapter.setData(data)
         val activityStartIndex = adapter.activityStartIndex
         // The last activity is activityEndExclusiveIndex - 1
         val activityEndExclusiveIndex = activityStartIndex + adapter.activityCount
@@ -304,7 +304,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
     override fun onGapClick(holder: GapViewHolder, position: Int) {
-        val activity = adapter?.getActivity(position) ?: return
+        val activity = adapter.getActivity(position) ?: return
         if (BuildConfig.DEBUG) {
             Log.v(TwidereConstants.LOGTAG, "Load activity gap $activity")
         }
@@ -315,7 +315,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
-        val adapter = adapter ?: return
+        val adapter = adapter
         val status = adapter.getActivity(position)?.getActivityStatus() ?: return
         IntentUtils.openMedia(activity, status, media, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API))
         // BEGIN HotMobi
@@ -350,7 +350,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-        val activity = adapter!!.getActivity(position) ?: return
+        val activity = adapter.getActivity(position) ?: return
         val list = ArrayList<Parcelable>()
         if (activity.target_object_statuses?.isNotEmpty() ?: false) {
             list.addAll(activity.target_object_statuses)
@@ -363,7 +363,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     override fun onStatusMenuClick(holder: IStatusViewHolder, menuView: View, position: Int) {
         if (activity == null) return
-        val lm = layoutManager ?: return
+        val lm = layoutManager
         val view = lm.findViewByPosition(position) ?: return
         if (lm.getItemViewType(view) != ITEM_VIEW_TYPE_STATUS) {
             return
@@ -377,7 +377,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
     private fun getActivityStatus(position: Int): ParcelableStatus? {
-        return adapter?.getActivity(position)?.getActivityStatus()
+        return adapter.getActivity(position)?.getActivityStatus()
     }
 
     override fun onStart() {
@@ -437,9 +437,9 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         scrollListener!!.reversed = preferences.getBoolean(KEY_READ_FROM_BOTTOM)
         val adapter = adapter
         val layoutManager = layoutManager
-        adapter!!.setListener(this)
+        adapter.setListener(this)
         registerForContextMenu(recyclerView)
-        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager!!, adapter,
+        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
         pauseOnScrollListener = PauseRecyclerViewOnScrollListener(adapter.mediaLoader.imageLoader, false, true)
 
@@ -453,8 +453,8 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         get() {
             val lm = layoutManager
             val adapter = adapter
-            val lastPosition = lm!!.findLastCompletelyVisibleItemPosition()
-            val itemCount = adapter!!.itemCount
+            val lastPosition = lm.findLastCompletelyVisibleItemPosition()
+            val itemCount = adapter.itemCount
             var finalPos = itemCount - 1
             for (i in lastPosition + 1..itemCount - 1) {
                 if (adapter.getItemViewType(i) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
@@ -476,7 +476,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     protected val adapterData: List<ParcelableActivity>?
         get() {
-            return adapter?.getData()
+            return adapter.getData()
         }
 
     protected open val readPositionTag: String?
@@ -493,7 +493,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION) return
-        val item = adapter!!.getActivity(position) ?: return
+        val item = adapter.getActivity(position) ?: return
         var positionUpdated = false
         readPositionTag?.let {
             for (accountKey in accountKeys) {
@@ -524,7 +524,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val position = contextMenuInfo!!.position
-        when (adapter!!.getItemViewType(position)) {
+        when (adapter.getItemViewType(position)) {
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
@@ -540,7 +540,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
 
-        when (adapter!!.getItemViewType(position)) {
+        when (adapter.getItemViewType(position)) {
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return false
                 if (item.itemId == R.id.share) {
@@ -559,7 +559,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
                                       layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val adapter = adapter!!
+        val adapter = adapter
         val itemDecoration = object : DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {
@@ -602,7 +602,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
 
         @Subscribe
         fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            adapter!!.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
         }
 
     }

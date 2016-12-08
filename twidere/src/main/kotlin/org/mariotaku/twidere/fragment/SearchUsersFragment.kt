@@ -45,7 +45,7 @@ class SearchUsersFragment : ParcelableUsersFragment() {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val query = args.getString(EXTRA_QUERY)
         val page = args.getInt(EXTRA_PAGE, 1)
-        return UserSearchLoader(context, accountKey, query, page, adapter!!.getData(), fromUser)
+        return UserSearchLoader(context, accountKey, query, page, adapter.getData(), fromUser)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {

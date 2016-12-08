@@ -35,7 +35,7 @@ class StatusRetweetersListFragment : CursorSupportUsersListFragment() {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val statusId = args.getString(EXTRA_STATUS_ID)
         val loader = StatusRetweetersLoader(context, accountKey, statusId,
-                adapter!!.getData(), fromUser)
+                adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

@@ -98,7 +98,6 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
@@ -131,8 +130,6 @@ import org.mariotaku.twidere.util.ReadStateManager;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper;
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
-import org.mariotaku.twidere.util.TwidereArrayUtils;
-import org.mariotaku.twidere.util.TwidereListUtils;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.CachedUsersQueryBuilder;
 import org.mariotaku.twidere.util.TwidereQueryBuilder.ConversationQueryBuilder;
 import org.mariotaku.twidere.util.UriExtraUtils;
@@ -149,8 +146,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -991,29 +986,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     throw new SecurityException("Access preferences requires level PERMISSION_LEVEL_PREFERENCES");
                 break;
             }
-            case TABLE_ID_ACCOUNTS: {
-                // Reading some information like user_id, screen_name etc is
-                // okay, but reading columns like password requires higher
-                // permission level.
-                if (checkPermission(PERMISSION_ACCOUNTS)) {
-                    break;
-                }
-                // Only querying basic information
-                if (TwidereArrayUtils.contains(Accounts.COLUMNS_NO_CREDENTIALS, projection) && !checkPermission(PERMISSION_READ)) {
-                    final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
-                    throw new SecurityException("Access database " + table + " requires level PERMISSION_LEVEL_READ, package: " + pkgName);
-                }
-                final String pkgName = mPermissionsManager.getPackageNameByUid(Binder.getCallingUid());
-                final List<String> callingSensitiveCols = new ArrayList<>();
-                if (projection != null) {
-                    Collections.addAll(callingSensitiveCols, projection);
-                    callingSensitiveCols.removeAll(Arrays.asList(Accounts.COLUMNS_NO_CREDENTIALS));
-                } else {
-                    callingSensitiveCols.add("*");
-                }
-                throw new SecurityException("Access column " + TwidereListUtils.toString(callingSensitiveCols, ',', true)
-                        + " in database accounts requires level PERMISSION_LEVEL_ACCOUNTS, package: " + pkgName);
-            }
             case TABLE_ID_DIRECT_MESSAGES:
             case TABLE_ID_DIRECT_MESSAGES_INBOX:
             case TABLE_ID_DIRECT_MESSAGES_OUTBOX:
@@ -1052,14 +1024,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void checkWritePermission(final int id, final String table) {
         if (Binder.getCallingPid() == Process.myPid()) return;
         switch (id) {
-            case TABLE_ID_ACCOUNTS: {
-                // Writing to accounts database is not allowed for third-party
-                // applications.
-                if (!mPermissionsManager.checkSignature(Binder.getCallingUid()))
-                    throw new SecurityException(
-                            "Writing to accounts database is not allowed for third-party applications");
-                break;
-            }
             case TABLE_ID_DIRECT_MESSAGES:
             case TABLE_ID_DIRECT_MESSAGES_INBOX:
             case TABLE_ID_DIRECT_MESSAGES_OUTBOX:
@@ -1223,14 +1187,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     private void onDatabaseUpdated(final int tableId, final Uri uri) {
         if (uri == null) return;
-        switch (tableId) {
-            case TABLE_ID_ACCOUNTS: {
-                DataStoreUtils.clearAccountName();
-                break;
-            }
-        }
         notifyContentObserver(Utils.getNotificationUri(tableId, uri));
-
     }
 
     private void onNewItemsInserted(final Uri uri, final int tableId, final ContentValues values) {

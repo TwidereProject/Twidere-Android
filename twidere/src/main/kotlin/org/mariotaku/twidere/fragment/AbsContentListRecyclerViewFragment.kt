@@ -51,7 +51,7 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
     }
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
-        layoutManager?.scrollToPositionWithOffset(0, 0)
+        layoutManager.scrollToPositionWithOffset(0, 0)
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {
@@ -60,13 +60,13 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
 
     override val reachingEnd: Boolean
         get() {
-            val lm = layoutManager ?: return false
+            val lm = layoutManager
             return lm.findLastCompletelyVisibleItemPosition() >= lm.itemCount - 1
         }
 
     override val reachingStart: Boolean
         get() {
-            val lm = layoutManager ?: return false
+            val lm = layoutManager
             return lm.findFirstCompletelyVisibleItemPosition() <= 0
         }
 

@@ -356,7 +356,7 @@ public class CompactHashSet<E> extends java.util.AbstractSet<E> {
                     offset = 2;
             }
 
-            newObjects[index] = (E) o;
+            newObjects[index] = o;
         }
 
         objects = newObjects;

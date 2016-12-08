@@ -32,7 +32,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridParcelableStatusesAdapter, StaggeredGridLayoutManager>(), LoaderCallbacks<List<ParcelableStatus>>, DrawerCallback, IStatusViewHolder.StatusClickListener {
 
     override fun scrollToPositionWithOffset(position: Int, offset: Int) {
-        layoutManager!!.scrollToPositionWithOffset(position, offset)
+        layoutManager.scrollToPositionWithOffset(position, offset)
     }
 
     override var refreshing: Boolean
@@ -48,7 +48,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val adapter = adapter
-        adapter!!.statusClickListener = this
+        adapter.statusClickListener = this
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
@@ -95,12 +95,12 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return MediaTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId,
-                adapter!!.getData(), null, tabPosition, fromUser, loadingMore)
+                adapter.getData(), null, tabPosition, fromUser, loadingMore)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>>, data: List<ParcelableStatus>?) {
         val adapter = adapter
-        val changed = adapter!!.setData(data)
+        val changed = adapter.setData(data)
         if ((loader as IExtendedLoader).fromUser && loader is MediaTimelineLoader) {
             val maxId = loader.maxId
             val sinceId = loader.sinceId
@@ -118,19 +118,19 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>>) {
-        adapter!!.setData(null)
+        adapter.setData(null)
     }
 
     override val reachingEnd: Boolean
         get() {
             val lm = layoutManager
-            return ArrayUtils.contains(lm!!.findLastCompletelyVisibleItemPositions(null), lm.itemCount - 1)
+            return ArrayUtils.contains(lm.findLastCompletelyVisibleItemPositions(null), lm.itemCount - 1)
         }
 
     override val reachingStart: Boolean
         get() {
             val lm = layoutManager
-            return ArrayUtils.contains(lm!!.findFirstCompletelyVisibleItemPositions(null), 0)
+            return ArrayUtils.contains(lm.findFirstCompletelyVisibleItemPositions(null), 0)
         }
 
     override fun onLoadMoreContents(position: Long) {
@@ -138,7 +138,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         if (position and ILoadMoreSupportAdapter.START != 0L) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
-        val adapter = adapter ?: return
+        val adapter = adapter
         val maxId = adapter.getStatusId(adapter.statusCount - 1)
         getStatuses(maxId, null)
     }
@@ -149,7 +149,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        IntentUtils.openStatus(context, adapter!!.getStatus(position)!!, null)
+        IntentUtils.openStatus(context, adapter.getStatus(position)!!, null)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

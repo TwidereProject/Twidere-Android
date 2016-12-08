@@ -81,7 +81,7 @@ class PlusServiceDashboardActivity : BaseActivity() {
             override fun loadInBackground(): List<ResolveInfo> {
                 val context = context
                 val intent = Intent(INTENT_ACTION_PLUS_SERVICE_SIGN_IN)
-                intent.setPackage(context.packageName)
+                intent.`package` = context.packageName
                 val pm = context.packageManager
                 return pm.queryIntentActivities(intent, PackageManager.GET_META_DATA)
             }
