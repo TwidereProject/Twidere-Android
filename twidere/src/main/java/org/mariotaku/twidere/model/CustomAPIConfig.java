@@ -7,10 +7,9 @@ import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.bluelinelabs.logansquare.typeconverters.StringBasedTypeConverter;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.annotation.AuthTypeInt;
+import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 
@@ -35,9 +34,9 @@ public final class CustomAPIConfig {
     String localizedName;
     @JsonField(name = "api_url_format")
     String apiUrlFormat;
-    @AuthTypeInt
-    @JsonField(name = "auth_type", typeConverter = AuthTypeConverter.class)
-    int authType;
+    @Credentials.Type
+    @JsonField(name = "auth_type")
+    String credentialsType;
     @JsonField(name = "same_oauth_url")
     boolean sameOAuthUrl;
     @JsonField(name = "no_version_suffix")
@@ -50,11 +49,11 @@ public final class CustomAPIConfig {
     CustomAPIConfig() {
     }
 
-    public CustomAPIConfig(String name, String apiUrlFormat, int authType, boolean sameOAuthUrl,
+    public CustomAPIConfig(String name, String apiUrlFormat, String credentialsType, boolean sameOAuthUrl,
                            boolean noVersionSuffix, String consumerKey, String consumerSecret) {
         this.name = name;
         this.apiUrlFormat = apiUrlFormat;
-        this.authType = authType;
+        this.credentialsType = credentialsType;
         this.sameOAuthUrl = sameOAuthUrl;
         this.noVersionSuffix = noVersionSuffix;
         this.consumerKey = consumerKey;
@@ -79,8 +78,8 @@ public final class CustomAPIConfig {
         return apiUrlFormat;
     }
 
-    public int getAuthType() {
-        return authType;
+    public String getCredentialsType() {
+        return credentialsType;
     }
 
     public boolean isSameOAuthUrl() {
@@ -117,50 +116,8 @@ public final class CustomAPIConfig {
 
     public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
         return Collections.singletonList(new CustomAPIConfig(context.getString(R.string.provider_default),
-                DEFAULT_TWITTER_API_URL_FORMAT, AuthTypeInt.OAUTH, true, false,
+                DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
                 TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET));
     }
 
-    static class AuthTypeConverter extends StringBasedTypeConverter<Integer> {
-        @Override
-        @AuthTypeInt
-        public Integer getFromString(String string) {
-            if (string == null) return AuthTypeInt.OAUTH;
-            switch (string) {
-                case "oauth": {
-                    return AuthTypeInt.OAUTH;
-                }
-                case "xauth": {
-                    return AuthTypeInt.XAUTH;
-                }
-                case "basic": {
-                    return AuthTypeInt.BASIC;
-                }
-                case "twip_o_mode": {
-                    return AuthTypeInt.TWIP_O_MODE;
-                }
-            }
-            return AuthTypeInt.OAUTH;
-        }
-
-        @Override
-        public String convertToString(@AuthTypeInt Integer object) {
-            if (object == null) return "oauth";
-            switch (object) {
-                case AuthTypeInt.OAUTH: {
-                    return "oauth";
-                }
-                case AuthTypeInt.XAUTH: {
-                    return "xauth";
-                }
-                case AuthTypeInt.BASIC: {
-                    return "basic";
-                }
-                case AuthTypeInt.TWIP_O_MODE: {
-                    return "twip_o_mode";
-                }
-            }
-            return "oauth";
-        }
-    }
 }

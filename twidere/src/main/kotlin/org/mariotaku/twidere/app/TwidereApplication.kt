@@ -47,6 +47,7 @@ import nl.komponents.kovenant.task
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.configure
+import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
@@ -61,6 +62,7 @@ import org.mariotaku.twidere.service.RefreshService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.theme.*
 import org.mariotaku.twidere.view.ProfileImageView
@@ -78,6 +80,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var restHttpClient: RestHttpClient
     @Inject
     lateinit internal var dns: TwidereDns
+    @Inject
+    lateinit internal var mediaDownloader: MediaDownloader
     @Inject
     lateinit internal var defaultFeatures: DefaultFeatures
     @Inject
@@ -292,13 +296,15 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 stopService(Intent(this, RefreshService::class.java))
                 Utils.startRefreshServiceIfNeeded(this)
             }
-            KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME, KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
+            KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME,
+            KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
                 HttpClientFactory.reloadConnectivitySettings(this)
             }
             KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER -> {
                 reloadDnsSettings()
             }
-            KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_AUTH_TYPE, KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
+            KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_CREDENTIALS_TYPE,
+            KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
                 val editor = preferences.edit()
                 editor.putLong(KEY_API_LAST_CHANGE, System.currentTimeMillis())
                 editor.apply()
@@ -328,6 +334,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 ATE.config(this, VALUE_THEME_NAME_LIGHT).primaryColor(themeColor).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(true).coloredStatusBar(true).commit()
                 ATE.config(this, VALUE_THEME_NAME_DARK).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE)).coloredActionBar(false).coloredStatusBar(true).statusBarColor(Color.BLACK).commit()
                 ATE.config(this, null).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(false).coloredStatusBar(false).commit()
+            }
+            KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
+                (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()
             }
         }
     }

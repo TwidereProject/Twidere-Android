@@ -80,6 +80,7 @@
                 android:layout_toRightOf="@+id/hasPrevAccountIndicator"
                 android:layout_toStartOf="@+id/hasNextAccountIndicator"
                 android:focusable="false"
+                android:overScrollMode="never"
                 tools:listitem="@layout/adapter_item_dashboard_account"
                 tools:paddingStart="@dimen/element_spacing_large"
                 tools:visibility="visible"/>

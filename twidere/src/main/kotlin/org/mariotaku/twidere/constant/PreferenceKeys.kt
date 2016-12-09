@@ -5,9 +5,10 @@ import android.os.Build
 import android.text.TextUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.annotation.AuthTypeInt
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
+import org.mariotaku.twidere.model.account.cred.Credentials
 
 /**
  * Created by mariotaku on 16/8/25.
@@ -39,7 +40,7 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
 
     override fun read(preferences: SharedPreferences): CustomAPIConfig {
         val apiUrlFormat = preferences.getNonEmptyString(KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT)
-        val authType = preferences.getInt(KEY_AUTH_TYPE, AuthTypeInt.OAUTH)
+        val authType = preferences.getString(KEY_CREDENTIALS_TYPE, Credentials.Type.OAUTH)
         val sameOAuthSigningUrl = preferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false)
         val noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false)
         val consumerKey = preferences.getNonEmptyString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY).trim()
@@ -57,7 +58,7 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
             editor.remove(KEY_CONSUMER_SECRET)
         }
         editor.putString(KEY_API_URL_FORMAT, value.apiUrlFormat)
-        editor.putInt(KEY_AUTH_TYPE, value.authType)
+        editor.putString(KEY_CREDENTIALS_TYPE, value.credentialsType)
         editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, value.isSameOAuthUrl)
         editor.putBoolean(KEY_NO_VERSION_SUFFIX, value.isNoVersionSuffix)
         return true

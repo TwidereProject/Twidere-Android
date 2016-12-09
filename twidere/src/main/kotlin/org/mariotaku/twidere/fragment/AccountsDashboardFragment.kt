@@ -44,15 +44,11 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView.ViewHolder
-import android.support.v7.widget.RecyclerViewAccessor
-import android.util.SparseArray
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
@@ -65,6 +61,7 @@ import org.mariotaku.ktextension.setMenuItemTitle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
+import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
@@ -584,7 +581,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         return TwidereViewUtils.hitView(e.rawX, e.rawY, accountsSelector)
     }
 
-    internal class AccountProfileImageViewHolder(val adapter: AccountSelectorAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
+    internal class AccountSpaceViewHolder(itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView)
+
+    internal class AccountProfileImageViewHolder(val adapter: AccountSelectorAdapter, itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView), OnClickListener {
 
         val iconView: ShapedImageView
 
@@ -602,9 +601,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     internal class AccountSelectorAdapter(
             private val inflater: LayoutInflater,
             private val fragment: AccountsDashboardFragment
-    ) : PagerAdapter() {
+    ) : RecyclerPagerAdapter() {
         private val mediaLoader: MediaLoaderWrapper
-        private val viewHolders: SparseArray<AccountProfileImageViewHolder> = SparseArray()
 
         var accounts: Array<AccountDetails>? = null
             set(value) {
@@ -627,7 +625,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 } else {
                     field = null
                 }
-                notifyDataSetChanged()
+                notifyPagesChanged(invalidateCache = true)
             }
 
         init {
@@ -635,7 +633,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
 
         fun getAdapterAccount(position: Int): AccountDetails? {
-            return accounts?.getOrNull(position + 1)
+            return accounts?.getOrNull(position - accountStart + 1)
         }
 
         var selectedAccount: AccountDetails?
@@ -648,58 +646,63 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 swap(from, to)
             }
 
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
-            container.addView(view)
-            val holder = AccountProfileImageViewHolder(this, view)
-            RecyclerViewAccessor.setLayoutPosition(holder, position)
-            viewHolders.put(position, holder)
-            val account = getAdapterAccount(position)!!
-            bindHolder(holder, account)
-            return holder
-        }
+        val ITEM_VIEW_TYPE_SPACE = 1
+        val ITEM_VIEW_TYPE_ICON = 2
 
-        override fun getItemPosition(obj: Any?): Int {
-            for (i in 0 until viewHolders.size()) {
-                val holder = viewHolders.valueAt(i)
-                if (holder === obj) {
-                    val account = getAdapterAccount(viewHolders.keyAt(i))!!
-                    bindHolder(holder, account)
-                    break
+        override fun onCreateViewHolder(container: ViewGroup, position: Int, itemViewType: Int): ViewHolder {
+            when (itemViewType) {
+                ITEM_VIEW_TYPE_SPACE -> {
+                    val view = inflater.inflate(R.layout.adapter_item_dashboard_account_space, container, false)
+                    return AccountSpaceViewHolder(view)
+                }
+                ITEM_VIEW_TYPE_ICON -> {
+                    val view = inflater.inflate(R.layout.adapter_item_dashboard_account, container, false)
+                    return AccountProfileImageViewHolder(this, view)
                 }
             }
-            return POSITION_UNCHANGED
+            throw UnsupportedOperationException()
         }
 
-        private fun bindHolder(holder: AccountProfileImageViewHolder, account: AccountDetails) {
-            holder.iconView.setBorderColor(account.color)
-            if (holder.iconView.tag != account && holder.iconView.drawable == null) {
-                mediaLoader.displayDashboardProfileImage(holder.iconView, account, null)
+        override fun onBindViewHolder(holder: ViewHolder, position: Int, itemViewType: Int) {
+            when (itemViewType) {
+                ITEM_VIEW_TYPE_ICON -> {
+                    val account = getAdapterAccount(position)!!
+                    holder as AccountProfileImageViewHolder
+                    holder.iconView.setBorderColor(account.color)
+                    if (holder.iconView.tag != account && holder.iconView.drawable == null) {
+                        mediaLoader.displayDashboardProfileImage(holder.iconView, account, null)
+                    }
+                    holder.iconView.tag = account
+                }
             }
-            holder.iconView.tag = account
         }
 
-        override fun destroyItem(container: ViewGroup, position: Int, obj: Any?) {
-            val holder = obj as AccountProfileImageViewHolder
-            viewHolders.remove(position)
-            container.removeView(holder.itemView)
-        }
-
-        override fun isViewFromObject(view: View?, obj: Any?): Boolean {
-            return view == (obj as AccountProfileImageViewHolder).itemView
+        override fun getItemViewType(position: Int): Int {
+            if (position < accountStart) {
+                return ITEM_VIEW_TYPE_SPACE
+            }
+            return ITEM_VIEW_TYPE_ICON
         }
 
         override fun getCount(): Int {
-            if (accounts == null || accounts!!.isEmpty()) return 0
-            return accounts!!.size - 1
+            return Math.max(3, accountsCount)
         }
+
+        val accountStart: Int
+            get() = Math.max(0, 3 - accountsCount)
+
+        val accountsCount: Int
+            get() {
+                val accounts = this.accounts ?: return 0
+                return Math.max(0, accounts.size - 1)
+            }
 
         override fun getPageWidth(position: Int): Float {
             return 1f / AccountsSelectorTransformer.selectorAccountsCount
         }
 
         fun dispatchItemSelected(holder: AccountProfileImageViewHolder) {
-            fragment.onAccountSelected(holder, getAdapterAccount(holder.layoutPosition)!!)
+            fragment.onAccountSelected(holder, getAdapterAccount(holder.position)!!)
         }
 
         private fun swap(from: AccountDetails, to: AccountDetails) {
@@ -710,7 +713,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             val temp = accounts[toIdx]
             accounts[toIdx] = accounts[fromIdx]
             accounts[fromIdx] = temp
-            notifyDataSetChanged()
+            notifyPagesChanged(invalidateCache = false)
         }
 
     }
