@@ -26,6 +26,7 @@ import android.widget.CompoundButton
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -36,6 +37,15 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
 
     @Inject
     lateinit override var mediaLoader: MediaLoaderWrapper
+
+    override val linkHighlightOption: Int
+        get() = 0
+
+    override var textSize: Float = 0f
+
+    override var isDisplayNameFirst: Boolean = true
+
+    override var isShowAccountColor: Boolean = true
 
     override var isProfileImageDisplayed: Boolean = false
     private var sortEnabled: Boolean = false
@@ -77,30 +87,10 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         return view
     }
 
-    override val linkHighlightOption: Int
-        get() = 0
-
     override fun setLinkHighlightOption(option: String) {
 
     }
 
-    override var textSize: Float
-        get() = 0f
-        set(textSize) {
-
-        }
-
-    override var isDisplayNameFirst: Boolean
-        get() = false
-        set(nameFirst) {
-
-        }
-
-    override var isShowAccountColor: Boolean
-        get() = false
-        set(show) {
-
-        }
 
     override fun hasStableIds(): Boolean {
         return true
@@ -126,6 +116,14 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         val fromItem = getItem(from)
         removeAt(from)
         insert(fromItem, to)
+    }
+
+    fun findItem(key: UserKey): AccountDetails? {
+        (0 until count).forEach { i ->
+            val item = getItem(i)
+            if (key == item.key) return item
+        }
+        return null
     }
 
 }

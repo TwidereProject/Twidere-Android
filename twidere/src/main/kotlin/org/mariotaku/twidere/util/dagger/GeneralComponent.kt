@@ -129,7 +129,7 @@ interface GeneralComponent {
 
     fun inject(task: UpdateProfileBannerImageTask<Any>)
 
-    fun inject(task: AsyncTwitterWrapper.UpdateProfileImageTask<Any>)
+    fun inject(task: UpdateProfileImageTask<Any>)
 
     fun inject(loader: APIEditorActivity.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
 

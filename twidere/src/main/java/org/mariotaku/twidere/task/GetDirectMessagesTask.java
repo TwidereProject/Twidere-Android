@@ -150,7 +150,7 @@ public abstract class GetDirectMessagesTask extends AbstractTask<RefreshTaskPara
     }
 
     @Override
-    protected void afterExecute(Object callback, List<TwitterWrapper.MessageListResponse> result) {
+    protected void afterExecute(Object handler, List<TwitterWrapper.MessageListResponse> result) {
         bus.post(new GetMessagesTaskEvent(getDatabaseUri(), false, AsyncTwitterWrapper.getException(result)));
     }
 }

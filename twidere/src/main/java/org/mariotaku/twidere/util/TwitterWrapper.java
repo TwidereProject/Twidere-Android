@@ -111,7 +111,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUser(final MicroBlog twitter, final String id, final String screenName,
+    public static User showUser(@NonNull final MicroBlog twitter, final String id, final String screenName,
                                 final String accountType) throws MicroBlogException {
         if (id != null) {
             if (AccountType.FANFOU.equals(accountType)) {
@@ -128,7 +128,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User showUserAlternative(final MicroBlog twitter, final String id,
+    public static User showUserAlternative(@NonNull final MicroBlog twitter, final String id,
                                            final String screenName)
             throws MicroBlogException {
         final String searchScreenName;
@@ -162,7 +162,7 @@ public class TwitterWrapper implements Constants {
     }
 
     @NonNull
-    public static User tryShowUser(final MicroBlog twitter, final String id, final String screenName,
+    public static User tryShowUser(@NonNull final MicroBlog twitter, final String id, final String screenName,
                                    String accountType)
             throws MicroBlogException {
         try {
@@ -176,8 +176,10 @@ public class TwitterWrapper implements Constants {
         }
     }
 
-    public static void updateProfileBannerImage(final Context context, final MicroBlog twitter,
-                                                final Uri imageUri, final boolean deleteImage)
+    public static void updateProfileBannerImage(@NonNull final Context context,
+                                                @NonNull final MicroBlog twitter,
+                                                @NonNull final Uri imageUri,
+                                                final boolean deleteImage)
             throws IOException, MicroBlogException {
         FileBody fileBody = null;
         try {
@@ -215,8 +217,8 @@ public class TwitterWrapper implements Constants {
         }
     }
 
-    public static User updateProfileImage(final Context context, final MicroBlog twitter,
-                                          final Uri imageUri, final boolean deleteImage)
+    public static User updateProfileImage(@NonNull final Context context, @NonNull final MicroBlog twitter,
+                                          @NonNull final Uri imageUri, final boolean deleteImage)
             throws IOException, MicroBlogException {
         FileBody fileBody = null;
         try {

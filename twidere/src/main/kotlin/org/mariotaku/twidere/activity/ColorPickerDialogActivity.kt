@@ -44,9 +44,8 @@ class ColorPickerDialogActivity : BaseActivity(), Callback {
     }
 
     override fun onColorSelected(color: Int) {
-        val intent = Intent()
-        intent.putExtra(EXTRA_COLOR, color)
-        setResult(Activity.RESULT_OK, intent)
+        setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_COLOR, color)
+                .putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS)))
         finish()
     }
 
