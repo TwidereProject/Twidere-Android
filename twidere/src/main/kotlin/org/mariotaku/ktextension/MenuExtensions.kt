@@ -19,6 +19,7 @@
 
 package org.mariotaku.ktextension
 
+import android.graphics.drawable.Drawable
 import android.support.v4.view.MenuItemCompat
 import android.view.Menu
 
@@ -38,6 +39,10 @@ fun Menu.setItemChecked(id: Int, checked: Boolean) {
 }
 
 fun Menu.setMenuItemIcon(id: Int, icon: Int) {
+    findItem(id)?.setIcon(icon)
+}
+
+fun Menu.setMenuItemIcon(id: Int, icon: Drawable) {
     findItem(id)?.setIcon(icon)
 }
 

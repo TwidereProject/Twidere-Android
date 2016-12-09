@@ -42,7 +42,9 @@ import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.view.SupportMenuInflater
@@ -344,10 +346,14 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
         if (useStarsForLikes) {
             menu.setMenuItemTitle(R.id.favorites, R.string.favorites)
-            menu.setMenuItemIcon(R.id.favorites, R.drawable.ic_action_star)
+            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_star)
+            DrawableCompat.setTintList(icon, navigationView.itemIconTintList)
+            menu.setMenuItemIcon(R.id.favorites, icon)
         } else {
             menu.setMenuItemTitle(R.id.favorites, R.string.likes)
-            menu.setMenuItemIcon(R.id.favorites, R.drawable.ic_action_heart)
+            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_heart)
+            DrawableCompat.setTintList(icon, navigationView.itemIconTintList)
+            menu.setMenuItemIcon(R.id.favorites, icon)
         }
         var hasLists = false
         var hasGroups = false
