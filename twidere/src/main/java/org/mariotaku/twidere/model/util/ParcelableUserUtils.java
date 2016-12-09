@@ -112,7 +112,7 @@ public class ParcelableUserUtils implements TwidereConstants {
         return result;
     }
 
-    private static int parseColor(@Nullable String colorString) {
+    public static int parseColor(@Nullable String colorString) {
         if (colorString == null) return 0;
         if (!colorString.startsWith("#")) {
             colorString = "#" + colorString;
