@@ -39,7 +39,7 @@ android {
         versionName '3.3.7'
         multiDexEnabled true
 
-        buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("false")'
+        buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
         buildConfigField 'boolean', 'SHOW_CUSTOM_TOKEN_DIALOG', 'Boolean.parseBoolean("false")'
         buildConfigField 'boolean', 'HOTMOBI_LOG_ENABLED', 'Boolean.parseBoolean("true")'
 
@@ -116,7 +116,7 @@ dependencies {
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
     debugCompile 'com.facebook.stetho:stetho-js-rhino:1.4.1'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
     provided 'javax.annotation:jsr250-api:1.0'
 
