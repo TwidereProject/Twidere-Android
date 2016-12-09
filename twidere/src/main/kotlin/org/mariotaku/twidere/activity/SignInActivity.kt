@@ -775,7 +775,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             for ((k, v) in map) {
                 userData[k] = v
             }
-            userData[ACCOUNT_USER_DATA_POSITION] = AccountUtils.getAccounts(am).size
+            userData[ACCOUNT_USER_DATA_POSITION] = AccountUtils.getAccounts(am).size.toString()
             am.addAccountExplicitly(account, null, userData)
             writeAuthToken(am, account)
             return account
