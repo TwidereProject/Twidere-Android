@@ -80,19 +80,21 @@
             android:id="@android:id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
-            tools:text="Name"
-            android:maxLines="1"/>
+            tools:text="Name"/>
 
         <TextView
             android:id="@android:id/text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:textColorSecondary"
-            tools:text="\@screenname"
-            android:maxLines="1"/>
+            tools:text="\@screenname"/>
     </LinearLayout>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
