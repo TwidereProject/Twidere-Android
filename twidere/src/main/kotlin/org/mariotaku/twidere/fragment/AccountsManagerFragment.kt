@@ -189,7 +189,7 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
-                    AccountManagerSupport.removeAccount(am, account, activity, null, null)
+                    AccountManagerSupport.removeAccount(am, account, null, null, null)
                     val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
                     val whereArgs = arrayOf(accountKey.toString())
                     // Also delete tweets related to the account we previously
