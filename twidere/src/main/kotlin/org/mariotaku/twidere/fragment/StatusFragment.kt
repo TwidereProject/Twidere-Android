@@ -191,9 +191,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                         override fun onClick(widget: View) {
                             val activity = activity
                             if (activity == null || activity.isFinishing) return
-                            MessageDialogFragment.show(activity,
-                                    getString(R.string.cant_load_all_replies_explanation),
-                                    "cant_load_all_replies_explanation")
+                            MessageDialogFragment.show(activity.supportFragmentManager,
+                                    message = getString(R.string.cant_load_all_replies_explanation),
+                                    tag = "cant_load_all_replies_explanation")
                         }
                     }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                 }

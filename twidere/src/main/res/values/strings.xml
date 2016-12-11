@@ -302,6 +302,8 @@
     <string name="action_refreshing_direct_messages">refreshing direct messages</string>
     <string name="action_favoriting">favoriting</string>
     <string name="action_unfavoriting">unfavoriting</string>
+    <string name="action_liking">liking</string>
+    <string name="action_cancelling_like">cancelling like</string>
     <string name="action_deleting">deleting</string>
     <string name="action_updating_profile">updating profile</string>
     <string name="action_updating_profile_image">updating profile image</string>
@@ -378,6 +380,8 @@
     <string name="status_deleted">Tweet deleted.</string>
     <string name="status_favorited">Tweet favorited.</string>
     <string name="status_unfavorited">Tweet unfavorited.</string>
+    <string name="status_liked">Tweet liked.</string>
+    <string name="status_like_removed">Like removed.</string>
     <string name="status_retweeted">Retweeted.</string>
     <string name="retweet_cancelled">Retweet cancelled.</string>
     <string name="direct_message_sent">Direct message sent.</string>
@@ -468,7 +472,8 @@
     <string name="keyword_filter_name">Keyword: <xliff:g id="name">%s</xliff:g></string>
     <string name="source_filter_name">Source: <xliff:g id="name">%s</xliff:g></string>
     <string name="block_user">Block <xliff:g id="name">%s</xliff:g></string>
-    <string name="block_user_confirm_message">Block <xliff:g id="name">%s</xliff:g>? This user won\'t be able to follow you, mention you or send you direct messages.</string>
+    <string name="block_user_confirm_message">Block <xliff:g example="Username" id="name">%s</xliff:g>? This user won\'t be able to follow you, mention you or send you direct messages.</string>
+    <string name="filter_user_confirm_message">Add <xliff:g example="Username" id="name">%s</xliff:g> to filter?</string>
     <string name="unfollow_user">Unfollow <xliff:g id="name">%s</xliff:g></string>
     <string name="unfollow_user_confirm_message">Unfollow <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user.</string>
     <string name="delete_user_list">Delete list <xliff:g id="name">%s</xliff:g></string>
@@ -818,4 +823,7 @@
     <string name="pinned_status">Pinned tweet</string>
     <string name="add_or_remove_from_list">Add or remove from list</string>
     <string name="title_extra_features">Extra features</string>
+    <string name="filter_everywhere">Filter everywhere</string>
+    <string name="filter_everywhere_description">These will be filtered in Twidere:\n  &#xb7;User\'s tweets\n  &#xb7;Tweets mentioning this user\n  &#xb7;Retweets/Quotes of this user</string>
+    <string name="message_toast_added_to_filter">Added to filter.</string>
 </resources>

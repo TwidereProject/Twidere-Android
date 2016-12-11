@@ -81,7 +81,7 @@ public class FriendshipTaskEvent {
     }
 
     @IntDef({Action.ACCEPT, Action.DENY, Action.FOLLOW, Action.UNFOLLOW, Action.BLOCK,
-            Action.UNBLOCK, Action.MUTE, Action.UNMUTE})
+            Action.UNBLOCK, Action.MUTE, Action.UNMUTE, Action.FILTER, Action.UNFILTER})
     public @interface Action {
         int ACCEPT = 1;
         int DENY = 2;
@@ -91,5 +91,7 @@ public class FriendshipTaskEvent {
         int UNBLOCK = 6;
         int MUTE = 7;
         int UNMUTE = 8;
+        int FILTER = 9;
+        int UNFILTER = 10;
     }
 }

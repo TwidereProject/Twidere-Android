@@ -18,7 +18,6 @@ import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
-import org.mariotaku.twidere.util.support.AccountManagerSupport
 import java.util.*
 
 /**
@@ -27,10 +26,6 @@ import java.util.*
  */
 @Suppress("deprecation")
 fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
-    am.getAccountsByType(ACCOUNT_TYPE).map { account ->
-        AccountManagerSupport.removeAccount(am, account, null, null, null)
-    }
-
     val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null, null, null, null) ?: return
     try {
         val indices = ParcelableCredentialsCursorIndices(cur)

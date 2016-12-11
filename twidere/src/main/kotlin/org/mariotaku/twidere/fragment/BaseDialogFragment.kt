@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.support.v4.app.DialogFragment
+import com.squareup.otto.Bus
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -38,6 +39,8 @@ open class BaseDialogFragment : DialogFragment(), Constants {
     lateinit var validator: TwidereValidator
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
+    @Inject
+    lateinit var bus: Bus
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)

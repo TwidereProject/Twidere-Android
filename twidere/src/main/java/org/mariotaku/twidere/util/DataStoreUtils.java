@@ -55,6 +55,9 @@ import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
+import org.mariotaku.twidere.model.FiltersData;
+import org.mariotaku.twidere.model.FiltersData$BaseItemValuesCreator;
+import org.mariotaku.twidere.model.FiltersData$UserItemValuesCreator;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivityValuesCreator;
@@ -675,13 +678,15 @@ public class DataStoreUtils implements Constants {
 
     @NonNull
     public static UserKey[] getAccountKeys(final Context context) {
-        AccountManager am = AccountManager.get(context);
+        final AccountManager am = AccountManager.get(context);
         final Account[] accounts = AccountUtils.getAccounts(am);
-        final UserKey[] keys = new UserKey[accounts.length];
-        for (int i = 0; i < accounts.length; i++) {
-            keys[i] = AccountExtensionsKt.getAccountKey(accounts[i], am);
+        final List<UserKey> keys = new ArrayList<>(accounts.length);
+        for (Account account : accounts) {
+            String keyString = am.getUserData(account, ACCOUNT_USER_DATA_KEY);
+            if (keyString == null) continue;
+            keys.add(UserKey.valueOf(keyString));
         }
-        return keys;
+        return keys.toArray(new UserKey[keys.size()]);
     }
 
     @Nullable
@@ -1061,6 +1066,37 @@ public class DataStoreUtils implements Constants {
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
                 since, sinceColumn, followingOnly, accountIds);
+    }
+
+    public static void addToFilter(Context context, ParcelableUser user, boolean filterAnywhere) {
+        final ContentResolver cr = context.getContentResolver();
+        final FiltersData.UserItem userItem = new FiltersData.UserItem();
+        userItem.setUserKey(user.key);
+        userItem.setScreenName(user.screen_name);
+        userItem.setName(user.name);
+        try {
+            // Insert to filtered users
+            cr.insert(Filters.Users.CONTENT_URI, FiltersData$UserItemValuesCreator.create(userItem));
+            if (filterAnywhere) {
+                // Insert user mention to keywords
+                final FiltersData.BaseItem keywordItem = new FiltersData.BaseItem();
+                keywordItem.setValue("@" + userItem.getScreenName());
+                cr.insert(Filters.Keywords.CONTENT_URI, FiltersData$BaseItemValuesCreator.create(keywordItem));
+
+                // Insert user link (without scheme) to links
+                final FiltersData.BaseItem linkItem = new FiltersData.BaseItem();
+                Uri userLink = LinkCreator.getUserWebLink(user);
+                String linkWithoutScheme = userLink.toString();
+                int idx;
+                if ((idx = linkWithoutScheme.indexOf("://")) >= 0) {
+                    linkWithoutScheme = linkWithoutScheme.substring(idx + 3);
+                }
+                linkItem.setValue(linkWithoutScheme);
+                cr.insert(Filters.Links.CONTENT_URI, FiltersData$BaseItemValuesCreator.create(linkItem));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public interface UpdateActivityAction {

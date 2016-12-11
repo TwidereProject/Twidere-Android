@@ -106,7 +106,7 @@ public class SQLiteDatabaseWrapper {
         return mDatabase.update(table, values, whereClause, whereArgs);
     }
 
-    private void tryCreateDatabase() {
+    private synchronized void tryCreateDatabase() {
         if (mLazyLoadCallback == null || mDatabase != null) return;
         mDatabase = mLazyLoadCallback.onCreateSQLiteDatabase();
         if (mDatabase == null)

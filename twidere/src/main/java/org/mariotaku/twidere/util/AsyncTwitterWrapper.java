@@ -74,7 +74,6 @@ import org.mariotaku.twidere.model.message.FavoriteTaskEvent;
 import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent;
 import org.mariotaku.twidere.model.message.GetMessagesTaskEvent;
 import org.mariotaku.twidere.model.message.GetStatusesTaskEvent;
-import org.mariotaku.twidere.model.message.ProfileUpdatedEvent;
 import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent;
 import org.mariotaku.twidere.model.message.StatusListChangedEvent;
 import org.mariotaku.twidere.model.message.StatusRetweetedEvent;
@@ -87,7 +86,6 @@ import org.mariotaku.twidere.model.message.UsersBlockedEvent;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils;
-import org.mariotaku.twidere.model.util.ParcelableUserUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
@@ -116,14 +114,10 @@ import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import javax.inject.Inject;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.TimelineType;
@@ -217,8 +211,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         AsyncTaskUtils.executeTask(task);
     }
 
-    public void createBlockAsync(final UserKey accountKey, final UserKey userKey) {
-        final CreateUserBlockTask task = new CreateUserBlockTask(context);
+    public void createBlockAsync(final UserKey accountKey, final UserKey userKey, boolean filterEverywhere) {
+        final CreateUserBlockTask task = new CreateUserBlockTask(context, filterEverywhere);
         task.setup(accountKey, userKey);
         TaskStarter.execute(task);
     }

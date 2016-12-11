@@ -5,6 +5,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 
 import java.util.List;
@@ -69,9 +71,9 @@ public class FiltersData {
     @JsonObject
     @CursorObject(valuesCreator = true)
     public static class UserItem {
-        @CursorField(Filters.Users.USER_KEY)
-        @JsonField(name = "user_key")
-        String userKey;
+        @CursorField(value = Filters.Users.USER_KEY, converter = UserKeyCursorFieldConverter.class)
+        @JsonField(name = "user_key", typeConverter = UserKeyConverter.class)
+        UserKey userKey;
         @CursorField(Filters.Users.NAME)
         @JsonField(name = "name")
         String name;
@@ -79,7 +81,7 @@ public class FiltersData {
         @JsonField(name = "screen_name")
         String screenName;
 
-        public String getUserKey() {
+        public UserKey getUserKey() {
             return userKey;
         }
 
@@ -89,6 +91,18 @@ public class FiltersData {
 
         public String getScreenName() {
             return screenName;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setScreenName(String screenName) {
+            this.screenName = screenName;
+        }
+
+        public void setUserKey(UserKey userKey) {
+            this.userKey = userKey;
         }
 
         @Override
@@ -110,6 +124,10 @@ public class FiltersData {
 
         public String getValue() {
             return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
         }
 
         @Override

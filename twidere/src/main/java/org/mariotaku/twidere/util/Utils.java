@@ -1191,6 +1191,7 @@ public final class Utils implements Constants {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                DataStoreUtils.prepareDatabase(context);
                 if (isNetworkAvailable(appContext) && hasAutoRefreshAccounts(appContext)) {
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Start background refresh service");

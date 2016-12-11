@@ -37,8 +37,9 @@ class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<Ac
         account.setAccountUser(am, user)
         account.setAccountKey(am, user.key)
 
-        val accountKeyValues = ContentValues()
-        accountKeyValues.put(AccountSupportColumns.ACCOUNT_KEY, user.key.toString())
+        val accountKeyValues = ContentValues().apply {
+            put(AccountSupportColumns.ACCOUNT_KEY, user.key.toString())
+        }
         val accountKeyWhere = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
         val accountKeyWhereArgs = arrayOf(details.key.toString())
 

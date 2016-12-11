@@ -22,7 +22,11 @@ package org.mariotaku.twidere.fragment
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.support.v4.app.FragmentManager
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE
 
 /**
  * Created by mariotaku on 14-6-24.
@@ -33,28 +37,26 @@ class MessageDialogFragment : BaseDialogFragment() {
         val activity = activity
         val builder = AlertDialog.Builder(activity)
         val args = arguments
+        builder.setTitle(args.getString(EXTRA_TITLE))
         builder.setMessage(args.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok, null)
         return builder.create()
     }
 
     companion object {
-        private val EXTRA_MESSAGE = "message"
 
-        fun show(activity: FragmentActivity, message: String, tag: String): MessageDialogFragment {
-            val df = MessageDialogFragment()
-            val args = Bundle()
-            args.putString(EXTRA_MESSAGE, message)
-            df.arguments = args
-            df.show(activity.supportFragmentManager, tag)
+        fun show(fm: FragmentManager, title: String? = null, message: String, tag: String): MessageDialogFragment {
+            val df = create(title, message)
+            df.show(fm, tag)
             return df
         }
 
-        fun create(message: String): MessageDialogFragment {
+        fun create(title: String? = null, message: String): MessageDialogFragment {
             val df = MessageDialogFragment()
-            val args = Bundle()
-            args.putString(EXTRA_MESSAGE, message)
-            df.arguments = args
+            df.arguments = Bundle {
+                this[EXTRA_TITLE] = title
+                this[EXTRA_MESSAGE] = message
+            }
             return df
         }
     }
