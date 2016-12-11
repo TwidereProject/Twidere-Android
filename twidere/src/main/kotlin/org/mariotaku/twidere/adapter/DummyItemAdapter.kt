@@ -50,6 +50,7 @@ class DummyItemAdapter @JvmOverloads constructor(
     override var userClickListener: IUsersAdapter.UserClickListener? = null
     override var showAccountsColor: Boolean = false
     override var useStarsForLikes: Boolean = false
+    override var simpleLayout: Boolean = false
 
     private var showCardActions: Boolean = false
     private var showingActionCardPosition = RecyclerView.NO_POSITION

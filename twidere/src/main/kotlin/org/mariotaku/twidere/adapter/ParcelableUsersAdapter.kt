@@ -47,7 +47,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     override var userClickListener: IUsersAdapter.UserClickListener? = null
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
     override var followClickListener: IUsersAdapter.FriendshipClickListener? = null
-
+    override var simpleLayout: Boolean = false
 
     init {
         inflater = LayoutInflater.from(context)
@@ -177,7 +177,7 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
 
         fun createUserViewHolder(adapter: IUsersAdapter<*>, inflater: LayoutInflater, parent: ViewGroup): UserViewHolder {
             val view = inflater.inflate(R.layout.list_item_user, parent, false)
-            val holder = UserViewHolder(adapter, view)
+            val holder = UserViewHolder(view, adapter, adapter.simpleLayout)
             holder.setOnClickListeners()
             holder.setupViewOptions()
             return holder

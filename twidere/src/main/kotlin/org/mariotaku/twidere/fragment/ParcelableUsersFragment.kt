@@ -38,6 +38,7 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
@@ -93,6 +94,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
         val adapter = ParcelableUsersAdapter(context)
+        adapter.simpleLayout = simpleLayout
         adapter.followClickListener = this
         return adapter
     }
@@ -170,6 +172,9 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     protected open val userReferral: String?
         @Referral
         get() = null
+
+    protected val simpleLayout: Boolean
+        get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
 
     override fun onUserLongClick(holder: UserViewHolder, position: Int): Boolean {
         return true

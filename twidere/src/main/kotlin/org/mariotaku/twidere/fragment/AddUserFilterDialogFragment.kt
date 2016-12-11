@@ -19,60 +19,32 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
-import android.widget.CheckBox
-import android.widget.TextView
 import android.widget.Toast
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 import org.mariotaku.twidere.util.DataStoreUtils
 
-class AddUserFilterDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
-
-    private val user: ParcelableUser by lazy { arguments.getParcelable<ParcelableUser>(EXTRA_USER) }
-
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        when (which) {
-            DialogInterface.BUTTON_POSITIVE -> {
-                val filterEverywhere = ((dialog as Dialog).findViewById(R.id.filterEverywhereToggle) as CheckBox).isChecked
-                DataStoreUtils.addToFilter(context, user, filterEverywhere)
-                bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, user.account_key, user.key).apply {
-                    isFinished = true
-                    isSucceeded = true
-                })
-                Toast.makeText(context, R.string.message_toast_added_to_filter, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-            }
-        }
+class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
+    override fun getMessage(user: ParcelableUser): String {
+        return getString(R.string.filter_user_confirm_message, userColorNameManager.getDisplayName(user, kPreferences[nameFirstKey]))
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(context)
-        val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
-        val displayName = userColorNameManager.getDisplayName(user, nameFirst)
-        builder.setTitle(R.string.add_to_filter)
-        builder.setView(R.layout.dialog_filter_user_confirm)
-        builder.setPositiveButton(android.R.string.ok, this)
-        builder.setNegativeButton(android.R.string.cancel, null)
-        val dialog = builder.create()
-        dialog.setOnShowListener {
-            val confirmMessageView = dialog.findViewById(R.id.confirmMessage) as TextView
-            val filterEverywhereHelp = dialog.findViewById(R.id.filterEverywhereHelp)!!
-            filterEverywhereHelp.setOnClickListener {
-                MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
-                        message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")
-            }
-            confirmMessageView.text = getString(R.string.filter_user_confirm_message, displayName)
-        }
-        return dialog
+    override fun getTitle(user: ParcelableUser): String {
+        return getString(R.string.add_to_filter)
+    }
+
+    override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
+        DataStoreUtils.addToFilter(context, user, filterEverywhere)
+        bus.post(FriendshipTaskEvent(FriendshipTaskEvent.Action.FILTER, user.account_key, user.key).apply {
+            isFinished = true
+            isSucceeded = true
+        })
+        Toast.makeText(context, R.string.message_toast_added_to_filter, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

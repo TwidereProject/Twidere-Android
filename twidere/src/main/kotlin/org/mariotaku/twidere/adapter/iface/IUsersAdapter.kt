@@ -37,6 +37,8 @@ interface IUsersAdapter<in Data> : IContentCardAdapter {
 
     val showAccountsColor: Boolean
 
+    val simpleLayout: Boolean
+
     fun setData(data: Data?): Boolean
 
     fun getUser(position: Int): ParcelableUser?

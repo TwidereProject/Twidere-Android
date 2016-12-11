@@ -34,12 +34,14 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.Window
 import org.mariotaku.ktextension.convert
+import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.toDoubleOrNull
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.constant.CompatibilityConstants
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
@@ -553,9 +555,11 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_USER_BLOCKS -> {
                 fragment = UserBlocksListFragment()
+                args[EXTRA_SIMPLE_LAYOUT] = true
             }
             LINK_ID_MUTES_USERS -> {
                 fragment = MutesUsersListFragment()
+                args[EXTRA_SIMPLE_LAYOUT] = true
             }
             LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
                 fragment = MessagesConversationFragment()

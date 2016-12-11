@@ -19,52 +19,28 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
 
-class CreateUserMuteDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
+class CreateUserMuteDialogFragment : AbsUserMuteBlockDialogFragment() {
 
-    override fun onClick(dialog: DialogInterface, which: Int) {
-        when (which) {
-            DialogInterface.BUTTON_POSITIVE -> {
-                val user = user
-                val twitter = twitterWrapper
-                if (user == null) return
-                twitter.createMuteAsync(user.account_key, user.key)
-            }
-            else -> {
-            }
-        }
+    override fun getMessage(user: ParcelableUser): String {
+        val displayName = userColorNameManager.getDisplayName(user, kPreferences[nameFirstKey])
+        return getString(R.string.mute_user_confirm_message, displayName)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val context = context
-        val builder = AlertDialog.Builder(context)
-        val user = user
-        if (user != null) {
-            val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
-            val displayName = userColorNameManager.getDisplayName(user, nameFirst)
-            builder.setTitle(getString(R.string.mute_user, displayName))
-            builder.setMessage(getString(R.string.mute_user_confirm_message, displayName))
-        }
-        builder.setPositiveButton(android.R.string.ok, this)
-        builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+    override fun getTitle(user: ParcelableUser): String {
+        val displayName = userColorNameManager.getDisplayName(user, kPreferences[nameFirstKey])
+        return getString(R.string.mute_user, displayName)
     }
 
-    private val user: ParcelableUser?
-        get() {
-            val args = arguments
-            if (!args.containsKey(EXTRA_USER)) return null
-            return args.getParcelable<ParcelableUser>(EXTRA_USER)
-        }
+    override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
+        twitterWrapper.createMuteAsync(user.account_key, user.key, filterEverywhere)
+    }
 
     companion object {
 

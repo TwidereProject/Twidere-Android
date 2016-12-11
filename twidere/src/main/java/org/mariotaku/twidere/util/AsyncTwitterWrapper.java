@@ -233,8 +233,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return asyncTaskManager.add(task, true);
     }
 
-    public void createMuteAsync(final UserKey accountKey, final UserKey userKey) {
-        final CreateUserMuteTask task = new CreateUserMuteTask(context);
+    public void createMuteAsync(final UserKey accountKey, final UserKey userKey, boolean filterEverywhere) {
+        final CreateUserMuteTask task = new CreateUserMuteTask(context, filterEverywhere);
         task.setup(accountKey, userKey);
         TaskStarter.execute(task);
     }

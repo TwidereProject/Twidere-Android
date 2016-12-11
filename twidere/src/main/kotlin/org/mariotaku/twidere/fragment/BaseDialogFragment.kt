@@ -22,6 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.support.v4.app.DialogFragment
 import com.squareup.otto.Bus
+import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -35,6 +36,8 @@ open class BaseDialogFragment : DialogFragment(), Constants {
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
+    @Inject
+    lateinit var kPreferences: KPreferences
     @Inject
     lateinit var validator: TwidereValidator
     @Inject

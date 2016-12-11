@@ -24,24 +24,23 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import kotlinx.android.synthetic.main.list_item_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.util.UserKeyUtils
-import org.mariotaku.twidere.util.Utils.getLocalizedNumber
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.NameView
 import org.mariotaku.twidere.view.iface.IColorLabelView
 import java.util.*
 
 class UserViewHolder(
+        itemView: View,
         private val adapter: IUsersAdapter<*>,
-        itemView: View
+        private val simple: Boolean = false
 ) : ViewHolder(itemView), OnClickListener, OnLongClickListener {
 
     private val itemContent: IColorLabelView
@@ -64,31 +63,55 @@ class UserViewHolder(
     private val actionsProgressContainer: View
     private val actionsContainer: View
     private val processingRequestProgress: View
+    private val countsContainer: LinearLayout
 
     private var userClickListener: UserClickListener? = null
     private var requestClickListener: RequestClickListener? = null
+
     private var friendshipClickListener: FriendshipClickListener? = null
 
     init {
-        itemContent = itemView.findViewById(R.id.itemContent) as IColorLabelView
-        profileImageView = itemView.findViewById(R.id.profileImage) as ImageView
-        profileTypeView = itemView.findViewById(R.id.profileType) as ImageView
-        nameView = itemView.findViewById(R.id.name) as NameView
-        externalIndicator = itemView.findViewById(R.id.externalIndicator) as TextView
-        descriptionView = itemView.findViewById(R.id.description) as TextView
-        locationView = itemView.findViewById(R.id.location) as TextView
-        urlView = itemView.findViewById(R.id.url) as TextView
-        statusesCountView = itemView.findViewById(R.id.statusesCount) as TextView
-        followersCountView = itemView.findViewById(R.id.followersCount) as TextView
-        friendsCountView = itemView.findViewById(R.id.friendsCount) as TextView
-        actionsProgressContainer = itemView.findViewById(R.id.actionsProgressContainer)
-        actionsContainer = itemView.findViewById(R.id.actionsContainer)
+        itemContent = itemView.itemContent
+        profileImageView = itemView.profileImage
+        profileTypeView = itemView.profileType
+        nameView = itemView.name
+        externalIndicator = itemView.externalIndicator
+        descriptionView = itemView.description
+        locationView = itemView.location
+        urlView = itemView.url
+        statusesCountView = itemView.statusesCount
+        followersCountView = itemView.followersCount
+        friendsCountView = itemView.friendsCount
+        actionsProgressContainer = itemView.actionsProgressContainer
+        actionsContainer = itemView.actionsContainer
         acceptRequestButton = itemView.acceptRequest
         denyRequestButton = itemView.denyRequest
         unblockButton = itemView.unblock
         unmuteButton = itemView.unmute
         followButton = itemView.follow
+        countsContainer = itemView.countsContainer
         processingRequestProgress = itemView.findViewById(R.id.processingRequest)
+
+        if (simple) {
+            externalIndicator.visibility = View.GONE
+            descriptionView.visibility = View.GONE
+            locationView.visibility = View.GONE
+            urlView.visibility = View.GONE
+            countsContainer.visibility = View.GONE
+
+            itemView.profileImageContainer.layoutParams.apply {
+                (this as RelativeLayout.LayoutParams).clearVerticalRules()
+                this.addRule(RelativeLayout.CENTER_VERTICAL)
+            }
+            nameView.layoutParams.apply {
+                (this as RelativeLayout.LayoutParams).clearVerticalRules()
+                this.addRule(RelativeLayout.CENTER_VERTICAL)
+            }
+            actionsProgressContainer.layoutParams.apply {
+                (this as RelativeLayout.LayoutParams).clearVerticalRules()
+                this.addRule(RelativeLayout.CENTER_VERTICAL)
+            }
+        }
     }
 
     fun displayUser(user: ParcelableUser) {
@@ -97,7 +120,6 @@ class UserViewHolder(
         val loader = adapter.mediaLoader
         val manager = adapter.userColorNameManager
         val twitter = adapter.twitterWrapper
-
 
         itemContent.drawStart(manager.getUserColor(user.key))
 
@@ -110,16 +132,7 @@ class UserViewHolder(
         nameView.setName(manager.getUserNickname(user.key, user.name))
         nameView.setScreenName("@${user.screen_name}")
         nameView.updateText(adapter.bidiFormatter)
-        descriptionView.visibility = if (TextUtils.isEmpty(user.description_unescaped)) View.GONE else View.VISIBLE
-        descriptionView.text = user.description_unescaped
-        locationView.visibility = if (TextUtils.isEmpty(user.location)) View.GONE else View.VISIBLE
-        locationView.text = user.location
-        urlView.visibility = if (TextUtils.isEmpty(user.url_expanded)) View.GONE else View.VISIBLE
-        urlView.text = user.url_expanded
-        val locale = Locale.getDefault()
-        statusesCountView.text = getLocalizedNumber(locale, user.statuses_count)
-        followersCountView.text = getLocalizedNumber(locale, user.followers_count)
-        friendsCountView.text = getLocalizedNumber(locale, user.friends_count)
+
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
             loader.displayProfileImage(profileImageView, user)
@@ -142,10 +155,7 @@ class UserViewHolder(
             externalIndicator.text = context.getString(R.string.external_user_host_format, user.key.host)
         }
 
-        followButton.setImageResource(if (user.is_following)
-            R.drawable.ic_action_confirm
-        else
-            R.drawable.ic_action_add)
+        followButton.setImageResource(if (user.is_following) R.drawable.ic_action_confirm else R.drawable.ic_action_add)
         followButton.isActivated = user.is_following
 
         val isMySelf = user.account_key == user.key
@@ -171,6 +181,19 @@ class UserViewHolder(
             unblockButton.visibility = View.GONE
             unmuteButton.visibility = View.GONE
         }
+
+        if (!simple) {
+            descriptionView.visibility = if (TextUtils.isEmpty(user.description_unescaped)) View.GONE else View.VISIBLE
+            descriptionView.text = user.description_unescaped
+            locationView.visibility = if (TextUtils.isEmpty(user.location)) View.GONE else View.VISIBLE
+            locationView.text = user.location
+            urlView.visibility = if (TextUtils.isEmpty(user.url_expanded)) View.GONE else View.VISIBLE
+            urlView.text = user.url_expanded
+            val locale = Locale.getDefault()
+            statusesCountView.text = Utils.getLocalizedNumber(locale, user.statuses_count)
+            followersCountView.text = Utils.getLocalizedNumber(locale, user.followers_count)
+            friendsCountView.text = Utils.getLocalizedNumber(locale, user.friends_count)
+        }
     }
 
     override fun onClick(v: View) {
@@ -189,6 +212,9 @@ class UserViewHolder(
             }
             R.id.unblock -> {
                 friendshipClickListener?.onUnblockClicked(this, layoutPosition)
+            }
+            R.id.unmute -> {
+                friendshipClickListener?.onUnmuteClicked(this, layoutPosition)
             }
         }
     }
@@ -248,4 +274,11 @@ class UserViewHolder(
         setTextSize(adapter.textSize)
     }
 
+}
+
+private fun RelativeLayout.LayoutParams.clearVerticalRules() {
+    intArrayOf(RelativeLayout.ABOVE, RelativeLayout.BELOW, RelativeLayout.ALIGN_BASELINE,
+            RelativeLayout.ALIGN_TOP, RelativeLayout.ALIGN_BOTTOM).forEach { verb ->
+        removeRule(verb)
+    }
 }
