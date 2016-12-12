@@ -197,7 +197,7 @@
                     app:sivBackgroundColor="?android:colorBackground"
                     app:sivBorder="true"
                     app:sivBorderWidth="@dimen/line_width_compose_account_profile_image"
-                    tools:src="@mipmap/ic_launcher"/>
+                    tools:src="@drawable/ic_profile_image_twidere"/>
             </org.mariotaku.twidere.view.SquareFrameLayout>
 
             <org.mariotaku.twidere.view.BadgeView

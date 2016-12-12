@@ -83,7 +83,7 @@
         android:layout_marginRight="@dimen/element_spacing_normal"
         android:contentDescription="@string/profile_image"
         android:scaleType="centerCrop"
-        tools:src="@mipmap/ic_launcher"
+        tools:src="@drawable/ic_profile_image_twidere"
         tools:visibility="visible"/>
 
     <org.mariotaku.twidere.view.BoundsImageView

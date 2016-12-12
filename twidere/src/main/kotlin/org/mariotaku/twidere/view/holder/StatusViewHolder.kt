@@ -89,7 +89,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
         statusContentUpperSpace.visibility = View.VISIBLE
 
-        profileImageView.setImageResource(R.mipmap.ic_launcher)
+        profileImageView.setImageResource(R.drawable.ic_profile_image_twidere)
         nameView.setName(Constants.TWIDERE_PREVIEW_NAME)
         nameView.setScreenName("@" + Constants.TWIDERE_PREVIEW_SCREEN_NAME)
         nameView.updateText(adapter.bidiFormatter)
@@ -115,7 +115,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         statusContentLowerSpace.visibility = if (showCardActions) View.GONE else View.VISIBLE
         quotedMediaPreview.visibility = View.GONE
         quotedMediaLabel.visibility = View.GONE
-        mediaPreview.displayMedia(R.drawable.nyan_stars_background)
+        mediaPreview.displayMedia(R.drawable.featured_graphics)
         extraTypeView.setImageResource(R.drawable.ic_action_gallery)
     }
 

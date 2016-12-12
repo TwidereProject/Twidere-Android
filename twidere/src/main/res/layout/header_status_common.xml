@@ -69,7 +69,7 @@
             android:scaleType="centerCrop"
             app:sivBorder="true"
             app:sivBorderWidth="1dp"
-            tools:src="@mipmap/ic_launcher"/>
+            tools:src="@drawable/ic_profile_image_twidere"/>
 
         <ImageView
             android:id="@+id/profileType"

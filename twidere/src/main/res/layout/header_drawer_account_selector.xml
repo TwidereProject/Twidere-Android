@@ -66,7 +66,7 @@
                 android:focusable="false"
                 app:sivBorder="true"
                 app:sivBorderWidth="2dp"
-                tools:src="@mipmap/ic_launcher"/>
+                tools:src="@drawable/ic_profile_image_twidere"/>
 
             <org.mariotaku.twidere.view.ExtendedViewPager
                 android:id="@+id/otherAccountsList"

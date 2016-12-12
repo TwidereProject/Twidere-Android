@@ -52,7 +52,7 @@
             android:layout_height="@dimen/icon_size_card_list_item"
             android:layout_centerInParent="true"
             android:contentDescription="@string/profile_image"
-            tools:src="@mipmap/ic_launcher"/>
+            tools:src="@drawable/ic_profile_image_twidere"/>
 
         <ImageView
             android:id="@+id/profileType"

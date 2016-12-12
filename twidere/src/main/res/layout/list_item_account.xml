@@ -50,7 +50,7 @@
         android:layout_toRightOf="@+id/drag_handle"
         android:contentDescription="@string/your_profile_image"
         android:scaleType="fitCenter"
-        tools:src="@mipmap/ic_launcher"/>
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
     <ImageView
         android:id="@+id/account_type"

@@ -1130,19 +1130,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return c;
     }
 
-    private Bitmap getProfileImageForNotification(final String profileImageUrl) {
-        final Context context = getContext();
-        assert context != null;
-        final Resources res = context.getResources();
-        final int w = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
-        final int h = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
-        final File profile_image_file = mImagePreloader.getCachedImageFile(profileImageUrl);
-        final Bitmap profile_image = profile_image_file != null && profile_image_file.isFile() ? BitmapFactory
-                .decodeFile(profile_image_file.getPath()) : null;
-        if (profile_image != null) return Bitmap.createScaledBitmap(profile_image, w, h, true);
-        return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher), w, h, true);
-    }
-
     private Cursor getUnreadCountsCursor() {
         final MatrixCursor c = new MatrixCursor(UnreadCounts.MATRIX_COLUMNS);
         return c;

@@ -31,7 +31,7 @@
         android:foregroundGravity="center"
         android:scaleType="centerCrop"
         tools:ignore="DuplicateIncludedIds"
-        tools:src="@drawable/nyan_stars_background"/>
+        tools:src="@drawable/featured_graphics"/>
 
     <ProgressBar
         android:id="@+id/media_preview_progress"

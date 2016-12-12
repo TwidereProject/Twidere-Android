@@ -110,7 +110,7 @@ class ParcelableUserLoader(
             } else {
                 return SingleResponse()
             }
-            val cur = resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where.sql,
+            resolver.query(CachedUsers.CONTENT_URI, CachedUsers.COLUMNS, where.sql,
                     whereArgs, null)?.let { cur ->
                 try {
                     cur.moveToFirst()
