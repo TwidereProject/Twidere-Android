@@ -121,23 +121,33 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onStart() {
         super.onStart()
-        contentObserver = object : ContentObserver(Handler()) {
-            override fun onChange(selfChange: Boolean) {
+        if (contentObserver == null) {
+            contentObserver = object : ContentObserver(Handler()) {
+                override fun onChange(selfChange: Boolean) {
+                    reloadStatuses()
+                }
+            }
+            context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
+        }
+        if (accountListener == null) {
+            accountListener = OnAccountsUpdateListener { accounts ->
                 reloadStatuses()
             }
+            AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
         }
-        accountListener = OnAccountsUpdateListener { accounts ->
-            reloadStatuses()
-        }
-        context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
-        AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
         updateRefreshState()
         reloadStatuses()
     }
 
     override fun onStop() {
-        context.contentResolver.unregisterContentObserver(contentObserver)
-        AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+        if (contentObserver != null) {
+            context.contentResolver.unregisterContentObserver(contentObserver)
+            contentObserver = null
+        }
+        if (accountListener != null) {
+            AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+            accountListener = null
+        }
         super.onStop()
     }
 

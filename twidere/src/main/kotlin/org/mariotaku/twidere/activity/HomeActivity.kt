@@ -86,7 +86,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 
 class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback, OnLongClickListener, DrawerLayout.DrawerListener {
 
-    private val accountChangeObserver = AccountChangeObserver(this)
+    private val accountUpdatedListener = AccountUpdatedListener(this)
 
     private var selectedAccountToSearch: AccountDetails? = null
     private var tabColumns: Int = 0
@@ -389,7 +389,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onStart() {
         super.onStart()
         multiSelectHandler.dispatchOnStart()
-        AccountManager.get(this).addOnAccountsUpdatedListener(accountChangeObserver, null, false)
+        AccountManager.get(this).addOnAccountsUpdatedListener(accountUpdatedListener, null, false)
         bus.register(this)
 
         readStateManager.registerOnSharedPreferenceChangeListener(readStateChangeListener)
@@ -406,7 +406,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         multiSelectHandler.dispatchOnStop()
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
         bus.unregister(this)
-        AccountManager.get(this).removeOnAccountsUpdatedListener(accountChangeObserver)
+        AccountManager.get(this).removeOnAccountsUpdatedListener(accountUpdatedListener)
         preferences.edit().putInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
 
         super.onStop()
@@ -814,7 +814,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         actionsButton.contentDescription = getString(title)
     }
 
-    private class AccountChangeObserver(private val activity: HomeActivity) : OnAccountsUpdateListener {
+    private class AccountUpdatedListener(private val activity: HomeActivity) : OnAccountsUpdateListener {
 
         override fun onAccountsUpdated(accounts: Array<out Account>?) {
             activity.notifyAccountsChanged()
