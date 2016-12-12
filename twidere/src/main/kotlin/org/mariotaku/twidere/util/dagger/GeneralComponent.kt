@@ -43,7 +43,6 @@ import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.MultiSelectEventHandler
 import javax.inject.Singleton
 
@@ -136,4 +135,6 @@ interface GeneralComponent {
     fun inject(task: UpdateStatusTask)
 
     fun inject(application: TwidereApplication)
+
+    fun inject(fragment: ThemedPreferenceDialogFragmentCompat)
 }

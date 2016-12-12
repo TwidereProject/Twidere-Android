@@ -86,12 +86,6 @@ public interface TwidereDataStore {
          */
         String AUTH_TYPE = "auth_type";
 
-        /**
-         * Password of the account. (It will not stored)<br>
-         * Type: TEXT
-         */
-        String PASSWORD = "password";
-
         String BASIC_AUTH_USERNAME = "basic_auth_username";
 
         /**
@@ -142,9 +136,6 @@ public interface TwidereDataStore {
         String ACCOUNT_EXTRAS = "account_extras";
 
         String ACCOUNT_USER = "account_user";
-
-        String[] COLUMNS_NO_CREDENTIALS = {_ID, NAME, SCREEN_NAME, ACCOUNT_KEY, PROFILE_IMAGE_URL,
-                PROFILE_BANNER_URL, COLOR, IS_ACTIVATED, SORT_POSITION, ACCOUNT_TYPE, ACCOUNT_USER};
 
         String[] COLUMNS = {_ID, NAME, SCREEN_NAME, ACCOUNT_KEY, AUTH_TYPE, BASIC_AUTH_USERNAME,
                 BASIC_AUTH_PASSWORD, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, CONSUMER_KEY, CONSUMER_SECRET,

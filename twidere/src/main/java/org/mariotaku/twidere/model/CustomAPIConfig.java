@@ -3,10 +3,13 @@ package org.mariotaku.twidere.model;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.account.cred.Credentials;
@@ -25,8 +28,9 @@ import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_SECRET;
 /**
  * Created by mariotaku on 16/3/12.
  */
+@ParcelablePlease
 @JsonObject
-public final class CustomAPIConfig {
+public final class CustomAPIConfig implements Parcelable {
 
     @JsonField(name = "name")
     String name;
@@ -46,7 +50,7 @@ public final class CustomAPIConfig {
     @JsonField(name = "consumer_secret")
     String consumerSecret;
 
-    CustomAPIConfig() {
+    public CustomAPIConfig() {
     }
 
     public CustomAPIConfig(String name, String apiUrlFormat, String credentialsType, boolean sameOAuthUrl,
@@ -98,6 +102,52 @@ public final class CustomAPIConfig {
         return consumerSecret;
     }
 
+    public void setApiUrlFormat(String apiUrlFormat) {
+        this.apiUrlFormat = apiUrlFormat;
+    }
+
+    public void setConsumerKey(String consumerKey) {
+        this.consumerKey = consumerKey;
+    }
+
+    public void setConsumerSecret(String consumerSecret) {
+        this.consumerSecret = consumerSecret;
+    }
+
+    public void setCredentialsType(String credentialsType) {
+        this.credentialsType = credentialsType;
+    }
+
+    public void setSameOAuthUrl(boolean sameOAuthUrl) {
+        this.sameOAuthUrl = sameOAuthUrl;
+    }
+
+    public void setNoVersionSuffix(boolean noVersionSuffix) {
+        this.noVersionSuffix = noVersionSuffix;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        CustomAPIConfigParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<CustomAPIConfig> CREATOR = new Creator<CustomAPIConfig>() {
+        public CustomAPIConfig createFromParcel(Parcel source) {
+            CustomAPIConfig target = new CustomAPIConfig();
+            CustomAPIConfigParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public CustomAPIConfig[] newArray(int size) {
+            return new CustomAPIConfig[size];
+        }
+    };
+
     @NonNull
     public static List<CustomAPIConfig> listDefault(@NonNull Context context) {
         final AssetManager assets = context.getAssets();
@@ -114,10 +164,13 @@ public final class CustomAPIConfig {
         }
     }
 
-    public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
-        return Collections.singletonList(new CustomAPIConfig(context.getString(R.string.provider_default),
+    public static CustomAPIConfig builtin(@NonNull Context context) {
+        return new CustomAPIConfig(context.getString(R.string.provider_default),
                 DEFAULT_TWITTER_API_URL_FORMAT, Credentials.Type.OAUTH, true, false,
-                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET));
+                TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET);
     }
 
+    public static List<CustomAPIConfig> listBuiltin(@NonNull Context context) {
+        return Collections.singletonList(builtin(context));
+    }
 }

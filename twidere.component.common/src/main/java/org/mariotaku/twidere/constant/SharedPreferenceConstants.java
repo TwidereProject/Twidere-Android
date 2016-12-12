@@ -19,10 +19,12 @@
 
 package org.mariotaku.twidere.constant;
 
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 
+import static org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT;
+import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_KEY;
+import static org.mariotaku.twidere.TwidereConstants.TWITTER_CONSUMER_SECRET;
 import static org.mariotaku.twidere.annotation.PreferenceType.BOOLEAN;
 import static org.mariotaku.twidere.annotation.PreferenceType.INT;
 import static org.mariotaku.twidere.annotation.PreferenceType.LONG;
@@ -231,7 +233,7 @@ public interface SharedPreferenceConstants {
     String KEY_PRELOAD_WIFI_ONLY = "preload_wifi_only";
     @Preference(type = BOOLEAN)
     String KEY_NO_CLOSE_AFTER_TWEET_SENT = "no_close_after_tweet_sent";
-    @Preference(type = STRING, hasDefault = false)
+    @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_TWITTER_API_URL_FORMAT)
     String KEY_API_URL_FORMAT = "api_url_format";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_SAME_OAUTH_SIGNING_URL = "same_oauth_signing_url";
@@ -239,9 +241,9 @@ public interface SharedPreferenceConstants {
     String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
     @Preference(type = STRING, hasDefault = true, defaultString = Credentials.Type.OAUTH)
     String KEY_CREDENTIALS_TYPE = "credentials_type";
-    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_KEY)
+    @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_KEY)
     String KEY_CONSUMER_KEY = "consumer_key";
-    @Preference(type = STRING, hasDefault = true, defaultString = TwidereConstants.TWITTER_CONSUMER_SECRET)
+    @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_SECRET)
     String KEY_CONSUMER_SECRET = "consumer_secret";
     String KEY_SETTINGS_WIZARD_COMPLETED = "settings_wizard_completed";
     String KEY_CONSUMER_KEY_SECRET_SET = "consumer_key_secret_set";

@@ -3,7 +3,6 @@ package org.mariotaku.twidere.util
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.database.sqlite.SQLiteDatabase
-import android.os.Bundle
 import android.support.annotation.ColorInt
 import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.twidere.TwidereConstants.*
@@ -33,14 +32,15 @@ fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
         while (!cur.isAfterLast) {
             val credentials = indices.newObject(cur)
             val account = Account(credentials.account_name, ACCOUNT_TYPE)
-            val userdata = Bundle()
-            userdata.putString(ACCOUNT_USER_DATA_KEY, credentials.account_key.toString())
-            userdata.putString(ACCOUNT_USER_DATA_TYPE, credentials.account_type)
-            userdata.putString(ACCOUNT_USER_DATA_ACTIVATED, credentials.is_activated.toString())
-            userdata.putString(ACCOUNT_USER_DATA_CREDS_TYPE, credentials.getCredentialsType())
-            userdata.putString(ACCOUNT_USER_DATA_COLOR, toHexColor(credentials.color))
-            userdata.putString(ACCOUNT_USER_DATA_POSITION, credentials.sort_position)
-            userdata.putString(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(credentials.account_user ?: run {
+            // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
+            am.addAccountExplicitly(account, null, null)
+            am.setUserData(account, ACCOUNT_USER_DATA_KEY, credentials.account_key.toString())
+            am.setUserData(account, ACCOUNT_USER_DATA_TYPE, credentials.account_type)
+            am.setUserData(account, ACCOUNT_USER_DATA_ACTIVATED, credentials.is_activated.toString())
+            am.setUserData(account, ACCOUNT_USER_DATA_CREDS_TYPE, credentials.getCredentialsType())
+            am.setUserData(account, ACCOUNT_USER_DATA_COLOR, toHexColor(credentials.color))
+            am.setUserData(account, ACCOUNT_USER_DATA_POSITION, credentials.sort_position)
+            am.setUserData(account, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(credentials.account_user ?: run {
                 val user = ParcelableUser()
                 user.account_key = credentials.account_key
                 user.key = credentials.account_key
@@ -51,8 +51,7 @@ fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
                 user.profile_image_url = credentials.profile_image_url
                 return@run user
             }))
-            userdata.putString(ACCOUNT_USER_DATA_EXTRAS, credentials.account_extras)
-            am.addAccountExplicitly(account, null, userdata)
+            am.setUserData(account, ACCOUNT_USER_DATA_EXTRAS, credentials.account_extras)
             am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(credentials.toCredentials()))
             cur.moveToNext()
         }

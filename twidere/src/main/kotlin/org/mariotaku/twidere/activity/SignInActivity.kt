@@ -40,7 +40,6 @@ import android.text.InputType
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
-import android.util.Pair
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -52,7 +51,6 @@ import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
@@ -68,10 +66,13 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
+import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
@@ -84,23 +85,15 @@ import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.lang.ref.WeakReference
-import java.util.*
 
 
 class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
-    private var apiUrlFormat: String? = null
-    @Credentials.Type
-    private var authType: String = Credentials.Type.EMPTY
-    private var consumerKey: String? = null
-    private var consumerSecret: String? = null
+    private lateinit var apiConfig: CustomAPIConfig
     private var apiChangeTimestamp: Long = 0
-    private var sameOAuthSigningUrl: Boolean = false
-    private var noVersionSuffix: Boolean = false
     private var signInTask: AbstractSignInTask? = null
 
     private var accountAuthenticatorResponse: AccountAuthenticatorResponse? = null
@@ -114,15 +107,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         setContentView(R.layout.activity_sign_in)
 
         if (savedInstanceState != null) {
-            apiUrlFormat = savedInstanceState.getString(Accounts.API_URL_FORMAT)
-            authType = savedInstanceState.getString(Accounts.AUTH_TYPE)
-            sameOAuthSigningUrl = savedInstanceState.getBoolean(Accounts.SAME_OAUTH_SIGNING_URL)
-            consumerKey = savedInstanceState.getString(Accounts.CONSUMER_KEY)?.trim()
-            consumerSecret = savedInstanceState.getString(Accounts.CONSUMER_SECRET)?.trim()
+            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
             apiChangeTimestamp = savedInstanceState.getLong(EXTRA_API_LAST_CHANGE)
+        } else {
+            apiConfig = kPreferences[defaultAPIConfigKey]
         }
 
-        val isTwipOMode = authType == Credentials.Type.EMPTY
+        val isTwipOMode = apiConfig.credentialsType == Credentials.Type.EMPTY
         usernamePasswordContainer.visibility = if (isTwipOMode) View.GONE else View.VISIBLE
         signInSignUpContainer.orientation = if (isTwipOMode) LinearLayout.VERTICAL else LinearLayout.HORIZONTAL
 
@@ -166,12 +157,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         when (requestCode) {
             REQUEST_EDIT_API -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    apiUrlFormat = data!!.getStringExtra(Accounts.API_URL_FORMAT)
-                    authType = data.getStringExtra(Accounts.AUTH_TYPE) ?: Credentials.Type.OAUTH
-                    sameOAuthSigningUrl = data.getBooleanExtra(Accounts.SAME_OAUTH_SIGNING_URL, false)
-                    noVersionSuffix = data.getBooleanExtra(Accounts.NO_VERSION_SUFFIX, false)
-                    consumerKey = data.getStringExtra(Accounts.CONSUMER_KEY)
-                    consumerSecret = data.getStringExtra(Accounts.CONSUMER_SECRET)
+                    apiConfig = data!!.getParcelableExtra(EXTRA_API_CONFIG)
                     updateSignInType()
                 }
                 setSignInButton()
@@ -208,7 +194,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     internal fun updateSignInType() {
-        when (authType) {
+        when (apiConfig.credentialsType) {
             Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
                 usernamePasswordContainer.visibility = View.VISIBLE
                 signInSignUpContainer.orientation = LinearLayout.HORIZONTAL
@@ -267,12 +253,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                     return false
                 setDefaultAPI()
                 val intent = Intent(this, APIEditorActivity::class.java)
-                intent.putExtra(Accounts.API_URL_FORMAT, apiUrlFormat)
-                intent.putExtra(Accounts.AUTH_TYPE, authType)
-                intent.putExtra(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl)
-                intent.putExtra(Accounts.NO_VERSION_SUFFIX, noVersionSuffix)
-                intent.putExtra(Accounts.CONSUMER_KEY, consumerKey)
-                intent.putExtra(Accounts.CONSUMER_SECRET, consumerSecret)
+                intent.putExtra(EXTRA_API_CONFIG, apiConfig)
                 startActivityForResult(intent, REQUEST_EDIT_API)
             }
         }
@@ -280,13 +261,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     internal fun openBrowserLogin(): Boolean {
-        if (authType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
+        if (apiConfig.credentialsType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
             return true
         val intent = Intent(this, BrowserSignInActivity::class.java)
-        intent.putExtra(Accounts.CONSUMER_KEY, consumerKey)
-        intent.putExtra(Accounts.CONSUMER_SECRET, consumerSecret)
-        intent.putExtra(Accounts.API_URL_FORMAT, apiUrlFormat)
-        intent.putExtra(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl)
+        intent.putExtra(EXTRA_API_CONFIG, apiConfig)
         startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN)
         return false
     }
@@ -294,7 +272,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val itemBrowser = menu.findItem(R.id.open_in_browser)
         if (itemBrowser != null) {
-            val is_oauth = authType == Credentials.Type.OAUTH
+            val is_oauth = apiConfig.credentialsType == Credentials.Type.OAUTH
             itemBrowser.isVisible = is_oauth
             itemBrowser.isEnabled = is_oauth
         }
@@ -302,13 +280,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        setDefaultAPI()
-        outState.putString(Accounts.API_URL_FORMAT, apiUrlFormat)
-        outState.putString(Accounts.AUTH_TYPE, authType)
-        outState.putBoolean(Accounts.SAME_OAUTH_SIGNING_URL, sameOAuthSigningUrl)
-        outState.putBoolean(Accounts.NO_VERSION_SUFFIX, noVersionSuffix)
-        outState.putString(Accounts.CONSUMER_KEY, consumerKey)
-        outState.putString(Accounts.CONSUMER_SECRET, consumerSecret)
+        outState.putParcelable(EXTRA_API_CONFIG, apiConfig)
         outState.putLong(EXTRA_API_LAST_CHANGE, apiChangeTimestamp)
         super.onSaveInstanceState(outState)
     }
@@ -322,33 +294,32 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING) {
             signInTask!!.cancel(true)
         }
-        setDefaultAPI()
-        if (authType == Credentials.Type.OAUTH && editUsername.length() <= 0) {
+        if (apiConfig.credentialsType == Credentials.Type.OAUTH && editUsername.length() <= 0) {
             openBrowserLogin()
             return
         }
-        val consumerKey = MicroBlogAPIFactory.getOAuthToken(this.consumerKey, consumerSecret)
-        val apiUrlFormat = if (TextUtils.isEmpty(this.apiUrlFormat)) DEFAULT_TWITTER_API_URL_FORMAT else this.apiUrlFormat!!
+
+        val consumerKey = MicroBlogAPIFactory.getOAuthToken(apiConfig.consumerKey, apiConfig.consumerSecret)
+        val apiUrlFormat = apiConfig.apiUrlFormat ?: DEFAULT_TWITTER_API_URL_FORMAT
         val username = editUsername.text.toString()
         val password = editPassword.text.toString()
-        signInTask = SignInTask(this, username, password, authType, consumerKey, apiUrlFormat,
-                sameOAuthSigningUrl, noVersionSuffix)
+        signInTask = SignInTask(this, username, password, apiConfig.credentialsType, consumerKey, apiUrlFormat,
+                apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
     private fun doBrowserLogin(intent: Intent?) {
         if (intent == null) return
-        if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING) {
-            signInTask!!.cancel(true)
+        if (signInTask?.status == AsyncTask.Status.RUNNING) {
+            signInTask?.cancel(true)
         }
-        setDefaultAPI()
         val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER)
-        val consumerKey = MicroBlogAPIFactory.getOAuthToken(this.consumerKey, consumerSecret)
+        val consumerKey = MicroBlogAPIFactory.getOAuthToken(apiConfig.consumerKey, apiConfig.consumerSecret)
         val requestToken = OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
                 intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET))
-        val apiUrlFormat = if (TextUtils.isEmpty(this.apiUrlFormat)) DEFAULT_TWITTER_API_URL_FORMAT else this.apiUrlFormat!!
+        val apiUrlFormat = apiConfig.apiUrlFormat ?: DEFAULT_TWITTER_API_URL_FORMAT
         signInTask = BrowserSignInTask(this, consumerKey, requestToken, verifier, apiUrlFormat,
-                sameOAuthSigningUrl, noVersionSuffix)
+                apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
@@ -362,23 +333,23 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         val noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false)
         val consumerKey = Utils.getNonEmptyString(preferences, KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY)
         val consumerSecret = Utils.getNonEmptyString(preferences, KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET)
-        if (TextUtils.isEmpty(this.apiUrlFormat) || defaultApiChanged) {
-            this.apiUrlFormat = apiUrlFormat
+        if (TextUtils.isEmpty(apiConfig.apiUrlFormat) || defaultApiChanged) {
+            apiConfig.apiUrlFormat = apiUrlFormat
         }
         if (defaultApiChanged) {
-            this.authType = authType
+            apiConfig.credentialsType = authType
         }
         if (defaultApiChanged) {
-            this.sameOAuthSigningUrl = sameOAuthSigningUrl
+            apiConfig.isSameOAuthUrl = sameOAuthSigningUrl
         }
         if (defaultApiChanged) {
-            this.noVersionSuffix = noVersionSuffix
+            apiConfig.isNoVersionSuffix = noVersionSuffix
         }
-        if (TextUtils.isEmpty(this.consumerKey) || defaultApiChanged) {
-            this.consumerKey = consumerKey
+        if (TextUtils.isEmpty(apiConfig.consumerKey) || defaultApiChanged) {
+            apiConfig.consumerKey = consumerKey
         }
-        if (TextUtils.isEmpty(this.consumerSecret) || defaultApiChanged) {
-            this.consumerSecret = consumerSecret
+        if (TextUtils.isEmpty(apiConfig.consumerSecret) || defaultApiChanged) {
+            apiConfig.consumerSecret = consumerSecret
         }
         if (defaultApiChanged) {
             apiChangeTimestamp = apiLastChange
@@ -386,7 +357,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     private fun setSignInButton() {
-        when (authType) {
+        when (apiConfig.credentialsType) {
             Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
                 passwordSignIn.visibility = View.GONE
                 signIn.isEnabled = editPassword.text.isNotEmpty() && editUsername.text.isNotEmpty()
@@ -738,19 +709,19 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val credentials: Credentials,
             val user: ParcelableUser,
             val color: Int = 0,
-            val accountType: Pair<String, String>
+            val accountType: Pair<String, String?>
     ) {
 
-        private fun writeAccountInfo(map: MutableMap<String, String?>) {
-            map[ACCOUNT_USER_DATA_KEY] = user.key.toString()
-            map[ACCOUNT_USER_DATA_TYPE] = accountType.first
-            map[ACCOUNT_USER_DATA_CREDS_TYPE] = credsType
+        private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
+            action(ACCOUNT_USER_DATA_KEY, user.key.toString())
+            action(ACCOUNT_USER_DATA_TYPE, accountType.first)
+            action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
 
-            map[ACCOUNT_USER_DATA_ACTIVATED] = true.toString()
-            map[ACCOUNT_USER_DATA_COLOR] = toHexColor(color)
+            action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
+            action(ACCOUNT_USER_DATA_COLOR, toHexColor(color))
 
-            map[ACCOUNT_USER_DATA_USER] = LoganSquare.serialize(user)
-            map[ACCOUNT_USER_DATA_EXTRAS] = accountType.second
+            action(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
+            action(ACCOUNT_USER_DATA_EXTRAS, accountType.second)
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {
@@ -759,9 +730,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
         fun updateAccount(am: AccountManager) {
             val account = AccountUtils.findByAccountKey(am, user.key) ?: return
-            val map: MutableMap<String, String?> = HashMap()
-            writeAccountInfo(map)
-            for ((k, v) in map) {
+            writeAccountInfo { k, v ->
                 am.setUserData(account, k, v)
             }
             writeAuthToken(am, account)
@@ -769,14 +738,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
         fun addAccount(am: AccountManager): Account {
             val account = Account(UserKey(user.screen_name, user.key.host).toString(), ACCOUNT_TYPE)
-            val map: MutableMap<String, String?> = HashMap()
-            writeAccountInfo(map)
-            val userData = Bundle()
-            for ((k, v) in map) {
-                userData[k] = v
+            val accountPosition = AccountUtils.getAccounts(am).size
+            // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
+            am.addAccountExplicitly(account, null, null)
+            writeAccountInfo { k, v ->
+                am.setUserData(account, k, v)
             }
-            userData[ACCOUNT_USER_DATA_POSITION] = AccountUtils.getAccounts(am).size.toString()
-            am.addAccountExplicitly(account, null, userData)
+            am.setUserData(account, ACCOUNT_USER_DATA_POSITION, accountPosition.toString())
             writeAuthToken(am, account)
             return account
         }
@@ -1014,7 +982,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
-        internal fun detectAccountType(twitter: MicroBlog, user: User): Pair<String, String> {
+        internal fun detectAccountType(twitter: MicroBlog, user: User): Pair<String, String?> {
             try {
                 // Get StatusNet specific resource
                 val config = twitter.statusNetConfig
@@ -1023,8 +991,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 if (site != null) {
                     extra.textLimit = site.textLimit
                 }
-                return Pair.create<String, String>(AccountType.STATUSNET,
-                        JsonSerializer.serialize(extra, StatusNetAccountExtras::class.java))
+                return Pair(AccountType.STATUSNET, JsonSerializer.serialize(extra,
+                        StatusNetAccountExtras::class.java))
             } catch (e: MicroBlogException) {
                 // Ignore
             }
@@ -1036,16 +1004,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 twitter.getActivitiesAboutMe(paging)
                 val extra = TwitterAccountExtras()
                 extra.setIsOfficialCredentials(true)
-                return Pair.create<String, String>(AccountType.TWITTER,
-                        JsonSerializer.serialize(extra, TwitterAccountExtras::class.java))
+                return Pair(AccountType.TWITTER, JsonSerializer.serialize(extra,
+                        TwitterAccountExtras::class.java))
             } catch (e: MicroBlogException) {
                 // Ignore
             }
 
             if (UserKeyUtils.isFanfouUser(user)) {
-                return Pair.create<String, String>(AccountType.FANFOU, null)
+                return Pair(AccountType.FANFOU, null)
             }
-            return Pair.create<String, String>(AccountType.TWITTER, null)
+            return Pair(AccountType.TWITTER, null)
         }
     }
 

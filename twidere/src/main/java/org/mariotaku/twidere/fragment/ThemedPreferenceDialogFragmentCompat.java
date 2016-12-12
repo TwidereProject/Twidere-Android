@@ -11,10 +11,25 @@ import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.view.View;
 import android.view.Window;
 
+import org.mariotaku.kpreferences.KPreferences;
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
+
+import javax.inject.Inject;
+
 /**
  * Created by mariotaku on 16/3/15.
  */
 public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDialogFragmentCompat {
+
+    @Inject
+    @NonNull
+    protected KPreferences kPreferences;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        GeneralComponentHelper.build(context).inject(this);
+    }
 
     @Override
     @NonNull

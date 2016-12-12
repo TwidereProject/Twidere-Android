@@ -44,6 +44,7 @@ import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.customizers.ATEStatusBarCustomizer
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import com.squareup.otto.Bus
+import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
@@ -75,6 +76,8 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
     lateinit var bus: Bus
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
+    @Inject
+    lateinit var kPreferences: KPreferences
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject

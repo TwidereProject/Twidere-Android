@@ -220,4 +220,5 @@ public interface IntentConstants {
     String EXTRA_SELECT_ONLY_ITEM = "select_only_item";
     String EXTRA_OBJECT = "object";
     String EXTRA_SIMPLE_LAYOUT = "simple_layout";
+    String EXTRA_API_CONFIG = "api_config";
 }
