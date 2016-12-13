@@ -37,6 +37,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -93,20 +95,12 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     override fun onStart() {
         super.onStart()
         bus.register(this)
-        try {
-            AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
-        } catch (e: IllegalStateException) {
-            // This really shouldn't happen.
-        }
+        AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
         adapter.updateReadState()
     }
 
     override fun onStop() {
-        try {
-            AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
-        } catch (e: IllegalStateException) {
-            // This really shouldn't happen.
-        }
+        AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
         bus.unregister(this)
         super.onStop()
     }

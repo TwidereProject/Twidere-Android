@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.util.SimpleArrayMap
 import android.text.TextUtils
 import android.util.Log
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
 import org.mariotaku.microblog.library.twitter.UserStreamCallback
@@ -58,12 +60,12 @@ class StreamingService : Service() {
             Log.d(LOGTAG, "Stream service started.")
         }
         initStreaming()
-        AccountManager.get(this).addOnAccountsUpdatedListener(accountChangeObserver, null, false)
+        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountChangeObserver, updateImmediately = false)
     }
 
     override fun onDestroy() {
         clearTwitterInstances()
-        AccountManager.get(this).removeOnAccountsUpdatedListener(accountChangeObserver)
+        AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountChangeObserver)
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, "Stream service stopped.")
         }

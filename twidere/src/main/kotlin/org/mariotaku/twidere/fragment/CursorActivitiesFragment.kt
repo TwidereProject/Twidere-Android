@@ -29,6 +29,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
 import com.squareup.otto.Subscribe
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -73,7 +75,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     protected abstract val errorInfoKey: String
 
     private var contentObserver: ContentObserver? = null
-    private var accountListener: OnAccountsUpdateListener? = null
+    private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener { accounts ->
+        reloadActivities()
+    }
 
     abstract val contentUri: Uri
 
@@ -122,12 +126,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             }
             context.contentResolver.registerContentObserver(Filters.CONTENT_URI, true, contentObserver)
         }
-        if (accountListener == null) {
-            accountListener = OnAccountsUpdateListener { accounts ->
-                reloadActivities()
-            }
-            AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
-        }
+        AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener, updateImmediately = false)
         updateRefreshState()
         reloadActivities()
     }
@@ -137,10 +136,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             context.contentResolver.unregisterContentObserver(contentObserver)
             contentObserver = null
         }
-        if (accountListener != null) {
-            AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
-            accountListener = null
-        }
+        AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
         super.onStop()
     }
 

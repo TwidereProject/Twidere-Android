@@ -57,7 +57,9 @@ import kotlinx.android.synthetic.main.activity_home_content.*
 import kotlinx.android.synthetic.main.layout_empty_tab_hint.*
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.convert
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
@@ -389,7 +391,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onStart() {
         super.onStart()
         multiSelectHandler.dispatchOnStart()
-        AccountManager.get(this).addOnAccountsUpdatedListener(accountUpdatedListener, null, false)
+        AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountUpdatedListener, updateImmediately = false)
         bus.register(this)
 
         readStateManager.registerOnSharedPreferenceChangeListener(readStateChangeListener)
@@ -406,7 +408,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         multiSelectHandler.dispatchOnStop()
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
         bus.unregister(this)
-        AccountManager.get(this).removeOnAccountsUpdatedListener(accountUpdatedListener)
+        AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountUpdatedListener)
         preferences.edit().putInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
 
         super.onStop()
