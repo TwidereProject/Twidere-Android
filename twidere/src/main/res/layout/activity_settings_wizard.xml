@@ -24,7 +24,7 @@
        tools:context=".activity.SettingsWizardActivity">
 
     <org.mariotaku.twidere.view.ExtendedViewPager
-        android:id="@+id/pager"
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -37,4 +37,9 @@
         app:lineWidth="@dimen/line_indicator_line_width_wizard"
         app:strokeWidth="@dimen/line_indicator_stroke_width_wizard"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:text="@string/action_skip"/>
 </merge>

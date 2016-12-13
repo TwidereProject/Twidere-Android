@@ -4,8 +4,9 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.text.TextUtils
 import org.mariotaku.kpreferences.*
+import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ATTACH_PRECISE_LOCATION
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -29,6 +30,9 @@ val linkHighlightOptionKey = KStringKey(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HI
 val statusShortenerKey = KNullableStringKey(KEY_STATUS_SHORTENER, null)
 val mediaUploaderKey = KNullableStringKey(KEY_MEDIA_UPLOADER, null)
 val newDocumentApiKey = KBooleanKey(KEY_NEW_DOCUMENT_API, Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+val attachLocationKey = KBooleanKey(KEY_ATTACH_LOCATION, false)
+val attachPreciseLocationKey = KBooleanKey(KEY_ATTACH_PRECISE_LOCATION, false)
+val noCloseAfterTweetSentKey = KBooleanKey(KEY_NO_CLOSE_AFTER_TWEET_SENT, false)
 val loadItemLimitKey = KIntKey(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)
 val defaultFeatureLastUpdated = KLongKey("default_feature_last_updated", -1)
 

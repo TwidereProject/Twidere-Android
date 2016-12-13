@@ -16,7 +16,6 @@
 
 package org.mariotaku.twidere.activity
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -24,7 +23,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.*
+import android.support.v4.app.DialogFragment
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -33,6 +35,7 @@ import android.widget.Toast
 import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import kotlinx.android.synthetic.main.activity_media_viewer.*
+import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
@@ -53,6 +56,7 @@ import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.File
 import javax.inject.Inject
+import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomizer, IMediaViewerActivity {
 
@@ -62,7 +66,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     lateinit var mMediaDownloader: MediaDownloader
 
     private var saveToStoragePosition = -1
-    private var mShareMediaPosition = -1
+    private var shareMediaPosition = -1
 
 
     private var mHelper: IMediaViewerActivity.Helper? = null
@@ -171,7 +175,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_PERMISSION_SAVE_MEDIA -> {
-                if (PermissionUtils.hasPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (PermissionUtils.hasPermission(permissions, grantResults, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
                     saveToStorage()
                 } else {
                     Toast.makeText(this, R.string.save_media_no_storage_permission_message, Toast.LENGTH_LONG).show()
@@ -179,7 +183,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
                 return
             }
             REQUEST_PERMISSION_SHARE_MEDIA -> {
-                if (!PermissionUtils.hasPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (!PermissionUtils.hasPermission(permissions, grantResults, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
                     Toast.makeText(this, R.string.share_media_no_storage_permission_message, Toast.LENGTH_LONG).show()
                 }
                 shareMedia()
@@ -295,44 +299,42 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
 
     private fun requestAndSaveToStorage(position: Int) {
         saveToStoragePosition = position
-        if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (checkAllSelfPermissionsGranted(AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
             saveToStorage()
         } else {
             val permissions: Array<String>
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
             } else {
-                permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SAVE_MEDIA)
+            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_save_media),
+                    permissions, REQUEST_PERMISSION_SAVE_MEDIA)
         }
     }
 
     private fun requestAndShareMedia(position: Int) {
-        mShareMediaPosition = position
-        if (PermissionUtils.hasPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        shareMediaPosition = position
+        if (checkAllSelfPermissionsGranted(AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
             shareMedia()
         } else {
             val permissions: Array<String>
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE, AndroidPermissions.READ_EXTERNAL_STORAGE)
             } else {
-                permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                permissions = arrayOf(AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             }
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_SHARE_MEDIA)
+            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_share_media),
+                    permissions, REQUEST_PERMISSION_SHARE_MEDIA)
         }
     }
 
     private fun shareMedia() {
-        if (mShareMediaPosition == -1) return
+        if (shareMediaPosition == -1) return
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
-        val f = adapter.instantiateItem(viewPager, mShareMediaPosition) as? CacheDownloadMediaViewerFragment ?: return
-        val result = f.downloadResult
-        if (result == null || result.cacheUri == null) {
-            // TODO show error
-            return
-        }
+        val f = adapter.instantiateItem(viewPager, shareMediaPosition) as? CacheDownloadMediaViewerFragment ?: return
+        val cacheUri = f.downloadResult?.cacheUri ?: return
         val destination = ShareProvider.getFilesDir(this) ?: return
         val type: String
         when (f) {
@@ -341,7 +343,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
             is GifPageFragment -> type = CacheProvider.Type.IMAGE
             else -> throw UnsupportedOperationException("Unsupported fragment $f")
         }
-        val task = object : SaveFileTask(this@MediaViewerActivity, result.cacheUri!!, destination,
+        val task = object : SaveFileTask(this@MediaViewerActivity, cacheUri, destination,
                 CacheProvider.CacheFileTypeCallback(this@MediaViewerActivity, type)) {
             private val PROGRESS_FRAGMENT_TAG = "progress"
 
@@ -351,7 +353,6 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
                     val fm = (activity as FragmentActivity).supportFragmentManager
                     val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
                     fragment?.dismiss()
-                    Unit
                 }
             }
 
@@ -361,7 +362,6 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
                     val fragment = ProgressDialogFragment()
                     fragment.isCancelable = false
                     fragment.show((activity as FragmentActivity).supportFragmentManager, PROGRESS_FRAGMENT_TAG)
-                    Unit
                 }
             }
 
@@ -388,7 +388,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
                 Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show()
             }
         }
-        AsyncTaskUtils.executeTask<SaveFileTask, Any>(task)
+        AsyncTaskUtils.executeTask(task)
     }
 
     private fun saveToStorage() {

@@ -36,3 +36,7 @@ operator fun Bundle.set(key: String, value: Parcelable?) {
 operator fun Bundle.set(key: String, value: Array<out Parcelable>?) {
     return putParcelableArray(key, value)
 }
+
+operator fun Bundle.set(key: String, value: Array<String>?) {
+    return putStringArray(key, value)
+}

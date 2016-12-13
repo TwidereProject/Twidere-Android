@@ -826,4 +826,11 @@
     <string name="filter_everywhere">Filter everywhere</string>
     <string name="filter_everywhere_description">These will be filtered in Twidere:\n  &#xb7;User\'s tweets\n  &#xb7;Tweets mentioning this user\n  &#xb7;Retweets/Quotes of this user</string>
     <string name="message_toast_added_to_filter">Added to filter.</string>
+    <!-- Verb. Used for skip some settings -->
+    <string name="action_skip">Skip</string>
+    <!-- Used for decide something later, like permission request -->
+    <string name="action_later">Later</string>
+    <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
+    <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
+    <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
 </resources>

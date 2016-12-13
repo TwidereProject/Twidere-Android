@@ -19,10 +19,8 @@
 
 package org.mariotaku.twidere.activity
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -30,12 +28,16 @@ import android.os.Environment.getExternalStorageDirectory
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.widget.Toast
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
+import org.mariotaku.ktextension.convert
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_REQUEST_PERMISSIONS
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.FileSelectorDialogFragment
-import org.mariotaku.twidere.util.PermissionUtils
 import java.io.File
+import android.Manifest.permission as AndroidPermissions
 
 class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback {
 
@@ -68,8 +70,7 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_REQUEST_PERMISSIONS) {
             executeAfterFragmentResumed {
-                if (PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                        && PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                if (checkAllSelfPermissionsGranted(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
                     showPickFileDialog()
                 } else {
                     finishWithDeniedMessage()
@@ -80,17 +81,15 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = intent
-
         val action = intent.action
         if (INTENT_ACTION_PICK_FILE != action && INTENT_ACTION_PICK_DIRECTORY != action) {
             finish()
             return
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (checkAllSelfPermissionsGranted(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
             showPickFileDialog()
         } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val permissions = arrayOf(AndroidPermissions.READ_EXTERNAL_STORAGE, AndroidPermissions.WRITE_EXTERNAL_STORAGE)
             ActivityCompat.requestPermissions(this, permissions, REQUEST_REQUEST_PERMISSIONS)
         } else {
             finishWithDeniedMessage()
@@ -104,19 +103,13 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
     }
 
     private fun showPickFileDialog() {
-        val intent = intent
-        val data = intent.data
-        val action = intent.action
-        var initialDirectory: File? = if (data != null) File(data.path) else getExternalStorageDirectory()
-        if (initialDirectory == null) {
-            initialDirectory = File("/")
-        }
+        val initialDirectory = intent?.data?.path?.convert(::File) ?: getExternalStorageDirectory() ?: File("/")
         val f = FileSelectorDialogFragment()
-        val args = Bundle()
-        args.putString(EXTRA_ACTION, action)
-        args.putString(EXTRA_PATH, initialDirectory.absolutePath)
-        args.putStringArray(EXTRA_FILE_EXTENSIONS, intent.getStringArrayExtra(EXTRA_FILE_EXTENSIONS))
-        f.arguments = args
+        f.arguments = Bundle {
+            this[EXTRA_ACTION] = intent.action
+            this[EXTRA_PATH] = initialDirectory.absolutePath
+            this[EXTRA_FILE_EXTENSIONS] = intent.getStringArrayExtra(EXTRA_FILE_EXTENSIONS)
+        }
         f.show(supportFragmentManager, "select_file")
     }
 

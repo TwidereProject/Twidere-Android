@@ -30,7 +30,6 @@ import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.preference.Preference
 import android.view.LayoutInflater
@@ -39,6 +38,7 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import com.afollestad.appthemeengine.Config
 import com.afollestad.appthemeengine.util.ATEUtil
+import kotlinx.android.synthetic.main.activity_settings_wizard.*
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
@@ -48,6 +48,7 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.fragment.BaseSupportFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.fragment.wizard.WizardWelcomePageFragment
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.TabConfiguration
@@ -56,25 +57,21 @@ import org.mariotaku.twidere.preference.WizardPageNavPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.view.LinePageIndicator
 
 class SettingsWizardActivity : BaseActivity() {
 
-    private var viewPager: ViewPager? = null
-
-    private var indicator: LinePageIndicator? = null
-    private var adapter: SupportTabsAdapter? = null
+    private lateinit var adapter: SupportTabsAdapter
 
     private var task: AbsInitialSettingsTask? = null
 
     fun applyInitialSettings() {
-        if (task != null && task!!.status == AsyncTask.Status.RUNNING) return
+        if (task?.status == AsyncTask.Status.RUNNING) return
         task = InitialSettingsTask(this)
         AsyncTaskUtils.executeTask<AbsInitialSettingsTask, Any>(task)
     }
 
     fun applyInitialTabSettings() {
-        if (task != null && task!!.status == AsyncTask.Status.RUNNING) return
+        if (task?.status == AsyncTask.Status.RUNNING) return
         task = InitialTabSettingsTask(this)
         AsyncTaskUtils.executeTask<AbsInitialSettingsTask, Any>(task)
     }
@@ -89,30 +86,21 @@ class SettingsWizardActivity : BaseActivity() {
     }
 
     fun gotoFinishPage() {
-        if (viewPager == null || adapter == null) return
-        val last = adapter!!.count - 1
-        viewPager!!.currentItem = Math.max(last, 0)
+        val last = adapter.count - 1
+        viewPager.currentItem = Math.max(last, 0)
     }
 
     fun gotoLastPage() {
-        if (viewPager == null || adapter == null) return
         gotoPage(pageCount - 2)
     }
 
     fun gotoNextPage() {
-        if (viewPager == null || adapter == null) return
-        val current = viewPager!!.currentItem
-        viewPager!!.currentItem = TwidereMathUtils.clamp(current + 1, adapter!!.count - 1, 0)
+        val current = viewPager.currentItem
+        viewPager.currentItem = TwidereMathUtils.clamp(current + 1, adapter.count - 1, 0)
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-    }
-
-    override fun onContentChanged() {
-        super.onContentChanged()
-        viewPager = findViewById(R.id.pager) as ViewPager
-        indicator = findViewById(R.id.indicator) as LinePageIndicator
     }
 
     override fun getStatusBarColor(): Int {
@@ -142,25 +130,25 @@ class SettingsWizardActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_wizard)
         adapter = SupportTabsAdapter(this, supportFragmentManager, null)
-        viewPager!!.adapter = adapter
-        viewPager!!.isEnabled = false
-        indicator!!.setViewPager(viewPager)
-        indicator!!.selectedColor = Config.accentColor(this, ateKey)
+        viewPager.adapter = adapter
+        viewPager.isEnabled = false
+        indicator.setViewPager(viewPager)
+        indicator.selectedColor = Config.accentColor(this, ateKey)
         initPages()
         val initialPage = intent.getIntExtra(IntentConstants.EXTRA_PAGE, -1)
         if (initialPage != -1) {
-            viewPager!!.setCurrentItem(initialPage, false)
+            viewPager.setCurrentItem(initialPage, false)
         }
     }
 
     private fun initPages() {
-        adapter!!.addTab(cls = WizardPageWelcomeFragment::class.java, name = getString(R.string.wizard_page_welcome_title))
-        adapter!!.addTab(cls = WizardPageThemeFragment::class.java, name = getString(R.string.theme))
-        adapter!!.addTab(cls = WizardPageTabsFragment::class.java, name = getString(R.string.tabs))
-        adapter!!.addTab(cls = WizardPageCardsFragment::class.java, name = getString(R.string.cards))
-        adapter!!.addTab(cls = WizardPageUsageStatisticsFragment::class.java, name = getString(R.string.usage_statistics))
-        adapter!!.addTab(cls = WizardPageHintsFragment::class.java, name = getString(R.string.hints))
-        adapter!!.addTab(cls = WizardPageFinishedFragment::class.java, name = getString(R.string.wizard_page_finished_title))
+        adapter.addTab(cls = WizardWelcomePageFragment::class.java, name = getString(R.string.wizard_page_welcome_title))
+        adapter.addTab(cls = WizardPageThemeFragment::class.java, name = getString(R.string.theme))
+        adapter.addTab(cls = WizardPageTabsFragment::class.java, name = getString(R.string.tabs))
+        adapter.addTab(cls = WizardPageCardsFragment::class.java, name = getString(R.string.cards))
+        adapter.addTab(cls = WizardPageUsageStatisticsFragment::class.java, name = getString(R.string.usage_statistics))
+        adapter.addTab(cls = WizardPageHintsFragment::class.java, name = getString(R.string.hints))
+        adapter.addTab(cls = WizardPageFinishedFragment::class.java, name = getString(R.string.wizard_page_finished_title))
     }
 
     private fun openImportSettingsDialog() {
@@ -248,7 +236,7 @@ class SettingsWizardActivity : BaseActivity() {
 
     private fun restartWithCurrentPage() {
         val intent = intent
-        intent.putExtra(EXTRA_PAGE, viewPager!!.currentItem)
+        intent.putExtra(EXTRA_PAGE, viewPager.currentItem)
         setIntent(intent)
         recreate()
     }
@@ -424,54 +412,6 @@ class SettingsWizardActivity : BaseActivity() {
             get() = R.xml.preferences_theme
     }
 
-    class WizardPageWelcomeFragment : BaseWizardPageFragment(), Preference.OnPreferenceClickListener {
-
-        fun applyInitialSettings() {
-            val a = activity
-            if (a is SettingsWizardActivity) {
-                a.applyInitialSettings()
-            }
-        }
-
-        override fun onActivityCreated(savedInstanceState: Bundle?) {
-            super.onActivityCreated(savedInstanceState)
-            findPreference(WIZARD_PREFERENCE_KEY_NEXT_PAGE).onPreferenceClickListener = this
-            findPreference(WIZARD_PREFERENCE_KEY_USE_DEFAULTS).onPreferenceClickListener = this
-            findPreference(WIZARD_PREFERENCE_KEY_IMPORT_SETTINGS).onPreferenceClickListener = this
-        }
-
-        override fun onPreferenceClick(preference: Preference): Boolean {
-            val key = preference.key
-            if (WIZARD_PREFERENCE_KEY_NEXT_PAGE == key) {
-                gotoNextPage()
-            } else if (WIZARD_PREFERENCE_KEY_USE_DEFAULTS == key) {
-                applyInitialSettings()
-            } else if (WIZARD_PREFERENCE_KEY_IMPORT_SETTINGS == key) {
-                openImportSettingsDialog()
-            }
-            return true
-        }
-
-        override val headerSummary: Int
-            get() = R.string.wizard_page_welcome_text
-
-        override val headerTitle: Int
-            get() = R.string.wizard_page_welcome_title
-
-        override val nextPageTitle: Int
-            get() = 0
-
-        override val preferenceResource: Int
-            get() = R.xml.settings_wizard_page_welcome
-
-        private fun openImportSettingsDialog() {
-            val a = activity
-            if (a is SettingsWizardActivity) {
-                a.openImportSettingsDialog()
-            }
-        }
-    }
-
     internal abstract class AbsInitialSettingsTask(protected val activity: SettingsWizardActivity) : AsyncTask<Any, Any, Boolean>() {
 
         override fun doInBackground(vararg params: Any): Boolean {
@@ -544,11 +484,11 @@ class SettingsWizardActivity : BaseActivity() {
     }
 
     private fun gotoPage(page: Int) {
-        viewPager!!.currentItem = TwidereMathUtils.clamp(page, 0, pageCount - 1)
+        viewPager.currentItem = TwidereMathUtils.clamp(page, 0, pageCount - 1)
     }
 
     private val pageCount: Int
-        get() = adapter!!.count
+        get() = adapter.count
 
     internal class InitialTabSettingsTask(activity: SettingsWizardActivity) : AbsInitialSettingsTask(activity) {
 

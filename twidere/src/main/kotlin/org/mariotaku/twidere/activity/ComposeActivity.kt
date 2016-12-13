@@ -19,12 +19,10 @@
 
 package org.mariotaku.twidere.activity
 
-import android.Manifest
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
 import android.content.*
-import android.content.pm.PackageManager
 import android.graphics.Canvas
 import android.graphics.PorterDuff.Mode
 import android.graphics.Rect
@@ -34,9 +32,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.*
@@ -49,7 +45,6 @@ import android.text.style.SuggestionSpan
 import android.text.style.UpdateAppearance
 import android.util.Log
 import android.view.*
-import android.view.ActionMode.Callback
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.EditText
@@ -66,6 +61,8 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
+import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.BuildConfig
@@ -73,8 +70,10 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
-import org.mariotaku.twidere.constant.KeyboardShortcutConstants
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.PermissionRequestDialog
+import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
@@ -96,8 +95,10 @@ import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
+import android.Manifest.permission as AndroidPermission
 
-class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener, Callback, ATEToolbarCustomizer {
+class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
+        ActionMode.Callback, PermissionRequestCancelCallback, ATEToolbarCustomizer {
 
     // Utility classes
     @Inject
@@ -225,8 +226,16 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         super.onStart()
         imageUploaderUsed = !ServicePickerPreference.isNoneValue(preferences.getString(KEY_MEDIA_UPLOADER, null))
         statusShortenerUsed = !ServicePickerPreference.isNoneValue(preferences.getString(KEY_STATUS_SHORTENER, null))
-        if (preferences.getBoolean(KEY_ATTACH_LOCATION)) {
-            requestOrUpdateLocation()
+        if (preferences[attachLocationKey]) {
+            if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)) {
+                try {
+                    startLocationUpdateIfEnabled()
+                } catch (e: SecurityException) {
+                    locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
+                }
+            } else {
+                locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
+            }
         }
         setMenu()
         updateTextCount()
@@ -904,8 +913,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun handleIntent(intent: Intent): Boolean {
         val action = intent.action ?: return false
         shouldSaveAccounts = false
-        mentionUser = intent.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-        inReplyToStatus = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
+        mentionUser = intent.getParcelableExtra(EXTRA_USER)
+        inReplyToStatus = intent.getParcelableExtra(EXTRA_STATUS)
         when (action) {
             INTENT_ACTION_REPLY -> {
                 return handleReplyIntent(inReplyToStatus)
@@ -914,7 +923,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 return handleQuoteIntent(inReplyToStatus)
             }
             INTENT_ACTION_EDIT_DRAFT -> {
-                draft = intent.getParcelableExtra<Draft>(EXTRA_DRAFT)
+                draft = intent.getParcelableExtra(EXTRA_DRAFT)
                 return handleEditDraftIntent(draft)
             }
             INTENT_ACTION_MENTION -> {
@@ -1146,28 +1155,38 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || PermissionUtils.getPermission(permissions, grantResults, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                startLocationUpdateIfEnabled()
-            } catch (e: SecurityException) {
-                // That should not happen
-            }
+        when (requestCode) {
+            REQUEST_ATTACH_LOCATION_PERMISSION -> {
+                if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_FINE_LOCATION, AndroidPermission.ACCESS_COARSE_LOCATION)) {
+                    try {
+                        startLocationUpdateIfEnabled()
+                    } catch (e: SecurityException) {
+                        // That should not happen
+                    }
 
-        } else {
-            Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
-            val editor = preferences.edit()
-            editor.putBoolean(KEY_ATTACH_LOCATION, false)
-            editor.putBoolean(KEY_ATTACH_PRECISE_LOCATION, false)
-            editor.apply()
-            locationSwitch.checkedPosition = ArrayUtils.indexOf(LOCATION_OPTIONS,
-                    LOCATION_VALUE_NONE)
+                } else {
+                    Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
+                    kPreferences.edit {
+                        this[attachLocationKey] = false
+                        this[attachPreciseLocationKey] = false
+                    }
+                    locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
+                }
+            }
+        }
+    }
+
+    override fun onPermissionRequestCancelled(requestCode: Int) {
+        when (requestCode) {
+            REQUEST_ATTACH_LOCATION_PERMISSION -> {
+                locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
+            }
         }
     }
 
     private fun setRecentLocation(location: ParcelableLocation?) {
         if (location != null) {
-            val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+            val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
             if (attachPreciseLocation) {
                 locationText.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
             } else {
@@ -1192,11 +1211,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     @Throws(SecurityException::class)
     private fun startLocationUpdateIfEnabled(): Boolean {
         if (locationListener != null) return true
-        val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
+        val attachLocation = kPreferences[attachLocationKey]
         if (!attachLocation) {
             return false
         }
-        val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
         val criteria = Criteria()
         if (attachPreciseLocation) {
             criteria.accuracy = Criteria.ACCURACY_FINE
@@ -1225,21 +1244,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun requestOrUpdateLocation() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)) {
             try {
                 startLocationUpdateIfEnabled()
             } catch (e: SecurityException) {
                 Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
             }
-
         } else {
-            val permissions = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_REQUEST_PERMISSIONS)
+            val permissions = arrayOf(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)
+            PermissionRequestDialog.show(supportFragmentManager, getString(R.string.message_permission_request_compose_location),
+                    permissions, REQUEST_ATTACH_LOCATION_PERMISSION)
         }
     }
 
     private fun updateLocationState() {
-        val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
+        val attachLocation = kPreferences[attachLocationKey]
         locationIcon.isActivated = attachLocation
         if (!attachLocation) {
             locationText.setText(R.string.no_location)
@@ -1268,8 +1287,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editText.setSelection(textLength - (tweetLength - maxLength), textLength)
             return
         }
-        val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
-        val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+        val attachLocation = kPreferences[attachLocationKey]
+        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
         val accountKeys = accountsAdapter.selectedAccountKeys
         val isPossiblySensitive = hasMedia && possiblySensitive
         val update = ParcelableStatusUpdate()
@@ -1285,7 +1304,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.is_possibly_sensitive = isPossiblySensitive
         update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtras)?.attachmentUrl
         BackgroundOperationService.updateStatusesAsync(this, action, update)
-        if (preferences.getBoolean(KEY_NO_CLOSE_AFTER_TWEET_SENT, false) && inReplyToStatus == null) {
+        if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
             possiblySensitive = false
             shouldSaveAccounts = true
             inReplyToStatus = null
@@ -1390,7 +1409,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             setHasStableIds(true)
             mInflater = activity.layoutInflater
             selection = HashMap<UserKey, Boolean>()
-            isNameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+            isNameFirst = preferences[nameFirstKey]
         }
 
         val imageLoader: MediaLoaderWrapper
@@ -1605,8 +1624,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val textView = callback ?: return
 
             val preferences = context.preferences
-            val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
-            val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+            val attachLocation = preferences[attachLocationKey]
+            val attachPreciseLocation = preferences[attachPreciseLocationKey]
             if (attachLocation) {
                 if (attachPreciseLocation) {
                     textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
@@ -1629,8 +1648,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun afterExecute(textView: TextView?, addresses: List<Address>?) {
             textView!!
             val preferences = context.preferences
-            val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
-            val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+            val attachLocation = preferences[attachLocationKey]
+            val attachPreciseLocation = preferences[attachPreciseLocationKey]
             if (attachLocation) {
                 if (attachPreciseLocation) {
                     val location = params
@@ -1895,6 +1914,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val LOCATION_VALUE_NONE = "none"
 
         private val LOCATION_OPTIONS = arrayOf(LOCATION_VALUE_NONE, LOCATION_VALUE_PLACE, LOCATION_VALUE_COORDINATE)
+
+        private const val REQUEST_ATTACH_LOCATION_PERMISSION = 301
+        private const val REQUEST_ATTACH_MEDIA_PERMISSION = 302
 
         internal fun getDraftAction(intentAction: String?): String {
             if (intentAction == null) {
