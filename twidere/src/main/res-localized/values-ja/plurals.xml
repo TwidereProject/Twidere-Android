@@ -39,7 +39,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g>件のツイート</item>
   </plurals>
   <plurals name="N_favorites">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g>件のお気に入り</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g>件のいいね</item>
   </plurals>
   <plurals name="N_likes">
     <item quantity="other"><xliff:g id="count">%d</xliff:g>件のいいね</item>

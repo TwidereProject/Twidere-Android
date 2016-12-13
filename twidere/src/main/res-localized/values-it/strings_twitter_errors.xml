@@ -21,6 +21,7 @@
   <string name="error_twitter_136">Sei stato bloccato da questo utente.</string>
   <string name="error_twitter_139">Hai già aggiunto a preferiti questo tweet.</string>
   <!-- 144 No status found with that ID. -->
+  <string name="error_twitter_144">Tweet non trovato, forse è stato eliminato.</string>
   <string name="error_twitter_161">Stai già seguendo questo utente.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
   <string name="error_twitter_162">Questo utente ti ha bloccato.</string>

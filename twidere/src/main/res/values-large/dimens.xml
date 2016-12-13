@@ -3,7 +3,6 @@
 
     <dimen name="pane_spacing_left">150dp</dimen>
     <dimen name="pane_spacing_right">150dp</dimen>
-    <dimen name="icon_size_wizard_large">480dp</dimen>
     <dimen name="icon_size_user_profile">108dp</dimen>
     <dimen name="drawer_width_home">280dp</dimen>
     <dimen name="accounts_drawer_name_size">18sp</dimen>
@@ -11,11 +10,6 @@
     <dimen name="accounts_drawer_default_indicator_size">14sp</dimen>
     <dimen name="accounts_drawer_switch_label_size">18sp</dimen>
     <dimen name="accounts_drawer_child_size">18sp</dimen>
-    <dimen name="text_size_wizard_title">96sp</dimen>
-    <dimen name="text_size_wizard_text">32sp</dimen>
-    <dimen name="text_size_wizard_nav_item">36sp</dimen>
-    <dimen name="line_indicator_line_width_wizard">32dp</dimen>
-    <dimen name="line_indicator_stroke_width_wizard">4dp</dimen>
 
     <!-- Dimensions for Tab indicator -->
     <dimen name="tab_item_minwidth_vpi">72dp</dimen>

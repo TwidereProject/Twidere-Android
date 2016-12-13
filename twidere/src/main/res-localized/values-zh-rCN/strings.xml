@@ -116,6 +116,7 @@
   <string name="likes">喜欢</string>
   <string name="name">名字</string>
   <string name="refresh">刷新</string>
+  <string name="settings_refresh">刷新</string>
   <string name="retry">重试</string>
   <string name="more">更多</string>
   <string name="quote_format">引用格式</string>
@@ -159,6 +160,7 @@
   <string name="ringtone">铃声</string>
   <string name="vibration">震动</string>
   <string name="light">灯光</string>
+  <string name="settings_notifications">通知</string>
   <string name="notifications">通知</string>
   <string name="refresh_on_start">启动时刷新</string>
   <string name="refresh_on_start_summary">启动时刷新时间线和提及</string>
@@ -293,12 +295,15 @@
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g>和其他<xliff:g id="users_count">%2$d</xliff:g>人给你发了<xliff:g id="messages_count">%3$d</xliff:g>条私信</string>
   <string name="action_getting_status">获取推文</string>
   <string name="action_updating_status">发送推文</string>
+  <string name="action_getting_user_lists">获取列表</string>
   <string name="action_sending_direct_message">发送私信</string>
   <string name="action_refreshing_home_timeline">刷新主页</string>
   <string name="action_refreshing_mentions">刷新提及</string>
   <string name="action_refreshing_direct_messages">刷新私信</string>
   <string name="action_favoriting">收藏</string>
   <string name="action_unfavoriting">取消收藏</string>
+  <string name="action_liking">喜欢</string>
+  <string name="action_cancelling_like">取消喜欢</string>
   <string name="action_deleting">删除</string>
   <string name="action_updating_profile">更新资料</string>
   <string name="action_updating_profile_image">更新头像</string>
@@ -312,6 +317,7 @@
   <string name="action_unfollowing">取消关注</string>
   <string name="action_creating_list">创建列表</string>
   <string name="action_adding_member">添加成员</string>
+  <string name="action_modifying_lists">修改列表</string>
   <string name="action_signing_in">登录</string>
   <string name="action_retweeting">转推</string>
   <string name="action_reporting_for_spam">报告垃圾信息</string>
@@ -374,6 +380,8 @@
   <string name="status_deleted">推文已删除</string>
   <string name="status_favorited">推文已收藏</string>
   <string name="status_unfavorited">推文已取消收藏</string>
+  <string name="status_liked">已喜欢了推文</string>
+  <string name="status_like_removed">已取消喜欢了推文</string>
   <string name="status_retweeted">已转推</string>
   <string name="retweet_cancelled">转推已取消</string>
   <string name="direct_message_sent">私信已发送</string>
@@ -382,7 +390,7 @@
   <string name="search_name_saved">搜索“<xliff:g id="name">%s</xliff:g>”已保存</string>
   <string name="search_deleted">搜索已删除</string>
   <string name="search_name_deleted">搜索“<xliff:g id="name">%s</xliff:g>”已删除</string>
-  <string name="import_from">导入自…</string>
+  <string name="import_from">导入自&#8230;</string>
   <string name="link_to_quoted_status">链接到引用的推文</string>
   <string name="quote_original_status">引用原推文</string>
   <string name="followed_user">关注了<xliff:g id="user">%s</xliff:g></string>
@@ -427,7 +435,7 @@
   <string name="settings_interface">界面</string>
   <string name="no_rule">没有规则</string>
   <string name="safety">安全</string>
-  <string name="updating_status_notification">正在发送推文…</string>
+  <string name="updating_status_notification">正在发送推文&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g>（<xliff:g id="nickname">%2$s</xliff:g>）</string>
   <string name="query">查询</string>
   <string name="input_text">输入文本</string>
@@ -443,20 +451,6 @@
   <string name="previous_item">上一条</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="next_item">下一条</string>
-  <string name="settings_wizard">设定向导</string>
-  <string name="wizard_page_welcome_title">欢迎</string>
-  <string name="wizard_page_welcome_text">感谢你选择Twidere。\n你想现在设定它吗？</string>
-  <string name="wizard_page_welcome_yes">是的</string>
-  <string name="wizard_page_welcome_not_now">暂时不</string>
-  <string name="wizard_page_welcome_import_settings">导入设定</string>
-  <string name="wizard_page_theme_text">选择一个你喜欢的主题。</string>
-  <string name="wizard_page_tabs_text">添加一些标签页到Twidere。\n时刻关注你在意的人和事。</string>
-  <string name="wizard_page_tabs_unchanged_message">你可以在"设置" - "标签页"添加标签</string>
-  <string name="wizard_page_cards_text">设定卡片项。</string>
-  <string name="wizard_page_hints_text">这里有一些有用的小提示。</string>
-  <string name="wizard_page_usage_statistics_text">Twidere加入了一些需要收集使用信息的研究项目。</string>
-  <string name="wizard_page_finished_title">完成</string>
-  <string name="wizard_page_finished_text">现在Twidere已经可以使用了。</string>
   <string name="invalid_tab">无效标签页</string>
   <string name="send_crash_report">发送Twidere的崩溃报告</string>
   <string name="add_to_filter">添加到过滤器</string>
@@ -465,6 +459,7 @@
   <string name="source_filter_name">来源：<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user">阻止<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user_confirm_message">阻止<xliff:g id="name">%s</xliff:g>？这个用户将不能关注你、提及你，或者给你发送私信。</string>
+  <string name="filter_user_confirm_message">添加<xliff:g example="Username" id="name">%s</xliff:g>到过滤器？</string>
   <string name="unfollow_user">取消关注<xliff:g id="name">%s</xliff:g></string>
   <string name="unfollow_user_confirm_message">取消关注<xliff:g id="name">%s</xliff:g>吗？你将不会在时间线中看到这个用户的推文。</string>
   <string name="delete_user_list">删除列表<xliff:g id="name">%s</xliff:g></string>
@@ -504,15 +499,12 @@
   <string name="theme_background_solid">纯白/纯黑</string>
   <string name="theme_background_transparent">透明</string>
   <string name="theme_dark_actionbar">暗色 ActionBar</string>
-  <string name="wizard_hint_compose_select_account">写推文时点击个人资料图片选择帐号</string>
-  <string name="wizard_hint_filters">你可以使用"过滤器"在时间线上隐藏不喜欢的推文和通知</string>
   <string name="view_replies">查看回复</string>
   <string name="compact_cards">紧凑卡片视图</string>
   <string name="compact_cards_summary">在屏幕中显示更多卡片</string>
   <string name="status_share_subject_format_with_time">来自<xliff:g id="name">%1$s</xliff:g>（@<xliff:g id="screen_name">%2$s</xliff:g>）的推文，写于<xliff:g id="time">%3$s</xliff:g></string>
   <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">调用限制</string>
-  <string name="wizard_hint_rate_limit">如果你遇到调用限制问题，请不要埋怨我，那是Twitter的政策所限</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>，保存于<xliff:g id="time">%2$s</xliff:g></string>
   <string name="update_status">发送推文</string>
   <string name="sending_direct_message">发送私信</string>
@@ -534,8 +526,8 @@
   <string name="denied_users_follow_request">拒绝了<xliff:g id="user">%s</xliff:g>的关注请求</string>
   <string name="import_settings">导入设定</string>
   <string name="export_settings">导出设定</string>
-  <string name="export_settings_type_dialog_title">导出设定…</string>
-  <string name="import_settings_type_dialog_title">导入设定…</string>
+  <string name="export_settings_type_dialog_title">导出设定&#8230;</string>
+  <string name="import_settings_type_dialog_title">导入设定&#8230;</string>
   <string name="nicknames">昵称</string>
   <string name="user_colors">用户颜色标签</string>
   <string name="progress">进度</string>
@@ -635,7 +627,7 @@
   <string name="usage_statistics">使用信息统计</string>
   <string name="research_hot_mobile">Data-Driven Mobile Network Research</string>
   <string name="unknown_location">未知位置</string>
-  <string name="ellipsis">…</string>
+  <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">导入/导出设定</string>
   <string name="usage_statistics_header_summary">Twidere参与了一些研究项目，加入这些项目帮助Twidere和更多应用做得更好。</string>
   <string name="no_tab">没有标签页</string>
@@ -690,9 +682,10 @@
   <string name="invalid_list_name">只能包含字母、数字、“-”和“_”且必须以字母开始</string>
   <string name="delete_conversation">删除对话</string>
   <string name="delete_conversation_confirm_message">删除此对话的所有信息？</string>
+  <string name="delete_message_confirm_message">删除这条信息吗？</string>
   <string name="name_first_summary_on">优先显示名字</string>
   <string name="name_first_summary_off">优先显示 \@screenname</string>
-  <string name="comment_hint">评论…</string>
+  <string name="comment_hint">评论&#8230;</string>
   <string name="comment">评论</string>
   <string name="enable_retweets">启用转推</string>
   <string name="play">播放</string>
@@ -702,10 +695,6 @@
   <string name="streaming">实时流</string>
   <string name="enable_streaming">启用实时流</string>
   <string name="dark_theme">暗色主题</string>
-  <string name="wizard_hint_title_location_requirement">位置权限</string>
-  <string name="wizard_hint_summary_location_requirement">在你发送含有位置的推文时，Twidere 需要位置权限</string>
-  <string name="wizard_hint_title_storage_requirement">存储权限</string>
-  <string name="wizard_hint_summary_storage_requirement">Twidere 需要存储权限以访问你的文档</string>
   <string name="scrapyard">垃圾场</string>
   <string name="crop_image">裁剪图像</string>
   <string name="media_preload">媒体预加载</string>
@@ -724,6 +713,7 @@
   <string name="combined_notifications_summary_on">通知将会被分组</string>
   <string name="combined_notifications_summary_off">通知将会分开显示</string>
   <string name="save_media_no_storage_permission_message">需要存储访问权限来保存媒体</string>
+  <string name="share_media_no_storage_permission_message">一些应用程序需要存储权限分享媒体</string>
   <string name="select_file_no_storage_permission_message">需要存储访问权限来选择文件</string>
   <string name="user_mentioned_you"><xliff:g id="name">%s</xliff:g> 提到了你</string>
   <string name="cant_load_all_replies_message">不能加载所有的回复。&lt;a href=\"#dialog\";&gt;为什么？&lt;/a&gt;</string>
@@ -792,4 +782,36 @@
   <string name="group">群组</string>
   <string name="your_coarse_location">你的大致位置</string>
   <string name="location_countrywide">全国</string>
+  <string name="error_title_device_incompatible">不兼容的设备</string>
+  <string name="error_message_device_incompatible">这个设备与 Twidere 不兼容，建议升级到最新的系统版本。\n你可以把下面的信息发送给我，帮助我把这个问题报告给设备制造商。</string>
+  <string name="password_sign_in_twitter_only">密码登录（仅 Twitter）</string>
+  <string name="direct_messages_next">DM next</string>
+  <string name="plus_service_name">Twidere ∞</string>
+  <string name="sign_in_service_google_id">Google ID</string>
+  <string name="sign_in_service_twitter">Twitter</string>
+  <string name="sign_in_service_email">电子邮件</string>
+  <string name="sign_in_with_ellip">登录方式&#8230;</string>
+  <string name="edit_description">编辑描述</string>
+  <string name="no_status_content_text">没有内容</string>
+  <string name="status_not_available_text">推文不可用</string>
+  <string name="share_link">分享链接</string>
+  <string name="hide_retweets">隐藏转推</string>
+  <string name="hide_quotes">隐藏引用</string>
+  <string name="hide_replies">隐藏回复</string>
+  <string name="no_extension_installed">没有安装扩展程序</string>
+  <string name="pinned_status">置顶推文</string>
+  <string name="add_or_remove_from_list">从列表中添加或删除</string>
+  <string name="title_extra_features">附加功能</string>
+  <string name="filter_everywhere">全面过滤</string>
+  <string name="filter_everywhere_description">这些会在 Twidere 中被过滤\n  ·用户的推文\n  ·提及用户的推文\n  ·用户的转推或引用</string>
+  <string name="message_toast_added_to_filter">已添加到过滤器</string>
+  <!-- Verb. Used for skip some settings -->
+  <string name="action_skip">跳过</string>
+  <!-- Used for decide something later, like permission request -->
+  <string name="action_later">稍后</string>
+  <string name="message_permission_request_compose_location">Twidere 需要权限来向推文添加位置</string>
+  <string name="message_permission_request_save_media">Twidere 需要存储权限来保存媒体</string>
+  <string name="message_permission_request_share_media">Twidere 需要存储权限来向一些应用分享媒体</string>
+  <string name="hint_accounts_dashboard_title">帐号面板</string>
+  <string name="hint_accounts_dashboard_message">从屏幕边缘滑动来打开帐号面板</string>
 </resources>

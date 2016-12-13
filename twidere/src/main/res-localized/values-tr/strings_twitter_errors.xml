@@ -16,15 +16,22 @@
   <!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
   <string name="error_twitter_131">Twitter sunucuları geçici olarak çevrimdışı, lütfen daha sonra tekrar deneyiniz.</string>
   <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
-  <string name="error_twitter_135">Lütfen sistem saatinizi doğrulayın.</string>
+  <string name="error_twitter_135">Lütfen sistem saatinizi kontrol edin.</string>
   <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
-  <string name="error_twitter_136">Bu kullanıcıdan engellendiniz.</string>
+  <string name="error_twitter_136">Bu kullanıcı tarafından bloke edilmişsiniz.</string>
+  <string name="error_twitter_139">Bu tweeti zaten favorilediniz.</string>
   <!-- 144 No status found with that ID. -->
+  <string name="error_twitter_144">Tweet bulunamadı, belki de silinmiştir.</string>
+  <string name="error_twitter_161">Zaten bu kullanıcıya takip talebi yolladınız.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
+  <string name="error_twitter_162">Bu kullanıcıdan engellendiniz.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
+  <string name="error_twitter_172">Bu aramayı zaten kaydettiniz.</string>
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
+  <string name="error_twitter_179">Korumalı kullanıcının tweetlerini göremezsiniz.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
-  <string name="error_twitter_193">Yüklediğiniz fotoğraf çok büyük.</string>
+  <string name="error_twitter_187">Bu tweeti zaten yolladınız.</string>
+  <string name="error_twitter_193">Yüklemeye çalıştığınız fotoğrafın boyutu çok büyük.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Tekrar oturum açmanız gerekebilir.</string>
 </resources>

@@ -1080,7 +1080,7 @@ public class DataStoreUtils implements Constants {
             if (filterAnywhere) {
                 // Insert user mention to keywords
                 final FiltersData.BaseItem keywordItem = new FiltersData.BaseItem();
-                keywordItem.setValue("@" + userItem.getScreenName());
+                keywordItem.setValue("@" + user.screen_name);
                 cr.insert(Filters.Keywords.CONTENT_URI, FiltersData$BaseItemValuesCreator.create(keywordItem));
 
                 // Insert user link (without scheme) to links
@@ -1097,6 +1097,26 @@ public class DataStoreUtils implements Constants {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void removeFromFilter(Context context, ParcelableUser user) {
+        final ContentResolver cr = context.getContentResolver();
+        // Delete from filtered users
+        cr.delete(Filters.Users.CONTENT_URI, Expression.equalsArgs(Filters.Users.USER_KEY).getSQL(),
+                new String[]{user.key.toString()});
+        // Delete user mention from keywords
+        cr.delete(Filters.Keywords.CONTENT_URI, Expression.equalsArgs(Filters.Keywords.VALUE).getSQL(),
+                new String[]{"@" + user.screen_name});
+
+        // Delete user link (without scheme) from links
+        Uri userLink = LinkCreator.getUserWebLink(user);
+        String linkWithoutScheme = userLink.toString();
+        int idx;
+        if ((idx = linkWithoutScheme.indexOf("://")) >= 0) {
+            linkWithoutScheme = linkWithoutScheme.substring(idx + 3);
+        }
+        cr.delete(Filters.Links.CONTENT_URI, Expression.equalsArgs(Filters.Links.VALUE).getSQL(),
+                new String[]{linkWithoutScheme});
     }
 
     public interface UpdateActivityAction {

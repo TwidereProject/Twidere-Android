@@ -340,7 +340,7 @@
   <string name="search_name_saved">Pretraga \"<xliff:g id="name">%s</xliff:g>\" spremljena.</string>
   <string name="search_deleted">Pretraga obrisana.</string>
   <string name="search_name_deleted">Pretraga \"<xliff:g id="name">%s</xliff:g>\" obrisana.</string>
-  <string name="import_from">Uvezi iz…</string>
+  <string name="import_from">Uvezi iz&#8230;</string>
   <string name="link_to_quoted_status">Link do citiranog tweeta</string>
   <string name="quote_original_status">Citiraj originalni tweet</string>
   <string name="followed_user">Slijedite <xliff:g id="user">%s</xliff:g>.</string>
@@ -384,7 +384,7 @@
   <string name="settings_interface">Sučelje</string>
   <string name="no_rule">Nema pravila</string>
   <string name="safety">Sigurnost</string>
-  <string name="updating_status_notification">Šaljem tweet…</string>
+  <string name="updating_status_notification">Šaljem tweet&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Upit</string>
   <string name="input_text">Tekst unosa</string>
@@ -400,19 +400,6 @@
   <string name="previous_item">Prethodno</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="next_item">Sljedeće</string>
-  <string name="settings_wizard">Čarobnjak za postavke</string>
-  <string name="wizard_page_welcome_title">Dobrodošli</string>
-  <string name="wizard_page_welcome_text">Hvala vam što ste odabrali Twidere.\nŽelite li ga sada postaviti?</string>
-  <string name="wizard_page_welcome_yes">Da</string>
-  <string name="wizard_page_welcome_not_now">Ne sada</string>
-  <string name="wizard_page_welcome_import_settings">Uvezi postavke</string>
-  <string name="wizard_page_theme_text">Odaberite temu koja vam se sviđa.</string>
-  <string name="wizard_page_tabs_text">Dodajte tabove u Twidere.\nPratite ljude i stvari do kojih vam je stalo.</string>
-  <string name="wizard_page_cards_text">Postavite stavke kartice.</string>
-  <string name="wizard_page_hints_text">Evo nekoliko korisnih savjeta.</string>
-  <string name="wizard_page_usage_statistics_text">Twidere sudjeluje u istraživačkom projektu kojemu trebaju podaci o korištenju.</string>
-  <string name="wizard_page_finished_title">Završeno</string>
-  <string name="wizard_page_finished_text">Twidere je sada spreman za korištenje.</string>
   <string name="invalid_tab">Nevažeći tab</string>
   <string name="send_crash_report">Pošalji izvještaj o padu aplikacije Twidere</string>
   <string name="add_to_filter">Dodaj u filter</string>
@@ -460,14 +447,12 @@
   <string name="theme_background_solid">Čisto bijela/crna</string>
   <string name="theme_background_transparent">Prozirno</string>
   <string name="theme_dark_actionbar">Tamna Akcijska Traka</string>
-  <string name="wizard_hint_compose_select_account">Dodirnite sliku profila za odabir računa kod pisanja tweeta.</string>
   <string name="view_replies">Pregledaj Odgovore</string>
   <string name="compact_cards">Kompaktne kartice</string>
   <string name="compact_cards_summary">Prikaži više kartice na zaslonu</string>
   <string name="status_share_subject_format_with_time">Tweet od <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), u <xliff:g id="time">%3$s</xliff:g></string>
   <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">Rate limit</string>
-  <string name="wizard_hint_rate_limit">Ako susretnete probleme s rate limitom, nemojte me kriviti, takva je politika Twittera.</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, spremljeno u <xliff:g id="time">%2$s</xliff:g></string>
   <string name="update_status">Pošalji tweet</string>
   <string name="sending_direct_message">Šaljem izravnu poruku</string>
@@ -489,8 +474,8 @@
   <string name="denied_users_follow_request">Odbačen zahtjev od <xliff:g id="user">%s</xliff:g> za slijeđenjem.</string>
   <string name="import_settings">Uvezi postavke</string>
   <string name="export_settings">Izvezi postavke</string>
-  <string name="export_settings_type_dialog_title">Izvezi postavke…</string>
-  <string name="import_settings_type_dialog_title">Uvezi postavke…</string>
+  <string name="export_settings_type_dialog_title">Izvezi postavke&#8230;</string>
+  <string name="import_settings_type_dialog_title">Uvezi postavke&#8230;</string>
   <string name="nicknames">Nadimci</string>
   <string name="user_colors">Korisničke boje</string>
   <string name="progress">Napredak</string>
@@ -588,7 +573,7 @@
   <string name="usage_statistics">Statistika korištenja</string>
   <string name="research_hot_mobile">Istraživanje o Mobilnoj Mreži Pogonjenoj Podacima</string>
   <string name="unknown_location">Nepoznata lokacija</string>
-  <string name="ellipsis">…</string>
+  <string name="ellipsis">&#8230;</string>
   <string name="import_export_settings">Postavke izvoza/uvoza</string>
   <string name="usage_statistics_header_summary">Twidere je sudjelovao u nekim istraživačkim projektima, pridružite se tim projektima kako bi učinili Twidere i ostale aplikacije boljima.</string>
   <string name="no_tab">Nema tabova</string>
@@ -644,7 +629,7 @@
   <string name="delete_conversation_confirm_message">Obrisati sve poruke u ovom razgovoru?</string>
   <string name="name_first_summary_on">Prikaži prvo ime</string>
   <string name="name_first_summary_off">Prikaži \@zaslonskoime prvo</string>
-  <string name="comment_hint">Komentiraj…</string>
+  <string name="comment_hint">Komentiraj&#8230;</string>
   <string name="comment">Komentirat</string>
   <string name="enable_retweets">Omogući retweetove</string>
   <string name="play">Pokreni</string>
@@ -654,8 +639,6 @@
   <string name="streaming">Streaming</string>
   <string name="enable_streaming">Omogući streaming</string>
   <string name="dark_theme">Tamna tema</string>
-  <string name="wizard_hint_title_location_requirement">Dopuštenje lokacije</string>
-  <string name="wizard_hint_summary_location_requirement">Twidere treba dopuštenje za pristup lokaciji kada šaljete tweetove koji sadrže lokaciju.</string>
   <string name="scrapyard">Reciklažno dvorište</string>
   <string name="crop_image">Obreži sliku</string>
   <string name="media_preload">Predučitavanje medija</string>
@@ -669,4 +652,6 @@
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
+  <!-- Verb. Used for skip some settings -->
+  <!-- Used for decide something later, like permission request -->
 </resources>

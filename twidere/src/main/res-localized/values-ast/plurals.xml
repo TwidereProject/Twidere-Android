@@ -15,7 +15,7 @@
     <item quantity="other">Desaniciáronse <xliff:g id="items">%1$d</xliff:g> usuarios del llistáu «<xliff:g id="list">%2$s</xliff:g>».</item>
   </plurals>
   <plurals name="delete_N_users_from_list_confirm">
-    <item quantity="one">¿Desaniciar <xliff:g id="items">%1$d</xliff:g> usuarios del llistáu «<xliff:g id="list">%2$s</xliff:g>»?</item>
+    <item quantity="one">¿Desaniciar <xliff:g id="items">%1$d</xliff:g> usuariu del llistáu «<xliff:g id="list">%2$s</xliff:g>»?</item>
     <item quantity="other">¿Desaniciar <xliff:g id="items">%1$d</xliff:g> usuarios del llistáu «<xliff:g id="list">%2$s</xliff:g>»?</item>
   </plurals>
   <plurals name="N_new_statuses">
@@ -55,11 +55,11 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> favoritos</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> prestóme</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> prestóme</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> préstame</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> préstames</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> votu</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> votu</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> votos</item>
   </plurals>
 </resources>

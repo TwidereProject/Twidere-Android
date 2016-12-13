@@ -8,11 +8,11 @@
   </plurals>
   <plurals name="added_N_users_to_list">
     <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Benutzer zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</item>
-    <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Benutzer zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</item>
+    <item quantity="other">Benutzer <xliff:g id="count">%1$d</xliff:g> zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</item>
   </plurals>
   <plurals name="deleted_N_users_from_list">
     <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Benutzer von der Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernt.</item>
-    <item quantity="other"><xliff:g id="count">%1$d</xliff:g> Benutzer von der Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernt.</item>
+    <item quantity="other">Benutzer <xliff:g id="count">%1$d</xliff:g> von der Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernt.</item>
   </plurals>
   <plurals name="delete_N_users_from_list_confirm">
     <item quantity="one"><xliff:g id="count">%1$d</xliff:g> Benutzer aus Liste "<xliff:g id="list">%2$s</xliff:g>\" entfernen?</item>

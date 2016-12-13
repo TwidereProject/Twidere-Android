@@ -29,19 +29,19 @@
   <string name="error_occurred">มีข้อผิดพลาดเกิดขึ้น กรุณาลองอีกครั้ง</string>
   <string name="error_already_logged_in">คุณเข้าสู่ระบบอยู่แล้ว</string>
   <string name="no_account_selected">ไม่มีบัญชีผู้ใช้ที่เลือกไว้</string>
-  <string name="error_unknown_error">ผิดพลาด: ไม่ทราบสาเหตุ อาจจะเป็นบั๊ก</string>
+  <string name="error_unknown_error">ผิดพลาด: ไม่ทราบสาเหตุ อาจจะเป็นข้อผิดพลาดของแอพ</string>
   <string name="error_message">ผิดพลาด: <xliff:g id="message">%s</xliff:g></string>
   <string name="error_message_with_action">ข้อผิดพลาดเมื่อ <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
-  <string name="error_message_rate_limit">ติด Rate Limit ของ Twitter กรุณาลองอีกครั้งหลังจาก <xliff:g id="time">%s</xliff:g></string>
+  <string name="error_message_rate_limit">เกินขีดจำกัดการเรียกใช้ข้อมูล กรุณาลองใหม่อีกครั้ง หลังจาก <xliff:g id="time">%s</xliff:g></string>
   <string name="error_message_rate_limit_with_action">ติด Rate Limit ของ Twitter เมื่อพยายาม<xliff:g id="action">%1$s</xliff:g> กรุณาลองอีกครั้งหลังจาก <xliff:g id="time">%2$s</xliff:g></string>
   <string name="select_account">เลือกบัญชี</string>
   <string name="username">ชื่อผู้ใช้</string>
   <string name="password">รหัสผ่าน</string>
   <string name="label_data_provider">ผู้ให้บริการฐานข้อมูล Twidere</string>
   <string name="label_refresh_service">เรียกบริการอีกครั้ง</string>
-  <string name="label_streaming_service">ระบบ Streaming</string>
-  <string name="label_background_operation_service">เซอร์วิสที่ทำงานเบื้องหลัง</string>
-  <string name="open_in_browser">เปิดในเบราเซอร์</string>
+  <string name="label_streaming_service">บริการการสตรีม</string>
+  <string name="label_background_operation_service">การดำเนินการเบื้องหลัง</string>
+  <string name="open_in_browser">เปิดในเบราว์เซอร์</string>
   <string name="delete">ลบ</string>
   <string name="retweet">รีทวีต</string>
   <string name="retweets">รีทวีต</string>
@@ -61,7 +61,7 @@
   <string name="open_source_license">ลิขสิทธิ์ซอฟต์แวร์เปิด</string>
   <string name="api">API</string>
   <string name="default_api_settings">ค่าเริ่มต้นของ API</string>
-  <string name="default_api_settings_summary">การตั้งค่าเหล่านี้จะถูกใช้กับบัญที่เพิ่มเข้ามาใหม่เท่านั้น</string>
+  <string name="default_api_settings_summary">การตั้งค่าเหล่านี้จะถูกใช้กับบัญชีที่ลงชื่อเข้าใช้ใหม่เท่านั้น</string>
   <string name="consumer_key">Consumer key</string>
   <string name="consumer_secret">Consumer secret</string>
   <string name="storage">พื้นที่จัดเก็บ</string>
@@ -242,6 +242,8 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตของคุณ.</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> รีทวีตทวีตของคุณ</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตของคุณ</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> รีทวีตทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตที่คุณถูกแท็ก</string>
   <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> รีทวีตทวีตที่เมนชั่นถึงคุณ</string>
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตที่เมนชั่นถึงคุณ</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่เมนชั่นถึงคุณ.</string>
@@ -251,6 +253,12 @@
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> เพิ่มคุณเข้าสู่รายการ</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> เพิ่มคุณเข้าสู่รายการ <xliff:g id="list">%2$s</xliff:g>.</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> เพิ่มคุณเข้าสู่รายการ</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> แท็กคุณ</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> แท็กคุณ</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> ถูกใจทวีตของ <xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> ถูกใจทวีตของ <xliff:g id="target">%2$s</xliff:g> และ <xliff:g id="other">%3$s</xliff:g></string>
   <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> ถูกใจทวีตของ <xliff:g id="target">%2$s</xliff:g>.</string>
@@ -263,6 +271,8 @@
   <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> เพิ่ม <xliff:g id="target">%2$s</xliff:g> และ <xliff:g id="other">%1$s</xliff:g> เข้าในรายการ</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> สร้างรายการ <xliff:g id="target">%2$s</xliff:g></string>
   <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> สร้างรายการ <xliff:g id="target">%2$s</xliff:g> และ <xliff:g id="other">%1$s</xliff:g></string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> เข้าร่วม Twitter</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> เข้าร่วม Twitter</string>
   <string name="status_not_updated">ข้อความไม่ถูกส่ง</string>
   <string name="status_not_updated_summary">ข้อความไม่ถูกส่ง และถูกบันทึกเป็นข้อความร่าง</string>
   <string name="incoming_friendships">คำขอติดตามทที่รอตรวจสอบ</string>
@@ -283,6 +293,7 @@
   <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> และอีก <xliff:g id="users_count">%2$d</xliff:g> คนส่ง <xliff:g id="messages_count">%3$d</xliff:g> ข้อความส่วนตัวถึงคุณ</string>
   <string name="action_getting_status">กำลังรับข้อความ</string>
   <string name="action_updating_status">กำลังส่งข้อความ</string>
+  <string name="action_getting_user_lists">กำลังเรียกลิสต์ของผู้ใช้</string>
   <string name="action_sending_direct_message">กำลังส่งข้อความด่วน</string>
   <string name="action_refreshing_home_timeline">กำลังโหลดข้อความหน้าแรกใหม่</string>
   <string name="action_refreshing_mentions">กำลังโหลดข้อความที่กล่าวถึงคุณ</string>
@@ -293,6 +304,7 @@
   <string name="action_updating_profile">กำลังอัพเดทข้อมูลส่วนตัว</string>
   <string name="action_updating_profile_image">กำลังอัพเดทภาพแทนตัว</string>
   <string name="action_updating_profile_banner_image">กำลังอัพเดทภาพปก</string>
+  <string name="action_updating_profile_background_image">กำลังอัพเดทภาพพื้นหลังโปรไฟล์</string>
   <string name="action_removing_profile_banner_image">กำลังลบภาพปก</string>
   <string name="action_updating_details">กำลังอัพเดทรายละเอียด</string>
   <string name="action_blocking">กำลังบล็อค</string>
@@ -301,6 +313,7 @@
   <string name="action_unfollowing">กำลังเลิกติดตาม</string>
   <string name="action_creating_list">กำลังสร้างรายการ</string>
   <string name="action_adding_member">กำลังเพิ่มสมาชิก</string>
+  <string name="action_modifying_lists">ปรับแต่งรายการ</string>
   <string name="action_signing_in">กำลังเข้าสู่ระบบ</string>
   <string name="action_retweeting">กำลังรีทวีต</string>
   <string name="action_reporting_for_spam">กำลังรายงานสแปม</string>
@@ -347,6 +360,7 @@
   <string name="preview_images">แสดงตัวอย่างภาพ</string>
   <string name="preload_wifi_only">โหลดล่วงหน้าเมื่อใช้ Wi-Fi เท่านั้น</string>
   <string name="sign_in_method_introduction_title">มันทำงานอย่างไร?</string>
+  <string name="sign_in_method_introduction">โปรแกรม Twitter ที่ส่วนใหญ่เปิดหน้าเว็บการอนุญาตให้ Twitter นี้อาจจะไม่สะดวก เมื่อใช้ API ที่กำหนดเอง หรือ ในเครือข่ายที่ช้า Twidere จำลองเบราว์เซอร์ปกติให้เข้าสู่ระบบ Twitter ไม่ต้องกังวล รหัสผ่านของคุณจะไม่ถูกเก็บไว้ หรือรั่วไหล</string>
   <string name="edit_draft">แก้ไขข้อความร่าง</string>
   <string name="profile_image">ภาพโปรไฟล์</string>
   <string name="your_profile_image">รูปโปรไฟล์ของคุณ</string>
@@ -370,7 +384,7 @@
   <string name="search_name_saved">บันทึกการค้นหา \"<xliff:g id="name">%s</xliff:g>\" แล้ว</string>
   <string name="search_deleted">ลบการค้นหาแล้ว</string>
   <string name="search_name_deleted">ลบการค้นหา \"<xliff:g id="name">%s</xliff:g>\" แล้ว</string>
-  <string name="import_from">นำเข้าจาก…</string>
+  <string name="import_from">นำเข้าจาก&#8230;</string>
   <string name="link_to_quoted_status">ลิงค์ไปยังทวีตที่อ้างอิง</string>
   <string name="quote_original_status">อ้างอิงทวีตปัจจุบัน</string>
   <string name="followed_user">ติดตาม <xliff:g id="user">%s</xliff:g></string>
@@ -391,6 +405,8 @@
   <string name="delete_user_from_list_confirm">ลบ <xliff:g id="user">%1$s</xliff:g> ออกจากลิสต์ <xliff:g id="list">%2$s</xliff:g> หรือไม่</string>
   <string name="subscribe">รับข่าวสาร</string>
   <string name="unsubscribe">เลิกรับข่าวสาร</string>
+  <string name="background_toast_notification">แจ้งเตือน Toast ของพื้นหลัง</string>
+  <string name="background_toast_notification_summary">แสดงการแจ้งเตือน Toast เมื่อเปลี่ยนเป็นเบื้องหลัง</string>
   <string name="original_status">ทวีตเดิม</string>
   <string name="ask">ถาม</string>
   <string name="no_close_after_status_updated">เปิดหน้า \"ประพันธ์\" หลังจากส่งทวีตแล้ว</string>
@@ -429,20 +445,6 @@
   <string name="previous_item">ย้อนกลับ</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="next_item">ถัดไป</string>
-  <string name="settings_wizard">ตัวช่วยตั้งค่า</string>
-  <string name="wizard_page_welcome_title">ยินดีต้อนรัก!</string>
-  <string name="wizard_page_welcome_text">ขอบคุณที่เลือก Twidere สู่อ้อมอกอ้อมใจ\nคุณต้องการตั้งค่าหรือไม่</string>
-  <string name="wizard_page_welcome_yes">ใช่</string>
-  <string name="wizard_page_welcome_not_now">ยังก่อน</string>
-  <string name="wizard_page_welcome_import_settings">นำเข้าการตั้งค่า</string>
-  <string name="wizard_page_theme_text">เลือกธีมที่คุณต้องการ</string>
-  <string name="wizard_page_tabs_text">เพิ่มแถบเข้าสู่ Twidere\nเพื่อติดตามผู้คนหรือเรื่องราวที่คุณสนใจ</string>
-  <string name="wizard_page_tabs_unchanged_message">คุณสามารถเพิ่มแถบในเมนู "ตั้งค่า" - "แถบ"</string>
-  <string name="wizard_page_cards_text">ปรับแต่งการ์ด</string>
-  <string name="wizard_page_hints_text">คำแนะนำที่เป็นประโยชน์</string>
-  <string name="wizard_page_usage_statistics_text">Twidere เข้าร่วมในโครงการวิจัยต่างๆ ที่ต้องการข้อมูลการใช้งาน</string>
-  <string name="wizard_page_finished_title">เสร็จสิ้นแล้ว</string>
-  <string name="wizard_page_finished_text">Twidere พร้อมใช้งาน</string>
   <string name="invalid_tab">แถบไม่ถูกต้อง</string>
   <string name="send_crash_report">ส่งรายงานการเด้งของ Twidere</string>
   <string name="add_to_filter">เพิ่มไปยังตัวกรอง</string>
@@ -461,6 +463,7 @@
   <string name="destroy_status_confirm_message">ลบทวีตนี้หรือไม่</string>
   <string name="destroy_saved_search">ลบผลการค้นหา \"<xliff:g id="name">%s</xliff:g>\"</string>
   <string name="destroy_saved_search_confirm_message">ลบผลการค้นหา \"<xliff:g id="name">%s</xliff:g>\" หรือไม่ คุณสามารถบันทึกผลการค้นหานี้ได้อีก</string>
+  <string name="signing_in_error_browser_sign_in_hint">ข้อผิดพลาดขณะเข้าสู่ระบบ คุณอาจจำเป็นต้องใช้เบราว์เซอร์เพื่อล็อกอิน (จะละเว้นค่า API ที่กำหนดเองในระหว่างการเข้าสู่ระบบ)</string>
   <string name="report_user">รายงาน <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">รายงาน <xliff:g id="name">%s</xliff:g> ว่าเป็นสแปมหรือไม่ คุณจะบล็อคผู้ใช้รายนี้ด้วย</string>
   <string name="twidere_test">ทดสอบ Twidere</string>
@@ -489,15 +492,12 @@
   <string name="theme_background_solid">ขาว/ดำ บริสุทธิ์</string>
   <string name="theme_background_transparent">โปร่งใส</string>
   <string name="theme_dark_actionbar">แถบด้านบนสีทึบ</string>
-  <string name="wizard_hint_compose_select_account">คลิกที่รูปโปรไฟล์เพื่อเลือกบัญชีที่ใช้ในการเขียนทวีต</string>
-  <string name="wizard_hint_filters">คุณสามารถซ่อนทวิตที่ไม่พึงประสงค์ออกจากไทม์ไลน์และการแจ้งเตือนโดยใช้ "ตัวกรอง"</string>
   <string name="view_replies">ดูการตอบกลับ</string>
   <string name="compact_cards">ขนาดกะทัดรัด</string>
   <string name="compact_cards_summary">แสดงการ์ดเยอะๆ บนหน้าจอ</string>
   <string name="status_share_subject_format_with_time">ทวีตจาก <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>) ที่ <xliff:g id="time">%3$s</xliff:g></string>
   <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
   <string name="rate_limit">อัตราจำกัด</string>
-  <string name="wizard_hint_rate_limit">หากคุณประสบปัญหาถูกจำกัด โปรดอย่าโทษผมเลย โทษทวิตเตอร์นู่น</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> ถูกบันทึกที่ <xliff:g id="time">%2$s</xliff:g></string>
   <string name="update_status">ส่งทวีต</string>
   <string name="sending_direct_message">กำลังส่งข้อความส่วนตัว</string>
@@ -574,6 +574,7 @@
   <string name="function">ฟังก์ชั่น</string>
   <string name="replies">การตอบกลับ</string>
   <string name="profile_banner">รูปแบนเนอร์โปรไฟล์</string>
+  <string name="profile_background">ภาพพื้นหลังโปรไฟล์</string>
   <string name="profile">โปรไฟล์</string>
   <string name="listed">จัดในลิสต์แล้ว</string>
   <string name="state_blocking">กำลังบล็อค</string>
@@ -661,6 +662,7 @@
   <string name="reset_to_default">เรียกคืนค่าเริ่มต้น</string>
   <string name="reset_keyboard_shortcuts_confirm">รีเซ็ตคีย์ลัดเป็นค่าเริ่มต้นหรือไม่</string>
   <string name="open_accounts_dashboard">เปิดกระดานจัดการบัญชี</string>
+  <string name="close_accounts_dashboard">ปิดกระดานจัดการบัญชี</string>
   <string name="previous_tab">แถบก่อนหน้า</string>
   <string name="next_tab">แถบถัดไป</string>
   <string name="keyboard_shortcut_back">ย้อนกลับ</string>
@@ -673,6 +675,7 @@
   <string name="invalid_list_name">ต้องเริ่มต้นด้วยอักขระที่ประกอบด้วย ตัวอักษร ตัวเลข \"-\" หรือ \"_\" เท่านั้น</string>
   <string name="delete_conversation">ลบการสนทนา</string>
   <string name="delete_conversation_confirm_message">ลบข้อความทั้งหมดจากการสนทนานี้หรือไม่</string>
+  <string name="delete_message_confirm_message">ลบข้อความนี้หรือไม่?</string>
   <string name="name_first_summary_on">แสดงชื่อผู้ใช้ก่อน</string>
   <string name="name_first_summary_off">แสดง \@ยูสเซอร์ไอดี ก่อน</string>
   <string name="comment_hint">ความคิดเห็น...</string>
@@ -681,13 +684,10 @@
   <string name="play">เล่น</string>
   <string name="pause">พัก</string>
   <string name="jump_to_top">ไปด้านบน</string>
+  <string name="timeline_streaming_running">กำลังสตรีมมิ่งไทม์ไลน์</string>
   <string name="streaming">สตรีมมิ่ง</string>
   <string name="enable_streaming">เปิดการใช้งานสตรีมมิ่ง</string>
   <string name="dark_theme">ดาร์คธีม</string>
-  <string name="wizard_hint_title_location_requirement">คำขอใช้ตำแหน่งที่ตั้ง</string>
-  <string name="wizard_hint_summary_location_requirement">Twidere ต้องการคำขอใช้ตำแหน่งที่ตั้งเมื่อคุณส่งทวิตที่ระบุตำแหน่งที่ตั้ง</string>
-  <string name="wizard_hint_title_storage_requirement">คำขอใช้ที่เก็บไฟล์</string>
-  <string name="wizard_hint_summary_storage_requirement">Twidere ต้องการคำขอใช้ที่เก็บไฟล์เมื่อคุณเข้าถึงรูปภาพต่างๆ</string>
   <string name="scrapyard">กองขยะ</string>
   <string name="crop_image">ตัดรูปภาพ</string>
   <string name="media_preload">โหลดรูปภาพล่วงหน้า</string>
@@ -706,12 +706,14 @@
   <string name="combined_notifications_summary_on">รวมการแจ้งเตือนเป็นกลุ่มเดียวกัน</string>
   <string name="combined_notifications_summary_off">แยกการแจ้งเตือนออกจากกันเป็นอันๆ</string>
   <string name="save_media_no_storage_permission_message">คำขอใช้ที่เก็บไฟล์จำเป็นต่อการบันทึกรูปภาพ</string>
+  <string name="share_media_no_storage_permission_message">บางแอพพลิเคชั่นต้องการสิทธิ์เข้าใช้ที่เก็บข้อมูลเพื่อทำการแชร์</string>
   <string name="select_file_no_storage_permission_message">คำขอใช้ที่เก็บไฟล์จำเป็นต่อการเลือกไฟล์</string>
   <string name="user_mentioned_you"><xliff:g id="user">%s</xliff:g> เมนชั่นคุณ</string>
   <string name="cant_load_all_replies_message">ไม่สามารถโหลดการตอบกลับได้ทุกอัน &lt;a href=\"#dialog\";&gt;เหตุผล&lt;/a&gt;</string>
   <string name="cant_load_all_replies_explanation">ด้วยความงก API ของ Twitter ที่ทำกับแอพทวิตแอพอื่นๆ ทำให้ Twidere ไม่สามารถเข้าถึงการตอบกลับได้ทุกอัน จึงไม่สามารถรับปากได้ว่าจะโหลดการตอบกลับได้ทุกอัน</string>
   <string name="current_status">ทวีตปัจจุบัน</string>
   <string name="twitter_optimized_searches">การค้นหาทวิตเตอร์แบบพิเศษ</string>
+  <string name="twitter_optimized_searches_summary">คำค้นหาพิเศษที่ใช้เพื่อปรับปรุงผลลัพธ์การค้นหาเช่น แยกรีทวีตออก</string>
   <string name="i_want_my_stars_back">ฉันอยากได้ตุ่มดาวกลับมา</string>
   <string name="i_want_my_stars_back_summary">ใช้ รายการโปรด (★) แทน ถูกใจ (♥︎)</string>
   <string name="copy_link">คัดลอกลิงค์</string>
@@ -720,6 +722,7 @@
   <string name="login_verification_pin_hint">ตรวจสอบรหัส PIN ที่ได้รับและใส่รหัสเพื่อล็อคอิน</string>
   <string name="login_challenge_retype_phone_hint">ใส่หมายเลขโทรศัพท์ที่เชื่อมต่อกับบัญชีทวิตเตอร์ของคุณ</string>
   <string name="login_challenge_retype_email_hint">พิมพ์อีเมลที่ใช้งานกับบัญชีทวิตเตอร์ของคุณอีกครั้ง</string>
+  <string name="login_verification_push_hint">ยอมรับคำขอตรวจสอบล็อกอินจากแอพ Twitter เมื่อคุณอนุมัติคำขอ คลิกตกลง</string>
   <string name="login_verification_failed">การยืนยันการล็อคอินล้มเหลว</string>
   <string name="saved_searches_already_saved_hint">คุณได้บันทึกผลการค้นหานี้ไปก่อนแล้ว</string>
   <string name="unsupported_activity_action_summary">โปรดรายงานการกระทำเบื้องต้น</string>
@@ -731,6 +734,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="mentions_only">เมนชั่นเท่านั้น</string>
   <string name="error_no_dm_permission">ไม่สามารถเข้าถึงข้อความส่วนตัวได้ กรุณาตรวจสอบการตั้งค่าคำขอใช้ข้อความส่วนตัวจากทวิตเตอร์ของคุณ</string>
+  <string name="error_no_access_for_credentials">แอพพลิเคชั่นของคุณไม่สามารถเข้าถึงทรัพยากรนี้ คุณต้องเปิดใช้งาน \'บังคับใช้ API ส่วนตัว\'</string>
   <string name="select_accounts_for_compose">เลือกบัญชีที่จะประพันธ์</string>
   <string name="interactions">ปฏิสัมพันธ์</string>
   <string name="network_diagnostics">การวินิจฉัยเครือข่าย</string>
@@ -743,6 +747,7 @@
   <string name="recent_media">รูปภาพล่าสุด</string>
   <string name="reply_to_name_text">ตอบกลับ <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_name_text">อ้างอิง <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="unsupported_login_verification_type_name">ตรวจสอบการเข้าสู่ระบบไม่สนับสนุนชนิด <xliff:g id="name">%1$s</xliff:g> กรุณารายงานไปที่บัญชี Support</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="translate_from_language">แปลจากภาษา<xliff:g id="language">%s</xliff:g></string>
   <string name="translation">การแปลภาษา</string>
@@ -751,14 +756,44 @@
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="groups">กลุ่ม</string>
   <string name="public_timeline">หน้าหลักสาธารณะ</string>
+  <string name="external_user_host_format">ผู้ใช้ภายนอกที่ <xliff:g id="host">%s</xliff:g></string>
+  <string name="external_group_host_format">กลุ่มภายนอกที่ <xliff:g id="host">%s</xliff:g></string>
   <string name="error_too_many_photos_fanfou">รูปภาพมากเกินไป</string>
   <string name="load_defaults">โหลดค่าเริ่มต้น</string>
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <string name="provider_fanfou">Fanfou</string>
+  <string name="provider_quitter_se">Quitter.se</string>
+  <string name="provider_loadaverage_org">LoadAverage.org</string>
+  <string name="provider_gnusocial_net">GNU Social.net</string>
+  <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="new_document_api">API เอกสารใหม่</string>
   <string name="new_document_api_summary">เปิดหน้าโปรไฟล์และรูปภาพในหน้าต่างใหม่</string>
+  <string name="drawer_toggle">สลับลิ้นชัก</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="group">กลุ่ม</string>
+  <string name="your_coarse_location">ตำแหน่งคร่าวๆ ของคุณ</string>
+  <string name="location_countrywide">ทั่วประเทศ</string>
+  <string name="error_title_device_incompatible">อุปกรณ์ไม่รองรับ</string>
+  <string name="error_message_device_incompatible">อุปกรณ์นี้ไม่เข้ากันได้กับ Twidere ขอแนะนำให้ทำการอัพเกรด Android ให้เป็น OS ล่าสุด\nคุณสามารถส่งข้อมูลด้านล่างเพื่อช่วยเราในการรายงานปัญหานี้แก่ผู้ผลิตอุปกรณ์</string>
+  <string name="password_sign_in_twitter_only">รหัสผ่านเข้าสู่ระบบ (Twitter เท่านั้น)</string>
+  <string name="direct_messages_next">ข้อความถัดไป</string>
+  <string name="plus_service_name">Twidere ∞</string>
+  <string name="sign_in_service_google_id">รหัส Google</string>
+  <string name="sign_in_service_twitter">ทวิตเตอร์</string>
+  <string name="sign_in_service_email">อีเมล</string>
+  <string name="sign_in_with_ellip">ลงชื่อเข้าใช้ด้วย...</string>
+  <string name="edit_description">แก้ไขคำอธิบาย</string>
+  <string name="no_status_content_text">ไม่มีเนื้อหา</string>
+  <string name="status_not_available_text">ทวิตไม่พร้อมใช้งาน</string>
+  <string name="share_link">แชร์ลิงค์</string>
+  <string name="hide_retweets">ซ่อนรีทวิต</string>
+  <string name="hide_quotes">ซ่อนคำอ้างอิง</string>
+  <string name="hide_replies">ซ่อนการตอบกลับ</string>
+  <string name="no_extension_installed">ไม่ได้ติดตั้งส่วนขยาย</string>
+  <string name="pinned_status">ปักหมุดทวิต</string>
+  <string name="add_or_remove_from_list">เพิ่มหรือลบออกจากรายการ</string>
+  <!-- Verb. Used for skip some settings -->
+  <!-- Used for decide something later, like permission request -->
 </resources>

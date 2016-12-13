@@ -21,6 +21,7 @@
   <string name="error_twitter_136">Вы были заблокированы этим пользователем</string>
   <string name="error_twitter_139">Вы уже добавили в избранное этот твит</string>
   <!-- 144 No status found with that ID. -->
+  <string name="error_twitter_144">Твит не найден, возможно он был удалён.</string>
   <string name="error_twitter_161">Вы уже отравили запрос этому пользователю.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
   <string name="error_twitter_162">Вы заблокированы этим пользователем.</string>

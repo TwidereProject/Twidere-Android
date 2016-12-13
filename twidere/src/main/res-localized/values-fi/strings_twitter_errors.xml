@@ -21,6 +21,7 @@
   <string name="error_twitter_136">Käyttäjä on estänyt sinut.</string>
   <string name="error_twitter_139">Olet jo merkinnyt twiitin suosikkeihisi.</string>
   <!-- 144 No status found with that ID. -->
+  <string name="error_twitter_144">Tweettiä ei löydetty, ehkä se on poistettu.</string>
   <string name="error_twitter_161">Olet jo pyytänyt tämän käyttäjän seuraamista.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
   <string name="error_twitter_162">Käyttäjä on estänyt sinut.</string>

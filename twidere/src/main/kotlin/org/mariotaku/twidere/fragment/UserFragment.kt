@@ -87,7 +87,6 @@ import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -115,7 +114,8 @@ import org.mariotaku.twidere.model.message.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.message.TaskStateChangedEvent
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.util.*
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
@@ -854,11 +854,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             }
             R.id.add_to_filter -> {
                 if (userRelationship == null) return true
-                val cr = context.contentResolver
                 if (userRelationship.filtering) {
-                    val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
-                    val whereArgs = arrayOf(user.key.toString())
-                    cr.delete(Filters.Users.CONTENT_URI, where, whereArgs)
+                    DataStoreUtils.removeFromFilter(context, user)
                     Utils.showInfoMessage(activity, R.string.message_user_unmuted, false)
                     getFriendship()
                 } else {

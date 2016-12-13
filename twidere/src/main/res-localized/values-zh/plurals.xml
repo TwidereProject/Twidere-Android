@@ -42,7 +42,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> 收藏</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> 喜欢</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> 喜歡</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="other"><xliff:g id="count">%d</xliff:g> 投票</item>

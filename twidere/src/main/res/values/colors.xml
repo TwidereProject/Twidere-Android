@@ -7,7 +7,6 @@
     <color name="background_color_window_viewer">#000</color>
     <color name="background_color_window_white">#fff</color>
     <color name="background_color_window_black">#000</color>
-    <color name="background_color_window_settings_wizard">#fafafa</color>
     <color name="bg_refresh_progress_color_light">#f5f5f5</color>
     <color name="bg_refresh_progress_color_dark">#333333</color>
     <color name="bg_color_transparent_dark">#ff000000</color>

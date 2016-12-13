@@ -328,7 +328,7 @@
   <string name="search_name_saved">Wyszukiwanie \"<xliff:g id="name">%s</xliff:g>\" zapisane.</string>
   <string name="search_deleted">Wyszukiwanie usunięte.</string>
   <string name="search_name_deleted">Wyszukiwanie \"<xliff:g id="name">%s</xliff:g>\" usunięte.</string>
-  <string name="import_from">Importuj z…</string>
+  <string name="import_from">Importuj z&#8230;</string>
   <string name="link_to_quoted_status">Linkuj do cytowanego tweeta</string>
   <string name="quote_original_status">Zacytuj tweeta</string>
   <string name="followed_user">Obserwujesz <xliff:g id="user">%s</xliff:g>.</string>
@@ -372,7 +372,7 @@
   <string name="settings_interface">Interfejs</string>
   <string name="no_rule">Brak reguł</string>
   <string name="safety">Bezpieczeństwo</string>
-  <string name="updating_status_notification">Wysyłanie tweeta…</string>
+  <string name="updating_status_notification">Wysyłanie tweeta&#8230;</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
   <string name="query">Zapytanie</string>
   <string name="input_text">Tekst wejściowy</string>
@@ -385,18 +385,6 @@
   <string name="name_first">Najpierw wyświetlana nazwa</string>
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
-  <string name="settings_wizard">Kreator ustawień</string>
-  <string name="wizard_page_welcome_title">Witamy</string>
-  <string name="wizard_page_welcome_text">Dziękujemy za wybranie Twidere.\nCzy chcesz go skonfigurować teraz?</string>
-  <string name="wizard_page_welcome_yes">Tak</string>
-  <string name="wizard_page_welcome_not_now">Nie teraz</string>
-  <string name="wizard_page_welcome_import_settings">Zaimportuj ustawienia</string>
-  <string name="wizard_page_theme_text">Wybierz swój motyw.</string>
-  <string name="wizard_page_tabs_text">Dodaj karty do Twidere.\nŚledź ludzi bądź rzeczy na których Ci zależy.</string>
-  <string name="wizard_page_cards_text">Ustaw wygląd tweeta.</string>
-  <string name="wizard_page_hints_text">Oto kilka użytecznych porad.</string>
-  <string name="wizard_page_finished_title">Zakończono</string>
-  <string name="wizard_page_finished_text">Twidere jest już gotowy do działania.</string>
   <string name="invalid_tab">Nieprawidłowa karta</string>
   <string name="send_crash_report">Wyślij raport błędu Twidere</string>
   <string name="add_to_filter">Dodaj do filtra</string>
@@ -443,14 +431,11 @@
   <string name="theme_background_solid">Czyste biało-czarne</string>
   <string name="theme_background_transparent">Przezroczyste</string>
   <string name="theme_dark_actionbar">Ciemny ActionBar</string>
-  <string name="wizard_hint_compose_select_account">Dotknij avatara by wybrać konto z którego zostanie wysłany tweet.</string>
-  <string name="wizard_hint_filters">Możesz ukryć niechciane tweety w strumieniu i powiadomieniach za pomocą opcji "Filtry".</string>
   <string name="view_replies">Zobacz odpowiedzi</string>
   <string name="compact_cards">Zwarty widok tweetów</string>
   <string name="compact_cards_summary">Wyświetla więcej tweetów na ekranie</string>
   <string name="status_share_subject_format_with_time"><xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>) o godzinie <xliff:g id="time">%3$s</xliff:g></string>
   <string name="rate_limit">Limit częstotliwości odświeżania</string>
-  <string name="wizard_hint_rate_limit">Problemy z częstotliwością odświeżania wynikają z polityki Twittera, nie winy dewelopera.</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, zapisono o <xliff:g id="time">%2$s</xliff:g></string>
   <string name="update_status">Wyślij tweet</string>
   <string name="sending_direct_message">Wysyłanie wiadomości</string>
@@ -472,8 +457,8 @@
   <string name="denied_users_follow_request">Odmówiono żądania obserwowania od <xliff:g id="user">%s</xliff:g>.</string>
   <string name="import_settings">Importuj ustawienia</string>
   <string name="export_settings">Eksportuj ustawienia</string>
-  <string name="export_settings_type_dialog_title">Eksportowanie ustawień…</string>
-  <string name="import_settings_type_dialog_title">Importowanie ustawień…</string>
+  <string name="export_settings_type_dialog_title">Eksportowanie ustawień&#8230;</string>
+  <string name="import_settings_type_dialog_title">Importowanie ustawień&#8230;</string>
   <string name="nicknames">Pseudonimy</string>
   <string name="user_colors">Kolory użytkownika</string>
   <string name="progress">Postęp</string>
@@ -528,6 +513,15 @@
   <string name="load_more">Załaduj więcej</string>
   <string name="photo">Zdjęcie</string>
   <string name="remove">Usuń</string>
+  <string name="belongs_to">Należy do</string>
+  <string name="blocked_by_user_summary">Zostałeś zablokowany przez <xliff:g id="name">%s </xliff:g></string>
+  <string name="select_accounts">Wybierz konta</string>
+  <string name="media_preview">Podgląd Media</string>
+  <string name="edit_tabs">Edytuj zakładki</string>
+  <string name="no_location">Brak lokalizacji</string>
+  <string name="getting_location">Uzyskiwanie lokalizacji</string>
+  <string name="save_to_gallery">Zapisz w galerii</string>
+  <string name="usage_statistics">Statystyki użytkowania</string>
   <string name="import_export_settings">Importuj/eksportuj ustawienia</string>
   <string name="usage_statistics_notification_summary">Pomóż nam ulepszyć Twidere!</string>
   <string name="from_name"><xliff:g id="name">%1$s</xliff:g></string>
@@ -565,4 +559,6 @@
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
+  <!-- Verb. Used for skip some settings -->
+  <!-- Used for decide something later, like permission request -->
 </resources>

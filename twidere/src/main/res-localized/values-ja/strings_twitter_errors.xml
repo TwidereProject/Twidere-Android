@@ -19,7 +19,7 @@
   <string name="error_twitter_135">端末の時計があっているか確認してください。</string>
   <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
   <string name="error_twitter_136">このユーザーにブロックされています。</string>
-  <string name="error_twitter_139">すでにこのツイートをお気に入りにしています。</string>
+  <string name="error_twitter_139">すでにこのツイートをいいねしています。</string>
   <!-- 144 No status found with that ID. -->
   <string name="error_twitter_144">ツイートが見つかりません。おそらく削除されています。</string>
   <string name="error_twitter_161">すでにフォローリクエストを送信しています。</string>
