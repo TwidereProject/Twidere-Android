@@ -67,15 +67,41 @@ import java.util.*
 class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntriesAdapter>(), LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
 
     // Listeners
-    private var accountListener: OnAccountsUpdateListener? = null
+    private var accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener { accounts ->
+        loaderManager.restartLoader(0, null, this)
+    }
 
-    private var mRemoveUnreadCountsTask: RemoveUnreadCountsTask? = null
-    private var mNavigationHelper: RecyclerViewNavigationHelper? = null
+    private var removeUnreadCountsTask: RemoveUnreadCountsTask? = null
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
 
     // Data fields
     val unreadCountsToRemove = SimpleArrayMap<UserKey, MutableSet<String>>()
-    private val mReadPositions = Collections.synchronizedSet(HashSet<Int>())
-    private var mFirstVisibleItem: Int = 0
+    private val readPositions = Collections.synchronizedSet(HashSet<Int>())
+    private var firstVisibleItem: Int = 0
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(activity is LinkHandlerActivity)
+        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
+
+        adapter.listener = this
+
+        loaderManager.initLoader(0, null, this)
+        showProgress()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        bus.register(this)
+        AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
+        adapter.updateReadState()
+    }
+
+    override fun onStop() {
+        AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+        bus.unregister(this)
+        super.onStop()
+    }
 
     override fun onCreateAdapter(context: Context): MessageEntriesAdapter {
         return MessageEntriesAdapter(context)
@@ -98,7 +124,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
                                               keyCode: Int, repeatCount: Int,
                                               event: KeyEvent, metaState: Int): Boolean {
-        return mNavigationHelper!!.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+        return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
@@ -111,11 +137,11 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         return false
     }
 
+
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
-        return ACTION_NAVIGATION_REFRESH == action || mNavigationHelper!!.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+        return ACTION_NAVIGATION_REFRESH == action || navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
-
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri = DirectMessages.ConversationEntries.CONTENT_URI
@@ -129,7 +155,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (activity == null) return
         val isEmpty = cursor != null && cursor.count == 0
-        mFirstVisibleItem = -1
+        firstVisibleItem = -1
         adapter.setCursor(cursor)
         adapter.loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE
         adapter.loadMoreSupportedPosition = if (hasMoreData(cursor)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
@@ -211,45 +237,12 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         return true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_direct_messages, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_direct_messages, menu)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(activity is LinkHandlerActivity)
-        mNavigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
-
-        adapter.listener = this
-
-        loaderManager.initLoader(0, null, this)
-        showProgress()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (accountListener == null) {
-            accountListener = OnAccountsUpdateListener { accounts ->
-
-            }
-            AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
-        }
-        bus.register(this)
-        adapter.updateReadState()
-    }
-
-    override fun onStop() {
-        bus.unregister(this)
-        if (accountListener != null) {
-            AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
-            accountListener = null
-        }
-        super.onStop()
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.compose -> {
                 openNewMessageConversation()
             }
@@ -277,7 +270,8 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
         }
     }
 
-    override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+    override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+                                      layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration {
         val itemDecoration = DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
@@ -288,20 +282,13 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     }
 
     private val accountKeys: Array<UserKey>
-        get() {
-            val args = arguments
-            val accountKeys = Utils.getAccountKeys(context, args)
-            if (accountKeys != null) {
-                return accountKeys
-            }
-            return DataStoreUtils.getActivatedAccountKeys(activity)
-        }
+        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(activity)
 
     private fun addReadPosition(firstVisibleItem: Int) {
-        if (mFirstVisibleItem != firstVisibleItem) {
-            mReadPositions.add(firstVisibleItem)
+        if (this.firstVisibleItem != firstVisibleItem) {
+            readPositions.add(firstVisibleItem)
         }
-        mFirstVisibleItem = firstVisibleItem
+        this.firstVisibleItem = firstVisibleItem
     }
 
     private fun addUnreadCountsToRemove(accountId: UserKey, id: String) {
@@ -343,10 +330,9 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     }
 
     private fun removeUnreadCounts() {
-        if (mRemoveUnreadCountsTask != null && mRemoveUnreadCountsTask!!.status == AsyncTask.Status.RUNNING)
-            return
-        mRemoveUnreadCountsTask = RemoveUnreadCountsTask(mReadPositions, this)
-        AsyncTaskUtils.executeTask<RemoveUnreadCountsTask, Any>(mRemoveUnreadCountsTask)
+        if (removeUnreadCountsTask?.status == AsyncTask.Status.RUNNING) return
+        removeUnreadCountsTask = RemoveUnreadCountsTask(readPositions, this)
+        AsyncTaskUtils.executeTask<RemoveUnreadCountsTask, Any>(removeUnreadCountsTask)
     }
 
     internal class RemoveUnreadCountsTask(readPositions: Set<Int>, private val fragment: DirectMessagesFragment) : AsyncTask<Any, Any, Any>() {

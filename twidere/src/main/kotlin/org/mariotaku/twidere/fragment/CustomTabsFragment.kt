@@ -79,7 +79,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             R.id.delete -> {
                 val itemIds = listView.checkedItemIds
                 val where = Expression.`in`(Column(Tabs._ID), RawItemArray(itemIds))
-                contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
+                context.contentResolver.delete(Tabs.CONTENT_URI, where.sql, null)
                 SettingsActivity.setShouldRestart(activity)
             }
         }
@@ -210,7 +210,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 val values = ContentValues()
                 values.put(Tabs.POSITION, i)
                 val where = Expression.equals(Tabs._ID, id).sql
-                contentResolver.update(Tabs.CONTENT_URI, values, where, null)
+                context.contentResolver.update(Tabs.CONTENT_URI, values, where, null)
             }
         }
         SettingsActivity.setShouldRestart(activity)

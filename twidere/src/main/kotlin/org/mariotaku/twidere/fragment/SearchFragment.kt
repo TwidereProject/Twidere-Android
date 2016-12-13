@@ -54,7 +54,7 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
             suggestions.saveRecentQuery(query, null)
             val values = ContentValues()
             values.put(SearchHistory.QUERY, query)
-            contentResolver.insert(SearchHistory.CONTENT_URI, values)
+            context.contentResolver.insert(SearchHistory.CONTENT_URI, values)
         }
     }
 

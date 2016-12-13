@@ -218,11 +218,11 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     override fun onStart() {
         super.onStart()
-        recyclerView.addOnScrollListener(scrollListener!!)
+        recyclerView.addOnScrollListener(scrollListener)
     }
 
     override fun onStop() {
-        recyclerView.removeOnScrollListener(scrollListener!!)
+        recyclerView.removeOnScrollListener(scrollListener)
         super.onStop()
     }
 

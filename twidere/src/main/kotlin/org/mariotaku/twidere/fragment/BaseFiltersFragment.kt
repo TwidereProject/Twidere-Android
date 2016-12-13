@@ -120,7 +120,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             R.id.delete -> {
                 val where = Expression.`in`(Column(Filters._ID),
                         RawItemArray(listView.checkedItemIds))
-                contentResolver.delete(contentUri, where.sql, null)
+                context.contentResolver.delete(contentUri, where.sql, null)
             }
             R.id.inverse_selection -> {
                 val positions = listView.checkedItemPositions
@@ -346,7 +346,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                         return
                     val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
                     val values = ContentValuesCreator.createFilteredUser(user)
-                    val resolver = contentResolver
+                    val resolver = context.contentResolver
                     val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
                     val whereArgs = arrayOf(user.key.toString())
                     resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)

@@ -23,4 +23,6 @@
             android:targetPackage="org.mariotaku.twidere"/>
     </Preference>
 
+    <org.mariotaku.twidere.preference.HiddenSettingEntryPreference android:title="@string/hidden_settings"/>
+
 </PreferenceScreen>

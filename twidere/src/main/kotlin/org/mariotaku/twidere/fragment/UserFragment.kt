@@ -310,8 +310,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         followContainer.follow.compoundDrawablePadding = Math.round(followContainer.follow.textSize * 0.25f)
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
 
+        val resolver = context.contentResolver
         task {
-            val resolver = contentResolver
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
             resolver.insert(CachedRelationships.CONTENT_URI, ParcelableRelationshipValuesCreator.create(userRelationship))
         }
@@ -854,7 +854,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             }
             R.id.add_to_filter -> {
                 if (userRelationship == null) return true
-                val cr = contentResolver
+                val cr = context.contentResolver
                 if (userRelationship.filtering) {
                     val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
                     val whereArgs = arrayOf(user.key.toString())

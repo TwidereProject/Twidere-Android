@@ -25,7 +25,6 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -84,7 +83,6 @@ import java.util.*
 class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<AccountsInfo>, OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private val mSystemWindowsInsets = Rect()
-    private var mResolver: ContentResolver? = null
 
     private var accountsAdapter: AccountSelectorAdapter? = null
 
@@ -110,7 +108,6 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mResolver = contentResolver
         val inflater = getLayoutInflater(savedInstanceState)
         accountsAdapter = AccountSelectorAdapter(inflater, this)
         val layoutManager = FixedLinearLayoutManager(context)

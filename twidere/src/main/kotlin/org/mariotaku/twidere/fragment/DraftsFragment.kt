@@ -106,7 +106,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
                 if (sendDrafts(list)) {
                     val where = Expression.`in`(Column(Drafts._ID),
                             RawItemArray(listView.checkedItemIds))
-                    contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
+                    context.contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
                 }
             }
             R.id.save -> {
@@ -221,7 +221,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     private fun editDraft(draft: Draft) {
         val intent = Intent(INTENT_ACTION_EDIT_DRAFT)
         intent.putExtra(EXTRA_DRAFT, draft)
-        contentResolver.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).sql, null)
+        context.contentResolver.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).sql, null)
         startActivityForResult(intent, REQUEST_COMPOSE)
     }
 
