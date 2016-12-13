@@ -93,12 +93,20 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
     override fun onStart() {
         super.onStart()
         bus.register(this)
-        AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
+        try {
+            AccountManager.get(context).addOnAccountsUpdatedListener(accountListener, null, false)
+        } catch (e: IllegalStateException) {
+            // This really shouldn't happen.
+        }
         adapter.updateReadState()
     }
 
     override fun onStop() {
-        AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+        try {
+            AccountManager.get(context).removeOnAccountsUpdatedListener(accountListener)
+        } catch (e: IllegalStateException) {
+            // This really shouldn't happen.
+        }
         bus.unregister(this)
         super.onStop()
     }
