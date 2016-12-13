@@ -165,6 +165,7 @@ dependencies {
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.6.1'
     compile 'org.attoparser:attoparser:2.0.1.RELEASE'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku.SQLiteQB:library:0.9.8'

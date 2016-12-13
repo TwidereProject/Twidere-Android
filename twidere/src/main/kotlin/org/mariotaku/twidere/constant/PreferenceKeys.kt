@@ -7,6 +7,7 @@ import org.mariotaku.kpreferences.*
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ATTACH_PRECISE_LOCATION
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_SETTINGS_WIZARD_COMPLETED
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -35,6 +36,7 @@ val attachPreciseLocationKey = KBooleanKey(KEY_ATTACH_PRECISE_LOCATION, false)
 val noCloseAfterTweetSentKey = KBooleanKey(KEY_NO_CLOSE_AFTER_TWEET_SENT, false)
 val loadItemLimitKey = KIntKey(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)
 val defaultFeatureLastUpdated = KLongKey("default_feature_last_updated", -1)
+val drawerTutorialCompleted = KBooleanKey(KEY_SETTINGS_WIZARD_COMPLETED, false)
 
 object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun contains(preferences: SharedPreferences): Boolean {

@@ -384,10 +384,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SettingsWizardActivity"
-            android:label="@string/settings_wizard"
-            android:theme="@style/Theme.Twidere.NoActionBar"/>
-        <activity
             android:name=".activity.DataExportActivity"
             android:label="@string/export_settings"
             android:theme="@style/Theme.Twidere.NoDisplay"/>

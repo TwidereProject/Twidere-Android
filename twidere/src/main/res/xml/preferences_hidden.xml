@@ -17,12 +17,6 @@
 
     <edu.tsinghua.hotmobi.UploadLogsPreferences android:title="@string/report_usage_statistics_now"/>
 
-    <Preference android:title="@string/settings_wizard">
-        <intent
-            android:targetClass="org.mariotaku.twidere.activity.SettingsWizardActivity"
-            android:targetPackage="org.mariotaku.twidere"/>
-    </Preference>
-
     <org.mariotaku.twidere.preference.HiddenSettingEntryPreference android:title="@string/hidden_settings"/>
 
 </PreferenceScreen>
