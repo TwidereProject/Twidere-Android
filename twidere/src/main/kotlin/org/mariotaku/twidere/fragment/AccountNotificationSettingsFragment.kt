@@ -25,15 +25,6 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 
 class AccountNotificationSettingsFragment : BaseAccountPreferenceFragment() {
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val preference = findPreference(KEY_NOTIFICATION_LIGHT_COLOR)
-        val account = account
-        if (preference != null && account != null) {
-            preference.setDefaultValue(account.color)
-        }
-    }
-
     override val preferencesResource: Int
         get() = R.xml.preferences_account_notifications
 
@@ -42,5 +33,14 @@ class AccountNotificationSettingsFragment : BaseAccountPreferenceFragment() {
 
     override val switchPreferenceKey: String?
         get() = KEY_NOTIFICATION
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val preference = findPreference(KEY_NOTIFICATION_LIGHT_COLOR)
+        val account = account
+        if (preference != null && account != null) {
+            preference.setDefaultValue(account.color)
+        }
+    }
 
 }

@@ -34,10 +34,9 @@ class AccountRefreshSettingsFragment : BaseAccountPreferenceFragment() {
         get() = DEFAULT_AUTO_REFRESH
 
     override val switchPreferenceKey: String?
-        get() = null
+        get() = KEY_AUTO_REFRESH
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        val activity = activity ?: return
         if (KEY_AUTO_REFRESH == key) {
             Utils.startRefreshServiceIfNeeded(activity)
         }

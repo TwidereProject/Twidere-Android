@@ -33,6 +33,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.preference.PreferenceViewHolder;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -100,22 +101,28 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             OnSharedPreferenceChangeListener {
 
         private final AccountDetails mAccount;
+        @Nullable
+        private final String mSwitchKey;
+        private final boolean mSwitchDefault;
         private final SharedPreferences mSwitchPreference;
 
         @Inject
         MediaLoaderWrapper mImageLoader;
 
-        public AccountItemPreference(final Context context, final AccountDetails account, final String switchKey,
-                                     final boolean switchDefault) {
+        public AccountItemPreference(final Context context, final AccountDetails account,
+                                     @Nullable final String switchKey, final boolean switchDefault) {
             super(context);
             GeneralComponentHelper.build(context).inject(this);
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.key;
             mAccount = account;
+            mSwitchKey = switchKey;
+            mSwitchDefault = switchDefault;
             mSwitchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE);
             mSwitchPreference.registerOnSharedPreferenceChangeListener(this);
             setTitle(mAccount.user.name);
             setSummary(String.format("@%s", mAccount.user.screen_name));
             mImageLoader.loadProfileImage(mAccount, this);
+            setWidgetLayoutResource(R.layout.layout_preference_switch_indicator);
         }
 
         @Override
@@ -167,6 +174,13 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
             final View summaryView = holder.findViewById(android.R.id.summary);
             if (summaryView instanceof TextView) {
                 ((TextView) summaryView).setSingleLine(true);
+            }
+            final SwitchCompat switchView = (SwitchCompat) holder.findViewById(android.R.id.toggle);
+            if (mSwitchKey != null) {
+                switchView.setChecked(mSwitchPreference.getBoolean(mSwitchKey, mSwitchDefault));
+                switchView.setVisibility(View.VISIBLE);
+            } else {
+                switchView.setVisibility(View.GONE);
             }
         }
     }

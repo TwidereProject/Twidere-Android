@@ -4,13 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/auto_refresh">
 
-    <SwitchPreferenceCompat
-        android:disableDependentsState="false"
-        android:key="auto_refresh"
-        android:title="@string/auto_refresh"/>
-
     <PreferenceCategory
-        android:dependency="auto_refresh"
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
         <SwitchPreferenceCompat
@@ -32,13 +26,13 @@
     </PreferenceCategory>
 
     <!--<PreferenceCategory-->
-        <!--android:enabled="false"-->
-        <!--android:key="cat_streaming"-->
-        <!--android:title="@string/streaming">-->
+    <!--android:enabled="false"-->
+    <!--android:key="cat_streaming"-->
+    <!--android:title="@string/streaming">-->
 
-        <!--<SwitchPreference-->
-            <!--android:key="enable_streaming"-->
-            <!--android:title="@string/enable_streaming"/>-->
+    <!--<SwitchPreference-->
+    <!--android:key="enable_streaming"-->
+    <!--android:title="@string/enable_streaming"/>-->
 
     <!--</PreferenceCategory>-->
 
