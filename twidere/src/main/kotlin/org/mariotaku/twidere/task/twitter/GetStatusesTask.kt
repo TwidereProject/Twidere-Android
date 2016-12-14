@@ -45,7 +45,8 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/1/2.
  */
-abstract class GetStatusesTask(protected val context: Context) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, Any>(), Constants {
+abstract class GetStatusesTask(protected val context: Context) :
+        AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, () -> Unit>(), Constants {
     @Inject
     lateinit var preferences: KPreferences
     @Inject
@@ -68,9 +69,10 @@ abstract class GetStatusesTask(protected val context: Context) : AbstractTask<Re
 
     protected abstract val timelineType: String
 
-    public override fun afterExecute(handler: Any?, result: List<TwitterWrapper.StatusListResponse>?) {
+    public override fun afterExecute(handler: (() -> Unit)?, result: List<TwitterWrapper.StatusListResponse>?) {
         context.contentResolver.notifyChange(contentUri, null)
         bus.post(GetStatusesTaskEvent(contentUri, false, AsyncTwitterWrapper.getException(result)))
+        handler?.invoke()
     }
 
     override fun beforeExecute() {

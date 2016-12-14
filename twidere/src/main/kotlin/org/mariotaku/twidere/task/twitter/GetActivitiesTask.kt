@@ -9,6 +9,7 @@ import android.support.annotation.UiThread
 import android.util.Log
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
+import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Activity
@@ -19,7 +20,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LOAD_ITEM_LIMIT
+import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.RefreshTaskParam
@@ -37,9 +38,9 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/1/4.
  */
-abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<RefreshTaskParam, Any, Any>(), Constants {
+abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<RefreshTaskParam, Any, () -> Unit>(), Constants {
     @Inject
-    lateinit var preferences: SharedPreferencesWrapper
+    lateinit var preferences: KPreferences
     @Inject
     lateinit var bus: Bus
     @Inject
@@ -60,12 +61,11 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
         val maxSortIds = param.maxSortIds
         val sinceIds = param.sinceIds
         val cr = context.contentResolver
-        val loadItemLimit = preferences.getInt(KEY_LOAD_ITEM_LIMIT)
+        val loadItemLimit = preferences[loadItemLimitKey]
         var saveReadPosition = false
         for (i in accountIds.indices) {
             val accountKey = accountIds[i]
-            val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri,
-                    accountKey) <= 0
+            val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri, accountKey) <= 0
             val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?: continue
             val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val paging = Paging()
@@ -123,7 +123,7 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
     private fun storeActivities(cr: ContentResolver, loadItemLimit: Int, details: AccountDetails,
                                 noItemsBefore: Boolean, activities: ResponseList<Activity>,
                                 sinceId: String?, maxId: String?, notify: Boolean) {
-        val deleteBound = LongArray(2, { return@LongArray -1 })
+        val deleteBound = LongArray(2) { -1 }
         val valuesList = ArrayList<ContentValues>()
         var minIdx = -1
         var minPositionKey: Long = -1
@@ -190,15 +190,12 @@ abstract class GetActivitiesTask(protected val context: Context) : AbstractTask<
         }
     }
 
-    protected abstract fun saveReadPosition(accountKey: UserKey,
-                                            details: AccountDetails, twitter: MicroBlog)
+    protected abstract fun saveReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog)
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getActivities(twitter: MicroBlog,
-                                         details: AccountDetails,
-                                         paging: Paging): ResponseList<Activity>
+    protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
 
-    public override fun afterExecute(handler: Any?, result: Any?) {
+    public override fun afterExecute(handler: (() -> Unit)?, result: Any?) {
         context.contentResolver.notifyChange(contentUri, null)
         bus.post(GetActivitiesTaskEvent(contentUri, false, null))
     }

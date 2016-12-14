@@ -36,6 +36,7 @@ import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.BackgroundOperationService
+import org.mariotaku.twidere.service.JobRefreshService
 import org.mariotaku.twidere.service.RefreshService
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask
@@ -109,6 +110,8 @@ interface GeneralComponent {
     fun inject(activity: MediaViewerActivity)
 
     fun inject(task: GetStatusesTask)
+
+    fun inject(service: JobRefreshService)
 
     fun inject(task: GetActivitiesTask)
 

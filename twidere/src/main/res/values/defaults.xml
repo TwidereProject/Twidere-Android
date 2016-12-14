@@ -6,6 +6,5 @@
     <string name="default_profile_image_style">round</string>
     <integer name="default_tab_columns">1</integer>
     <integer name="min_database_item_limit">50</integer>
-    <bool name="is_debug">false</bool>
 
 </resources>

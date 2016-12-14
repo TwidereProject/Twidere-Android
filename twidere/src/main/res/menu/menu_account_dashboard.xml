@@ -17,6 +17,12 @@
             android:title="@string/direct_messages"/>
         <item
             android:id="@id/favorites"
+            android:enabled="false"
+            android:icon="@drawable/ic_action_star"
+            android:title="@string/favorites"
+            android:visible="false"/>
+        <item
+            android:id="@id/likes"
             android:icon="@drawable/ic_action_heart"
             android:title="@string/likes"/>
         <item

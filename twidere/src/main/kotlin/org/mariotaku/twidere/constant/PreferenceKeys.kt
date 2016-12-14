@@ -4,10 +4,9 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.text.TextUtils
 import org.mariotaku.kpreferences.*
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ATTACH_PRECISE_LOCATION
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_SETTINGS_WIZARD_COMPLETED
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -37,6 +36,9 @@ val noCloseAfterTweetSentKey = KBooleanKey(KEY_NO_CLOSE_AFTER_TWEET_SENT, false)
 val loadItemLimitKey = KIntKey(KEY_LOAD_ITEM_LIMIT, DEFAULT_LOAD_ITEM_LIMIT)
 val defaultFeatureLastUpdated = KLongKey("default_feature_last_updated", -1)
 val drawerTutorialCompleted = KBooleanKey(KEY_SETTINGS_WIZARD_COMPLETED, false)
+val stopAutoRefreshWhenBatteryLowKey = KBooleanKey(KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW, true)
+val apiLastChangeKey = KLongKey(KEY_API_LAST_CHANGE, -1)
+val bugReportsKey = KBooleanKey(KEY_BUG_REPORTS, BuildConfig.DEBUG)
 
 object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun contains(preferences: SharedPreferences): Boolean {

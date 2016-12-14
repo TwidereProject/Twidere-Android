@@ -396,15 +396,11 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
         val f = adapter.instantiateItem(viewPager, saveToStoragePosition) as? CacheDownloadMediaViewerFragment ?: return
-        val result = f.downloadResult ?: return
-        val cacheUri = result.cacheUri
-        val hasMedia = cacheUri != null
-        if (!hasMedia) return
-        val task: SaveFileTask
-        when (f) {
-            is ImagePageFragment -> task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
-            is VideoPageFragment -> task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO)
-            is GifPageFragment -> task = SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
+        val cacheUri = f.downloadResult?.cacheUri ?: return
+        val task: SaveFileTask = when (f) {
+            is ImagePageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
+            is VideoPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO)
+            is GifPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
             else -> throw UnsupportedOperationException()
         }
         AsyncTaskUtils.executeTask(task)

@@ -41,9 +41,7 @@ import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.view.SupportMenuInflater
@@ -55,7 +53,10 @@ import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.convert
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
@@ -79,9 +80,9 @@ import java.util.*
 
 class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<AccountsInfo>, OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback, NavigationView.OnNavigationItemSelectedListener {
 
-    private val mSystemWindowsInsets = Rect()
+    private val systemWindowsInsets = Rect()
 
-    private var accountsAdapter: AccountSelectorAdapter? = null
+    private lateinit var accountsAdapter: AccountSelectorAdapter
 
     private val hasNextAccountIndicator by lazy { accountsHeader.hasNextAccountIndicator }
     private val hasPrevAccountIndicator by lazy { accountsHeader.hasPrevAccountIndicator }
@@ -113,7 +114,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         accountsSelector.adapter = accountsAdapter
         accountsSelector.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                val adapter = accountsAdapter ?: return
+                val adapter = accountsAdapter
                 val pagePosition = position + positionOffset
                 val pageCount = adapter.count
                 val visiblePages = 1 / adapter.getPageWidth(position)
@@ -145,7 +146,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             } else {
                 when (item.itemId) {
                     R.id.compose -> {
-                        val account = accountsAdapter!!.selectedAccount ?: return@OnMenuItemClickListener true
+                        val account = accountsAdapter.selectedAccount ?: return@OnMenuItemClickListener true
                         val composeIntent = Intent(INTENT_ACTION_COMPOSE)
                         composeIntent.setClass(activity, ComposeActivity::class.java)
                         composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
@@ -225,7 +226,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     override fun onClick(v: View) {
         when (v.id) {
             R.id.profileContainer -> {
-                val account = accountsAdapter!!.selectedAccount ?: return
+                val account = accountsAdapter.selectedAccount ?: return
                 val activity = activity
                 if (account.user != null) {
                     IntentUtils.openUserProfile(activity, account.user!!, null,
@@ -262,18 +263,18 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             profileContainer.visibility = View.INVISIBLE
         }
         useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
-        accountsAdapter!!.accounts = accounts
+        accountsAdapter.accounts = accounts
         val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
                 ?: accounts.firstOrNull { it.activated }?.key
         val defaultAccount = accounts.firstOrNull { it.key.maybeEquals(defaultKey) }
-        accountsAdapter!!.selectedAccount = defaultAccount
+        accountsAdapter.selectedAccount = defaultAccount
 
         if (accountActionProvider != null) {
             accountActionProvider!!.isExclusive = false
             accountActionProvider!!.accounts = accounts
         }
         updateAccountActions()
-        val currentAccount = accountsAdapter!!.selectedAccount
+        val currentAccount = accountsAdapter.selectedAccount
         if (currentAccount != null) {
             displayAccountBanner(currentAccount)
             displayCurrentAccount(null)
@@ -297,7 +298,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     override fun fitSystemWindows(insets: Rect) {
-        mSystemWindowsInsets.set(insets)
+        systemWindowsInsets.set(insets)
         updateSystemWindowsInsets()
     }
 
@@ -316,11 +317,10 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     internal fun updateAccountActions() {
         val activity = activity as HomeActivity
         val tabs = activity.tabs
-        val account = accountsAdapter!!.selectedAccount ?: return
+        val account = accountsAdapter.selectedAccount ?: return
         var hasDmTab = false
         var hasInteractionsTab = false
         for (tab in tabs) {
-            if (tab.type == null) continue
             when (tab.type) {
                 CustomTabType.DIRECT_MESSAGES -> {
                     if (!hasDmTab) {
@@ -338,17 +338,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         menu.setItemAvailability(R.id.interactions, !hasInteractionsTab)
         menu.setItemAvailability(R.id.messages, !hasDmTab)
 
-        if (useStarsForLikes) {
-            menu.setMenuItemTitle(R.id.favorites, R.string.favorites)
-            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_star)
-            DrawableCompat.setTintList(icon, navigationView.itemIconTintList)
-            menu.setMenuItemIcon(R.id.favorites, icon)
-        } else {
-            menu.setMenuItemTitle(R.id.favorites, R.string.likes)
-            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_heart)
-            DrawableCompat.setTintList(icon, navigationView.itemIconTintList)
-            menu.setMenuItemIcon(R.id.favorites, icon)
-        }
+        menu.setItemAvailability(R.id.favorites, useStarsForLikes)
+        menu.setItemAvailability(R.id.likes, !useStarsForLikes)
         var hasLists = false
         var hasGroups = false
         var hasPublicTimeline = false
@@ -434,7 +425,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 val profileDrawable = profileImageView.drawable
                 clickedDrawable = clickedImageView.drawable
                 clickedColors = clickedImageView.borderColors
-                val oldSelectedAccount = accountsAdapter!!.selectedAccount ?: return
+                val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 mediaLoader.displayDashboardProfileImage(clickedImageView,
                         oldSelectedAccount, profileDrawable)
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
@@ -460,7 +451,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 preferences.edit()
                         .putString(KEY_DEFAULT_ACCOUNT_KEY, account.key.toString())
                         .apply()
-                accountsAdapter!!.selectedAccount = account
+                accountsAdapter.selectedAccount = account
                 updateAccountActions()
                 displayCurrentAccount(clickedDrawable)
                 snapshotView.visibility = View.INVISIBLE
@@ -493,7 +484,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {
-        val account = accountsAdapter!!.selectedAccount ?: return
+        val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = String.format("@%s", account.user.screen_name)
         mediaLoader.displayDashboardProfileImage(accountProfileImageView, account,
@@ -506,7 +497,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val account = accountsAdapter!!.selectedAccount ?: return false
+        val account = accountsAdapter.selectedAccount ?: return false
         when (item.itemId) {
             R.id.search -> {
                 val intent = Intent(activity, QuickSearchBarActivity::class.java)
@@ -520,9 +511,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 composeIntent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
                 startActivity(composeIntent)
             }
-            R.id.favorites -> {
-                IntentUtils.openUserFavorites(activity, account.key,
-                        account.key, account.user.screen_name)
+            R.id.likes, R.id.favorites -> {
+                IntentUtils.openUserFavorites(activity, account.key, account.key,
+                        account.user.screen_name)
             }
             R.id.lists -> {
                 IntentUtils.openUserLists(activity, account.key,

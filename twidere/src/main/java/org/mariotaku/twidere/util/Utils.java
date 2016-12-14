@@ -1187,6 +1187,7 @@ public final class Utils implements Constants {
     public static void startRefreshServiceIfNeeded(@NonNull final Context context) {
         final Context appContext = context.getApplicationContext();
         if (appContext == null) return;
+        if (!appContext.getResources().getBoolean(R.bool.use_legacy_refresh_service)) return;
         final Intent refreshServiceIntent = new Intent(appContext, RefreshService.class);
         AsyncTask.execute(new Runnable() {
             @Override

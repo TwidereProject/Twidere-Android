@@ -461,7 +461,14 @@
 
         <service
             android:name=".service.RefreshService"
+            android:enabled="@bool/use_legacy_refresh_service"
             android:label="@string/label_refresh_service"/>
+        <service
+            android:name=".service.JobRefreshService"
+            android:enabled="@bool/use_job_refresh_service"
+            android:exported="true"
+            android:label="@string/label_refresh_service"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".service.StreamingService"
             android:label="@string/label_streaming_service"/>

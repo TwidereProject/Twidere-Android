@@ -47,9 +47,7 @@ import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate;
-import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.Relationship;
-import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.SavedSearch;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
@@ -106,10 +104,11 @@ import org.mariotaku.twidere.task.DestroyStatusTask;
 import org.mariotaku.twidere.task.DestroyUserBlockTask;
 import org.mariotaku.twidere.task.DestroyUserMuteTask;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
-import org.mariotaku.twidere.task.GetDirectMessagesTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
 import org.mariotaku.twidere.task.GetLocalTrendsTask;
+import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask;
 import org.mariotaku.twidere.task.GetSavedSearchesTask;
+import org.mariotaku.twidere.task.GetSentDirectMessagesTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
@@ -1321,61 +1320,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 Utils.showErrorMessage(context, R.string.action_deleting, result.getException(), true);
             }
             super.onPostExecute(result);
-        }
-
-    }
-
-    static class GetReceivedDirectMessagesTask extends GetDirectMessagesTask {
-
-        public GetReceivedDirectMessagesTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public ResponseList<DirectMessage> getDirectMessages(final MicroBlog twitter, final Paging paging)
-                throws MicroBlogException {
-            return twitter.getDirectMessages(paging);
-        }
-
-        @Override
-        protected Uri getDatabaseUri() {
-            return Inbox.CONTENT_URI;
-        }
-
-
-        @Override
-        protected boolean isOutgoing() {
-            return false;
-        }
-
-        @Override
-        public void beforeExecute(RefreshTaskParam params) {
-            final Intent intent = new Intent(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING);
-            context.sendBroadcast(intent);
-            super.beforeExecute(params);
-        }
-    }
-
-    static class GetSentDirectMessagesTask extends GetDirectMessagesTask {
-
-        public GetSentDirectMessagesTask(Context context) {
-            super(context);
-        }
-
-        @Override
-        public ResponseList<DirectMessage> getDirectMessages(final MicroBlog twitter, final Paging paging)
-                throws MicroBlogException {
-            return twitter.getSentDirectMessages(paging);
-        }
-
-        @Override
-        protected boolean isOutgoing() {
-            return true;
-        }
-
-        @Override
-        protected Uri getDatabaseUri() {
-            return Outbox.CONTENT_URI;
         }
 
     }

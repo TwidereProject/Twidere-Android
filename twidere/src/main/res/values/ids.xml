@@ -57,6 +57,7 @@
     <item name="delete_from_list" type="id"/>
     <item name="statuses" type="id"/>
     <item name="favorites" type="id"/>
+    <item name="likes" type="id"/>
     <item name="lists" type="id"/>
     <item name="groups" type="id"/>
     <item name="public_timeline" type="id"/>
