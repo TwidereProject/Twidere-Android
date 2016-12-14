@@ -31,7 +31,12 @@ import java.io.File
 /**
  * Created by mariotaku on 15/12/28.
  */
-class SaveMediaToGalleryTask(activity: Activity, source: Uri, destination: File, type: String) : ProgressSaveFileTask(activity, source, destination, CacheProvider.CacheFileTypeCallback(activity, type)) {
+class SaveMediaToGalleryTask(
+        activity: Activity,
+        source: Uri,
+        destination: File,
+        type: String
+) : ProgressSaveFileTask(activity, source, destination, CacheProvider.CacheFileTypeCallback(activity, type)) {
 
     override fun onFileSaved(savedFile: File, mimeType: String?) {
         val context = context ?: return

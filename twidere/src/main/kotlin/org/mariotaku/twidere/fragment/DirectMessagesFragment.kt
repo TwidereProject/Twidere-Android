@@ -223,9 +223,8 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
             override fun doInBackground(vararg params: Any): RefreshTaskParam? {
                 val context = context ?: return null
                 val accountIds = accountKeys
-                val ids = DataStoreUtils.getNewestMessageIds(context,
-                        Inbox.CONTENT_URI, accountIds)
-                return BaseRefreshTaskParam(accountIds, ids, null)
+                val ids = DataStoreUtils.getNewestMessageIds(context, Inbox.CONTENT_URI, accountIds)
+                return BaseRefreshTaskParam(accountIds, maxIds = null, sinceIds = ids)
             }
 
             override fun onPostExecute(result: RefreshTaskParam?) {

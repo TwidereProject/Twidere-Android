@@ -35,7 +35,7 @@ public class ParcelableDirectMessageUtils {
         final Pair<String, SpanItem[]> pair = InternalTwitterContentUtils.formatDirectMessageText(message);
         result.text_unescaped = pair.first;
         result.spans = pair.second;
-        result.text_plain = message.getText();
+        result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(message.getText());
         result.sender_name = sender.getName();
         result.recipient_name = recipient.getName();
         result.sender_screen_name = sender.getScreenName();
