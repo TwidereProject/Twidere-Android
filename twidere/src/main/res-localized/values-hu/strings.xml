@@ -116,6 +116,7 @@
   <string name="likes">Kedvelés</string>
   <string name="name">Név</string>
   <string name="refresh">Frissít</string>
+  <string name="settings_refresh">Frissítés</string>
   <string name="retry">Újrapróbál</string>
   <string name="more">Tovább</string>
   <string name="quote_format">Idézet formátuma</string>
@@ -159,6 +160,7 @@
   <string name="ringtone">Csengőhang</string>
   <string name="vibration">Rezgés</string>
   <string name="light">Jelzőfény</string>
+  <string name="settings_notifications">Értesítések</string>
   <string name="notifications">Értesítések</string>
   <string name="refresh_on_start">Frissítés indításkor</string>
   <string name="refresh_on_start_summary">Idővonal és említések frissítése induláskor.</string>
@@ -242,6 +244,8 @@
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> retweetelte a tweeted.</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetelte a retweeted.</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> retweetelték a retweeted.</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetelte a tweetet amiben megjelöltek.</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweetelte a tweetet amiben megjelöltek.</string>
   <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetelte a tweetet miben említenek.</string>
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> retweetelte a tweetet miben említenek.</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> kedvence a tweet miben említenek.</string>
@@ -251,6 +255,9 @@
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> hozzáadott egy listájához.</string>
   <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> hozzáadott téged a következő listához: "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> hozzáadtak téged listáikhoz.</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> megjelölt téged.</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> és <xliff:g id="other">%2$s</xliff:g> megjelöltek.</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> kedvelt egy tweetet, amiben megjelöltek.</string>
   <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> kedvencek közé rakta <xliff:g id="target">%2$s</xliff:g> tweetjét.</string>
   <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> kedvencek közé rakta <xliff:g id="target">%2$s</xliff:g> és <xliff:g id="other">%3$s</xliff:g> tweetjét.</string>
   <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> kedveli <xliff:g id="target">%2$s</xliff:g> tweetjét.</string>

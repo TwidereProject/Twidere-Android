@@ -57,6 +57,7 @@
   <string name="statuses">Tweets</string>
   <string name="followers">Followers</string>
   <string name="users_favorited_this">Users favourited this</string>
+  <string name="customize">Customise</string>
   <string name="set_color">Set colour</string>
   <string name="pick_color">Pick colour</string>
   <string name="location">Location</string>
@@ -71,7 +72,21 @@
   <string name="quote_format">Quote format</string>
   <string name="quote_format_summary">\"[TEXT]\" = Tweet text\n\"[NAME]\" = Twitter username</string>
   <string name="notification_light_color">Light Colour</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favourited your tweet.</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favourited your tweet.</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favourited your retweet.</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favourited your retweet.</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favourited a tweet you were mentioned in.</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favourited a tweet you were mentioned in.</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favourited a tweet you were tagged in.</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favourited a tweet you were tagged in.</string>
+  <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favourited <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> favourited <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+  <string name="action_favoriting">favouriting</string>
+  <string name="action_unfavoriting">unfavouriting</string>
   <string name="theme_color">Theme colour</string>
+  <string name="status_favorited">Tweet favourited.</string>
+  <string name="status_unfavorited">Tweet favourited.</string>
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <string name="center">Centre</string>
@@ -81,6 +96,7 @@
   <string name="profile_background_color">Background colour</string>
   <string name="profile_link_color_main_color">Link colour (main colour)</string>
   <!-- 'Tweet' here is a verb -->
+  <string name="i_want_my_stars_back_summary">Use favourite (★) instead of like (♥︎)</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->

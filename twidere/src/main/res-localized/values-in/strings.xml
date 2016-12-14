@@ -116,6 +116,7 @@
   <string name="likes">Suka</string>
   <string name="name">Nama</string>
   <string name="refresh">Segarkan</string>
+  <string name="settings_refresh">Perbaharui</string>
   <string name="retry">Coba lagi</string>
   <string name="more">Lebih</string>
   <string name="quote_format">Format kutipan</string>
@@ -159,6 +160,7 @@
   <string name="ringtone">Nada dering</string>
   <string name="vibration">Getaran</string>
   <string name="light">Terang</string>
+  <string name="settings_notifications">Notifikasi</string>
   <string name="notifications">Notifikasi</string>
   <string name="refresh_on_start">Muat ulang di awal</string>
   <string name="refresh_on_start_summary">Muat ulang timeline dan mention saat memulai.</string>
@@ -300,6 +302,8 @@
   <string name="action_refreshing_direct_messages">menyegarkan pesan langsung</string>
   <string name="action_favoriting">memfavoritkan</string>
   <string name="action_unfavoriting">batalkan favorit</string>
+  <string name="action_liking">Suka</string>
+  <string name="action_cancelling_like">Batalkan tanda suka</string>
   <string name="action_deleting">menghapus</string>
   <string name="action_updating_profile">memperbarui profil</string>
   <string name="action_updating_profile_image">Memperbarui gambar profil</string>
@@ -376,6 +380,8 @@
   <string name="status_deleted">Twit dihapus.</string>
   <string name="status_favorited">Twit difavoritkan.</string>
   <string name="status_unfavorited">Twit batal difavoritkan.</string>
+  <string name="status_liked">Cuitan disukai.</string>
+  <string name="status_like_removed">Hapus tanda suka.</string>
   <string name="status_retweeted">Di-retweet.</string>
   <string name="retweet_cancelled">Retweet dibatalkan.</string>
   <string name="direct_message_sent">Direct meesage terkirim.</string>
@@ -453,6 +459,7 @@
   <string name="source_filter_name">Sumber: <xliff:g id="name">%s</xliff:g></string>
   <string name="block_user">Blok <xliff:g id="name">%s</xliff:g></string>
   <string name="block_user_confirm_message">Blokir <xliff:g id="name">%s</xliff:g>? Pengguna ini tidak akan bisa mengikuti, mention, atau mengirim pesan pribadi padamu.</string>
+  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"></xliff:g> pada penyaringan?</string>
   <string name="unfollow_user">Batal mengikuti <xliff:g id="name">%s</xliff:g></string>
   <string name="unfollow_user_confirm_message">Batal mengikuti <xliff:g id="name">%s</xliff:g>? Kamu tidak akan bisa melihat tweet dari pengguna ini.</string>
   <string name="delete_user_list">Hapus daftar <xliff:g id="name">%s</xliff:g></string>
@@ -794,6 +801,17 @@
   <string name="no_extension_installed">Tidak ada ekstensi terpasang</string>
   <string name="pinned_status">Tweet Disematkan</string>
   <string name="add_or_remove_from_list">Tambah atau hapus dari daftar</string>
+  <string name="title_extra_features">Fitur lain</string>
+  <string name="filter_everywhere">Saring segalanya</string>
+  <string name="filter_everywhere_description">Hal berikut akan disaring pada Twidere: ·Cuitan pengguna. ·Cuitan yang menyebut akun pengguna ini. Cuitan ulang/Kutipan dari pengguna ini</string>
+  <string name="message_toast_added_to_filter">Tambahkan ke penyaringan.</string>
   <!-- Verb. Used for skip some settings -->
+  <string name="action_skip">Lewati</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Nanti</string>
+  <string name="message_permission_request_compose_location">Twidere meminta ijin untuk menambahkan lokasi pada cuitan.</string>
+  <string name="message_permission_request_save_media">Twidere meminta ijin untuk menyimpan media pada ruang penyimpanan.</string>
+  <string name="message_permission_request_share_media">Twidere meminta ijin untuk membagikan media pada beberapa aplikasi.</string>
+  <string name="hint_accounts_dashboard_title">Panel Akun</string>
+  <string name="hint_accounts_dashboard_message">Geser dari ujung layar untuk membuka panel akun.</string>
 </resources>
