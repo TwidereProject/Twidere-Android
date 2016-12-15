@@ -476,32 +476,31 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
+        nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
-
 
         mediaPreviewAdapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
         itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(mediaPreviewAdapter))
 
         setFinishOnTouchOutside(false)
-        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this))
+        val am = AccountManager.get(this)
+        val accounts = AccountUtils.getAccounts(am)
         if (accounts.isEmpty()) {
-            val intent = Intent(INTENT_ACTION_TWITTER_LOGIN)
-            intent.setClass(this, SignInActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, R.string.no_account, Toast.LENGTH_SHORT).show()
             shouldSkipDraft = true
             finish()
             return
         }
-        val defaultAccountIds = accounts.map { it.key }.toTypedArray()
+        val accountDetails = AccountUtils.getAllAccountDetails(am, accounts)
+        val defaultAccountIds = accountDetails.map(AccountDetails::key).toTypedArray()
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
         accountSelectorContainer.setOnClickListener(this)
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
         locationSwitch.max = LOCATION_OPTIONS.size
-        val attachLocation = preferences.getBoolean(KEY_ATTACH_LOCATION)
-        val attachPreciseLocation = preferences.getBoolean(KEY_ATTACH_PRECISE_LOCATION)
+        val attachLocation = preferences[attachLocationKey]
+        val attachPreciseLocation = preferences[attachPreciseLocationKey]
         if (attachLocation) {
             if (attachPreciseLocation) {
                 locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_COORDINATE)
@@ -552,7 +551,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         accountSelector.itemAnimator = DefaultItemAnimator()
         accountsAdapter = AccountIconsAdapter(this).apply {
-            setAccounts(accounts)
+            setAccounts(accountDetails)
         }
         accountSelector.adapter = accountsAdapter
 

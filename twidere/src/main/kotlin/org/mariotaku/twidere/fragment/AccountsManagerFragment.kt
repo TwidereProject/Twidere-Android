@@ -21,8 +21,9 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE
+import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
-import org.mariotaku.twidere.activity.SignInActivity
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
@@ -105,9 +106,8 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add_account -> {
-                val intent = Intent(INTENT_ACTION_TWITTER_LOGIN)
-                intent.setClass(activity, SignInActivity::class.java)
-                startActivity(intent)
+                AccountManager.get(context).addAccount(ACCOUNT_TYPE, ACCOUNT_AUTH_TOKEN_TYPE,
+                        null, null, activity, null, null)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -117,8 +117,8 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
         inflater.inflate(R.menu.menu_accounts_manager, menu)
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val menuInfo = item!!.menuInfo as? AdapterContextMenuInfo ?: return false
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val menuInfo = item.menuInfo as? AdapterContextMenuInfo ?: return false
         val details = adapter.getItem(menuInfo.position) ?: return false
         when (item.itemId) {
             R.id.set_color -> {
