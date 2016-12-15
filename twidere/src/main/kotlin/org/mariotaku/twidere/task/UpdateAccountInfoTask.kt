@@ -19,7 +19,9 @@ import java.io.IOException
 /**
  * Created by mariotaku on 16/3/8.
  */
-class UpdateAccountInfoTask(private val context: Context) : AbstractTask<Pair<AccountDetails, ParcelableUser>, Any, Unit>() {
+class UpdateAccountInfoTask(
+        private val context: Context
+) : AbstractTask<Pair<AccountDetails, ParcelableUser>, Unit, Unit?>() {
 
     override fun doLongOperation(params: Pair<AccountDetails, ParcelableUser>) {
         val resolver = context.contentResolver

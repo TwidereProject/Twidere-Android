@@ -17,9 +17,11 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
 /**
  * Created by mariotaku on 16/2/13.
  */
-class GetSavedSearchesTask(private val context: Context) : AbstractTask<Array<UserKey>, SingleResponse<Any>, Any>() {
+class GetSavedSearchesTask(
+        private val context: Context
+) : AbstractTask<Array<UserKey>, SingleResponse<Unit>, Any?>() {
 
-    public override fun doLongOperation(params: Array<UserKey>): SingleResponse<Any> {
+    public override fun doLongOperation(params: Array<UserKey>): SingleResponse<Unit> {
         val cr = context.contentResolver
         for (accountKey in params) {
             val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
@@ -36,8 +38,7 @@ class GetSavedSearchesTask(private val context: Context) : AbstractTask<Array<Us
                     Log.w(LOGTAG, e)
                 }
             }
-
         }
-        return SingleResponse.getInstance()
+        return SingleResponse.getInstance(Unit)
     }
 }

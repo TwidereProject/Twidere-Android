@@ -28,7 +28,7 @@ import javax.inject.Inject
 abstract class AbsFriendshipOperationTask(
         protected val context: Context,
         @FriendshipTaskEvent.Action protected val action: Int
-) : AbstractTask<AbsFriendshipOperationTask.Arguments, SingleResponse<ParcelableUser>, Any>() {
+) : AbstractTask<AbsFriendshipOperationTask.Arguments, SingleResponse<ParcelableUser>, Any?>() {
 
     @Inject
     lateinit var bus: Bus

@@ -6,7 +6,6 @@ import android.util.Log
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.model.ParcelableUser
@@ -29,7 +28,7 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
         private val accountKey: UserKey,
         private val imageUri: Uri,
         private val deleteImage: Boolean
-) : AbstractTask<Any, SingleResponse<ParcelableUser>, ResultHandler>(), Constants {
+) : AbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>() {
 
     @Inject
     lateinit var mBus: Bus
@@ -50,7 +49,7 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
         }
     }
 
-    override fun doLongOperation(params: Any): SingleResponse<ParcelableUser> {
+    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
         try {
             val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)!!
             TwitterWrapper.updateProfileBannerImage(context, twitter, imageUri, deleteImage)

@@ -14,7 +14,6 @@ import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.model.RefreshTaskParam
@@ -29,8 +28,9 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/2/14.
  */
-abstract class GetDirectMessagesTask(protected val context: Context) : AbstractTask<RefreshTaskParam,
-        List<TwitterWrapper.MessageListResponse>, () -> Unit>(), Constants {
+abstract class GetDirectMessagesTask(
+        protected val context: Context
+) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.MessageListResponse>, () -> Unit>() {
     @Inject
     protected lateinit var errorInfoStore: ErrorInfoStore
     @Inject

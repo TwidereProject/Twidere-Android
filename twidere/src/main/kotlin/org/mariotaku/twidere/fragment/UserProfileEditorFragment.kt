@@ -426,9 +426,11 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
 
     }
 
-    internal inner class RemoveProfileBannerTaskInternal(private val accountKey: UserKey) : AbstractTask<Any, SingleResponse<Boolean>, UserProfileEditorFragment>() {
+    internal inner class RemoveProfileBannerTaskInternal(
+            private val accountKey: UserKey
+    ) : AbstractTask<Any?, SingleResponse<Boolean>, UserProfileEditorFragment>() {
 
-        override fun doLongOperation(params: Any): SingleResponse<Boolean> {
+        override fun doLongOperation(params: Any?): SingleResponse<Boolean> {
             return TwitterWrapper.deleteProfileBannerImage(activity, accountKey)
         }
 

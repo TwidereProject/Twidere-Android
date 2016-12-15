@@ -1607,7 +1607,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    internal class DisplayPlaceNameTask(private val context: ComposeActivity) : AbstractTask<ParcelableLocation, List<Address>, TextView>() {
+    internal class DisplayPlaceNameTask(
+            private val context: ComposeActivity
+    ) : AbstractTask<ParcelableLocation, List<Address>, TextView>() {
 
         override fun doLongOperation(location: ParcelableLocation): List<Address>? {
             val gcd = Geocoder(context, Locale.getDefault())

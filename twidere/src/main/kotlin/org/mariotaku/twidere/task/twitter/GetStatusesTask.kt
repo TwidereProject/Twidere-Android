@@ -21,7 +21,6 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.constant.loadItemLimitKey
@@ -45,8 +44,9 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/1/2.
  */
-abstract class GetStatusesTask(protected val context: Context) :
-        AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, () -> Unit>(), Constants {
+abstract class GetStatusesTask(
+        protected val context: Context
+) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, () -> Unit>() {
     @Inject
     lateinit var preferences: KPreferences
     @Inject

@@ -285,7 +285,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                 }
 
                 @UiThread
-                override fun afterExecute(handler: Context?, result: UpdateStatusTask.UpdateStatusResult) {
+                override fun afterExecute(result: UpdateStatusTask.UpdateStatusResult) {
                     var failed = false
                     val exception = result.exception
                     val exceptions = result.exceptions

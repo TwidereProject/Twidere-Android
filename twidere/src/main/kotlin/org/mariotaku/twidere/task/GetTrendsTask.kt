@@ -22,7 +22,10 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 16/2/24.
  */
-abstract class GetTrendsTask(private val context: Context, private val accountId: UserKey) : AbstractTask<Any, Any, Any>() {
+abstract class GetTrendsTask(
+        private val context: Context,
+        private val accountId: UserKey
+) : AbstractTask<Any?, Unit, Any?>() {
 
     @Inject
     lateinit var bus: Bus
@@ -34,19 +37,19 @@ abstract class GetTrendsTask(private val context: Context, private val accountId
     @Throws(MicroBlogException::class)
     abstract fun getTrends(twitter: MicroBlog): List<Trends>
 
-    public override fun doLongOperation(param: Any): Any? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return null
+    public override fun doLongOperation(param: Any?) {
+        val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return
         try {
             val trends = getTrends(twitter)
             storeTrends(context.contentResolver, contentUri, trends)
-            return null
+            return
         } catch (e: MicroBlogException) {
-            return null
+            return
         }
 
     }
 
-    override fun afterExecute(handler: Any?, result: Any?) {
+    override fun afterExecute(handler: Any?, result: Unit) {
         bus.post(TrendsRefreshedEvent())
     }
 
