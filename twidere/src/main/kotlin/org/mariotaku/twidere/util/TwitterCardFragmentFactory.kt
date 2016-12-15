@@ -27,6 +27,7 @@ import org.mariotaku.twidere.fragment.card.CardPollFragment
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
+import java.util.*
 
 /**
  * Created by mariotaku on 15/1/1.
@@ -42,7 +43,7 @@ abstract class TwitterCardFragmentFactory {
     companion object {
 
         val instance: TwitterCardFragmentFactory
-            get() = TwitterCardFragmentFactoryImpl()
+            get() = ServiceLoader.load(TwitterCardFragmentFactory::class.java).first()
 
         fun createGenericPlayerFragment(card: ParcelableCardEntity?, args: Bundle?): Fragment? {
             if (card == null) return null

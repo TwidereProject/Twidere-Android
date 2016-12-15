@@ -41,49 +41,52 @@ public class AccountUtils {
         return am.getAccountsByType(ACCOUNT_TYPE);
     }
 
-    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull Account[] accounts) {
+    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull Account[] accounts, boolean getCredentials) {
         AccountDetails[] details = new AccountDetails[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
-            details[i] = getAccountDetails(am, accounts[i]);
+            details[i] = getAccountDetails(am, accounts[i], getCredentials);
         }
         Arrays.sort(details);
         return details;
     }
 
-    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull UserKey[] accountKeys) {
+    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, @NonNull UserKey[] accountKeys, boolean getCredentials) {
         AccountDetails[] details = new AccountDetails[accountKeys.length];
         for (int i = 0; i < accountKeys.length; i++) {
-            details[i] = getAccountDetails(am, accountKeys[i]);
+            details[i] = getAccountDetails(am, accountKeys[i], getCredentials);
         }
         Arrays.sort(details);
         return details;
     }
 
-    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am) {
-        return getAllAccountDetails(am, getAccounts(am));
+    public static AccountDetails[] getAllAccountDetails(@NonNull AccountManager am, boolean getCredentials) {
+        return getAllAccountDetails(am, getAccounts(am), getCredentials);
     }
 
     @Nullable
-    public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull UserKey accountKey) {
+    public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull UserKey accountKey, boolean getCredentials) {
         final Account account = findByAccountKey(am, accountKey);
         if (account == null) return null;
-        return getAccountDetails(am, account);
+        return getAccountDetails(am, account, getCredentials);
     }
 
-    public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull Account account) {
+    public static AccountDetails getAccountDetails(@NonNull AccountManager am, @NonNull Account account, boolean getCredentials) {
         AccountDetails details = new AccountDetails();
         details.key = AccountExtensionsKt.getAccountKey(account, am);
         details.account = account;
         details.color = AccountExtensionsKt.getColor(account, am);
         details.position = AccountExtensionsKt.getPosition(account, am);
-        details.credentials = AccountExtensionsKt.getCredentials(account, am);
-        details.user = AccountExtensionsKt.getAccountUser(account, am);
         details.activated = AccountExtensionsKt.isActivated(account, am);
         details.type = AccountExtensionsKt.getAccountType(account, am);
         details.credentials_type = AccountExtensionsKt.getCredentialsType(account, am);
+        details.user = AccountExtensionsKt.getAccountUser(account, am);
+        details.user.color = details.color;
+
         details.extras = AccountExtensionsKt.getAccountExtras(account, am);
 
-        details.user.color = details.color;
+        if (getCredentials) {
+            details.credentials = AccountExtensionsKt.getCredentials(account, am);
+        }
         return details;
     }
 
@@ -97,7 +100,7 @@ public class AccountUtils {
     }
 
     public static boolean hasOfficialKeyAccount(Context context) {
-        for (AccountDetails details : getAllAccountDetails(AccountManager.get(context))) {
+        for (AccountDetails details : getAllAccountDetails(AccountManager.get(context), true)) {
             if (AccountDetailsExtensionsKt.isOfficial(details, context)) {
                 return true;
             }

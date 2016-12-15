@@ -58,12 +58,12 @@ import org.mariotaku.twidere.util.Utils.matchLinkId
 
 class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IControlBarActivity, SupportFragmentCallback {
 
-    private val mControlBarShowHideHelper = ControlBarShowHideHelper(this)
-    private var mMultiSelectHandler: MultiSelectEventHandler? = null
-    private var mFinishOnly: Boolean = false
-    private var mActionBarHeight: Int = 0
-    private var mSubtitle: CharSequence? = null
-    private var mHideOffsetNotSupported: Boolean = false
+    private lateinit var multiSelectHandler: MultiSelectEventHandler
+    private lateinit var controlBarShowHideHelper: ControlBarShowHideHelper
+    private var finishOnly: Boolean = false
+    private var actionBarHeight: Int = 0
+    private var subtitle: CharSequence? = null
+    private var hideOffsetNotSupported: Boolean = false
 
 
     override val currentVisibleFragment: Fragment?
@@ -90,7 +90,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                if (mFinishOnly) {
+                if (finishOnly) {
                     finish()
                 } else {
                     NavUtils.navigateUpFromSameTask(this)
@@ -142,17 +142,20 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        mMultiSelectHandler = MultiSelectEventHandler(this)
-        mMultiSelectHandler!!.dispatchOnCreate()
-        val intent = intent
+        super.onCreate(savedInstanceState)
+        multiSelectHandler = MultiSelectEventHandler(this)
+        controlBarShowHideHelper = ControlBarShowHideHelper(this)
+        multiSelectHandler.dispatchOnCreate()
         val uri = intent.data
         val linkId = matchLinkId(uri)
         intent.setExtrasClassLoader(classLoader)
-        val fragment: Fragment?
+        val fragment: Fragment
         try {
-            fragment = createFragmentForIntent(this, linkId, intent)
+            fragment = createFragmentForIntent(this, linkId, intent) ?: run {
+                finish()
+                return
+            }
         } catch (e: Utils.NoAccountException) {
-            super.onCreate(savedInstanceState)
             val selectIntent = Intent(this, AccountSelectorActivity::class.java)
             val accountHost: String? = intent.getStringExtra(EXTRA_ACCOUNT_HOST) ?:
                     uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST) ?: e.accountHost
@@ -172,20 +175,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
         }
 
-        super.onCreate(savedInstanceState)
-
-        if (fragment == null) {
-            finish()
-            return
-        }
-
         setupActionBarOption()
         Utils.logOpenNotificationFromUri(this, uri)
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(android.R.id.content, fragment)
         ft.commit()
         setTitle(linkId, uri)
-        mFinishOnly = java.lang.Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY))
+        finishOnly = java.lang.Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY))
 
         if (fragment is IToolBarSupportFragment) {
             ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
@@ -194,12 +190,12 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
 
     override fun onStart() {
         super.onStart()
-        mMultiSelectHandler!!.dispatchOnStart()
+        multiSelectHandler.dispatchOnStart()
     }
 
 
     override fun onStop() {
-        mMultiSelectHandler!!.dispatchOnStop()
+        multiSelectHandler.dispatchOnStop()
         super.onStop()
     }
 
@@ -209,20 +205,20 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     fun setSubtitle(subtitle: CharSequence?) {
-        mSubtitle = subtitle
+        this.subtitle = subtitle
         setupActionBarOption()
     }
 
     override fun setControlBarVisibleAnimate(visible: Boolean) {
         // Currently only search page needs this pattern, so we only enable this feature for it.
         if (currentVisibleFragment !is HideUiOnScroll) return
-        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible)
+        controlBarShowHideHelper.setControlBarVisibleAnimate(visible)
     }
 
     override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener) {
         // Currently only search page needs this pattern, so we only enable this feature for it.
         if (currentVisibleFragment !is HideUiOnScroll) return
-        mControlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
+        controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
     override fun getControlBarOffset(): Float {
@@ -241,12 +237,12 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         val actionBar = supportActionBar
         if (fragment is IToolBarSupportFragment) {
             fragment.controlBarOffset = offset
-        } else if (actionBar != null && !mHideOffsetNotSupported) {
+        } else if (actionBar != null && !hideOffsetNotSupported) {
             try {
                 actionBar.hideOffset = (controlBarHeight * offset).toInt()
             } catch (e: UnsupportedOperationException) {
                 // Some device will throw this exception
-                mHideOffsetNotSupported = true
+                hideOffsetNotSupported = true
             }
 
         }
@@ -261,9 +257,9 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         } else if (actionBar != null) {
             return actionBar.height
         }
-        if (mActionBarHeight != 0) return mActionBarHeight
-        mActionBarHeight = ThemeUtils.getActionBarHeight(this)
-        return mActionBarHeight
+        if (actionBarHeight != 0) return actionBarHeight
+        actionBarHeight = ThemeUtils.getActionBarHeight(this)
+        return actionBarHeight
     }
 
     private fun setTitle(linkId: Int, uri: Uri): Boolean {
@@ -408,7 +404,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.subtitle = mSubtitle
+            actionBar.subtitle = subtitle
         }
     }
 
@@ -459,7 +455,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                     args.putDouble(EXTRA_LATITUDE, lat)
                     args.putDouble(EXTRA_LONGITUDE, lng)
                 }
-                fragment = MapFragmentFactory.getInstance().createMapFragment(context)
+                fragment = MapFragmentFactory.instance.createMapFragment(context)
             }
             LINK_ID_STATUS -> {
                 fragment = StatusFragment()
@@ -721,6 +717,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         if (accountKey == null) {
             val accountId = uri.getQueryParameter(CompatibilityConstants.QUERY_PARAM_ACCOUNT_ID)
             val paramAccountName = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_NAME)
+            DataStoreUtils.prepareDatabase(context)
             if (accountId != null) {
                 accountKey = DataStoreUtils.findAccountKey(context, accountId)
                 args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)

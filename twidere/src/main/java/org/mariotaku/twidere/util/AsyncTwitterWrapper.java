@@ -628,7 +628,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
             final ContentResolver resolver = getContext().getContentResolver();
-            final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(getContext()), mAccountKey);
+            final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(getContext()), mAccountKey, true);
             if (details == null) return SingleResponse.Companion.getInstance();
             final MicroBlog microBlog = AccountDetailsExtensionsKt.newMicroBlogInstance(details,
                     getContext(), MicroBlog.class);
@@ -1114,7 +1114,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
 
         @Override
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
-            final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey);
+            final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey, true);
             if (details == null) return SingleResponse.Companion.getInstance();
             final MicroBlog microBlog = AccountDetailsExtensionsKt.newMicroBlogInstance(details,
                     getContext(), MicroBlog.class);
@@ -1359,7 +1359,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         protected SingleResponse<ParcelableStatus> doInBackground(final Object... params) {
             final ContentResolver resolver = getContext().getContentResolver();
             final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(getContext()),
-                    mAccountKey);
+                    mAccountKey, true);
             if (details == null) return SingleResponse.Companion.getInstance();
             final MicroBlog microBlog = AccountDetailsExtensionsKt.newMicroBlogInstance(details,
                     getContext(), MicroBlog.class);

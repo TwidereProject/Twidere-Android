@@ -47,7 +47,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.service.BackgroundOperationService
-import org.mariotaku.twidere.util.BugReporter
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereValidator
@@ -63,7 +63,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         val builder = AlertDialog.Builder(context)
         val context = builder.context
         val status = status!!
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), status.account_key)!!
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), status.account_key, true)!!
 
         builder.setView(R.layout.dialog_status_quote_retweet)
         builder.setTitle(R.string.retweet_quote_confirm_title)
@@ -159,7 +159,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                 } else if (useQuote(!status.user_is_protected, details)) {
                     dismissDialog = retweetOrQuote(details, status, SHOW_PROTECTED_CONFIRM)
                 } else {
-                    BugReporter.logException(IllegalStateException(status.toString()))
+                    Analyzer.logException(IllegalStateException(status.toString()))
                 }
                 if (dismissDialog) {
                     dismiss()

@@ -18,7 +18,7 @@ public class ParcelableStatusUpdateUtils {
     public static ParcelableStatusUpdate fromDraftItem(final Context context, final Draft draft) {
         ParcelableStatusUpdate statusUpdate = new ParcelableStatusUpdate();
         if (draft.account_keys != null) {
-            statusUpdate.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), draft.account_keys);
+            statusUpdate.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), draft.account_keys, true);
         } else {
             statusUpdate.accounts = new AccountDetails[0];
         }

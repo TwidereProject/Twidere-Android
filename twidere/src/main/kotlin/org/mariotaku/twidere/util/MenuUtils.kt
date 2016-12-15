@@ -115,7 +115,7 @@ object MenuUtils {
                        status: ParcelableStatus,
                        twitter: AsyncTwitterWrapper) {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context),
-                status.account_key) ?: return
+                status.account_key, true) ?: return
         setupForStatus(context, preferences, menu, status, account, twitter)
     }
 

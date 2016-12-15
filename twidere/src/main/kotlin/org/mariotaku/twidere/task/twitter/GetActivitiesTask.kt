@@ -67,7 +67,7 @@ abstract class GetActivitiesTask(
         for (i in accountIds.indices) {
             val accountKey = accountIds[i]
             val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri, accountKey) <= 0
-            val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?: continue
+            val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: continue
             val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             val paging = Paging()
             paging.count(loadItemLimit)

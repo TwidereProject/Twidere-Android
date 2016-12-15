@@ -52,6 +52,7 @@ import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -71,6 +72,8 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
+import org.mariotaku.twidere.extension.getColor
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -78,12 +81,14 @@ import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.model.analyzer.SignIn
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
@@ -383,7 +388,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             result.updateAccount(am)
             Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
-            result.addAccount(am)
+            val account = result.addAccount(am)
             if (accountAuthenticatorResponse != null) {
                 accountAuthenticatorResult = Bundle {
                     this[AccountManager.KEY_BOOLEAN_RESULT] = true
@@ -394,6 +399,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 startActivity(intent)
             }
+            Analyzer.log(SignIn(true, type = result.accountType.first, account = account.name,
+                    officialKey = result.accountType.second?.official ?: false))
             finish()
         }
     }
@@ -402,21 +409,29 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         if (BuildConfig.DEBUG) {
             Log.w(LOGTAG, exception)
         }
+        var errorReason: String? = null
         if (exception is AuthenticityTokenException) {
             Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_api_key"
         } else if (exception is WrongUserPassException) {
             Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_username_password"
         } else if (exception is SignInTask.WrongBasicCredentialException) {
             Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_username_password"
         } else if (exception is SignInTask.WrongAPIURLFormatException) {
             Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_api_key"
         } else if (exception is LoginVerificationException) {
             Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show()
+            errorReason = "login_verification_failed"
         } else if (exception is AuthenticationException) {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception.cause, true)
         } else {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
         }
+        Analyzer.log(SignIn(false, type = "unknown", authType = apiConfig.credentialsType,
+                errorReason = errorReason))
     }
 
     internal fun dismissDialogFragment(tag: String) {
@@ -543,9 +558,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val userId = apiUser.id!!
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
-            val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey)
+            val am = AccountManager.get(context)
+            val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
-                color = account.color
+                color = account.getColor(am)
             }
             val credentials = OAuthCredentials()
             credentials.api_url_format = apiUrlFormat
@@ -717,7 +733,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val credentials: Credentials,
             val user: ParcelableUser,
             val color: Int = 0,
-            val accountType: Pair<String, String?>
+            val accountType: Pair<String, AccountExtras?>
     ) {
 
         private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
@@ -729,7 +745,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             action(ACCOUNT_USER_DATA_COLOR, toHexColor(color))
 
             action(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
-            action(ACCOUNT_USER_DATA_EXTRAS, accountType.second)
+            action(ACCOUNT_USER_DATA_EXTRAS, accountType.second?.convert { LoganSquare.serialize(it) })
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {
@@ -856,9 +872,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val accountType = SignInActivity.detectAccountType(twitter, apiUser)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
-            val account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey)
+            val am = AccountManager.get(activity)
+            val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
-                color = account.color
+                color = account.getColor(am)
             }
             val credentials = BasicCredentials()
             credentials.api_url_format = apiUrlFormat
@@ -885,9 +902,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val accountType = SignInActivity.detectAccountType(twitter, apiUser)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
-            val account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey)
+            val am = AccountManager.get(activity)
+            val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
-                color = account.color
+                color = account.getColor(am)
             }
             val credentials = EmptyCredentials()
             credentials.api_url_format = apiUrlFormat
@@ -912,9 +930,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val accountType = SignInActivity.detectAccountType(twitter, apiUser)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
-            val account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey)
+            val am = AccountManager.get(activity)
+            val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
-                color = account.color
+                color = account.getColor(am)
             }
             val credentials = OAuthCredentials()
             credentials.api_url_format = apiUrlFormat
@@ -992,17 +1011,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
-        internal fun detectAccountType(twitter: MicroBlog, user: User): Pair<String, String?> {
+        internal fun detectAccountType(twitter: MicroBlog, user: User): Pair<String, AccountExtras?> {
             try {
                 // Get StatusNet specific resource
                 val config = twitter.statusNetConfig
-                val extra = StatusNetAccountExtras()
+                val extras = StatusNetAccountExtras()
                 val site = config.site
                 if (site != null) {
-                    extra.textLimit = site.textLimit
+                    extras.textLimit = site.textLimit
                 }
-                return Pair(AccountType.STATUSNET, JsonSerializer.serialize(extra,
-                        StatusNetAccountExtras::class.java))
+                return Pair(AccountType.STATUSNET, extras)
             } catch (e: MicroBlogException) {
                 // Ignore
             }
@@ -1012,10 +1030,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 val paging = Paging()
                 paging.count(1)
                 twitter.getActivitiesAboutMe(paging)
-                val extra = TwitterAccountExtras()
-                extra.setIsOfficialCredentials(true)
-                return Pair(AccountType.TWITTER, JsonSerializer.serialize(extra,
-                        TwitterAccountExtras::class.java))
+                val extras = TwitterAccountExtras()
+                extras.setIsOfficialCredentials(true)
+                return Pair(AccountType.TWITTER, extras)
             } catch (e: MicroBlogException) {
                 // Ignore
             }

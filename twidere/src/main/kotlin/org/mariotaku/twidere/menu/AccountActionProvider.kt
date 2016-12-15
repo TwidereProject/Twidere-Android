@@ -15,7 +15,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 
 class AccountActionProvider(
         context: Context,
-        var accounts: Array<AccountDetails>? = AccountUtils.getAllAccountDetails(AccountManager.get(context))
+        var accounts: Array<AccountDetails>? = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
 ) : ActionProvider(context), TwidereConstants {
 
     var selectedAccountIds: Array<UserKey>? = null

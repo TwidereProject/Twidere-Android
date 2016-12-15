@@ -52,6 +52,7 @@ import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.Constants.KEY_USAGE_STATISTICS
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
@@ -72,6 +73,7 @@ import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.ThemedMultiValueSwitch
 import org.mariotaku.twidere.view.TimelineContentTextView
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -251,18 +253,18 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
     private fun initBugReport() {
         if (!sharedPreferences[bugReportsKey]) return
-        BugReporter.setImplementation(TwidereBugReporter())
-        BugReporter.init(this)
+        Analyzer.implementation = ServiceLoader.load(Analyzer::class.java).firstOrNull()
+        Analyzer.init(this)
     }
 
     private fun migrateUsageStatisticsPreferences() {
         val preferences = sharedPreferences
-        val hasUsageStatistics = preferences.contains(Constants.KEY_USAGE_STATISTICS)
+        val hasUsageStatistics = preferences.contains(KEY_USAGE_STATISTICS)
         if (hasUsageStatistics) return
         if (preferences.contains(KEY_UCD_DATA_PROFILING) || preferences.contains(KEY_SPICE_DATA_PROFILING)) {
             val prevUsageEnabled = preferences.getBoolean(KEY_UCD_DATA_PROFILING, false) || preferences.getBoolean(KEY_SPICE_DATA_PROFILING, false)
             val editor = preferences.edit()
-            editor.putBoolean(Constants.KEY_USAGE_STATISTICS, prevUsageEnabled)
+            editor.putBoolean(KEY_USAGE_STATISTICS, prevUsageEnabled)
             editor.remove(KEY_UCD_DATA_PROFILING)
             editor.remove(KEY_SPICE_DATA_PROFILING)
             editor.apply()

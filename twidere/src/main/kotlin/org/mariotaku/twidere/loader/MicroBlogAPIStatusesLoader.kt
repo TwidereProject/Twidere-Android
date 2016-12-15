@@ -91,7 +91,7 @@ abstract class MicroBlogAPIStatusesLoader(
     override fun loadInBackground(): ListResponse<ParcelableStatus> {
         val context = context
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?:
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
 
         var data: MutableList<ParcelableStatus>? = data

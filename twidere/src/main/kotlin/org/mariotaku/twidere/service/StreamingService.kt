@@ -94,7 +94,7 @@ class StreamingService : Service() {
     }
 
     private fun setTwitterInstances(): Boolean {
-        val accountsList = AccountUtils.getAllAccountDetails(AccountManager.get(this)).filter { it.credentials is OAuthCredentials }
+        val accountsList = AccountUtils.getAllAccountDetails(AccountManager.get(this), true).filter { it.credentials is OAuthCredentials }
         val accountKeys = accountsList.map { it.key }.toTypedArray()
         val activatedPreferences = AccountPreferences.getAccountPreferences(this, accountKeys)
         if (BuildConfig.DEBUG) {

@@ -884,7 +884,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString())
                 builder.appendQueryParameter(QUERY_PARAM_USER_KEY, user.key.toString())
                 val intent = Intent(Intent.ACTION_VIEW, builder.build())
-                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(AccountManager.get(activity), user.account_key))
+                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(AccountManager.get(activity), user.account_key, true))
                 intent.putExtra(EXTRA_USER, user)
                 startActivity(intent)
             }
@@ -1529,7 +1529,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                         null, isFiltering))
             }
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                    accountKey) ?: return SingleResponse.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
+                    accountKey, true) ?: return SingleResponse.getInstance<ParcelableRelationship>(MicroBlogException("No Account"))
             if (details.type == AccountType.TWITTER) {
                 if (!UserKeyUtils.isSameHost(accountKey, user.key)) {
                     return SingleResponse.getInstance(ParcelableRelationshipUtils.create(user, isFiltering))

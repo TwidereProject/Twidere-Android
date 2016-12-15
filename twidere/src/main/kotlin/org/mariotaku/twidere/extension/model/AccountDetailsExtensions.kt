@@ -4,6 +4,7 @@ import android.content.Context
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
@@ -22,6 +23,14 @@ fun AccountDetails.isOfficial(context: Context): Boolean {
     }
     return false
 }
+
+val AccountExtras.official: Boolean
+    get() {
+        if (this is TwitterAccountExtras) {
+            return isOfficialCredentials
+        }
+        return false
+    }
 
 
 @JvmOverloads

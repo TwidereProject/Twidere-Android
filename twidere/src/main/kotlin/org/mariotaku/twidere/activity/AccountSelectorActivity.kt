@@ -39,6 +39,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.is_oauth
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.util.DataStoreUtils
 
 class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
 
@@ -83,12 +84,13 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         super.onCreate(savedInstanceState)
         firstCreated = savedInstanceState == null
         setContentView(R.layout.activity_account_selector)
+        DataStoreUtils.prepareDatabase(this)
         adapter = AccountDetailsAdapter(this).apply {
             setSwitchEnabled(!isSingleSelection)
             setSortEnabled(false)
             isProfileImageDisplayed = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
             val am = AccountManager.get(context)
-            val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am))
+            val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), false)
             val extraKeys = keysWhiteList
             val oAuthOnly = isOAuthOnly
             val accountHost = accountHost

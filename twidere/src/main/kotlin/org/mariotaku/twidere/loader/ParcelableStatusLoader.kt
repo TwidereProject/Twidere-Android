@@ -58,7 +58,7 @@ class ParcelableStatusLoader(
 
     override fun loadInBackground(): SingleResponse<ParcelableStatus> {
         if (accountKey == null || statusId == null) return SingleResponse.getInstance<ParcelableStatus>()
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey)
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
         if (!omitIntentExtra && extras != null) {
             val cache = extras.getParcelable<ParcelableStatus>(IntentConstants.EXTRA_STATUS)
             if (cache != null) {

@@ -350,7 +350,7 @@ class BackgroundOperationService : IntentService("background_operation"), Consta
                                   text: String,
                                   imageUri: String?): SingleResponse<ParcelableDirectMessage> {
         val details = AccountUtils.getAccountDetails(AccountManager.get(this),
-                accountKey) ?: return SingleResponse.getInstance<ParcelableDirectMessage>()
+                accountKey, true) ?: return SingleResponse.getInstance()
         val twitter = details.newMicroBlogInstance(context = this, cls = MicroBlog::class.java)
         val twitterUpload = details.newMicroBlogInstance(context = this, cls = TwitterUpload::class.java)
         try {

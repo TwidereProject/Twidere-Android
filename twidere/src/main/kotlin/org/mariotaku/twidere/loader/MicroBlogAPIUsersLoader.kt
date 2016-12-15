@@ -44,11 +44,11 @@ abstract class MicroBlogAPIUsersLoader(
 
     override fun loadInBackground(): List<ParcelableUser> {
         if (accountKey == null) {
-            return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
+            return ListResponse.getListInstance(MicroBlogException("No Account"))
         }
         val am = AccountManager.get(context)
-        val details = AccountUtils.getAccountDetails(am, accountKey) ?:
-                return ListResponse.getListInstance<ParcelableUser>(MicroBlogException("No Account"))
+        val details = AccountUtils.getAccountDetails(am, accountKey, true) ?:
+                return ListResponse.getListInstance(MicroBlogException("No Account"))
         val twitter: MicroBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
         val data = data
         val users: List<User>

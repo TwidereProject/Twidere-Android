@@ -93,7 +93,7 @@ abstract class GetStatusesTask(
         for (i in 0 until accountKeys.size) {
             val accountKey = accountKeys[i]
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                    accountKey) ?: continue
+                    accountKey, true) ?: continue
             val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             try {
                 val paging = Paging()

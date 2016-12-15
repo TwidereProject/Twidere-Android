@@ -167,7 +167,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
             for (UserKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
-                final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(mContext), accountKey);
+                final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(mContext), accountKey, true);
                 final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, accountKey);
                 if (details == null || twitter == null) continue;
                 publishProgress(new LogText("Testing connection for account " + accountKey));

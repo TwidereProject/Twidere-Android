@@ -71,6 +71,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.getAccountUser
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
@@ -491,7 +492,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             finish()
             return
         }
-        val accountDetails = AccountUtils.getAllAccountDetails(am, accounts)
+        val accountDetails = AccountUtils.getAllAccountDetails(am, accounts, true)
         val defaultAccountIds = accountDetails.map(AccountDetails::key).toTypedArray()
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
@@ -994,7 +995,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
         if (status == null) return false
-        val account = AccountUtils.getAccountDetails(AccountManager.get(this), status.account_key) ?: return false
+        val am = AccountManager.get(this)
+        val accountUser = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountUser(am) ?: return false
         var selectionStart = 0
         val mentions = TreeSet(String.CASE_INSENSITIVE_ORDER)
         editText.append("@" + status.user_screen_name + " ")
@@ -1025,7 +1027,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         }
 
-        mentions.filterNot { it.equals(status.user_screen_name, ignoreCase = true) || it.equals(account.user.screen_name, ignoreCase = true) }
+        mentions.filterNot { it.equals(status.user_screen_name, ignoreCase = true)
+                || it.equals(accountUser.screen_name, ignoreCase = true) }
                 .forEach { editText.append("@$it ") }
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
@@ -1292,7 +1295,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val isPossiblySensitive = hasMedia && possiblySensitive
         val update = ParcelableStatusUpdate()
         @Draft.Action val action = draft?.action_type ?: getDraftAction(intent.action)
-        update.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys)
+        update.accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         update.text = text
         if (attachLocation) {
             update.location = recentLocation

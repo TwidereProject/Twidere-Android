@@ -348,7 +348,7 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
     ) : AbstractTask<Context, SingleResponse<ParcelableUser>, UserProfileEditorFragment>() {
 
         override fun doLongOperation(context: Context): SingleResponse<ParcelableUser> {
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey) ?: return SingleResponse.getInstance()
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return SingleResponse.getInstance()
             val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             try {
                 var user: User? = null

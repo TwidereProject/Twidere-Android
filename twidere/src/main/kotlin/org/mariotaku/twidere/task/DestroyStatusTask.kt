@@ -28,7 +28,7 @@ class DestroyStatusTask(
 ) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableStatus>>(context) {
 
     override fun doInBackground(vararg params: Any): SingleResponse<ParcelableStatus> {
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey)
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
                 ?: return SingleResponse()
         val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         var status: ParcelableStatus? = null

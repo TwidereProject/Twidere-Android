@@ -21,9 +21,10 @@ import org.mariotaku.twidere.util.toHexColor
 
 
 fun Account.getCredentials(am: AccountManager): Credentials {
-    val credentialsType: String = getCredentialsType(am)
-    val creds: Credentials = parseCredentials(am.peekAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE), credentialsType)
-    return creds
+    val authToken = am.peekAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE) ?: run {
+        throw IllegalStateException("AuthToken is null for ${this}")
+    }
+    return parseCredentials(authToken, getCredentialsType(am))
 }
 
 @Credentials.Type
@@ -32,7 +33,10 @@ fun Account.getCredentialsType(am: AccountManager): String {
 }
 
 fun Account.getAccountKey(am: AccountManager): UserKey {
-    return UserKey.valueOf(am.getUserData(this, ACCOUNT_USER_DATA_KEY))
+    val accountKeyString = am.getUserData(this, ACCOUNT_USER_DATA_KEY) ?: run {
+        throw IllegalStateException("UserKey is null for ${this}")
+    }
+    return UserKey.valueOf(accountKeyString)
 }
 
 fun Account.setAccountKey(am: AccountManager, accountKey: UserKey) {

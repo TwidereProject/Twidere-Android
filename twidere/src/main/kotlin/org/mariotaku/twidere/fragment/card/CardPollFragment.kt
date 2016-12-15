@@ -140,7 +140,7 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
 
                             public override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {
                                 val details = AccountUtils.getAccountDetails(AccountManager.get(context),
-                                        card.account_key) ?: return null
+                                        card.account_key, true) ?: return null
                                 val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)
                                 try {
                                     val cardEntity = caps.sendPassThrough(cardDataMap).card
@@ -233,7 +233,7 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<ParcelableCardEntity?> {
         val card = card
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), card.account_key)!!
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), card.account_key, true)!!
         return ParcelableCardEntityLoader(context, details, card.url, card.name)
     }
 

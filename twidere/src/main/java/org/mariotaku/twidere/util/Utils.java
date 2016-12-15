@@ -508,7 +508,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean isOfficialCredentials(@NonNull final Context context, final UserKey accountKey) {
-        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey);
+        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true);
         if (details == null) return false;
         return AccountDetailsExtensionsKt.isOfficial(details, context);
     }
@@ -599,14 +599,14 @@ public final class Utils implements Constants {
         if (t instanceof MicroBlogException)
             return getTwitterErrorMessage(context, action, (MicroBlogException) t);
         else if (t != null) return getErrorMessage(context, trimLineBreak(t.getMessage()));
-        TwidereBugReporter.logException(new IllegalStateException());
+        Analyzer.Companion.logException(new IllegalStateException());
         return context.getString(R.string.error_unknown_error);
     }
 
     @Nullable
     public static String getErrorMessage(@NonNull final Context context, final Throwable t) {
         if (t == null) {
-            TwidereBugReporter.logException(new IllegalStateException());
+            Analyzer.Companion.logException(new IllegalStateException());
             return context.getString(R.string.error_unknown_error);
         }
         if (t instanceof MicroBlogException)
@@ -1189,10 +1189,10 @@ public final class Utils implements Constants {
         if (appContext == null) return;
         if (!appContext.getResources().getBoolean(R.bool.use_legacy_refresh_service)) return;
         final Intent refreshServiceIntent = new Intent(appContext, RefreshService.class);
+        DataStoreUtils.prepareDatabase(context);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                DataStoreUtils.prepareDatabase(context);
                 if (isNetworkAvailable(appContext) && hasAutoRefreshAccounts(appContext)) {
                     if (BuildConfig.DEBUG) {
                         Log.d(LOGTAG, "Start background refresh service");
@@ -1471,7 +1471,7 @@ public final class Utils implements Constants {
         try {
             Menu.class.isAssignableFrom(MenuBuilder.class);
         } catch (Error e) {
-            TwidereBugReporter.logException(e);
+            Analyzer.Companion.logException(e);
             return false;
         }
         return true;

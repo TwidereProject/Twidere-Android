@@ -26,7 +26,7 @@ class AccountDetailsLoader(
     }
 
     override fun loadInBackground(): List<AccountDetails> {
-        return AccountUtils.getAllAccountDetails(am).filter {
+        return AccountUtils.getAllAccountDetails(am, true).filter {
             filter?.invoke(it) ?: true
         }.sortedBy(AccountDetails::position)
     }

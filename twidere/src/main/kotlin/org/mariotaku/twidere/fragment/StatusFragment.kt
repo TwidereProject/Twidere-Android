@@ -2058,7 +2058,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
         override fun loadInBackground(): StatusActivity? {
             val context = context
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey) ?: return null
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey, true) ?: return null
             if (AccountType.TWITTER != details.type) {
                 return null
             }

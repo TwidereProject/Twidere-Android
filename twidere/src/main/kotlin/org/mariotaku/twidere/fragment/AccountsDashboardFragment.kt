@@ -727,7 +727,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         }
 
         override fun loadInBackground(): AccountsInfo {
-            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context))
+            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
             val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
             return AccountsInfo(accounts, draftsCount)
         }

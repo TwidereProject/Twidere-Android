@@ -171,7 +171,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                 ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_SHOW_CUSTOM)
         actionBar.setCustomView(R.layout.layout_actionbar_message_user_picker)
         val am = AccountManager.get(context)
-        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am)).asList()
+        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).asList()
         val accountsSpinnerAdapter = AccountsSpinnerAdapter(
                 actionBar.themedContext, R.layout.spinner_item_account_icon)
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
@@ -244,7 +244,7 @@ class MessagesConversationFragment : BaseSupportFragment(), LoaderCallbacks<Curs
                     if (accountPos >= 0) {
                         account = accountsSpinnerAdapter.getItem(accountPos)
                     } else {
-                        account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey)
+                        account = AccountUtils.getAccountDetails(AccountManager.get(activity), accountKey, true)
                     }
                     if (userId != null) {
                         recipient = Utils.getUserForConversation(activity, accountKey, userId)

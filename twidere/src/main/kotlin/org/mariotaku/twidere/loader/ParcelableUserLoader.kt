@@ -70,7 +70,7 @@ class ParcelableUserLoader(
         val resolver = context.contentResolver
         val accountKey = accountKey
         val am = AccountManager.get(context)
-        val details = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am)).firstOrNull {
+        val details = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).firstOrNull {
             if (it.key == accountKey) {
                 return@firstOrNull true
             } else if (it.user.account_key == accountKey) {

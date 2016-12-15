@@ -92,7 +92,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     protected void onAttachedToHierarchy(@NonNull final PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         if (getPreferenceCount() > 0) return;
-        setAccountsData(AccountUtils.getAllAccountDetails(AccountManager.get(getContext())));
+        setAccountsData(AccountUtils.getAllAccountDetails(AccountManager.get(getContext()), true));
     }
 
     protected abstract void setupPreference(AccountItemPreference preference, AccountDetails account);

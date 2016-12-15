@@ -50,7 +50,7 @@ public class AccountPreferences implements Constants {
     }
 
     public int getDefaultNotificationLightColor() {
-        final AccountDetails a = AccountUtils.getAccountDetails(AccountManager.get(mContext), mAccountKey);
+        final AccountDetails a = AccountUtils.getAccountDetails(AccountManager.get(mContext), mAccountKey, true);
         if (a != null) {
             return a.color;
         } else {

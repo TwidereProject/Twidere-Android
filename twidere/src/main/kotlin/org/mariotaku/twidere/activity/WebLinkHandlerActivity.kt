@@ -13,7 +13,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.BugReporter
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -46,7 +46,7 @@ class WebLinkHandlerActivity : Activity(), Constants {
             startActivity(handled.first)
         } else {
             if (!handled.second) {
-                BugReporter.logException(TwitterLinkException("Unable to handle twitter uri " + uri))
+                Analyzer.logException(TwitterLinkException("Unable to handle twitter uri " + uri))
             }
             val fallbackIntent = Intent(Intent.ACTION_VIEW, uri)
             fallbackIntent.addCategory(Intent.CATEGORY_BROWSABLE)

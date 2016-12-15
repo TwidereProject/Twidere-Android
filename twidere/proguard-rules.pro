@@ -65,6 +65,10 @@
     <init>(android.content.Context);
 }
 
+-keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
+-keep class * extends org.mariotaku.twidere.util.TwitterCardFragmentFactory
+-keep class * extends org.mariotaku.twidere.util.BugReporter
+
 -keepclassmembers class * {
     private <fields>;
 }
