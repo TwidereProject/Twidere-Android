@@ -5,6 +5,8 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -16,6 +18,7 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
+import nl.komponents.kovenant.task
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Expression
@@ -38,6 +41,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
+import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.support.AccountManagerSupport
@@ -96,6 +100,10 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
                 val details = adapter.findItem(accountKey) ?: return
                 details.color = color
                 details.account.setColor(am, color)
+                val resolver = context.contentResolver
+                task {
+                    updateContentsColor(resolver, details)
+                }
                 adapter.notifyDataSetChanged()
                 return
             }
@@ -178,6 +186,26 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
     private fun setListShown(shown: Boolean) {
         listContainer.visibility = if (shown) View.VISIBLE else View.GONE
         progressContainer.visibility = if (shown) View.GONE else View.VISIBLE
+    }
+
+    private fun updateContentsColor(resolver: ContentResolver, details: AccountDetails) {
+        val statusValues = ContentValues().apply {
+            put(Statuses.ACCOUNT_COLOR, details.color)
+        }
+        val activityValues = ContentValues().apply {
+            put(Activities.ACCOUNT_COLOR, details.color)
+        }
+        val statusesWhere = Expression.equalsArgs(Statuses.ACCOUNT_KEY)
+        val statusesWhereArgs = arrayOf(details.key.toString())
+        val activitiesWhere = Expression.equalsArgs(Activities.ACCOUNT_KEY)
+        val activitiesWhereArgs = arrayOf(details.key.toString())
+
+        DataStoreUtils.STATUSES_URIS.forEach { uri ->
+            resolver.update(uri, statusValues, statusesWhere.sql, statusesWhereArgs)
+        }
+        DataStoreUtils.ACTIVITIES_URIS.forEach { uri ->
+            resolver.update(uri, activityValues, activitiesWhere.sql, activitiesWhereArgs)
+        }
     }
 
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
