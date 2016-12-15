@@ -53,7 +53,9 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
     }
 
     class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
-        private val aspectRatioSource = SimpleAspectRatioSource()
+        private val aspectRatioSource = SimpleAspectRatioSource().apply {
+            setSize(100, 100)
+        }
 
         private val mediaImageContainer: AspectLockedFrameLayout
         private val mediaImageView: MediaPreviewImageView
@@ -94,10 +96,9 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
             get() = null
 
         override fun onClick(v: View) {
-            if (listener == null) return
             when (v.id) {
                 R.id.itemContent -> {
-                    listener!!.onStatusClick(this, layoutPosition)
+                    listener?.onStatusClick(this, layoutPosition)
                 }
             }
         }
