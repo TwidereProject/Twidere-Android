@@ -51,6 +51,8 @@ import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
@@ -382,10 +384,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am)
-            val intent = Intent(this, HomeActivity::class.java)
-            //TODO refresh time lines
-            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            startActivity(intent)
+            if (accountAuthenticatorResponse != null) {
+                accountAuthenticatorResult = Bundle {
+                    this[AccountManager.KEY_BOOLEAN_RESULT] = true
+                }
+            } else {
+                val intent = Intent(this, HomeActivity::class.java)
+                //TODO refresh time lines
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                startActivity(intent)
+            }
             finish()
         }
     }
@@ -725,7 +733,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {
-            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(credentials))
+            val authToken = LoganSquare.serialize(credentials)
+            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, authToken)
         }
 
         fun updateAccount(am: AccountManager) {
@@ -748,6 +757,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             writeAuthToken(am, account)
             return account
         }
+
     }
 
     internal class SignInTask(
