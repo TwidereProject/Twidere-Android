@@ -27,10 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.RemoteException;
-import android.util.Log;
 
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.IMediaUploader;
 import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -40,7 +37,6 @@ import org.mariotaku.twidere.model.UserKey;
 
 import java.util.List;
 
-import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
 import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
 
 public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUploader> {
@@ -58,12 +54,9 @@ public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUplo
             final String mediaJson = JsonSerializer.serialize(media, UploaderMediaItem.class);
             return JsonSerializer.parse(iface.upload(statusJson, currentAccountKey.toString(),
                     mediaJson), MediaUploadResult.class);
-        } catch (final RemoteException e) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, e);
-            }
+        } catch (final Exception e) {
+            return MediaUploadResult.error(2, e.getMessage());
         }
-        return null;
     }
 
 
@@ -74,12 +67,9 @@ public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUplo
             final String resultJson = JsonSerializer.serialize(uploadResult, MediaUploadResult.class);
             final String statusJson = JsonSerializer.serialize(status, ParcelableStatus.class);
             return iface.callback(resultJson, statusJson);
-        } catch (final RemoteException e) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, e);
-            }
+        } catch (final Exception e) {
+            return false;
         }
-        return false;
     }
 
     @Override
