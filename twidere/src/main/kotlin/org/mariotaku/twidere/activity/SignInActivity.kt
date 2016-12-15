@@ -381,7 +381,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     internal fun onSignInResult(result: SignInResponse) {
-        dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS)
         val am = AccountManager.get(this)
         setSignInButton()
         if (result.alreadyLoggedIn) {
@@ -486,6 +485,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
         override fun onPostExecute(result: SingleResponse<SignInResponse>) {
             val activity = activityRef.get()
+            activity?.dismissDialogFragment(FRAGMENT_TAG_SIGN_IN_PROGRESS)
             if (result.hasData()) {
                 activity?.onSignInResult(result.data!!)
             } else {
@@ -966,8 +966,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             override fun getLoginVerification(challengeType: String): String? {
                 // Dismiss current progress dialog
                 publishProgress(Runnable {
-                    val activity = activityRef.get() ?: return@Runnable
-                    activity.dismissDialogFragment(SignInActivity.FRAGMENT_TAG_SIGN_IN_PROGRESS)
+                    activityRef.get()?.dismissDialogFragment(SignInActivity.FRAGMENT_TAG_SIGN_IN_PROGRESS)
                 })
                 // Show verification input dialog and wait for user input
                 publishProgress(Runnable {
@@ -978,8 +977,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                         df.isCancelable = false
                         df.setCallback(this@InputLoginVerificationCallback)
                         df.challengeType = challengeType
-                        df.show(sia.supportFragmentManager, null)
-                        Unit
+                        df.show(sia.supportFragmentManager, "login_challenge_$challengeType")
                     }
                 })
                 while (!isChallengeFinished) {
