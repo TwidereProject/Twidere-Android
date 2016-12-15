@@ -35,6 +35,7 @@ subprojects {
         ext.android_support_lib_version = '25.1.0'
         ext.mariotaku_commons_library_version = '0.9.11'
         ext.mariotaku_restfu_version = '0.9.34'
+        ext.play_services_version = '10.0.1'
     }
     afterEvaluate { project ->
 

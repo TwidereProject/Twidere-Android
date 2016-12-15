@@ -20,45 +20,23 @@
 package org.mariotaku.twidere.util
 
 import android.graphics.Point
-import android.support.v4.app.Fragment
 import android.text.TextUtils
-import org.mariotaku.twidere.fragment.card.CardPollFragment
+import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
+import java.util.regex.Pattern
 
 /**
  * Created by mariotaku on 15/1/1.
  */
 object TwitterCardUtils {
 
-    private val sFactory = TwitterCardFragmentFactory.instance
+    val PATTERN_POLL_TEXT_ONLY: Pattern = Pattern.compile("poll([\\d]+)choice_text_only")
 
-    val CARD_NAME_PLAYER = "player"
-    val CARD_NAME_AUDIO = "audio"
-    val CARD_NAME_ANIMATED_GIF = "animated_gif"
-
-    fun createCardFragment(status: ParcelableStatus): Fragment? {
-        val card = status.card
-        if (card == null || card.name == null) return null
-        if (CARD_NAME_PLAYER == card.name) {
-            val playerFragment = sFactory.createPlayerFragment(card)
-            if (playerFragment != null) return playerFragment
-            return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
-        } else if (CARD_NAME_AUDIO == card.name) {
-            val playerFragment = sFactory.createAudioFragment(card)
-            if (playerFragment != null) return playerFragment
-            return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
-        } else if (CARD_NAME_ANIMATED_GIF == card.name) {
-            val playerFragment = sFactory.createAnimatedGifFragment(card)
-            if (playerFragment != null) return playerFragment
-            return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
-        } else if (CardPollFragment.isPoll(card)) {
-            return TwitterCardFragmentFactory.createCardPollFragment(status)
-        }
-        return null
-    }
-
+    const val CARD_NAME_PLAYER = "player"
+    const val CARD_NAME_AUDIO = "audio"
+    const val CARD_NAME_ANIMATED_GIF = "animated_gif"
 
     fun getCardSize(card: ParcelableCardEntity): Point? {
         val playerWidth = ParcelableCardEntityUtils.getAsInteger(card, "player_width", -1)
@@ -88,14 +66,24 @@ object TwitterCardUtils {
                 return true
             }
         }
-        if (CardPollFragment.isPoll(card)) {
+        if (isPoll(card)) {
             return true
         }
         return false
     }
 
+    fun getChoicesCount(card: ParcelableCardEntity): Int {
+        val matcher = PATTERN_POLL_TEXT_ONLY.matcher(card.name)
+        if (!matcher.matches()) throw IllegalStateException()
+        return NumberUtils.toInt(matcher.group(1))
+    }
+
+    fun isPoll(card: ParcelableCardEntity): Boolean {
+        return PATTERN_POLL_TEXT_ONLY.matcher(card.name).matches() && !TextUtils.isEmpty(card.url)
+    }
+
     fun isPoll(status: ParcelableStatus): Boolean {
         val card = status.card ?: return false
-        return CardPollFragment.isPoll(card)
+        return isPoll(card)
     }
 }

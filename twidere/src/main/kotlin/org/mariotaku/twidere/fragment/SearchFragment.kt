@@ -36,6 +36,7 @@ import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -60,10 +61,10 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
             val values = ContentValues()
             values.put(SearchHistory.QUERY, query)
             context.contentResolver.insert(SearchHistory.CONTENT_URI, values)
-
+            val am = AccountManager.get(context)
             Analyzer.log(Search(query, accountKey.convert {
-                AccountUtils.findByAccountKey(AccountManager.get(context), it)
-            }?.name))
+                AccountUtils.findByAccountKey(am, it)
+            }?.getAccountType(am)))
         }
     }
 

@@ -42,8 +42,9 @@ abstract class TwitterCardFragmentFactory {
 
     companion object {
 
-        val instance: TwitterCardFragmentFactory
-            get() = ServiceLoader.load(TwitterCardFragmentFactory::class.java).first()
+        val instance: TwitterCardFragmentFactory by lazy {
+            ServiceLoader.load(TwitterCardFragmentFactory::class.java).first()
+        }
 
         fun createGenericPlayerFragment(card: ParcelableCardEntity?, args: Bundle?): Fragment? {
             if (card == null) return null
@@ -54,5 +55,27 @@ abstract class TwitterCardFragmentFactory {
         fun createCardPollFragment(status: ParcelableStatus): Fragment {
             return CardPollFragment.show(status)
         }
+
+        fun createCardFragment(status: ParcelableStatus): Fragment? {
+            val card = status.card
+            if (card == null || card.name == null) return null
+            if (TwitterCardUtils.CARD_NAME_PLAYER == card.name) {
+                val playerFragment = instance.createPlayerFragment(card)
+                if (playerFragment != null) return playerFragment
+                return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
+            } else if (TwitterCardUtils.CARD_NAME_AUDIO == card.name) {
+                val playerFragment = instance.createAudioFragment(card)
+                if (playerFragment != null) return playerFragment
+                return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
+            } else if (TwitterCardUtils.CARD_NAME_ANIMATED_GIF == card.name) {
+                val playerFragment = instance.createAnimatedGifFragment(card)
+                if (playerFragment != null) return playerFragment
+                return TwitterCardFragmentFactory.createGenericPlayerFragment(card, null)
+            } else if (TwitterCardUtils.isPoll(card)) {
+                return TwitterCardFragmentFactory.createCardPollFragment(status)
+            }
+            return null
+        }
+
     }
 }

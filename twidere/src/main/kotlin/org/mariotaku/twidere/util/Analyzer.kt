@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.app.Application
+import org.mariotaku.twidere.annotation.AccountType
 
 /**
  * Created by mariotaku on 15/7/8.
@@ -35,7 +36,15 @@ abstract class Analyzer {
     protected abstract fun init(application: Application)
 
     interface Event {
-        val account: String?
+        val name: String
+            get() = "Custom Event"
+        @AccountType val accountType: String?
+        @AccountType val accountHost: String?
+            get() = null
+
+        fun forEachValues(action: (key: String, value: String?) -> Unit) {
+
+        }
     }
 
     companion object {

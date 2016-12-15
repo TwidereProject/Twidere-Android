@@ -25,10 +25,7 @@ import android.accounts.OnAccountsUpdateListener
 import android.app.Application
 import android.os.Build
 import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
-import com.crashlytics.android.answers.AnswersEvent
-import com.crashlytics.android.answers.LoginEvent
-import com.crashlytics.android.answers.SearchEvent
+import com.crashlytics.android.answers.*
 import io.fabric.sdk.android.Fabric
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.configure
@@ -36,6 +33,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.model.analyzer.Search
+import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.analyzer.SignIn
 
 /**
@@ -56,15 +54,39 @@ class FabricAnalyzer : Analyzer(), Constants {
         when (event) {
             is SignIn -> {
                 answers.logLogin(configure(LoginEvent()) {
-                    putMethod(event.type)
+                    putMethod(event.accountType)
                     putSuccess(event.success)
-                    putAttributes(event)
+                    if (event.errorReason != null) {
+                        putCustomAttribute("Error reason", event.errorReason)
+                    }
+                    if (event.accountHost != null) {
+                        putCustomAttribute("Account host", event.accountHost)
+                    }
+                    if (event.credentialsType != null) {
+                        putCustomAttribute("Credentials type", event.credentialsType)
+                    }
+                    putCustomAttribute("Official key", event.officialKey.toString())
                 })
             }
             is Search -> {
                 answers.logSearch(configure(SearchEvent()) {
                     putQuery(event.query)
                     putAttributes(event)
+                })
+            }
+            is Share -> {
+                answers.logShare(configure(ShareEvent()) {
+                    putContentId(event.id)
+                    putContentType(event.type)
+                    putAttributes(event)
+                })
+            }
+            else -> {
+                answers.logCustom(configure(CustomEvent(event.name)) {
+                    putAttributes(event)
+                    event.forEachValues { name, value ->
+                        putCustomAttribute(name, value)
+                    }
                 })
             }
         }
@@ -88,8 +110,11 @@ class FabricAnalyzer : Analyzer(), Constants {
     }
 
     private fun AnswersEvent<*>.putAttributes(event: Analyzer.Event) {
-        if (event.account != null) {
-            putCustomAttribute("account", event.account)
+        if (event.accountType != null) {
+            putCustomAttribute("Account type", event.accountType)
+        }
+        if (event.accountHost != null) {
+            putCustomAttribute("Account host", event.accountHost)
         }
     }
 }

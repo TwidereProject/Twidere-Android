@@ -32,8 +32,9 @@ abstract class MapFragmentFactory {
 
     companion object {
 
-        val instance: MapFragmentFactory
-            get() = ServiceLoader.load(MapFragmentFactory::class.java).first()
+        val instance: MapFragmentFactory by lazy {
+            ServiceLoader.load(MapFragmentFactory::class.java).first()
+        }
     }
 
 }

@@ -398,7 +398,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 startActivity(intent)
             }
-            Analyzer.log(SignIn(true, type = result.accountType.first, account = account.name,
+            Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
                     officialKey = result.accountType.second?.official ?: false))
             finish()
         }
@@ -429,7 +429,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         } else {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
         }
-        Analyzer.log(SignIn(false, type = "unknown", authType = apiConfig.credentialsType,
+        Analyzer.log(SignIn(false, accountType = "unknown", credentialsType = apiConfig.credentialsType,
                 errorReason = errorReason))
     }
 

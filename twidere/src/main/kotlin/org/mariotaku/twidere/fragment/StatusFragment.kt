@@ -979,7 +979,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 } else {
                     itemView.twitterCard.setCardSize(0, 0)
                 }
-                val cardFragment = TwitterCardUtils.createCardFragment(status)
+                val cardFragment = TwitterCardFragmentFactory.createCardFragment(status)
                 val fm = fragment.childFragmentManager
                 if (cardFragment != null && !FragmentManagerAccessor.isStateSaved(fm)) {
                     val ft = fm.beginTransaction()

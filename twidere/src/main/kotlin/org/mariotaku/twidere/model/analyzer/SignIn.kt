@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.analyzer
 
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.util.Analyzer
 
 /**
@@ -8,9 +9,9 @@ import org.mariotaku.twidere.util.Analyzer
  */
 data class SignIn(
         val success: Boolean,
-        @AccountType val type: String,
-        override val account: String? = null,
         val officialKey: Boolean = false,
-        val authType: String? = null,
-        val errorReason: String? = null
+        @Credentials.Type val credentialsType: String? = null,
+        val errorReason: String? = null,
+        @AccountType override val accountType: String,
+        override val accountHost: String? = null
 ) : Analyzer.Event
