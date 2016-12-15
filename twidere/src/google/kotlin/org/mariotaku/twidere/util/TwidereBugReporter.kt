@@ -19,12 +19,16 @@
 
 package org.mariotaku.twidere.util
 
+import android.accounts.AccountManager
+import android.accounts.OnAccountsUpdateListener
 import android.app.Application
 import android.os.Build
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
+import java.util.*
 
 /**
  * Created by mariotaku on 15/7/8.
@@ -49,6 +53,10 @@ class TwidereBugReporter : BugReporter(), Constants {
         Crashlytics.setString("build.manufacturer", Build.MANUFACTURER)
         Crashlytics.setString("build.model", Build.MODEL)
         Crashlytics.setString("build.product", Build.PRODUCT)
+        val am = AccountManager.get(application)
+        am.addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener { accounts ->
+            Crashlytics.setString("twidere.accounts", Arrays.toString(accounts))
+        }, updateImmediately = true)
     }
 
 }

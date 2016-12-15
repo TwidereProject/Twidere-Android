@@ -38,15 +38,13 @@ class CreateUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCli
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 val alertDialog = dialog as AlertDialog
-                val args = arguments
-                val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-                val editName = alertDialog.findViewById(R.id.name) as MaterialEditText?
-                val editDescription = alertDialog.findViewById(R.id.description) as MaterialEditText?
-                val editPublic = alertDialog.findViewById(R.id.is_public) as CheckBox?
-                assert(editName != null && editDescription != null && editPublic != null)
-                val name = ParseUtils.parseString(editName!!.text)
-                val description = ParseUtils.parseString(editDescription!!.text)
-                val isPublic = editPublic!!.isChecked
+                val accountKey: UserKey = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+                val editName = alertDialog.findViewById(R.id.name) as MaterialEditText
+                val editDescription = alertDialog.findViewById(R.id.description) as MaterialEditText
+                val editPublic = alertDialog.findViewById(R.id.is_public) as CheckBox
+                val name = ParseUtils.parseString(editName.text)
+                val description = ParseUtils.parseString(editDescription.text)
+                val isPublic = editPublic.isChecked
                 if (TextUtils.isEmpty(name)) return
                 twitterWrapper.createUserListAsync(accountKey, name, isPublic, description)
             }
@@ -64,10 +62,8 @@ class CreateUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCli
         val dialog = builder.create()
         dialog.setOnShowListener { dialog ->
             val alertDialog = dialog as AlertDialog
-            val editName = alertDialog.findViewById(R.id.name) as MaterialEditText?
-            val editDescription = alertDialog.findViewById(R.id.description) as MaterialEditText?
-            val publicCheckBox = alertDialog.findViewById(R.id.is_public) as CheckBox?
-            editName!!.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
+            val editName = alertDialog.findViewById(R.id.name) as MaterialEditText
+            editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
         }
         return dialog
     }

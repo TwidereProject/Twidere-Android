@@ -77,9 +77,9 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         if (multiSelectManager.isActive) return
         val trend: String?
         if (view is ListView) {
-            trend = adapter!!.getItem(position - view.headerViewsCount)
+            trend = adapter.getItem(position - view.headerViewsCount)
         } else {
-            trend = adapter!!.getItem(position)
+            trend = adapter.getItem(position)
 
         }
         if (trend == null) return
@@ -87,11 +87,11 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
-        adapter!!.swapCursor(null)
+        adapter.swapCursor(null)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
-        adapter!!.swapCursor(cursor)
+        adapter.swapCursor(cursor)
         showContent()
     }
 
