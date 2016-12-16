@@ -29,19 +29,14 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
-import edu.tsinghua.hotmobi.model.ScrollRecord
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
@@ -64,7 +59,6 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
-import java.util.*
 
 /**
  * Created by mariotaku on 14/11/5.
@@ -77,50 +71,9 @@ abstract class AbsStatusesFragment protected constructor() :
     private lateinit var statusesBusCallback: Any
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
     private var pauseOnScrollListener: OnScrollListener? = null
-    private var activeHotMobiScrollTracker: OnScrollListener? = null
     var loaderInitialized: Boolean = false
         private set
-    private val hotMobiScrollTracker = object : OnScrollListener() {
 
-        var records: MutableList<ScrollRecord>? = null
-        private var firstVisibleId: String? = null
-        private var firstVisibleAccountId: UserKey? = null
-        private var firstVisiblePosition = -1
-        private var scrollState: Int = 0
-
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-            val layoutManager = recyclerView!!.layoutManager as LinearLayoutManager
-            val position = layoutManager.findFirstVisibleItemPosition()
-            if (position != position && position >= 0) {
-                //noinspection unchecked
-                val adapter = recyclerView.adapter as ParcelableStatusesAdapter
-                val status = adapter.getStatus(position)
-                if (status != null) {
-                    val id = status.id
-                    val accountId = status.account_key
-                    if (!TextUtils.equals(id, firstVisibleId) || accountId != firstVisibleAccountId) {
-                        if (records == null) records = ArrayList<ScrollRecord>()
-                        val time = System.currentTimeMillis()
-                        records!!.add(ScrollRecord.create(id, accountId, time,
-                                TimeZone.getDefault().getOffset(time).toLong(), scrollState))
-                    }
-                    firstVisibleId = id
-                    firstVisibleAccountId = accountId
-                }
-            }
-            firstVisiblePosition = position
-        }
-
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            scrollState = newState
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (records != null) {
-                    HotMobiLogger.getInstance(activity).logList(records, null, "scroll")
-                }
-                records = null
-            }
-        }
-    }
     private val onScrollListener = object : OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -184,33 +137,11 @@ abstract class AbsStatusesFragment protected constructor() :
         super.onStart()
         recyclerView.addOnScrollListener(onScrollListener)
         recyclerView.addOnScrollListener(pauseOnScrollListener)
-        val task = object : AbstractTask<Any?, Boolean, AbsStatusesFragment>() {
-            public override fun doLongOperation(params: Any?): Boolean {
-                val context = callback?.context ?: return false
-                val prefs = callback?.preferences ?: return false
-                if (!prefs.getBoolean(Constants.KEY_USAGE_STATISTICS, false)) return false
-                val logFile = HotMobiLogger.getLogFile(context, null, "scroll")
-                return logFile.length() < 131072
-            }
-
-            public override fun afterExecute(fragment: AbsStatusesFragment?, result: Boolean) {
-                if (result && fragment != null) {
-                    fragment.activeHotMobiScrollTracker = fragment.hotMobiScrollTracker
-                    fragment.recyclerView.addOnScrollListener(fragment.activeHotMobiScrollTracker)
-                }
-            }
-        }
-        task.callback = this
-        TaskStarter.execute(task)
         bus.register(statusesBusCallback)
     }
 
     override fun onStop() {
         bus.unregister(statusesBusCallback)
-        if (activeHotMobiScrollTracker != null) {
-            recyclerView.removeOnScrollListener(activeHotMobiScrollTracker)
-        }
-        activeHotMobiScrollTracker = null
         recyclerView.removeOnScrollListener(pauseOnScrollListener)
         recyclerView.removeOnScrollListener(onScrollListener)
         if (userVisibleHint) {

@@ -34,10 +34,8 @@ import android.view.*
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
-import edu.tsinghua.hotmobi.model.ScrollRecord
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -52,6 +50,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
@@ -73,50 +72,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     private lateinit var activitiesBusCallback: Any
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
 
-    private var pauseOnScrollListener: OnScrollListener? = null
-    private var activeHotMobiScrollTracker: OnScrollListener? = null
-
-    private val hotMobiScrollTracker = object : OnScrollListener() {
-
-        var records: MutableList<ScrollRecord>? = null
-        private var firstVisibleTimestamp: Long = -1
-        private var firstVisibleAccountId: UserKey? = null
-        private var firstVisiblePosition = -1
-        private var scrollState: Int = 0
-
-        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-            val layoutManager = recyclerView!!.layoutManager as LinearLayoutManager
-            val pos = layoutManager.findFirstVisibleItemPosition()
-            if (pos != firstVisiblePosition && pos >= 0) {
-                //noinspection unchecked
-                val adapter = recyclerView.adapter as ParcelableActivitiesAdapter
-                val activity = adapter.getActivity(pos)
-                if (activity != null) {
-                    val timestamp = activity.timestamp
-                    val accountKey = activity.account_key
-                    if (timestamp != firstVisibleTimestamp || accountKey != firstVisibleAccountId) {
-                        if (records == null) records = ArrayList<ScrollRecord>()
-                        val time = System.currentTimeMillis()
-                        records!!.add(ScrollRecord.create(timestamp.toString(), accountKey, time,
-                                TimeZone.getDefault().getOffset(time).toLong(), scrollState))
-                    }
-                    firstVisibleTimestamp = timestamp
-                    firstVisibleAccountId = accountKey
-                }
-            }
-            firstVisiblePosition = pos
-        }
-
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            scrollState = newState
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                if (records != null) {
-                    HotMobiLogger.getInstance(activity).logList(records, null, "scroll")
-                }
-                records = null
-            }
-        }
-    }
+    private lateinit var pauseOnScrollListener: OnScrollListener
 
     private val onScrollListener = object : OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -131,8 +87,7 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activitiesBusCallback = createMessageBusCallback()
-        scrollListener!!.reversed = preferences.getBoolean(KEY_READ_FROM_BOTTOM)
-        val layoutManager = layoutManager
+        scrollListener.reversed = preferences[readFromBottomKey]
         adapter.setListener(this)
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
@@ -153,13 +108,11 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
             triggerRefresh()
             return true
         }
-        val layoutManager = layoutManager
-        if (recyclerView == null || layoutManager == null) return false
         val focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView,
                 layoutManager.focusedChild)
         var position = RecyclerView.NO_POSITION
         if (focusedChild != null && focusedChild.parent === recyclerView) {
-            position = recyclerView!!.getChildLayoutPosition(focusedChild)
+            position = recyclerView.getChildLayoutPosition(focusedChild)
         }
         if (position != RecyclerView.NO_POSITION) {
             val activity = adapter.getActivity(position) ?: return false
@@ -394,34 +347,11 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
         super.onStart()
         recyclerView.addOnScrollListener(onScrollListener)
         recyclerView.addOnScrollListener(pauseOnScrollListener)
-        val task = object : AbstractTask<Any?, Boolean, RecyclerView>() {
-            public override fun doLongOperation(params: Any?): Boolean {
-                val context = context ?: return false
-                val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                        Context.MODE_PRIVATE)
-                if (!prefs.getBoolean(KEY_USAGE_STATISTICS, false)) return false
-                val logFile = HotMobiLogger.getLogFile(context, null, "scroll")
-                return logFile.length() < 131072
-            }
-
-            public override fun afterExecute(recyclerView: RecyclerView?, result: Boolean?) {
-                if (result!!) {
-                    activeHotMobiScrollTracker = hotMobiScrollTracker
-                    recyclerView!!.addOnScrollListener(activeHotMobiScrollTracker)
-                }
-            }
-        }
-        task.callback = recyclerView
-        TaskStarter.execute(task)
         bus.register(activitiesBusCallback)
     }
 
     override fun onStop() {
         bus.unregister(activitiesBusCallback)
-        if (activeHotMobiScrollTracker != null) {
-            recyclerView.removeOnScrollListener(activeHotMobiScrollTracker)
-        }
-        activeHotMobiScrollTracker = null
         recyclerView.removeOnScrollListener(pauseOnScrollListener)
         recyclerView.removeOnScrollListener(onScrollListener)
         if (userVisibleHint) {
@@ -513,14 +443,13 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
         val inflater = MenuInflater(context)
-        val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
-        val position = contextMenuInfo!!.position
+        val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val position = contextMenuInfo.position
         when (adapter.getItemViewType(position)) {
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, preferences, menu, status,
-                        twitterWrapper)
+                MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper)
             }
         }
     }

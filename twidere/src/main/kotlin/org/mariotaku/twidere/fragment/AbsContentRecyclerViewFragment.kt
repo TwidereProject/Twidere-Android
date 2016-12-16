@@ -43,8 +43,10 @@ import org.mariotaku.twidere.view.iface.IExtendedView
 /**
  * Created by mariotaku on 15/10/26.
  */
-abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>, L : RecyclerView.LayoutManager> : BaseSupportFragment(), SwipeRefreshLayout.OnRefreshListener, HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener, ContentScrollHandler.ContentListSupport, ControlBarShowHideHelper.ControlBarAnimationListener {
-
+abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>,
+        L : RecyclerView.LayoutManager> : BaseSupportFragment(), SwipeRefreshLayout.OnRefreshListener,
+        HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
+        ContentScrollHandler.ContentListSupport, ControlBarShowHideHelper.ControlBarAnimationListener {
 
     lateinit var layoutManager: L
         protected set
@@ -55,7 +57,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     // Callbacks and listeners
     private lateinit var drawerCallback: SimpleDrawerCallback
-    var scrollListener: RecyclerViewScrollHandler? = null
+    lateinit var scrollListener: RecyclerViewScrollHandler
     // Data fields
     private val systemWindowsInsets = Rect()
 
@@ -201,8 +203,8 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         recyclerView.adapter = adapter
 
         scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
-        scrollListener!!.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        recyclerView.setOnTouchListener(scrollListener!!.touchListener)
+        scrollListener.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+        recyclerView.setOnTouchListener(scrollListener.touchListener)
     }
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

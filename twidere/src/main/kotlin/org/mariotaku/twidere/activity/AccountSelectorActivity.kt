@@ -58,6 +58,9 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
             return intent.getBooleanExtra(EXTRA_OAUTH_ONLY, false)
         }
 
+    /**
+     * If not null, account selector will only show accounts matched this host.
+     */
     private val accountHost: String?
         get() {
             return intent.getStringExtra(EXTRA_ACCOUNT_HOST)
@@ -73,6 +76,9 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
             return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, false)
         }
 
+    /**
+     * True if you want account picked automatically if there are only one match.
+     */
     private val isSelectOnlyItemAutomatically: Boolean
         get() = intent.getBooleanExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, false)
 
