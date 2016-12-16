@@ -45,9 +45,6 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
 
     private lateinit var adapter: AccountDetailsAdapter
 
-    private var firstCreated: Boolean = false
-
-
     private val keysWhiteList: Array<UserKey>?
         get() {
             return intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS)?.toTypedArray(UserKey.CREATOR)
@@ -91,7 +88,6 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        firstCreated = savedInstanceState == null
         setContentView(R.layout.activity_account_selector)
         DataStoreUtils.prepareDatabase(this)
         adapter = AccountDetailsAdapter(this).apply {
@@ -101,13 +97,13 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
             val am = AccountManager.get(context)
             val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), false)
             val extraKeys = keysWhiteList
-            val oAuthOnly = isOAuthOnly
+            val oauthOnly = isOAuthOnly
             val accountHost = accountHost
             addAll(allAccountDetails.filter {
                 if (extraKeys != null) {
                     return@filter extraKeys.contains(it.key)
                 }
-                if (oAuthOnly && !it.is_oauth) {
+                if (oauthOnly && !it.is_oauth) {
                     return@filter false
                 }
                 if (USER_TYPE_TWITTER_COM == accountHost) {
