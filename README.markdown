@@ -10,19 +10,12 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 
 ## Features ##
 
-* Pure & Clean Material design
-* Theme support
-* Media preview
+* Customizable Material Design
+* Night mode
 * Customizable tabs
-* Powerful filters (mute unwanted tweets)
-* Drafts for tweets / DMs
-* Extension support like [Twicca](http://twicca.r246.jp/), but more friendly to users and developers
-* t.co link auto expanding
-* Multiple account
-* Custom OAuth consumer key/secret
-* Custom API Proxy (jtapi recommended, gtap and twip o mode works)
-* Advance network settings like proxy or DNS
-* Supports Twitter, Fanfou and GNU social
+* Powerful mute filters
+* Multiple account support
+* Custom API settings
 * Free, open source, NO ads, forever!
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
@@ -38,16 +31,17 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 
 ### Icon designers ###
 
+* [@NovaDNG](https://twitter.com/NovaDNG)
 * [@Linkzero](https://twitter.com/Linkzero)
 * [@lordfriend](https://twitter.com/lordfriend)
-* [@ilovinheart](https://twitter.com/ilovinheart) (0.0.7 version)
-* [@Rieya](https://twitter.com/Rieya) (0.0.6 version)
+* [@ilovinheart](https://twitter.com/ilovinheart)
+* [@Rieya](https://twitter.com/Rieya)
 
 Thanks to their excellent design!
 
 ### Open source projects ###
 
-Too many, see dependencies in `build.gradle`
+See dependencies in `build.gradle`
 
 ---
 
