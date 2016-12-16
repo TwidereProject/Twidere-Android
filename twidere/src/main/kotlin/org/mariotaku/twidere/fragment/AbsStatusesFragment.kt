@@ -184,24 +184,23 @@ abstract class AbsStatusesFragment protected constructor() :
         super.onStart()
         recyclerView.addOnScrollListener(onScrollListener)
         recyclerView.addOnScrollListener(pauseOnScrollListener)
-        val task = object : AbstractTask<Any?, Boolean, RecyclerView>() {
+        val task = object : AbstractTask<Any?, Boolean, AbsStatusesFragment>() {
             public override fun doLongOperation(params: Any?): Boolean {
-                val context = context ?: return false
-                val prefs = context.getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME,
-                        Context.MODE_PRIVATE)
+                val context = callback?.context ?: return false
+                val prefs = callback?.preferences ?: return false
                 if (!prefs.getBoolean(Constants.KEY_USAGE_STATISTICS, false)) return false
                 val logFile = HotMobiLogger.getLogFile(context, null, "scroll")
                 return logFile.length() < 131072
             }
 
-            public override fun afterExecute(recyclerView: RecyclerView?, result: Boolean?) {
-                if (result!!) {
-                    activeHotMobiScrollTracker = hotMobiScrollTracker
-                    recyclerView!!.addOnScrollListener(activeHotMobiScrollTracker)
+            public override fun afterExecute(fragment: AbsStatusesFragment?, result: Boolean) {
+                if (result && fragment != null) {
+                    fragment.activeHotMobiScrollTracker = fragment.hotMobiScrollTracker
+                    fragment.recyclerView.addOnScrollListener(fragment.activeHotMobiScrollTracker)
                 }
             }
         }
-        task.callback = recyclerView
+        task.callback = this
         TaskStarter.execute(task)
         bus.register(statusesBusCallback)
     }
