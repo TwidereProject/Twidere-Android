@@ -39,6 +39,7 @@ import edu.tsinghua.hotmobi.model.ScrollRecord
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
@@ -51,6 +52,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
@@ -72,7 +74,12 @@ abstract class AbsStatusesFragment protected constructor() :
         LoaderCallbacks<List<ParcelableStatus>?>, IStatusViewHolder.StatusClickListener,
         KeyboardShortcutCallback {
 
-    private val statusesBusCallback: Any
+    private lateinit var statusesBusCallback: Any
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
+    private var pauseOnScrollListener: OnScrollListener? = null
+    private var activeHotMobiScrollTracker: OnScrollListener? = null
+    var loaderInitialized: Boolean = false
+        private set
     private val hotMobiScrollTracker = object : OnScrollListener() {
 
         var records: MutableList<ScrollRecord>? = null
@@ -122,11 +129,6 @@ abstract class AbsStatusesFragment protected constructor() :
             }
         }
     }
-    private var navigationHelper: RecyclerViewNavigationHelper? = null
-    private var pauseOnScrollListener: OnScrollListener? = null
-    private var activeHotMobiScrollTracker: OnScrollListener? = null
-    var loaderInitialized: Boolean = false
-        private set
 
     protected abstract val timelineType: String
 
@@ -161,15 +163,12 @@ abstract class AbsStatusesFragment protected constructor() :
         get() = (parentFragment as? StatusesFragmentDelegate)?.shouldInitLoader ?: true
 
 
-    init {
-        statusesBusCallback = createMessageBusCallback()
-    }
-
     // Fragment life cycles
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        scrollListener?.reversed = preferences.getBoolean(SharedPreferenceConstants.KEY_READ_FROM_BOTTOM)
+        statusesBusCallback = createMessageBusCallback()
+        scrollListener?.reversed = preferences[readFromBottomKey]
         adapter.statusClickListener = this
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
@@ -234,8 +233,6 @@ abstract class AbsStatusesFragment protected constructor() :
             triggerRefresh()
             return true
         }
-        val layoutManager = layoutManager
-        if (recyclerView == null || layoutManager == null) return false
         val focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView,
                 layoutManager.focusedChild)
         var position = -1
@@ -277,7 +274,7 @@ abstract class AbsStatusesFragment protected constructor() :
                 }
             }
         }
-        return navigationHelper!!.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
+        return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -292,12 +289,12 @@ abstract class AbsStatusesFragment protected constructor() :
         when (action) {
             ACTION_STATUS_REPLY, ACTION_STATUS_RETWEET, ACTION_STATUS_FAVORITE -> return true
         }
-        return navigationHelper!!.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+        return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int,
                                               event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+        return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>?> {
@@ -446,10 +443,7 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     protected fun saveReadPosition() {
-        val layoutManager = layoutManager
-        if (layoutManager != null) {
-            saveReadPosition(layoutManager.findFirstVisibleItemPosition())
-        }
+        saveReadPosition(layoutManager.findFirstVisibleItemPosition())
     }
 
     protected open fun onHasMoreDataChanged(hasMoreData: Boolean) {

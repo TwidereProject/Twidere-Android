@@ -39,6 +39,7 @@ val drawerTutorialCompleted = KBooleanKey(KEY_SETTINGS_WIZARD_COMPLETED, false)
 val stopAutoRefreshWhenBatteryLowKey = KBooleanKey(KEY_STOP_AUTO_REFRESH_WHEN_BATTERY_LOW, true)
 val apiLastChangeKey = KLongKey(KEY_API_LAST_CHANGE, -1)
 val bugReportsKey = KBooleanKey(KEY_BUG_REPORTS, BuildConfig.DEBUG)
+val readFromBottomKey = KBooleanKey(KEY_READ_FROM_BOTTOM, false)
 
 object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun contains(preferences: SharedPreferences): Boolean {
