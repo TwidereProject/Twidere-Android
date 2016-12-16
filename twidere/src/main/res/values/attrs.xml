@@ -127,6 +127,9 @@
         <attr name="android:foreground"/>
         <attr name="android:foregroundGravity"/>
     </declare-styleable>
+    <declare-styleable name="AccountDashboardHeaderView">
+        <attr name="sizeMeasurementId" format="reference"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>
