@@ -163,7 +163,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         accountProfileBanner.setInAnimation(context, android.R.anim.fade_in)
         accountProfileBanner.setOutAnimation(context, android.R.anim.fade_out)
         accountProfileBanner.setFactory {
-            inflater.inflate(R.layout.layout_account_dashboard_profile_image,
+            inflater.inflate(R.layout.layout_account_dashboard_profile_banner,
                     accountProfileBanner, false)
         }
 

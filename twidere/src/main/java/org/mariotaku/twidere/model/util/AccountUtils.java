@@ -6,7 +6,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.AuthTypeInt;
@@ -90,9 +89,10 @@ public class AccountUtils {
         return details;
     }
 
-    public static Account findByScreenName(AccountManager am, String screenName) {
+    @Nullable
+    public static Account findByScreenName(AccountManager am, @NonNull String screenName) {
         for (Account account : getAccounts(am)) {
-            if (StringUtils.equalsIgnoreCase(UserKey.valueOf(account.name).getId(), screenName)) {
+            if (screenName.equalsIgnoreCase(AccountExtensionsKt.getAccountUser(account, am).screen_name)) {
                 return account;
             }
         }

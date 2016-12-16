@@ -9,7 +9,7 @@ import android.support.v4.util.LongSparseArray
 import android.text.TextUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.extension.setAccountKey
 import org.mariotaku.twidere.extension.setAccountUser
 import org.mariotaku.twidere.model.*
@@ -35,7 +35,7 @@ class UpdateAccountInfoTask(
         }
 
         val am = AccountManager.get(context)
-        val account = Account(details.account.name, TwidereConstants.ACCOUNT_TYPE)
+        val account = Account(details.account.name, ACCOUNT_TYPE)
         account.setAccountUser(am, user)
         account.setAccountKey(am, user.key)
 
