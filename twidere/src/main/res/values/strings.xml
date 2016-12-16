@@ -814,4 +814,7 @@
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
     <string name="hint_accounts_dashboard_message">Swipe from screen edge to open accounts dashboard.</string>
+    <string name="preference_randomize_account_name">Randomize account name</string>
+    <string name="preference_randomize_account_name_summary">Disallow other apps to get your name by reading accounts, improves privacy.</string>
+    <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
 </resources>

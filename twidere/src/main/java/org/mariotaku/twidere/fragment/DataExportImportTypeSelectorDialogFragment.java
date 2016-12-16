@@ -44,6 +44,10 @@ import org.mariotaku.twidere.adapter.ArrayAdapter;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.DataImportExportUtils;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_FLAGS;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_PATH;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE;
+
 public final class DataExportImportTypeSelectorDialogFragment extends BaseDialogFragment implements
         OnMultiChoiceClickListener, OnClickListener, OnShowListener, OnItemClickListener {
 

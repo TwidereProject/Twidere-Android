@@ -37,7 +37,6 @@
         android:contentDescription="@string/profile_banner"
         android:focusable="false"
         android:foreground="@color/drawer_banner_foreground"
-        android:scaleType="centerCrop"
         tools:background="@drawable/nyan_stars_background"/>
 
     <FrameLayout

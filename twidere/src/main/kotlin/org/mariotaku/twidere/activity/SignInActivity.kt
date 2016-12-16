@@ -33,6 +33,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.util.ArraySet
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.AlertDialog
 import android.text.Editable
@@ -51,6 +52,7 @@ import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.set
@@ -72,6 +74,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
+import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.getColor
 import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.extension.newMicroBlogInstance
@@ -96,6 +99,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.lang.ref.WeakReference
+import java.util.*
 
 
 class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
@@ -387,7 +391,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             result.updateAccount(am)
             Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
-            val account = result.addAccount(am)
+            result.addAccount(am, preferences[randomizeAccountNameKey])
             if (accountAuthenticatorResponse != null) {
                 accountAuthenticatorResult = Bundle {
                     this[AccountManager.KEY_BOOLEAN_RESULT] = true
@@ -761,8 +765,18 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             writeAuthToken(am, account)
         }
 
-        fun addAccount(am: AccountManager): Account {
-            val account = Account(UserKey(user.screen_name, user.key.host).toString(), ACCOUNT_TYPE)
+        fun addAccount(am: AccountManager, randomizeAccountName: Boolean): Account {
+            var accountName: String
+            if (randomizeAccountName) {
+                val usedNames = ArraySet<String>()
+                AccountUtils.getAccounts(am).mapTo(usedNames, Account::name)
+                do {
+                    accountName = UUID.randomUUID().toString()
+                } while (usedNames.contains(accountName))
+            } else {
+                accountName = generateAccountName(user.screen_name, user.key.host)
+            }
+            val account = Account(accountName, ACCOUNT_TYPE)
             val accountPosition = AccountUtils.getAccounts(am).size
             // Don't add UserData in this method, see http://stackoverflow.com/a/29776224/859190
             am.addAccountExplicitly(account, null, null)

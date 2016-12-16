@@ -31,6 +31,8 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST;
+
 public class DestroyUserListDialogFragment extends BaseDialogFragment implements DialogInterface.OnClickListener {
 
     public static final String FRAGMENT_TAG = "destroy_user_list";

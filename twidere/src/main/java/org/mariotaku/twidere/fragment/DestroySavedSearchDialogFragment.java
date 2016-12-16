@@ -31,6 +31,10 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_NAME;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_SEARCH_ID;
+
 public class DestroySavedSearchDialogFragment extends BaseDialogFragment implements
         DialogInterface.OnClickListener {
 

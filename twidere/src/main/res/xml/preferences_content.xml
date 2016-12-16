@@ -92,6 +92,11 @@
             android:key="display_sensitive_contents"
             android:summary="@string/display_sensitive_contents_summary"
             android:title="@string/display_sensitive_contents"/>
+        <org.mariotaku.twidere.preference.RandomizeAccountNamePreference
+            android:defaultValue="false"
+            android:key="randomize_account_name"
+            android:summary="@string/preference_randomize_account_name_summary"
+            android:title="@string/preference_randomize_account_name"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

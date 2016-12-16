@@ -42,7 +42,7 @@ public class AccountManagerSupport {
         return new BooleanToBundleAccountManagerFuture(future);
     }
 
-    private static class AccountManagerSupportL {
+    public static class AccountManagerSupportL {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
         static AccountManagerFuture<Bundle> removeAccount(AccountManager am, Account account,
                                                           Activity activity,
@@ -50,6 +50,7 @@ public class AccountManagerSupport {
                                                           Handler handler) {
             return am.removeAccount(account, activity, callback, handler);
         }
+
     }
 
     private static class BooleanToBundleAccountManagerFuture implements AccountManagerFuture<Bundle> {

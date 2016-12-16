@@ -475,7 +475,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         val defWidth = res.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerView = accountProfileBanner.nextView as ImageView
-        if (bannerView.drawable == null || !CompareUtils.objectEquals(account, bannerView.tag)) {
+        if (bannerView.drawable == null || account != bannerView.tag) {
             mediaLoader.displayProfileBanner(bannerView, account, width)
             bannerView.tag = account
         } else {

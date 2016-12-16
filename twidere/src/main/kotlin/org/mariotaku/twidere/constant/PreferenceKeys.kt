@@ -40,6 +40,7 @@ val stopAutoRefreshWhenBatteryLowKey = KBooleanKey(KEY_STOP_AUTO_REFRESH_WHEN_BA
 val apiLastChangeKey = KLongKey(KEY_API_LAST_CHANGE, -1)
 val bugReportsKey = KBooleanKey(KEY_BUG_REPORTS, BuildConfig.DEBUG)
 val readFromBottomKey = KBooleanKey(KEY_READ_FROM_BOTTOM, false)
+val randomizeAccountNameKey = KBooleanKey(KEY_RANDOMIZE_ACCOUNT_NAME, false)
 
 object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun contains(preferences: SharedPreferences): Boolean {

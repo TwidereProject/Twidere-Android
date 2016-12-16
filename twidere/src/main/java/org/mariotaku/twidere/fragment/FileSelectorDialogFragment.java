@@ -58,6 +58,10 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static android.os.Environment.getExternalStorageDirectory;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_FILE_EXTENSIONS;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_PATH;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PICK_DIRECTORY;
 
 public class FileSelectorDialogFragment extends BaseDialogFragment implements LoaderCallbacks<List<File>>,
         OnClickListener, OnItemClickListener {
