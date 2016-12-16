@@ -472,7 +472,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             val type = Tab.getTypeAlias(cursor.getString(indices.type))
             val name = cursor.getString(indices.name)
             val iconKey = cursor.getString(indices.icon)
-            if (CustomTabUtils.isTabTypeValid(type)) {
+            if (type != null && CustomTabUtils.isTabTypeValid(type)) {
                 val typeName = CustomTabUtils.getTabTypeName(context, type)
                 holder.text1.text = if (TextUtils.isEmpty(name)) typeName else name
                 holder.text1.paintFlags = holder.text1.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
