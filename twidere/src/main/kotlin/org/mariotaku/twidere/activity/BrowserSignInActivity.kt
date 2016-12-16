@@ -63,11 +63,6 @@ class BrowserSignInActivity : BaseActivity() {
     private var requestToken: OAuthToken? = null
     private var task: GetRequestTokenTask? = null
 
-    public override fun onDestroy() {
-        loaderManager.destroyLoader(0)
-        super.onDestroy()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
@@ -98,11 +93,17 @@ class BrowserSignInActivity : BaseActivity() {
         getRequestToken()
     }
 
+    public override fun onDestroy() {
+        if (task?.status == AsyncTask.Status.RUNNING) {
+            task?.cancel(true)
+        }
+        super.onDestroy()
+    }
+
     private fun getRequestToken() {
-        if (requestToken != null || task != null && task!!.status == AsyncTask.Status.RUNNING)
-            return
+        if (requestToken != null || task?.status == AsyncTask.Status.RUNNING) return
         task = GetRequestTokenTask(this)
-        AsyncTaskUtils.executeTask<GetRequestTokenTask, Any>(task)
+        AsyncTaskUtils.executeTask(task)
     }
 
     private fun loadUrl(url: String) {
