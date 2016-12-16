@@ -302,7 +302,7 @@ public class UserListSelectorActivity extends BaseActivity implements OnClickLis
             final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mActivity, mAccountKey);
             if (twitter == null) return SingleResponse.Companion.getInstance();
             try {
-                final ResponseList<UserList> lists = twitter.getUserLists(mScreenName, true);
+                final ResponseList<UserList> lists = twitter.getUserListsByScreenName(mScreenName, true);
                 final List<ParcelableUserList> data = new ArrayList<>();
                 boolean isMyAccount = mScreenName.equalsIgnoreCase(getAccountScreenName(mActivity,
                         mAccountKey));

@@ -54,25 +54,25 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         private set
 
     // Callbacks and listeners
-    private var drawerCallback: SimpleDrawerCallback? = null
+    private lateinit var drawerCallback: SimpleDrawerCallback
     var scrollListener: RecyclerViewScrollHandler? = null
     // Data fields
     private val systemWindowsInsets = Rect()
 
     override fun canScroll(dy: Float): Boolean {
-        return drawerCallback!!.canScroll(dy)
+        return drawerCallback.canScroll(dy)
     }
 
     override fun cancelTouch() {
-        drawerCallback!!.cancelTouch()
+        drawerCallback.cancelTouch()
     }
 
     override fun fling(velocity: Float) {
-        drawerCallback!!.fling(velocity)
+        drawerCallback.fling(velocity)
     }
 
     override fun isScrollContent(x: Float, y: Float): Boolean {
-        return drawerCallback!!.isScrollContent(x, y)
+        return drawerCallback.isScrollContent(x, y)
     }
 
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
@@ -91,7 +91,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     override fun scrollBy(dy: Float) {
-        drawerCallback!!.scrollBy(dy)
+        drawerCallback.scrollBy(dy)
     }
 
     override fun scrollToStart(): Boolean {
@@ -124,11 +124,11 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     }
 
     override fun shouldLayoutHeaderBottom(): Boolean {
-        return drawerCallback!!.shouldLayoutHeaderBottom()
+        return drawerCallback.shouldLayoutHeaderBottom()
     }
 
     override fun topChanged(offset: Int) {
-        drawerCallback!!.topChanged(offset)
+        drawerCallback.topChanged(offset)
     }
 
     override var refreshing: Boolean
@@ -161,16 +161,14 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_content_recyclerview, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_content_recyclerview, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         drawerCallback = SimpleDrawerCallback(recyclerView)
 
-        val view = view!!
-        val context = view.context
         val backgroundColor = ThemeUtils.getThemeBackgroundColor(context)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
@@ -268,19 +266,19 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected fun showContent() {
         errorContainer.visibility = View.GONE
         progressContainer.visibility = View.GONE
-        swipeLayout.visibility = View.VISIBLE
+        recyclerView.visibility = View.VISIBLE
     }
 
     protected fun showProgress() {
         errorContainer.visibility = View.GONE
         progressContainer.visibility = View.VISIBLE
-        swipeLayout.visibility = View.GONE
+        recyclerView.visibility = View.GONE
     }
 
     protected fun showError(icon: Int, text: CharSequence) {
         errorContainer.visibility = View.VISIBLE
         progressContainer.visibility = View.GONE
-        swipeLayout.visibility = View.GONE
+        recyclerView.visibility = View.GONE
         errorIcon.setImageResource(icon)
         errorText.text = text
     }
@@ -288,7 +286,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected fun showEmpty(icon: Int, text: CharSequence) {
         errorContainer.visibility = View.VISIBLE
         progressContainer.visibility = View.GONE
-        swipeLayout.visibility = View.VISIBLE
+        recyclerView.visibility = View.VISIBLE
         errorIcon.setImageResource(icon)
         errorText.text = text
     }

@@ -8,11 +8,8 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import org.apache.commons.lang3.ArrayUtils
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -62,7 +59,6 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         return StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
     }
 
-
     fun getStatuses(maxId: String?, sinceId: String?): Int {
         if (context == null) return -1
         val args = Bundle(arguments)
@@ -74,13 +70,8 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
         return 0
     }
 
-
     override fun onCreateAdapter(context: Context): StaggeredGridParcelableStatusesAdapter {
         return StaggeredGridParcelableStatusesAdapter(context)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_content_recyclerview, container, false)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>> {

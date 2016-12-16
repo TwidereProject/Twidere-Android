@@ -26,6 +26,7 @@ import android.support.annotation.WorkerThread
 import android.util.Log
 import com.bluelinelabs.logansquare.LoganSquare
 import com.nostra13.universalimageloader.cache.disc.DiskCache
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -33,6 +34,7 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ListResponse
@@ -45,11 +47,9 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.TwidereArrayUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.PipedInputStream
-import java.io.PipedOutputStream
 import java.util.*
-import java.util.concurrent.Callable
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -225,17 +225,12 @@ abstract class MicroBlogAPIStatusesLoader(
     private fun saveCachedData(data: List<ParcelableStatus>?) {
         val key = serializationKey
         if (key == null || data == null) return
-        val databaseItemLimit = preferences.getInt(KEY_DATABASE_ITEM_LIMIT, DEFAULT_DATABASE_ITEM_LIMIT)
+        val databaseItemLimit = preferences[loadItemLimitKey]
         try {
             val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
-            val pos = PipedOutputStream()
-            val pis = PipedInputStream(pos)
-            val future = pool.submit(Callable<Unit> {
-                LoganSquare.serialize(statuses, pos)
-            })
-            val saved = fileCache.save(key, pis) { current, total -> !future.isDone }
-            if (BuildConfig.DEBUG) {
-                Log.v(LOGTAG, key + " saved: " + saved)
+            fileCache.save(key, ByteArrayInputStream(byteArrayOf())) { current, total -> true }
+            fileCache.get(key)?.outputStream()?.use {
+                LoganSquare.serialize(statuses, it, ParcelableStatus::class.java)
             }
         } catch (e: Exception) {
             // Ignore
