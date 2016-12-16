@@ -160,7 +160,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             val accountHost: String? = intent.getStringExtra(EXTRA_ACCOUNT_HOST) ?:
                     uri.getQueryParameter(QUERY_PARAM_ACCOUNT_HOST) ?: e.accountHost
             selectIntent.putExtra(EXTRA_SINGLE_SELECTION, true)
-            selectIntent.putExtra(EXTRA_SELECT_ONLY_ITEM, true)
+            selectIntent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
             selectIntent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
             selectIntent.putExtra(EXTRA_START_INTENT, intent)
             startActivity(selectIntent)

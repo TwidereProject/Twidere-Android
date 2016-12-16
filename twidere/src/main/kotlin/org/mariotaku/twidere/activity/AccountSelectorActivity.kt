@@ -73,6 +73,9 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
             return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, false)
         }
 
+    private val isSelectOnlyItemAutomatically: Boolean
+        get() = intent.getBooleanExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, false)
+
     private val startIntent: Intent?
         get() {
             val startIntent = intent.getParcelableExtra<Intent>(EXTRA_START_INTENT)
@@ -115,6 +118,9 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         }
         selectAccountButtons.visibility = if (isSingleSelection) View.GONE else View.VISIBLE
         accountsList.adapter = adapter
+        if (adapter.count == 1 && isSelectOnlyItemAutomatically) {
+            selectSingleAccount(0)
+        }
     }
 
     override fun onClick(view: View) {
