@@ -72,25 +72,25 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
         get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
     override fun onItemLongClick(view: AdapterView<*>, child: View, position: Int, id: Long): Boolean {
-        val item = adapter!!.findItem(id) ?: return false
+        val item = adapter.findItem(id) ?: return false
         DestroySavedSearchDialogFragment.show(fragmentManager, accountKey, item.id, item.name)
         return true
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
-        val item = adapter!!.findItem(id) ?: return
+        val item = adapter.findItem(id) ?: return
         openTweetSearch(activity, accountKey, item.query)
     }
 
     override fun onLoaderReset(loader: Loader<ResponseList<SavedSearch>?>) {
-        adapter!!.setData(null)
+        adapter.setData(null)
     }
 
     override fun onLoadFinished(loader: Loader<ResponseList<SavedSearch>?>, data: ResponseList<SavedSearch>?) {
         if (data != null) {
             Collections.sort(data, POSITION_COMPARATOR)
         }
-        adapter!!.setData(data)
+        adapter.setData(data)
         showContent()
         refreshing = false
     }
@@ -109,7 +109,7 @@ class SavedSearchesListFragment : AbsContentListViewFragment<SavedSearchesAdapte
     @Subscribe
     fun onSavedSearchDestroyed(event: SavedSearchDestroyedEvent) {
         val adapter = adapter
-        adapter!!.removeItem(event.accountKey, event.searchId)
+        adapter.removeItem(event.accountKey, event.searchId)
     }
 
     companion object {

@@ -82,7 +82,7 @@ class ActivityTitleSummaryViewHolder(private val adapter: ParcelableActivitiesAd
         timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
     }
 
-    fun displayActivity(activity: ParcelableActivity, byFriends: Boolean) {
+    fun displayActivity(activity: ParcelableActivity) {
         val context = adapter.context
         val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
         val message = ActivityTitleSummaryMessage.get(context,

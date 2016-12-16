@@ -158,7 +158,7 @@ class ParcelableActivitiesAdapter(
         }
 
     private fun bindTitleSummaryViewHolder(holder: ActivityTitleSummaryViewHolder, position: Int) {
-        holder.displayActivity(getActivity(position)!!, byFriends)
+        holder.displayActivity(getActivity(position)!!)
     }
 
     fun getData(): List<ParcelableActivity>? {

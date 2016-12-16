@@ -469,7 +469,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
             super.bindView(view, context, cursor)
             val holder = view.tag as TwoLineWithIconViewHolder
             val indices = indices!!
-            val type = cursor.getString(indices.type)
+            val type = Tab.getTypeAlias(cursor.getString(indices.type))
             val name = cursor.getString(indices.name)
             val iconKey = cursor.getString(indices.icon)
             if (CustomTabUtils.isTabTypeValid(type)) {

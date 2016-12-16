@@ -33,15 +33,14 @@ object HttpClientFactory {
     fun initOkHttpClient(context: Context, prefs: SharedPreferencesWrapper,
                          builder: OkHttpClient.Builder, dns: Dns,
                          connectionPool: ConnectionPool) {
-        updateHttpClientConfiguration(context, builder, prefs, dns, connectionPool)
+        updateHttpClientConfiguration(builder, prefs, dns, connectionPool)
         DebugModeUtils.initForOkHttpClient(builder)
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
-    fun updateHttpClientConfiguration(context: Context,
-                                      builder: OkHttpClient.Builder,
-                                      prefs: SharedPreferencesWrapper, dns: Dns,
-                                      connectionPool: ConnectionPool) {
+    fun updateHttpClientConfiguration(builder: OkHttpClient.Builder,
+                                      prefs: SharedPreferencesWrapper,
+                                      dns: Dns, connectionPool: ConnectionPool) {
         val enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false)
         builder.connectTimeout(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong(), TimeUnit.SECONDS)
         builder.connectionPool(connectionPool)
