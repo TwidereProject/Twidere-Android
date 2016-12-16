@@ -70,6 +70,13 @@
                 android:data="twidere://user?user_key=12630242@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
         <Preference
+            android:summary="Designed Material Twidere icon"
+            android:title="NovaDNG">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="twidere://user?user_key=362300647@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
+        </Preference>
+        <Preference
             android:summary="He taught me some useful things about SQLite"
             android:title="impulseplus">
             <intent
