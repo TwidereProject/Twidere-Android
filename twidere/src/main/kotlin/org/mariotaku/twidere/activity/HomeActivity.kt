@@ -26,6 +26,7 @@ import android.app.Dialog
 import android.app.PendingIntent
 import android.app.SearchManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.res.Configuration
@@ -72,10 +73,7 @@ import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.constant.KeyboardShortcutConstants
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
-import org.mariotaku.twidere.constant.defaultAutoRefreshKeyAsked
-import org.mariotaku.twidere.constant.drawerTutorialCompleted
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -758,7 +756,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun showAutoRefreshConfirm() {
-
+        val df = AutoRefreshConfirmDialogFragment()
+        df.show(supportFragmentManager, "auto_refresh_confirm")
     }
 
     private fun setTabPosition(initialTab: Int) {
@@ -931,12 +930,17 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
             builder.setPositiveButton(android.R.string.ok) { dialog, which ->
-
+                kPreferences[defaultAutoRefreshKey] = true
             }
-            builder.setPositiveButton(R.string.no_thanks) { dialog, which ->
-
+            builder.setNegativeButton(R.string.no_thanks) { dialog, which ->
+                kPreferences[defaultAutoRefreshKey] = false
             }
             return builder.create()
+        }
+
+        override fun onDismiss(dialog: DialogInterface?) {
+            kPreferences[defaultAutoRefreshKeyAsked] = true
+            super.onDismiss(dialog)
         }
     }
 

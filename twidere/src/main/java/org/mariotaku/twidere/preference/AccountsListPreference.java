@@ -79,7 +79,7 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
         removeAll();
         for (final AccountDetails account : accounts) {
             final AccountItemPreference preference = new AccountItemPreference(getContext(), account,
-                    mSwitchKey, mSwitchDefault);
+                    mSwitchKey, getSwitchDefault());
             setupPreference(preference, account);
             addPreference(preference);
         }
@@ -96,6 +96,10 @@ public abstract class AccountsListPreference extends PreferenceCategory implemen
     }
 
     protected abstract void setupPreference(AccountItemPreference preference, AccountDetails account);
+
+    protected boolean getSwitchDefault() {
+        return mSwitchDefault;
+    }
 
     public static final class AccountItemPreference extends Preference implements ImageLoadingListener,
             OnSharedPreferenceChangeListener {

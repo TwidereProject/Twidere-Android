@@ -47,4 +47,8 @@ public class AutoRefreshAccountsListPreference extends AccountsListPreference {
         args.putParcelable(EXTRA_ACCOUNT, account);
     }
 
+    @Override
+    protected boolean getSwitchDefault() {
+        return getPreferenceManager().getSharedPreferences().getBoolean(KEY_DEFAULT_AUTO_REFRESH, false);
+    }
 }

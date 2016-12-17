@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
+import org.mariotaku.kpreferences.KPreferences
 
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
@@ -43,6 +44,8 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat() {
     lateinit var keyboardShortcutHandler: KeyboardShortcutsHandler
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
+    @Inject
+    lateinit var kPreferences: KPreferences
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
