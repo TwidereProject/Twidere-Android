@@ -62,7 +62,6 @@ import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.bugReportsKey
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
 import org.mariotaku.twidere.model.DefaultFeatures
-import org.mariotaku.twidere.service.RefreshService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -93,6 +92,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var externalThemeManager: ExternalThemeManager
     @Inject
     lateinit internal var kPreferences: KPreferences
+    @Inject
+    lateinit internal var autoRefreshController: AutoRefreshController
 
     private lateinit var profileImageViewViewProcessor: ProfileImageViewViewProcessor
     private lateinit var fontFamilyTagProcessor: FontFamilyTagProcessor
@@ -129,12 +130,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         updateEasterEggIcon()
 
         migrateUsageStatisticsPreferences()
-        if (resources.getBoolean(R.bool.use_job_refresh_service)) {
-        } else {
-            Utils.startRefreshServiceIfNeeded(this)
-        }
-
         GeneralComponentHelper.build(this).inject(this)
+
+        autoRefreshController.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
 
@@ -288,8 +286,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
         when (key) {
             KEY_REFRESH_INTERVAL -> {
-                stopService(Intent(this, RefreshService::class.java))
-                Utils.startRefreshServiceIfNeeded(this)
+                autoRefreshController.rescheduleAll()
             }
             KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME,
             KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {

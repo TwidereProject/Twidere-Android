@@ -19,11 +19,9 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.content.SharedPreferences
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_AUTO_REFRESH
 import org.mariotaku.twidere.constant.defaultAutoRefreshKey
-import org.mariotaku.twidere.util.Utils
 
 class AccountRefreshSettingsFragment : BaseAccountPreferenceFragment() {
 
@@ -36,9 +34,4 @@ class AccountRefreshSettingsFragment : BaseAccountPreferenceFragment() {
     override val switchPreferenceKey: String?
         get() = KEY_AUTO_REFRESH
 
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        if (KEY_AUTO_REFRESH == key) {
-            Utils.startRefreshServiceIfNeeded(activity)
-        }
-    }
 }

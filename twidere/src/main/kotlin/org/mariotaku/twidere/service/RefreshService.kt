@@ -19,269 +19,53 @@
 
 package org.mariotaku.twidere.service
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.IBinder
-import android.os.SystemClock
 import android.util.Log
-import edu.tsinghua.hotmobi.model.BatteryRecord
-import edu.tsinghua.hotmobi.model.ScreenEvent
-import org.apache.commons.lang3.math.NumberUtils
-import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
+import org.mariotaku.abstask.library.AbstractTask
+import org.mariotaku.ktextension.convert
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.receiver.PowerStateReceiver
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.task.GetActivitiesAboutMeTask
+import org.mariotaku.twidere.task.GetHomeTimelineTask
+import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
 
-class RefreshService : Service(), Constants {
+class RefreshService : Service() {
 
     @Inject
     internal lateinit var preferences: SharedPreferencesWrapper
-    @Inject
-    internal lateinit var twitterWrapper: AsyncTwitterWrapper
 
-    private lateinit var alarmManager: AlarmManager
-    private var pendingRefreshHomeTimelineIntent: PendingIntent? = null
-    private var pendingRefreshMentionsIntent: PendingIntent? = null
-    private var pendingRefreshDirectMessagesIntent: PendingIntent? = null
-    private var pendingRefreshTrendsIntent: PendingIntent? = null
-
-    private val mStateReceiver = object : BroadcastReceiver() {
-
-        override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action
-            if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG, String.format("Refresh service received action %s", action))
-            }
-            when (action) {
-                BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING -> {
-                    rescheduleHomeTimelineRefreshing()
-                }
-                BROADCAST_RESCHEDULE_MENTIONS_REFRESHING -> {
-                    rescheduleMentionsRefreshing()
-                }
-                BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING -> {
-                    rescheduleDirectMessagesRefreshing()
-                }
-                BROADCAST_RESCHEDULE_TRENDS_REFRESHING -> {
-                    rescheduleTrendsRefreshing()
-                }
-                BROADCAST_REFRESH_HOME_TIMELINE -> {
-                    if (isAutoRefreshAllowed) {
-                        twitterWrapper.getHomeTimelineAsync(AutoRefreshTaskParam(context,
-                                AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
-                            DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, accountKeys)
-                        })
-                    }
-                }
-                BROADCAST_REFRESH_NOTIFICATIONS -> {
-                    if (isAutoRefreshAllowed) {
-                        twitterWrapper.getActivitiesAboutMeAsync(AutoRefreshTaskParam(context,
-                                AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
-                            DataStoreUtils.getNewestActivityMaxPositions(context,
-                                    Activities.AboutMe.CONTENT_URI, accountKeys)
-                        })
-                    }
-                }
-                BROADCAST_REFRESH_DIRECT_MESSAGES -> {
-                    if (isAutoRefreshAllowed) {
-                        twitterWrapper.getReceivedDirectMessagesAsync(AutoRefreshTaskParam(context,
-                                AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
-                            DataStoreUtils.getNewestMessageIds(context,
-                                    DirectMessages.Inbox.CONTENT_URI, accountKeys)
-                        })
-                    }
-                }
-                BROADCAST_REFRESH_TRENDS -> {
-                    if (isAutoRefreshAllowed) {
-                        val prefs = AccountPreferences.getAccountPreferences(context,
-                                DataStoreUtils.getAccountKeys(context)).filter(AccountPreferences::isAutoRefreshEnabled)
-                        getLocalTrends(prefs.filter(AccountPreferences::isAutoRefreshTrendsEnabled)
-                                .map(AccountPreferences::getAccountKey).toTypedArray())
-                    }
-                }
-            }
-        }
-
-    }
-
-    private val mPowerStateReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                Intent.ACTION_BATTERY_CHANGED -> {
-                    BatteryRecord.log(context, intent)
-                }
-                else -> {
-                    BatteryRecord.log(context)
-                }
-            }
-        }
-    }
-
-    private val mScreenStateReceiver = object : BroadcastReceiver() {
-        var mPresentTime: Long = -1
-
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                Intent.ACTION_SCREEN_ON -> {
-                    ScreenEvent.log(context, ScreenEvent.Action.ON, presentDuration)
-                }
-                Intent.ACTION_SCREEN_OFF -> {
-                    ScreenEvent.log(context, ScreenEvent.Action.OFF, presentDuration)
-                    mPresentTime = -1
-                }
-                Intent.ACTION_USER_PRESENT -> {
-                    mPresentTime = SystemClock.elapsedRealtime()
-                    ScreenEvent.log(context, ScreenEvent.Action.PRESENT, -1)
-                }
-            }
-        }
-
-        private val presentDuration: Long
-            get() {
-                if (mPresentTime < 0) return -1
-                return SystemClock.elapsedRealtime() - mPresentTime
-            }
-    }
-
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         GeneralComponentHelper.build(this).inject(this)
-        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        pendingRefreshHomeTimelineIntent = PendingIntent.getBroadcast(this, 0, Intent(
-                BROADCAST_REFRESH_HOME_TIMELINE), 0)
-        pendingRefreshMentionsIntent = PendingIntent.getBroadcast(this, 0, Intent(BROADCAST_REFRESH_NOTIFICATIONS), 0)
-        pendingRefreshDirectMessagesIntent = PendingIntent.getBroadcast(this, 0, Intent(
-                BROADCAST_REFRESH_DIRECT_MESSAGES), 0)
-        pendingRefreshTrendsIntent = PendingIntent.getBroadcast(this, 0, Intent(BROADCAST_REFRESH_TRENDS), 0)
-        val refreshFilter = IntentFilter(BROADCAST_NOTIFICATION_DELETED)
-        refreshFilter.addAction(BROADCAST_REFRESH_HOME_TIMELINE)
-        refreshFilter.addAction(BROADCAST_REFRESH_NOTIFICATIONS)
-        refreshFilter.addAction(BROADCAST_REFRESH_DIRECT_MESSAGES)
-        refreshFilter.addAction(BROADCAST_RESCHEDULE_HOME_TIMELINE_REFRESHING)
-        refreshFilter.addAction(BROADCAST_RESCHEDULE_MENTIONS_REFRESHING)
-        refreshFilter.addAction(BROADCAST_RESCHEDULE_DIRECT_MESSAGES_REFRESHING)
-        registerReceiver(mStateReceiver, refreshFilter)
-        val batteryFilter = IntentFilter()
-        batteryFilter.addAction(Intent.ACTION_BATTERY_CHANGED)
-        batteryFilter.addAction(Intent.ACTION_BATTERY_OKAY)
-        batteryFilter.addAction(Intent.ACTION_BATTERY_LOW)
-        batteryFilter.addAction(Intent.ACTION_POWER_CONNECTED)
-        batteryFilter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        val screenFilter = IntentFilter()
-        screenFilter.addAction(Intent.ACTION_SCREEN_ON)
-        screenFilter.addAction(Intent.ACTION_SCREEN_OFF)
-        screenFilter.addAction(Intent.ACTION_USER_PRESENT)
-        registerReceiver(mPowerStateReceiver, batteryFilter)
-        registerReceiver(mScreenStateReceiver, screenFilter)
-        PowerStateReceiver.serviceReceiverStarted = true
-        if (Utils.hasAutoRefreshAccounts(this)) {
-            startAutoRefresh()
-        } else {
-            stopSelf()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(LOGTAG, "onStartCommand ${intent?.action}")
+        val task = run {
+            val type = intent?.action?.convert { getRefreshType(it) } ?: return@run null
+            return@run createJobTask(this, type)
+        } ?: run {
+            stopSelfResult(startId)
+            return START_NOT_STICKY
         }
-    }
-
-    override fun onDestroy() {
-        PowerStateReceiver.serviceReceiverStarted = false
-        unregisterReceiver(mScreenStateReceiver)
-        unregisterReceiver(mPowerStateReceiver)
-        unregisterReceiver(mStateReceiver)
-        if (Utils.hasAutoRefreshAccounts(this)) {
-            // Auto refresh enabled, so I will try to start service after it was
-            // stopped.
-            startService(Intent(this, javaClass))
+        task.callback = {
+            stopSelfResult(startId)
         }
-        super.onDestroy()
-    }
-
-    protected val isAutoRefreshAllowed: Boolean
-        get() = Utils.isNetworkAvailable(this) && (Utils.isBatteryOkay(this) || !Utils.shouldStopAutoRefreshOnBatteryLow(this))
-
-    private fun getLocalTrends(accountIds: Array<UserKey>) {
-        val account_id = Utils.getDefaultAccountKey(this)
-        val woeid = preferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1)
-        twitterWrapper.getLocalTrendsAsync(account_id, woeid)
-    }
-
-    private val refreshInterval: Long
-        get() {
-            val prefValue = NumberUtils.toInt(preferences.getString(KEY_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL), -1)
-            return (Math.max(prefValue, 3) * 60 * 1000).toLong()
-        }
-
-    private fun rescheduleDirectMessagesRefreshing() {
-        alarmManager.cancel(pendingRefreshDirectMessagesIntent)
-        val refreshInterval = refreshInterval
-        if (refreshInterval > 0) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-                    refreshInterval, pendingRefreshDirectMessagesIntent)
-        }
-    }
-
-    private fun rescheduleHomeTimelineRefreshing() {
-        alarmManager.cancel(pendingRefreshHomeTimelineIntent)
-        val refreshInterval = refreshInterval
-        if (refreshInterval > 0) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-                    refreshInterval, pendingRefreshHomeTimelineIntent)
-        }
-    }
-
-    private fun rescheduleMentionsRefreshing() {
-        alarmManager.cancel(pendingRefreshMentionsIntent)
-        val refreshInterval = refreshInterval
-        if (refreshInterval > 0) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-                    refreshInterval, pendingRefreshMentionsIntent)
-        }
-    }
-
-    private fun rescheduleTrendsRefreshing() {
-        alarmManager.cancel(pendingRefreshTrendsIntent)
-        val refreshInterval = refreshInterval
-        if (refreshInterval > 0) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + refreshInterval,
-                    refreshInterval, pendingRefreshTrendsIntent)
-        }
-    }
-
-    private fun startAutoRefresh(): Boolean {
-        stopAutoRefresh()
-        val refreshInterval = refreshInterval
-        if (refreshInterval <= 0) return false
-        rescheduleHomeTimelineRefreshing()
-        rescheduleMentionsRefreshing()
-        rescheduleDirectMessagesRefreshing()
-        rescheduleTrendsRefreshing()
-        return true
-    }
-
-    private fun stopAutoRefresh() {
-        alarmManager.cancel(pendingRefreshHomeTimelineIntent)
-        alarmManager.cancel(pendingRefreshMentionsIntent)
-        alarmManager.cancel(pendingRefreshDirectMessagesIntent)
-        alarmManager.cancel(pendingRefreshTrendsIntent)
+        return START_NOT_STICKY
     }
 
     class AutoRefreshTaskParam(
@@ -301,4 +85,49 @@ class RefreshService : Service(), Constants {
             get() = getSinceIds(accountKeys)
     }
 
+    companion object {
+
+        fun createJobTask(context: Context, @AutoRefreshType refreshType: String): AbstractTask<*, *, () -> Unit>? {
+            when (refreshType) {
+                AutoRefreshType.HOME_TIMELINE -> {
+                    val task = GetHomeTimelineTask(context)
+                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
+                        DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, accountKeys)
+                    }
+                    return task
+                }
+                AutoRefreshType.INTERACTIONS_TIMELINE -> {
+                    val task = GetActivitiesAboutMeTask(context)
+                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
+                        DataStoreUtils.getNewestActivityMaxPositions(context, Activities.AboutMe.CONTENT_URI, accountKeys)
+                    }
+                    return task
+                }
+                AutoRefreshType.DIRECT_MESSAGES -> {
+                    val task = GetReceivedDirectMessagesTask(context)
+                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
+                        DataStoreUtils.getNewestMessageIds(context, DirectMessages.Inbox.CONTENT_URI, accountKeys)
+                    }
+                    return task
+                }
+            }
+            return null
+        }
+
+        @AutoRefreshType
+        fun getRefreshType(action: String): String? = when (action) {
+            ACTION_REFRESH_HOME_TIMELINE -> AutoRefreshType.HOME_TIMELINE
+            ACTION_REFRESH_NOTIFICATIONS -> AutoRefreshType.INTERACTIONS_TIMELINE
+            ACTION_REFRESH_DIRECT_MESSAGES -> AutoRefreshType.DIRECT_MESSAGES
+            else -> null
+        }
+
+        fun getRefreshAction(@AutoRefreshType type: String): String? = when (type) {
+            AutoRefreshType.HOME_TIMELINE -> ACTION_REFRESH_HOME_TIMELINE
+            AutoRefreshType.INTERACTIONS_TIMELINE -> ACTION_REFRESH_NOTIFICATIONS
+            AutoRefreshType.DIRECT_MESSAGES -> ACTION_REFRESH_DIRECT_MESSAGES
+            else -> null
+        }
+
+    }
 }

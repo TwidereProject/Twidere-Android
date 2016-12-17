@@ -1019,8 +1019,11 @@ public class DataStoreUtils implements Constants {
     }
 
     public static void prepareDatabase(@NonNull Context context) {
-        context.getContentResolver().query(TwidereDataStore.CONTENT_URI_DATABASE_PREPARE, null,
-                null, null, null);
+        final ContentResolver cr = context.getContentResolver();
+        final Cursor cursor = cr.query(TwidereDataStore.CONTENT_URI_DATABASE_PREPARE, null, null,
+                null, null);
+        if (cursor == null) return;
+        cursor.close();
     }
 
     interface FieldArrayCreator<T> {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<bool name="use_job_refresh_service">true</bool>-->
-    <!--<bool name="use_legacy_refresh_service">false</bool>-->
+    <bool name="use_job_refresh_service">true</bool>
+    <bool name="use_legacy_refresh_service">false</bool>
 </resources>

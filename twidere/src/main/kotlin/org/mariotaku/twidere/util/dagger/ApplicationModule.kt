@@ -42,6 +42,7 @@ import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
@@ -229,6 +230,14 @@ class ApplicationModule(private val application: Application) {
     }
 
     @Provides
+    fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
+        if (application.resources.getBoolean(R.bool.use_job_refresh_service)) {
+            return JobSchedulerAutoRefreshController(application, kPreferences)
+        }
+        return LegacyAutoRefreshController(application, kPreferences)
+    }
+
+    @Provides
     @Singleton
     fun defaultFeatures(preferences: SharedPreferencesWrapper): DefaultFeatures {
         val features = DefaultFeatures()
@@ -270,3 +279,4 @@ class ApplicationModule(private val application: Application) {
         }
     }
 }
+

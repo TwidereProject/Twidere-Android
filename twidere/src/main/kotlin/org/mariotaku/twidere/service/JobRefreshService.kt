@@ -24,17 +24,13 @@ import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
-import org.mariotaku.abstask.library.AbstractTask
+import android.util.Log
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
-import org.mariotaku.twidere.model.AccountPreferences
-import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.task.GetActivitiesAboutMeTask
-import org.mariotaku.twidere.task.GetHomeTimelineTask
-import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask
-import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -59,10 +55,16 @@ class JobRefreshService : JobService() {
             // Low battery, don't refresh
             return false
         }
+        if (BuildConfig.DEBUG) {
+            Log.d(LOGTAG, "Running job ${params.jobId}")
+        }
 
-        val task = createJobTask(params) ?: return false
+        val task = run {
+            val type = getRefreshType(params.jobId) ?: return@run null
+            return@run RefreshService.createJobTask(this, type)
+        } ?: return false
         task.callback = {
-            this.jobFinished(params, true)
+            this.jobFinished(params, false)
         }
         TaskStarter.execute(task)
         return true
@@ -72,30 +74,23 @@ class JobRefreshService : JobService() {
         return false
     }
 
-    internal fun createJobTask(params: JobParameters): AbstractTask<*, *, () -> Unit>? {
-        when (params.extras?.getString(EXTRA_ACTION)) {
-            BROADCAST_REFRESH_HOME_TIMELINE -> {
-                val task = GetHomeTimelineTask(this)
-                task.params = RefreshService.AutoRefreshTaskParam(this, AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestStatusIds(this, Statuses.CONTENT_URI, accountKeys)
-                }
-                return task
-            }
-            BROADCAST_REFRESH_NOTIFICATIONS -> {
-                val task = GetActivitiesAboutMeTask(this)
-                task.params = RefreshService.AutoRefreshTaskParam(this, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestActivityMaxPositions(this, Activities.AboutMe.CONTENT_URI, accountKeys)
-                }
-                return task
-            }
-            BROADCAST_REFRESH_DIRECT_MESSAGES -> {
-                val task = GetReceivedDirectMessagesTask(this)
-                task.params = RefreshService.AutoRefreshTaskParam(this, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestMessageIds(this, DirectMessages.Inbox.CONTENT_URI, accountKeys)
-                }
-                return task
-            }
+    companion object {
+        const val ID_REFRESH_HOME_TIMELINE = 1
+        const val ID_REFRESH_NOTIFICATIONS = 2
+        const val ID_REFRESH_DIRECT_MESSAGES = 3
+
+        fun getJobId(@AutoRefreshType type: String): Int = when (type) {
+            AutoRefreshType.HOME_TIMELINE -> JobRefreshService.ID_REFRESH_HOME_TIMELINE
+            AutoRefreshType.INTERACTIONS_TIMELINE -> JobRefreshService.ID_REFRESH_NOTIFICATIONS
+            AutoRefreshType.DIRECT_MESSAGES -> JobRefreshService.ID_REFRESH_DIRECT_MESSAGES
+            else -> 0
         }
-        return null
+
+        fun getRefreshType(jobId: Int): String? = when (jobId) {
+            JobRefreshService.ID_REFRESH_HOME_TIMELINE -> AutoRefreshType.HOME_TIMELINE
+            JobRefreshService.ID_REFRESH_NOTIFICATIONS -> AutoRefreshType.INTERACTIONS_TIMELINE
+            JobRefreshService.ID_REFRESH_DIRECT_MESSAGES -> AutoRefreshType.DIRECT_MESSAGES
+            else -> null
+        }
     }
 }
