@@ -21,10 +21,10 @@ import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
-import org.mariotaku.twidere.util.support.AccountManagerSupport;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE;
@@ -170,17 +170,9 @@ public class AccountUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static Account renameAccount(AccountManager am, Account oldAccount, String newName) {
+    public static AccountManagerFuture<Account> renameAccount(AccountManager am, Account oldAccount, String newName) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            try {
-                return AccountManagerSupportL.renameAccount(am, oldAccount, newName, null, null).getResult();
-            } catch (OperationCanceledException e) {
-                return null;
-            } catch (IOException e) {
-                return null;
-            } catch (AuthenticatorException e) {
-                return null;
-            }
+            return AccountManagerSupportL.renameAccount(am, oldAccount, newName, null, null);
         }
         final Account newAccount = new Account(newName, oldAccount.type);
         if (am.addAccountExplicitly(newAccount, null, null)) {
@@ -189,10 +181,53 @@ public class AccountUtils {
             }
             am.setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
                     am.peekAuthToken(oldAccount, ACCOUNT_AUTH_TOKEN_TYPE));
-            AccountManagerSupport.removeAccount(am, oldAccount, null, null, null);
-            return newAccount;
+            @SuppressWarnings("deprecation")
+            final AccountManagerFuture<Boolean> booleanFuture = am.removeAccount(oldAccount, null, null);
+            return new AccountFuture(newAccount, booleanFuture);
         }
         return null;
+    }
+
+    private static class AccountFuture implements AccountManagerFuture<Account> {
+
+        private final Account account;
+        private final AccountManagerFuture<Boolean> booleanFuture;
+
+        AccountFuture(Account account, AccountManagerFuture<Boolean> booleanFuture) {
+            this.account = account;
+            this.booleanFuture = booleanFuture;
+        }
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return booleanFuture.cancel(mayInterruptIfRunning);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return booleanFuture.isCancelled();
+        }
+
+        @Override
+        public boolean isDone() {
+            return booleanFuture.isDone();
+        }
+
+        @Override
+        public Account getResult() throws OperationCanceledException, IOException, AuthenticatorException {
+            if (booleanFuture.getResult()) {
+                return account;
+            }
+            return null;
+        }
+
+        @Override
+        public Account getResult(long timeout, TimeUnit unit) throws OperationCanceledException, IOException, AuthenticatorException {
+            if (booleanFuture.getResult(timeout, unit)) {
+                return account;
+            }
+            return null;
+        }
     }
 
     private static class AccountManagerSupportL {
