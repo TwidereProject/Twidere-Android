@@ -309,6 +309,7 @@ public interface SharedPreferenceConstants {
     String KEY_DRAWER_TOGGLE = "drawer_toggle";
 
     String KEY_RANDOMIZE_ACCOUNT_NAME = "randomize_account_name";
+    String KEY_DEFAULT_AUTO_REFRESH = "default_auto_refresh";
 
     String KEY_MEDIA_LINK_COUNTS_IN_STATUS = "media_link_counts_in_status";
     String KEY_DROPBOX_ACCESS_TOKEN = "dropbox_access_token";

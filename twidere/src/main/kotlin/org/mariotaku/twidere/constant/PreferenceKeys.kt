@@ -41,6 +41,8 @@ val apiLastChangeKey = KLongKey(KEY_API_LAST_CHANGE, -1)
 val bugReportsKey = KBooleanKey(KEY_BUG_REPORTS, BuildConfig.DEBUG)
 val readFromBottomKey = KBooleanKey(KEY_READ_FROM_BOTTOM, false)
 val randomizeAccountNameKey = KBooleanKey(KEY_RANDOMIZE_ACCOUNT_NAME, false)
+val defaultAutoRefreshKey = KBooleanKey(KEY_DEFAULT_AUTO_REFRESH, false)
+val defaultAutoRefreshKeyAsked = KBooleanKey("default_auto_refresh_asked", true)
 
 object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun contains(preferences: SharedPreferences): Boolean {

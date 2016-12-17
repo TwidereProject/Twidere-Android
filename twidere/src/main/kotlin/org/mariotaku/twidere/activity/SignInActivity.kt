@@ -392,20 +392,24 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])
-            if (accountAuthenticatorResponse != null) {
-                accountAuthenticatorResult = Bundle {
-                    this[AccountManager.KEY_BOOLEAN_RESULT] = true
-                }
-            } else {
-                val intent = Intent(this, HomeActivity::class.java)
-                //TODO refresh time lines
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-                startActivity(intent)
-            }
             Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
                     officialKey = result.accountType.second?.official ?: false))
-            finish()
+            finishSignIn()
         }
+    }
+
+    private fun finishSignIn() {
+        if (accountAuthenticatorResponse != null) {
+            accountAuthenticatorResult = Bundle {
+                this[AccountManager.KEY_BOOLEAN_RESULT] = true
+            }
+        } else {
+            val intent = Intent(this, HomeActivity::class.java)
+            //TODO refresh time lines
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            startActivity(intent)
+        }
+        finish()
     }
 
     internal fun onSignInError(exception: Exception) {

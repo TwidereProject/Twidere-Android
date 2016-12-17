@@ -88,7 +88,7 @@ public class AccountPreferences implements Constants {
     }
 
     public boolean isAutoRefreshEnabled() {
-        return mPreferences.getBoolean(KEY_AUTO_REFRESH, DEFAULT_AUTO_REFRESH);
+        return mPreferences.getBoolean(KEY_AUTO_REFRESH, mPreferences.getBoolean(KEY_DEFAULT_AUTO_REFRESH, false));
     }
 
     public boolean isAutoRefreshHomeTimelineEnabled() {
