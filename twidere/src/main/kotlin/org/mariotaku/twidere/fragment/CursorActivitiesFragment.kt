@@ -61,7 +61,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             showContent()
         } else if (accountKeys.isNotEmpty()) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
-                    errorInfoStore.get(errorInfoKey, accountKeys[0]))
+                    errorInfoStore[errorInfoKey, accountKeys[0]])
             if (errorInfo != null) {
                 showEmpty(errorInfo.icon, errorInfo.message)
             } else {

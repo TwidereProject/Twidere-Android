@@ -86,11 +86,9 @@ abstract class GetDirectMessagesTask(
                 errorInfoStore.remove(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey)
             } catch (e: MicroBlogException) {
                 if (e.errorCode == ErrorInfo.NO_DIRECT_MESSAGE_PERMISSION) {
-                    errorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey,
-                            ErrorInfoStore.CODE_NO_DM_PERMISSION)
+                    errorInfoStore[ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey] = ErrorInfoStore.CODE_NO_DM_PERMISSION
                 } else if (e.isCausedByNetworkIssue) {
-                    errorInfoStore.put(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey,
-                            ErrorInfoStore.CODE_NETWORK_ERROR)
+                    errorInfoStore[ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey] = ErrorInfoStore.CODE_NETWORK_ERROR
                 }
                 if (BuildConfig.DEBUG) {
                     Log.w(TwidereConstants.LOGTAG, e)

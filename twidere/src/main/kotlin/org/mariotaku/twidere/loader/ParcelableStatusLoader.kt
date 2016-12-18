@@ -23,6 +23,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.AsyncTaskLoader
+import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.twidere.constant.IntentConstants
@@ -57,24 +58,24 @@ class ParcelableStatusLoader(
     }
 
     override fun loadInBackground(): SingleResponse<ParcelableStatus> {
-        if (accountKey == null || statusId == null) return SingleResponse.getInstance<ParcelableStatus>()
+        if (accountKey == null || statusId == null) {
+            return SingleResponse(exception = IllegalArgumentException())
+        }
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
         if (!omitIntentExtra && extras != null) {
-            val cache = extras.getParcelable<ParcelableStatus>(IntentConstants.EXTRA_STATUS)
+            val cache: ParcelableStatus? = extras.getParcelable(IntentConstants.EXTRA_STATUS)
             if (cache != null) {
-                val response = SingleResponse.getInstance(cache)
-                val extras = response.extras
-                extras.putParcelable(EXTRA_ACCOUNT, details)
+                val response = SingleResponse(cache)
+                response.extras[EXTRA_ACCOUNT] = details
                 return response
             }
         }
+        if (details == null) return SingleResponse(exception = MicroBlogException("No account"))
         try {
-            if (details == null) return SingleResponse.getInstance<ParcelableStatus>()
             val status = findStatus(context, accountKey, statusId)
             ParcelableStatusUtils.updateExtraInformation(status, details, userColorNameManager)
-            val response = SingleResponse.getInstance(status)
-            val extras = response.extras
-            extras.putParcelable(EXTRA_ACCOUNT, details)
+            val response = SingleResponse(status)
+            response.extras[EXTRA_ACCOUNT] = details
             return response
         } catch (e: MicroBlogException) {
             if (e.errorCode == ErrorInfo.STATUS_NOT_FOUND) {
@@ -84,7 +85,7 @@ class ParcelableStatusLoader(
                         statusId, null)
                 DataStoreUtils.deleteActivityStatus(cr, accountKey, statusId, null)
             }
-            return SingleResponse.getInstance<ParcelableStatus>(e)
+            return SingleResponse(exception = e)
         }
 
     }

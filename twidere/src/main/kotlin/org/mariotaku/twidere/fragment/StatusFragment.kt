@@ -411,7 +411,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         if (status != null) {
             val readPosition = saveReadPosition()
             val dataExtra = data.extras
-            val details: AccountDetails = dataExtra.getParcelable(EXTRA_ACCOUNT)
+            val details: AccountDetails? = dataExtra.getParcelable(EXTRA_ACCOUNT)
             if (adapter.setStatus(status, details)) {
                 val args = arguments
                 if (args.containsKey(EXTRA_STATUS)) {
@@ -429,7 +429,11 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
                 val event = TweetEvent.create(activity, status, TimelineType.OTHER)
                 event.action = TweetEvent.Action.OPEN
-                event.isHasTranslateFeature = Utils.isOfficialCredentials(context, details)
+                if (details != null) {
+                    event.isHasTranslateFeature = Utils.isOfficialCredentials(context, details)
+                } else {
+                    event.isHasTranslateFeature = false
+                }
                 statusEvent = event
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition)
@@ -1816,7 +1820,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             updateItemDecoration()
         }
 
-        fun setStatus(status: ParcelableStatus, account: AccountDetails): Boolean {
+        fun setStatus(status: ParcelableStatus, account: AccountDetails?): Boolean {
             val old = this.status
             this.status = status
             statusAccount = account

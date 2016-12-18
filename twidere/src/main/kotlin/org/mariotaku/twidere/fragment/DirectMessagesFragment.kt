@@ -167,7 +167,7 @@ class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntries
 
         if (accountIds.isNotEmpty()) {
             val errorInfo = ErrorInfoStore.getErrorInfo(context,
-                    errorInfoStore.get(ErrorInfoStore.KEY_DIRECT_MESSAGES, accountIds[0]))
+                    errorInfoStore[ErrorInfoStore.KEY_DIRECT_MESSAGES, accountIds.first()])
             if (isEmpty && errorInfo != null) {
                 showEmpty(errorInfo.icon, errorInfo.message)
             } else {

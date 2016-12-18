@@ -90,21 +90,21 @@ class RefreshService : Service() {
             when (refreshType) {
                 AutoRefreshType.HOME_TIMELINE -> {
                     val task = GetHomeTimelineTask(context)
-                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
+                    task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
                         DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, accountKeys)
                     }
                     return task
                 }
                 AutoRefreshType.INTERACTIONS_TIMELINE -> {
                     val task = GetActivitiesAboutMeTask(context)
-                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
+                    task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
                         DataStoreUtils.getNewestActivityMaxPositions(context, Activities.AboutMe.CONTENT_URI, accountKeys)
                     }
                     return task
                 }
                 AutoRefreshType.DIRECT_MESSAGES -> {
                     val task = GetReceivedDirectMessagesTask(context)
-                    task.params = RefreshService.AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
+                    task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
                         DataStoreUtils.getNewestMessageIds(context, DirectMessages.Inbox.CONTENT_URI, accountKeys)
                     }
                     return task

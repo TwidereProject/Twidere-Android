@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.SystemClock
 import android.support.v4.util.ArrayMap
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
@@ -46,8 +47,8 @@ class LegacyAutoRefreshController(
         val pendingIntent = pendingIntents[type] ?: return
         val interval = TimeUnit.MINUTES.toMillis(kPreferences[refreshIntervalKey])
         if (interval > 0) {
-            val triggerAt = System.currentTimeMillis() + interval
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, triggerAt, interval, pendingIntent)
+            val triggerAt = SystemClock.elapsedRealtime() + interval
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, interval, pendingIntent)
         }
     }
 

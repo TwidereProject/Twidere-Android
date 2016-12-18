@@ -143,8 +143,9 @@ abstract class GetStatusesTask(
                     Log.w(LOGTAG, e)
                 }
                 if (e.isCausedByNetworkIssue) {
-                    errorInfoStore.put(errorInfoKey, accountKey.id,
-                            ErrorInfoStore.CODE_NETWORK_ERROR)
+                    errorInfoStore[errorInfoKey, accountKey.id] = ErrorInfoStore.CODE_NETWORK_ERROR
+                } else if (e.statusCode == 401) {
+                    // Unauthorized
                 }
                 result.add(TwitterWrapper.StatusListResponse(accountKey, e))
             }

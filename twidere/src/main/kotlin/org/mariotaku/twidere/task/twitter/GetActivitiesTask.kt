@@ -107,11 +107,9 @@ abstract class GetActivitiesTask(
                     Log.w(LOGTAG, e)
                 }
                 if (e.errorCode == 220) {
-                    errorInfoStore.put(errorInfoKey, accountKey,
-                            ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS)
+                    errorInfoStore[errorInfoKey, accountKey] = ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS
                 } else if (e.isCausedByNetworkIssue) {
-                    errorInfoStore.put(errorInfoKey, accountKey,
-                            ErrorInfoStore.CODE_NETWORK_ERROR)
+                    errorInfoStore[errorInfoKey, accountKey] = ErrorInfoStore.CODE_NETWORK_ERROR
                 }
             }
 

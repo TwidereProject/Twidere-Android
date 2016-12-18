@@ -23,6 +23,7 @@ public class ErrorInfoStore {
     public static final int CODE_NO_DM_PERMISSION = 1;
     public static final int CODE_NO_ACCESS_FOR_CREDENTIALS = 2;
     public static final int CODE_NETWORK_ERROR = 3;
+    public static final int CODE_TIMESTAMP_ERROR = 4;
 
     private final SharedPreferences mPreferences;
 
@@ -47,20 +48,20 @@ public class ErrorInfoStore {
         }
     }
 
-    public void put(String key, int code) {
+    public void set(String key, int code) {
         mPreferences.edit().putInt(key, code).apply();
     }
 
-    public void put(String key, String extraId, int code) {
-        put(key + "_" + extraId, code);
+    public void set(String key, String extraId, int code) {
+        set(key + "_" + extraId, code);
     }
 
-    public void put(String key, UserKey extraId, int code) {
+    public void set(String key, UserKey extraId, int code) {
         final String host = extraId.getHost();
         if (host == null) {
-            put(key, extraId.getId(), code);
+            set(key, extraId.getId(), code);
         } else {
-            put(key + "_" + extraId.getId() + "_" + host, code);
+            set(key + "_" + extraId.getId() + "_" + host, code);
         }
     }
 
@@ -78,6 +79,10 @@ public class ErrorInfoStore {
             case CODE_NETWORK_ERROR: {
                 return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
                         context.getString(R.string.network_error));
+            }
+            case CODE_TIMESTAMP_ERROR: {
+                return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
+                        context.getString(R.string.error_info_oauth_timestamp_error));
             }
         }
         return null;
