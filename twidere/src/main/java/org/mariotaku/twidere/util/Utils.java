@@ -128,6 +128,7 @@ import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle;
+import org.mariotaku.twidere.view.TabPagerIndicator;
 
 import java.io.Closeable;
 import java.io.File;
@@ -807,10 +808,10 @@ public final class Utils implements Constants {
 
     public static int getTabDisplayOptionInt(final String option) {
         if (VALUE_TAB_DISPLAY_OPTION_ICON.equals(option))
-            return VALUE_TAB_DISPLAY_OPTION_CODE_ICON;
+            return TabPagerIndicator.DisplayOption.ICON;
         else if (VALUE_TAB_DISPLAY_OPTION_LABEL.equals(option))
-            return VALUE_TAB_DISPLAY_OPTION_CODE_LABEL;
-        return VALUE_TAB_DISPLAY_OPTION_CODE_BOTH;
+            return TabPagerIndicator.DisplayOption.LABEL;
+        return TabPagerIndicator.DisplayOption.BOTH;
     }
 
     public static boolean hasNavBar(@NonNull Context context) {

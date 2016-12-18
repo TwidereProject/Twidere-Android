@@ -20,8 +20,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
         <item name="mediaLabelBackground">#505050</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
+        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
+        <item name="isToolbarColored">false</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -55,8 +55,8 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
+        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
+        <item name="isToolbarColored">false</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -84,8 +84,8 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
+        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
+        <item name="isToolbarColored">false</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -154,8 +154,8 @@
         <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">dark</item>
+        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
+        <item name="isToolbarColored">false</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>

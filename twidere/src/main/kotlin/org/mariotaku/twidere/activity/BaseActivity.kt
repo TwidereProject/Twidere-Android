@@ -42,7 +42,6 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
@@ -58,7 +57,7 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : ChameleonActivity(), Constants, IExtendedActivity, IThemedActivity,
+open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
         KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
     @Inject
@@ -341,7 +340,13 @@ open class BaseActivity : ChameleonActivity(), Constants, IExtendedActivity, ITh
     }
 
     override fun getOverrideTheme(): Chameleon.Theme {
-        return Chameleon.Theme()
+        val theme = Chameleon.Theme.from(this)
+        theme.colorAccent = ThemeUtils.getUserAccentColor(this)
+        theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
+        if (theme.isToolbarColored) {
+            theme.colorToolbar = theme.colorPrimary
+        }
+        return theme
     }
 
     companion object {

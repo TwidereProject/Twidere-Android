@@ -20,13 +20,13 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
-import android.support.v7.widget.AppCompatMultiAutoCompleteTextView
 import android.text.InputType
 import android.text.Selection
 import android.text.method.ArrowKeyMovementMethod
 import android.text.method.MovementMethod
 import android.util.AttributeSet
 import android.widget.AdapterView
+import org.mariotaku.chameleon.view.ChameleonMultiAutoCompleteTextView
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.EmojiSupportUtils
@@ -35,7 +35,7 @@ import org.mariotaku.twidere.util.widget.StatusTextTokenizer
 class ComposeEditText @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null
-) : AppCompatMultiAutoCompleteTextView(context, attrs) {
+) : ChameleonMultiAutoCompleteTextView(context, attrs) {
 
     private var adapter: ComposeAutoCompleteAdapter? = null
     var accountKey: UserKey? = null

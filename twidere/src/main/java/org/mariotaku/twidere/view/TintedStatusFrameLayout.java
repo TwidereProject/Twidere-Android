@@ -27,18 +27,23 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowInsetsCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.mariotaku.chameleon.Chameleon;
+import org.mariotaku.chameleon.ChameleonUtils;
+import org.mariotaku.chameleon.ChameleonView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout {
+public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout,
+        ChameleonView, ChameleonView.StatusBarThemeable {
 
     private final Paint mColorPaint;
     private boolean mSetPadding;
@@ -117,6 +122,42 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
 
     public void setWindowInsetsListener(WindowInsetsListener listener) {
         mWindowInsetsListener = listener;
+    }
+
+    @Override
+    public boolean isPostApplyTheme() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+        Appearance appearance = new Appearance();
+        appearance.setColor(ChameleonUtils.darkenColor(theme.getColorToolbar()));
+        return appearance;
+    }
+
+    @Override
+    public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
+        Appearance a = (Appearance) appearance;
+        setStatusBarColor(a.getColor());
+    }
+
+    @Override
+    public boolean isStatusBarColorHandled() {
+        return true;
+    }
+
+    public static class Appearance implements ChameleonView.Appearance {
+        int color;
+
+        public int getColor() {
+            return color;
+        }
+
+        public void setColor(int color) {
+            this.color = color;
+        }
     }
 
     public interface WindowInsetsListener {

@@ -102,8 +102,8 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
         protected void onClick() {
             final Context context = getContext();
             final Intent intent = new Intent(context, KeyboardShortcutPreferenceCompatActivity.class);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_CONTEXT_TAG, mContextTag);
-            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.EXTRA_KEY_ACTION, mAction);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_CONTEXT_TAG(), mContextTag);
+            intent.putExtra(KeyboardShortcutPreferenceCompatActivity.Companion.getEXTRA_KEY_ACTION(), mAction);
             context.startActivity(intent);
         }
 

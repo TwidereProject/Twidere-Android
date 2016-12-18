@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
-import android.support.v7.widget.AppCompatTextView
 import android.text.Spannable
 import android.text.method.MovementMethod
 import android.text.style.ClickableSpan
@@ -28,23 +27,20 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.widget.TextView
+import org.mariotaku.chameleon.view.ChameleonTextView
 import org.mariotaku.twidere.util.EmojiSupportUtils
 
 /**
  * Returns true when not clicking links
  * Created by mariotaku on 15/11/20.
  */
-class TimelineContentTextView : AppCompatTextView {
+class TimelineContentTextView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
+) : ChameleonTextView(context, attrs, defStyle) {
 
-    constructor(context: Context) : super(context) {
-        EmojiSupportUtils.initForTextView(this)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        EmojiSupportUtils.initForTextView(this)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+    init {
         EmojiSupportUtils.initForTextView(this)
     }
 

@@ -19,8 +19,8 @@
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
         <item name="mediaLabelBackground">#dddddd</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">light</item>
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -47,8 +47,8 @@
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">light</item>
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -74,8 +74,8 @@
         <item name="messageBubbleColor">@color/message_bubble_color_light</item>
         <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
 
-        <!-- ATE attributes -->
-        <item name="ateThemeKey">light</item>
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
 
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>

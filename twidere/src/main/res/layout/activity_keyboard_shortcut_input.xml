@@ -19,13 +19,13 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:divider="?android:attr/dividerHorizontal"
-    android:dividerPadding="0dip"
-    android:orientation="vertical"
-    android:showDividers="middle">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:divider="?android:attr/dividerHorizontal"
+              android:dividerPadding="0dip"
+              android:orientation="vertical"
+              android:showDividers="middle">
 
     <LinearLayout
         android:id="@+id/keyboard_shortcut_input"
@@ -37,17 +37,17 @@
         android:padding="@dimen/element_spacing_xlarge">
 
         <TextView
-            android:id="@+id/keys_label"
+            android:id="@+id/keysLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/keyboard_shortcut_hint"
-            android:textAppearance="?android:textAppearanceMedium" />
+            android:textAppearance="?android:textAppearanceMedium"/>
 
         <TextView
-            android:id="@+id/conflict_label"
+            android:id="@+id/conflictLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -61,7 +61,7 @@
         tools:ignore="UselessParent">
 
         <Button
-            android:id="@+id/button_negative"
+            android:id="@+id/buttonNegative"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,10 +70,10 @@
             android:maxLines="2"
             android:minHeight="@dimen/element_size_normal"
             android:text="@android:string/cancel"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <Button
-            android:id="@+id/button_neutral"
+            android:id="@+id/buttonNeutral"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,10 +82,10 @@
             android:maxLines="2"
             android:minHeight="@dimen/element_size_normal"
             android:text="@string/clear"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <Button
-            android:id="@+id/button_positive"
+            android:id="@+id/buttonPositive"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,6 +94,6 @@
             android:maxLines="2"
             android:minHeight="@dimen/element_size_normal"
             android:text="@android:string/ok"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
     </LinearLayout>
 </LinearLayout>

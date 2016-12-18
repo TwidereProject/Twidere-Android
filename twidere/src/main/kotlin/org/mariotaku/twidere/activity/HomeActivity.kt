@@ -341,10 +341,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         mainTabs.setOnPageChangeListener(this)
         mainTabs.setColumns(tabColumns)
         if (tabDisplayOptionInt == 0) {
-            tabDisplayOptionInt = TabPagerIndicator.ICON
+            tabDisplayOptionInt = TabPagerIndicator.DisplayOption.ICON
         }
         mainTabs.setTabDisplayOption(tabDisplayOptionInt)
-        mainTabs.setTabExpandEnabled(tabDisplayOptionInt and TabPagerIndicator.LABEL == 0)
+        mainTabs.setTabExpandEnabled(tabDisplayOptionInt and TabPagerIndicator.DisplayOption.LABEL == 0)
         mainTabs.setDisplayBadge(preferences.getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
         mainTabs.updateAppearance()
 

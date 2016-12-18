@@ -95,6 +95,7 @@ dependencies {
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
+    compile project(':chameleon')
 
     // START Non-FOSS component
     googleCompile "com.google.android.gms:play-services-maps:$play_services_version"

@@ -48,7 +48,7 @@ abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScroll
         viewPager.offscreenPageLimit = 2
         viewPager.addOnPageChangeListener(this)
         toolbarTabs.setViewPager(viewPager)
-        toolbarTabs.setTabDisplayOption(TabPagerIndicator.LABEL)
+        toolbarTabs.setTabDisplayOption(TabPagerIndicator.DisplayOption.LABEL)
 
 
         addTabs(pagerAdapter!!)

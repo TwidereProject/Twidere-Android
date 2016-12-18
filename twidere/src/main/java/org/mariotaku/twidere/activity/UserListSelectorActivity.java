@@ -64,6 +64,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_IS_MY_ACCOUNT;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER;
+import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST;
+import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_SELECT_USER;
 import static org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName;
 
 public class UserListSelectorActivity extends BaseActivity implements OnClickListener,
