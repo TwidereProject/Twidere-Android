@@ -192,7 +192,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun onDestroy() {
-        if (!shouldSkipDraft && hasComposingStatus()) {
+        if (!shouldSkipDraft && hasComposingStatus() && isFinishing) {
             saveToDrafts()
             Toast.makeText(this, R.string.status_saved_to_draft, Toast.LENGTH_SHORT).show()
         }
