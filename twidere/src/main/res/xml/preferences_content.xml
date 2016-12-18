@@ -74,8 +74,8 @@
             android:defaultValue="true"
             android:enabled="@bool/support_new_document_intent"
             android:key="new_document_api"
-            android:summary="@string/new_document_api_summary"
-            android:title="@string/new_document_api"/>
+            android:summary="@string/preference_multitasking_summary"
+            android:title="@string/preference_multitasking"/>
 
     </PreferenceCategory>
 
