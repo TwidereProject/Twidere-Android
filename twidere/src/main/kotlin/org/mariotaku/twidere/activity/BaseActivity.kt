@@ -28,22 +28,18 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
 import android.support.v7.view.menu.ActionMenuItemView
-import android.support.v7.widget.Toolbar
 import android.support.v7.widget.TwidereActionMenuView
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
-import com.afollestad.appthemeengine.ATE
-import com.afollestad.appthemeengine.ATEActivity
-import com.afollestad.appthemeengine.Config
-import com.afollestad.appthemeengine.customizers.ATEStatusBarCustomizer
-import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import com.squareup.otto.Bus
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
@@ -62,10 +58,9 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedActivity,
+open class BaseActivity : AppCompatActivity(), Constants, IExtendedActivity, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
-        KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback, ATEToolbarCustomizer,
-        ATEStatusBarCustomizer {
+        KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback, Chameleon.Themeable {
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
@@ -260,11 +255,6 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
     override val themeBackgroundOption: String
         get() = ThemeUtils.getThemeBackgroundOption(this)
 
-
-    override fun getATEKey(): String? {
-        return ThemeUtils.getATEKey(this)
-    }
-
     override fun onApplyThemeResource(theme: Resources.Theme, resId: Int, first: Boolean) {
         super.onApplyThemeResource(theme, resId, first)
         if (window != null && shouldApplyWindowBackground) {
@@ -350,22 +340,8 @@ open class BaseActivity : ATEActivity(), Constants, IExtendedActivity, IThemedAc
         return false
     }
 
-    override fun getStatusBarColor(): Int {
-        return ATE.USE_DEFAULT
-    }
-
-    override fun getToolbarColor(toolbar: Toolbar?): Int {
-        return ATE.USE_DEFAULT
-    }
-
-    override fun getLightStatusBarMode(): Int {
-        //noinspection WrongConstant
-        return ThemeUtils.getLightStatusBarMode(Config.statusBarColor(this, ateKey))
-    }
-
-    override fun getLightToolbarMode(toolbar: Toolbar?): Int {
-        //noinspection WrongConstant
-        return ThemeUtils.getLightToolbarMode(Config.toolbarColor(this, ateKey, toolbar))
+    override fun getOverrideTheme(): Chameleon.Theme {
+        return Chameleon.Theme()
     }
 
     companion object {

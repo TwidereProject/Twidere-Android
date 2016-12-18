@@ -1277,21 +1277,24 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             setupBaseActionBar()
         }
         val activity = activity as BaseActivity
-        if (Config.coloredActionBar(activity, activity.ateKey)) {
+        val theme = activity.overrideTheme
+        primaryColor = theme.primaryColor
+        primaryColorDark = ThemeUtils.computeDarkColor(primaryColor)
+        if (theme.isToolbarColored) {
             primaryColor = color
             primaryColorDark = ThemeUtils.computeDarkColor(color)
         } else {
-            primaryColor = Config.primaryColor(activity, activity.ateKey)
+            primaryColor = theme.primaryColor
             primaryColorDark = Color.BLACK
         }
         if (actionBarBackground != null) {
             actionBarBackground!!.color = primaryColor
         }
         val taskColor: Int
-        if (Config.coloredActionBar(activity, activity.ateKey)) {
+        if (theme.isToolbarColored) {
             taskColor = color
         } else {
-            taskColor = Config.toolbarColor(activity, activity.ateKey, toolbar)
+            taskColor = theme.toolbarColor
         }
         if (user != null) {
             val name = userColorNameManager.getDisplayName(user, nameFirst)
@@ -1399,11 +1402,11 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             val tabContrastColor = ThemeUtils.getColorDependent(currentTabColor)
             toolbarTabs.setIconColor(tabContrastColor)
             toolbarTabs.setLabelColor(tabContrastColor)
-            if (Config.coloredActionBar(activity, activity.ateKey)) {
+            val theme = activity.overrideTheme
+            if (theme.isToolbarColored) {
                 toolbarTabs.setStripColor(tabContrastColor)
             } else {
-                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(uiColor,
-                        tabContrastColor))
+                toolbarTabs.setStripColor(ThemeUtils.getOptimalAccentColor(uiColor, tabContrastColor))
             }
             toolbarTabs.updateAppearance()
         }

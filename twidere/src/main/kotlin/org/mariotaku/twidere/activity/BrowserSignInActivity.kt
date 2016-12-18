@@ -25,7 +25,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils.isEmpty
 import android.util.Log
@@ -37,6 +36,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_browser_sign_in.*
 import org.attoparser.ParseException
+import org.mariotaku.ktextension.removeAllCookiesSupport
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.restfu.oauth.OAuthAuthorization
@@ -77,11 +77,7 @@ class BrowserSignInActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser_sign_in)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().removeAllCookie()
-        } else {
-            CookieManager.getInstance().removeAllCookies(null)
-        }
+        CookieManager.getInstance().removeAllCookiesSupport()
         webView.setWebViewClient(AuthorizationWebViewClient(this))
         webView.isVerticalScrollBarEnabled = false
         webView.addJavascriptInterface(InjectorJavaScriptInterface(this), "injector")

@@ -197,10 +197,6 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
         setBarVisibility(!isBarShowing)
     }
 
-    override fun getATEKey(): String? {
-        return VALUE_THEME_NAME_DARK
-    }
-
     override fun getInitialPosition(): Int {
         return media.indexOf(initialMedia)
     }
