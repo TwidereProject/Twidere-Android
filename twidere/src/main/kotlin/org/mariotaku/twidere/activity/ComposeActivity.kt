@@ -35,8 +35,11 @@ import android.provider.BaseColumns
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
-import android.support.v7.widget.*
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.FixedLinearLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.*
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.*
@@ -51,9 +54,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.afollestad.appthemeengine.Config
-import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
-import com.afollestad.appthemeengine.util.ATEUtil
 import com.twitter.Extractor
 import kotlinx.android.synthetic.main.activity_compose.*
 import org.apache.commons.lang3.ArrayUtils
@@ -99,7 +99,7 @@ import javax.inject.Inject
 import android.Manifest.permission as AndroidPermission
 
 class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
-        ActionMode.Callback, PermissionRequestCancelCallback, ATEToolbarCustomizer {
+        ActionMode.Callback, PermissionRequestCancelCallback {
 
     // Utility classes
     @Inject
@@ -1337,14 +1337,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             text += " https://twitter.com/example/status/12345678901234567890/photos/1"
         }
         statusTextCount.textCount = validator.getTweetLength(text)
-    }
-
-    override fun getLightToolbarMode(toolbar: Toolbar?): Int {
-        return Config.LIGHT_TOOLBAR_AUTO
-    }
-
-    override fun getToolbarColor(toolbar: Toolbar?): Int {
-        return ATEUtil.resolveColor(this, android.R.attr.panelColorBackground)
     }
 
     internal class ComposeLocationListener(activity: ComposeActivity) : LocationListener {

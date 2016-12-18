@@ -62,8 +62,6 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.animation.AnimationUtils
-import com.afollestad.appthemeengine.ATEActivity
-import com.afollestad.appthemeengine.Config
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.UserEvent
@@ -80,6 +78,7 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.apache.commons.lang3.ObjectUtils
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.set
@@ -430,9 +429,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         if (user == null || user.key == null) {
             profileImage.visibility = View.GONE
             profileType.visibility = View.GONE
-            if (activity is ATEActivity) {
-                setUiColor(Config.primaryColor(activity, activity.ateKey))
-            }
+            val theme = Chameleon.getOverrideTheme(activity, activity)
+            setUiColor(theme.primaryColor)
             return
         }
         val adapter = pagerAdapter
@@ -496,8 +494,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             setUiColor(user.color)
         } else if (user.link_color != 0) {
             setUiColor(user.link_color)
-        } else if (activity is ATEActivity) {
-            setUiColor(Config.primaryColor(activity, activity.ateKey))
+        } else {
+            val theme = Chameleon.getOverrideTheme(activity, activity)
+            setUiColor(theme.primaryColor)
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
@@ -1277,7 +1276,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             setupBaseActionBar()
         }
         val activity = activity as BaseActivity
-        val theme = activity.overrideTheme
+        val theme = Chameleon.getOverrideTheme(activity, activity)
         primaryColor = theme.primaryColor
         primaryColorDark = ThemeUtils.computeDarkColor(primaryColor)
         if (theme.isToolbarColored) {
@@ -1402,7 +1401,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             val tabContrastColor = ThemeUtils.getColorDependent(currentTabColor)
             toolbarTabs.setIconColor(tabContrastColor)
             toolbarTabs.setLabelColor(tabContrastColor)
-            val theme = activity.overrideTheme
+            val theme = Chameleon.getOverrideTheme(activity, activity)
             if (theme.isToolbarColored) {
                 toolbarTabs.setStripColor(tabContrastColor)
             } else {

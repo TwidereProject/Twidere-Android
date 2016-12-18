@@ -77,7 +77,7 @@ public class LinkCreator implements Constants {
     }
 
     @NonNull
-    public static Uri getStatusWebLink(ParcelableStatus status) {
+    public static Uri getStatusWebLink(@NonNull ParcelableStatus status) {
         if (status.extras != null && !TextUtils.isEmpty(status.extras.external_url)) {
             return Uri.parse(status.extras.external_url);
         }

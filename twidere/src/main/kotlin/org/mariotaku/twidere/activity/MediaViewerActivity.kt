@@ -28,12 +28,9 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.afollestad.appthemeengine.Config
-import com.afollestad.appthemeengine.customizers.ATEToolbarCustomizer
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
 import org.mariotaku.ktextension.toTypedArray
@@ -58,7 +55,7 @@ import java.io.File
 import javax.inject.Inject
 import android.Manifest.permission as AndroidPermissions
 
-class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomizer, IMediaViewerActivity {
+class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActivity {
 
     @Inject
     lateinit var mFileCache: FileCache
@@ -266,15 +263,6 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, ATEToolbarCustomi
 
     override fun getMediaCount(): Int {
         return media.size
-    }
-
-
-    override fun getLightToolbarMode(toolbar: Toolbar?): Int {
-        return Config.LIGHT_TOOLBAR_OFF
-    }
-
-    override fun getToolbarColor(toolbar: Toolbar?): Int {
-        return 0
     }
 
     private val status: ParcelableStatus?

@@ -12,6 +12,6 @@ data class SignIn(
         val officialKey: Boolean = false,
         @Credentials.Type val credentialsType: String? = null,
         val errorReason: String? = null,
-        @AccountType override val accountType: String,
+        @AccountType override val accountType: String? = null,
         override val accountHost: String? = null
 ) : Analyzer.Event

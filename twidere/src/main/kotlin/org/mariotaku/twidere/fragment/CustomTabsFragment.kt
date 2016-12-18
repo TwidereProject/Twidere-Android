@@ -39,11 +39,10 @@ import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView.OnItemClickListener
-import com.afollestad.appthemeengine.ATEActivity
-import com.afollestad.appthemeengine.Config
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import kotlinx.android.synthetic.main.list_item_section_header.view.*
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -135,6 +134,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         val context = this.context
         val accountIds = DataStoreUtils.getAccountKeys(context)
         val itemAdd = menu.findItem(R.id.add_submenu)
+        val theme = Chameleon.getOverrideTheme(context, context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
@@ -147,10 +147,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
                 subItem.isVisible = !shouldDisable
                 subItem.isEnabled = !shouldDisable
                 val icon = conf.icon.createDrawable(context)
-                if (context is ATEActivity) {
-                    icon.mutate().setColorFilter(Config.textColorPrimary(context, context.ateKey),
-                            Mode.SRC_ATOP)
-                }
+                icon.mutate().setColorFilter(theme.textColorPrimary, Mode.SRC_ATOP)
                 subItem.icon = icon
                 subItem.setOnMenuItemClickListener { item ->
                     val df = TabEditorDialogFragment()

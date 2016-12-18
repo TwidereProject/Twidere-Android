@@ -22,10 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.graphics.Rect
 import android.nfc.NdefMessage
@@ -39,6 +36,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.IntentCompat
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewCompat
@@ -92,10 +90,12 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent
 import org.mariotaku.twidere.model.message.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.*
@@ -631,7 +631,13 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         if (item.itemId == R.id.share) {
             val shareIntent = Utils.createStatusShareIntent(activity, status)
             val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
+
             startActivity(chooser)
+
+            val am = AccountManager.get(context)
+            val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+
+            Analyzer.log(Share.status(accountType, status))
             return true
         }
         return MenuUtils.handleStatusClick(activity, this, fragmentManager,

@@ -31,6 +31,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -50,9 +51,6 @@ import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-
-import com.afollestad.appthemeengine.Config;
-import com.afollestad.appthemeengine.util.ATEUtil;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.mariotaku.twidere.Constants;
@@ -589,36 +587,11 @@ public class ThemeUtils implements Constants {
                     | Configuration.UI_MODE_NIGHT_YES;
     }
 
-    public static String getATEKey(Context context) {
-        TypedValue value = new TypedValue();
-        if (!context.getTheme().resolveAttribute(R.attr.ateThemeKey, value, true)) {
-            return "dark";
-        }
-        if (TextUtils.isEmpty(value.string)) return "dark";
-        return String.valueOf(value.string);
-    }
-
     public static int getColorDependent(int color) {
         final boolean isDark = !isLightColor(color);
         return isDark ? Color.WHITE : Color.BLACK;
     }
 
-
-    @Config.LightStatusBarMode
-    public static int getLightStatusBarMode(int statusBarColor) {
-        if (isLightColor(statusBarColor)) {
-            return Config.LIGHT_STATUS_BAR_ON;
-        }
-        return Config.LIGHT_STATUS_BAR_OFF;
-    }
-
-    @Config.LightToolbarMode
-    public static int getLightToolbarMode(int themeColor) {
-        if (isLightColor(themeColor)) {
-            return Config.LIGHT_TOOLBAR_ON;
-        }
-        return Config.LIGHT_TOOLBAR_OFF;
-    }
 
     public static boolean isLightColor(int color) {
         return ColorUtils.calculateLuminance(color) * 0xFF > ACCENT_COLOR_THRESHOLD;
@@ -630,6 +603,19 @@ public class ThemeUtils implements Constants {
     }
 
     public static int computeDarkColor(int color) {
-        return ATEUtil.darkenColor(color);
+        return shiftColor(color, 0.9f);
+    }
+
+
+    @ColorInt
+    private static int shiftColor(@ColorInt int color, @FloatRange(from = 0.0D, to = 2.0D) float by) {
+        if (by == 1.0F) {
+            return color;
+        } else {
+            float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[2] *= by;
+            return Color.HSVToColor(hsv);
+        }
     }
 }

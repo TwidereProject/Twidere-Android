@@ -25,21 +25,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.graphics.Color
 import android.os.AsyncTask
-import android.support.design.widget.FloatingActionButton
 import android.support.multidex.MultiDex
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.ActionBarContextView
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
-import com.afollestad.appthemeengine.ATE
-import com.afollestad.appthemeengine.Config
-import com.pnikosis.materialishprogress.ProgressWheel
-import com.rengwuxian.materialedittext.MaterialEditText
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
@@ -47,13 +36,11 @@ import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.configure
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.Constants.KEY_USAGE_STATISTICS
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
@@ -67,11 +54,6 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
-import org.mariotaku.twidere.util.theme.*
-import org.mariotaku.twidere.view.ProfileImageView
-import org.mariotaku.twidere.view.TabPagerIndicator
-import org.mariotaku.twidere.view.ThemedMultiValueSwitch
-import org.mariotaku.twidere.view.TimelineContentTextView
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -94,9 +76,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var kPreferences: KPreferences
     @Inject
     lateinit internal var autoRefreshController: AutoRefreshController
-
-    private lateinit var profileImageViewViewProcessor: ProfileImageViewViewProcessor
-    private lateinit var fontFamilyTagProcessor: FontFamilyTagProcessor
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -122,7 +101,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         resetTheme(preferences)
         super.onCreate()
         startKovenant()
-        initAppThemeEngine(preferences)
         initializeAsyncTask()
         initDebugMode()
         initBugReport()
@@ -201,49 +179,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         }
     }
 
-    private fun initAppThemeEngine(preferences: SharedPreferences) {
-
-        profileImageViewViewProcessor = configure(ProfileImageViewViewProcessor()) {
-            setStyle(Utils.getProfileImageStyle(preferences))
-        }
-        fontFamilyTagProcessor = configure(FontFamilyTagProcessor()) {
-            setFontFamily(ThemeUtils.getThemeFontFamily(preferences))
-        }
-
-        ATE.registerViewProcessor(TabPagerIndicator::class.java, TabPagerIndicatorViewProcessor())
-        ATE.registerViewProcessor(FloatingActionButton::class.java, FloatingActionButtonViewProcessor())
-        ATE.registerViewProcessor(ActionBarContextView::class.java, ActionBarContextViewViewProcessor())
-        ATE.registerViewProcessor(SwipeRefreshLayout::class.java, SwipeRefreshLayoutViewProcessor())
-        ATE.registerViewProcessor(TimelineContentTextView::class.java, TimelineContentTextViewViewProcessor())
-        ATE.registerViewProcessor(TextView::class.java, TextViewViewProcessor())
-        ATE.registerViewProcessor(ImageView::class.java, ImageViewViewProcessor())
-        ATE.registerViewProcessor(MaterialEditText::class.java, MaterialEditTextViewProcessor())
-        ATE.registerViewProcessor(ProgressWheel::class.java, ProgressWheelViewProcessor())
-        ATE.registerViewProcessor(ProfileImageView::class.java, profileImageViewViewProcessor)
-        ATE.registerTagProcessor(OptimalLinkColorTagProcessor.TAG, OptimalLinkColorTagProcessor())
-        ATE.registerTagProcessor(FontFamilyTagProcessor.TAG, fontFamilyTagProcessor)
-        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR,
-                IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR))
-        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_ACTIVATED,
-                IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_ACTIVATED))
-        ATE.registerTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED,
-                IconActionButtonTagProcessor(IconActionButtonTagProcessor.PREFIX_COLOR_DISABLED))
-        ATE.registerTagProcessor(ThemedMultiValueSwitch.PREFIX_TINT, ThemedMultiValueSwitch.TintTagProcessor())
-
-
-        val themeColor = preferences.getInt(KEY_THEME_COLOR, ContextCompat.getColor(this,
-                R.color.branding_color))
-        if (!ATE.config(this, VALUE_THEME_NAME_LIGHT).isConfigured) {
-            //noinspection WrongConstant
-            ATE.config(this, VALUE_THEME_NAME_LIGHT).primaryColor(themeColor).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(true).coloredStatusBar(true).commit()
-        }
-        if (!ATE.config(this, VALUE_THEME_NAME_DARK).isConfigured) {
-            ATE.config(this, VALUE_THEME_NAME_DARK).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE)).coloredActionBar(false).coloredStatusBar(true).statusBarColor(Color.BLACK).commit()
-        }
-        if (!ATE.config(this, null).isConfigured) {
-            ATE.config(this, null).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE)).coloredActionBar(false).coloredStatusBar(false).commit()
-        }
-    }
 
     private fun initDebugMode() {
         DebugModeUtils.initForApplication(this)
@@ -304,26 +239,14 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             }
             KEY_THEME -> {
                 resetTheme(preferences)
-                Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK)
             }
             KEY_THEME_BACKGROUND -> {
-                Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK)
             }
             KEY_PROFILE_IMAGE_STYLE -> {
-                Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK)
-                profileImageViewViewProcessor.setStyle(Utils.getProfileImageStyle(preferences.getString(key, null)))
             }
             KEY_THEME_FONT_FAMILY -> {
-                Config.markChanged(this, VALUE_THEME_NAME_LIGHT, VALUE_THEME_NAME_DARK)
-                fontFamilyTagProcessor.setFontFamily(ThemeUtils.getThemeFontFamily(preferences))
             }
             KEY_THEME_COLOR -> {
-                val themeColor = preferences.getInt(key, ContextCompat.getColor(this,
-                        R.color.branding_color))
-                //noinspection WrongConstant
-                ATE.config(this, VALUE_THEME_NAME_LIGHT).primaryColor(themeColor).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(true).coloredStatusBar(true).commit()
-                ATE.config(this, VALUE_THEME_NAME_DARK).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.WHITE)).coloredActionBar(false).coloredStatusBar(true).statusBarColor(Color.BLACK).commit()
-                ATE.config(this, null).accentColor(ThemeUtils.getOptimalAccentColor(themeColor, Color.BLACK)).coloredActionBar(false).coloredStatusBar(false).commit()
             }
             KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
                 (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()

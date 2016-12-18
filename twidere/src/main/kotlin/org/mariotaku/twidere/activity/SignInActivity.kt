@@ -437,8 +437,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         } else {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
         }
-        Analyzer.log(SignIn(false, accountType = "unknown", credentialsType = apiConfig.credentialsType,
-                errorReason = errorReason))
+        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType, errorReason = errorReason))
     }
 
     internal fun dismissDialogFragment(tag: String) {

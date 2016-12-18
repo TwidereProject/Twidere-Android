@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -51,10 +52,13 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.readFromBottomKey
+import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.message.StatusListChangedEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.*
@@ -466,6 +470,10 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
                     val shareIntent = Utils.createStatusShareIntent(activity, status)
                     val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
                     startActivity(chooser)
+
+                    val am = AccountManager.get(context)
+                    val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+                    Analyzer.log(Share.status(accountType, status))
                     return true
                 }
                 return MenuUtils.handleStatusClick(activity, this, fragmentManager,

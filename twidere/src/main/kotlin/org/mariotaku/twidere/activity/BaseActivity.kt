@@ -28,7 +28,6 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
@@ -40,6 +39,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.squareup.otto.Bus
 import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
@@ -58,9 +58,9 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : AppCompatActivity(), Constants, IExtendedActivity, IThemedActivity,
+open class BaseActivity : ChameleonActivity(), Constants, IExtendedActivity, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
-        KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback, Chameleon.Themeable {
+        KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
@@ -85,24 +85,24 @@ open class BaseActivity : AppCompatActivity(), Constants, IExtendedActivity, ITh
     private val actionHelper = IExtendedActivity.ActionHelper(this)
 
     // Registered listeners
-    private val mControlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
+    private val controlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
 
     // Data fields
-    private var mSystemWindowsInsets: Rect? = null
+    private var systemWindowsInsets: Rect? = null
     var keyMetaState: Int = 0
         private set
 
     override fun getSystemWindowsInsets(insets: Rect): Boolean {
-        if (mSystemWindowsInsets == null) return false
-        insets.set(mSystemWindowsInsets)
+        if (systemWindowsInsets == null) return false
+        insets.set(systemWindowsInsets)
         return true
     }
 
     override fun onFitSystemWindows(insets: Rect) {
-        if (mSystemWindowsInsets == null)
-            mSystemWindowsInsets = Rect(insets)
+        if (systemWindowsInsets == null)
+            systemWindowsInsets = Rect(insets)
         else {
-            mSystemWindowsInsets!!.set(insets)
+            systemWindowsInsets!!.set(insets)
         }
         notifyControlBarOffsetChanged()
     }
@@ -218,17 +218,17 @@ open class BaseActivity : AppCompatActivity(), Constants, IExtendedActivity, ITh
 
     override fun notifyControlBarOffsetChanged() {
         val offset = controlBarOffset
-        for (l in mControlBarOffsetListeners) {
+        for (l in controlBarOffsetListeners) {
             l.onControlBarOffsetChanged(this, offset)
         }
     }
 
     override fun registerControlBarOffsetListener(listener: IControlBarActivity.ControlBarOffsetListener) {
-        mControlBarOffsetListeners.add(listener)
+        controlBarOffsetListeners.add(listener)
     }
 
     override fun unregisterControlBarOffsetListener(listener: IControlBarActivity.ControlBarOffsetListener) {
-        mControlBarOffsetListeners.remove(listener)
+        controlBarOffsetListeners.remove(listener)
     }
 
     override fun onResumeFragments() {

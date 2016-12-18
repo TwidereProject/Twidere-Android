@@ -76,8 +76,8 @@ class FabricAnalyzer : Analyzer(), Constants {
             }
             is Share -> {
                 answers.logShare(configure(ShareEvent()) {
-                    putContentId(event.id)
                     putContentType(event.type)
+                    putContentId(event.id)
                     putAttributes(event)
                 })
             }
@@ -111,7 +111,7 @@ class FabricAnalyzer : Analyzer(), Constants {
 
     private fun AnswersEvent<*>.putAttributes(event: Analyzer.Event) {
         if (event.accountType != null) {
-            putCustomAttribute("Account type", event.accountType)
+            putCustomAttribute("Account type", event.accountType ?: "unknown")
         }
         if (event.accountHost != null) {
             putCustomAttribute("Account host", event.accountHost)

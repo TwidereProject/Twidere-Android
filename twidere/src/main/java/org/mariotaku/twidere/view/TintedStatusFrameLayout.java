@@ -32,16 +32,13 @@ import android.support.v4.view.WindowInsetsCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.afollestad.appthemeengine.inflation.ViewInterface;
-
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
 /**
  * Created by mariotaku on 14/11/26.
  */
-public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout,
-        ViewInterface {
+public class TintedStatusFrameLayout extends ExtendedFrameLayout implements TintedStatusLayout {
 
     private final Paint mColorPaint;
     private boolean mSetPadding;
@@ -116,16 +113,6 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         mSystemWindowsInsets.set(insets);
         return true;
-    }
-
-    @Override
-    public boolean setsStatusBarColor() {
-        return true;
-    }
-
-    @Override
-    public boolean setsToolbarColor() {
-        return false;
     }
 
     public void setWindowInsetsListener(WindowInsetsListener listener) {
