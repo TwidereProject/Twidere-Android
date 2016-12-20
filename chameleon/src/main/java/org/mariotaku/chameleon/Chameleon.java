@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import org.mariotaku.chameleon.internal.ChameleonInflationFactory;
-import org.mariotaku.chameleon.internal.WindowSupport;
+import org.mariotaku.chameleon.internal.SupportMethods;
 
 /**
  * Created by mariotaku on 2016/12/18.
@@ -67,7 +67,7 @@ public class Chameleon {
         if (!statusBarColorHandled) {
             final Window window = activity.getWindow();
             final int statusBarColor = theme.getStatusBarColor();
-            WindowSupport.setStatusBarColor(window, statusBarColor);
+            SupportMethods.setStatusBarColor(window, statusBarColor);
             ChameleonUtils.applyLightStatusBar(window, statusBarColor, theme.getLightStatusBarMode());
         }
     }
@@ -108,8 +108,11 @@ public class Chameleon {
         private int colorForeground;
 
         private int textColorPrimary;
+        private int textColorPrimaryInverse;
         private int textColorSecondary;
+        private int textColorSecondaryInverse;
         private int textColorLink;
+        private int textColorLinkInverse;
 
         private int colorPrimary;
         private int colorPrimaryDark;
@@ -227,8 +230,32 @@ public class Chameleon {
             return textColorLink;
         }
 
+        public int getTextColorPrimaryInverse() {
+            return textColorPrimaryInverse;
+        }
+
+        public void setTextColorPrimaryInverse(int textColorPrimaryInverse) {
+            this.textColorPrimaryInverse = textColorPrimaryInverse;
+        }
+
+        public int getTextColorSecondaryInverse() {
+            return textColorSecondaryInverse;
+        }
+
+        public void setTextColorSecondaryInverse(int textColorSecondaryInverse) {
+            this.textColorSecondaryInverse = textColorSecondaryInverse;
+        }
+
         public void setTextColorLink(int textColorLink) {
             this.textColorLink = textColorLink;
+        }
+
+        public int getTextColorLinkInverse() {
+            return textColorLinkInverse;
+        }
+
+        public void setTextColorLinkInverse(int textColorLinkInverse) {
+            this.textColorLinkInverse = textColorLinkInverse;
         }
 
         public int getStatusBarColor() {
@@ -295,8 +322,11 @@ public class Chameleon {
             theme.setColorAccent(a.getColor(R.styleable.ChameleonTheme_colorAccent, 0));
 
             theme.setTextColorPrimary(a.getColor(R.styleable.ChameleonTheme_android_textColorPrimary, 0));
+            theme.setTextColorPrimaryInverse(a.getColor(R.styleable.ChameleonTheme_android_textColorPrimaryInverse, 0));
             theme.setTextColorSecondary(a.getColor(R.styleable.ChameleonTheme_android_textColorSecondary, 0));
+            theme.setTextColorSecondaryInverse(a.getColor(R.styleable.ChameleonTheme_android_textColorSecondaryInverse, 0));
             theme.setTextColorLink(a.getColor(R.styleable.ChameleonTheme_android_textColorLink, 0));
+            theme.setTextColorLinkInverse(a.getColor(R.styleable.ChameleonTheme_android_textColorLinkInverse, 0));
 
             theme.setColorEdgeEffect(a.getColor(R.styleable.ChameleonTheme_colorEdgeEffect, 0));
 

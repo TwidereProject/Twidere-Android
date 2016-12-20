@@ -11,8 +11,11 @@
 
         <!-- Text colors -->
         <attr name="android:textColorPrimary"/>
+        <attr name="android:textColorPrimaryInverse"/>
         <attr name="android:textColorSecondary"/>
+        <attr name="android:textColorSecondaryInverse"/>
         <attr name="android:textColorLink"/>
+        <attr name="android:textColorLinkInverse"/>
 
         <!-- Colors based on base colors -->
         <attr name="colorEdgeEffect" format="color"/>
@@ -29,6 +32,9 @@
 
         <attr name="colorToolbar" format="color"/>
         <attr name="isToolbarColored" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="ChameleonView">
+        <attr name="android:background"/>
     </declare-styleable>
     <declare-styleable name="ChameleonTextView">
         <attr name="android:textColorLink"/>

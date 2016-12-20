@@ -2,6 +2,7 @@ package org.mariotaku.chameleon.internal;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import org.mariotaku.chameleon.Chameleon;
 import org.mariotaku.chameleon.ChameleonView;
+import org.mariotaku.chameleon.R;
 import org.mariotaku.chameleon.view.ChameleonAutoCompleteTextView;
 import org.mariotaku.chameleon.view.ChameleonEditText;
 import org.mariotaku.chameleon.view.ChameleonFloatingActionButton;
@@ -158,6 +160,14 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
                     cv.applyAppearance(appearance);
                 }
             }
+        } else {
+            ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attrs,
+                    R.styleable.ChameleonView, mTheme);
+            Drawable background = a.getDrawable(R.styleable.ChameleonView_android_background);
+            if (background != null) {
+                SupportMethods.setBackground(view, background);
+            }
+            a.recycle();
         }
         return view;
     }

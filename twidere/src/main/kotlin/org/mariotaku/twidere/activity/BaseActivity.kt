@@ -39,6 +39,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.squareup.otto.Bus
 import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.Chameleon.Theme.LightStatusBarMode
 import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.KPreferences
@@ -95,6 +96,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
             theme.colorToolbar = theme.colorPrimary
         }
         theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
+        theme.lightStatusBarMode = LightStatusBarMode.AUTO
         theme.textColorLink = ThemeUtils.getOptimalAccentColor(theme.colorAccent, theme.colorForeground)
 
         return@lazy theme
