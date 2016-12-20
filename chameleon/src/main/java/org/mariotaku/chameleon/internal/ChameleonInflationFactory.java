@@ -17,6 +17,7 @@ import org.mariotaku.chameleon.view.ChameleonAutoCompleteTextView;
 import org.mariotaku.chameleon.view.ChameleonEditText;
 import org.mariotaku.chameleon.view.ChameleonFloatingActionButton;
 import org.mariotaku.chameleon.view.ChameleonMultiAutoCompleteTextView;
+import org.mariotaku.chameleon.view.ChameleonProgressBar;
 import org.mariotaku.chameleon.view.ChameleonSwipeRefreshLayout;
 import org.mariotaku.chameleon.view.ChameleonTextView;
 import org.mariotaku.chameleon.view.ChameleonToolbar;
@@ -74,6 +75,10 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
             case "MultiAutoCompleteTextView":
             case "android.support.v7.widget.AppCompatMultiAutoCompleteTextView": {
                 view = new ChameleonMultiAutoCompleteTextView(context, attrs);
+                break;
+            }
+            case "ProgressBar": {
+                view = new ChameleonProgressBar(context, attrs);
                 break;
             }
             case "android.support.design.widget.FloatingActionButton": {

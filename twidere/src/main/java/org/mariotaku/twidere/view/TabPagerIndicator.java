@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -232,8 +231,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
         final Appearance appearance = new Appearance();
         final int toolbarColor = theme.getColorToolbar();
-        final boolean isLight = ChameleonUtils.isColorLight(toolbarColor);
-        final int itemColor = isLight ? Color.BLACK : Color.WHITE;
+        final int itemColor = ChameleonUtils.getColorDependent(toolbarColor);
         appearance.setLabelColor(itemColor);
         appearance.setIconColor(itemColor);
         if (theme.isToolbarColored()) {

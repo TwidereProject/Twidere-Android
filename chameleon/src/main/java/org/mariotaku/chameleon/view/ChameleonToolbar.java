@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 
 import org.mariotaku.chameleon.Chameleon;
-import org.mariotaku.chameleon.ChameleonTypedArray;
+import org.mariotaku.chameleon.internal.ChameleonTypedArray;
 import org.mariotaku.chameleon.ChameleonView;
 import org.mariotaku.chameleon.R;
 

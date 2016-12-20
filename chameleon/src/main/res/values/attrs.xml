@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ChameleonTheme">
-        <attr name="colorPrimary"/>
-        <attr name="colorAccent"/>
-        <attr name="colorToolbar" format="color"/>
+        <!-- Basic colors -->
         <attr name="android:colorForeground"/>
         <attr name="android:colorBackground"/>
+
+        <attr name="colorPrimary"/>
+        <attr name="colorPrimaryDark"/>
+        <attr name="colorAccent"/>
+
+        <!-- Text colors -->
+        <attr name="android:textColorPrimary"/>
+        <attr name="android:textColorSecondary"/>
+        <attr name="android:textColorLink"/>
+
+        <!-- Colors based on base colors -->
+        <attr name="colorEdgeEffect" format="color"/>
+
+        <attr name="colorControlNormal"/>
+        <attr name="colorControlActivated"/>
+
+        <attr name="colorControlHighlight"/>
+        <attr name="colorButtonNormal"/>
+        <attr name="colorSwitchThumbNormal"/>
+
+        <attr name="android:statusBarColor"/>
+        <attr name="android:navigationBarColor"/>
+
+        <attr name="colorToolbar" format="color"/>
         <attr name="isToolbarColored" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="ChameleonTextView">

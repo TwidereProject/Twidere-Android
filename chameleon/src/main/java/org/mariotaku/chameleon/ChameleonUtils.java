@@ -3,10 +3,22 @@ package org.mariotaku.chameleon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.Window;
+
+import org.mariotaku.chameleon.Chameleon.Theme.LightStatusBarMode;
 
 /**
  * Created by mariotaku on 2016/12/18.
@@ -41,11 +53,60 @@ public class ChameleonUtils {
         return shiftColor(color, 0.9f);
     }
 
+    // This returns a NEW Drawable because of the mutate() call. The mutate() call is necessary because Drawables with the same resource have shared states otherwise.
+    @CheckResult
+    @Nullable
+    public static Drawable createTintedDrawable(@Nullable Drawable drawable, @ColorInt int color) {
+        if (drawable == null) return null;
+        drawable = DrawableCompat.wrap(drawable.mutate());
+        DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN);
+        DrawableCompat.setTint(drawable, color);
+        return drawable;
+    }
+
+    // This returns a NEW Drawable because of the mutate() call. The mutate() call is necessary because Drawables with the same resource have shared states otherwise.
+    @CheckResult
+    @Nullable
+    public static Drawable createTintedDrawable(@Nullable Drawable drawable, @NonNull ColorStateList sl) {
+        if (drawable == null) return null;
+        drawable = DrawableCompat.wrap(drawable.mutate());
+        DrawableCompat.setTintList(drawable, sl);
+        return drawable;
+    }
+
+    @CheckResult
+    @Nullable
     public static Activity getActivity(Context context) {
         if (context instanceof Activity) return (Activity) context;
         if (context instanceof ContextWrapper) {
             return getActivity(((ContextWrapper) context).getBaseContext());
         }
         return null;
+    }
+
+    public static int getColorDependent(int color) {
+        final boolean isLight = isColorLight(color);
+        return isLight ? Color.BLACK : Color.WHITE;
+    }
+
+    public static void applyLightStatusBar(Window window, int statusBarColor,
+                                           @LightStatusBarMode int lightStatusBarMode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final View decorView = window.getDecorView();
+            final int systemUiVisibility = decorView.getSystemUiVisibility();
+            boolean isLightStatusBar;
+            if (lightStatusBarMode == LightStatusBarMode.ON) {
+                isLightStatusBar = true;
+            } else if (lightStatusBarMode == LightStatusBarMode.AUTO) {
+                isLightStatusBar = isColorLight(statusBarColor);
+            } else {
+                isLightStatusBar = false;
+            }
+            if (isLightStatusBar) {
+                decorView.setSystemUiVisibility(systemUiVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else {
+                decorView.setSystemUiVisibility(systemUiVisibility & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+        }
     }
 }

@@ -8,9 +8,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 
 import org.mariotaku.chameleon.Chameleon;
-import org.mariotaku.chameleon.ChameleonTypedArray;
+import org.mariotaku.chameleon.ChameleonUtils;
 import org.mariotaku.chameleon.ChameleonView;
 import org.mariotaku.chameleon.R;
+import org.mariotaku.chameleon.internal.ChameleonTypedArray;
 
 /**
  * Created by mariotaku on 2016/12/18.
@@ -40,7 +41,9 @@ public class ChameleonFloatingActionButton extends FloatingActionButton implemen
         Appearance appearance = new Appearance();
         ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
                 R.styleable.ChameleonFloatingActionButton, theme);
-        appearance.backgroundTint = a.getColor(R.styleable.ChameleonFloatingActionButton_backgroundTint, theme.getColorAccent());
+        final int backgroundTint = a.getColor(R.styleable.ChameleonFloatingActionButton_backgroundTint, theme.getColorAccent());
+        appearance.setBackgroundTint(backgroundTint);
+        appearance.setIconTint(ChameleonUtils.getColorDependent(backgroundTint));
         a.recycle();
         return appearance;
     }
@@ -48,11 +51,34 @@ public class ChameleonFloatingActionButton extends FloatingActionButton implemen
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
         Appearance a = (Appearance) appearance;
-        setBackgroundTintList(ColorStateList.valueOf(a.backgroundTint));
+        setBackgroundTintList(ColorStateList.valueOf(a.getBackgroundTint()));
+        final int iconTint = a.getIconTint();
+        if (iconTint == 0) {
+            clearColorFilter();
+        } else {
+            setColorFilter(iconTint);
+        }
     }
 
     public static class Appearance implements ChameleonView.Appearance {
-        int backgroundTint;
+        private int backgroundTint;
+        private int iconTint;
+
+        public int getBackgroundTint() {
+            return backgroundTint;
+        }
+
+        public void setBackgroundTint(int backgroundTint) {
+            this.backgroundTint = backgroundTint;
+        }
+
+        public int getIconTint() {
+            return iconTint;
+        }
+
+        public void setIconTint(int iconTint) {
+            this.iconTint = iconTint;
+        }
     }
 
 }

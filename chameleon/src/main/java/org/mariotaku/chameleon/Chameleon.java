@@ -3,7 +3,8 @@ package org.mariotaku.chameleon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
+import android.graphics.Color;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -13,8 +14,10 @@ import android.support.v7.app.AppCompatDelegate;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 
 import org.mariotaku.chameleon.internal.ChameleonInflationFactory;
+import org.mariotaku.chameleon.internal.WindowSupport;
 
 /**
  * Created by mariotaku on 2016/12/18.
@@ -61,8 +64,11 @@ public class Chameleon {
                 statusBarColorHandled = true;
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !statusBarColorHandled) {
-            activity.getWindow().setStatusBarColor(theme.getStatusBarColor());
+        if (!statusBarColorHandled) {
+            final Window window = activity.getWindow();
+            final int statusBarColor = theme.getStatusBarColor();
+            WindowSupport.setStatusBarColor(window, statusBarColor);
+            ChameleonUtils.applyLightStatusBar(window, statusBarColor, theme.getLightStatusBarMode());
         }
     }
 
@@ -98,25 +104,32 @@ public class Chameleon {
      */
 
     public static class Theme {
-        private int colorPrimary;
-        private int colorAccent;
-        private int colorToolbar;
         private int colorBackground;
         private int colorForeground;
-        private boolean toolbarColored;
+
         private int textColorPrimary;
+        private int textColorSecondary;
+        private int textColorLink;
+
+        private int colorPrimary;
+        private int colorPrimaryDark;
+        private int colorAccent;
+
+        private int colorEdgeEffect;
+
+        private int colorControlNormal;
+        private int colorControlActivated;
+
         private int statusBarColor;
+        private int navigationBarColor;
+
+        private int colorToolbar;
+        private boolean toolbarColored;
+        @LightStatusBarMode
+        private int lightStatusBarMode = LightStatusBarMode.NONE;
 
         Theme() {
 
-        }
-
-        public int getColorAccent() {
-            return colorAccent;
-        }
-
-        public void setColorAccent(int colorAccent) {
-            this.colorAccent = colorAccent;
         }
 
         public int getColorPrimary() {
@@ -127,13 +140,44 @@ public class Chameleon {
             this.colorPrimary = colorPrimary;
         }
 
+        public int getColorPrimaryDark() {
+            if (colorPrimaryDark == 0) {
+                return ChameleonUtils.darkenColor(getColorPrimary());
+            }
+            return colorPrimaryDark;
+        }
+
+        public void setColorPrimaryDark(int colorPrimaryDark) {
+            this.colorPrimaryDark = colorPrimaryDark;
+        }
+
+        public int getColorAccent() {
+            return colorAccent;
+        }
+
+        public void setColorAccent(int color) {
+            this.colorAccent = color;
+        }
+
+        public int getColorEdgeEffect() {
+            if (colorEdgeEffect == 0) {
+                return getColorPrimary();
+            }
+            return colorEdgeEffect;
+        }
+
+        public void setColorEdgeEffect(int color) {
+            if (color == colorPrimary) return;
+            this.colorEdgeEffect = color;
+        }
+
         public int getColorToolbar() {
             if (colorToolbar == 0) return colorPrimary;
             return colorToolbar;
         }
 
-        public void setColorToolbar(int colorToolbar) {
-            this.colorToolbar = colorToolbar;
+        public void setColorToolbar(int color) {
+            this.colorToolbar = color;
         }
 
         public boolean isToolbarColored() {
@@ -142,14 +186,6 @@ public class Chameleon {
 
         public void setToolbarColored(boolean toolbarColored) {
             this.toolbarColored = toolbarColored;
-        }
-
-        public int getTextColorPrimary() {
-            return textColorPrimary;
-        }
-
-        public void setTextColorPrimary(int textColorPrimary) {
-            this.textColorPrimary = textColorPrimary;
         }
 
         public int getColorBackground() {
@@ -168,29 +204,122 @@ public class Chameleon {
             this.colorForeground = colorForeground;
         }
 
-        @NonNull
-        public static Theme from(Context context) {
-            Theme theme = new Theme();
-            TypedArray a = context.obtainStyledAttributes(R.styleable.ChameleonTheme);
-            theme.setColorPrimary(a.getColor(R.styleable.ChameleonTheme_colorPrimary, 0));
-            theme.setColorAccent(a.getColor(R.styleable.ChameleonTheme_colorAccent, 0));
-            theme.setColorToolbar(a.getColor(R.styleable.ChameleonTheme_colorToolbar, theme.getColorPrimary()));
-            theme.setColorBackground(a.getColor(R.styleable.ChameleonTheme_android_colorBackground, 0));
-            theme.setColorForeground(a.getColor(R.styleable.ChameleonTheme_android_colorForeground, 0));
-            theme.setToolbarColored(a.getBoolean(R.styleable.ChameleonTheme_isToolbarColored, true));
-            a.recycle();
-            return theme;
+        public int getTextColorPrimary() {
+            return textColorPrimary;
+        }
+
+        public void setTextColorPrimary(int textColorPrimary) {
+            this.textColorPrimary = textColorPrimary;
+        }
+
+        public int getTextColorSecondary() {
+            return textColorSecondary;
+        }
+
+        public void setTextColorSecondary(int textColorSecondary) {
+            this.textColorSecondary = textColorSecondary;
+        }
+
+        public int getTextColorLink() {
+            if (textColorLink == 0) {
+                return getColorAccent();
+            }
+            return textColorLink;
+        }
+
+        public void setTextColorLink(int textColorLink) {
+            this.textColorLink = textColorLink;
         }
 
         public int getStatusBarColor() {
             if (statusBarColor == 0) {
-                return ChameleonUtils.darkenColor(getColorToolbar());
+                return getColorPrimaryDark();
             }
             return statusBarColor;
         }
 
         public void setStatusBarColor(int statusBarColor) {
             this.statusBarColor = statusBarColor;
+        }
+
+        public int getNavigationBarColor() {
+            return navigationBarColor;
+        }
+
+        public void setNavigationBarColor(int navigationBarColor) {
+            this.navigationBarColor = navigationBarColor;
+        }
+
+        public void setColorControlNormal(int color) {
+            if (color == textColorSecondary) return;
+            this.colorControlNormal = color;
+        }
+
+        public int getColorControlNormal() {
+            if (colorControlNormal == 0) {
+                return getTextColorSecondary();
+            }
+            return colorControlNormal;
+        }
+
+        public int getColorControlActivated() {
+            if (colorControlActivated == 0) {
+                return getColorAccent();
+            }
+            return colorControlActivated;
+        }
+
+        public void setColorControlActivated(int color) {
+            if (color == colorAccent) return;
+            this.colorControlActivated = color;
+        }
+
+        public void setLightStatusBarMode(@LightStatusBarMode int mode) {
+            this.lightStatusBarMode = mode;
+        }
+
+        @LightStatusBarMode
+        public int getLightStatusBarMode() {
+            return lightStatusBarMode;
+        }
+
+        @NonNull
+        public static Theme from(Context context) {
+            Theme theme = new Theme();
+            TypedArray a = context.obtainStyledAttributes(R.styleable.ChameleonTheme);
+            theme.setColorBackground(a.getColor(R.styleable.ChameleonTheme_android_colorBackground, 0));
+            theme.setColorForeground(a.getColor(R.styleable.ChameleonTheme_android_colorForeground, 0));
+
+            theme.setColorPrimary(a.getColor(R.styleable.ChameleonTheme_colorPrimary, 0));
+            theme.setColorPrimaryDark(a.getColor(R.styleable.ChameleonTheme_colorPrimaryDark, 0));
+            theme.setColorAccent(a.getColor(R.styleable.ChameleonTheme_colorAccent, 0));
+
+            theme.setTextColorPrimary(a.getColor(R.styleable.ChameleonTheme_android_textColorPrimary, 0));
+            theme.setTextColorSecondary(a.getColor(R.styleable.ChameleonTheme_android_textColorSecondary, 0));
+            theme.setTextColorLink(a.getColor(R.styleable.ChameleonTheme_android_textColorLink, 0));
+
+            theme.setColorEdgeEffect(a.getColor(R.styleable.ChameleonTheme_colorEdgeEffect, 0));
+
+            theme.setColorControlNormal(a.getColor(R.styleable.ChameleonTheme_colorControlNormal, 0));
+            theme.setColorControlActivated(a.getColor(R.styleable.ChameleonTheme_colorControlNormal, 0));
+
+            theme.setStatusBarColor(a.getColor(R.styleable.ChameleonTheme_android_statusBarColor, 0));
+            theme.setNavigationBarColor(a.getColor(R.styleable.ChameleonTheme_android_navigationBarColor, Color.BLACK));
+
+            theme.setColorToolbar(a.getColor(R.styleable.ChameleonTheme_colorToolbar, theme.getColorPrimary()));
+            theme.setToolbarColored(a.getBoolean(R.styleable.ChameleonTheme_isToolbarColored, true));
+
+            a.recycle();
+            return theme;
+        }
+
+        @IntDef({LightStatusBarMode.NONE, LightStatusBarMode.AUTO, LightStatusBarMode.ON,
+                LightStatusBarMode.OFF})
+        public @interface LightStatusBarMode {
+            int NONE = 0;
+            int AUTO = 1;
+            int ON = 2;
+            int OFF = 3;
         }
     }
 

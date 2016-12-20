@@ -1,4 +1,4 @@
-package org.mariotaku.chameleon;
+package org.mariotaku.chameleon.internal;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,6 +6,10 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+
+import org.mariotaku.chameleon.Chameleon;
+import org.mariotaku.chameleon.ChameleonUtils;
+import org.mariotaku.chameleon.R;
 
 /**
  * Created by mariotaku on 2016/12/18.

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -32,10 +33,13 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.WindowInsetsCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.Window;
 
 import org.mariotaku.chameleon.Chameleon;
+import org.mariotaku.chameleon.Chameleon.Theme.LightStatusBarMode;
 import org.mariotaku.chameleon.ChameleonUtils;
 import org.mariotaku.chameleon.ChameleonView;
+import org.mariotaku.chameleon.internal.WindowSupport;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.TintedStatusLayout;
 
@@ -133,14 +137,22 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     @Override
     public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
         Appearance appearance = new Appearance();
-        appearance.setColor(ChameleonUtils.darkenColor(theme.getColorToolbar()));
+        appearance.setStatusBarColor(theme.getStatusBarColor());
+        appearance.setLightStatusBarMode(theme.getLightStatusBarMode());
         return appearance;
     }
 
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
         Appearance a = (Appearance) appearance;
-        setStatusBarColor(a.getColor());
+        final int statusBarColor = a.getStatusBarColor();
+        setStatusBarColor(statusBarColor);
+        final Activity activity = ChameleonUtils.getActivity(getContext());
+        if (activity != null) {
+            final Window window = activity.getWindow();
+            WindowSupport.setStatusBarColor(window, Color.TRANSPARENT);
+            ChameleonUtils.applyLightStatusBar(window, statusBarColor, a.getLightStatusBarMode());
+        }
     }
 
     @Override
@@ -149,14 +161,25 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
     }
 
     public static class Appearance implements ChameleonView.Appearance {
-        int color;
+        private int statusBarColor;
+        @LightStatusBarMode
+        private int lightStatusBarMode;
 
-        public int getColor() {
-            return color;
+        public int getStatusBarColor() {
+            return statusBarColor;
         }
 
-        public void setColor(int color) {
-            this.color = color;
+        public void setStatusBarColor(int statusBarColor) {
+            this.statusBarColor = statusBarColor;
+        }
+
+        @LightStatusBarMode
+        public int getLightStatusBarMode() {
+            return lightStatusBarMode;
+        }
+
+        public void setLightStatusBarMode(@LightStatusBarMode int lightStatusBarMode) {
+            this.lightStatusBarMode = lightStatusBarMode;
         }
     }
 

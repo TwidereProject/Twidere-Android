@@ -40,6 +40,7 @@ import android.view.View
 import com.squareup.otto.Bus
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonActivity
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
@@ -85,6 +86,19 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
 
     // Registered listeners
     private val controlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
+
+    private val userTheme: Chameleon.Theme by lazy {
+        val theme = Chameleon.Theme.from(this)
+        theme.colorAccent = ThemeUtils.getUserAccentColor(this)
+        theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
+        if (theme.isToolbarColored) {
+            theme.colorToolbar = theme.colorPrimary
+        }
+        theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
+        theme.textColorLink = ThemeUtils.getOptimalAccentColor(theme.colorAccent, theme.colorForeground)
+
+        return@lazy theme
+    }
 
     // Data fields
     private var systemWindowsInsets: Rect? = null
@@ -340,13 +354,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
     }
 
     override fun getOverrideTheme(): Chameleon.Theme {
-        val theme = Chameleon.Theme.from(this)
-        theme.colorAccent = ThemeUtils.getUserAccentColor(this)
-        theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
-        if (theme.isToolbarColored) {
-            theme.colorToolbar = theme.colorPrimary
-        }
-        return theme
+        return userTheme
     }
 
     companion object {

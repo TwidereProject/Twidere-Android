@@ -7,9 +7,9 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 import org.mariotaku.chameleon.Chameleon;
-import org.mariotaku.chameleon.ChameleonTypedArray;
 import org.mariotaku.chameleon.ChameleonView;
 import org.mariotaku.chameleon.R;
+import org.mariotaku.chameleon.internal.ChameleonTypedArray;
 
 /**
  * Created by mariotaku on 2016/12/18.
@@ -39,7 +39,7 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
         Appearance appearance = new Appearance();
         ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
                 R.styleable.ChameleonTextView, theme);
-        appearance.setLinkTextColor(a.getColor(R.styleable.ChameleonTextView_android_textColorLink, theme.getColorAccent()));
+        appearance.setLinkTextColor(a.getColor(R.styleable.ChameleonTextView_android_textColorLink, theme.getTextColorLink()));
         a.recycle();
         return appearance;
     }
