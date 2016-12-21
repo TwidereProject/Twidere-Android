@@ -821,4 +821,6 @@
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="error_info_oauth_timestamp_error">Please check your system date &amp; time settings.</string>
+    <string name="fab_visible">Floating Action Button</string>
+    <string name="fab_visible_summary">Show the Floating Action Button</string>
 </resources>
