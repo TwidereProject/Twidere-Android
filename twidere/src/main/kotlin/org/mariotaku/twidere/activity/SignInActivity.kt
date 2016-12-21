@@ -281,6 +281,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
         val itemBrowser = menu.findItem(R.id.open_in_browser)
         if (itemBrowser != null) {
             val is_oauth = apiConfig.credentialsType == Credentials.Type.OAUTH

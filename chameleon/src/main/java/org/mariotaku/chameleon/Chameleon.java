@@ -4,14 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.graphics.drawable.DrawableWrapper;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarAccessor;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.DecorToolbar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -85,7 +94,15 @@ public class Chameleon {
     }
 
     public void themeOverflow() {
-
+        if (activity instanceof AppCompatActivity) {
+            final ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
+            final DecorToolbar decorToolbar = ActionBarAccessor.getDecorToolbar(actionBar);
+            if (decorToolbar != null) {
+                Toolbar toolbar = (Toolbar) decorToolbar.getViewGroup();
+                int itemColor = ChameleonUtils.getColorDependent(theme.getColorToolbar());
+                ChameleonUtils.setOverflowIconColor(toolbar, itemColor);
+            }
+        }
     }
 
     @NonNull
@@ -97,6 +114,30 @@ public class Chameleon {
             }
         }
         return Theme.from(context);
+    }
+
+    public void themeActionMenu(Menu menu) {
+        int itemColor = ChameleonUtils.getColorDependent(theme.getColorToolbar());
+        themeMenu(menu, itemColor);
+    }
+
+    private void themeMenu(Menu menu, int color) {
+        for (int i = 0, j = menu.size(); i < j; i++) {
+            themeMenuItem(menu.getItem(i), color);
+        }
+    }
+
+    private void themeMenuItem(MenuItem item, int color) {
+        if (item.hasSubMenu()) {
+            themeMenu(item.getSubMenu(), color);
+        }
+        Drawable icon = item.getIcon();
+        if (icon == null) return;
+        if (!(icon instanceof DrawableWrapper)) {
+            icon = DrawableCompat.wrap(icon);
+            item.setIcon(icon);
+        }
+        DrawableCompat.setTint(icon, color);
     }
 
     /**

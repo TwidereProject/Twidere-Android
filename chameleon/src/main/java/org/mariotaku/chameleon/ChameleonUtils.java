@@ -14,6 +14,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.Window;
@@ -87,6 +88,14 @@ public class ChameleonUtils {
     public static int getColorDependent(int color) {
         final boolean isLight = isColorLight(color);
         return isLight ? Color.BLACK : Color.WHITE;
+    }
+
+    public static void setOverflowIconColor(Toolbar toolbar, int itemColor) {
+        final Drawable overflowIcon = toolbar.getOverflowIcon();
+        if (overflowIcon != null) {
+            overflowIcon.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP);
+            toolbar.setOverflowIcon(overflowIcon);
+        }
     }
 
     public static void applyLightStatusBar(Window window, int statusBarColor,
