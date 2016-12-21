@@ -307,6 +307,8 @@ public interface SharedPreferenceConstants {
     String KEY_NEW_DOCUMENT_API = "new_document_api";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_DRAWER_TOGGLE = "drawer_toggle";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    String KEY_FAB_VISIBLE = "fab_visible";
 
     String KEY_RANDOMIZE_ACCOUNT_NAME = "randomize_account_name";
     String KEY_DEFAULT_AUTO_REFRESH = "default_auto_refresh";
