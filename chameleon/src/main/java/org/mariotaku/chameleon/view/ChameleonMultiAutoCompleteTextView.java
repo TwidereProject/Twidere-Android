@@ -34,14 +34,14 @@ public class ChameleonMultiAutoCompleteTextView extends AppCompatMultiAutoComple
     @Nullable
     @Override
     public ChameleonEditText.Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
-        return ChameleonEditText.Appearance.create(context, attributeSet, theme);
+        return ChameleonTextView.Appearance.create(context, attributeSet, theme);
     }
 
 
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
         final ChameleonEditText.Appearance a = (ChameleonEditText.Appearance) appearance;
-        ChameleonEditText.Appearance.apply(this, a);
+        ChameleonTextView.Appearance.apply(this, a);
     }
 
 }
