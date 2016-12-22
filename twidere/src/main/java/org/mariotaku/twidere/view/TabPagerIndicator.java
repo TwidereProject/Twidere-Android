@@ -228,7 +228,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
 
     @Nullable
     @Override
-    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         final Appearance appearance = new Appearance();
         final int toolbarColor = theme.getColorToolbar();
         final int itemColor = ChameleonUtils.getColorDependent(toolbarColor);

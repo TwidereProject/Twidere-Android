@@ -135,7 +135,7 @@ public class TintedStatusFrameLayout extends ExtendedFrameLayout implements Tint
 
     @Nullable
     @Override
-    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         Appearance appearance = new Appearance();
         appearance.setStatusBarColor(theme.getStatusBarColor());
         appearance.setLightStatusBarMode(theme.getLightStatusBarMode());

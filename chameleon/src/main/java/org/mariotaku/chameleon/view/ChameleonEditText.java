@@ -44,7 +44,7 @@ public class ChameleonEditText extends AppCompatEditText implements ChameleonVie
 
     @Nullable
     @Override
-    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         return Appearance.create(context, attributeSet, theme);
     }
 

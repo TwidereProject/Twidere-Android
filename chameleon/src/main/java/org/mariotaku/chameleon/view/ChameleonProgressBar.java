@@ -35,7 +35,7 @@ public class ChameleonProgressBar extends ProgressBar implements ChameleonView {
 
     @Nullable
     @Override
-    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         Appearance appearance = new Appearance();
         appearance.setProgressColor(theme.getColorAccent());
         return appearance;

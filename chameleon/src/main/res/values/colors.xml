@@ -3,4 +3,24 @@
     <color name="color_reference_primary_color">#00100001</color>
     <color name="color_reference_accent_color">#00100002</color>
     <color name="color_reference_toolbar_color">#00100003</color>
+
+    <!--LIGHT-->
+    <!--12%-->
+    <color name="chameleon_switch_track_disabled_light">#1F000000</color>
+    <!-- 26% -->
+    <color name="chameleon_switch_track_normal_light">#43000000</color>
+    <!--Grey 50, #FAFAFA, Opacity  100%-->
+    <color name="chameleon_switch_thumb_normal_light">#FFFAFAFA</color>
+    <!--Grey 400, #BDBDBD, Opacity  100%-->
+    <color name="chameleon_switch_thumb_disabled_light">#FFBDBDBD</color>
+
+    <!--DARK-->
+    <!--10%-->
+    <color name="chameleon_switch_track_disabled_dark">#1AFFFFFF</color>
+    <!-- 30% -->
+    <color name="chameleon_switch_track_normal_dark">#4DFFFFFF</color>
+    <!--Grey 400, #BDBDBD, Opacity  100%-->
+    <color name="chameleon_switch_thumb_normal_dark">#FFBDBDBD</color>
+    <!--Grey 800, #424242, Opacity 100%-->
+    <color name="chameleon_switch_thumb_disabled_dark">#FF424242</color>
 </resources>

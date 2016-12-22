@@ -49,6 +49,18 @@ public class ChameleonUtils {
         return Color.HSVToColor(hsv);
     }
 
+    public static int adjustAlpha(@ColorInt int color, @FloatRange(from = 0.0, to = 1.0) float factor) {
+        int alpha = Math.round(Color.alpha(color) * factor);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return Color.argb(alpha, red, green, blue);
+    }
+
+    public static int stripAlpha(@ColorInt int color) {
+        return Color.rgb(Color.red(color), Color.green(color), Color.blue(color));
+    }
+
     @ColorInt
     public static int darkenColor(@ColorInt int color) {
         return shiftColor(color, 0.9f);
@@ -95,6 +107,11 @@ public class ChameleonUtils {
         if (overflowIcon != null) {
             overflowIcon.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP);
             toolbar.setOverflowIcon(overflowIcon);
+        }
+        final Drawable navigationIcon = toolbar.getNavigationIcon();
+        if (navigationIcon != null) {
+            navigationIcon.setColorFilter(itemColor, PorterDuff.Mode.SRC_ATOP);
+            toolbar.setNavigationIcon(navigationIcon);
         }
     }
 

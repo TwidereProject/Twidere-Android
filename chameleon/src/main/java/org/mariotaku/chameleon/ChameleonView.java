@@ -14,7 +14,7 @@ public interface ChameleonView {
     boolean isPostApplyTheme();
 
     @Nullable
-    Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme);
+    Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme);
 
     void applyAppearance(@NonNull Appearance appearance);
 

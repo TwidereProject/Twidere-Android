@@ -33,7 +33,7 @@ public class ChameleonAutoCompleteTextView extends AppCompatAutoCompleteTextView
 
     @Nullable
     @Override
-    public ChameleonEditText.Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public ChameleonEditText.Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         return ChameleonEditText.Appearance.create(context, attributeSet, theme);
     }
 

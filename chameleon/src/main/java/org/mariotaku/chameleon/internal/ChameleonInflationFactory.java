@@ -21,6 +21,7 @@ import org.mariotaku.chameleon.view.ChameleonFloatingActionButton;
 import org.mariotaku.chameleon.view.ChameleonMultiAutoCompleteTextView;
 import org.mariotaku.chameleon.view.ChameleonProgressBar;
 import org.mariotaku.chameleon.view.ChameleonSwipeRefreshLayout;
+import org.mariotaku.chameleon.view.ChameleonSwitchCompat;
 import org.mariotaku.chameleon.view.ChameleonTextView;
 import org.mariotaku.chameleon.view.ChameleonToolbar;
 
@@ -36,7 +37,7 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
     private final Activity mActivity;
     @Nullable
     private final AppCompatDelegate mDelegate;
-    @Nullable
+    @NonNull
     private final Chameleon.Theme mTheme;
     private final ArrayMap<ChameleonView, ChameleonView.Appearance> mPostApplyViews;
 
@@ -44,7 +45,7 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
     public ChameleonInflationFactory(@NonNull LayoutInflater inflater,
                                      @Nullable Activity activity,
                                      @Nullable AppCompatDelegate delegate,
-                                     @Nullable Chameleon.Theme theme,
+                                     @NonNull Chameleon.Theme theme,
                                      @NonNull ArrayMap<ChameleonView, ChameleonView.Appearance> postApplyViews) {
         this.mInflater = inflater;
         this.mActivity = activity;
@@ -93,6 +94,10 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
             }
             case "android.support.v4.widget.SwipeRefreshLayout": {
                 view = new ChameleonSwipeRefreshLayout(context, attrs);
+                break;
+            }
+            case "android.support.v7.widget.SwitchCompat": {
+                view = new ChameleonSwitchCompat(context, attrs);
                 break;
             }
         }

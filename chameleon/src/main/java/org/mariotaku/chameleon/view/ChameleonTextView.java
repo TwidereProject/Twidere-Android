@@ -35,7 +35,7 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
 
     @Nullable
     @Override
-    public Appearance createAppearance(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
         Appearance appearance = new Appearance();
         ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
                 R.styleable.ChameleonTextView, theme);

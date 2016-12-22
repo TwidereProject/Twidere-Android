@@ -48,6 +48,7 @@ public class Chameleon {
         return new Chameleon(activity);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void preApply() {
 
         final LayoutInflater inflater = activity.getLayoutInflater();
@@ -60,6 +61,7 @@ public class Chameleon {
         LayoutInflaterCompat.setFactory(inflater, factory);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void postApply() {
         for (int i = 0, j = postApplyViews.size(); i < j; i++) {
             postApplyViews.keyAt(i).applyAppearance(postApplyViews.valueAt(i));
@@ -85,14 +87,17 @@ public class Chameleon {
         return ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void invalidateActivity() {
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void cleanUp() {
         postApplyViews.clear();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void themeOverflow() {
         if (activity instanceof AppCompatActivity) {
             final ActionBar actionBar = ((AppCompatActivity) activity).getSupportActionBar();
@@ -116,6 +121,7 @@ public class Chameleon {
         return Theme.from(context);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void themeActionMenu(Menu menu) {
         int itemColor = ChameleonUtils.getColorDependent(theme.getColorToolbar());
         themeMenu(menu, itemColor);
