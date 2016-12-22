@@ -64,7 +64,7 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
         private int linkTextColor;
         private int backgroundColor;
 
-        public static void apply(TextView view, ChameleonEditText.Appearance appearance) {
+        public static void apply(TextView view, ChameleonTextView.Appearance appearance) {
             view.setLinkTextColor(appearance.getLinkTextColor());
             ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(appearance.getBackgroundColor()));
             setCursorTint(view, appearance.getBackgroundColor());
@@ -73,7 +73,7 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
         }
 
         public static ChameleonEditText.Appearance create(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
-            ChameleonEditText.Appearance appearance = new ChameleonEditText.Appearance();
+            ChameleonTextView.Appearance appearance = new ChameleonTextView.Appearance();
             ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
                     R.styleable.ChameleonEditText, theme);
             appearance.setLinkTextColor(a.getColor(R.styleable.ChameleonEditText_android_textColorLink, theme.getTextColorLink()));

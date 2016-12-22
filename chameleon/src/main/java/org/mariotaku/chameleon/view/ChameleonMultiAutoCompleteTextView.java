@@ -40,7 +40,7 @@ public class ChameleonMultiAutoCompleteTextView extends AppCompatMultiAutoComple
 
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
-        final ChameleonEditText.Appearance a = (ChameleonEditText.Appearance) appearance;
+        final ChameleonTextView.Appearance a = (ChameleonTextView.Appearance) appearance;
         ChameleonTextView.Appearance.apply(this, a);
     }
 

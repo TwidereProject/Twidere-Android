@@ -40,7 +40,7 @@ public class ChameleonEditText extends AppCompatEditText implements ChameleonVie
 
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
-        final Appearance a = (Appearance) appearance;
+        final ChameleonTextView.Appearance a = (ChameleonTextView.Appearance) appearance;
         ChameleonTextView.Appearance.apply(this, a);
     }
 

@@ -62,6 +62,7 @@ import kotlinx.android.synthetic.main.activity_home_content.*
 import kotlinx.android.synthetic.main.layout_empty_tab_hint.*
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
@@ -113,6 +114,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
             drawerToggleButton.setImageDrawable(upDrawable)
+            drawerToggleButton.setColorFilter(ChameleonUtils.getColorDependent(overrideTheme.colorToolbar))
             drawerToggleButton.contentDescription = getString(contentDescRes)
         }
 
@@ -121,8 +123,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
         override fun getThemeUpIndicator(): Drawable {
-            val a = TintTypedArray.obtainStyledAttributes(
-                    actionBarThemedContext, null, HOME_AS_UP_ATTRS)
+            val a = TintTypedArray.obtainStyledAttributes(actionBarThemedContext, null,
+                    HOME_AS_UP_ATTRS)
             val result = a.getDrawable(0)
             a.recycle()
             return result
