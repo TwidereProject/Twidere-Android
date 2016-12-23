@@ -58,12 +58,12 @@ public class Chameleon {
 
     @SuppressWarnings("WeakerAccess")
     public void preApply() {
-
         final LayoutInflater inflater = activity.getLayoutInflater();
         AppCompatDelegate delegate = null;
         if (activity instanceof AppCompatActivity) {
             delegate = ((AppCompatActivity) activity).getDelegate();
         }
+
         final ChameleonInflationFactory factory = new ChameleonInflationFactory(inflater, activity,
                 creator, delegate, theme, postApplyViews);
         LayoutInflaterCompat.setFactory(inflater, factory);
@@ -195,6 +195,8 @@ public class Chameleon {
         private boolean toolbarColored;
         @LightStatusBarMode
         private int lightStatusBarMode = LightStatusBarMode.NONE;
+
+        private int actionBarWidgetTheme;
 
         Theme() {
 
@@ -383,6 +385,14 @@ public class Chameleon {
             return lightStatusBarMode;
         }
 
+        public int getActionBarWidgetTheme() {
+            return actionBarWidgetTheme;
+        }
+
+        public void setActionBarWidgetTheme(int actionBarWidgetTheme) {
+            this.actionBarWidgetTheme = actionBarWidgetTheme;
+        }
+
         @NonNull
         public static Theme from(Context context) {
             Theme theme = new Theme();
@@ -412,6 +422,7 @@ public class Chameleon {
 
             theme.setColorToolbar(a.getColor(R.styleable.ChameleonTheme_colorToolbar, theme.getColorPrimary()));
             theme.setToolbarColored(a.getBoolean(R.styleable.ChameleonTheme_isToolbarColored, true));
+            theme.setActionBarWidgetTheme(a.getResourceId(R.styleable.ChameleonTheme_actionBarWidgetTheme, 0));
 
             a.recycle();
             return theme;

@@ -31,7 +31,8 @@
         android:id="@+id/accountSpinner"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:tag="tint|primary_color_dependent"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginTop="@dimen/element_spacing_small"
         tools:listitem="@layout/spinner_item_account_icon"/>
 
     <FrameLayout
@@ -44,11 +45,11 @@
             android:id="@+id/editUserQuery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginRight="@dimen/element_spacing_normal"
-            android:gravity="bottom|center_vertical"
-            android:inputType="textPersonName|textMultiLine"
-            android:tag="tint|primary_color_dependent,text_color|primary_color_dependent">
+            android:gravity="center_vertical"
+            android:inputType="textPersonName|textMultiLine">
 
             <requestFocus/>
         </EditText>

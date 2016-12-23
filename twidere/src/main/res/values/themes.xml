@@ -1,94 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="Theme.Twidere" parent="Theme.Twidere.Dark"/>
 
-    <style name="Theme.Twidere" parent="Theme.AppCompat">
+    <style name="Theme.Twidere.Dialog" parent="Theme.Twidere.Dark.Dialog"/>
 
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.Dark.DialogWhenLarge.NoActionBar"/>
 
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-        <item name="mediaLabelBackground">#505050</item>
-
-        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
-        <item name="isToolbarColored">false</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere">
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere.Dark">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
-    </style>
-
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.DialogWhenLarge">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-
-        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
-        <item name="isToolbarColored">false</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-    <style name="Theme.Twidere.Dialog" parent="Theme.AppCompat.Dialog">
-
-        <!-- TODO this is a simple fix for https://github.com/TwidereProject/Twidere-Android/issues/579 -->
-        <item name="android:windowBackground">@drawable/abc_dialog_material_background_dark</item>
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
-        <item name="android:panelColorBackground">#3c3c3c</item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-
-        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
-        <item name="isToolbarColored">false</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 

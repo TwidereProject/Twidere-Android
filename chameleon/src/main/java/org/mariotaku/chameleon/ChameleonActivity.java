@@ -18,6 +18,7 @@ public class ChameleonActivity extends AppCompatActivity implements Chameleon.Th
         mChameleon = Chameleon.getInstance(this, onCreateAppearanceCreator());
         mChameleon.preApply();
         super.onCreate(savedInstanceState);
+
     }
 
     @Override

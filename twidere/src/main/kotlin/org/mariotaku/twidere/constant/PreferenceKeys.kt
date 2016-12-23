@@ -47,6 +47,8 @@ val defaultAutoRefreshAskedKey = KBooleanKey("default_auto_refresh_asked", true)
 val unreadCountKey = KBooleanKey(KEY_UNREAD_COUNT, true)
 val drawerToggleKey = KBooleanKey(KEY_DRAWER_TOGGLE, false)
 val fabVisibleKey = KBooleanKey(KEY_FAB_VISIBLE, true)
+val themeKey = KStringKey(KEY_THEME, VALUE_THEME_NAME_LIGHT)
+val themeColorKey = KIntKey(KEY_THEME_COLOR, 0)
 
 object refreshIntervalKey : KSimpleKey<Long>(KEY_REFRESH_INTERVAL, 15) {
     override fun read(preferences: SharedPreferences): Long {

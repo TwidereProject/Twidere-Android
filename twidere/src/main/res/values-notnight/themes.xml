@@ -1,84 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Twidere" parent="Theme.AppCompat.Light">
+    <style name="Theme.Twidere" parent="Theme.Twidere.Light"/>
 
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
-        </item>
+    <style name="Theme.Twidere.Dialog" parent="Theme.Twidere.Light.Dialog"/>
 
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.Light.DialogWhenLarge.NoActionBar"/>
 
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-        <item name="mediaLabelBackground">#dddddd</item>
-
-        <item name="colorToolbar">?colorPrimary</item>
-        <item name="isToolbarColored">true</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.Light.DialogWhenLarge">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-
-        <item name="colorToolbar">?colorPrimary</item>
-        <item name="isToolbarColored">true</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
-
-
-    <style name="Theme.Twidere.Dialog" parent="Theme.AppCompat.Light.Dialog">
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
-        </item>
-        <item name="android:panelColorBackground">#e5e5e5</item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
-
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_dark</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
-
-        <item name="colorToolbar">?colorPrimary</item>
-        <item name="isToolbarColored">true</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
 
 </resources>

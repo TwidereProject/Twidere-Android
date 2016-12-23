@@ -32,6 +32,8 @@
 
         <attr name="colorToolbar" format="color"/>
         <attr name="isToolbarColored" format="boolean"/>
+
+        <attr name="actionBarWidgetTheme"/>
     </declare-styleable>
     <declare-styleable name="ChameleonView">
         <attr name="android:background"/>

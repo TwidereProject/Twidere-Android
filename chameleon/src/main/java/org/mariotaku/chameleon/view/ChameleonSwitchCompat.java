@@ -45,9 +45,9 @@ public class ChameleonSwitchCompat extends SwitchCompat implements ChameleonView
     }
 
 
-    private static Drawable modifySwitchDrawable(@NonNull Context context, @NonNull Drawable from,
-                                                 @ColorInt int tint, boolean thumb, boolean compatSwitch,
-                                                 boolean useDarker) {
+    public static Drawable modifySwitchDrawable(@NonNull Context context, @NonNull Drawable from,
+                                                @ColorInt int tint, boolean thumb, boolean compatSwitch,
+                                                boolean useDarker) {
         if (useDarker) {
             tint = ChameleonUtils.shiftColor(tint, 1.1f);
         }
@@ -92,10 +92,7 @@ public class ChameleonSwitchCompat extends SwitchCompat implements ChameleonView
     @Nullable
     @Override
     public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
-        Appearance appearance = new Appearance();
-        appearance.setAccentColor(theme.getColorAccent());
-        appearance.setDark(!ChameleonUtils.isColorLight(theme.getColorBackground()));
-        return appearance;
+        return Appearance.create(theme);
     }
 
     @Override
@@ -107,6 +104,14 @@ public class ChameleonSwitchCompat extends SwitchCompat implements ChameleonView
     public static class Appearance implements ChameleonView.Appearance {
         int accentColor;
         boolean dark;
+
+        @NonNull
+        public static Appearance create(@NonNull Chameleon.Theme theme) {
+            Appearance appearance = new Appearance();
+            appearance.setAccentColor(theme.getColorAccent());
+            appearance.setDark(!ChameleonUtils.isColorLight(theme.getColorBackground()));
+            return appearance;
+        }
 
         public int getAccentColor() {
             return accentColor;
