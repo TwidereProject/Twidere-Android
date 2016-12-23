@@ -36,6 +36,7 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
     private final LayoutInflater mInflater;
     @Nullable
     private final Activity mActivity;
+    private final Chameleon.AppearanceCreator mCreator;
     @Nullable
     private final AppCompatDelegate mDelegate;
     @NonNull
@@ -45,11 +46,13 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
 
     public ChameleonInflationFactory(@NonNull LayoutInflater inflater,
                                      @Nullable Activity activity,
+                                     Chameleon.AppearanceCreator creator,
                                      @Nullable AppCompatDelegate delegate,
                                      @NonNull Chameleon.Theme theme,
                                      @NonNull ArrayMap<ChameleonView, ChameleonView.Appearance> postApplyViews) {
         this.mInflater = inflater;
         this.mActivity = activity;
+        this.mCreator = creator;
         this.mDelegate = delegate;
         this.mTheme = theme;
         this.mPostApplyViews = postApplyViews;
@@ -166,18 +169,28 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
                     cv.applyAppearance(appearance);
                 }
             }
-        } else {
-            ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attrs,
-                    R.styleable.ChameleonView, mTheme);
-            Drawable background = a.getDrawable(R.styleable.ChameleonView_android_background);
-            if (background != null) {
-                int tint = a.getColor(R.styleable.ChameleonView_backgroundTint, 0);
-                if (tint != 0) {
-                    DrawableCompat.setTint(background, tint);
+        } else if (view != null) {
+            boolean handled = false;
+            if (mCreator != null) {
+                ChameleonView.Appearance appearance = mCreator.createAppearance(view, context, attrs, mTheme);
+                if (appearance != null) {
+                    mCreator.applyAppearance(view, appearance);
+                    handled = true;
                 }
-                SupportMethods.setBackground(view, background);
             }
-            a.recycle();
+            if (!handled) {
+                ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attrs,
+                        R.styleable.ChameleonView, mTheme);
+                Drawable background = a.getDrawable(R.styleable.ChameleonView_android_background);
+                if (background != null) {
+                    int tint = a.getColor(R.styleable.ChameleonView_backgroundTint, 0);
+                    if (tint != 0) {
+                        DrawableCompat.setTint(background, tint);
+                    }
+                    SupportMethods.setBackground(view, background);
+                }
+                a.recycle();
+            }
         }
         return view;
     }

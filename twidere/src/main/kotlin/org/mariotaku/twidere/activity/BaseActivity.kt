@@ -53,6 +53,7 @@ import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -359,8 +360,13 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         return userTheme
     }
 
+    override fun onCreateAppearanceCreator(): Chameleon.AppearanceCreator? {
+        return TwidereAppearanceCreator
+    }
+
     companion object {
 
         private val sClassPrefixList = arrayOf("android.widget.", "android.view.", "android.webkit.")
     }
 }
+

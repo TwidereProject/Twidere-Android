@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.DecorToolbar;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,16 +37,23 @@ public class Chameleon {
 
     private final Activity activity;
     private final Theme theme;
+    @Nullable
+    private final AppearanceCreator creator;
     private final ArrayMap<ChameleonView, ChameleonView.Appearance> postApplyViews;
 
-    private Chameleon(Activity activity) {
+    private Chameleon(Activity activity, @Nullable AppearanceCreator creator) {
         this.activity = activity;
+        this.creator = creator;
         this.theme = getOverrideTheme(activity, activity);
         this.postApplyViews = new ArrayMap<>();
     }
 
     public static Chameleon getInstance(Activity activity) {
-        return new Chameleon(activity);
+        return getInstance(activity, null);
+    }
+
+    public static Chameleon getInstance(Activity activity, AppearanceCreator creator) {
+        return new Chameleon(activity, creator);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -57,7 +65,7 @@ public class Chameleon {
             delegate = ((AppCompatActivity) activity).getDelegate();
         }
         final ChameleonInflationFactory factory = new ChameleonInflationFactory(inflater, activity,
-                delegate, theme, postApplyViews);
+                creator, delegate, theme, postApplyViews);
         LayoutInflaterCompat.setFactory(inflater, factory);
     }
 
@@ -146,10 +154,19 @@ public class Chameleon {
         DrawableCompat.setTint(icon, color);
     }
 
+    public interface AppearanceCreator {
+        @Nullable
+        ChameleonView.Appearance createAppearance(@NonNull View view,
+                                                  @NonNull Context context,
+                                                  @NonNull AttributeSet attributeSet,
+                                                  @NonNull Chameleon.Theme theme);
+
+        void applyAppearance(@NonNull View view, @NonNull ChameleonView.Appearance appearance);
+    }
+
     /**
      * Created by mariotaku on 2016/12/18.
      */
-
     public static class Theme {
         private int colorBackground;
         private int colorForeground;

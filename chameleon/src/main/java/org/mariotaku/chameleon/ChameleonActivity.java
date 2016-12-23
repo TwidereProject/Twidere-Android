@@ -15,7 +15,7 @@ public class ChameleonActivity extends AppCompatActivity implements Chameleon.Th
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        mChameleon = Chameleon.getInstance(this);
+        mChameleon = Chameleon.getInstance(this, onCreateAppearanceCreator());
         mChameleon.preApply();
         super.onCreate(savedInstanceState);
     }
@@ -57,6 +57,11 @@ public class ChameleonActivity extends AppCompatActivity implements Chameleon.Th
 
     @Override
     public Chameleon.Theme getOverrideTheme() {
+        return null;
+    }
+
+    @Nullable
+    protected Chameleon.AppearanceCreator onCreateAppearanceCreator() {
         return null;
     }
 }
