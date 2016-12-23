@@ -354,6 +354,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             drawerToggleButton.visibility = View.GONE
         }
 
+        if (preferences.getBoolean(SharedPreferenceConstants.KEY_FAB_VISIBLE)) {
+            actionsButton.visibility = View.VISIBLE
+        } else {
+            actionsButton.visibility = View.GONE
+        }
+
         homeContent.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
             if (top != oldTop) {
                 val fragment = leftDrawerFragment
