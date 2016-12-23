@@ -48,9 +48,9 @@
                     android:layout_height="wrap_content"
                     android:background="?android:panelColorBackground"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:padding="@dimen/element_spacing_normal"
-                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"
-                    android:maxLines="1"/>
+                    tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
 
                 <View
                     android:id="@+id/replyLabelDivider"
@@ -97,7 +97,6 @@
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_action_location"
-                        android:tag="iab_activated_color|accent_color"
                         app:iabActivatedColor="?colorAccent"
                         app:iabColor="?android:textColorSecondary"
                         tools:activated="true"/>
@@ -113,10 +112,10 @@
                         android:layout_toLeftOf="@+id/locationSwitch"
                         android:layout_toRightOf="@+id/locationIcon"
                         android:layout_toStartOf="@+id/locationSwitch"
+                        android:maxLines="1"
                         android:paddingLeft="@dimen/element_spacing_normal"
                         android:paddingRight="@dimen/element_spacing_normal"
-                        tools:text="11.4, 51.4"
-                        android:maxLines="1"/>
+                        tools:text="11.4, 51.4"/>
 
                     <org.mariotaku.twidere.view.ThemedMultiValueSwitch
                         android:id="@+id/locationSwitch"
@@ -230,8 +229,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:background="@null"
-                android:tag="ate_ignore"/>
+                android:background="@null"/>
         </FrameLayout>
 
         <LinearLayout

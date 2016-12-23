@@ -378,7 +378,7 @@ public class Chameleon {
             theme.setColorEdgeEffect(a.getColor(R.styleable.ChameleonTheme_colorEdgeEffect, 0));
 
             theme.setColorControlNormal(a.getColor(R.styleable.ChameleonTheme_colorControlNormal, 0));
-            theme.setColorControlActivated(a.getColor(R.styleable.ChameleonTheme_colorControlNormal, 0));
+            theme.setColorControlActivated(a.getColor(R.styleable.ChameleonTheme_colorControlActivated, 0));
 
             theme.setStatusBarColor(a.getColor(R.styleable.ChameleonTheme_android_statusBarColor, 0));
             theme.setNavigationBarColor(a.getColor(R.styleable.ChameleonTheme_android_navigationBarColor, Color.BLACK));

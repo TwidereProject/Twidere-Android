@@ -28,6 +28,8 @@ import android.support.customtabs.CustomTabsIntent
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.LinkEvent
 import org.apache.commons.lang3.StringUtils
+import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.activity.WebLinkHandlerActivity
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.app.TwidereApplication
@@ -159,6 +161,9 @@ open class OnLinkClickHandler(
     protected open fun openLink(link: String) {
         if (manager != null && manager.isActive) return
         val builder = CustomTabsIntent.Builder()
+        (ChameleonUtils.getActivity(context) as? Chameleon.Themeable)?.overrideTheme?.let { theme ->
+            builder.setToolbarColor(theme.colorToolbar)
+        }
         val intent = builder.build()
         try {
             intent.launchUrl(context, Uri.parse(link))

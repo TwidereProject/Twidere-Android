@@ -5,10 +5,14 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
+import org.mariotaku.chameleon.Chameleon;
+import org.mariotaku.chameleon.ChameleonView;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.view.iface.IIconActionButton;
@@ -106,5 +110,21 @@ public class IconActionButton extends AppCompatImageButton implements IIconActio
         } else {
             setColorFilter(getDisabledColor());
         }
+    }
+
+    @Override
+    public boolean isPostApplyTheme() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
+        return IIconActionButton.Appearance.create(context, attributeSet, theme);
+    }
+
+    @Override
+    public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
+        IIconActionButton.Appearance.apply(this, (Appearance) appearance);
     }
 }

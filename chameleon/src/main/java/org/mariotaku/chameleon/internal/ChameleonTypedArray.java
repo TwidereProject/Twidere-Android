@@ -55,27 +55,30 @@ public class ChameleonTypedArray {
 
     public int getColor(int index, int defValue) {
         final int ref = attributeReferences[index];
-        if (ref == android.support.design.R.attr.colorPrimary) {
-            return theme.getColorPrimary();
-        } else if (ref == android.support.design.R.attr.colorAccent) {
-            return theme.getColorAccent();
-        } else if (ref == R.attr.colorToolbar) {
-            return theme.getColorToolbar();
-        }
+        int color = getCommonColorReference(ref);
+        if (color != 0) return color;
         if (!hasAttributeStates[index]) return defValue;
         return wrapped.getColor(index, defValue);
     }
 
     public Drawable getDrawable(int index) {
         final int ref = attributeReferences[index];
-        if (ref == android.support.design.R.attr.colorPrimary) {
-            return new ColorDrawable(theme.getColorPrimary());
-        } else if (ref == android.support.design.R.attr.colorAccent) {
-            return new ColorDrawable(theme.getColorAccent());
-        } else if (ref == R.attr.colorToolbar) {
-            return new ColorDrawable(theme.getColorToolbar());
-        }
+        int color = getCommonColorReference(ref);
+        if (color != 0) return new ColorDrawable(color);
         if (!hasAttributeStates[index]) return null;
         return wrapped.getDrawable(index);
+    }
+
+    public int getCommonColorReference(int ref) {
+        if (ref == android.support.design.R.attr.colorPrimary) {
+            return theme.getColorPrimary();
+        } else if (ref == android.support.design.R.attr.colorPrimaryDark) {
+            return theme.getColorPrimaryDark();
+        } else if (ref == android.support.design.R.attr.colorAccent) {
+            return theme.getColorAccent();
+        } else if (ref == R.attr.colorToolbar) {
+            return theme.getColorToolbar();
+        }
+        return 0;
     }
 }
