@@ -266,6 +266,7 @@
                 android:padding="@dimen/element_spacing_xsmall"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_action_send"
+                app:iabColor="?android:textColorSecondary"
                 tools:tint="?android:textColorSecondary"/>
 
         </LinearLayout>
