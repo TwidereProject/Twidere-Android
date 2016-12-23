@@ -29,7 +29,11 @@ import org.mariotaku.twidere.model.UserKey
 /**
  * Created by mariotaku on 15/1/23.
  */
-open class StatusLinkClickHandler(context: Context, manager: MultiSelectManager, preferences: SharedPreferencesWrapper) : OnLinkClickHandler(context, manager, preferences), Constants {
+open class StatusLinkClickHandler(
+        context: Context,
+        manager: MultiSelectManager,
+        preferences: SharedPreferencesWrapper
+) : OnLinkClickHandler(context, manager, preferences), Constants {
 
     var status: ParcelableStatus? = null
 

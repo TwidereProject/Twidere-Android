@@ -16,23 +16,25 @@
 
 <TwoLineListItem
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:minHeight="?android:attr/listPreferredItemHeight"
+    android:background="?android:activatedBackgroundIndicator"
+    android:minHeight="?android:listPreferredItemHeight"
     android:mode="twoLine"
     android:paddingBottom="2dip"
     android:paddingTop="2dip"
-    android:tag="tint_background|accent_color">
+    android:tag="tint_background|accent_color"
+    app:backgroundTint="?colorControlActivated">
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:layout_marginStart="?android:attr/listPreferredItemPaddingStart"
+        android:layout_marginLeft="?android:listPreferredItemPaddingLeft"
+        android:layout_marginStart="?android:listPreferredItemPaddingStart"
         android:layout_marginTop="6dip"
-        android:textAppearance="?android:attr/textAppearanceListItem"/>
+        android:textAppearance="?android:textAppearanceListItem"/>
 
     <TextView
         android:id="@android:id/text2"
@@ -41,7 +43,7 @@
         android:layout_alignLeft="@android:id/text1"
         android:layout_alignStart="@android:id/text1"
         android:layout_below="@android:id/text1"
-        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorSecondary"/>
 
 </TwoLineListItem>

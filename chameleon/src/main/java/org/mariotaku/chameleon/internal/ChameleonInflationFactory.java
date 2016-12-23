@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.LayoutInflaterFactory;
 import android.support.v7.app.AppCompatDelegate;
@@ -170,6 +171,10 @@ public class ChameleonInflationFactory implements LayoutInflaterFactory {
                     R.styleable.ChameleonView, mTheme);
             Drawable background = a.getDrawable(R.styleable.ChameleonView_android_background);
             if (background != null) {
+                int tint = a.getColor(R.styleable.ChameleonView_backgroundTint, 0);
+                if (tint != 0) {
+                    DrawableCompat.setTint(background, tint);
+                }
                 SupportMethods.setBackground(view, background);
             }
             a.recycle();

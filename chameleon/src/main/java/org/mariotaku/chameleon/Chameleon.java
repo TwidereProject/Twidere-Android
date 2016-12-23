@@ -169,6 +169,7 @@ public class Chameleon {
 
         private int colorControlNormal;
         private int colorControlActivated;
+        private int colorControlHighlight;
 
         private int statusBarColor;
         private int navigationBarColor;
@@ -348,6 +349,14 @@ public class Chameleon {
             this.colorControlActivated = color;
         }
 
+        public int getColorControlHighlight() {
+            return colorControlHighlight;
+        }
+
+        public void setColorControlHighlight(int colorControlHighlight) {
+            this.colorControlHighlight = colorControlHighlight;
+        }
+
         public void setLightStatusBarMode(@LightStatusBarMode int mode) {
             this.lightStatusBarMode = mode;
         }
@@ -379,6 +388,7 @@ public class Chameleon {
 
             theme.setColorControlNormal(a.getColor(R.styleable.ChameleonTheme_colorControlNormal, 0));
             theme.setColorControlActivated(a.getColor(R.styleable.ChameleonTheme_colorControlActivated, 0));
+            theme.setColorControlHighlight(a.getColor(R.styleable.ChameleonTheme_colorControlHighlight, 0));
 
             theme.setStatusBarColor(a.getColor(R.styleable.ChameleonTheme_android_statusBarColor, 0));
             theme.setNavigationBarColor(a.getColor(R.styleable.ChameleonTheme_android_navigationBarColor, Color.BLACK));

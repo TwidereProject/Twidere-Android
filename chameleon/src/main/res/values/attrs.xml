@@ -35,11 +35,14 @@
     </declare-styleable>
     <declare-styleable name="ChameleonView">
         <attr name="android:background"/>
+        <attr name="backgroundTint"/>
+        <attr name="backgroundTintMode"/>
     </declare-styleable>
     <declare-styleable name="ChameleonTextView">
         <attr name="android:textColorLink"/>
     </declare-styleable>
     <declare-styleable name="ChameleonEditText">
+        <attr name="android:textColor"/>
         <attr name="android:textColorLink"/>
         <attr name="backgroundTint"/>
     </declare-styleable>

@@ -49,10 +49,6 @@ public class ChameleonTypedArray {
         return new ChameleonTypedArray(array, hasAttribute, attributeReferences, theme);
     }
 
-    public int getColor(int index) {
-        return wrapped.getColor(index, 0);
-    }
-
     public int getColor(int index, int defValue) {
         final int ref = attributeReferences[index];
         int color = getCommonColorReference(ref);
@@ -76,6 +72,12 @@ public class ChameleonTypedArray {
             return theme.getColorPrimaryDark();
         } else if (ref == android.support.design.R.attr.colorAccent) {
             return theme.getColorAccent();
+        } else if (ref == android.support.design.R.attr.colorControlNormal) {
+            return theme.getColorControlNormal();
+        } else if (ref == android.support.design.R.attr.colorControlActivated) {
+            return theme.getColorControlActivated();
+        } else if (ref == android.support.design.R.attr.colorControlHighlight) {
+            return theme.getColorControlHighlight();
         } else if (ref == R.attr.colorToolbar) {
             return theme.getColorToolbar();
         }

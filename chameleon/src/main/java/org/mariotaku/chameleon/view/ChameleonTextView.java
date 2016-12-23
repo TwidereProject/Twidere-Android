@@ -45,37 +45,59 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
     @Nullable
     @Override
     public Appearance createAppearance(@NonNull Context context, @NonNull AttributeSet attributeSet, @NonNull Chameleon.Theme theme) {
-        Appearance appearance = new Appearance();
-        ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
-                R.styleable.ChameleonTextView, theme);
-        appearance.setLinkTextColor(a.getColor(R.styleable.ChameleonTextView_android_textColorLink, theme.getTextColorLink()));
-        a.recycle();
-        return appearance;
+        return Appearance.create(this, context, attributeSet, theme);
     }
 
 
     @Override
     public void applyAppearance(@NonNull ChameleonView.Appearance appearance) {
-        final Appearance a = (Appearance) appearance;
-        setLinkTextColor(a.getLinkTextColor());
+        Appearance.apply(this, (Appearance) appearance);
     }
 
     public static class Appearance implements ChameleonView.Appearance {
+        private int textColor;
         private int linkTextColor;
         private int backgroundColor;
 
-        public static void apply(TextView view, ChameleonTextView.Appearance appearance) {
+
+        public int getLinkTextColor() {
+            return linkTextColor;
+        }
+
+        public void setLinkTextColor(int linkTextColor) {
+            this.linkTextColor = linkTextColor;
+        }
+
+        public int getBackgroundColor() {
+            return backgroundColor;
+        }
+
+        public void setBackgroundColor(int backgroundColor) {
+            this.backgroundColor = backgroundColor;
+        }
+
+        public int getTextColor() {
+            return textColor;
+        }
+
+        public void setTextColor(int textColor) {
+            this.textColor = textColor;
+        }
+
+        public static void apply(TextView view, Appearance appearance) {
             view.setLinkTextColor(appearance.getLinkTextColor());
+            view.setTextColor(appearance.getTextColor());
             ViewCompat.setBackgroundTintList(view, ColorStateList.valueOf(appearance.getBackgroundColor()));
             setCursorTint(view, appearance.getBackgroundColor());
             setHandlerTint(view, appearance.getBackgroundColor());
             view.setHighlightColor(ChameleonUtils.adjustAlpha(appearance.getBackgroundColor(), 0.4f));
         }
 
-        public static ChameleonEditText.Appearance create(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
-            ChameleonTextView.Appearance appearance = new ChameleonTextView.Appearance();
+        public static Appearance create(TextView view, Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
+            Appearance appearance = new Appearance();
             ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet,
                     R.styleable.ChameleonEditText, theme);
+            appearance.setTextColor(a.getColor(R.styleable.ChameleonEditText_android_textColor, view.getCurrentTextColor()));
             appearance.setLinkTextColor(a.getColor(R.styleable.ChameleonEditText_android_textColorLink, theme.getTextColorLink()));
             appearance.setBackgroundColor(a.getColor(R.styleable.ChameleonEditText_backgroundTint, theme.getColorAccent()));
             a.recycle();
@@ -131,22 +153,6 @@ public class ChameleonTextView extends AppCompatTextView implements ChameleonVie
             Field field = cls.getDeclaredField(fieldName);
             field.setAccessible(true);
             field.set(object, value);
-        }
-
-        public int getLinkTextColor() {
-            return linkTextColor;
-        }
-
-        public void setLinkTextColor(int linkTextColor) {
-            this.linkTextColor = linkTextColor;
-        }
-
-        public int getBackgroundColor() {
-            return backgroundColor;
-        }
-
-        public void setBackgroundColor(int backgroundColor) {
-            this.backgroundColor = backgroundColor;
         }
     }
 }

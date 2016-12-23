@@ -29,6 +29,7 @@
     android:orientation="vertical"
     android:padding="@dimen/element_spacing_normal"
     android:tag="tint_background|accent_color"
+    app:backgroundTint="?colorControlActivated"
     app:ignorePadding="true"
     tools:context=".adapter.DraftsAdapter">
 
