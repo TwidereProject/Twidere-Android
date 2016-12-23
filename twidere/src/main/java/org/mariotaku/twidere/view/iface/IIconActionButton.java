@@ -60,17 +60,26 @@ public interface IIconActionButton extends ChameleonView {
         public static Appearance create(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
             Appearance appearance = new Appearance();
             ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet, R.styleable.IconActionButton, theme);
-            appearance.setDefaultColor(a.getColor(R.styleable.IconActionButton_iabColor, theme.getColorForeground()));
-            appearance.setActivatedColor(a.getColor(R.styleable.IconActionButton_iabActivatedColor, theme.getColorAccent()));
-            appearance.setDisabledColor(a.getColor(R.styleable.IconActionButton_iabDisabledColor, theme.getTextColorSecondary()));
+            appearance.setDefaultColor(a.getColor(R.styleable.IconActionButton_iabColor, 0));
+            appearance.setActivatedColor(a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0));
+            appearance.setDisabledColor(a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0));
             a.recycle();
             return appearance;
         }
 
         public static void apply(IIconActionButton view, Appearance appearance) {
-            view.setDefaultColor(appearance.getDefaultColor());
-            view.setActivatedColor(appearance.getActivatedColor());
-            view.setDisabledColor(appearance.getDisabledColor());
+            final int defaultColor = appearance.getDefaultColor();
+            if (defaultColor != 0) {
+                view.setDefaultColor(defaultColor);
+            }
+            final int activatedColor = appearance.getActivatedColor();
+            if (activatedColor != 0) {
+                view.setActivatedColor(activatedColor);
+            }
+            final int disabledColor = appearance.getDisabledColor();
+            if (disabledColor != 0) {
+                view.setDisabledColor(disabledColor);
+            }
         }
     }
 }
