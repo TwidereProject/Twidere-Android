@@ -253,6 +253,8 @@ public interface SharedPreferenceConstants {
     String KEY_NOTIFICATION_MENTIONS_ONLY = "notification_mentions_only";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = false)
     String KEY_PEBBLE_NOTIFICATIONS = "pebble_notifications";
+    @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
+    String KEY_FAB_VISIBLE = "fab_visible";
 
     @Preference(type = STRING, hasDefault = true, defaultString = VALUE_COMPOSE_NOW_ACTION_COMPOSE)
     String KEY_COMPOSE_NOW_ACTION = "compose_now_action";

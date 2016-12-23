@@ -805,4 +805,7 @@
   <string name="filter_everywhere_description">Folgendes wird in Twidere gefiltert:\n · Tweets dieses Benutzers\n · Tweets, die diesen Benutzer erwähnen\n · Retweets/Zitate dieses Benutzers</string>
   <!-- Verb. Used for skip some settings -->
   <!-- Used for decide something later, like permission request -->
+
+  <string name="fab_visible">Floating Action Button</string>
+  <string name="fab_visible_summary">Den Floating Action Button anzeigen</string>
 </resources>
