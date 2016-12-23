@@ -66,7 +66,8 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import java.util.*
 
-class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntriesAdapter>(), LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
+class DirectMessagesFragment : AbsContentListRecyclerViewFragment<MessageEntriesAdapter>(),
+        LoaderCallbacks<Cursor>, MessageEntriesAdapterListener, KeyboardShortcutCallback {
 
     // Listeners
     private var accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener { accounts ->

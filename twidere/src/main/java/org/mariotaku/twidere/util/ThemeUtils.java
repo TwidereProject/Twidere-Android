@@ -561,23 +561,6 @@ public class ThemeUtils implements Constants {
         return AppCompatDelegate.MODE_NIGHT_NO;
     }
 
-    public static void applyDayNight(SharedPreferences preferences, AppCompatDelegate delegate) {
-        switch (getLocalNightMode(preferences)) {
-            case AppCompatDelegate.MODE_NIGHT_AUTO: {
-                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                break;
-            }
-            case AppCompatDelegate.MODE_NIGHT_YES: {
-                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            }
-            default: {
-                delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            }
-        }
-    }
-
     public static void fixNightMode(Resources resources, Configuration newConfig) {
         int currentNightMode = resources.getConfiguration().uiMode
                 & Configuration.UI_MODE_NIGHT_MASK;

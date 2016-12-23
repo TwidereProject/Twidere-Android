@@ -614,7 +614,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return mainTabs.height - mainTabs.stripHeight
     }
 
-    override fun getThemeResource(theme: String, themeColor: Int): Int {
+    override fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int {
         when (theme) {
             SharedPreferenceConstants.VALUE_THEME_NAME_LIGHT -> {
                 if (ChameleonUtils.isColorLight(themeColor)) {

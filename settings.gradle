@@ -1,4 +1,4 @@
-include ':twidere', ':chameleon'
+include ':twidere'
 include ':twidere.component.common'
 include ':twidere.library.extension'
 include ':twidere.wear'

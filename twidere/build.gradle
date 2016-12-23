@@ -95,7 +95,6 @@ dependencies {
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
-    compile project(':chameleon')
 
     // START Non-FOSS component
     googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
@@ -174,6 +173,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:text:$mariotaku_commons_library_version"
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:$mariotaku_commons_library_version"
     compile 'com.github.mariotaku:KPreferences:0.9.5'
+    compile 'com.github.mariotaku:Chameleon:0.9'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'

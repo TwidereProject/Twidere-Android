@@ -176,11 +176,12 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
             StrictModeUtils.detectAllThreadPolicy()
         }
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey])
+        val nightMode = ThemeUtils.getLocalNightMode(prefs)
+        val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey], nightMode)
         if (themeResource != 0) {
             setTheme(themeResource)
         }
-        ThemeUtils.applyDayNight(prefs, delegate)
+        delegate.setLocalNightMode(nightMode)
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
     }
@@ -381,7 +382,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
     }
 
     @StyleRes
-    protected open fun getThemeResource(theme: String, themeColor: Int): Int = 0
+    protected open fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int = 0
 
     companion object {
 

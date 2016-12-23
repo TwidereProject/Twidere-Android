@@ -33,6 +33,7 @@ import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.Window
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.toDoubleOrNull
@@ -260,6 +261,19 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         if (actionBarHeight != 0) return actionBarHeight
         actionBarHeight = ThemeUtils.getActionBarHeight(this)
         return actionBarHeight
+    }
+
+    override fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int {
+        when (theme) {
+            SharedPreferenceConstants.VALUE_THEME_NAME_LIGHT -> {
+                if (ChameleonUtils.isColorLight(themeColor)) {
+                    return R.style.Theme_Twidere_Light
+                } else {
+                    return R.style.Theme_Twidere_Light_DarkActionBar
+                }
+            }
+        }
+        return R.style.Theme_Twidere
     }
 
     private fun setTitle(linkId: Int, uri: Uri): Boolean {
