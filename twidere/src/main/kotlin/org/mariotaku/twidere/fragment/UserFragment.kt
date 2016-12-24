@@ -283,7 +283,6 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             relationship = userRelationship
         }
         activity.invalidateOptionsMenu()
-        followContainer.follow.isEnabled = userRelationship.blocking || !userRelationship.blocked_by
         if (userRelationship.blocked_by) {
             pagesErrorContainer.visibility = View.GONE
             pagesErrorText.text = null
@@ -300,6 +299,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         }
         if (userRelationship.blocking) {
             followContainer.follow.setText(R.string.unblock)
+        } else if (userRelationship.blocked_by) {
+            followContainer.follow.setText(R.string.action_block)
         } else if (userRelationship.following) {
             followContainer.follow.setText(R.string.unfollow)
         } else if (user.is_follow_request_sent) {
@@ -1122,6 +1123,8 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                     if (userRelationship == null) return
                     if (userRelationship.blocking) {
                         twitter.destroyBlockAsync(user.account_key, user.key)
+                    } else if (userRelationship.blocked_by) {
+                        CreateUserBlockDialogFragment.show(childFragmentManager, user)
                     } else if (userRelationship.following) {
                         DestroyFriendshipDialogFragment.show(fragmentManager, user)
                     } else {

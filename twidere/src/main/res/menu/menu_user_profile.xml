@@ -60,11 +60,11 @@
     <item
         android:id="@id/block"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/block"/>
+        android:title="@string/action_block"/>
     <item
         android:id="@id/report_spam"
         android:icon="@drawable/ic_action_warning"
-        android:title="@string/report_for_spam"/>
+        android:title="@string/action_report_spam"/>
     <item
         android:id="@+id/muted_users"
         android:icon="@drawable/ic_action_visibility_off"

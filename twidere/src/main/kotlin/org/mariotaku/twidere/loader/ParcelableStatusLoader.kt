@@ -59,7 +59,7 @@ class ParcelableStatusLoader(
 
     override fun loadInBackground(): SingleResponse<ParcelableStatus> {
         if (accountKey == null || statusId == null) {
-            return SingleResponse(exception = IllegalArgumentException())
+            return SingleResponse(IllegalArgumentException())
         }
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
         if (!omitIntentExtra && extras != null) {
@@ -70,7 +70,7 @@ class ParcelableStatusLoader(
                 return response
             }
         }
-        if (details == null) return SingleResponse(exception = MicroBlogException("No account"))
+        if (details == null) return SingleResponse(MicroBlogException("No account"))
         try {
             val status = findStatus(context, accountKey, statusId)
             ParcelableStatusUtils.updateExtraInformation(status, details, userColorNameManager)
@@ -85,7 +85,7 @@ class ParcelableStatusLoader(
                         statusId, null)
                 DataStoreUtils.deleteActivityStatus(cr, accountKey, statusId, null)
             }
-            return SingleResponse(exception = e)
+            return SingleResponse(e)
         }
 
     }

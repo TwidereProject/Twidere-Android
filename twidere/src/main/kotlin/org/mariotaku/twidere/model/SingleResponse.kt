@@ -27,6 +27,10 @@ data class SingleResponse<Data>(
         override val extras: Bundle = Bundle()
 ) : Response<Data> {
 
+    constructor(data: Data) : this(data, null)
+
+    constructor(exception: Exception) : this(null, exception)
+
     override fun hasData(): Boolean {
         return data != null
     }

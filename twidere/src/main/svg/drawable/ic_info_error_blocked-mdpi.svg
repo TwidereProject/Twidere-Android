@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_info_error_blocked-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Error-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_info_error_blocked-mdpi">
+            <polygon id="Shape" points="0 0 64 0 64 64 0 64"></polygon>
+            <path d="M32,5.33333333 C17.28,5.33333333 5.33333333,17.28 5.33333333,32 C5.33333333,46.72 17.28,58.6666667 32,58.6666667 C46.72,58.6666667 58.6666667,46.72 58.6666667,32 C58.6666667,17.28 46.72,5.33333333 32,5.33333333 Z M10.6666667,32 C10.6666667,20.2133333 20.2133333,10.6666667 32,10.6666667 C36.9333333,10.6666667 41.4666667,12.3466667 45.0666667,15.1733333 L15.1733333,45.0666667 C12.3466667,41.4666667 10.6666667,36.9333333 10.6666667,32 L10.6666667,32 Z M32,53.3333333 C27.0666667,53.3333333 22.5333333,51.6533333 18.9333333,48.8266667 L48.8266667,18.9333333 C51.6533333,22.5333333 53.3333333,27.0666667 53.3333333,32 C53.3333333,43.7866667 43.7866667,53.3333333 32,53.3333333 L32,53.3333333 Z" id="Shape" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

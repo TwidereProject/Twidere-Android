@@ -22,7 +22,10 @@ package org.mariotaku.twidere.fragment
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.*
+import android.content.ContentValues
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.nfc.NdefMessage
@@ -36,7 +39,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.IntentCompat
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewCompat
@@ -442,7 +444,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         } else {
             adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
             setState(STATE_ERROR)
-            errorText.text = Utils.getErrorMessage(context, data.exception)
+            val errorInfo = StatusCodeMessageUtils.getErrorInfo(context, data.exception!!)
+            errorText.text = errorInfo.message
+            errorIcon.setImageResource(errorInfo.icon)
         }
         activity.supportInvalidateOptionsMenu()
     }
@@ -892,9 +896,9 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
 
             val timeString = Utils.formatToLongTimeString(context, timestamp)
             if (!TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
-                itemView.timeSource.text = HtmlSpanBuilder.fromHtml(context.getString(R.string.time_source, timeString, status.source))
+                itemView.timeSource.text = HtmlSpanBuilder.fromHtml(context.getString(R.string.status_format_time_source, timeString, status.source))
             } else if (TextUtils.isEmpty(timeString) && !TextUtils.isEmpty(status.source)) {
-                itemView.timeSource.text = HtmlSpanBuilder.fromHtml(context.getString(R.string.source, status.source))
+                itemView.timeSource.text = HtmlSpanBuilder.fromHtml(status.source)
             } else if (!TextUtils.isEmpty(timeString) && TextUtils.isEmpty(status.source)) {
                 itemView.timeSource.text = timeString
             }

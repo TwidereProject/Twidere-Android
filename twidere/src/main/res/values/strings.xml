@@ -144,6 +144,7 @@
     <string name="block">Block</string>
     <string name="unblock">Unblock</string>
     <string name="report_for_spam">Report spam</string>
+    <string name="action_report_spam">Report spam</string>
     <string name="twitter_mute_user">Mute user</string>
     <string name="twitter_muted_users">Muted users</string>
     <string name="message_user_muted">Added this user to filter list. You will not see tweets from this user in your home timeline/mentions list.</string>
@@ -823,4 +824,7 @@
     <string name="error_info_oauth_timestamp_error">Please check your system date &amp; time settings.</string>
     <string name="fab_visible">Floating Action Button</string>
     <string name="fab_visible_summary">Show the Floating Action Button</string>
+    <string name="action_block">Block</string>
+    <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
+    <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
 </resources>

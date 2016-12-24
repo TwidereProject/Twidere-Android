@@ -124,6 +124,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
+import org.mariotaku.twidere.util.ErrorInfoStore.DisplayErrorInfo;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -609,7 +610,7 @@ public final class Utils implements Constants {
             return context.getString(R.string.error_unknown_error);
         }
         if (t instanceof MicroBlogException)
-            return getTwitterErrorMessage(context, (MicroBlogException) t);
+            return StatusCodeMessageUtils.getMicroBlogErrorMessage(context, (MicroBlogException) t);
         return t.getMessage();
     }
 
