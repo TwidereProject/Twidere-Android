@@ -116,6 +116,7 @@ import org.mariotaku.twidere.receiver.NotificationReceiver;
 import org.mariotaku.twidere.service.BackgroundOperationService;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
+import org.mariotaku.twidere.util.DataStoreFunctionsKt;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
@@ -1249,7 +1250,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final NotificationManagerWrapper nm = mNotificationManager;
         final Expression selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.greaterThan(Statuses.POSITION_KEY, position));
-        final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences,
+        final String filteredSelection = DataStoreFunctionsKt.buildStatusFilterWhereClause(preferences,
                 Statuses.TABLE_NAME, selection).getSQL();
         final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};

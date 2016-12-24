@@ -77,18 +77,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         showProgress()
     }
 
-    //    @Override
-    //    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-    //        final View view = super.onCreateView(inflater, container, savedInstanceState);
-    //        assert view != null;
-    //        final ListView listView = (ListView) view.findViewById(R.id.list_view);
-    //        final Resources res = getResources();
-    //        final float density = res.getDisplayMetrics().density;
-    //        final int padding = (int) density * 16;
-    //        listView.setPadding(padding, 0, padding, 0);
-    //        return view;
-    //    }
-
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (!isVisibleToUser && actionMode != null) {
@@ -170,7 +158,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
-        adapter!!.swapCursor(data)
+        adapter.swapCursor(data)
         if (data != null && data.count > 0) {
             showContent()
         } else {
@@ -179,13 +167,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {
-        adapter!!.swapCursor(null)
+        adapter.swapCursor(null)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_filters, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_filters, menu)
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -338,6 +325,11 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     class FilteredUsersFragment : BaseFiltersFragment() {
 
+        public override val contentColumns: Array<String>
+            get() = Filters.Users.COLUMNS
+
+        override val contentUri: Uri
+            get() = Filters.Users.CONTENT_URI
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             when (requestCode) {
@@ -355,11 +347,9 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             }
         }
 
-        public override val contentColumns: Array<String>
-            get() = Filters.Users.COLUMNS
-
-        override val contentUri: Uri
-            get() = Filters.Users.CONTENT_URI
+        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+            inflater.inflate(R.menu.menu_filters_users, menu)
+        }
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {

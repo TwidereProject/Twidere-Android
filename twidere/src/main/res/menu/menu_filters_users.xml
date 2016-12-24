@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_submenu"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/add"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@id/add"
+                android:title="@string/select_user"/>
+            <item
+                android:id="@+id/import_from_blocked_users"
+                android:enabled="@bool/is_debug"
+                android:title="@string/action_filter_import_from_blocked_users"
+                android:visible="@bool/is_debug"/>
+            <item
+                android:id="@+id/import_from_muted_users"
+                android:enabled="@bool/is_debug"
+                android:title="@string/action_filter_import_from_muted_users"
+                android:visible="@bool/is_debug"/>
+        </menu>
+
+    </item>
+
+</menu>

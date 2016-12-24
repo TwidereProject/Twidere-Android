@@ -42,7 +42,6 @@ import com.bluelinelabs.logansquare.LoganSquare;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.mariotaku.kpreferences.SharedPreferencesExtensionsKt;
 import org.mariotaku.microblog.library.twitter.model.Activity;
 import org.mariotaku.sqliteqb.library.ArgsArray;
 import org.mariotaku.sqliteqb.library.Columns;
@@ -56,7 +55,6 @@ import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.constant.PreferenceKeysKt;
 import org.mariotaku.twidere.extension.AccountExtensionsKt;
 import org.mariotaku.twidere.model.FiltersData;
 import org.mariotaku.twidere.model.FiltersData$BaseItemValuesCreator;
@@ -325,69 +323,6 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    @NonNull
-    public static Expression buildStatusFilterWhereClause(@NonNull final SharedPreferences preferences,
-                                                          @NonNull final String table,
-                                                          @Nullable final Expression extraSelection) {
-        final SQLSelectQuery filteredUsersQuery = SQLQueryBuilder
-                .select(new Column(new Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
-                .from(new Tables(Filters.Users.TABLE_NAME))
-                .build();
-        final Expression filteredUsersWhere = Expression.or(
-                Expression.in(new Column(new Table(table), Statuses.USER_KEY), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Statuses.RETWEETED_BY_USER_KEY), filteredUsersQuery),
-                Expression.in(new Column(new Table(table), Statuses.QUOTED_USER_KEY), filteredUsersQuery)
-        );
-        final SQLSelectQuery.Builder filteredIdsQueryBuilder = SQLQueryBuilder
-                .select(new Column(new Table(table), Statuses._ID))
-                .from(new Tables(table))
-                .where(filteredUsersWhere)
-                .union()
-                .select(new Columns(new Column(new Table(table), Statuses._ID)))
-                .from(new Tables(table, Filters.Sources.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(new Column(new Table(table), Statuses.SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
-                ))
-                .union()
-                .select(new Columns(new Column(new Table(table), Statuses._ID)))
-                .from(new Tables(table, Filters.Keywords.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(new Column(new Table(table), Statuses.TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
-                ))
-                .union()
-                .select(new Columns(new Column(new Table(table), Statuses._ID)))
-                .from(new Tables(table, Filters.Links.TABLE_NAME))
-                .where(Expression.or(
-                        Expression.likeRaw(new Column(new Table(table), Statuses.SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
-                        Expression.likeRaw(new Column(new Table(table), Statuses.QUOTED_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
-                ));
-        int filterFlags = 0;
-        if (SharedPreferencesExtensionsKt.get(preferences, PreferenceKeysKt.getFilterUnavailableQuoteStatusesKey())) {
-            filterFlags |= ParcelableStatus.FilterFlags.QUOTE_NOT_AVAILABLE;
-        }
-
-        final Expression filterExpression = Expression.or(
-                Expression.and(
-                        new Expression("(" + Statuses.FILTER_FLAGS + " & " + filterFlags + ") == 0"),
-                        Expression.notIn(new Column(new Table(table), Statuses._ID), filteredIdsQueryBuilder.build())
-                ),
-                Expression.equals(new Column(new Table(table), Statuses.IS_GAP), 1)
-        );
-        if (extraSelection != null) {
-            return Expression.and(filterExpression, extraSelection);
-        }
-        return filterExpression;
-    }
-
-
     public static String getAccountDisplayName(final Context context, final UserKey accountKey, final boolean nameFirst) {
         final String name;
         if (nameFirst) {
@@ -458,7 +393,7 @@ public class DataStoreUtils implements Constants {
         }
         expressionArgs.add(String.valueOf(compare));
 
-        expressions.add(buildStatusFilterWhereClause(preferences, getTableNameByUri(uri), null));
+        expressions.add(DataStoreFunctionsKt.buildStatusFilterWhereClause(preferences, getTableNameByUri(uri), null));
 
         if (extraArgs != null) {
             Parcelable extras = extraArgs.getParcelable(EXTRA_EXTRAS);

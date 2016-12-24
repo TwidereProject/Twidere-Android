@@ -828,4 +828,6 @@
     <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
     <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
     <string name="preference_filter_unavailable_quote_statuses">Filter unavailable quotes</string>
+    <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
+    <string name="action_filter_import_from_muted_users">Import from muted users</string>
 </resources>

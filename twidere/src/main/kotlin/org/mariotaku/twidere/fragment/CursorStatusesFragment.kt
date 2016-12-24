@@ -47,6 +47,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.buildStatusFilterWhereClause
 
 /**
  * Created by mariotaku on 14/12/3.
@@ -222,7 +223,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null)
+        return buildStatusFilterWhereClause(preferences, table, null)
     }
 
     protected fun getNewestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
