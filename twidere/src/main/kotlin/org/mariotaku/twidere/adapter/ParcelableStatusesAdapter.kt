@@ -20,11 +20,13 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.database.Cursor
 import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.mariotaku.ktextension.findPositionByItemId
+import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
@@ -176,58 +178,49 @@ abstract class ParcelableStatusesAdapter(
         get() = data?.size ?: 0
 
     override fun getItemId(position: Int): Long {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= statusCount) return position.toLong()
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return -1
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
+        return getFieldValue(position, { cursor, indices ->
             val accountKey = UserKey.valueOf(cursor.getString(indices.account_key))
             val id = cursor.getString(indices.id)
-            return ParcelableStatus.calculateHashCode(accountKey, id).toLong()
-        }
-        return data!![dataPosition].hashCode().toLong()
+            return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id).toLong()
+        }, { status ->
+            return@getFieldValue status.hashCode().toLong()
+        }, -1L)
     }
 
     override fun getStatusId(position: Int): String? {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return null
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return null
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
-            return cursor.getString(indices.id)
-        }
-        return data!![dataPosition].id
+        return getFieldValue<String?>(position, { cursor, indices ->
+            return@getFieldValue cursor.getString(indices.id)
+        }, { status ->
+            return@getFieldValue status.id
+        }, null)
+    }
+
+    fun getStatusSortId(position: Int): Long {
+        return getFieldValue(position, { cursor, indices ->
+            return@getFieldValue cursor.getLong(indices.sort_id)
+        }, { status ->
+            return@getFieldValue status.sort_id
+        }, -1L)
     }
 
     override fun getStatusTimestamp(position: Int): Long {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return -1
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return -1
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
-            return cursor.getLong(indices.timestamp)
-        }
-        return data!![dataPosition].timestamp
+        return getFieldValue(position, { cursor, indices ->
+            return@getFieldValue cursor.getLong(indices.timestamp)
+        }, { status ->
+            return@getFieldValue status.timestamp
+        }, -1L)
     }
 
     override fun getStatusPositionKey(position: Int): Long {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return -1
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return -1
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
+        return getFieldValue(position, { cursor, indices ->
             val positionKey = cursor.getLong(indices.position_key)
-            if (positionKey > 0) return positionKey
-            return cursor.getLong(indices.timestamp)
-        }
-        val status = data!![dataPosition]
-        val positionKey = status.position_key
-        if (positionKey > 0) return positionKey
-        return status.timestamp
+            if (positionKey > 0) return@getFieldValue positionKey
+            return@getFieldValue cursor.getLong(indices.timestamp)
+        }, { status ->
+            val positionKey = status.position_key
+            if (positionKey > 0) return@getFieldValue positionKey
+            return@getFieldValue status.timestamp
+        }, -1L)
     }
 
     override fun getAccountKey(position: Int): UserKey? {
@@ -295,7 +288,6 @@ abstract class ParcelableStatusesAdapter(
         throw IllegalStateException("Unknown view type " + viewType)
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemCountIndex(position)) {
             1 -> {
@@ -317,6 +309,7 @@ abstract class ParcelableStatusesAdapter(
         }
 
     }
+
 
     protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
 
@@ -360,7 +353,6 @@ abstract class ParcelableStatusesAdapter(
         throw AssertionError()
     }
 
-
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
         itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
@@ -380,8 +372,27 @@ abstract class ParcelableStatusesAdapter(
         return null
     }
 
+
     val statusStartIndex: Int
         get() = getItemStartPosition(2)
+
+    private inline fun <T> getFieldValue(
+            position: Int,
+            readCursorValueAction: (cursor: Cursor, indices: ParcelableStatusCursorIndices) -> T,
+            readStatusValueAction: (status: ParcelableStatus) -> T,
+            defValue: T
+    ): T {
+        val dataPosition = position - getItemStartPosition(2)
+        if (dataPosition < 0 || dataPosition >= rawStatusCount) return defValue
+        if (data is ObjectCursor) {
+            val cursor = (data as ObjectCursor).cursor
+            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
+            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
+            return readCursorValueAction(cursor, indices)
+        }
+        val status = data!![dataPosition]
+        return readStatusValueAction(status)
+    }
 
     private fun isFiltered(position: Int): Boolean {
         if (data is ObjectCursor) return false
@@ -391,6 +402,18 @@ abstract class ParcelableStatusesAdapter(
     companion object {
         const val ITEM_VIEW_TYPE_STATUS = 2
         const val ITEM_VIEW_TYPE_EMPTY = 3
+    }
+
+    fun findPositionByPositionKey(positionKey: Long): Int {
+        // Assume statuses are descend sorted by id, so break at first status with id
+        // lesser equals than read position
+        return rangeOfSize(statusStartIndex, statusCount - 1).indexOfFirst { positionKey > 0 && getStatusPositionKey(it) <= positionKey }
+    }
+
+    fun findPositionBySortId(sortId: Long): Int {
+        // Assume statuses are descend sorted by id, so break at first status with id
+        // lesser equals than read position
+        return rangeOfSize(statusStartIndex, statusCount - 1).indexOfFirst { sortId > 0 && getStatusSortId(it) <= sortId }
     }
 
 

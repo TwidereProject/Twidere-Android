@@ -38,7 +38,7 @@ import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants.*
+import org.mariotaku.twidere.Constants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
@@ -52,6 +52,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.readFromBottomKey
+import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -71,7 +72,10 @@ import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.util.*
 
-abstract class AbsActivitiesFragment protected constructor() : AbsContentListRecyclerViewFragment<ParcelableActivitiesAdapter>(), LoaderCallbacks<List<ParcelableActivity>>, ParcelableActivitiesAdapter.ActivityAdapterListener, KeyboardShortcutCallback {
+abstract class AbsActivitiesFragment protected constructor() :
+        AbsContentListRecyclerViewFragment<ParcelableActivitiesAdapter>(),
+        LoaderCallbacks<List<ParcelableActivity>>, ParcelableActivitiesAdapter.ActivityAdapterListener,
+        KeyboardShortcutCallback {
 
     private lateinit var activitiesBusCallback: Any
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
@@ -193,8 +197,8 @@ abstract class AbsActivitiesFragment protected constructor() : AbsContentListRec
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>) {
-        val rememberPosition = preferences.getBoolean(KEY_REMEMBER_POSITION, false)
-        val readFromBottom = preferences.getBoolean(KEY_READ_FROM_BOTTOM, false)
+        val rememberPosition = preferences[rememberPositionKey]
+        val readFromBottom = preferences[readFromBottomKey]
         var lastReadId: Long
         val lastVisiblePos: Int
         val lastVisibleTop: Int

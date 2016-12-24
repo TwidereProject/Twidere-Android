@@ -37,6 +37,8 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.isNullOrEmpty
+import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
@@ -49,6 +51,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.readFromBottomKey
+import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -92,23 +95,25 @@ abstract class AbsStatusesFragment protected constructor() :
     protected abstract val accountKeys: Array<UserKey>
 
     protected var adapterData: List<ParcelableStatus>?
-        get() {
-            return adapter.getData()
-        }
+        get() = adapter.getData()
         set(data) {
             adapter.setData(data)
         }
 
+    @ReadPositionTag
     protected open val readPositionTag: String?
-        @ReadPositionTag
         get() = null
+
     protected open val readPositionTagWithArguments: String?
         get() = readPositionTag
-    private val currentReadPositionTag: String?
-        get() {
-            if (readPositionTag == null || tabId < 0) return null
-            return "${readPositionTag}_${tabId}_current"
-        }
+
+    protected open val useSortIdAsReadPosition: Boolean = true
+
+    /**
+     * Used for 'restore position' feature
+     */
+    protected open val currentReadPositionTag: String?
+        get() = if (readPositionTag == null || tabId < 0) null else "${readPositionTag}_${tabId}_current"
 
     override val extraContentPadding: Rect
         get() {
@@ -121,11 +126,10 @@ abstract class AbsStatusesFragment protected constructor() :
 
 
     // Fragment life cycles
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         statusesBusCallback = createMessageBusCallback()
-        scrollListener?.reversed = preferences[readFromBottomKey]
+        scrollListener.reversed = preferences[readFromBottomKey]
         adapter.statusClickListener = this
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter, this)
@@ -244,45 +248,58 @@ abstract class AbsStatusesFragment protected constructor() :
         super.setUserVisibleHint(isVisibleToUser)
     }
 
+    /**
+     * Statuses loaded, update adapter data & restore load position
+     *
+     * Steps:
+     * 1. Save current read position if not first load (adapter data is not empty)
+     *   1.1 If readFromBottom is true, save position on screen bottom
+     * 2. Change adapter data
+     * 3. Restore adapter data
+     *   3.1 If lastVisible was last item, keep lastVisibleItem position (load more)
+     *   3.2 Else, if readFromBottom is true:
+     *     3.1.1 If position was first, keep lastVisibleItem position (pull refresh)
+     *     3.1.2 Else, keep lastVisibleItem position
+     *   3.2 If readFromBottom is false:
+     *     3.2.1 If position was first, set new position to 0 (pull refresh)
+     *     3.2.2 Else, keep firstVisibleItem position (gap clicked)
+     */
     override fun onLoadFinished(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
-        val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, false)
-        val readFromBottom = preferences.getBoolean(SharedPreferenceConstants.KEY_READ_FROM_BOTTOM, false)
-        var lastReadPositionKey: Long
-        val lastVisiblePos: Int
-        val lastVisibleTop: Int
-        val tag = currentReadPositionTag
-        val layoutManager = layoutManager
-        if (readFromBottom) {
-            lastVisiblePos = layoutManager.findLastVisibleItemPosition()
-        } else {
-            lastVisiblePos = layoutManager.findFirstVisibleItemPosition()
-        }
-        if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.itemCount) {
-            val statusStartIndex = adapter.statusStartIndex
-            val statusEndIndex = statusStartIndex + adapter.statusCount
-            val lastItemIndex = Math.min(statusEndIndex, lastVisiblePos)
-            lastReadPositionKey = adapter.getStatusPositionKey(lastItemIndex)
-            val positionView = layoutManager.findViewByPosition(lastItemIndex)
-            lastVisibleTop = positionView?.top ?: 0
-        } else if (rememberPosition && tag != null) {
-            lastReadPositionKey = readStateManager.getPosition(tag)
-            lastVisibleTop = 0
-        } else {
-            lastReadPositionKey = -1
-            lastVisibleTop = 0
-        }
-        adapterData = data
-        val statusStartIndex = adapter.statusStartIndex
-        // The last status is statusEndExclusiveIndex - 1
-        val statusEndExclusiveIndex = statusStartIndex + adapter.statusCount
-        if (statusEndExclusiveIndex >= 0 && rememberPosition && tag != null) {
-            val lastPositionKey = adapter.getStatusPositionKey(statusEndExclusiveIndex - 1)
-            // Status corresponds to last read id was deleted, use last item id instead
-            if (lastPositionKey != -1L && lastReadPositionKey > 0 && lastReadPositionKey < lastPositionKey) {
-                lastReadPositionKey = lastPositionKey
+        val rememberPosition = preferences[rememberPositionKey]
+        val readPositionTag = currentReadPositionTag
+        val readFromBottom = preferences[readFromBottomKey]
+        val firstLoad = adapterData.isNullOrEmpty()
+
+        var lastReadId: Long = -1
+        var lastReadViewTop: Int = 0
+        var loadMore = false
+        // 1. Save current read position if not first load
+        if (!firstLoad) {
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            val statusRange = rangeOfSize(adapter.statusStartIndex, adapter.statusCount - 1)
+            val lastReadPosition = if (readFromBottom) {
+                lastVisibleItemPosition
+            } else {
+                layoutManager.findFirstVisibleItemPosition()
+            }.coerceIn(statusRange)
+            lastReadId = if (useSortIdAsReadPosition) {
+                adapter.getStatusSortId(lastReadPosition)
+            } else {
+                adapter.getStatusPositionKey(lastReadPosition)
             }
+            lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
+            loadMore = lastVisibleItemPosition >= statusRange.endInclusive
+        } else if (rememberPosition && readPositionTag != null) {
+            lastReadId = readStateManager.getPosition(readPositionTag)
+            lastReadViewTop = 0
         }
+        // 2. Change adapter data
+        adapterData = data
+
         refreshEnabled = true
+
+        var restorePosition = -1
+
         if (loader !is IExtendedLoader || loader.fromUser) {
             if (hasMoreData(data)) {
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
@@ -291,26 +308,23 @@ abstract class AbsStatusesFragment protected constructor() :
                 adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
                 onHasMoreDataChanged(false)
             }
-            var pos = -1
-            for (i in statusStartIndex..statusEndExclusiveIndex - 1) {
-                // Assume statuses are descend sorted by id, so break at first status with id
-                // lesser equals than read position
-                if (lastReadPositionKey != -1L && adapter.getStatusPositionKey(i) <= lastReadPositionKey) {
-                    pos = i
-                    break
-                }
-            }
-            if (pos != -1 && adapter.isStatus(pos) && (readFromBottom || lastVisiblePos != 0)) {
-                if (layoutManager.height == 0) {
-                    // RecyclerView has not currently laid out, ignore padding.
-                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop)
-                } else {
-                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - layoutManager.paddingTop)
-                }
+            restorePosition = if (useSortIdAsReadPosition) {
+                adapter.findPositionBySortId(lastReadId)
+            } else {
+                adapter.findPositionByPositionKey(lastReadId)
             }
         } else {
             onHasMoreDataChanged(false)
         }
+        if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || readFromBottom)) {
+            if (layoutManager.height == 0) {
+                // RecyclerView has not currently laid out, ignore padding.
+                layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop)
+            } else {
+                layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop - layoutManager.paddingTop)
+            }
+        }
+
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }

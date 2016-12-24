@@ -22,10 +22,7 @@ package org.mariotaku.twidere.fragment
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.graphics.Rect
 import android.nfc.NdefMessage
@@ -72,6 +69,7 @@ import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.header_status_common.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -92,6 +90,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.getAccountType
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -1381,7 +1380,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 context: Context,
                 manager: MultiSelectManager,
                 private val adapter: StatusAdapter,
-                preferences: SharedPreferencesWrapper
+                preferences: SharedPreferences
         ) : StatusLinkClickHandler(context, manager, preferences) {
 
             override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
@@ -1397,7 +1396,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             private fun expandOrOpenMedia(current: ParcelableMedia) {
                 if (adapter.isDetailMediaExpanded) {
                     IntentUtils.openMedia(adapter.context, adapter.status, current, null,
-                            preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
+                            preferences[newDocumentApiKey])
                     return
                 }
                 adapter.isDetailMediaExpanded = true

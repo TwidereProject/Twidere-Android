@@ -714,11 +714,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             builder.setPositiveButton(android.R.string.ok) { dialog, which ->
                 val editConsumerKey = (dialog as Dialog).findViewById(R.id.editConsumerKey) as EditText
                 val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as EditText
-                val prefs = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                val editor = prefs.edit()
-                editor.putString(KEY_CONSUMER_KEY, ParseUtils.parseString(editConsumerKey.text))
-                editor.putString(KEY_CONSUMER_SECRET, ParseUtils.parseString(editConsumerSecret.text))
-                editor.apply()
+                val apiConfig = kPreferences[defaultAPIConfigKey]
+                apiConfig.consumerKey = editConsumerKey.text.toString()
+                apiConfig.consumerSecret = editConsumerSecret.text.toString()
+                kPreferences[defaultAPIConfigKey] = apiConfig
             }
             val dialog = builder.create()
             dialog.setOnShowListener(DialogInterface.OnShowListener { dialog ->
@@ -727,9 +726,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as MaterialEditText
                 editConsumerKey.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)))
                 editConsumerSecret.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)))
-                val prefs = SharedPreferencesWrapper.getInstance(activity, SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-                editConsumerKey.setText(prefs.getString(KEY_CONSUMER_KEY, null))
-                editConsumerSecret.setText(prefs.getString(KEY_CONSUMER_SECRET, null))
+                val apiConfig = kPreferences[defaultAPIConfigKey]
+                editConsumerKey.setText(apiConfig.consumerKey)
+                editConsumerSecret.setText(apiConfig.consumerSecret)
             })
             return dialog
         }

@@ -33,7 +33,9 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 /**
  * Created by mariotaku on 16/3/16.
  */
-abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScrollTopInterface, SupportFragmentCallback, IBaseFragment.SystemWindowsInsetsCallback, ControlBarOffsetListener, HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
+abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScrollTopInterface,
+        SupportFragmentCallback, IBaseFragment.SystemWindowsInsetsCallback, ControlBarOffsetListener,
+        HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 
     private var pagerAdapter: SupportTabsAdapter? = null
     override val toolbar: Toolbar

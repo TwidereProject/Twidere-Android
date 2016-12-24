@@ -69,6 +69,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         set(value) {
             super.refreshing = value
         }
+    override val useSortIdAsReadPosition: Boolean
+        get() = false
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
         showContentOrError()

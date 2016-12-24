@@ -852,6 +852,7 @@ public interface TwidereDataStore {
         String RETWEET_USER_NICKNAME = "retweet_user_nickname";
         String IN_REPLY_TO_USER_NICKNAME = "in_reply_to_user_nickname";
 
+        String FILTER_FLAGS = "filter_flags";
 
         String DEFAULT_SORT_ORDER = STATUS_TIMESTAMP + " DESC, " + SORT_ID + " DESC, " + STATUS_ID
                 + " DESC";

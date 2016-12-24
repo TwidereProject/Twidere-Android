@@ -8,6 +8,7 @@ import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_REMEMBER_POSITION
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -31,6 +32,7 @@ val linkHighlightOptionKey = KStringKey(KEY_LINK_HIGHLIGHT_OPTION, VALUE_LINK_HI
 val statusShortenerKey = KNullableStringKey(KEY_STATUS_SHORTENER, null)
 val mediaUploaderKey = KNullableStringKey(KEY_MEDIA_UPLOADER, null)
 val newDocumentApiKey = KBooleanKey(KEY_NEW_DOCUMENT_API, Build.VERSION.SDK_INT == Build.VERSION_CODES.M)
+val rememberPositionKey = KBooleanKey(KEY_REMEMBER_POSITION, true)
 val attachLocationKey = KBooleanKey(KEY_ATTACH_LOCATION, false)
 val attachPreciseLocationKey = KBooleanKey(KEY_ATTACH_PRECISE_LOCATION, false)
 val noCloseAfterTweetSentKey = KBooleanKey(KEY_NO_CLOSE_AFTER_TWEET_SENT, false)

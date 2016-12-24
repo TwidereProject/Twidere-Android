@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="filter_unavailable_quote_statuses"
+        android:title="@string/preference_filter_unavailable_quote_statuses"/>
+</PreferenceScreen>

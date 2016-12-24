@@ -20,12 +20,10 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
-import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -71,40 +69,6 @@ open class BaseSupportFragment : Fragment(), IBaseFragment {
         GeneralComponentHelper.build(context!!).inject(this)
     }
 
-    override val extraConfiguration: Bundle?
-        get() {
-            return null
-        }
-
-    override val tabPosition: Int
-        get() {
-            val args = arguments ?: return -1
-            return args.getInt(IntentConstants.EXTRA_TAB_POSITION, -1)
-        }
-
-    override val tabId: Long
-        get() {
-            val args = arguments ?: return -1L
-            return args.getLong(IntentConstants.EXTRA_TAB_ID, -1L)
-        }
-
-    override fun requestFitSystemWindows() {
-        val activity = activity
-        val parentFragment = parentFragment
-        val callback: IBaseFragment.SystemWindowsInsetsCallback
-        if (parentFragment is IBaseFragment.SystemWindowsInsetsCallback) {
-            callback = parentFragment
-        } else if (activity is IBaseFragment.SystemWindowsInsetsCallback) {
-            callback = activity
-        } else {
-            return
-        }
-        val insets = Rect()
-        if (callback.getSystemWindowsInsets(insets)) {
-            fitSystemWindows(insets)
-        }
-    }
-
     override fun executeAfterFragmentResumed(action: (IBaseFragment) -> Unit) {
         actionHelper.executeAfterFragmentResumed(action)
     }
@@ -124,8 +88,4 @@ open class BaseSupportFragment : Fragment(), IBaseFragment {
         DebugModeUtils.watchReferenceLeak(this)
     }
 
-    protected open fun fitSystemWindows(insets: Rect) {
-        val view = view
-        view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
-    }
 }

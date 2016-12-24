@@ -21,9 +21,10 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 
@@ -43,7 +44,7 @@ class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPref
         if (current != null && current.open_browser) {
             openLink(link)
         } else {
-            val newDocument = preferences.getBoolean(KEY_NEW_DOCUMENT_API)
+            val newDocument = preferences[newDocumentApiKey]
             IntentUtils.openMedia(context, status, current, null, newDocument)
         }
     }

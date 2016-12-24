@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -353,6 +354,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     public boolean is_pinned_status;
 
+    @FilterFlags
+    @CursorField(Statuses.FILTER_FLAGS)
+    @ParcelableThisPlease
+    public long filter_flags;
+
     public ParcelableStatus() {
     }
 
@@ -556,5 +562,36 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         public void writeToParcel(Parcel dest, int flags) {
             ParcelableStatus$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
         }
+    }
+
+    /**
+     * Flags for filtering some kind of tweet.
+     * We use bitwise operations against string comparisons because it's much faster.
+     * <p>
+     * DO NOT CHANGE ONCE DEFINED!
+     */
+    @IntDef(value = {
+            FilterFlags.QUOTE_NOT_AVAILABLE,
+            FilterFlags.BLOCKING_USER,
+            FilterFlags.BLOCKED_BY_USER
+    }, flag = true)
+    public @interface FilterFlags {
+        /**
+         * Original tweet of a quote tweet is unavailable.
+         * Happens when:
+         * <p>
+         * <li/>You were blocked by this user
+         * <li/>You blocked/muted this user
+         * <li/>Original tweet was marked sensitive and your account settings blocked them
+         */
+        long QUOTE_NOT_AVAILABLE = 0x1;
+        /**
+         * Original author of a quote/retweet was blocked by you
+         */
+        long BLOCKING_USER = 0x2;
+        /**
+         * You were blocked by original author of a quote/retweet
+         */
+        long BLOCKED_BY_USER = 0x4;
     }
 }

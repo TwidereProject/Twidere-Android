@@ -42,6 +42,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
+import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.TwidereArrayUtils
@@ -147,18 +148,26 @@ abstract class MicroBlogAPIStatusesLoader(
         val noRowsDeleted = rowsDeleted == 0
         val insertGap = minIdx != -1 && (noRowsDeleted || deletedOldGap) && !noItemsBefore
                 && statuses.size >= loadItemLimit && !loadingMore
-        for (i in 0 until statuses.size) {
-            val status = statuses[i]
-            val item = ParcelableStatusUtils.fromStatus(status, accountKey, insertGap && isGapEnabled && minIdx == i)
-            ParcelableStatusUtils.updateExtraInformation(item, details, userColorNameManager)
-            data.add(item)
+
+        if (statuses.isNotEmpty()) {
+            val firstSortId = statuses.first().sortId
+            val lastSortId = statuses.last().sortId
+            // Get id diff of first and last item
+            val sortDiff = firstSortId - lastSortId
+            for (i in 0 until statuses.size) {
+                val status = statuses[i]
+                val item = ParcelableStatusUtils.fromStatus(status, accountKey, insertGap && isGapEnabled && minIdx == i)
+                item.position_key = GetStatusesTask.getPositionKey(item.timestamp, item.sort_id, lastSortId,
+                        sortDiff, i, statuses.size)
+                ParcelableStatusUtils.updateExtraInformation(item, details, userColorNameManager)
+                data.add(item)
+            }
         }
 
         val db = TwidereApplication.getInstance(context).sqLiteDatabase
         val array = data.toTypedArray()
-        var i = 0
         val size = array.size
-        while (i < size) {
+        for (i in (0 until size)) {
             val status = array[i]
             val filtered = shouldFilterStatus(db, status)
             if (filtered) {
@@ -168,12 +177,12 @@ abstract class MicroBlogAPIStatusesLoader(
                     status.is_filtered = true
                 }
             }
-            i++
         }
+
         if (comparator != null) {
-            Collections.sort(data, comparator)
+            data.sortWith(comparator!!)
         } else {
-            Collections.sort(data)
+            data.sort()
         }
         saveCachedData(data)
         return ListResponse.getListInstance(CopyOnWriteArrayList(data))

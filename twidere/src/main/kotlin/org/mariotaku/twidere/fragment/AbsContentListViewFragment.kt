@@ -41,7 +41,9 @@ import org.mariotaku.twidere.util.TwidereColorUtils
 /**
  * Created by mariotaku on 15/4/16.
  */
-abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment(), OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport, AbsListView.OnScrollListener {
+abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment(),
+        OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport,
+        AbsListView.OnScrollListener {
     private lateinit var scrollHandler: ListViewScrollHandler
 
     override lateinit var adapter: A
@@ -105,8 +107,8 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment
         super.onDetach()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_content_listview, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_content_listview, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

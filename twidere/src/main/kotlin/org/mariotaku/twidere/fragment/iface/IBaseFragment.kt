@@ -21,16 +21,42 @@ package org.mariotaku.twidere.fragment.iface
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.support.v4.app.Fragment
+import org.mariotaku.twidere.constant.IntentConstants
 import java.util.*
 
 interface IBaseFragment {
     val extraConfiguration: Bundle?
+        get() = null
 
     val tabPosition: Int
+        get() = (this as Fragment).arguments?.getInt(IntentConstants.EXTRA_TAB_POSITION, -1) ?: -1
 
     val tabId: Long
+        get() = (this as Fragment).arguments?.getLong(IntentConstants.EXTRA_TAB_ID, -1L) ?: -1L
 
-    fun requestFitSystemWindows()
+    fun requestFitSystemWindows() {
+        val fragment = this as Fragment
+        val activity = fragment.activity
+        val parentFragment = fragment.parentFragment
+        val callback: IBaseFragment.SystemWindowsInsetsCallback
+        if (parentFragment is IBaseFragment.SystemWindowsInsetsCallback) {
+            callback = parentFragment
+        } else if (activity is IBaseFragment.SystemWindowsInsetsCallback) {
+            callback = activity
+        } else {
+            return
+        }
+        val insets = Rect()
+        if (callback.getSystemWindowsInsets(insets)) {
+            fitSystemWindows(insets)
+        }
+    }
+
+    fun fitSystemWindows(insets: Rect) {
+        val fragment = this as Fragment
+        fragment.view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+    }
 
     interface SystemWindowsInsetsCallback {
         fun getSystemWindowsInsets(insets: Rect): Boolean

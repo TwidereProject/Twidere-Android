@@ -108,33 +108,11 @@ class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFr
         }
     }
 
-
-    override val extraConfiguration: Bundle? = null
-    override val tabPosition: Int = -1
-    override val tabId: Long = -1L
-
-    override fun requestFitSystemWindows() {
-        val activity = activity
-        val parentFragment = parentFragment
-        val callback: IBaseFragment.SystemWindowsInsetsCallback
-        if (parentFragment is IBaseFragment.SystemWindowsInsetsCallback) {
-            callback = parentFragment
-        } else if (activity is IBaseFragment.SystemWindowsInsetsCallback) {
-            callback = activity
-        } else {
-            return
-        }
-        val insets = Rect()
-        if (callback.getSystemWindowsInsets(insets)) {
-            fitSystemWindows(insets)
-        }
-    }
-
     override fun executeAfterFragmentResumed(action: (IBaseFragment) -> Unit) {
         actionHelper.executeAfterFragmentResumed(action)
     }
 
-    private fun fitSystemWindows(insets: Rect) {
+    override fun fitSystemWindows(insets: Rect) {
         val view = view
         view?.setPadding(insets.left, insets.top, insets.right, insets.bottom)
     }
