@@ -37,6 +37,8 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.isNullOrEmpty
+import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.R
@@ -196,66 +198,75 @@ abstract class AbsActivitiesFragment protected constructor() :
         saveReadPosition(layoutManager.findFirstVisibleItemPosition())
     }
 
+    /**
+     * Activities loaded, update adapter data & restore load position
+     *
+     * Steps:
+     * 1. Save current read position if not first load (adapter data is not empty)
+     *   1.1 If readFromBottom is true, save position on screen bottom
+     * 2. Change adapter data
+     * 3. Restore adapter data
+     *   3.1 If lastVisible was last item, keep lastVisibleItem position (load more)
+     *   3.2 Else, if readFromBottom is true:
+     *     3.1.1 If position was first, keep lastVisibleItem position (pull refresh)
+     *     3.1.2 Else, keep lastVisibleItem position
+     *   3.2 If readFromBottom is false:
+     *     3.2.1 If position was first, set new position to 0 (pull refresh)
+     *     3.2.2 Else, keep firstVisibleItem position (gap clicked)
+     */
     override fun onLoadFinished(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>) {
         val rememberPosition = preferences[rememberPositionKey]
+        val readPositionTag = currentReadPositionTag
         val readFromBottom = preferences[readFromBottomKey]
-        var lastReadId: Long
-        val lastVisiblePos: Int
-        val lastVisibleTop: Int
-        val tag = currentReadPositionTag
-        val layoutManager = layoutManager
-        if (readFromBottom) {
-            lastVisiblePos = layoutManager.findLastVisibleItemPosition()
-        } else {
-            lastVisiblePos = layoutManager.findFirstVisibleItemPosition()
-        }
-        if (lastVisiblePos != RecyclerView.NO_POSITION && lastVisiblePos < adapter.itemCount) {
-            val activityStartIndex = adapter.activityStartIndex
-            val activityEndIndex = activityStartIndex + adapter.activityCount
-            val lastItemIndex = Math.min(activityEndIndex, lastVisiblePos)
-            lastReadId = adapter.getTimestamp(lastItemIndex)
-            val positionView = layoutManager.findViewByPosition(lastItemIndex)
-            lastVisibleTop = positionView?.top ?: 0
-        } else if (rememberPosition && tag != null) {
-            lastReadId = readStateManager.getPosition(tag)
-            lastVisibleTop = 0
-        } else {
-            lastReadId = -1
-            lastVisibleTop = 0
-        }
-        adapter.setData(data)
-        val activityStartIndex = adapter.activityStartIndex
-        // The last activity is activityEndExclusiveIndex - 1
-        val activityEndExclusiveIndex = activityStartIndex + adapter.activityCount
+        val firstLoad = adapterData.isNullOrEmpty()
 
-        if (activityEndExclusiveIndex >= 0 && rememberPosition && tag != null) {
-            val lastItemId = adapter.getTimestamp(activityEndExclusiveIndex)
-            // Activity corresponds to last read timestamp was deleted, use last item timestamp
-            // instead
-            if (lastItemId > 0 && lastReadId < lastItemId) {
-                lastReadId = lastItemId
-            }
+        var lastReadId: Long = -1
+        var lastReadViewTop: Int = 0
+        var loadMore = false
+
+        // 1. Save current read position if not first load
+        if (!firstLoad) {
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            val statusRange = rangeOfSize(adapter.activityStartIndex, adapter.activityCount - 1)
+            val lastReadPosition = if (readFromBottom) {
+                lastVisibleItemPosition
+            } else {
+                layoutManager.findFirstVisibleItemPosition()
+            }.coerceIn(statusRange)
+            lastReadId = adapter.getTimestamp(lastReadPosition)
+            lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
+            loadMore = lastVisibleItemPosition >= statusRange.endInclusive
+        } else if (rememberPosition && readPositionTag != null) {
+            lastReadId = readStateManager.getPosition(readPositionTag)
+            lastReadViewTop = 0
         }
+
+        adapter.setData(data)
 
         refreshEnabled = true
+
+        var restorePosition = -1
+
         if (loader !is IExtendedLoader || loader.fromUser) {
-            adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
-            var pos = -1
-            for (i in activityStartIndex until activityEndExclusiveIndex) {
-                if (lastReadId != -1L && adapter.getTimestamp(i) <= lastReadId) {
-                    pos = i
-                    break
-                }
+            if (hasMoreData(data)) {
+                adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
+            } else {
+                adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
             }
-            if (pos != -1 && adapter.isActivity(pos) && (readFromBottom || lastVisiblePos != 0)) {
-                if (layoutManager.height == 0) {
-                    // RecyclerView has not currently laid out, ignore padding.
-                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop)
-                } else {
-                    layoutManager.scrollToPositionWithOffset(pos, lastVisibleTop - layoutManager.paddingTop)
-                }
+            restorePosition = adapter.findPositionBySortTimestamp(lastReadId)
+        }
+
+        if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || readFromBottom
+                || (rememberPosition && firstLoad))) {
+            if (layoutManager.height == 0) {
+                // RecyclerView has not currently laid out, ignore padding.
+                layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop)
+            } else {
+                layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop - layoutManager.paddingTop)
             }
         }
+
+
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
@@ -366,10 +377,6 @@ abstract class AbsActivitiesFragment protected constructor() :
             saveReadPosition()
         }
         super.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     override fun scrollToStart(): Boolean {

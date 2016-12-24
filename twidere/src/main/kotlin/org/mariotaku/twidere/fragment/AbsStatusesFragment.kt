@@ -316,7 +316,8 @@ abstract class AbsStatusesFragment protected constructor() :
         } else {
             onHasMoreDataChanged(false)
         }
-        if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || readFromBottom)) {
+        if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || readFromBottom
+                || (rememberPosition && firstLoad))) {
             if (layoutManager.height == 0) {
                 // RecyclerView has not currently laid out, ignore padding.
                 layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop)

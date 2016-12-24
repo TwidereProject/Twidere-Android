@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.apache.commons.lang3.ArrayUtils
+import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Activity
@@ -357,6 +358,10 @@ class ParcelableActivitiesAdapter(
         }
 
 
+    fun findPositionBySortTimestamp(timestamp: Long): Int {
+        return rangeOfSize(activityStartIndex, activityCount - 1).indexOfFirst { timestamp > 0 && getTimestamp(it) <= timestamp }
+    }
+
     interface ActivityAdapterListener {
         fun onGapClick(holder: GapViewHolder, position: Int)
 
@@ -453,12 +458,12 @@ class ParcelableActivitiesAdapter(
     }
 
     companion object {
-
         val ITEM_VIEW_TYPE_STUB = 0
         val ITEM_VIEW_TYPE_GAP = 1
         val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
         val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
         val ITEM_VIEW_TYPE_STATUS = 4
         val ITEM_VIEW_TYPE_EMPTY = 5
+
     }
 }
