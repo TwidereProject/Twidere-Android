@@ -18,15 +18,14 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.TwidereMathUtils
 import org.mariotaku.twidere.util.UriUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.media.MediaExtra
 import java.io.IOException
-import java.io.InputStream
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
-    private var mMediaLoadState: Int = 0
+
+    private var mediaLoadState: Int = 0
     private var mediaDownloadEvent: MediaDownloadEvent? = null
-    private var resultCreator: CacheDownloadLoader.ResultCreator? = null
+    private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy { SizedResultCreator(context) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -53,17 +52,12 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         return mediaExtra
     }
 
-    override fun getDownloadUri(): Uri? {
-        val downloadUri = super.getDownloadUri() ?: return null
-        return replaceTwitterMediaUri(downloadUri)
-    }
-
     override fun hasDownloadedData(): Boolean {
-        return super.hasDownloadedData() && mMediaLoadState != State.ERROR
+        return super.hasDownloadedData() && mediaLoadState != State.ERROR
     }
 
     override fun onMediaLoadStateChange(@State state: Int) {
-        mMediaLoadState = state
+        mediaLoadState = state
         val activity = activity
         if (userVisibleHint && activity != null) {
             activity.supportInvalidateOptionsMenu()
@@ -94,11 +88,7 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     }
 
     override fun getResultCreator(): CacheDownloadLoader.ResultCreator? {
-        var creator = resultCreator
-        if (creator != null) return creator
-        creator = SizedResultCreator(context)
-        resultCreator = creator
-        return creator
+        return sizedResultCreator
     }
 
     private val media: ParcelableMedia
@@ -119,16 +109,16 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     override fun onDownloadStart(total: Long, nonce: Long) {
         super.onDownloadStart(total, nonce)
-        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
-            mediaDownloadEvent!!.setOpenedTime(System.currentTimeMillis())
-            mediaDownloadEvent!!.setSize(total)
+        if (mediaDownloadEvent?.nonce == nonce) {
+            mediaDownloadEvent?.setOpenedTime(System.currentTimeMillis())
+            mediaDownloadEvent?.setSize(total)
         }
     }
 
     override fun onDownloadFinished(nonce: Long) {
         super.onDownloadFinished(nonce)
-        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
-            mediaDownloadEvent!!.markEnd()
+        if (mediaDownloadEvent?.nonce == nonce) {
+            mediaDownloadEvent?.markEnd()
             HotMobiLogger.getInstance(context).log(accountKey, mediaDownloadEvent!!)
             mediaDownloadEvent = null
         }
@@ -181,35 +171,10 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
         @Throws(IOException::class)
         internal fun decodeBitmap(cr: ContentResolver, uri: Uri, o: BitmapFactory.Options): Bitmap? {
-            var st: InputStream? = null
-            try {
-                st = cr.openInputStream(uri)
-                return BitmapFactory.decodeStream(st, null, o)
-            } finally {
-                Utils.closeSilently(st)
+            cr.openInputStream(uri).use {
+                return BitmapFactory.decodeStream(it, null, o)
             }
         }
 
-        internal fun replaceTwitterMediaUri(downloadUri: Uri): Uri {
-            //            String uriString = downloadUri.toString();
-            //            if (TwitterMediaProvider.isSupported(uriString)) {
-            //                final String suffix = ".jpg";
-            //                int lastIndexOfJpegSuffix = uriString.lastIndexOf(suffix);
-            //                if (lastIndexOfJpegSuffix == -1) return downloadUri;
-            //                final int endOfSuffix = lastIndexOfJpegSuffix + suffix.length();
-            //                if (endOfSuffix == uriString.length()) {
-            //                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png");
-            //                } else {
-            //                    // Seems :orig suffix won't work jpegs -> pngs
-            //                    String sizeSuffix = uriString.substring(endOfSuffix);
-            //                    if (":orig".equals(sizeSuffix)) {
-            //                        sizeSuffix = ":large";
-            //                    }
-            //                    return Uri.parse(uriString.substring(0, lastIndexOfJpegSuffix) + ".png" +
-            //                            sizeSuffix);
-            //                }
-            //            }
-            return downloadUri
-        }
     }
 }

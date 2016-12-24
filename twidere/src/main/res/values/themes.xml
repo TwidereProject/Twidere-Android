@@ -52,7 +52,7 @@
         <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
     </style>
 
-    <style name="Theme.Twidere.Viewer" parent="Theme.AppCompat">
+    <style name="Theme.Twidere.Viewer" parent="Theme.Twidere.Dark">
 
         <!-- Window attributes -->
         <item name="android:windowBackground">@color/background_color_window_viewer</item>
@@ -61,30 +61,13 @@
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>
         <item name="actionModeShareDrawable">@drawable/ic_action_share</item>
 
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
-
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-
-        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
-        <item name="isToolbarColored">false</item>
-
         <item name="actionBarTheme">@null</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+        <item name="colorToolbar">#80000000</item>
     </style>
 
-    <style name="Theme.Nyan" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Nyan" parent="Theme.Twidere.Dark">
         <item name="android:windowBackground">@color/nyan_background</item>
         <item name="colorPrimary">@color/nyan_background</item>
     </style>

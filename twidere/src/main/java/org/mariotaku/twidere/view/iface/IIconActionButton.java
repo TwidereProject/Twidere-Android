@@ -60,9 +60,9 @@ public interface IIconActionButton extends ChameleonView {
         public static Appearance create(Context context, AttributeSet attributeSet, Chameleon.Theme theme) {
             Appearance appearance = new Appearance();
             ChameleonTypedArray a = ChameleonTypedArray.obtain(context, attributeSet, R.styleable.IconActionButton, theme);
-            appearance.setDefaultColor(a.getColor(R.styleable.IconActionButton_iabColor, 0));
-            appearance.setActivatedColor(a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0));
-            appearance.setDisabledColor(a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0));
+            appearance.setDefaultColor(a.getColor(R.styleable.IconActionButton_iabColor, 0, false));
+            appearance.setActivatedColor(a.getColor(R.styleable.IconActionButton_iabActivatedColor, 0, false));
+            appearance.setDisabledColor(a.getColor(R.styleable.IconActionButton_iabDisabledColor, 0, false));
             a.recycle();
             return appearance;
         }

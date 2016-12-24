@@ -68,6 +68,7 @@ import javax.inject.Inject
 open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
         KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
+
     @Inject
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject

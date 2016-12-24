@@ -32,6 +32,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
@@ -65,14 +66,23 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
     private var saveToStoragePosition = -1
     private var shareMediaPosition = -1
 
+    private lateinit var mediaViewerHelper: IMediaViewerActivity.Helper
 
-    private var mHelper: IMediaViewerActivity.Helper? = null
+    private val status: ParcelableStatus?
+        get() = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
+
+    private val initialMedia: ParcelableMedia?
+        get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
+
+    private val media: Array<ParcelableMedia> by lazy {
+        intent.getParcelableArrayExtra(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
-        mHelper = IMediaViewerActivity.Helper(this)
-        mHelper!!.onCreate(savedInstanceState)
+        mediaViewerHelper = IMediaViewerActivity.Helper(this)
+        mediaViewerHelper.onCreate(savedInstanceState)
         val actionBar = supportActionBar!!
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
@@ -88,15 +98,17 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
 
     override fun onContentChanged() {
         super.onContentChanged()
-        mHelper!!.onContentChanged()
+        mediaViewerHelper.onContentChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_media_viewer, menu)
         return true
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        super.onPrepareOptionsMenu(menu)
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
         val currentItem = viewPager.currentItem
@@ -265,14 +277,8 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
         return media.size
     }
 
-    private val status: ParcelableStatus?
-        get() = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
-
-    private val initialMedia: ParcelableMedia?
-        get() = intent.getParcelableExtra<ParcelableMedia>(EXTRA_CURRENT_MEDIA)
-
-    private val media: Array<ParcelableMedia> by lazy {
-        intent.getParcelableArrayExtra(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
+    override fun getOverrideTheme(): Chameleon.Theme {
+        return Chameleon.Theme.from(this)
     }
 
     private fun processShareIntent(intent: Intent) {
