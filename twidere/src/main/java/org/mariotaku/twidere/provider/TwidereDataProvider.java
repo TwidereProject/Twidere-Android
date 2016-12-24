@@ -1193,7 +1193,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isHomeTimelineNotificationEnabled()) continue;
                             final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountKey());
-                            showTimelineNotification(pref, positionTag);
+                            showTimelineNotification(mPreferences, pref, positionTag);
                         }
                         notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
                     }
@@ -1241,7 +1241,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return mReadStateManager.getPosition(tag);
     }
 
-    private void showTimelineNotification(AccountPreferences pref, long position) {
+    private void showTimelineNotification(SharedPreferences preferences, AccountPreferences pref, long position) {
         final UserKey accountKey = pref.getAccountKey();
         final Context context = getContext();
         if (context == null) return;
@@ -1249,8 +1249,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final NotificationManagerWrapper nm = mNotificationManager;
         final Expression selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.greaterThan(Statuses.POSITION_KEY, position));
-        final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(Statuses.TABLE_NAME,
-                selection).getSQL();
+        final String filteredSelection = DataStoreUtils.buildStatusFilterWhereClause(preferences,
+                Statuses.TABLE_NAME, selection).getSQL();
         final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final String[] statusProjection = {Statuses.STATUS_ID};

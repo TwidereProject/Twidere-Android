@@ -7,7 +7,6 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.TwitterContentUtils
@@ -105,7 +104,7 @@ object ParcelableStatusUtils {
             result.quoted_user_profile_image = TwitterContentUtils.getProfileImageUrl(quotedUser)
             result.quoted_user_is_protected = quotedUser.isProtected
             result.quoted_user_is_verified = quotedUser.isVerified
-        } else {
+        } else if (status.isQuoteStatus) {
             result.filter_flags = result.filter_flags or FilterFlags.QUOTE_NOT_AVAILABLE
         }
 

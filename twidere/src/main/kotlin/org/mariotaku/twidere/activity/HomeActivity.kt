@@ -28,6 +28,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.res.Configuration
 import android.graphics.Rect
@@ -515,7 +516,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     fun updateUnreadCount() {
         if (mainTabs == null || updateUnreadCountTask != null && updateUnreadCountTask!!.status == AsyncTask.Status.RUNNING)
             return
-        updateUnreadCountTask = UpdateUnreadCountTask(this, readStateManager, mainTabs,
+        updateUnreadCountTask = UpdateUnreadCountTask(this, preferences, readStateManager, mainTabs,
                 pagerAdapter.tabs.toTypedArray())
         AsyncTaskUtils.executeTask<UpdateUnreadCountTask, Any>(updateUnreadCountTask)
         mainTabs.setDisplayBadge(preferences.getBoolean(SharedPreferenceConstants.KEY_UNREAD_COUNT, true))
@@ -885,6 +886,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private class UpdateUnreadCountTask internal constructor(
             private val context: Context,
+            private val preferences: SharedPreferences,
             private val readStateManager: ReadStateManager,
             private val indicator: TabPagerIndicator,
             private val tabs: Array<SupportTabSpec>) : AsyncTask<Any, UpdateUnreadCountTask.TabBadge, SparseIntArray>() {
@@ -904,8 +906,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, it)
                             readStateManager.getPosition(tag)
                         }.fold(0L, Math::max)
-                        val count = DataStoreUtils.getStatusesCount(context, Statuses.CONTENT_URI,
-                                spec.args, position, Statuses.STATUS_TIMESTAMP, true, accountKeys)
+                        val count = DataStoreUtils.getStatusesCount(context, preferences,
+                                Statuses.CONTENT_URI, spec.args, position, Statuses.STATUS_TIMESTAMP,
+                                true, accountKeys)
                         result.put(i, count)
                         publishProgress(TabBadge(i, count))
                     }

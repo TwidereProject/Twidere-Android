@@ -12,7 +12,7 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -48,7 +48,7 @@ abstract class GetStatusesTask(
         protected val context: Context
 ) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, () -> Unit>() {
     @Inject
-    lateinit var preferences: KPreferences
+    lateinit var preferences: SharedPreferencesWrapper
     @Inject
     lateinit var bus: Bus
     @Inject
@@ -200,8 +200,8 @@ abstract class GetStatusesTask(
         val deleteWhereArgs = arrayOf(accountKey.toString(), *statusIds)
         var olderCount = -1
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getStatusesCount(context, uri, null, minPositionKey,
-                    Statuses.POSITION_KEY, false, arrayOf(accountKey))
+            olderCount = DataStoreUtils.getStatusesCount(context, preferences, uri, null,
+                    minPositionKey, Statuses.POSITION_KEY, false, arrayOf(accountKey))
         }
         val rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs)
 

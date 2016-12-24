@@ -45,8 +45,6 @@ import org.mariotaku.twidere.model.message.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.DataStoreUtils.buildStatusFilterWhereClause
-import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
 
@@ -78,7 +76,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         val uri = contentUri
-        val table = getTableNameByUri(uri)
+        val table = DataStoreUtils.getTableNameByUri(uri)
         val sortOrder = Statuses.DEFAULT_SORT_ORDER
         val accountKeys = this.accountKeys
         val accountWhere = Expression.`in`(Column(Statuses.ACCOUNT_KEY),
@@ -224,7 +222,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
-        return buildStatusFilterWhereClause(table, null)
+        return DataStoreUtils.buildStatusFilterWhereClause(preferences, table, null)
     }
 
     protected fun getNewestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
