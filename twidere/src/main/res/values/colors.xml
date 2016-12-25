@@ -33,6 +33,7 @@
     <color name="branding_color">@color/material_cyan</color>
     <color name="bg_color_tab_pressed">#40808080</color>
     <color name="bg_color_media_viewer">#cc000000</color>
+    <color name="ab_bg_color_media_viewer">#80000000</color>
     <color name="background_color_card_item_dark">#424242</color>
     <color name="background_color_card_item_light">#ffffff</color>
     <color name="background_color_action_bar_dark">#212121</color>

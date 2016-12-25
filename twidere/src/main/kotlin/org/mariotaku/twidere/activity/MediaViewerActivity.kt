@@ -27,6 +27,7 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.hasRunningLoadersSafe
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.Menu
 import android.view.MenuItem
@@ -278,7 +279,10 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
     }
 
     override fun getOverrideTheme(): Chameleon.Theme {
-        return Chameleon.Theme.from(this)
+        val theme = super.getOverrideTheme()
+        theme.colorToolbar = ContextCompat.getColor(this, R.color.ab_bg_color_media_viewer)
+        theme.isToolbarColored = false
+        return theme
     }
 
     private fun processShareIntent(intent: Intent) {
