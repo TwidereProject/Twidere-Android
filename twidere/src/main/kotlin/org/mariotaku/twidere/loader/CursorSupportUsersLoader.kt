@@ -93,8 +93,8 @@ abstract class CursorSupportUsersLoader(
         val users: List<User>
         if (useIDs(details)) {
             val ids = getIDs(twitter, details, paging)
-            setCursors(ids)
             users = twitter.lookupUsers(ids.iDs)
+            setCursors(ids)
         } else {
             users = getCursoredUsers(twitter, details, paging)
             if (users is CursorSupport) {

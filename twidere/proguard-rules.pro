@@ -68,6 +68,7 @@
 -keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
 -keep class * extends org.mariotaku.twidere.util.TwitterCardFragmentFactory
 -keep class * extends org.mariotaku.twidere.util.Analyzer
+-keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 
 -keepclassmembers class * {
     private <fields>;

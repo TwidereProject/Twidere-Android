@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
+    package="org.mariotaku.twidere"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -18,7 +19,7 @@
             android:value="AIzaSyCVdCIMFFxdNqHnCPrJ9yKUzoTfs8jhYGc"/>
 
         <activity
-            android:name="org.mariotaku.twidere.activity.PlusServiceGoogleSignInActivity"
+            android:name=".activity.PlusServiceGoogleSignInActivity"
             android:exported="false"
             android:theme="@style/Theme.Twidere.NoDisplay">
             <meta-data
@@ -30,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="org.mariotaku.twidere.activity.DropboxAuthStarterActivity"
+            android:name=".activity.DropboxAuthStarterActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name="com.dropbox.core.android.AuthActivity"
@@ -45,7 +46,16 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.PlayInAppPurchaseActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="org.mariotaku.twidere.IN_APP_PURCHASE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
-        <service android:name="org.mariotaku.twidere.service.DropboxDataSyncService"/>
+        <service android:name=".service.DropboxDataSyncService"/>
     </application>
 </manifest>

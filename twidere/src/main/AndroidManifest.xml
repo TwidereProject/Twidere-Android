@@ -462,6 +462,9 @@
             android:label="@string/error_title_device_incompatible"
             android:theme="@android:style/Theme.DeviceDefault.Dialog"/>
         <activity
+            android:name=".activity.InvalidAccountAlertActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
+        <activity
             android:name=".activity.PlusServiceDashboardActivity"
             android:label="@string/plus_service_name"
             android:theme="@style/Theme.Twidere"/>

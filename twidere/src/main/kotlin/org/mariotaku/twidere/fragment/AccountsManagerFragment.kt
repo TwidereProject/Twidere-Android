@@ -44,7 +44,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.support.AccountManagerSupport
+import org.mariotaku.twidere.util.support.removeAccountSupport
 
 /**
  * Sort and toggle account availability
@@ -217,7 +217,7 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
-                    AccountManagerSupport.removeAccount(am, account, null, null, null)
+                    am.removeAccountSupport(account)
                     val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
                     val whereArgs = arrayOf(accountKey.toString())
                     // Also delete tweets related to the account we previously

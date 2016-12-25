@@ -19,9 +19,12 @@
 
 package org.mariotaku.twidere.activity
 
+import android.accounts.AccountManager
 import android.content.Intent
 import android.os.Bundle
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.StrictModeUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -33,12 +36,15 @@ open class MainActivity : BaseActivity() {
             StrictModeUtils.detectAllThreadPolicy()
         }
         super.onCreate(savedInstanceState)
+        val am = AccountManager.get(this)
         if (!Utils.checkDeviceCompatible()) {
-            val intent = Intent(this, IncompatibleAlertActivity::class.java)
+            startActivity(Intent(this, IncompatibleAlertActivity::class.java))
+        } else if (AccountUtils.hasInvalidAccount(am)) {
+            val intent = Intent(this, InvalidAccountAlertActivity::class.java)
+            intent.putExtra(EXTRA_INTENT, Intent(this, HomeActivity::class.java))
             startActivity(intent)
         } else {
-            val intent = Intent(this, HomeActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, HomeActivity::class.java))
         }
         finish()
     }

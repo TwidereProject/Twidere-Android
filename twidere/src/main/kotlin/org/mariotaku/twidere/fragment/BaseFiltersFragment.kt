@@ -43,11 +43,13 @@ import android.widget.AutoCompleteTextView
 import android.widget.ListView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
@@ -59,7 +61,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.Utils.getDefaultAccountKey
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 import javax.inject.Inject
+
+private const val REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT = 201
+private const val REQUEST_IMPORT_MUTES_SELECT_ACCOUNT = 202
 
 abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
         LoaderManager.LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
@@ -325,11 +331,24 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     class FilteredUsersFragment : BaseFiltersFragment() {
 
+        private lateinit var extraFeaturesChecker: ExtraFeaturesChecker
+
         public override val contentColumns: Array<String>
             get() = Filters.Users.COLUMNS
 
         override val contentUri: Uri
             get() = Filters.Users.CONTENT_URI
+
+        override fun onActivityCreated(savedInstanceState: Bundle?) {
+            super.onActivityCreated(savedInstanceState)
+            extraFeaturesChecker = ExtraFeaturesChecker.instance
+            extraFeaturesChecker.init(context)
+        }
+
+        override fun onDestroy() {
+            extraFeaturesChecker.release()
+            super.onDestroy()
+        }
 
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             when (requestCode) {
@@ -344,6 +363,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)
                     resolver.insert(Filters.Users.CONTENT_URI, values)
                 }
+                REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
+
+                }
+                REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
+
+                }
             }
         }
 
@@ -351,13 +376,37 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             inflater.inflate(R.menu.menu_filters_users, menu)
         }
 
+        override fun onPrepareOptionsMenu(menu: Menu) {
+            super.onPrepareOptionsMenu(menu)
+            val isFeaturesSupported = extraFeaturesChecker.isSupported()
+            menu.setItemAvailability(R.id.add_user_single, !isFeaturesSupported)
+            menu.setItemAvailability(R.id.add_user_submenu, isFeaturesSupported)
+        }
+
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             when (item.itemId) {
-                R.id.add -> {
+                R.id.add_user_single, R.id.add_user -> {
                     val intent = Intent(INTENT_ACTION_SELECT_USER)
                     intent.setClass(context, UserListSelectorActivity::class.java)
                     intent.putExtra(EXTRA_ACCOUNT_KEY, getDefaultAccountKey(activity))
                     startActivityForResult(intent, REQUEST_SELECT_USER)
+                    return true
+                }
+                R.id.import_from_blocked_users, R.id.import_from_muted_users -> {
+                    if (extraFeaturesChecker.isEnabled()) {
+                        val intent = Intent(context, AccountSelectorActivity::class.java)
+                        intent.putExtra(EXTRA_SINGLE_SELECTION, true)
+                        intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
+                        val requestCode = when (item.itemId) {
+                            R.id.import_from_blocked_users -> REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT
+                            R.id.import_from_muted_users -> REQUEST_IMPORT_MUTES_SELECT_ACCOUNT
+                            else -> throw AssertionError()
+                        }
+                        startActivityForResult(intent, requestCode)
+                    } else {
+                        val df = ExtraFeaturesIntroductionDialogFragment()
+                        df.show(childFragmentManager, "extra_features_introduction")
+                    }
                     return true
                 }
             }

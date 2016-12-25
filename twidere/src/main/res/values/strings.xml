@@ -830,4 +830,12 @@
     <string name="preference_filter_unavailable_quote_statuses">Filter unavailable quotes</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
+    <string name="action_purchase">Purchase</string>
+    <string name="action_restore_purchase">Restore purchase</string>
+    <string name="extra_features_description">Support Twidere and get enhanced features</string>
+    <string name="extra_features_restore_purchase_hint">If you\'ve already purchased enhanced features, you can use \'Restore purchase\' to enable.</string>
+    <string name="extra_features_name_sync_data">Sync data like filters and drafts</string>
+    <string name="extra_features_name_import_filter_list">Import filter list from blocks/mutes</string>
+    <string name="title_error_invalid_account">Invalid account</string>
+    <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash. Sorry for the inconvenience.</string>
 </resources>

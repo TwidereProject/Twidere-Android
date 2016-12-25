@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
@@ -186,6 +187,19 @@ public class AccountUtils {
             return new AccountFuture(newAccount, booleanFuture);
         }
         return null;
+    }
+
+    public static boolean hasInvalidAccount(@NonNull AccountManager am) {
+        for (Account account : getAccounts(am)) {
+            if (!isAccountValid(am, account)) return true;
+        }
+        return false;
+    }
+
+    public static boolean isAccountValid(@NonNull AccountManager am, Account account) {
+        if (TextUtils.isEmpty(am.peekAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE))) return false;
+        if (TextUtils.isEmpty(am.getUserData(account, ACCOUNT_USER_DATA_KEY))) return false;
+        return true;
     }
 
     private static class AccountFuture implements AccountManagerFuture<Account> {
