@@ -25,7 +25,7 @@ public class FavoriteTimelineTabConfiguration extends TabConfiguration {
     @NonNull
     @Override
     public StringHolder getName() {
-        return StringHolder.resource(R.string.favorites);
+        return StringHolder.resource(R.string.title_favorites);
     }
 
     @NonNull
@@ -44,7 +44,7 @@ public class FavoriteTimelineTabConfiguration extends TabConfiguration {
     @Override
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return new ExtraConfiguration[]{
-                new UserExtraConfiguration(EXTRA_USER).title(R.string.user).headerTitle(R.string.user)
+                new UserExtraConfiguration(EXTRA_USER).title(R.string.title_user).headerTitle(R.string.title_user)
         };
     }
 

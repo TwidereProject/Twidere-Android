@@ -19,12 +19,12 @@
             android:id="@id/favorites"
             android:enabled="false"
             android:icon="@drawable/ic_action_star"
-            android:title="@string/favorites"
+            android:title="@string/title_favorites"
             android:visible="false"/>
         <item
             android:id="@id/likes"
             android:icon="@drawable/ic_action_heart"
-            android:title="@string/likes"/>
+            android:title="@string/title_likes"/>
         <item
             android:id="@id/lists"
             android:icon="@drawable/ic_action_list"
@@ -48,11 +48,11 @@
         <item
             android:id="@id/drafts"
             android:icon="@drawable/ic_action_draft"
-            android:title="@string/drafts"/>
+            android:title="@string/title_drafts"/>
         <item
             android:id="@id/filters"
             android:icon="@drawable/ic_action_speaker_muted"
-            android:title="@string/filters"/>
+            android:title="@string/title_filters"/>
         <item
             android:id="@id/premium_features"
             android:enabled="@bool/is_debug"

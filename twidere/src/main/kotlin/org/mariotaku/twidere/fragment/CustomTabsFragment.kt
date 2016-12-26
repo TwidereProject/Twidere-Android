@@ -389,7 +389,7 @@ class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, Mult
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_custom_tab_editor)
-            builder.setPositiveButton(R.string.save, null)
+            builder.setPositiveButton(R.string.action_save, null)
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
             dialog.setOnShowListener(this)

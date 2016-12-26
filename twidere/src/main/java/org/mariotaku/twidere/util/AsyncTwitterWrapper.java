@@ -815,7 +815,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<SavedSearch> result) {
             if (result.hasData()) {
-                final String message = context.getString(R.string.search_name_saved, result.getData().getQuery());
+                final String message = context.getString(R.string.message_search_name_saved, result.getData().getQuery());
                 Utils.showOkMessage(context, message, false);
             } else if (result.hasException()) {
                 final Exception exception = result.getException();
@@ -1231,7 +1231,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<SavedSearch> result) {
             if (result.hasData()) {
-                final String message = context.getString(R.string.search_name_deleted, result.getData().getQuery());
+                final String message = context.getString(R.string.message_search_name_deleted, result.getData().getQuery());
                 Utils.showOkMessage(context, message, false);
                 getBus().post(new SavedSearchDestroyedEvent(mAccountKey, mSearchId));
             } else {

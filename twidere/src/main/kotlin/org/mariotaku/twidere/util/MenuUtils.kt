@@ -150,7 +150,7 @@ object MenuUtils {
         val retweet = menu.findItem(R.id.retweet)
         if (retweet != null) {
             ActionIconDrawable.setMenuHighlight(retweet, TwidereMenuInfo(isMyRetweet, retweetHighlight))
-            retweet.setTitle(if (isMyRetweet) R.string.cancel_retweet else R.string.retweet)
+            retweet.setTitle(if (isMyRetweet) R.string.cancel_retweet else R.string.action_retweet)
         }
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
@@ -181,9 +181,9 @@ object MenuUtils {
                 }
             }
             if (useStar) {
-                favorite.setTitle(if (isFavorite) R.string.unfavorite else R.string.favorite)
+                favorite.setTitle(if (isFavorite) R.string.action_unfavorite else R.string.action_favorite)
             } else {
-                favorite.setTitle(if (isFavorite) R.string.undo_like else R.string.like)
+                favorite.setTitle(if (isFavorite) R.string.action_undo_like else R.string.action_like)
             }
         }
         val translate = menu.findItem(R.id.translate)

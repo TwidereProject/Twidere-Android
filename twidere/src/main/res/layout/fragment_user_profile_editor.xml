@@ -159,7 +159,7 @@
                     android:maxLines="1"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/name"
+                    app:met_floatingLabelText="@string/user_profile_name"
                     app:met_maxCharacters="20"
                     app:met_primaryColor="?colorAccent"
                     tools:text="TwidereProject"/>
@@ -168,11 +168,12 @@
                     android:id="@+id/editDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="top"
                     android:inputType="textMultiLine"
                     android:minLines="4"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/description"
+                    app:met_floatingLabelText="@string/user_profile_description"
                     app:met_maxCharacters="160"
                     app:met_primaryColor="?colorAccent"
                     tools:text="@string/sample_status_text"/>
@@ -185,7 +186,7 @@
                     android:maxLines="1"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/location"
+                    app:met_floatingLabelText="@string/user_profile_location"
                     app:met_maxCharacters="30"
                     app:met_primaryColor="?colorAccent"
                     tools:text="Earth"/>
@@ -198,7 +199,7 @@
                     android:maxLines="1"
                     app:met_baseColor="?android:textColorPrimary"
                     app:met_floatingLabel="normal"
-                    app:met_floatingLabelText="@string/url"
+                    app:met_floatingLabelText="@string/user_profile_url"
                     app:met_maxCharacters="100"
                     app:met_primaryColor="?colorAccent"
                     tools:text="https://github.com/TwidereProject/"/>

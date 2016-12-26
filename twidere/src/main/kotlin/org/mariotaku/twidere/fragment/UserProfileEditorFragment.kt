@@ -284,10 +284,12 @@ class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, 
             mediaLoader.displayImage(profileBackground, user.profile_background_url)
             linkColor.color = user.link_color
             backgroundColor.color = user.background_color
-            if (USER_TYPE_FANFOU_COM == user.key.host) {
-                editProfileBanner.visibility = View.GONE
-            } else {
+            if (USER_TYPE_TWITTER_COM == user.key.host) {
                 editProfileBanner.visibility = View.VISIBLE
+                editProfileBackground.visibility = View.GONE
+            } else {
+                editProfileBanner.visibility = View.GONE
+                editProfileBackground.visibility = View.VISIBLE
             }
         } else {
             progressContainer.visibility = View.GONE

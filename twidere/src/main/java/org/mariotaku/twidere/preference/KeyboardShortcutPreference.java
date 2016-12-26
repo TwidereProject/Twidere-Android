@@ -142,7 +142,7 @@ public class KeyboardShortcutPreference extends DialogPreference implements IDia
         protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            builder.setNeutralButton(R.string.clear, this);
+            builder.setNeutralButton(R.string.action_clear, this);
             builder.setOnKeyListener(this);
         }
 

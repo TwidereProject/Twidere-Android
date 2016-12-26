@@ -91,7 +91,7 @@ public final class DataExportImportTypeSelectorDialogFragment extends BaseDialog
         mAdapter.add(new Type(R.string.user_colors, DataImportExportUtils.FLAG_USER_COLORS));
         mAdapter.add(new Type(R.string.custom_host_mapping, DataImportExportUtils.FLAG_HOST_MAPPING));
         mAdapter.add(new Type(R.string.keyboard_shortcuts, DataImportExportUtils.FLAG_KEYBOARD_SHORTCUTS));
-        mAdapter.add(new Type(R.string.filters, DataImportExportUtils.FLAG_FILTERS));
+        mAdapter.add(new Type(R.string.title_filters, DataImportExportUtils.FLAG_FILTERS));
         mAdapter.add(new Type(R.string.tabs, DataImportExportUtils.FLAG_TABS));
         mListView.setAdapter(mAdapter);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

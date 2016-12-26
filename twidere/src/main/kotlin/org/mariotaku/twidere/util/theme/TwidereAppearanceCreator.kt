@@ -5,9 +5,11 @@ import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import com.pnikosis.materialishprogress.ProgressWheel
+import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonView
 import org.mariotaku.chameleon.view.ChameleonSwitchCompat
+import org.mariotaku.chameleon.view.ChameleonTextView
 import org.mariotaku.multivalueswitch.library.MultiValueSwitch
 
 object TwidereAppearanceCreator : Chameleon.AppearanceCreator {
@@ -18,6 +20,9 @@ object TwidereAppearanceCreator : Chameleon.AppearanceCreator {
             }
             is MultiValueSwitch -> {
                 return ChameleonSwitchCompat.Appearance.create(theme)
+            }
+            is MaterialEditText -> {
+                return ChameleonTextView.Appearance.create(view, context, attributeSet, theme)
             }
         }
         return null
@@ -32,6 +37,11 @@ object TwidereAppearanceCreator : Chameleon.AppearanceCreator {
             is MultiValueSwitch -> {
                 appearance as ChameleonSwitchCompat.Appearance
                 setMultiValueSwitchTint(view, appearance.accentColor, appearance.isDark)
+            }
+            is MaterialEditText -> {
+                appearance as ChameleonTextView.Appearance
+                ChameleonTextView.Appearance.apply(view, appearance)
+                view.setPrimaryColor(appearance.tintColor)
             }
         }
     }

@@ -108,10 +108,10 @@ fun Draft.getActionName(context: Context): String? {
             return context.getString(R.string.update_status)
         }
         Draft.Action.REPLY -> {
-            return context.getString(R.string.reply)
+            return context.getString(R.string.action_reply)
         }
         Draft.Action.QUOTE -> {
-            return context.getString(R.string.quote)
+            return context.getString(R.string.action_quote)
         }
         Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT -> {
             return context.getString(R.string.send_direct_message)

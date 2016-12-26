@@ -136,7 +136,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/follow"/>
+                android:text="@string/action_follow"/>
 
             <ProgressBar
                 android:id="@+id/followInfoProgress"

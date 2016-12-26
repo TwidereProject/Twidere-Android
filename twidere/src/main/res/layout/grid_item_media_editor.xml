@@ -68,7 +68,7 @@
         android:layout_marginRight="@dimen/element_spacing_minus_mlarge"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
-        android:contentDescription="@string/edit"
+        android:contentDescription="@string/action_edit"
         app:touchHeight="@dimen/element_size_normal"
         app:touchWidth="@dimen/element_size_normal">
 
@@ -76,7 +76,7 @@
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
             android:layout_gravity="center"
-            android:contentDescription="@string/edit"
+            android:contentDescription="@string/action_edit"
             android:scaleType="center"
             android:src="@drawable/ic_btn_grid_item_edit"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>

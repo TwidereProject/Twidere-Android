@@ -287,16 +287,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setTitle(R.string.status)
             }
             LINK_ID_USER -> {
-                setTitle(R.string.user)
+                setTitle(R.string.title_user)
             }
             LINK_ID_USER_TIMELINE -> {
                 setTitle(R.string.statuses)
             }
             LINK_ID_USER_FAVORITES -> {
                 if (preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)) {
-                    setTitle(R.string.favorites)
+                    setTitle(R.string.title_favorites)
                 } else {
-                    setTitle(R.string.likes)
+                    setTitle(R.string.title_likes)
                 }
             }
             LINK_ID_USER_FOLLOWERS -> {
@@ -366,16 +366,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setTitle(R.string.accounts)
             }
             LINK_ID_DRAFTS -> {
-                setTitle(R.string.drafts)
+                setTitle(R.string.title_drafts)
             }
             LINK_ID_FILTERS -> {
-                setTitle(R.string.filters)
+                setTitle(R.string.title_filters)
             }
             LINK_ID_MAP -> {
                 setTitle(R.string.view_map)
             }
             LINK_ID_PROFILE_EDITOR -> {
-                setTitle(R.string.edit_profile)
+                setTitle(R.string.title_edit_profile)
             }
             LINK_ID_SCHEDULED_STATUSES -> {
                 title = getString(R.string.scheduled_statuses)

@@ -152,7 +152,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
                     val intent = Intent(Intent.ACTION_SEND)
                     intent.type = "text/plain"
                     intent.putExtra(Intent.EXTRA_TEXT, media.url)
-                    startActivity(Intent.createChooser(intent, getString(R.string.share)))
+                    startActivity(Intent.createChooser(intent, getString(R.string.action_share)))
                 }
                 return true
             }
@@ -373,7 +373,7 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
                     intent.addFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
                 }
                 activity.processShareIntent(intent)
-                startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.share)),
+                startActivityForResult(Intent.createChooser(intent, activity.getString(R.string.action_share)),
                         REQUEST_SHARE_MEDIA)
             }
 

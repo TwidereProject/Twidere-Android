@@ -48,7 +48,7 @@ abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInte
         val builder = AlertDialog.Builder(context)
         builder.setTitle(getTitle(user))
         builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
-        builder.setPositiveButton(android.R.string.ok, this)
+        builder.setPositiveButton(getPositiveButtonTitle(user), this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
         dialog.setOnShowListener {
@@ -65,6 +65,7 @@ abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInte
 
     abstract fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean)
 
-    abstract fun getTitle(user: ParcelableUser): String
-    abstract fun getMessage(user: ParcelableUser): String
+    protected abstract fun getTitle(user: ParcelableUser): String
+    protected abstract fun getMessage(user: ParcelableUser): String
+    protected open fun getPositiveButtonTitle(user: ParcelableUser): String = getString(android.R.string.ok)
 }

@@ -19,11 +19,11 @@
     <item
         android:id="@id/set_color"
         android:icon="@drawable/ic_action_color_palette"
-        android:title="@string/set_color"/>
+        android:title="@string/action_set_color"/>
     <item
         android:id="@id/set_nickname"
         android:icon="@drawable/ic_action_edit"
-        android:title="@string/set_nickname"/>
+        android:title="@string/action_set_nickname"/>
     <item
         android:id="@+id/incoming_friendships"
         android:icon="@drawable/ic_action_profile"

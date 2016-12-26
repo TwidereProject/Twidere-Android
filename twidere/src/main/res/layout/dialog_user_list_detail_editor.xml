@@ -30,14 +30,14 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/is_public"
         android:layout_toStartOf="@+id/is_public"
-        android:hint="@string/name"
+        android:hint="@string/user_list_details_name"
         android:inputType="text"
         android:maxLength="20"
+        android:maxLines="1"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelText="@string/name"
-        app:met_maxCharacters="25"
-        android:maxLines="1"/>
+        app:met_floatingLabelText="@string/user_list_details_name"
+        app:met_maxCharacters="25"/>
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/description"
@@ -45,12 +45,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:gravity="top"
-        android:hint="@string/description"
+        android:hint="@string/user_list_details_description"
         android:inputType="textMultiLine"
         android:minLines="3"
         app:met_baseColor="?android:textColorPrimary"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelText="@string/description"
+        app:met_floatingLabelText="@string/user_list_details_description"
         app:met_maxCharacters="100"/>
 
     <CheckBox
@@ -62,7 +62,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/name"
         android:checked="true"
-        android:text="@string/is_public"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:text="@string/is_public"/>
 
 </RelativeLayout>

@@ -70,7 +70,7 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
         builder.setView(me.uucky.colorpicker.R.layout.cp__dialog_color_picker)
         builder.setPositiveButton(android.R.string.ok, this)
         if (args.getBoolean(EXTRA_CLEAR_BUTTON, false)) {
-            builder.setNeutralButton(R.string.clear, this)
+            builder.setNeutralButton(R.string.action_clear, this)
         }
         builder.setNegativeButton(android.R.string.cancel, this)
         val dialog = builder.create()

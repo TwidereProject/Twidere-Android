@@ -271,7 +271,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             return
         }
         if (user.account_key.maybeEquals(user.key)) {
-            followContainer.follow.setText(R.string.edit)
+            followContainer.follow.setText(R.string.action_edit)
             followContainer.follow.visibility = View.VISIBLE
             relationship = userRelationship
             return
@@ -298,15 +298,15 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             pagesContent.visibility = View.VISIBLE
         }
         if (userRelationship.blocking) {
-            followContainer.follow.setText(R.string.unblock)
+            followContainer.follow.setText(R.string.action_unblock)
         } else if (userRelationship.blocked_by) {
             followContainer.follow.setText(R.string.action_block)
         } else if (userRelationship.following) {
-            followContainer.follow.setText(R.string.unfollow)
+            followContainer.follow.setText(R.string.action_unfollow)
         } else if (user.is_follow_request_sent) {
             followContainer.follow.setText(R.string.requested)
         } else {
-            followContainer.follow.setText(R.string.follow)
+            followContainer.follow.setText(R.string.action_follow)
         }
         followContainer.follow.compoundDrawablePadding = Math.round(followContainer.follow.textSize * 0.25f)
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
@@ -806,7 +806,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                 val blockItem = menu.findItem(R.id.block)
                 if (blockItem != null) {
                     ActionIconDrawable.setMenuHighlight(blockItem, TwidereMenuInfo(userRelationship.blocking))
-                    blockItem.setTitle(if (userRelationship.blocking) R.string.unblock else R.string.block)
+                    blockItem.setTitle(if (userRelationship.blocking) R.string.action_unblock else R.string.action_block)
                 }
                 val muteItem = menu.findItem(R.id.mute_user)
                 if (muteItem != null) {
@@ -1348,10 +1348,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         pagerAdapter.addTab(cls = UserMediaTimelineFragment::class.java, args = tabArgs, name = getString(R.string.media),
                 icon = DrawableHolder.resource(R.drawable.ic_action_gallery), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)
         if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
-            pagerAdapter.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.favorites),
+            pagerAdapter.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.title_favorites),
                     icon = DrawableHolder.resource(R.drawable.ic_action_star), type = TAB_TYPE_FAVORITES, position = TAB_POSITION_FAVORITES)
         } else {
-            pagerAdapter.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.likes),
+            pagerAdapter.addTab(cls = UserFavoritesFragment::class.java, args = tabArgs, name = getString(R.string.title_likes),
                     icon = DrawableHolder.resource(R.drawable.ic_action_heart), type = TAB_TYPE_FAVORITES, position = TAB_POSITION_FAVORITES)
         }
     }

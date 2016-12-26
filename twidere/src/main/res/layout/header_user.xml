@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                tools:text="@string/follow"
+                tools:text="@string/action_follow"
                 tools:visibility="visible"/>
 
             <ProgressBar

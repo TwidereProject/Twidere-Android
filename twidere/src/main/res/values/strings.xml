@@ -21,8 +21,10 @@
     <string name="basic">Basic</string>
     <string name="twip_o">twip O Mode</string>
     <string name="advanced">Advanced</string>
-    <string name="save">Save</string>
-    <string name="edit">Edit</string>
+    <!-- [verb] Save settings/files etc. -->
+    <string name="action_save">Save</string>
+    <!-- [verb] Edit image/settings etc. -->
+    <string name="action_edit">Edit</string>
     <string name="edit_api">Edit API</string>
     <string name="home">Home</string>
     <string name="mentions">Mentions</string>
@@ -42,19 +44,26 @@
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="open_in_browser">Open in browser</string>
-    <string name="delete">Delete</string>
-    <string name="retweet">Retweet</string>
-    <string name="retweets">Retweets</string>
+    <!-- [verb] Action for deleting a file or a twitter object like tweet-->
+    <string name="action_delete">Delete</string>
+    <!-- [verb] Action for performing retweet -->
+    <string name="action_retweet">Retweet</string>
+    <!-- [noun] Accessibility label for retweet icon -->
+    <string name="status_type_retweet">Retweet</string>
+    <!-- [noun] Count label for retweets, e.g. (N retweets)-->
+    <string name="count_label_retweets">Retweets</string>
+    <!-- [verb] Action for cancelling (deleting) a retweet-->
     <string name="cancel_retweet">Cancel retweet</string>
-    <string name="favorite">Favorite</string>
-    <string name="unfavorite">Unfavorite</string>
-    <!-- v. e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
-    <string name="like">Like</string>
-    <string name="undo_like">Undo like</string>
-    <string name="reply">Reply</string>
-    <string name="share">Share</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_unfavorite">Unfavorite</string>
+    <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
+    <string name="action_like">Like</string>
+    <string name="action_undo_like">Undo like</string>
+    <string name="action_reply">Reply</string>
+    <string name="action_share">Share</string>
     <string name="view_map">Map</string>
     <string name="statuses">Tweets</string>
+
     <string name="followers">Followers</string>
     <string name="following">Following</string>
     <string name="about">About</string>
@@ -85,36 +94,44 @@
     <string name="quote_user">Quote <xliff:g id="user_name">%s</xliff:g></string>
     <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
     <string name="source"><xliff:g id="source">%s</xliff:g></string>
-    <string name="filters">Filters</string>
-    <string name="users">Users</string>
-    <string name="user">User</string>
-    <string name="keywords">Keywords</string>
-    <string name="sources">Sources</string>
+    <string name="title_filters">Filters</string>
+    <string name="search_type_statuses">Tweets</string>
+    <string name="search_type_users">Users</string>
+    <string name="title_user">User</string>
+    <string name="filter_type_users">Users</string>
+    <string name="filter_type_keywords">Keywords</string>
+    <string name="filter_type_sources">Sources</string>
+    <string name="filter_type_links">Links</string>
     <string name="content">Content</string>
-    <string name="customize">Customize</string>
-    <string name="set_nickname">Set nickname</string>
-    <string name="set_color">Set color</string>
-    <string name="clear">Clear</string>
-    <string name="pick_color">Pick color</string>
-    <string name="follow">Follow</string>
-    <string name="unfollow">Unfollow</string>
+    <string name="title_set_nickname">Set nickname</string>
+    <string name="action_set_nickname">Set nickname</string>
+    <string name="action_set_color">Set color</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_pick_color">Pick color</string>
+    <string name="action_follow">Follow</string>
+    <string name="action_unfollow">Unfollow</string>
     <string name="leftside_compose_button">Left side compose button</string>
     <string name="leftside_compose_button_summary">Put the compose button on the left.</string>
     <string name="load_item_limit">Load item limit</string>
     <string name="load_item_limit_summary">Set items limit per load.</string>
-    <string name="quote">Quote</string>
+    <string name="action_quote">Quote</string>
     <string name="add_rule">Add rule</string>
     <string name="text_size">Text size</string>
     <string name="text_size_summary">Text size of tweets.</string>
     <string name="cannot_get_location">Can\'t get your location.</string>
-    <string name="drafts">Drafts</string>
-    <string name="description">Description</string>
-    <string name="location">Location</string>
-    <string name="url">URL</string>
-    <string name="favorites">Favorites</string>
-    <!-- n. formerly Twitter's favorite, in the plural -->
-    <string name="likes">Likes</string>
-    <string name="name">Name</string>
+    <string name="title_drafts">Drafts</string>
+    <string name="user_list_details_name">Name</string>
+    <string name="user_list_details_description">Description</string>
+    <string name="user_profile_description">Description</string>
+    <string name="user_profile_location">Location</string>
+    <string name="user_profile_url">URL</string>
+    <string name="user_profile_name">Name</string>
+    <!-- [noun] Twitter's favorite, in the plural -->
+    <string name="title_favorites">Favorites</string>
+    <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+    <string name="title_likes">Likes</string>
+    <string name="tab_editor_hint_name">Name</string>
+
     <string name="refresh">Refresh</string>
     <string name="settings_refresh">Refresh</string>
     <string name="retry">Retry</string>
@@ -141,8 +158,10 @@
     <string name="proxy_port">Proxy port</string>
     <string name="proxy_username">Proxy username</string>
     <string name="proxy_password">Proxy password</string>
-    <string name="block">Block</string>
-    <string name="unblock">Unblock</string>
+    <!-- [verb] Action for blocking user -->
+    <string name="action_block">Block</string>
+    <!-- [verb] Action for unblocking user -->
+    <string name="action_unblock">Unblock</string>
     <string name="report_for_spam">Report spam</string>
     <string name="action_report_spam">Report spam</string>
     <string name="twitter_mute_user">Mute user</string>
@@ -331,9 +350,9 @@
     <string name="status_is_duplicate">Your tweet is a duplicate.</string>
     <string name="text_copied">Text copied to clipboard.</string>
     <string name="hashtag">Hashtag</string>
-    <string name="links">Links</string>
-    <string name="edit_profile">Edit profile</string>
-    <string name="edit_details">Edit details</string>
+
+    <string name="title_edit_profile">Edit profile</string>
+    <string name="title_edit_details">Edit details</string>
     <string name="display_sensitive_contents">Display sensitive contents</string>
     <string name="display_sensitive_contents_summary">Display sensitive contents without notice in timeline</string>
     <string name="sensitive_content_warning">This tweet may have sensitive content, continue?</string>
@@ -387,10 +406,10 @@
     <string name="retweet_cancelled">Retweet cancelled.</string>
     <string name="direct_message_sent">Direct message sent.</string>
     <string name="direct_message_deleted">Direct message deleted.</string>
-    <string name="search_saved">Search saved.</string>
-    <string name="search_name_saved">Search \"<xliff:g id="name">%s</xliff:g>\" saved.</string>
-    <string name="search_deleted">Search deleted.</string>
-    <string name="search_name_deleted">Search \"<xliff:g id="name">%s</xliff:g>\" deleted.</string>
+    <string name="message_search_saved">Search saved.</string>
+    <string name="message_search_name_saved">Search \"<xliff:g id="name">%s</xliff:g>\" saved.</string>
+    <string name="message_search_deleted">Search deleted.</string>
+    <string name="message_search_name_deleted">Search \"<xliff:g id="name">%s</xliff:g>\" deleted.</string>
     <string name="import_from">Import from…</string>
     <string name="link_to_quoted_status">Link to quoted tweet</string>
     <string name="quote_original_status">Quote original tweet</string>
@@ -475,7 +494,6 @@
     <string name="report_user">Report <xliff:g id="name">%s</xliff:g></string>
     <string name="report_user_confirm_message">Report <xliff:g id="name">%s</xliff:g> for spam? You\'ll also block this user.</string>
     <string name="twidere_test">Twidere test</string>
-    <string name="staggered_home_timeline">Staggered Home Timeline</string>
     <string name="unread_count">Unread count</string>
     <string name="developed_by">Developed by</string>
     <string name="project_account">Project account</string>
@@ -535,8 +553,6 @@
     <string name="hidden_settings">Hidden settings</string>
     <string name="hidden_settings_warning_title">WARNING: These settings may harm!</string>
     <string name="hidden_settings_warning_message">NEVER change these settings if you don\'t know what it is, or it\'ll:\n * Kill your cat\n * Launch nuclear weapons in North Korea\n * Turn ALL Mahou Shoujo into Majo\n * Destroy the universe</string>
-    <string name="force_using_private_apis">Force using private APIs</string>
-    <string name="status_text_limit">Tweet text limit</string>
     <string name="load_more_from_top">Load more from top</string>
     <string name="load_more_from_top_summary">Useful if you prefer to read from bottom to top</string>
     <string name="compose_now">Compose Now</string>
@@ -569,8 +585,8 @@
     <string name="muted_user">Muted <xliff:g id="name">%s</xliff:g></string>
     <string name="unmute_user">Unmute <xliff:g id="name">%s</xliff:g></string>
     <string name="unmuted_user">Unmuted <xliff:g id="name">%s</xliff:g></string>
-    <string name="mute">Mute</string>
-    <string name="unmute">Unmute</string>
+    <string name="action_mute">Mute</string>
+    <string name="action_unmute">Unmute</string>
     <string name="action_muting">muting</string>
     <string name="action_unmuting">unmuting</string>
     <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? You will no longer see tweets from this user while keep following this user.</string>
@@ -808,7 +824,7 @@
     <string name="filter_everywhere">Filter everywhere</string>
     <string name="filter_everywhere_description">These will be filtered in Twidere:\n  &#xb7;User\'s tweets\n  &#xb7;Tweets mentioning this user\n  &#xb7;Retweets/Quotes of this user</string>
     <string name="message_toast_added_to_filter">Added to filter.</string>
-    <!-- Verb. Used for skip some settings -->
+    <!-- [verb] Used for skip some settings -->
     <string name="action_skip">Skip</string>
     <!-- Used for decide something later, like permission request -->
     <string name="action_later">Later</string>
@@ -824,7 +840,7 @@
     <string name="error_info_oauth_timestamp_error">Please check your system date &amp; time settings.</string>
     <string name="fab_visible">Floating Action Button</string>
     <string name="fab_visible_summary">Show the Floating Action Button</string>
-    <string name="action_block">Block</string>
+
     <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
     <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
     <string name="preference_filter_unavailable_quote_statuses">Filter unavailable quotes</string>
@@ -832,7 +848,7 @@
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
     <string name="title_select_users">Select users</string>
     <string name="action_purchase">Purchase</string>
-    <!-- Action title used for restore purchase -->
+    <!-- [verb] Restore purchase -->
     <string name="action_restore_purchase">Restore</string>
     <!-- Enhanced (paid) features description -->
     <string name="extra_features_description">Support Twidere and get enhanced features</string>

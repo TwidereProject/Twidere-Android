@@ -1181,7 +1181,7 @@ public final class Utils implements Constants {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, status.text_plain);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share)));
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_share)));
     }
 
     public static void stopListView(final AbsListView list) {

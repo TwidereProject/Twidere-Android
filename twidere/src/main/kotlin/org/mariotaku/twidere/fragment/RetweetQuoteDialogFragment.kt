@@ -67,9 +67,9 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
 
         builder.setView(R.layout.dialog_status_quote_retweet)
         builder.setTitle(R.string.retweet_quote_confirm_title)
-        builder.setPositiveButton(R.string.retweet, null)
+        builder.setPositiveButton(R.string.action_retweet, null)
         builder.setNegativeButton(android.R.string.cancel, null)
-        builder.setNeutralButton(R.string.quote) { dialog, which ->
+        builder.setNeutralButton(R.string.action_quote) { dialog, which ->
             val intent = Intent(INTENT_ACTION_QUOTE)
             val menu = popupMenu!!.menu
             val quoteOriginalStatus = menu.findItem(R.id.quote_original_status)
@@ -181,10 +181,10 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             positiveButton.setText(R.string.cancel_retweet)
             positiveButton.isEnabled = true
         } else if (useQuote(false, credentials)) {
-            positiveButton.setText(R.string.retweet)
+            positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = true
         } else {
-            positiveButton.setText(R.string.retweet)
+            positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = !status.user_is_protected
         }
         val textCountView = (dialog.findViewById(R.id.comment_text_count) as StatusTextCountView?)!!

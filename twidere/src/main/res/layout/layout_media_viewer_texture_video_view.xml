@@ -105,7 +105,7 @@
                 android:layout_alignParentRight="true"
                 android:background="?selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:contentDescription="@string/mute"
+                android:contentDescription="@string/action_mute"
                 android:minWidth="@dimen/element_size_normal"
                 android:src="@drawable/ic_action_speaker_max"/>
 

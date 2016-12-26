@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/element_spacing_normal"
-            android:hint="@string/name"
+            android:hint="@string/tab_editor_hint_name"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             app:met_baseColor="?android:colorForeground"

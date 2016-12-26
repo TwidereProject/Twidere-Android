@@ -1350,10 +1350,10 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                             label = adapter.context.getString(R.string.replies)
                         }
                         KEY_RETWEET_COUNT -> {
-                            label = adapter.context.getString(R.string.retweets)
+                            label = adapter.context.getString(R.string.count_label_retweets)
                         }
                         KEY_FAVORITE_COUNT -> {
-                            label = adapter.context.getString(R.string.favorites)
+                            label = adapter.context.getString(R.string.title_favorites)
                         }
                         else -> {
                             throw UnsupportedOperationException("Unsupported type " + count.type)

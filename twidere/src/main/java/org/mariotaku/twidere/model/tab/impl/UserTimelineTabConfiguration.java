@@ -44,7 +44,7 @@ public class UserTimelineTabConfiguration extends TabConfiguration {
     @Override
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return new ExtraConfiguration[]{
-                new UserExtraConfiguration(EXTRA_USER).title(R.string.user).headerTitle(R.string.user)
+                new UserExtraConfiguration(EXTRA_USER).title(R.string.title_user).headerTitle(R.string.title_user)
         };
     }
 

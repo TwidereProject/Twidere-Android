@@ -292,7 +292,7 @@
         </activity>
         <activity
             android:name=".activity.ColorPickerDialogActivity"
-            android:label="@string/set_color"
+            android:label="@string/action_set_color"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.LinkHandlerActivity"

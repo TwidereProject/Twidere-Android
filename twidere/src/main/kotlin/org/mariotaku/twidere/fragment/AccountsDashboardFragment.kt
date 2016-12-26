@@ -282,9 +282,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         updateDefaultAccountState()
 
         if (data.draftsCount > 0) {
-            navigationView.menu.findItem(R.id.drafts).title = "${getString(R.string.drafts)} (${data.draftsCount})"
+            navigationView.menu.findItem(R.id.drafts).title = "${getString(R.string.title_drafts)} (${data.draftsCount})"
         } else {
-            navigationView.menu.findItem(R.id.drafts).title = getString(R.string.drafts)
+            navigationView.menu.findItem(R.id.drafts).title = getString(R.string.title_drafts)
         }
     }
 

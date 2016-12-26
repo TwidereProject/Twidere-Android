@@ -37,6 +37,10 @@ class CreateUserBlockDialogFragment : AbsUserMuteBlockDialogFragment() {
         return getString(R.string.block_user, displayName)
     }
 
+    override fun getPositiveButtonTitle(user: ParcelableUser): String {
+        return getString(R.string.action_block)
+    }
+
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {
         twitterWrapper.createBlockAsync(user.account_key, user.key, filterEverywhere)
     }

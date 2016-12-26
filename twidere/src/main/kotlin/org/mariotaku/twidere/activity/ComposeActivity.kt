@@ -1793,7 +1793,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 (activity as ComposeActivity).setMediaAltText(arguments.getInt(EXTRA_POSITION),
                         ParseUtils.parseString(editText.text))
             }
-            builder.setNeutralButton(R.string.clear) { dialogInterface, i ->
+            builder.setNeutralButton(R.string.action_clear) { dialogInterface, i ->
                 (activity as ComposeActivity).setMediaAltText(arguments.getInt(EXTRA_POSITION), null)
             }
             val dialog = builder.create()

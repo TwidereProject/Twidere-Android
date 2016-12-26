@@ -81,7 +81,7 @@
             android:layout_weight="1"
             android:maxLines="2"
             android:minHeight="@dimen/element_size_normal"
-            android:text="@string/clear"
+            android:text="@string/action_clear"
             android:textSize="14sp"/>
 
         <Button

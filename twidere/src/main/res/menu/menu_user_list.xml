@@ -17,7 +17,7 @@
     <item
         android:id="@id/edit"
         android:icon="@drawable/ic_action_edit"
-        android:title="@string/edit_details"
+        android:title="@string/title_edit_details"
         android:visible="false" />
     <item
         android:id="@id/add"
@@ -26,7 +26,7 @@
     <item
         android:id="@id/delete"
         android:icon="@drawable/ic_action_delete"
-        android:title="@string/delete" />
+        android:title="@string/action_delete" />
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"

@@ -111,7 +111,7 @@
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
-                android:contentDescription="@string/follow"
+                android:contentDescription="@string/action_follow"
                 android:src="@drawable/ic_action_visibility_off"
                 app:backgroundTint="@color/material_grey"
                 app:iabColor="@android:color/transparent"/>
@@ -121,7 +121,7 @@
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
-                android:contentDescription="@string/follow"
+                android:contentDescription="@string/action_follow"
                 android:src="@drawable/ic_action_add"
                 app:backgroundTint="@color/color_stateful_follow"
                 app:iabColor="@android:color/transparent"/>
