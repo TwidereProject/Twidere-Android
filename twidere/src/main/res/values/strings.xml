@@ -4,7 +4,8 @@
     <!-- App name, normally you don't need to translate this. -->
     <string name="app_name">Twidere</string>
     <string name="app_description">Your own Twitter app</string>
-    <string name="compose">Compose</string>
+    <string name="action_compose">Compose</string>
+    <string name="title_compose">Compose</string>
     <string name="add_account">Add account</string>
     <string name="settings">Settings</string>
     <string name="send">Send</string>
@@ -62,7 +63,7 @@
     <string name="action_reply">Reply</string>
     <string name="action_share">Share</string>
     <string name="view_map">Map</string>
-    <string name="statuses">Tweets</string>
+    <string name="title_statuses">Tweets</string>
 
     <string name="followers">Followers</string>
     <string name="following">Following</string>
@@ -122,6 +123,7 @@
     <string name="title_drafts">Drafts</string>
     <string name="user_list_details_name">Name</string>
     <string name="user_list_details_description">Description</string>
+    <string name="user_list_details_is_public">Public</string>
     <string name="user_profile_description">Description</string>
     <string name="user_profile_location">Location</string>
     <string name="user_profile_url">URL</string>
@@ -202,10 +204,8 @@
     <string name="account">Account</string>
     <string name="mention_this_user">Mention this user</string>
     <string name="mention_user_name">Mention <xliff:g id="name">%1$s</xliff:g></string>
-    <string name="connectivity">Connectivity</string>
     <string name="add_member">Add member</string>
     <string name="new_user_list">New list</string>
-    <string name="is_public">Public</string>
     <string name="send_direct_message">Send DM</string>
     <string name="extensions">Extensions</string>
     <string name="uninstall">Uninstall</string>
@@ -300,7 +300,7 @@
     <string name="incoming_friendships">Pending follow requests</string>
     <string name="send_follow_request">Send follow request</string>
     <string name="follow_request_sent">Follow request sent</string>
-    <string name="status">Tweet</string>
+    <string name="title_status">Tweet</string>
     <string name="preview">Preview</string>
     <string name="connection_timeout">Connection timeout</string>
     <string name="both">Both</string>

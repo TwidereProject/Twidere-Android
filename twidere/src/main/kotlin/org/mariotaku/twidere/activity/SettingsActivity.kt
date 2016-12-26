@@ -117,7 +117,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 R.xml.preferences_notifications)
         entriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
                 R.xml.preferences_network)
-        entriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.compose),
+        entriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.action_compose),
                 R.xml.preferences_compose)
         entriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
                 R.xml.preferences_content)

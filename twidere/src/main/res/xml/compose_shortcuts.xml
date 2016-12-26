@@ -7,8 +7,8 @@
         android:enabled="true"
         android:icon="@drawable/ic_app_shortcut_compose"
         android:shortcutId="compose"
-        android:shortcutLongLabel="@string/compose"
-        android:shortcutShortLabel="@string/compose">
+        android:shortcutLongLabel="@string/action_compose"
+        android:shortcutShortLabel="@string/action_compose">
         <intent
             android:action="org.mariotaku.twidere.COMPOSE"
             android:targetClass="org.mariotaku.twidere.activity.ComposeActivity"

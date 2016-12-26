@@ -63,6 +63,6 @@
         android:layout_alignTop="@+id/name"
         android:checked="true"
         android:maxLines="1"
-        android:text="@string/is_public"/>
+        android:text="@string/user_list_details_is_public"/>
 
 </RelativeLayout>

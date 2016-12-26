@@ -4,38 +4,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/advanced">
 
-    <PreferenceCategory
-        android:key="category_connectivity"
-        android:title="@string/connectivity">
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="builtin_dns_resolver"
+        android:title="@string/builtin_dns_resolver"/>
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="builtin_dns_resolver"
-            android:title="@string/builtin_dns_resolver"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:dependency="builtin_dns_resolver"
+        android:key="tcp_dns_query"
+        android:summary="@string/tcp_dns_query_summary"
+        android:title="@string/tcp_dns_query"/>
 
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:dependency="builtin_dns_resolver"
-            android:key="tcp_dns_query"
-            android:summary="@string/tcp_dns_query_summary"
-            android:title="@string/tcp_dns_query"/>
+    <org.mariotaku.twidere.preference.ThemedEditTextPreference
+        android:dependency="builtin_dns_resolver"
+        android:dialogTitle="@string/dns_server"
+        android:inputType="textVisiblePassword"
+        android:key="dns_server"
+        android:singleLine="true"
+        android:summary="@string/dns_server_summary"
+        android:title="@string/dns_server"/>
 
-        <org.mariotaku.twidere.preference.ThemedEditTextPreference
-            android:dependency="builtin_dns_resolver"
-            android:dialogTitle="@string/dns_server"
-            android:inputType="textVisiblePassword"
-            android:key="dns_server"
-            android:singleLine="true"
-            android:summary="@string/dns_server_summary"
-            android:title="@string/dns_server"/>
+    <Preference
+        android:fragment="org.mariotaku.twidere.fragment.HostMappingsListFragment"
+        android:key="custom_host_mapping"
+        android:summary="@string/custom_host_mapping_summary"
+        android:title="@string/custom_host_mapping"/>
 
-        <Preference
-            android:fragment="org.mariotaku.twidere.fragment.HostMappingsListFragment"
-            android:key="custom_host_mapping"
-            android:summary="@string/custom_host_mapping_summary"
-            android:title="@string/custom_host_mapping"/>
-
-    </PreferenceCategory>
     <PreferenceCategory
         android:key="category_proxy"
         android:title="@string/proxy">

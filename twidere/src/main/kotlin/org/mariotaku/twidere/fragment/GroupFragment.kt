@@ -30,7 +30,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
     override fun addTabs(adapter: SupportTabsAdapter) {
         val args = arguments
-        adapter.addTab(cls = GroupTimelineFragment::class.java, args = args, name = getString(R.string.statuses), tag = "statuses")
+        adapter.addTab(cls = GroupTimelineFragment::class.java, args = args, name = getString(R.string.title_statuses), tag = "statuses")
         adapter.addTab(cls = GroupMembersFragment::class.java, args = args, name = getString(R.string.members), tag = "members")
     }
 

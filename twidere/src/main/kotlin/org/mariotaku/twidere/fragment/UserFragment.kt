@@ -1343,7 +1343,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable<Parcelable>(EXTRA_USER_KEY))
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
         }
-        pagerAdapter.addTab(cls = UserTimelineFragment::class.java, args = tabArgs, name = getString(R.string.statuses),
+        pagerAdapter.addTab(cls = UserTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses),
                 icon = DrawableHolder.resource(R.drawable.ic_action_quote), type = TAB_TYPE_STATUSES, position = TAB_POSITION_STATUSES)
         pagerAdapter.addTab(cls = UserMediaTimelineFragment::class.java, args = tabArgs, name = getString(R.string.media),
                 icon = DrawableHolder.resource(R.drawable.ic_action_gallery), type = TAB_TYPE_MEDIA, position = TAB_POSITION_MEDIA)

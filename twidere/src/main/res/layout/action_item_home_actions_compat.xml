@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/element_spacing_normal"
-        android:contentDescription="@string/compose"
+        android:contentDescription="@string/action_compose"
         android:scaleType="centerInside"/>
 
 </FrameLayout>

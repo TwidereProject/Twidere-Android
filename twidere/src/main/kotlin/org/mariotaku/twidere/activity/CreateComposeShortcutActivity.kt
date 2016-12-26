@@ -35,7 +35,7 @@ class CreateComposeShortcutActivity : Activity() {
         val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, launch_intent)
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.compose))
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.action_compose))
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

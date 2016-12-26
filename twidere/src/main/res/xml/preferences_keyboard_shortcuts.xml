@@ -8,7 +8,7 @@
         android:title="@string/general">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="compose"
-            android:title="@string/compose"/>
+            android:title="@string/action_compose"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="search"
             android:title="@string/search"/>
@@ -69,7 +69,7 @@
 
     <PreferenceCategory
         android:key="cat_statuses"
-        android:title="@string/statuses">
+        android:title="@string/title_statuses">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="status.reply"
             android:tag="status"

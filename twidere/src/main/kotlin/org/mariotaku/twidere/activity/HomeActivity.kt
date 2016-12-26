@@ -870,7 +870,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             title = android.R.string.search_go
         } else {
             icon = R.drawable.ic_action_status_compose
-            title = R.string.compose
+            title = R.string.action_compose
         }
         actionsButton.setImageResource(icon)
         actionsButton.contentDescription = getString(title)

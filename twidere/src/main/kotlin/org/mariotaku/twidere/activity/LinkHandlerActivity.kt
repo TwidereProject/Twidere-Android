@@ -284,13 +284,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         setSubtitle(null)
         when (linkId) {
             LINK_ID_STATUS -> {
-                setTitle(R.string.status)
+                setTitle(R.string.title_status)
             }
             LINK_ID_USER -> {
                 setTitle(R.string.title_user)
             }
             LINK_ID_USER_TIMELINE -> {
-                setTitle(R.string.statuses)
+                setTitle(R.string.title_statuses)
             }
             LINK_ID_USER_FAVORITES -> {
                 if (preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)) {

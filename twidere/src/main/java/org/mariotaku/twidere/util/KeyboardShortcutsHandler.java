@@ -40,7 +40,7 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
     private static final SparseArrayCompat<String> sMetaNameMap = new SparseArrayCompat<>();
 
     static {
-        sActionLabelMap.put(ACTION_COMPOSE, R.string.compose);
+        sActionLabelMap.put(ACTION_COMPOSE, R.string.action_compose);
         sActionLabelMap.put(ACTION_SEARCH, R.string.search);
         sActionLabelMap.put(ACTION_MESSAGE, R.string.new_direct_message);
         sActionLabelMap.put(ACTION_HOME_ACCOUNTS_DASHBOARD, R.string.open_accounts_dashboard);
