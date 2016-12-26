@@ -50,6 +50,7 @@
     </TableRow>
 
     <TextView
+        android:id="@+id/restorePurchaseHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"

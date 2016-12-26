@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="?cardItemBackgroundColor"
-    tools:showIn="@layout/activity_plus_service_dashboard">
+    tools:showIn="@layout/activity_premium_dashboard">
 
     <fragment
         android:id="@+id/extra_features_introduction"

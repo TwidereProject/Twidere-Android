@@ -547,8 +547,8 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 IntentUtils.openFilters(activity)
                 closeAccountsDrawer()
             }
-            R.id.plus_service -> {
-                val intent = Intent(activity, PlusServiceDashboardActivity::class.java)
+            R.id.premium_features -> {
+                val intent = Intent(activity, PremiumDashboardActivity::class.java)
                 startActivity(intent)
                 closeAccountsDrawer()
             }

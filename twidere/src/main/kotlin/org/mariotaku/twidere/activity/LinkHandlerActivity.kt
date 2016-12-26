@@ -47,6 +47,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment

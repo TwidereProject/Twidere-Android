@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.util.premium
 
 import android.content.Context
+import android.content.Intent
 import android.support.annotation.CallSuper
 import java.util.*
 
@@ -12,7 +13,7 @@ abstract class ExtraFeaturesChecker {
     protected lateinit var context: Context
 
     @CallSuper
-    open fun init(context: Context) {
+    protected open fun init(context: Context) {
         this.context = context
     }
 
@@ -23,10 +24,17 @@ abstract class ExtraFeaturesChecker {
 
     abstract fun isEnabled(): Boolean
 
+    abstract fun createPurchaseIntent(context: Context): Intent
+
+    abstract fun createRestorePurchaseIntent(context: Context): Intent?
+
     companion object {
 
-        val instance: ExtraFeaturesChecker
-            get() = ServiceLoader.load(ExtraFeaturesChecker::class.java).first()
+        fun newInstance(context: Context): ExtraFeaturesChecker {
+            val instance = ServiceLoader.load(ExtraFeaturesChecker::class.java).first()
+            instance.init(context)
+            return instance
+        }
 
     }
 }

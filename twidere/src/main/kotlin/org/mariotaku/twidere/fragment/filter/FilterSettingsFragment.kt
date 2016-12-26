@@ -1,8 +1,9 @@
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.filter
 
 import android.os.Bundle
 import org.mariotaku.twidere.Constants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.fragment.BasePreferenceFragment
 
 class FilterSettingsFragment : BasePreferenceFragment() {
 

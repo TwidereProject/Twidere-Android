@@ -24,11 +24,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
-import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
@@ -36,36 +34,27 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
-import android.view.*
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AutoCompleteTextView
 import android.widget.ListView
-import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
-import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.AccountSelectorActivity
-import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
-import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.Utils.getDefaultAccountKey
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
-import javax.inject.Inject
+import org.mariotaku.twidere.util.ParseUtils
+import org.mariotaku.twidere.util.Utils
 
-private const val REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT = 201
-private const val REQUEST_IMPORT_MUTES_SELECT_ACCOUNT = 202
 
 abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
         LoaderManager.LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
@@ -270,51 +259,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     }
 
-    class FilteredKeywordsFragment : BaseFiltersFragment() {
-
-        override val contentUri: Uri
-            get() = Filters.Keywords.CONTENT_URI
-
-        public override val contentColumns: Array<String>
-            get() = Filters.Keywords.COLUMNS
-
-    }
-
-
-    class FilteredLinksFragment : BaseFiltersFragment() {
-
-        public override val contentColumns: Array<String>
-            get() = Filters.Links.COLUMNS
-
-        override val contentUri: Uri
-            get() = Filters.Links.CONTENT_URI
-
-    }
-
-    class FilteredSourcesFragment : BaseFiltersFragment() {
-
-        public override val contentColumns: Array<String>
-            get() = Filters.Sources.COLUMNS
-
-        override val contentUri: Uri
-            get() = Filters.Sources.CONTENT_URI
-
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.add -> {
-                    val args = Bundle()
-                    args.putInt(EXTRA_AUTO_COMPLETE_TYPE, AUTO_COMPLETE_TYPE_SOURCES)
-                    args.putParcelable(EXTRA_URI, contentUri)
-                    val dialog = AddItemFragment()
-                    dialog.arguments = args
-                    dialog.show(fragmentManager, "add_rule")
-                    return true
-                }
-            }
-            return super.onOptionsItemSelected(item)
-        }
-
-    }
 
     private class FilterListAdapter(
             context: Context
@@ -329,142 +273,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     }
 
-    class FilteredUsersFragment : BaseFiltersFragment() {
-
-        private lateinit var extraFeaturesChecker: ExtraFeaturesChecker
-
-        public override val contentColumns: Array<String>
-            get() = Filters.Users.COLUMNS
-
-        override val contentUri: Uri
-            get() = Filters.Users.CONTENT_URI
-
-        override fun onActivityCreated(savedInstanceState: Bundle?) {
-            super.onActivityCreated(savedInstanceState)
-            extraFeaturesChecker = ExtraFeaturesChecker.instance
-            extraFeaturesChecker.init(context)
-        }
-
-        override fun onDestroy() {
-            extraFeaturesChecker.release()
-            super.onDestroy()
-        }
-
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            when (requestCode) {
-                REQUEST_SELECT_USER -> {
-                    if (resultCode != FragmentActivity.RESULT_OK || !data!!.hasExtra(EXTRA_USER))
-                        return
-                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                    val values = ContentValuesCreator.createFilteredUser(user)
-                    val resolver = context.contentResolver
-                    val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
-                    val whereArgs = arrayOf(user.key.toString())
-                    resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)
-                    resolver.insert(Filters.Users.CONTENT_URI, values)
-                }
-                REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
-
-                }
-                REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
-
-                }
-            }
-        }
-
-        override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-            inflater.inflate(R.menu.menu_filters_users, menu)
-        }
-
-        override fun onPrepareOptionsMenu(menu: Menu) {
-            super.onPrepareOptionsMenu(menu)
-            val isFeaturesSupported = extraFeaturesChecker.isSupported()
-            menu.setItemAvailability(R.id.add_user_single, !isFeaturesSupported)
-            menu.setItemAvailability(R.id.add_user_submenu, isFeaturesSupported)
-        }
-
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.add_user_single, R.id.add_user -> {
-                    val intent = Intent(INTENT_ACTION_SELECT_USER)
-                    intent.setClass(context, UserListSelectorActivity::class.java)
-                    intent.putExtra(EXTRA_ACCOUNT_KEY, getDefaultAccountKey(activity))
-                    startActivityForResult(intent, REQUEST_SELECT_USER)
-                    return true
-                }
-                R.id.import_from_blocked_users, R.id.import_from_muted_users -> {
-                    if (extraFeaturesChecker.isEnabled()) {
-                        val intent = Intent(context, AccountSelectorActivity::class.java)
-                        intent.putExtra(EXTRA_SINGLE_SELECTION, true)
-                        intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
-                        val requestCode = when (item.itemId) {
-                            R.id.import_from_blocked_users -> REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT
-                            R.id.import_from_muted_users -> REQUEST_IMPORT_MUTES_SELECT_ACCOUNT
-                            else -> throw AssertionError()
-                        }
-                        startActivityForResult(intent, requestCode)
-                    } else {
-                        val df = ExtraFeaturesIntroductionDialogFragment()
-                        df.show(childFragmentManager, "extra_features_introduction")
-                    }
-                    return true
-                }
-            }
-            return super.onOptionsItemSelected(item)
-        }
-
-        override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
-            return FilterUsersListAdapter(context)
-        }
-
-        class FilterUsersListAdapter(
-                context: Context
-        ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_2, null,
-                emptyArray(), IntArray(0), 0) {
-
-            @Inject
-            lateinit var userColorNameManager: UserColorNameManager
-            @Inject
-            lateinit var preferences: SharedPreferencesWrapper
-
-            private val nameFirst: Boolean
-
-            private var indices: `FiltersData$UserItemCursorIndices`? = null
-
-            init {
-                GeneralComponentHelper.build(context).inject(this)
-                nameFirst = preferences.getBoolean(KEY_NAME_FIRST, true)
-            }
-
-            override fun bindView(view: View, context: Context?, cursor: Cursor) {
-                super.bindView(view, context, cursor)
-                val indices = this.indices!!
-                val text1 = view.findViewById(android.R.id.text1) as TextView
-                val text2 = view.findViewById(android.R.id.text2) as TextView
-                val userId = UserKey.valueOf(cursor.getString(indices.userKey))
-                val name = cursor.getString(indices.name)
-                val screenName = cursor.getString(indices.screenName)
-                val displayName = userColorNameManager.getDisplayName(userId, name, screenName,
-                        nameFirst)
-                text1.text = displayName
-                text2.text = userId.host
-            }
-
-            override fun swapCursor(c: Cursor?): Cursor? {
-                val old = super.swapCursor(c)
-                if (c != null) {
-                    indices = `FiltersData$UserItemCursorIndices`(c)
-                }
-                return old
-            }
-
-        }
-
-    }
-
     companion object {
 
-        private val EXTRA_AUTO_COMPLETE_TYPE = "auto_complete_type"
-        private val AUTO_COMPLETE_TYPE_SOURCES = 2
+        internal const val EXTRA_AUTO_COMPLETE_TYPE = "auto_complete_type"
+        internal const val AUTO_COMPLETE_TYPE_SOURCES = 2
+        internal const val REQUEST_ADD_USER_SELECT_ACCOUNT = 201
+        internal const val REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT = 202
+        internal const val REQUEST_IMPORT_MUTES_SELECT_ACCOUNT = 203
     }
 }

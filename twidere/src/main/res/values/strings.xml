@@ -789,7 +789,6 @@
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
     <string name="password_sign_in_twitter_only">Password sign in (Twitter only)</string>
     <string name="direct_messages_next">DM next</string>
-    <string name="plus_service_name">Twidere ∞</string>
     <string name="sign_in_service_google_id">Google ID</string>
     <string name="sign_in_service_twitter">Twitter</string>
     <string name="sign_in_service_email">Email</string>
@@ -804,7 +803,8 @@
     <string name="no_extension_installed">No extension installed</string>
     <string name="pinned_status">Pinned tweet</string>
     <string name="add_or_remove_from_list">Add or remove from list</string>
-    <string name="title_extra_features">Extra features</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="title_extra_features">Enhanced features</string>
     <string name="filter_everywhere">Filter everywhere</string>
     <string name="filter_everywhere_description">These will be filtered in Twidere:\n  &#xb7;User\'s tweets\n  &#xb7;Tweets mentioning this user\n  &#xb7;Retweets/Quotes of this user</string>
     <string name="message_toast_added_to_filter">Added to filter.</string>
@@ -831,11 +831,15 @@
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
     <string name="action_purchase">Purchase</string>
-    <string name="action_restore_purchase">Restore purchase</string>
+    <!-- Action title used for restore purchase -->
+    <string name="action_restore_purchase">Restore</string>
+    <!-- Enhanced (paid) features description -->
     <string name="extra_features_description">Support Twidere and get enhanced features</string>
-    <string name="extra_features_restore_purchase_hint">If you\'ve already purchased enhanced features, you can use \'Restore purchase\' to enable.</string>
+    <!-- Enhanced (paid) features title -->
+    <string name="extra_features_restore_purchase_hint">If you\'ve already purchased enhanced features, you can use \'Restore\' to restore purchase.</string>
     <string name="extra_features_name_sync_data">Sync data like filters and drafts</string>
     <string name="extra_features_name_import_filter_list">Import filter list from blocks/mutes</string>
     <string name="title_error_invalid_account">Invalid account</string>
-    <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash. Sorry for the inconvenience.</string>
+    <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
+    <string name="title_premium_features_name">Twidere ∞</string>
 </resources>

@@ -54,10 +54,10 @@
             android:icon="@drawable/ic_action_speaker_muted"
             android:title="@string/filters"/>
         <item
-            android:id="@id/plus_service"
+            android:id="@id/premium_features"
             android:enabled="@bool/is_debug"
             android:icon="@drawable/ic_action_infinity"
-            android:title="@string/plus_service_name"
+            android:title="@string/title_premium_features_name"
             android:visible="@bool/is_debug"/>
         <item
             android:id="@id/settings"

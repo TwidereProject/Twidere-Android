@@ -23,7 +23,7 @@
             android:exported="false"
             android:theme="@style/Theme.Twidere.NoDisplay">
             <meta-data
-                android:name="org.mariotaku.twidere.plus_service.sign_in_label"
+                android:name="org.mariotaku.twidere.premium_features.sign_in_label"
                 android:resource="@string/sign_in_service_google_id"/>
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.PLUS_SERVICE_SIGN_IN"/>
@@ -47,14 +47,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PlayInAppPurchaseActivity"
+            android:name=".activity.GooglePlayInAppPurchaseActivity"
             android:exported="false"
-            android:theme="@style/Theme.Twidere.NoDisplay">
-            <intent-filter>
-                <action android:name="org.mariotaku.twidere.IN_APP_PURCHASE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
 
         <service android:name=".service.DropboxDataSyncService"/>
     </application>

@@ -13,7 +13,7 @@ import org.mariotaku.twidere.model.premium.GooglePurchaseResult
  * Created by mariotaku on 2016/12/25.
  */
 
-class PlayInAppPurchaseActivity : Activity(), BillingProcessor.IBillingHandler {
+class GooglePlayInAppPurchaseActivity : Activity(), BillingProcessor.IBillingHandler {
 
     lateinit var billingProcessor: BillingProcessor
 
@@ -44,12 +44,14 @@ class PlayInAppPurchaseActivity : Activity(), BillingProcessor.IBillingHandler {
         finish()
     }
 
+    private val productId: String get() = intent.getStringExtra(EXTRA_PRODUCT_ID)
+
     override fun onBillingInitialized() {
-        billingProcessor.purchase(this, "android.test.purchased")
+        billingProcessor.purchase(this, productId)
     }
 
     override fun onProductPurchased(productId: String?, details: TransactionDetails?) {
-        billingProcessor.getPurchaseTransactionDetails("android.test.purchased")
+        billingProcessor.getPurchaseTransactionDetails(productId)
         val data = Intent()
         val purchaseResult = GooglePurchaseResult()
         details?.purchaseInfo?.purchaseData?.let { purchaseData ->
@@ -63,4 +65,7 @@ class PlayInAppPurchaseActivity : Activity(), BillingProcessor.IBillingHandler {
     override fun onPurchaseHistoryRestored() {
     }
 
+    companion object {
+        const val EXTRA_PRODUCT_ID = "product_id"
+    }
 }

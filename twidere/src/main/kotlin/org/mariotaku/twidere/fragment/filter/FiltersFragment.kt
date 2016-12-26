@@ -17,11 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.filter
 
 import android.os.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.BaseFiltersFragment.*
 
 class FiltersFragment : AbsToolbarTabPagesFragment() {

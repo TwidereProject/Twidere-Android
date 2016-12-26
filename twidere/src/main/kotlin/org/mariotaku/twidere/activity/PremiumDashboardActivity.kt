@@ -13,7 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_plus_service_dashboard.*
+import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.METADATA_KEY_PLUS_SERVICE_SIGN_IN_LABEL
 import org.mariotaku.twidere.adapter.ArrayAdapter
@@ -21,15 +21,14 @@ import org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_PLUS_SERVICE
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 
-class PlusServiceDashboardActivity : BaseActivity() {
+class PremiumDashboardActivity : BaseActivity() {
 
     private lateinit var extraFeaturesChecker: ExtraFeaturesChecker
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        extraFeaturesChecker = ExtraFeaturesChecker.instance
-        extraFeaturesChecker.init(this)
-        setContentView(R.layout.activity_plus_service_dashboard)
+        extraFeaturesChecker = ExtraFeaturesChecker.newInstance(this)
+        setContentView(R.layout.activity_premium_dashboard)
         if (extraFeaturesChecker.isSupported()) {
             if (extraFeaturesChecker.isEnabled()) {
                 View.inflate(this, R.layout.card_item_extra_features_sync_status, cardsContainer)

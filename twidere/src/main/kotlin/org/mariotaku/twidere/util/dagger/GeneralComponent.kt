@@ -28,6 +28,7 @@ import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
 import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -91,7 +92,7 @@ interface GeneralComponent {
 
     fun inject(obj: BasePreferenceFragment)
 
-    fun inject(obj: BaseFiltersFragment.FilteredUsersFragment.FilterUsersListAdapter)
+    fun inject(obj: FilteredUsersFragment.FilterUsersListAdapter)
 
     fun inject(obj: EmojiSpannableFactory)
 

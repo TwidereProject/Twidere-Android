@@ -465,8 +465,8 @@
             android:name=".activity.InvalidAccountAlertActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
-            android:name=".activity.PlusServiceDashboardActivity"
-            android:label="@string/plus_service_name"
+            android:name=".activity.PremiumDashboardActivity"
+            android:label="@string/title_premium_features_name"
             android:theme="@style/Theme.Twidere"/>
 
         <service
