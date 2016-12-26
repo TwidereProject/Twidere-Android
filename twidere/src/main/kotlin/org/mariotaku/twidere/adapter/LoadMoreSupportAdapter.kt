@@ -28,7 +28,8 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 /**
  * Created by mariotaku on 15/4/16.
  */
-abstract class LoadMoreSupportAdapter<VH : ViewHolder>(context: Context) : BaseRecyclerViewAdapter<VH>(context), ILoadMoreSupportAdapter {
+abstract class LoadMoreSupportAdapter<VH : ViewHolder>(context: Context) :
+        BaseRecyclerViewAdapter<VH>(context), ILoadMoreSupportAdapter {
 
     @IndicatorPosition
     override var loadMoreSupportedPosition: Long = 0

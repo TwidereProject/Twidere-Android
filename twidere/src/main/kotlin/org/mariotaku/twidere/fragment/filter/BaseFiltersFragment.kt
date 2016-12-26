@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.fragment.filter
 
 import android.app.Dialog
 import android.content.ContentValues
@@ -51,6 +51,8 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
+import org.mariotaku.twidere.fragment.AbsContentListViewFragment
+import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.Utils
@@ -263,7 +265,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     private class FilterListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_1, null,
-            BaseFiltersFragment.FilterListAdapter.from, BaseFiltersFragment.FilterListAdapter.to, 0) {
+            from, to, 0) {
         companion object {
 
             private val from = arrayOf(Filters.VALUE)

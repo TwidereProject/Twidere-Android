@@ -830,6 +830,7 @@
     <string name="preference_filter_unavailable_quote_statuses">Filter unavailable quotes</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
+    <string name="title_select_users">Select users</string>
     <string name="action_purchase">Purchase</string>
     <!-- Action title used for restore purchase -->
     <string name="action_restore_purchase">Restore</string>

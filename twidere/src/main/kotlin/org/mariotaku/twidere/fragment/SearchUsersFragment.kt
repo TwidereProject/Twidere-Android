@@ -66,8 +66,8 @@ class SearchUsersFragment : ParcelableUsersFragment() {
         loaderManager.restartLoader<List<ParcelableUser>>(0, loaderArgs, this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState!!.putInt(EXTRA_PAGE, page)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(EXTRA_PAGE, page)
         super.onSaveInstanceState(outState)
     }
 

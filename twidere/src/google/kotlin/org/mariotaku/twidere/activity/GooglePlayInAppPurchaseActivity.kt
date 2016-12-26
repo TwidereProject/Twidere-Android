@@ -7,7 +7,6 @@ import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.EXTRA_DATA
-import org.mariotaku.twidere.model.premium.GooglePurchaseResult
 
 /**
  * Created by mariotaku on 2016/12/25.
@@ -53,11 +52,9 @@ class GooglePlayInAppPurchaseActivity : Activity(), BillingProcessor.IBillingHan
     override fun onProductPurchased(productId: String?, details: TransactionDetails?) {
         billingProcessor.getPurchaseTransactionDetails(productId)
         val data = Intent()
-        val purchaseResult = GooglePurchaseResult()
         details?.purchaseInfo?.purchaseData?.let { purchaseData ->
-
+            data.putExtra(EXTRA_DATA, purchaseData)
         }
-        data.putExtra(EXTRA_DATA, purchaseResult)
         setResult(RESULT_OK, data)
         finish()
     }

@@ -16,12 +16,11 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
+import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
+import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
-import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.fragment.BaseFiltersFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -66,10 +65,18 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 resolver.insert(TwidereDataStore.Filters.Users.CONTENT_URI, values)
             }
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
-
+                if (resultCode != FragmentActivity.RESULT_OK) return
+                val intent = Intent(context, LinkHandlerActivity::class.java)
+                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS_IMPORT_BLOCKS).build()
+                intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
+                startActivity(intent)
             }
             REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
-
+                if (resultCode != FragmentActivity.RESULT_OK) return
+                val intent = Intent(context, LinkHandlerActivity::class.java)
+                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS_IMPORT_MUTES).build()
+                intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
+                startActivity(intent)
             }
             REQUEST_ADD_USER_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK) return

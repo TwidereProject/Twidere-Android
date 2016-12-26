@@ -23,7 +23,7 @@ import android.os.Bundle
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.fragment.*
-import org.mariotaku.twidere.fragment.BaseFiltersFragment.*
+import org.mariotaku.twidere.fragment.filter.BaseFiltersFragment.*
 
 class FiltersFragment : AbsToolbarTabPagesFragment() {
 

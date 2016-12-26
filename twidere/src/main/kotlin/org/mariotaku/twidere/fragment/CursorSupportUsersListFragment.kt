@@ -46,10 +46,6 @@ abstract class CursorSupportUsersListFragment : ParcelableUsersFragment() {
         super.onActivityCreated(savedInstanceState)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
         super.onLoaderReset(loader)
     }
@@ -70,15 +66,15 @@ abstract class CursorSupportUsersListFragment : ParcelableUsersFragment() {
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderArgs.putLong(EXTRA_NEXT_CURSOR, nextCursor)
-        loaderArgs.putLong(EXTRA_PAGE, nextPage.toLong())
+        loaderArgs.putInt(EXTRA_PAGE, nextPage)
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState!!.putLong(EXTRA_NEXT_CURSOR, nextCursor)
+        outState.putLong(EXTRA_NEXT_CURSOR, nextCursor)
         outState.putLong(EXTRA_PREV_CURSOR, prevCursor)
-        outState.putLong(EXTRA_NEXT_PAGE, nextPage.toLong())
+        outState.putInt(EXTRA_NEXT_PAGE, nextPage)
     }
 
     abstract override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader

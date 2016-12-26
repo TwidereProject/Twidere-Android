@@ -7,6 +7,7 @@ import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 
 import java.util.List;
@@ -69,17 +70,25 @@ public class FiltersData {
     }
 
     @JsonObject
-    @CursorObject(valuesCreator = true)
+    @CursorObject(valuesCreator = true, tableInfo = true)
     public static class UserItem {
-        @CursorField(value = Filters.Users.USER_KEY, converter = UserKeyCursorFieldConverter.class)
+        @CursorField(value = Filters.Users._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+        long _id;
+        @CursorField(value = Filters.Users.USER_KEY, converter = UserKeyCursorFieldConverter.class, type = "TEXT NOT NULL UNIQUE")
         @JsonField(name = "user_key", typeConverter = UserKeyConverter.class)
         UserKey userKey;
-        @CursorField(Filters.Users.NAME)
+        @CursorField(value = Filters.Users.NAME, type = CursorField.TEXT)
         @JsonField(name = "name")
         String name;
-        @CursorField(Filters.Users.SCREEN_NAME)
+        @CursorField(value = Filters.Users.SCREEN_NAME, type = CursorField.TEXT)
         @JsonField(name = "screen_name")
         String screenName;
+        /**
+         * Used for filter list subscription
+         */
+        @CursorField(value = Filters.Users.SOURCE, type = "INTEGER DEFAULT -1")
+        @JsonField(name = "source")
+        long source;
 
         public UserKey getUserKey() {
             return userKey;
@@ -105,6 +114,14 @@ public class FiltersData {
             this.userKey = userKey;
         }
 
+        public long getSource() {
+            return source;
+        }
+
+        public void setSource(long source) {
+            this.source = source;
+        }
+
         @Override
         public String toString() {
             return "UserItem{" +
@@ -116,11 +133,19 @@ public class FiltersData {
     }
 
     @JsonObject
-    @CursorObject(valuesCreator = true)
+    @CursorObject(valuesCreator = true, tableInfo = true)
     public static class BaseItem {
-        @CursorField(Filters.VALUE)
+        @CursorField(value = Filters._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+        long _id;
+        @CursorField(value = Filters.VALUE, type = "TEXT NOT NULL UNIQUE")
         @JsonField(name = "value")
         String value;
+        /**
+         * Used for filter list subscription
+         */
+        @CursorField(value = Filters.Users.SOURCE, type = "INTEGER DEFAULT -1")
+        @JsonField(name = "source")
+        long source;
 
         public String getValue() {
             return value;
@@ -128,6 +153,14 @@ public class FiltersData {
 
         public void setValue(String value) {
             this.value = value;
+        }
+
+        public long getSource() {
+            return source;
+        }
+
+        public void setSource(long source) {
+            this.source = source;
         }
 
         @Override

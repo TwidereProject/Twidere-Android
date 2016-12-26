@@ -62,20 +62,20 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="bold"
-            tools:text="List"
-            android:maxLines="1"/>
+            tools:text="List"/>
 
         <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/createdBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            tools:text="Created by user"
-            android:maxLines="1"/>
+            tools:text="Created by user"/>
     </LinearLayout>
 
     <TextView
@@ -87,7 +87,8 @@
         android:layout_below="@+id/nameContainer"
         android:paddingTop="@dimen/element_spacing_small"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary"/>
+        android:textColor="?android:attr/textColorSecondary"
+        tools:text="@string/sample_status_text"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -106,8 +107,9 @@
             android:drawableLeft="@drawable/ic_indicator_following"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_following"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:maxLines="1"/>
+            tools:text="255"/>
 
         <TextView
             android:id="@+id/subscribersCount"
@@ -117,8 +119,9 @@
             android:drawableLeft="@drawable/ic_indicator_followers"
             android:drawablePadding="4dp"
             android:drawableStart="@drawable/ic_indicator_followers"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:maxLines="1"/>
+            tools:text="255"/>
     </LinearLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

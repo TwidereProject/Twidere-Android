@@ -34,7 +34,7 @@ import static org.mariotaku.twidere.annotation.PreferenceType.STRING;
 public interface Constants extends TwidereConstants {
 
     String DATABASES_NAME = "twidere.sqlite";
-    int DATABASES_VERSION = 155;
+    int DATABASES_VERSION = 156;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;
@@ -75,8 +75,10 @@ public interface Constants extends TwidereConstants {
     int LINK_ID_SCHEDULED_STATUSES = 61;
     int LINK_ID_ACCOUNTS = 101;
     int LINK_ID_DRAFTS = 102;
-    int LINK_ID_FILTERS = 103;
-    int LINK_ID_PROFILE_EDITOR = 104;
+    int LINK_ID_FILTERS = 110;
+    int LINK_ID_FILTERS_IMPORT_BLOCKS = 111;
+    int LINK_ID_FILTERS_IMPORT_MUTES = 112;
+    int LINK_ID_PROFILE_EDITOR = 121;
 
     String TWIDERE_PREVIEW_NICKNAME = "Twidere";
     String TWIDERE_PREVIEW_NAME = "Twidere Project";

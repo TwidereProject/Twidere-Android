@@ -29,7 +29,7 @@ import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
 import org.mariotaku.twidere.util.PermissionsManager
 import org.mariotaku.twidere.view.holder.CheckableTwoLineWithIconViewHolder
 
-class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line_checked) {
+class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line) {
 
     private val mPermissionsManager: PermissionsManager
 

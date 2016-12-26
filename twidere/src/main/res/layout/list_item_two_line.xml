@@ -17,26 +17,32 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
-    android:minHeight="?android:listPreferredItemHeight"
+    android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:padding="@dimen/element_spacing_normal">
+    android:padding="@dimen/element_spacing_normal"
+    tools:layout_gravity="center">
 
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="@dimen/icon_size_list_item"
         android:layout_height="@dimen/icon_size_list_item"
+        android:layout_weight="0"
         android:contentDescription="@string/icon"
         android:scaleType="fitCenter"
-        tools:src="@android:drawable/sym_def_app_icon" />
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingEnd="0dp"
@@ -48,17 +54,30 @@
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:text="text1"
-            android:maxLines="1"/>
+            android:textColor="?android:textColorPrimary"
+            android:textStyle="bold"
+            tools:text="Title"/>
 
         <TextView
             android:id="@android:id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="text2"
-            android:maxLines="1"/>
+            android:textColor="?android:textColorSecondary"
+            tools:text="summary"/>
     </LinearLayout>
+
+    <org.mariotaku.twidere.view.ActivatedCheckBox
+        android:id="@android:id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>

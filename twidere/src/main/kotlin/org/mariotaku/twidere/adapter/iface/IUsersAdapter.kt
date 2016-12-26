@@ -33,7 +33,7 @@ interface IUsersAdapter<in Data> : IContentCardAdapter {
 
     val requestClickListener: RequestClickListener?
 
-    val followClickListener: FriendshipClickListener?
+    val friendshipClickListener: FriendshipClickListener?
 
     val showAccountsColor: Boolean
 

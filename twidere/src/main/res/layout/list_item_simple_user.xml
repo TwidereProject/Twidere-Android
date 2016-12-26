@@ -29,10 +29,11 @@
     android:padding="@dimen/element_spacing_normal">
 
     <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@android:id/icon"
+        android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_list_item_small"
         android:layout_height="@dimen/icon_size_list_item_small"
+        android:layout_weight="0"
         android:contentDescription="@string/icon"
         android:scaleType="centerCrop"
         tools:src="@drawable/ic_profile_image_twidere"/>
@@ -40,6 +41,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingEnd="0dp"
@@ -48,21 +50,33 @@
         android:paddingStart="@dimen/element_spacing_small">
 
         <TextView
-            android:id="@android:id/text1"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             tools:text="User name"/>
 
         <TextView
-            android:id="@android:id/text2"
+            android:id="@+id/screenName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="\@screenname"/>
     </LinearLayout>
+
+    <org.mariotaku.twidere.view.ActivatedCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>

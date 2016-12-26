@@ -20,23 +20,28 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:orientation="horizontal"
-    android:padding="@dimen/element_spacing_small">
+    android:padding="@dimen/element_spacing_small"
+    tools:layout_gravity="center">
 
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="@dimen/icon_size_list_item_small"
         android:layout_height="@dimen/icon_size_list_item_small"
+        android:layout_weight="0"
         android:contentDescription="@string/icon"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        tools:src="@drawable/ic_profile_image_twidere"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingEnd="0dp"
@@ -48,15 +53,26 @@
             android:id="@android:id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:maxLines="1"/>
+            tools:text="Title"/>
 
         <TextView
             android:id="@android:id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:maxLines="1"/>
+            tools:text="Summary"/>
     </LinearLayout>
 
+    <org.mariotaku.twidere.view.ActivatedCheckBox
+        android:id="@android:id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 </LinearLayout>

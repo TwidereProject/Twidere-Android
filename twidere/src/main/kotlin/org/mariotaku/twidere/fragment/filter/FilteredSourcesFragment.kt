@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
-import org.mariotaku.twidere.fragment.BaseFiltersFragment
+import org.mariotaku.twidere.fragment.filter.BaseFiltersFragment
 import org.mariotaku.twidere.provider.TwidereDataStore
 
 class FilteredSourcesFragment : BaseFiltersFragment() {

@@ -61,9 +61,9 @@ class UserListMembersFragment : CursorSupportUsersListFragment() {
         registerForContextMenu(recyclerView)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState!!.putParcelable(EXTRA_USER_LIST, userList)
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putParcelable(EXTRA_USER_LIST, userList)
     }
 
     override fun onStart() {

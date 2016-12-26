@@ -124,7 +124,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.ConversationEntries;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
-import org.mariotaku.twidere.util.ErrorInfoStore.DisplayErrorInfo;
 import org.mariotaku.twidere.util.TwidereLinkify.HighlightStyle;
 import org.mariotaku.twidere.view.CardMediaContainer.PreviewStyle;
 import org.mariotaku.twidere.view.ShapedImageView;
@@ -197,6 +196,8 @@ public final class Utils implements Constants {
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_ACCOUNTS, null, LINK_ID_ACCOUNTS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_DRAFTS, null, LINK_ID_DRAFTS);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_FILTERS, null, LINK_ID_FILTERS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_FILTERS_IMPORT_BLOCKS, null, LINK_ID_FILTERS_IMPORT_BLOCKS);
+        LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_FILTERS_IMPORT_MUTES, null, LINK_ID_FILTERS_IMPORT_MUTES);
         LINK_HANDLER_URI_MATCHER.addURI(AUTHORITY_PROFILE_EDITOR, null, LINK_ID_PROFILE_EDITOR);
 
         HOME_TABS_URI_MATCHER.addURI(CustomTabType.HOME_TIMELINE, null, TAB_CODE_HOME_TIMELINE);
@@ -730,19 +731,6 @@ public final class Utils implements Constants {
         if (matcher.matches())
             return matcher.replaceFirst("$1$2/profile_images/$3/$4$6");
         return url;
-    }
-
-    @ShapeStyle
-    public static int getProfileImageStyle(Context context) {
-        final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-        final String style = prefs.getString(KEY_PROFILE_IMAGE_STYLE, null);
-        return getProfileImageStyle(style);
-    }
-
-    @ShapeStyle
-    public static int getProfileImageStyle(@NonNull SharedPreferences prefs) {
-        final String style = prefs.getString(KEY_PROFILE_IMAGE_STYLE, null);
-        return getProfileImageStyle(style);
     }
 
     @ShapeStyle

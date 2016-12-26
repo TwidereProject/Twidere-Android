@@ -33,7 +33,8 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
  * Comment, blah, blah, blah.
  * Created by mariotaku on 15/4/16.
  */
-abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>> : AbsContentRecyclerViewFragment<A, LinearLayoutManager>() {
+abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>>
+    : AbsContentRecyclerViewFragment<A, LinearLayoutManager>() {
 
     override fun createItemDecoration(context: Context,
                                       recyclerView: RecyclerView,

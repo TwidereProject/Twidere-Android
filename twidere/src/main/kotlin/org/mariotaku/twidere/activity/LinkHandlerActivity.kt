@@ -48,6 +48,8 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
+import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
+import org.mariotaku.twidere.fragment.filter.FiltersImportMutesFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
@@ -56,6 +58,7 @@ import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.util.Utils.LINK_ID_FILTERS_IMPORT_BLOCKS
 import org.mariotaku.twidere.util.Utils.matchLinkId
 
 class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IControlBarActivity, SupportFragmentCallback {
@@ -385,6 +388,12 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_PUBLIC_TIMELINE -> {
                 title = getString(R.string.public_timeline)
+            }
+            LINK_ID_FILTERS_IMPORT_BLOCKS -> {
+                title = getString(R.string.title_select_users)
+            }
+            LINK_ID_FILTERS_IMPORT_MUTES -> {
+                title = getString(R.string.title_select_users)
             }
             else -> {
                 title = getString(R.string.app_name)
@@ -720,6 +729,12 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                     return null
                 }
                 fragment = SearchFragment()
+            }
+            LINK_ID_FILTERS_IMPORT_BLOCKS -> {
+                fragment = FiltersImportBlocksFragment()
+            }
+            LINK_ID_FILTERS_IMPORT_MUTES -> {
+                fragment = FiltersImportMutesFragment()
             }
             else -> {
                 return null

@@ -6,19 +6,19 @@ import android.text.TextUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.Constants.KEY_DISPLAY_PROFILE_IMAGE
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_REMEMBER_POSITION
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.view.ProfileImageView
 
 /**
  * Created by mariotaku on 16/8/25.
  */
 
 val mediaPreviewStyleKey = KStringKey(KEY_MEDIA_PREVIEW_STYLE, VALUE_MEDIA_PREVIEW_STYLE_CROP)
-val profileImageStyleKey = KStringKey(KEY_PROFILE_IMAGE_STYLE, VALUE_PROFILE_IMAGE_STYLE_ROUND)
 val textSizeKey = KIntKey(KEY_TEXT_SIZE, 15)
 val nameFirstKey = KBooleanKey(KEY_NAME_FIRST, true)
 val displayProfileImageKey = KBooleanKey(KEY_DISPLAY_PROFILE_IMAGE, true)
@@ -52,6 +52,19 @@ val fabVisibleKey = KBooleanKey(KEY_FAB_VISIBLE, true)
 val themeKey = KStringKey(KEY_THEME, VALUE_THEME_NAME_LIGHT)
 val themeColorKey = KIntKey(KEY_THEME_COLOR, 0)
 val filterUnavailableQuoteStatusesKey = KBooleanKey("filter_unavailable_quote_statuses", false)
+
+object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ProfileImageView.SHAPE_CIRCLE) {
+    override fun read(preferences: SharedPreferences): Int {
+        if (preferences.getString(key, null) == VALUE_PROFILE_IMAGE_STYLE_SQUARE) return ProfileImageView.SHAPE_RECTANGLE
+        return ProfileImageView.SHAPE_CIRCLE
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
+        editor.putString(key, if (value == ProfileImageView.SHAPE_CIRCLE) VALUE_PROFILE_IMAGE_STYLE_ROUND else VALUE_PROFILE_IMAGE_STYLE_SQUARE)
+        return true
+    }
+
+}
 
 object refreshIntervalKey : KSimpleKey<Long>(KEY_REFRESH_INTERVAL, 15) {
     override fun read(preferences: SharedPreferences): Long {

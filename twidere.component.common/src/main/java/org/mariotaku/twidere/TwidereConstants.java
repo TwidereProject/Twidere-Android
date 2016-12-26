@@ -120,6 +120,8 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_ACCOUNTS = "accounts";
     String AUTHORITY_DRAFTS = "drafts";
     String AUTHORITY_FILTERS = "filters";
+    String AUTHORITY_FILTERS_IMPORT_BLOCKS = "filters/import/blocks";
+    String AUTHORITY_FILTERS_IMPORT_MUTES = "filters/import/mutes";
     String AUTHORITY_PROFILE_EDITOR = "profile_editor";
 
     String QUERY_PARAM_ACCOUNT_KEY = "account_key";
