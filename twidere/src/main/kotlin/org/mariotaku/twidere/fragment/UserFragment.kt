@@ -856,7 +856,7 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             R.id.add_to_filter -> {
                 if (userRelationship == null) return true
                 if (userRelationship.filtering) {
-                    DataStoreUtils.removeFromFilter(context, user)
+                    DataStoreUtils.removeFromFilter(context, listOf(user))
                     Utils.showInfoMessage(activity, R.string.message_user_unmuted, false)
                     getFriendship()
                 } else {

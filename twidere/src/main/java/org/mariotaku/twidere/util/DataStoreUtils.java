@@ -1065,24 +1065,29 @@ public class DataStoreUtils implements Constants {
         }
     }
 
-    public static void removeFromFilter(Context context, ParcelableUser user) {
+    public static void removeFromFilter(Context context, Collection<ParcelableUser> users) {
+        List<String> userKeyValues = new ArrayList<>();
+        List<String> linkValues = new ArrayList<>();
+        List<String> keywordValues = new ArrayList<>();
         final ContentResolver cr = context.getContentResolver();
-        // Delete from filtered users
-        cr.delete(Filters.Users.CONTENT_URI, Expression.equalsArgs(Filters.Users.USER_KEY).getSQL(),
-                new String[]{user.key.toString()});
-        // Delete user mention from keywords
-        cr.delete(Filters.Keywords.CONTENT_URI, Expression.equalsArgs(Filters.Keywords.VALUE).getSQL(),
-                new String[]{"@" + user.screen_name});
+        for (ParcelableUser user : users) {
+            // Delete from filtered users
+            userKeyValues.add(user.key.toString());
+            // Delete user mention from keywords
+            keywordValues.add("@" + user.screen_name);
 
-        // Delete user link (without scheme) from links
-        Uri userLink = LinkCreator.getUserWebLink(user);
-        String linkWithoutScheme = userLink.toString();
-        int idx;
-        if ((idx = linkWithoutScheme.indexOf("://")) >= 0) {
-            linkWithoutScheme = linkWithoutScheme.substring(idx + 3);
+            // Delete user link (without scheme) from links
+            Uri userLink = LinkCreator.getUserWebLink(user);
+            String linkWithoutScheme = userLink.toString();
+            int idx;
+            if ((idx = linkWithoutScheme.indexOf("://")) >= 0) {
+                linkWithoutScheme = linkWithoutScheme.substring(idx + 3);
+            }
+            linkValues.add(linkWithoutScheme);
         }
-        cr.delete(Filters.Links.CONTENT_URI, Expression.equalsArgs(Filters.Links.VALUE).getSQL(),
-                new String[]{linkWithoutScheme});
+        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeyValues, null);
+        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywordValues, null);
+        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, linkValues, null);
     }
 
     public interface UpdateActivityAction {

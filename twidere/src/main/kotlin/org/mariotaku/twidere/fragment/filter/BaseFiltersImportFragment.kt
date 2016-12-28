@@ -188,6 +188,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
         val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)
                 .filter { adapter.isItemChecked(it) }
                 .map { adapter.getUser(it)!! }
+        selectedUsers.forEach { it.is_filtered = true }
         ProgressDialogFragment.show(childFragmentManager, "import_progress")
         task {
             DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
@@ -195,6 +196,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
             executeAfterFragmentResumed {
                 (childFragmentManager.findFragmentByTag("import_progress") as? DialogFragment)?.dismiss()
             }
+            adapter.notifyDataSetChanged()
         }
     }
 
@@ -369,7 +371,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
         }
 
         val checkedCount: Int get() {
-            return itemStates.count { it.value }
+            return data?.count { !it.is_filtered && itemStates[it.key] ?: false } ?: 0
         }
 
         fun setItemChecked(position: Int, value: Boolean) {
@@ -409,6 +411,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
             checkBox.setOnCheckedChangeListener(null)
             checkBox.isChecked = (adapter as SelectableUsersAdapter).isItemChecked(layoutPosition)
             checkBox.setOnCheckedChangeListener(checkChangedListener)
+            itemView.isEnabled = !user.is_filtered
+            checkBox.isEnabled = !user.is_filtered
         }
 
     }
