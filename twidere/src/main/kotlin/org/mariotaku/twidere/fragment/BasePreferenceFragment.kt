@@ -116,8 +116,8 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
         return super.onPreferenceTreeClick(preference)
     }
 
-    override fun executeAfterFragmentResumed(action: (IBaseFragment) -> Unit) {
-        actionHelper.executeAfterFragmentResumed(action)
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (IBaseFragment) -> Unit) {
+        actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
     override fun fitSystemWindows(insets: Rect) {

@@ -69,8 +69,8 @@ open class BaseSupportFragment : Fragment(), IBaseFragment {
         GeneralComponentHelper.build(context!!).inject(this)
     }
 
-    override fun executeAfterFragmentResumed(action: (IBaseFragment) -> Unit) {
-        actionHelper.executeAfterFragmentResumed(action)
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (IBaseFragment) -> Unit) {
+        actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
     override fun onResume() {

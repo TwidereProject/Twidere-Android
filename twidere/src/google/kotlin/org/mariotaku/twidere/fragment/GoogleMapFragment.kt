@@ -108,8 +108,8 @@ class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFr
         }
     }
 
-    override fun executeAfterFragmentResumed(action: (IBaseFragment) -> Unit) {
-        actionHelper.executeAfterFragmentResumed(action)
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (IBaseFragment) -> Unit) {
+        actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
     override fun fitSystemWindows(insets: Rect) {

@@ -39,6 +39,7 @@ import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
+import java.lang.ref.WeakReference
 
 /**
  * Created by mariotaku on 2016/12/26.
@@ -189,14 +190,18 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
                 .filter { adapter.isItemChecked(it) }
                 .map { adapter.getUser(it)!! }
         selectedUsers.forEach { it.is_filtered = true }
-        ProgressDialogFragment.show(childFragmentManager, "import_progress")
+        val weakDf = WeakReference(ProgressDialogFragment.show(childFragmentManager, "import_progress"))
+        val weakThis = WeakReference(this)
         task {
+            val context = weakThis.get()?.context ?: return@task
             DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
         }.alwaysUi {
-            executeAfterFragmentResumed {
-                (childFragmentManager.findFragmentByTag("import_progress") as? DialogFragment)?.dismiss()
+            executeAfterFragmentResumed(true) {
+                val fm = weakThis.get()?.fragmentManager ?: return@executeAfterFragmentResumed
+                val df = weakDf.get() ?: fm.findFragmentByTag("import_progress") as? DialogFragment
+                df?.dismiss()
             }
-            adapter.notifyDataSetChanged()
+            weakThis.get()?.adapter?.notifyDataSetChanged()
         }
     }
 

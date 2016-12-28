@@ -45,9 +45,8 @@ import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.sqliteqb.library.Columns.Column
+import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.sqliteqb.library.RawItemArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
@@ -62,6 +61,13 @@ import org.mariotaku.twidere.util.Utils
 
 abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdapter>(),
         LoaderManager.LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
+
+    override var refreshing: Boolean
+        get() = false
+        set(value) {
+            super.refreshing = value
+        }
+
     private var actionMode: ActionMode? = null
 
     abstract val contentUri: Uri
@@ -111,9 +117,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete -> {
-                val where = Expression.`in`(Column(Filters._ID),
-                        RawItemArray(listView.checkedItemIds))
-                context.contentResolver.delete(contentUri, where.sql, null)
+                performDeletion()
                 mode.finish()
             }
             R.id.select_all -> {
@@ -205,14 +209,14 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
 
-    override var refreshing: Boolean
-        get() = false
-        set(value) {
-            super.refreshing = value
-        }
-
     override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
         return FilterListAdapter(context)
+    }
+
+    protected open fun performDeletion() {
+        val ids = listView.checkedItemIds
+        val where = Expression.inArgs(Columns.Column(Filters._ID), ids.size)
+        context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
     protected abstract val contentColumns: Array<String>
