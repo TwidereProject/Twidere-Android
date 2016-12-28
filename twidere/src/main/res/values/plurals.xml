@@ -61,5 +61,9 @@
         <item quantity="one"><xliff:g id="count">%d</xliff:g> vote</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> votes</item>
     </plurals>
+    <plurals name="N_users">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> user</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> users</item>
+    </plurals>
 
 </resources>

@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.DataStoreUtils
 
 class MutesUsersLoader(
         context: Context,
@@ -36,9 +37,19 @@ class MutesUsersLoader(
         fromUser: Boolean
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
+    private var filteredUsers: Array<UserKey>? = null
+
     @Throws(MicroBlogException::class)
     override fun getCursoredUsers(twitter: MicroBlog, details: AccountDetails, paging: Paging): PageableResponseList<User> {
         return twitter.getMutesUsersList(paging)
     }
 
+    override fun onLoadInBackground(): List<ParcelableUser> {
+        filteredUsers = DataStoreUtils.getFilteredUserIds(context)
+        return super.onLoadInBackground()
+    }
+
+    override fun processUser(user: ParcelableUser) {
+        user.is_filtered = filteredUsers?.contains(user.key) ?: false
+    }
 }

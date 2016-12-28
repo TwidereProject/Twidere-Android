@@ -64,11 +64,17 @@ abstract class MicroBlogAPIUsersLoader(
             if (hasId(user.id)) {
                 continue
             }
-            data.add(ParcelableUserUtils.fromUser(user, accountKey, pos.toLong()))
+            val item = ParcelableUserUtils.fromUser(user, accountKey, pos.toLong())
+            processUser(item)
+            data.add(item)
             pos++
         }
         Collections.sort(data)
         return ListResponse.getListInstance(data)
+    }
+
+    protected open fun processUser(user: ParcelableUser) {
+
     }
 
     @Throws(MicroBlogException::class)

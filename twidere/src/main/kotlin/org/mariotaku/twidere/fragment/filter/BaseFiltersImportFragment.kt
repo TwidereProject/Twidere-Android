@@ -1,34 +1,53 @@
 package org.mariotaku.twidere.fragment.filter
 
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import android.support.v4.util.ArrayMap
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.TextView
+import android.widget.Toast
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IContentCardAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.MessageDialogFragment
+import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 /**
  * Created by mariotaku on 2016/12/26.
  */
+private const val EXTRA_COUNT = "count"
 
 abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<BaseFiltersImportFragment.SelectableUsersAdapter>(),
         LoaderManager.LoaderCallbacks<List<ParcelableUser>?> {
+
 
     protected var nextCursor: Long = -1
         private set
@@ -39,9 +58,58 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_filters_import, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val checkedCount = adapter.checkedCount
+        val userCount = adapter.userCount
+        menu.setItemAvailability(R.id.select_none, checkedCount > 0)
+        menu.setItemAvailability(R.id.select_all, checkedCount < userCount)
+        menu.setItemAvailability(R.id.invert_selection, checkedCount > 0 && checkedCount < userCount)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.select_none -> {
+                adapter.clearSelection()
+                adapter.notifyDataSetChanged()
+            }
+            R.id.select_all -> {
+                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)) {
+                    adapter.setItemChecked(idx, true)
+                }
+                adapter.notifyDataSetChanged()
+            }
+            R.id.invert_selection -> {
+                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)) {
+                    adapter.setItemChecked(idx, !adapter.isItemChecked(idx))
+                }
+                adapter.notifyDataSetChanged()
+            }
+            R.id.perform_import -> {
+                if (adapter.checkedCount == 0) {
+                    Toast.makeText(context, R.string.message_no_user_selected, Toast.LENGTH_SHORT).show()
+                    return true
+                }
+                val df = ImportConfirmDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_COUNT] = adapter.checkedCount
+                }
+                df.show(childFragmentManager, "import_confirm")
+            }
+            else -> {
+                return false
+            }
+        }
+        return true
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {
@@ -55,22 +123,35 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>?>, data: List<ParcelableUser>?) {
+        val hasMoreData = run {
+            val previousCount = adapter.data?.size
+            if (previousCount != data?.size) return@run true
+            val previousFirst = adapter.data?.firstOrNull()
+            val previousLast = adapter.data?.lastOrNull()
+            // If first and last data not changed, assume no more data
+            return@run previousFirst != data?.firstOrNull() && previousLast != data?.lastOrNull()
+        }
         adapter.data = data
         if (loader !is IExtendedLoader || loader.fromUser) {
-            adapter.loadMoreSupportedPosition = if (hasMoreData(data)) ILoadMoreSupportAdapter.END else ILoadMoreSupportAdapter.NONE
+            adapter.loadMoreSupportedPosition = if (hasMoreData) {
+                ILoadMoreSupportAdapter.END
+            } else {
+                ILoadMoreSupportAdapter.NONE
+            }
             refreshEnabled = true
         }
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
         showContent()
-        refreshEnabled = true
+        refreshEnabled = data.isNullOrEmpty()
         refreshing = false
         setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
         val cursorLoader = loader as CursorSupportUsersLoader
         nextCursor = cursorLoader.nextCursor
         prevCursor = cursorLoader.prevCursor
         nextPage = cursorLoader.nextPage
+        activity.supportInvalidateOptionsMenu()
     }
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
@@ -85,20 +166,71 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
         loaderManager.restartLoader(0, loaderArgs, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_filters_import, container, false)
-    }
-
     override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
-        return SelectableUsersAdapter(context)
+        val adapter = SelectableUsersAdapter(context)
+        adapter.itemCheckedListener = { position, checked ->
+            val count = adapter.checkedCount
+            val actionBar = (activity as BaseActivity).supportActionBar
+            actionBar?.subtitle = if (count > 0) {
+                resources.getQuantityString(R.plurals.Nitems_selected, count, count)
+            } else {
+                null
+            }
+            activity.supportInvalidateOptionsMenu()
+        }
+        return adapter
     }
 
     protected abstract fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableUser>?>
 
-    protected open fun hasMoreData(data: List<ParcelableUser>?): Boolean {
-        return data == null || !data.isEmpty()
+    private fun performImport(filterEverywhere: Boolean) {
+        val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)
+                .filter { adapter.isItemChecked(it) }
+                .map { adapter.getUser(it)!! }
+        ProgressDialogFragment.show(childFragmentManager, "import_progress")
+        task {
+            DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
+        }.alwaysUi {
+            executeAfterFragmentResumed {
+                (childFragmentManager.findFragmentByTag("import_progress") as? DialogFragment)?.dismiss()
+            }
+        }
     }
+
+    class ImportConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
+
+        override fun onClick(dialog: DialogInterface, which: Int) {
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    val filterEverywhere = ((dialog as Dialog).findViewById(R.id.filterEverywhereToggle) as CheckBox).isChecked
+                    (parentFragment as BaseFiltersImportFragment).performImport(filterEverywhere)
+                }
+            }
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(R.string.add_to_filter)
+            builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
+            builder.setPositiveButton(android.R.string.ok, this)
+            builder.setNegativeButton(android.R.string.cancel, null)
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                val confirmMessageView = dialog.findViewById(R.id.confirmMessage) as TextView
+                val filterEverywhereHelp = dialog.findViewById(R.id.filterEverywhereHelp)!!
+                filterEverywhereHelp.setOnClickListener {
+                    MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
+                            message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")
+                }
+                val usersCount = arguments.getInt(EXTRA_COUNT)
+                val nUsers = resources.getQuantityString(R.plurals.N_users, usersCount, usersCount)
+                confirmMessageView.text = getString(R.string.filter_user_confirm_message, nUsers)
+            }
+            return dialog
+        }
+    }
+
 
     class SelectableUsersAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IContentCardAdapter {
         override val isShowAbsoluteTime: Boolean
@@ -109,16 +241,23 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
         val ITEM_VIEW_TYPE_USER = 2
 
         private val inflater: LayoutInflater
+        private val itemStates: MutableMap<UserKey, Boolean>
+        var itemCheckedListener: ((Int, Boolean) -> Unit)? = null
 
         var data: List<ParcelableUser>? = null
             set(value) {
                 field = value
+                value?.forEach { item ->
+                    if (item.key !in itemStates && item.is_filtered) {
+                        itemStates[item.key] = true
+                    }
+                }
                 notifyDataSetChanged()
             }
 
-
         init {
             inflater = LayoutInflater.from(context)
+            itemStates = ArrayMap<UserKey, Boolean>()
             isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
             profileImageEnabled = preferences[displayProfileImageKey]
             profileImageStyle = preferences[profileImageStyleKey]
@@ -157,9 +296,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
                 return start
             }
 
-        fun getUserId(position: Int): String? {
-            if (position == userCount) return null
-            return data!![position].key.id
+        fun getUserKey(position: Int): UserKey {
+            return data!![position].key
         }
 
         val userCount: Int
@@ -229,15 +367,48 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
             }
             return ITEM_VIEW_TYPE_USER
         }
+
+        val checkedCount: Int get() {
+            return itemStates.count { it.value }
+        }
+
+        fun setItemChecked(position: Int, value: Boolean) {
+            val userKey = getUserKey(position)
+            itemStates[userKey] = value
+            itemCheckedListener?.invoke(position, value)
+        }
+
+        fun isItemChecked(position: Int): Boolean {
+            return itemStates[getUserKey(position)] ?: false
+        }
+
+        fun clearSelection() {
+            itemStates.clear()
+        }
     }
 
-
-    class SelectableUserViewHolder(
+    internal class SelectableUserViewHolder(
             itemView: View,
-            adapter: IContentCardAdapter
+            adapter: SelectableUsersAdapter
     ) : SimpleUserViewHolder(itemView, adapter) {
+        val checkChangedListener: CompoundButton.OnCheckedChangeListener
+
+        init {
+            ViewSupport.setBackground(itemView, ThemeUtils.getSelectableItemBackgroundDrawable(itemView.context))
+            checkBox.visibility = View.VISIBLE
+            checkChangedListener = CompoundButton.OnCheckedChangeListener { view, value ->
+                adapter.setItemChecked(layoutPosition, value)
+            }
+            itemView.setOnClickListener {
+                checkBox.toggle()
+            }
+        }
+
         override fun displayUser(user: ParcelableUser) {
             super.displayUser(user)
+            checkBox.setOnCheckedChangeListener(null)
+            checkBox.isChecked = (adapter as SelectableUsersAdapter).isItemChecked(layoutPosition)
+            checkBox.setOnCheckedChangeListener(checkChangedListener)
         }
 
     }

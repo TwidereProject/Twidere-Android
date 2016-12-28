@@ -72,7 +72,7 @@ public class FiltersData {
     @JsonObject
     @CursorObject(valuesCreator = true, tableInfo = true)
     public static class UserItem {
-        @CursorField(value = Filters.Users._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+        @CursorField(value = Filters.Users._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
         long _id;
         @CursorField(value = Filters.Users.USER_KEY, converter = UserKeyCursorFieldConverter.class, type = "TEXT NOT NULL UNIQUE")
         @JsonField(name = "user_key", typeConverter = UserKeyConverter.class)
@@ -88,7 +88,7 @@ public class FiltersData {
          */
         @CursorField(value = Filters.Users.SOURCE, type = "INTEGER DEFAULT -1")
         @JsonField(name = "source")
-        long source;
+        long source = -1;
 
         public UserKey getUserKey() {
             return userKey;
@@ -135,7 +135,7 @@ public class FiltersData {
     @JsonObject
     @CursorObject(valuesCreator = true, tableInfo = true)
     public static class BaseItem {
-        @CursorField(value = Filters._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY)
+        @CursorField(value = Filters._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
         long _id;
         @CursorField(value = Filters.VALUE, type = "TEXT NOT NULL UNIQUE")
         @JsonField(name = "value")
@@ -145,7 +145,7 @@ public class FiltersData {
          */
         @CursorField(value = Filters.Users.SOURCE, type = "INTEGER DEFAULT -1")
         @JsonField(name = "source")
-        long source;
+        long source = -1;
 
         public String getValue() {
             return value;

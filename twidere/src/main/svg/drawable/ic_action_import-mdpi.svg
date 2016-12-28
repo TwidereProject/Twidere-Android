@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_import-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_import-mdpi">
+            <polyline id="Path-2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="11.7563613 7 7 7 7 25 25 25 25 20.406492"></polyline>
+            <path d="M16,8.13011457 L18.7765957,10.9042553 L24.6783961,5 L28,8.32160393 L22.0957447,14.2234043 L24.8698854,16.997545 L16,16.997545 L16,8.13011457 Z" id="polygon3-#1-path" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

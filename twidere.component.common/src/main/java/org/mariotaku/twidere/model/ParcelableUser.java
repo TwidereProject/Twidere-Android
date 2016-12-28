@@ -194,6 +194,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     @ParcelableThisPlease
     public String nickname;
 
+    @ParcelableThisPlease
+    public boolean is_filtered;
+
     public static final Creator<ParcelableUser> CREATOR = new Creator<ParcelableUser>() {
         @Override
         public ParcelableUser createFromParcel(Parcel source) {

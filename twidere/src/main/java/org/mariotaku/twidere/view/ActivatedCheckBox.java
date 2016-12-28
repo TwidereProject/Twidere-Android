@@ -21,9 +21,10 @@ package org.mariotaku.twidere.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.CheckBox;
 
-public class ActivatedCheckBox extends CheckBox {
+import org.mariotaku.chameleon.view.ChameleonCheckBox;
+
+public class ActivatedCheckBox extends ChameleonCheckBox {
 
     public ActivatedCheckBox(final Context context) {
         super(context);

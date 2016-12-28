@@ -29,6 +29,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.DataStoreUtils
 
 class UserBlocksLoader(
         context: Context,
@@ -36,6 +37,8 @@ class UserBlocksLoader(
         data: List<ParcelableUser>?,
         fromUser: Boolean
 ) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
+
+    private var filteredUsers: Array<UserKey>? = null
 
     @Throws(MicroBlogException::class)
     override fun getCursoredUsers(twitter: MicroBlog,
@@ -49,4 +52,12 @@ class UserBlocksLoader(
         return twitter.getBlocksList(paging)
     }
 
+    override fun onLoadInBackground(): List<ParcelableUser> {
+        filteredUsers = DataStoreUtils.getFilteredUserIds(context)
+        return super.onLoadInBackground()
+    }
+
+    override fun processUser(user: ParcelableUser) {
+        user.is_filtered = filteredUsers?.contains(user.key) ?: false
+    }
 }

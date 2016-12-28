@@ -59,7 +59,7 @@ class CreateUserMuteTask(
         values.put(CachedRelationships.MUTING, true)
         resolver.insert(CachedRelationships.CONTENT_URI, values)
         if (filterEverywhere) {
-            DataStoreUtils.addToFilter(context, user, true)
+            DataStoreUtils.addToFilter(context, listOf(user), true)
         }
     }
 

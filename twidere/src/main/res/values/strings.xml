@@ -578,7 +578,6 @@
     <string name="exclude_this_host">Exclude this host</string>
     <string name="api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
     <string name="no_version_suffix">No version suffix</string>
-    <string name="inverse_selection">Inverse selection</string>
     <string name="edit_media">Edit media</string>
     <string name="media">Media</string>
     <string name="mute_user">Mute <xliff:g id="name">%s</xliff:g></string>
@@ -859,4 +858,10 @@
     <string name="title_error_invalid_account">Invalid account</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
     <string name="title_premium_features_name">Twidere ∞</string>
+    <!-- [verb] Perform import action -->
+    <string name="action_import">Import</string>
+    <string name="action_select_all">Select all</string>
+    <string name="action_select_none">Select none</string>
+    <string name="action_invert_selection">Invert selection</string>
+    <string name="message_no_user_selected">No user selected</string>
 </resources>

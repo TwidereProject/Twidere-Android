@@ -43,6 +43,8 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AutoCompleteTextView
 import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.ktextension.setGroupAvailability
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
@@ -92,11 +94,17 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         actionMode = mode
         setControlVisible(true)
         mode.menuInflater.inflate(R.menu.action_multi_select_items, menu)
+        menu.setGroupAvailability(R.id.selection_group, true)
         return true
     }
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         updateTitle(mode)
+        val checkedCount = listView.checkedItemCount
+        val listCount = listView.count
+        menu.setItemAvailability(R.id.select_none, checkedCount > 0)
+        menu.setItemAvailability(R.id.select_all, checkedCount < listCount)
+        menu.setItemAvailability(R.id.invert_selection, checkedCount > 0 && checkedCount < listCount)
         return true
     }
 
@@ -106,19 +114,28 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 val where = Expression.`in`(Column(Filters._ID),
                         RawItemArray(listView.checkedItemIds))
                 context.contentResolver.delete(contentUri, where.sql, null)
+                mode.finish()
             }
-            R.id.inverse_selection -> {
+            R.id.select_all -> {
+                for (i in 0 until listView.count) {
+                    listView.setItemChecked(i, true)
+                }
+            }
+            R.id.select_none -> {
+                for (i in 0 until listView.count) {
+                    listView.setItemChecked(i, false)
+                }
+            }
+            R.id.invert_selection -> {
                 val positions = listView.checkedItemPositions
                 for (i in 0 until listView.count) {
                     listView.setItemChecked(i, !positions.get(i))
                 }
-                return true
             }
             else -> {
                 return false
             }
         }
-        mode.finish()
         return true
     }
 
@@ -129,6 +146,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
                                            checked: Boolean) {
         updateTitle(mode)
+        mode.invalidate()
     }
 
     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
@@ -161,6 +179,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         } else {
             showEmpty(R.drawable.ic_info_volume_off, getString(R.string.no_rule))
         }
+        actionMode?.invalidate()
     }
 
     override fun onLoaderReset(loader: Loader<Cursor?>) {

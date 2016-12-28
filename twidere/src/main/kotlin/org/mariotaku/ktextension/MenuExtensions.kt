@@ -29,7 +29,7 @@ fun Menu.setItemAvailability(id: Int, available: Boolean) {
     item.isEnabled = available
 }
 
-fun Menu.setMenuGroupAvailability(groupId: Int, available: Boolean) {
+fun Menu.setGroupAvailability(groupId: Int, available: Boolean) {
     setGroupEnabled(groupId, available)
     setGroupVisible(groupId, available)
 }
