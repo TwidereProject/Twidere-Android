@@ -10,8 +10,6 @@ apply plugin: 'io.fabric'
 // END Non-FOSS component
 
 buildscript {
-    ext.kotlin_version = '1.0.5-3'
-
     repositories {
         jcenter()
         // START Non-FOSS component
