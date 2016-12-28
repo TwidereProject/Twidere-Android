@@ -934,7 +934,7 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 locationView.isClickable = ParcelableLocationUtils.isValidLocation(location)
             } else if (ParcelableLocationUtils.isValidLocation(location)) {
                 locationView.visibility = View.VISIBLE
-                locationView.setText(R.string.view_map)
+                locationView.setText(R.string.action_view_map)
                 locationView.isClickable = true
             } else {
                 locationView.visibility = View.GONE

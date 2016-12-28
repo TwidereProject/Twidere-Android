@@ -88,7 +88,7 @@
                 android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:color="?android:textColorSecondary"
-                android:contentDescription="@string/send"
+                android:contentDescription="@string/action_send"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_action_send"/>
 

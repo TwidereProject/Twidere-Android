@@ -178,7 +178,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             positiveButton.setText(R.string.comment)
             positiveButton.isEnabled = true
         } else if (isMyRetweet(status)) {
-            positiveButton.setText(R.string.cancel_retweet)
+            positiveButton.setText(R.string.action_cancel_retweet)
             positiveButton.isEnabled = true
         } else if (useQuote(false, credentials)) {
             positiveButton.setText(R.string.action_retweet)

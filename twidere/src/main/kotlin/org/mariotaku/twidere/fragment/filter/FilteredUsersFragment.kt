@@ -20,6 +20,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
@@ -112,6 +113,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             }
             R.id.import_from_muted_users -> {
                 isExtraFeatures = true
+                intent.putExtra(EXTRA_ACCOUNT_HOST, USER_TYPE_TWITTER_COM)
                 REQUEST_IMPORT_MUTES_SELECT_ACCOUNT
             }
             else -> return false

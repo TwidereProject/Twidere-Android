@@ -26,7 +26,7 @@
         android:title="@string/notifications_type">
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_home"
-            android:title="@string/home"
+            android:title="@string/title_home"
             app:dependencyKey="home_timeline_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"

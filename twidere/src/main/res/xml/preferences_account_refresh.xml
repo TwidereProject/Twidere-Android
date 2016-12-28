@@ -10,11 +10,11 @@
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_home_timeline"
-            android:title="@string/home"/>
+            android:title="@string/title_home"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_mentions"
-            android:title="@string/mentions"/>
+            android:title="@string/title_mentions"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_direct_messages"

@@ -8,7 +8,8 @@
     <string name="title_compose">Compose</string>
     <string name="add_account">Add account</string>
     <string name="settings">Settings</string>
-    <string name="send">Send</string>
+    <!-- [verb] Send tweet/message -->
+    <string name="action_send">Send</string>
     <string name="add_image">Add image</string>
     <string name="take_photo">Take photo</string>
     <string name="status_hint">What\'s happening?</string>
@@ -21,14 +22,13 @@
     <string name="xauth">xAuth</string>
     <string name="basic">Basic</string>
     <string name="twip_o">twip O Mode</string>
-    <string name="advanced">Advanced</string>
     <!-- [verb] Save settings/files etc. -->
     <string name="action_save">Save</string>
     <!-- [verb] Edit image/settings etc. -->
     <string name="action_edit">Edit</string>
     <string name="edit_api">Edit API</string>
-    <string name="home">Home</string>
-    <string name="mentions">Mentions</string>
+    <string name="title_home">Home</string>
+    <string name="title_mentions">Mentions</string>
     <string name="error_occurred">An error occurred, please try again.</string>
     <string name="error_already_logged_in">You have already logged in.</string>
     <string name="no_account_selected">No account selected.</string>
@@ -44,7 +44,7 @@
     <string name="label_refresh_service">Refresh service</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_background_operation_service">Background operation service</string>
-    <string name="open_in_browser">Open in browser</string>
+    <string name="action_open_in_browser">Open in browser</string>
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Delete</string>
     <!-- [verb] Action for performing retweet -->
@@ -54,7 +54,7 @@
     <!-- [noun] Count label for retweets, e.g. (N retweets)-->
     <string name="count_label_retweets">Retweets</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
-    <string name="cancel_retweet">Cancel retweet</string>
+    <string name="action_cancel_retweet">Cancel retweet</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_unfavorite">Unfavorite</string>
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
@@ -62,21 +62,20 @@
     <string name="action_undo_like">Undo like</string>
     <string name="action_reply">Reply</string>
     <string name="action_share">Share</string>
-    <string name="view_map">Map</string>
+    <string name="action_view_map">Map</string>
     <string name="title_statuses">Tweets</string>
 
-    <string name="followers">Followers</string>
-    <string name="following">Following</string>
-    <string name="about">About</string>
-    <string name="open_source_license">Open source license</string>
-    <string name="api">API</string>
+    <string name="title_followers">Followers</string>
+    <string name="title_following">Following</string>
+    <string name="title_about">About</string>
+    <string name="title_open_source_license">Open source license</string>
     <string name="default_api_settings">Default API settings</string>
     <string name="default_api_settings_summary">These settings only apply to newly logged-in accounts</string>
     <string name="consumer_key">Consumer key</string>
     <string name="consumer_secret">Consumer secret</string>
-    <string name="storage">Storage</string>
-    <string name="database_item_limit">Database size limit</string>
-    <string name="database_item_limit_summary">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
+    <string name="preference_title_storage">Storage</string>
+    <string name="preference_title_database_item_limit">Database size limit</string>
+    <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="clear_cache">Clear cache</string>
     <string name="clear_cache_summary">Clear stored profile image cache.</string>
     <string name="clear_databases">Clear databases</string>
@@ -88,9 +87,9 @@
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
     <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>
-    <string name="users_retweeted_this">Users retweeted this</string>
-    <string name="users_favorited_this">Users favorited this</string>
-    <string name="users_liked_this">Users liked this</string>
+    <string name="title_users_retweeted_this">Users retweeted this</string>
+    <string name="title_users_favorited_this">Users favorited this</string>
+    <string name="title_users_liked_this">Users liked this</string>
     <string name="reply_to">Reply to <xliff:g id="user_name">%s</xliff:g></string>
     <string name="quote_user">Quote <xliff:g id="user_name">%s</xliff:g></string>
     <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
@@ -116,13 +115,17 @@
     <string name="load_item_limit">Load item limit</string>
     <string name="load_item_limit_summary">Set items limit per load.</string>
     <string name="action_quote">Quote</string>
-    <string name="add_rule">Add rule</string>
+    <!-- [verb] Add mute filter rule -->
+    <string name="action_add_filter_rule">Add rule</string>
     <string name="text_size">Text size</string>
     <string name="text_size_summary">Text size of tweets.</string>
     <string name="cannot_get_location">Can\'t get your location.</string>
     <string name="title_drafts">Drafts</string>
+    <!-- User list name -->
     <string name="user_list_details_name">Name</string>
+    <!-- User list description -->
     <string name="user_list_details_description">Description</string>
+    <!-- User list is public -->
     <string name="user_list_details_is_public">Public</string>
     <string name="user_profile_description">Description</string>
     <string name="user_profile_location">Location</string>
@@ -864,4 +867,5 @@
     <string name="action_select_none">Select none</string>
     <string name="action_invert_selection">Invert selection</string>
     <string name="message_no_user_selected">No user selected</string>
+    <string name="preference_title_advanced">Advanced</string>
 </resources>

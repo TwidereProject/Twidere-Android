@@ -571,7 +571,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Intent sendIntent = new Intent(context, BackgroundOperationService.class);
         sendIntent.setAction(INTENT_ACTION_SEND_DRAFT);
         sendIntent.setData(draftUri);
-        nb.addAction(R.drawable.ic_action_send, context.getString(R.string.send),
+        nb.addAction(R.drawable.ic_action_send, context.getString(R.string.action_send),
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));

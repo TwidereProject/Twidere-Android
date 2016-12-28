@@ -2,7 +2,12 @@
 <!--suppress AndroidElementNotAllowed -->
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:title="@string/advanced">
+    android:title="@string/preference_title_advanced">
+
+    <org.mariotaku.twidere.preference.DefaultAPIPreference
+        android:key="default_api"
+        android:summary="@string/default_api_settings_summary"
+        android:title="@string/default_api_settings"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
@@ -71,16 +76,6 @@
             android:key="proxy_password"
             android:singleLine="true"
             android:title="@string/proxy_password"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="category_api"
-        android:title="@string/api">
-
-        <org.mariotaku.twidere.preference.DefaultAPIPreference
-            android:key="default_api"
-            android:summary="@string/default_api_settings_summary"
-            android:title="@string/default_api_settings"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory

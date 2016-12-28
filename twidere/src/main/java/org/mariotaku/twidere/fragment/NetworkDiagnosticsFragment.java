@@ -362,7 +362,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
     }
 
     private void logReady() {
-        mStartDiagnosticsButton.setText(R.string.send);
+        mStartDiagnosticsButton.setText(R.string.action_send);
         mStartDiagnosticsButton.setEnabled(true);
         mStartDiagnosticsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -371,7 +371,7 @@ public class NetworkDiagnosticsFragment extends BaseSupportFragment {
                 intent.setType("text/plain");
                 intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Twidere Network Diagnostics");
                 intent.putExtra(android.content.Intent.EXTRA_TEXT, mLogTextView.getText());
-                startActivity(Intent.createChooser(intent, getString(R.string.send)));
+                startActivity(Intent.createChooser(intent, getString(R.string.action_send)));
             }
         });
     }

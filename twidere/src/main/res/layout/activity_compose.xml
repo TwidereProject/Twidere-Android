@@ -239,7 +239,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:contentDescription="@string/send"
+            android:contentDescription="@string/action_send"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/element_spacing_normal"
@@ -261,7 +261,7 @@
             <org.mariotaku.twidere.view.IconActionView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/send"
+                android:contentDescription="@string/action_send"
                 android:cropToPadding="false"
                 android:padding="@dimen/element_spacing_xsmall"
                 android:scaleType="centerCrop"

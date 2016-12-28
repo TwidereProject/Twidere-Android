@@ -313,7 +313,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onLongClick(v: View): Boolean {
         when (v) {
             updateStatus -> {
-                Utils.showMenuItemToast(v, getString(R.string.send), true)
+                Utils.showMenuItemToast(v, getString(R.string.action_send), true)
                 return true
             }
         }

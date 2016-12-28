@@ -293,7 +293,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="@string/followers"
+                        android:text="@string/title_followers"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"/>
                 </LinearLayout>
@@ -323,7 +323,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="@string/following"
+                        android:text="@string/title_following"
                         android:textAppearance="?android:textAppearanceSmall"
                         android:textColor="?android:textColorSecondary"/>
                 </LinearLayout>

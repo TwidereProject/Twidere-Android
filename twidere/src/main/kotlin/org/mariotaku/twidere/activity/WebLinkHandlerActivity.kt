@@ -55,7 +55,7 @@ class WebLinkHandlerActivity : Activity(), Constants {
             if (componentName == null) {
                 val targetIntent = Intent(Intent.ACTION_VIEW, uri)
                 targetIntent.addCategory(Intent.CATEGORY_BROWSABLE)
-                startActivity(Intent.createChooser(targetIntent, getString(R.string.open_in_browser)))
+                startActivity(Intent.createChooser(targetIntent, getString(R.string.action_open_in_browser)))
             } else if (!TextUtils.equals(packageName, componentName.packageName)) {
                 startActivity(fallbackIntent)
             } else {

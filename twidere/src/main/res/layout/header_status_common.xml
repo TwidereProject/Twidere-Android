@@ -367,7 +367,7 @@
         android:maxLines="1"
         android:padding="@dimen/element_spacing_normal"
         android:tag="font_family|user"
-        android:text="@string/view_map"
+        android:text="@string/action_view_map"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:textColorSecondary"/>
 

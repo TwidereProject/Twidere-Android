@@ -150,7 +150,7 @@ object MenuUtils {
         val retweet = menu.findItem(R.id.retweet)
         if (retweet != null) {
             ActionIconDrawable.setMenuHighlight(retweet, TwidereMenuInfo(isMyRetweet, retweetHighlight))
-            retweet.setTitle(if (isMyRetweet) R.string.cancel_retweet else R.string.action_retweet)
+            retweet.setTitle(if (isMyRetweet) R.string.action_cancel_retweet else R.string.action_retweet)
         }
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
@@ -310,7 +310,7 @@ object MenuUtils {
                     context.startActivity(intent)
                 } catch (e: ActivityNotFoundException) {
                     intent.`package` = null
-                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.open_in_browser)))
+                    context.startActivity(Intent.createChooser(intent, context.getString(R.string.action_open_in_browser)))
                 }
             }
             R.id.copy_url -> {

@@ -121,17 +121,17 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 R.xml.preferences_compose)
         entriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
                 R.xml.preferences_content)
-        entriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.storage),
+        entriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.preference_title_storage),
                 R.xml.preferences_storage)
         entriesAdapter.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
                 R.xml.preferences_other)
 
-        entriesAdapter.addHeader(getString(R.string.about))
-        entriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.about),
+        entriesAdapter.addHeader(getString(R.string.title_about))
+        entriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.title_about),
                 R.xml.preferences_about)
         val browserArgs = Bundle()
         browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html")
-        entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.open_source_license),
+        entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.title_open_source_license),
                 SupportBrowserFragment::class.java, browserArgs)
     }
 

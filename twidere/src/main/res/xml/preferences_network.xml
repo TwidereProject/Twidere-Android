@@ -22,7 +22,7 @@
 
     <Preference
         android:fragment="org.mariotaku.twidere.fragment.SettingsDetailsFragment"
-        android:title="@string/advanced">
+        android:title="@string/preference_title_advanced">
         <extra
             android:name="resid"
             android:value="@xml/preferences_advanced_network"/>

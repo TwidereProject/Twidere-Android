@@ -10,7 +10,7 @@
     <item
         android:id="@id/send"
         android:icon="@drawable/ic_action_send"
-        android:title="@string/send"
+        android:title="@string/action_send"
         app:showAsAction="ifRoom|withText"/>
     <item
         android:id="@id/save"

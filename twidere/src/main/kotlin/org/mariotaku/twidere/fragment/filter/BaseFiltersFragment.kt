@@ -249,7 +249,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_auto_complete_textview)
 
-            builder.setTitle(R.string.add_rule)
+            builder.setTitle(R.string.action_add_filter_rule)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, this)
             val dialog = builder.create()

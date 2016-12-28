@@ -19,7 +19,7 @@
 
     <PreferenceCategory
         android:key="cat_home"
-        android:title="@string/home">
+        android:title="@string/title_home">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="home.accounts_dashboard"
             android:tag="home"
