@@ -52,6 +52,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.HttpUrl;
+
 /**
  * Created by mariotaku on 15/5/7.
  */
@@ -128,19 +130,28 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     @NonNull
     public static String getApiBaseUrl(@NonNull String format, @Nullable final String domain) {
         final Matcher matcher = Pattern.compile("\\[(\\.?)DOMAIN(\\.?)\\]", Pattern.CASE_INSENSITIVE).matcher(format);
+        final String baseUrl;
         if (!matcher.find()) {
             // For backward compatibility
             format = substituteLegacyApiBaseUrl(format, domain);
             if (!format.endsWith("/1.1") && !format.endsWith("/1.1/")) {
-                return format;
+                baseUrl = format;
+            } else {
+                final String versionSuffix = "/1.1";
+                final int suffixLength = versionSuffix.length();
+                final int lastIndex = format.lastIndexOf(versionSuffix);
+                baseUrl = format.substring(0, lastIndex) + format.substring(lastIndex + suffixLength);
             }
-            final String versionSuffix = "/1.1";
-            final int suffixLength = versionSuffix.length();
-            final int lastIndex = format.lastIndexOf(versionSuffix);
-            return format.substring(0, lastIndex) + format.substring(lastIndex + suffixLength);
+        } else if (TextUtils.isEmpty(domain)) {
+            baseUrl = matcher.replaceAll("");
+        } else {
+            baseUrl = matcher.replaceAll("$1" + domain + "$2");
         }
-        if (TextUtils.isEmpty(domain)) return matcher.replaceAll("");
-        return matcher.replaceAll("$1" + domain + "$2");
+        // In case someone set invalid base url
+        if (HttpUrl.parse(baseUrl) == null) {
+            return getApiBaseUrl(DEFAULT_TWITTER_API_URL_FORMAT, domain);
+        }
+        return baseUrl;
     }
 
     @NonNull
