@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.tab.impl;
 
 import android.content.Context;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,18 +15,41 @@ import org.mariotaku.twidere.model.tab.StringHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.argument.UserArguments;
 import org.mariotaku.twidere.model.tab.conf.UserExtraConfiguration;
+import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK;
 
 /**
  * Created by mariotaku on 2016/11/27.
  */
 
 public class FavoriteTimelineTabConfiguration extends TabConfiguration {
+    final static StringHolder TAB_NAME = new StringHolder() {
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+
+        }
+
+        @Override
+        public String createString(Context context) {
+            if (DependencyHolder.Companion.get(context).preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                return context.getString(R.string.title_favorites);
+            }
+            return context.getString(R.string.title_likes);
+        }
+    };
+
     @NonNull
     @Override
     public StringHolder getName() {
-        return StringHolder.resource(R.string.title_favorites);
+        return TAB_NAME;
     }
 
     @NonNull

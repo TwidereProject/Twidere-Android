@@ -593,5 +593,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          * You were blocked by original author of a quote/retweet
          */
         long BLOCKED_BY_USER = 0x4;
+        /**
+         * Status possibility sensitive (NSFW etc)
+         */
+        long POSSIBILITY_SENSITIVE = 0x8;
     }
 }

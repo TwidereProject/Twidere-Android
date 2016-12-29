@@ -3,6 +3,7 @@ package org.mariotaku.twidere.util
 import android.content.SharedPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.*
+import org.mariotaku.twidere.constant.filterPossibilitySensitiveStatusesKey
 import org.mariotaku.twidere.constant.filterUnavailableQuoteStatusesKey
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -58,6 +59,9 @@ fun buildStatusFilterWhereClause(preferences: SharedPreferences,
     var filterFlags: Long = 0
     if (preferences[filterUnavailableQuoteStatusesKey]) {
         filterFlags = filterFlags or FilterFlags.QUOTE_NOT_AVAILABLE
+    }
+    if (preferences[filterPossibilitySensitiveStatusesKey]) {
+        filterFlags = filterFlags or FilterFlags.POSSIBILITY_SENSITIVE
     }
 
     val filterExpression = Expression.or(

@@ -22,8 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
@@ -70,9 +69,9 @@ class AccountsSpinnerAdapter(
     }
 
     private fun bindView(view: View, item: AccountDetails) {
-        val text1 = view.findViewById(android.R.id.text1) as TextView?
-        val text2 = view.findViewById(android.R.id.text2) as TextView?
-        val icon = view.findViewById(android.R.id.icon) as ImageView?
+        val text1 = view.name
+        val text2 = view.screenName
+        val icon = view.profileImage
         if (!item.dummy) {
             if (text1 != null) {
                 text1.visibility = View.VISIBLE

@@ -61,13 +61,19 @@ object ParcelableStatusUtils {
             result.extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
 
             if (retweetUser.isBlocking) {
-                result.filter_flags = result.filter_flags or FilterFlags.BLOCKING_USER
+                result.addFilterFlag(FilterFlags.BLOCKING_USER)
             }
             if (retweetUser.isBlockedBy) {
-                result.filter_flags = result.filter_flags or FilterFlags.BLOCKED_BY_USER
+                result.addFilterFlag(FilterFlags.BLOCKED_BY_USER)
+            }
+            if (retweetedStatus.isPossiblySensitive) {
+                result.addFilterFlag(FilterFlags.POSSIBILITY_SENSITIVE)
             }
         } else {
             status = orig
+            if (status.isPossiblySensitive) {
+                result.addFilterFlag(FilterFlags.POSSIBILITY_SENSITIVE)
+            }
         }
 
         val quoted = status.quotedStatus
@@ -104,8 +110,12 @@ object ParcelableStatusUtils {
             result.quoted_user_profile_image = TwitterContentUtils.getProfileImageUrl(quotedUser)
             result.quoted_user_is_protected = quotedUser.isProtected
             result.quoted_user_is_verified = quotedUser.isVerified
+
+            if (quoted.isPossiblySensitive) {
+                result.addFilterFlag(FilterFlags.POSSIBILITY_SENSITIVE)
+            }
         } else if (status.isQuoteStatus) {
-            result.filter_flags = result.filter_flags or FilterFlags.QUOTE_NOT_AVAILABLE
+            result.addFilterFlag(FilterFlags.QUOTE_NOT_AVAILABLE)
         }
 
         result.reply_count = status.replyCount
@@ -163,6 +173,10 @@ object ParcelableStatusUtils {
         result.lang = status.lang
 
         return result
+    }
+
+    private fun ParcelableStatus.addFilterFlag(@FilterFlags flags: Long) {
+        filter_flags = filter_flags or flags
     }
 
     private fun getSpanItems(html: CharSequence): Array<SpanItem>? {
