@@ -42,20 +42,6 @@
             android:value="true"/>
     </org.mariotaku.twidere.preference.ColorPickerPreference>
 
-    <org.mariotaku.twidere.preference.ThemeFontFamilyPreference
-        android:defaultValue="sans-serif-light"
-        android:enabled="@bool/has_font_family"
-        android:key="theme_font_family"
-        android:order="24"
-        android:title="@string/font_family">
-        <extra
-            android:name="should_recreate"
-            android:value="true"/>
-        <extra
-            android:name="recreate_activity"
-            android:value="true"/>
-    </org.mariotaku.twidere.preference.ThemeFontFamilyPreference>
-
     <org.mariotaku.twidere.preference.EmojiSupportPreference
         android:key="emoji_support"
         android:order="25"

@@ -61,7 +61,6 @@
         android:gravity="center_vertical|start"
         android:maxLines="1"
         android:minHeight="@dimen/element_size_small"
-        android:tag="font_family|user"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone"
         tools:text="Retweeted by Mariotaku"
@@ -127,7 +126,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:tag="font_family|user"
                 app:nv_primaryTextColor="?android:textColorPrimary"
                 app:nv_primaryTextStyle="bold"
                 app:nv_secondaryTextColor="?android:textColorSecondary"/>
@@ -137,7 +135,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="42 mins ago"
                 tools:textSize="@dimen/text_size_extra_small"/>
@@ -161,7 +158,6 @@
             android:layout_alignStart="@+id/profileContainer"
             android:layout_below="@+id/profileContainer"
             android:paddingTop="@dimen/element_spacing_small"
-            android:tag="font_family|user"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorPrimary"
             android:visibility="visible"
@@ -269,7 +265,6 @@
                 android:paddingRight="0dp"
                 android:paddingStart="@dimen/element_spacing_small"
                 android:paddingTop="@dimen/element_spacing_small"
-                android:tag="font_family|user"
                 android:visibility="gone"
                 app:nv_primaryTextColor="?android:textColorPrimary"
                 app:nv_primaryTextStyle="bold"
@@ -291,7 +286,6 @@
                 android:paddingRight="0dp"
                 android:paddingStart="@dimen/element_spacing_small"
                 android:paddingTop="@dimen/element_spacing_small"
-                android:tag="font_family|user"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorPrimary"
                 android:visibility="gone"
@@ -388,7 +382,6 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="255"/>
         </LinearLayout>
@@ -428,7 +421,6 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="255"/>
 
@@ -469,7 +461,6 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:minHeight="@dimen/button_size_content_card_action"
-                android:tag="font_family|user"
                 android:textAppearance="?android:textAppearanceSmall"
                 tools:text="255"/>
         </LinearLayout>

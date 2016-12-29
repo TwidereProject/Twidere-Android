@@ -36,7 +36,7 @@ import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
-import org.mariotaku.twidere.service.BackgroundOperationService
+import org.mariotaku.twidere.service.BaseIntentService
 import org.mariotaku.twidere.service.JobRefreshService
 import org.mariotaku.twidere.service.RefreshService
 import org.mariotaku.twidere.task.*
@@ -71,8 +71,6 @@ interface GeneralComponent {
     fun inject(obj: BaseListFragment)
 
     fun inject(obj: BaseActivity)
-
-    fun inject(obj: BackgroundOperationService)
 
     fun inject(obj: BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
 
@@ -141,4 +139,6 @@ interface GeneralComponent {
     fun inject(application: TwidereApplication)
 
     fun inject(fragment: ThemedPreferenceDialogFragmentCompat)
+
+    fun inject(service: BaseIntentService)
 }

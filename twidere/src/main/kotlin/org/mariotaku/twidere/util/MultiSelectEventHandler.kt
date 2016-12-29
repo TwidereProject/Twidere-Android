@@ -32,7 +32,7 @@ import com.twitter.Extractor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.getAccountUser
+import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.menu.AccountActionProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus

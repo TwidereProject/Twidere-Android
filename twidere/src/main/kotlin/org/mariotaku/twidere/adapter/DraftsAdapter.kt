@@ -28,7 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE
-import org.mariotaku.twidere.extension.getActionName
+import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.DraftCursorIndices
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils

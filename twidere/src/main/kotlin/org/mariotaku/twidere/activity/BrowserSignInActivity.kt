@@ -46,7 +46,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.util.AsyncTaskUtils

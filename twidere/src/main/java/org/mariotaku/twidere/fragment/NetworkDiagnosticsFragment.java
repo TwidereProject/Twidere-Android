@@ -34,7 +34,7 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.extension.CredentialsExtensionsKt;
+import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials;

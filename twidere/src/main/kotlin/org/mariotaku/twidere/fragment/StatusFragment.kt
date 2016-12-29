@@ -91,7 +91,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.extension.getAccountType
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider

@@ -26,7 +26,7 @@ import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.oauth.OAuthAuthorization;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.extension.CredentialsExtensionsKt;
+import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.CacheMetadata;
 import org.mariotaku.twidere.model.ParcelableMedia;

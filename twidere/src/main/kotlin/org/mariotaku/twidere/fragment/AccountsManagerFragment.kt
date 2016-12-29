@@ -31,10 +31,10 @@ import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
-import org.mariotaku.twidere.extension.getAccountKey
-import org.mariotaku.twidere.extension.setActivated
-import org.mariotaku.twidere.extension.setColor
-import org.mariotaku.twidere.extension.setPosition
+import org.mariotaku.twidere.extension.model.getAccountKey
+import org.mariotaku.twidere.extension.model.setActivated
+import org.mariotaku.twidere.extension.model.setColor
+import org.mariotaku.twidere.extension.model.setPosition
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey

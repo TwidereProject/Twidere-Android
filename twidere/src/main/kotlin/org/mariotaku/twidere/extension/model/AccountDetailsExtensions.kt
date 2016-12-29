@@ -2,7 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras

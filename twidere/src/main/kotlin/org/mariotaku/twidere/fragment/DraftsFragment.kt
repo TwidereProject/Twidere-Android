@@ -57,7 +57,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.extension.writeMimeMessageTo
+import org.mariotaku.twidere.extension.model.writeMimeMessageTo
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras

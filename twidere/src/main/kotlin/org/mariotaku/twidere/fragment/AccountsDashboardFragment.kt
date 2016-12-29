@@ -65,7 +65,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.extension.setActivated
+import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
 import org.mariotaku.twidere.model.AccountDetails

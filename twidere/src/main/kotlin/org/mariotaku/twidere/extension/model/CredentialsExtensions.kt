@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import android.text.TextUtils

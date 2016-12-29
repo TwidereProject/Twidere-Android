@@ -31,9 +31,9 @@ class PremiumDashboardActivity : BaseActivity() {
         setContentView(R.layout.activity_premium_dashboard)
         if (extraFeaturesChecker.isSupported()) {
             if (extraFeaturesChecker.isEnabled()) {
-                View.inflate(this, R.layout.card_item_extra_features_sync_status, cardsContainer)
+                View.inflate(this, extraFeaturesChecker.statusLayout, cardsContainer)
             } else {
-                View.inflate(this, R.layout.card_item_extra_features_purchase_introduction, cardsContainer)
+                View.inflate(this, extraFeaturesChecker.introductionLayout, cardsContainer)
             }
         }
     }
@@ -44,15 +44,15 @@ class PremiumDashboardActivity : BaseActivity() {
     }
 
     class SignInChooserDialogFragment : BaseDialogFragment(), LoaderManager.LoaderCallbacks<List<ResolveInfo>> {
-        private var mAdapter: ProviderAdapter? = null
-        private var mLoaderInitialized: Boolean = false
+        private var adapter: ProviderAdapter? = null
+        private var loaderInitialized: Boolean = false
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = context
-            mAdapter = ProviderAdapter(context)
+            adapter = ProviderAdapter(context)
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.sign_in_with_ellip)
-            builder.setAdapter(mAdapter) { dialog, which -> startLogin(mAdapter!!.getItem(which)) }
+            builder.setAdapter(adapter) { dialog, which -> startLogin(adapter!!.getItem(which)) }
             val dialog = builder.create()
             dialog.setOnShowListener { loadInfo() }
             return dialog
@@ -68,11 +68,11 @@ class PremiumDashboardActivity : BaseActivity() {
 
         private fun loadInfo() {
             val lm = loaderManager
-            if (mLoaderInitialized) {
+            if (loaderInitialized) {
                 lm.restartLoader(0, null, this)
             } else {
                 lm.initLoader(0, null, this)
-                mLoaderInitialized = true
+                loaderInitialized = true
             }
         }
 
@@ -81,14 +81,14 @@ class PremiumDashboardActivity : BaseActivity() {
         }
 
         override fun onLoadFinished(loader: Loader<List<ResolveInfo>>, data: List<ResolveInfo>?) {
-            mAdapter!!.clear()
+            adapter!!.clear()
             if (data != null) {
-                mAdapter!!.addAll(data)
+                adapter!!.addAll(data)
             }
         }
 
         override fun onLoaderReset(loader: Loader<List<ResolveInfo>>) {
-            mAdapter!!.clear()
+            adapter!!.clear()
         }
 
         class SignInActivitiesLoader(context: Context) : AsyncTaskLoader<List<ResolveInfo>>(context) {

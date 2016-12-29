@@ -1,4 +1,4 @@
-package org.mariotaku.twidere
+package org.mariotaku.twidere.extension.model
 
 import android.net.Uri
 import android.support.test.InstrumentationRegistry
@@ -7,8 +7,6 @@ import org.apache.commons.io.IOUtils
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mariotaku.twidere.extension.readMimeMessageFrom
-import org.mariotaku.twidere.extension.writeMimeMessageTo
 import org.mariotaku.twidere.model.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

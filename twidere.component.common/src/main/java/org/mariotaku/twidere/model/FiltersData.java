@@ -130,6 +130,22 @@ public class FiltersData {
                     ", screenName='" + screenName + '\'' +
                     '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            UserItem userItem = (UserItem) o;
+
+            return userKey.equals(userItem.userKey);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return userKey.hashCode();
+        }
     }
 
     @JsonObject
@@ -168,6 +184,22 @@ public class FiltersData {
             return "BaseItem{" +
                     "value='" + value + '\'' +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            BaseItem baseItem = (BaseItem) o;
+
+            return value.equals(baseItem.value);
+
+        }
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
         }
     }
 }

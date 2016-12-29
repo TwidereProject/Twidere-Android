@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.service
 
 import android.accounts.AccountManager
-import android.app.IntentService
 import android.app.Notification
 import android.app.Service
 import android.content.ContentValues
@@ -39,7 +38,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.util.Pair
 import android.widget.Toast
-import com.twitter.Extractor
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
@@ -56,7 +54,6 @@ import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.SimpleBody
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
@@ -69,40 +66,17 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.ContentValuesCreator
+import org.mariotaku.twidere.util.NotificationManagerWrapper
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class BackgroundOperationService : IntentService("background_operation"), Constants {
-
+class BackgroundOperationService : BaseIntentService("background_operation") {
 
     private val handler: Handler by lazy { Handler(Looper.getMainLooper()) }
-    @Inject
-    lateinit var preferences: SharedPreferencesWrapper
-    @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
-    lateinit var notificationManager: NotificationManagerWrapper
-    @Inject
-    lateinit var validator: TwidereValidator
-    @Inject
-    lateinit var extractor: Extractor
-    @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-
-
-    override fun onCreate() {
-        super.onCreate()
-        GeneralComponentHelper.build(this).inject(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)

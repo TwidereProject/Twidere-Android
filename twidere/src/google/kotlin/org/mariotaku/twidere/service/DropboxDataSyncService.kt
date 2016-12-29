@@ -1,61 +1,61 @@
 package org.mariotaku.twidere.service
 
-import android.app.Service
 import android.content.Intent
-import android.content.SyncResult
-import android.os.Bundle
-import android.os.IBinder
-import org.mariotaku.ktextension.convert
-import org.mariotaku.twidere.IDataSyncService
-import org.mariotaku.twidere.activity.DropboxAuthStarterActivity
-import org.mariotaku.twidere.model.SyncAuthInfo
-import org.mariotaku.twidere.util.JsonSerializer
-import java.lang.ref.WeakReference
+import android.util.Xml
+import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.v2.DbxClientV2
+import com.dropbox.core.v2.files.WriteMode
+import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.map
+import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.dropboxAuthTokenKey
+import org.mariotaku.twidere.extension.model.read
+import org.mariotaku.twidere.extension.model.serialize
+import org.mariotaku.twidere.extension.model.writeMimeMessageTo
+import org.mariotaku.twidere.model.DraftCursorIndices
+import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 
 /**
  * Created by mariotaku on 2016/12/7.
  */
 
-class DropboxDataSyncService : Service() {
-    private val serviceInterface: ServiceInterface
+class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
 
-    init {
-        serviceInterface = ServiceInterface(WeakReference(this))
+    override fun onHandleIntent(intent: Intent?) {
+        val authToken = preferences[dropboxAuthTokenKey] ?: return
+        val requestConfig = DbxRequestConfig.newBuilder("twidere-android/${BuildConfig.VERSION_NAME}")
+                .build()
+        val client = DbxClientV2(requestConfig, authToken)
+        uploadFilters(client)
+        uploadDrafts(client)
     }
 
-    override fun onBind(intent: Intent?): IBinder {
-        return serviceInterface.asBinder()
-    }
+    private fun DbxClientV2.newUploader(path: String) = files().uploadBuilder(path).withMode(WriteMode.OVERWRITE).withMute(true).start()
 
-    private fun getAuthInfo(): SyncAuthInfo? {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private fun getAuthRequestIntent(info: SyncAuthInfo?): Intent {
-        return Intent(this, DropboxAuthStarterActivity::class.java)
-    }
-
-    private fun onPerformSync(info: SyncAuthInfo, extras: Bundle?, syncResult: SyncResult) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    internal class ServiceInterface(val service: WeakReference<DropboxDataSyncService>) : IDataSyncService.Stub() {
-
-        override fun getAuthInfo(): String? {
-            val info = service.get().getAuthInfo() ?: return null
-            return JsonSerializer.serialize(info)
+    private fun uploadDrafts(client: DbxClientV2) {
+        val cur = contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null) ?: return
+        cur.map(DraftCursorIndices(cur)).forEach { draft ->
+            client.newUploader("/Drafts/${draft.timestamp}.eml").use {
+                draft.writeMimeMessageTo(this, it.outputStream)
+                it.finish()
+            }
         }
+        cur.close()
+    }
 
-        override fun getAuthRequestIntent(infoJson: String?): Intent {
-            val info = infoJson?.convert { JsonSerializer.parse(infoJson, SyncAuthInfo::class.java) }
-            return service.get().getAuthRequestIntent(info)
+    private fun uploadFilters(client: DbxClientV2) {
+        val uploader = client.newUploader("/Common/filters.xml")
+        val filters = FiltersData()
+        filters.read(contentResolver)
+        val serializer = Xml.newSerializer()
+        serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
+        uploader.use {
+            serializer.setOutput(it.outputStream, "UTF-8")
+            filters.serialize(serializer)
+            it.finish()
         }
-
-        override fun onPerformSync(infoJson: String, extras: Bundle?, syncResult: SyncResult) {
-            val info = infoJson.convert { JsonSerializer.parse(infoJson, SyncAuthInfo::class.java) }!!
-            service.get().onPerformSync(info, extras, syncResult)
-        }
-
     }
 
 }
+

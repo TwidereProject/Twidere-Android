@@ -36,7 +36,7 @@ import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
-import org.mariotaku.twidere.extension.getAccountType
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback

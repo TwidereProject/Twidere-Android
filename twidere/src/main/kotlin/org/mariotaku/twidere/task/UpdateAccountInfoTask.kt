@@ -10,8 +10,8 @@ import android.text.TextUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
-import org.mariotaku.twidere.extension.setAccountKey
-import org.mariotaku.twidere.extension.setAccountUser
+import org.mariotaku.twidere.extension.model.setAccountKey
+import org.mariotaku.twidere.extension.model.setAccountUser
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import java.io.IOException

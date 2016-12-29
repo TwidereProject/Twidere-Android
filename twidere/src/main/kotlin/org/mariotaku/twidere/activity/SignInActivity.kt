@@ -75,9 +75,9 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
-import org.mariotaku.twidere.extension.getColor
+import org.mariotaku.twidere.extension.model.getColor
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.official
-import org.mariotaku.twidere.extension.newMicroBlogInstance
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.CustomAPIConfig
@@ -160,6 +160,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_sign_in, menu)
         return true
     }

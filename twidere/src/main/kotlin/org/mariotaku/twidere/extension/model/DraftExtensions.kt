@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import android.net.Uri
@@ -20,7 +20,6 @@ import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.extension.model.getMimeType
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.Draft.Action
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras

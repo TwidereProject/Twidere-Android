@@ -41,7 +41,6 @@ import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TwidereToolbar;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -234,12 +233,6 @@ public class ThemeUtils implements Constants {
         if (context == null) return VALUE_THEME_BACKGROUND_DEFAULT;
         final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
         return pref.getString(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT);
-    }
-
-    public static String getThemeFontFamily(@NonNull final SharedPreferences pref) {
-        final String fontFamily = pref.getString(KEY_THEME_FONT_FAMILY, VALUE_THEME_FONT_FAMILY_REGULAR);
-        if (!TextUtils.isEmpty(fontFamily)) return fontFamily;
-        return VALUE_THEME_FONT_FAMILY_REGULAR;
     }
 
     public static int getThemeForegroundColor(final Context context) {

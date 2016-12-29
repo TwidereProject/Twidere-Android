@@ -615,19 +615,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return mainTabs.height - mainTabs.stripHeight
     }
 
-    override fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int {
-        when (theme) {
-            SharedPreferenceConstants.VALUE_THEME_NAME_LIGHT -> {
-                if (ChameleonUtils.isColorLight(themeColor)) {
-                    return R.style.Theme_Twidere_Light_NoActionBar
-                } else {
-                    return R.style.Theme_Twidere_Light_DarkActionBar_NoActionBar
-                }
-            }
-        }
-        return R.style.Theme_Twidere_NoActionBar
-    }
-
     private val keyboardShortcutRecipient: Fragment?
         get() {
             if (homeMenu.isDrawerOpen(GravityCompat.START)) {

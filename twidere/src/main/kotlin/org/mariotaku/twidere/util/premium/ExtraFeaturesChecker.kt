@@ -12,6 +12,9 @@ import java.util.*
 abstract class ExtraFeaturesChecker {
     protected lateinit var context: Context
 
+    abstract val introductionLayout: Int
+    abstract val statusLayout: Int
+
     @CallSuper
     protected open fun init(context: Context) {
         this.context = context
@@ -27,6 +30,7 @@ abstract class ExtraFeaturesChecker {
     abstract fun createPurchaseIntent(context: Context): Intent
 
     abstract fun createRestorePurchaseIntent(context: Context): Intent?
+
 
     companion object {
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.anjlab.android.iab.v3.BillingProcessor
 import org.mariotaku.twidere.Constants.GOOGLE_PLAY_LICENCING_PUBKEY
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.GooglePlayInAppPurchaseActivity
 
 /**
@@ -11,6 +12,8 @@ import org.mariotaku.twidere.activity.GooglePlayInAppPurchaseActivity
  */
 
 class GooglePlayExtraFeaturesChecker() : ExtraFeaturesChecker() {
+    override val statusLayout: Int = R.layout.card_item_extra_features_status
+    override val introductionLayout: Int = R.layout.card_item_extra_features_purchase_introduction
     private val EXTRA_FEATURE_PRODUCT_ID = "twidere.extra.features"
 
     private lateinit var bp: BillingProcessor

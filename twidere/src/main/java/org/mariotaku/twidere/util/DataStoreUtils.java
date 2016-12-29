@@ -55,7 +55,7 @@ import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.TwidereConstants;
-import org.mariotaku.twidere.extension.AccountExtensionsKt;
+import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.model.FiltersData;
 import org.mariotaku.twidere.model.FiltersData$BaseItemValuesCreator;
 import org.mariotaku.twidere.model.FiltersData$UserItemValuesCreator;

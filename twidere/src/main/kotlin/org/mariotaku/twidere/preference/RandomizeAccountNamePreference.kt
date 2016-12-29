@@ -13,8 +13,8 @@ import android.util.AttributeSet
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.extension.getAccountKey
-import org.mariotaku.twidere.extension.getAccountUser
+import org.mariotaku.twidere.extension.model.getAccountKey
+import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.generateAccountName

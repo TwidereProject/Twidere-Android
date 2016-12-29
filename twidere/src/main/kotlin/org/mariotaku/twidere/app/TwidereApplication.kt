@@ -244,8 +244,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             }
             KEY_PROFILE_IMAGE_STYLE -> {
             }
-            KEY_THEME_FONT_FAMILY -> {
-            }
             KEY_THEME_COLOR -> {
             }
             KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {

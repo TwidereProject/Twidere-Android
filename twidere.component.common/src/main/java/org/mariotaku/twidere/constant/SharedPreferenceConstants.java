@@ -56,19 +56,10 @@ public interface SharedPreferenceConstants {
     int VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE = 2;
     int VALUE_MEDIA_PREVIEW_STYLE_CODE_NONE = 0;
 
-    String VALUE_THEME_FONT_FAMILY_REGULAR = "sans-serif";
-    String VALUE_THEME_FONT_FAMILY_CONDENSED = "sans-serif-condensed";
-    String VALUE_THEME_FONT_FAMILY_LIGHT = "sans-serif-light";
-    String VALUE_THEME_FONT_FAMILY_THIN = "sans-serif-thin";
-
     int VALUE_NOTIFICATION_FLAG_NONE = 0x0;
     int VALUE_NOTIFICATION_FLAG_RINGTONE = 0x1;
     int VALUE_NOTIFICATION_FLAG_VIBRATION = 0x2;
     int VALUE_NOTIFICATION_FLAG_LIGHT = 0x4;
-
-    String VALUE_COMPOSE_QUIT_ACTION_ASK = "ask";
-    String VALUE_COMPOSE_QUIT_ACTION_SAVE = "save";
-    String VALUE_COMPOSE_QUIT_ACTION_DISCARD = "discard";
 
     String VALUE_TAB_DISPLAY_OPTION_ICON = "icon";
     String VALUE_TAB_DISPLAY_OPTION_LABEL = "label";
@@ -91,7 +82,6 @@ public interface SharedPreferenceConstants {
 
     String DEFAULT_THEME = VALUE_THEME_NAME_LIGHT;
     String DEFAULT_THEME_BACKGROUND = VALUE_THEME_BACKGROUND_DEFAULT;
-    String DEFAULT_THEME_FONT_FAMILY = VALUE_THEME_FONT_FAMILY_REGULAR;
     int DEFAULT_THEME_BACKGROUND_ALPHA = 160;
 
     String DEFAULT_QUOTE_FORMAT = "RT @" + FORMAT_PATTERN_NAME + ": " + FORMAT_PATTERN_TEXT;
@@ -132,8 +122,6 @@ public interface SharedPreferenceConstants {
     String KEY_THEME_BACKGROUND_ALPHA = "theme_background_alpha";
     @Preference(type = INT)
     String KEY_THEME_COLOR = "theme_color";
-    @Preference(type = STRING, hasDefault = true, defaultString = DEFAULT_THEME_FONT_FAMILY)
-    String KEY_THEME_FONT_FAMILY = "theme_font_family";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_DISPLAY_PROFILE_IMAGE = "display_profile_image";
     @Preference(type = BOOLEAN, exportable = false, hasDefault = true, defaultBoolean = false)

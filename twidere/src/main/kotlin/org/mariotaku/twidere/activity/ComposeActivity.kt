@@ -71,7 +71,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.*
-import org.mariotaku.twidere.extension.getAccountUser
+import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback

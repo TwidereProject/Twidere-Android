@@ -7,7 +7,7 @@
 
     <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.Dark.DialogWhenLarge.NoActionBar"/>
 
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere.Dark">
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

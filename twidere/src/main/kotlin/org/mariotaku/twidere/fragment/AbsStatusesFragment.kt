@@ -52,7 +52,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
-import org.mariotaku.twidere.extension.getAccountType
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
