@@ -8,4 +8,7 @@
         android:defaultValue="false"
         android:key="filter_possibility_sensitive_statuses"
         android:title="@string/preference_filter_possibility_sensitive_statuses"/>
+    <PreferenceCategory android:title="@string/preference_title_filter_subscription">
+        <Preference android:title="@string/preference_title_filter_manage_subscriptions"/>
+    </PreferenceCategory>
 </PreferenceScreen>

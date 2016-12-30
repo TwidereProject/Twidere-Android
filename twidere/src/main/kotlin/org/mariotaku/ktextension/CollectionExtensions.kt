@@ -11,3 +11,7 @@ fun Collection<*>?.isNotNullOrEmpty(): Boolean {
 fun Collection<*>?.isNullOrEmpty(): Boolean {
     return this == null || this.isEmpty()
 }
+
+fun <T> MutableCollection<T>.addAllIgnoreDuplicates(collection: Collection<T>) {
+    addAll(collection.filter { it !in this })
+}

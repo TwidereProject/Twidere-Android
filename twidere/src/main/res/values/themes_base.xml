@@ -42,7 +42,7 @@
         <item name="colorToolbar">@color/background_color_action_bar_dark</item>
         <item name="isToolbarColored">false</item>
 
-        <item name="actionBarTheme">@style/Theme.Twidere.Light.ActionBar</item>
+        <item name="actionBarTheme">@style/Theme.Twidere.Dark.ActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
@@ -67,7 +67,7 @@
         <item name="colorToolbar">?colorPrimary</item>
         <item name="isToolbarColored">true</item>
 
-        <item name="actionBarTheme">@null</item>
+        <item name="actionBarTheme">@style/Theme.Twidere.Light.ActionBar</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 

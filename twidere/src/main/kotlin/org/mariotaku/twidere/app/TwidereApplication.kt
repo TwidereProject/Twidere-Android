@@ -48,6 +48,7 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.bugReportsKey
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
+import org.mariotaku.twidere.constant.nightModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
@@ -258,17 +259,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     }
 
     private fun resetTheme(preferences: SharedPreferences) {
-        when (ThemeUtils.getLocalNightMode(preferences)) {
-            AppCompatDelegate.MODE_NIGHT_AUTO -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-            }
-            AppCompatDelegate.MODE_NIGHT_YES -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-            else -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-        }
+        AppCompatDelegate.setDefaultNightMode(preferences[nightModeKey])
     }
 
     private fun reloadDnsSettings() {

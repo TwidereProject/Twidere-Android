@@ -24,7 +24,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
@@ -47,11 +46,11 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
+import org.mariotaku.twidere.constant.nightModeKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -102,11 +101,6 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
         if (theme.isToolbarColored) {
             theme.colorToolbar = theme.colorPrimary
-        }
-        theme.actionBarWidgetTheme = if (ChameleonUtils.isColorLight(theme.colorToolbar)) {
-            R.style.Theme_Twidere_Light
-        } else {
-            R.style.Theme_Twidere_Dark
         }
         theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
         theme.lightStatusBarMode = LightStatusBarMode.AUTO
@@ -178,7 +172,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
             StrictModeUtils.detectAllThreadPolicy()
         }
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val nightMode = ThemeUtils.getLocalNightMode(prefs)
+        val nightMode = prefs[nightModeKey]
         val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey], nightMode)
         if (themeResource != 0) {
             setTheme(themeResource)
@@ -228,11 +222,6 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         }
         actionHelper.dispatchOnPause()
         super.onPause()
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        ThemeUtils.fixNightMode(resources, newConfig)
     }
 
     override fun setControlBarOffset(offset: Float) {

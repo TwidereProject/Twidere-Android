@@ -2,13 +2,13 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.ContentResolver
 import android.net.Uri
+import org.mariotaku.ktextension.addAllIgnoreDuplicates
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.map
-import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.`FiltersData$BaseItemCursorIndices`
-import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
+import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlSerializer
 import java.io.IOException
@@ -18,9 +18,10 @@ import java.util.*
  * Created by mariotaku on 2016/12/28.
  */
 
-fun FiltersData.read(cr: ContentResolver) {
+fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     fun readBaseItems(uri: Uri): List<FiltersData.BaseItem>? {
-        val c = cr.query(uri, Filters.COLUMNS, null, null, null) ?: return null
+        val where = if (loadSubscription) null else Expression.lesserThan(Filters.SOURCE, 0).sql
+        val c = cr.query(uri, Filters.COLUMNS, where, null, null) ?: return null
         @Suppress("ConvertTryFinallyToUseCall")
         try {
             return c.map(`FiltersData$BaseItemCursorIndices`(c))
@@ -29,7 +30,8 @@ fun FiltersData.read(cr: ContentResolver) {
         }
     }
     this.users = run {
-        val c = cr.query(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, null, null, null) ?: return@run null
+        val where = if (loadSubscription) null else Expression.lesserThan(Filters.Users.SOURCE, 0).sql
+        val c = cr.query(Filters.Users.CONTENT_URI, Filters.Users.COLUMNS, where, null, null) ?: return@run null
         @Suppress("ConvertTryFinallyToUseCall")
         try {
             return@run c.map(`FiltersData$UserItemCursorIndices`(c))
@@ -40,6 +42,25 @@ fun FiltersData.read(cr: ContentResolver) {
     this.keywords = readBaseItems(Filters.Keywords.CONTENT_URI)
     this.sources = readBaseItems(Filters.Sources.CONTENT_URI)
     this.links = readBaseItems(Filters.Links.CONTENT_URI)
+}
+
+fun FiltersData.write(cr: ContentResolver) {
+    if (users != null) {
+        ContentResolverUtils.bulkInsert(cr, Filters.Users.CONTENT_URI,
+                users.map(`FiltersData$UserItemValuesCreator`::create))
+    }
+    if (keywords != null) {
+        ContentResolverUtils.bulkInsert(cr, Filters.Keywords.CONTENT_URI,
+                keywords.map(`FiltersData$BaseItemValuesCreator`::create))
+    }
+    if (sources != null) {
+        ContentResolverUtils.bulkInsert(cr, Filters.Sources.CONTENT_URI,
+                sources.map(`FiltersData$BaseItemValuesCreator`::create))
+    }
+    if (links != null) {
+        ContentResolverUtils.bulkInsert(cr, Filters.Links.CONTENT_URI,
+                links.map(`FiltersData$BaseItemValuesCreator`::create))
+    }
 }
 
 private const val TAG_FILTERS = "filters"
@@ -94,18 +115,7 @@ fun FiltersData.parse(parser: XmlPullParser) {
     while (event != XmlPullParser.END_DOCUMENT) {
         when (event) {
             XmlPullParser.START_DOCUMENT -> {
-                if (users == null) {
-                    users = ArrayList()
-                }
-                if (keywords == null) {
-                    keywords = ArrayList()
-                }
-                if (sources == null) {
-                    sources = ArrayList()
-                }
-                if (links == null) {
-                    links = ArrayList()
-                }
+                initFields()
             }
             XmlPullParser.START_TAG -> {
                 stack.push(when (parser.name) {
@@ -138,4 +148,46 @@ fun FiltersData.parse(parser: XmlPullParser) {
         event = parser.next()
     }
 
+}
+
+fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false) {
+    this.users = mergeList(this.users, data.users, ignoreDuplicates = ignoreDuplicates)
+    this.keywords = mergeList(this.keywords, data.keywords, ignoreDuplicates = ignoreDuplicates)
+    this.sources = mergeList(this.sources, data.sources, ignoreDuplicates = ignoreDuplicates)
+    this.links = mergeList(this.links, data.links, ignoreDuplicates = ignoreDuplicates)
+}
+
+fun FiltersData.removeAll(data: FiltersData) {
+    data.users?.let { this.users?.removeAll(it) }
+    data.keywords?.let { this.keywords?.removeAll(it) }
+    data.sources?.let { this.sources?.removeAll(it) }
+    data.links?.let { this.links?.removeAll(it) }
+}
+
+private fun <T> mergeList(vararg lists: List<T>?, ignoreDuplicates: Boolean): List<T> {
+    val result = ArrayList<T>()
+    lists.forEach {
+        if (it == null) return@forEach
+        if (ignoreDuplicates) {
+            result.addAllIgnoreDuplicates(it)
+        } else {
+            result.addAll(it)
+        }
+    }
+    return result
+}
+
+fun FiltersData.initFields() {
+    if (users == null) {
+        users = ArrayList()
+    }
+    if (keywords == null) {
+        keywords = ArrayList()
+    }
+    if (sources == null) {
+        sources = ArrayList()
+    }
+    if (links == null) {
+        links = ArrayList()
+    }
 }
