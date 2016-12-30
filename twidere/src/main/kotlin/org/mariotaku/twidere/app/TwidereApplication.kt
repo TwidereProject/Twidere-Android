@@ -27,7 +27,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
-import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
@@ -48,7 +47,6 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.bugReportsKey
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
-import org.mariotaku.twidere.constant.nightModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
@@ -98,8 +96,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy()
         }
-        val preferences = sharedPreferences
-        resetTheme(preferences)
         super.onCreate()
         startKovenant()
         initializeAsyncTask()
@@ -238,15 +234,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             KEY_EMOJI_SUPPORT -> {
                 externalThemeManager.reloadEmojiPreferences()
             }
-            KEY_THEME -> {
-                resetTheme(preferences)
-            }
-            KEY_THEME_BACKGROUND -> {
-            }
-            KEY_PROFILE_IMAGE_STYLE -> {
-            }
-            KEY_THEME_COLOR -> {
-            }
             KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
                 (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()
             }
@@ -256,10 +243,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     override fun onTerminate() {
         super.onTerminate()
         stopKovenant()
-    }
-
-    private fun resetTheme(preferences: SharedPreferences) {
-        AppCompatDelegate.setDefaultNightMode(preferences[nightModeKey])
     }
 
     private fun reloadDnsSettings() {

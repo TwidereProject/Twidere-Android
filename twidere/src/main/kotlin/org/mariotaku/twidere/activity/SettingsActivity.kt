@@ -44,6 +44,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_DARK
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_LIGHT
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
@@ -206,6 +208,18 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         openDetails(position)
     }
 
+    override fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int {
+        when (theme) {
+            VALUE_THEME_NAME_LIGHT -> {
+                return R.style.Theme_Twidere_Light
+            }
+            VALUE_THEME_NAME_DARK -> {
+                return R.style.Theme_Twidere_Dark
+            }
+        }
+        return super.getThemeResource(theme, themeColor, nightMode)
+    }
+
     private fun openDetails(position: Int) {
         if (isFinishing) return
         val entry = entriesAdapter.getItem(position) as? PreferenceEntry ?: return
@@ -241,13 +255,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
     internal class EntriesAdapter(context: Context) : BaseAdapter() {
-        private val inflater: LayoutInflater
-        private val entries: MutableList<Entry>
-
-        init {
-            inflater = LayoutInflater.from(context)
-            entries = ArrayList<Entry>()
-        }
+        private val inflater: LayoutInflater = LayoutInflater.from(context)
+        private val entries: MutableList<Entry> = ArrayList()
 
         fun addPreference(tag: String, @DrawableRes icon: Int, title: String, @XmlRes preference: Int) {
             entries.add(PreferenceEntry(tag, icon, title, preference, null, null))
