@@ -19,7 +19,7 @@ abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
         }
         val remoteModified = remoteFilters.loadFromRemote(snapshotFile.lastModified())
         if (BuildConfig.DEBUG && !remoteModified) {
-            Log.d(LOGTAG, "Remote filter unchanged, skipped downloading")
+            Log.d(LOGTAG, "Remote filter unchanged, skip download")
         }
         val filters: FiltersData = FiltersData().apply {
             read(context.contentResolver)
@@ -28,27 +28,37 @@ abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
 
         var localModified = false
 
-        val deletedFilters: FiltersData? = try {
-            FileReader(snapshotFile).use {
-                val result = FiltersData()
+        val remoteAddedFilters = FiltersData()
+        val remoteDeletedFilters = FiltersData()
+        try {
+            val snapshot = FileReader(snapshotFile).use {
+                val snapshot = FiltersData()
                 val parser = Xml.newPullParser()
                 parser.setInput(it)
-                result.parse(parser)
-                localModified = localModified or (result != filters)
-                result.removeAll(filters)
-                return@use result
+                snapshot.parse(parser)
+                return@use snapshot
             }
+            if (remoteModified) {
+                remoteAddedFilters.addAll(remoteFilters)
+                remoteAddedFilters.removeAll(snapshot)
+
+                remoteDeletedFilters.addAll(snapshot)
+                remoteDeletedFilters.removeAll(remoteFilters)
+            }
+
+            localModified = localModified or (snapshot != filters)
         } catch (e: FileNotFoundException) {
+            remoteAddedFilters.addAll(remoteFilters)
+            remoteAddedFilters.removeAll(filters)
+
             localModified = true
-            null
         }
 
         if (remoteModified) {
-            localModified = localModified or filters.addAll(remoteFilters, true)
-        }
+            filters.addAll(remoteAddedFilters, true)
+            filters.removeAll(remoteDeletedFilters)
 
-        if (deletedFilters != null) {
-            localModified = localModified or filters.removeAll(deletedFilters)
+            localModified = !remoteAddedFilters.isEmpty() || !remoteDeletedFilters.isEmpty()
         }
 
         filters.write(context.contentResolver)

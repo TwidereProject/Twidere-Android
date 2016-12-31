@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import org.mariotaku.ktextension.addAllEnhanced
 import org.mariotaku.ktextension.convert
+import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.map
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.model.*
@@ -152,29 +153,18 @@ fun FiltersData.parse(parser: XmlPullParser) {
 
 fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Boolean {
     var changed: Boolean = false
-    if (this.users != null) {
+    initFields()
+    if (data.users != null) {
         changed = changed or this.users.addAllEnhanced(collection = data.users, ignoreDuplicates = ignoreDuplicates)
-    } else {
-        this.users = data.users
-        changed = true
     }
-    if (this.keywords != null) {
+    if (data.keywords != null) {
         changed = changed or this.keywords.addAllEnhanced(collection = data.keywords, ignoreDuplicates = ignoreDuplicates)
-    } else {
-        this.keywords = data.keywords
-        changed = true
     }
-    if (this.sources != null) {
+    if (data.sources != null) {
         changed = changed or this.sources.addAllEnhanced(collection = data.sources, ignoreDuplicates = ignoreDuplicates)
-    } else {
-        this.sources = data.sources
-        changed = true
     }
-    if (this.links != null) {
+    if (data.links != null) {
         changed = changed or this.links.addAllEnhanced(collection = data.links, ignoreDuplicates = ignoreDuplicates)
-    } else {
-        this.links = data.links
-        changed = true
     }
     return changed
 }
@@ -186,6 +176,11 @@ fun FiltersData.removeAll(data: FiltersData): Boolean {
     changed = changed or (data.sources?.let { this.sources?.removeAll(it) } ?: false)
     changed = changed or (data.links?.let { this.links?.removeAll(it) } ?: false)
     return changed
+}
+
+fun FiltersData.isEmpty(): Boolean {
+    return users.isNullOrEmpty() && keywords.isNullOrEmpty() && sources.isNullOrEmpty()
+            && links.isNullOrEmpty()
 }
 
 fun FiltersData.initFields() {
