@@ -94,6 +94,7 @@ public abstract class BaseEvent implements Parcelable, LogModel {
     }
 
     public void markStart(@NonNull Context context) {
+        if (!BuildConfig.HOTMOBI_LOG_ENABLED) return;
         setStartTime(System.currentTimeMillis());
         setTimeOffset(TimeZone.getDefault().getOffset(startTime));
         setLocation(LocationUtils.getCachedLatLng(context));

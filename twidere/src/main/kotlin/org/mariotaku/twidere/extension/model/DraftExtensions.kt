@@ -92,12 +92,14 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
     st.flush()
 }
 
-fun Draft.readMimeMessageFrom(context: Context, st: InputStream) {
+fun Draft.readMimeMessageFrom(context: Context, st: InputStream): Boolean {
     val config = MimeConfig()
     val parser = MimeStreamParser(config)
     parser.isContentDecoding = true
-    parser.setContentHandler(DraftContentHandler(context, this))
+    val handler = DraftContentHandler(context, this)
+    parser.setContentHandler(handler)
     parser.parse(st)
+    return !handler.malformedData
 }
 
 fun Draft.getActionName(context: Context): String? {
@@ -119,9 +121,16 @@ fun Draft.getActionName(context: Context): String? {
     return null
 }
 
+val Draft.filename: String get() = "$unique_id_non_null.eml"
+
+val Draft.unique_id_non_null: String
+    get() = unique_id ?: UUID.nameUUIDFromBytes(("$_id:$timestamp").toByteArray()).toString()
+
 private class DraftContentHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
     private val processingStack = Stack<SimpleContentHandler>()
     private val mediaList: MutableList<ParcelableMediaUpdate> = ArrayList()
+
+    internal var malformedData: Boolean = false
     override fun headers(header: Header) {
         if (processingStack.isEmpty()) {
             draft.timestamp = header.getField("Date")?.convert {
@@ -159,6 +168,10 @@ private class DraftContentHandler(private val context: Context, private val draf
     }
 
     override fun body(bd: BodyDescriptor?, `is`: InputStream?) {
+        if (processingStack.isEmpty()) {
+            malformedData = true
+            return
+        }
         processingStack.peek().body(bd, `is`)
     }
 

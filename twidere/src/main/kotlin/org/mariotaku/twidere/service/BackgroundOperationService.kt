@@ -130,11 +130,11 @@ class BackgroundOperationService : BaseIntentService("background_operation") {
         val where = Expression.equals(Drafts._ID, draftId)
         val cr = contentResolver
         val c = cr.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null) ?: return
-        val i = DraftCursorIndices(c)
-        val item: Draft
-        try {
+        @Suppress("ConvertTryFinallyToUseCall")
+        val item: Draft = try {
+            val i = DraftCursorIndices(c)
             if (!c.moveToFirst()) return
-            item = i.newObject(c)
+            i.newObject(c)
         } finally {
             c.close()
         }

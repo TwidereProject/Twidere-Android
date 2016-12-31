@@ -2,7 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.ContentResolver
 import android.net.Uri
-import org.mariotaku.ktextension.addAllIgnoreDuplicates
+import org.mariotaku.ktextension.addAllEnhanced
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.map
 import org.mariotaku.sqliteqb.library.Expression
@@ -150,31 +150,42 @@ fun FiltersData.parse(parser: XmlPullParser) {
 
 }
 
-fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false) {
-    this.users = mergeList(this.users, data.users, ignoreDuplicates = ignoreDuplicates)
-    this.keywords = mergeList(this.keywords, data.keywords, ignoreDuplicates = ignoreDuplicates)
-    this.sources = mergeList(this.sources, data.sources, ignoreDuplicates = ignoreDuplicates)
-    this.links = mergeList(this.links, data.links, ignoreDuplicates = ignoreDuplicates)
-}
-
-fun FiltersData.removeAll(data: FiltersData) {
-    data.users?.let { this.users?.removeAll(it) }
-    data.keywords?.let { this.keywords?.removeAll(it) }
-    data.sources?.let { this.sources?.removeAll(it) }
-    data.links?.let { this.links?.removeAll(it) }
-}
-
-private fun <T> mergeList(vararg lists: List<T>?, ignoreDuplicates: Boolean): List<T> {
-    val result = ArrayList<T>()
-    lists.forEach {
-        if (it == null) return@forEach
-        if (ignoreDuplicates) {
-            result.addAllIgnoreDuplicates(it)
-        } else {
-            result.addAll(it)
-        }
+fun FiltersData.addAll(data: FiltersData, ignoreDuplicates: Boolean = false): Boolean {
+    var changed: Boolean = false
+    if (this.users != null) {
+        changed = changed or this.users.addAllEnhanced(collection = data.users, ignoreDuplicates = ignoreDuplicates)
+    } else {
+        this.users = data.users
+        changed = true
     }
-    return result
+    if (this.keywords != null) {
+        changed = changed or this.keywords.addAllEnhanced(collection = data.keywords, ignoreDuplicates = ignoreDuplicates)
+    } else {
+        this.keywords = data.keywords
+        changed = true
+    }
+    if (this.sources != null) {
+        changed = changed or this.sources.addAllEnhanced(collection = data.sources, ignoreDuplicates = ignoreDuplicates)
+    } else {
+        this.sources = data.sources
+        changed = true
+    }
+    if (this.links != null) {
+        changed = changed or this.links.addAllEnhanced(collection = data.links, ignoreDuplicates = ignoreDuplicates)
+    } else {
+        this.links = data.links
+        changed = true
+    }
+    return changed
+}
+
+fun FiltersData.removeAll(data: FiltersData): Boolean {
+    var changed: Boolean = false
+    changed = changed or (data.users?.let { this.users?.removeAll(it) } ?: false)
+    changed = changed or (data.keywords?.let { this.keywords?.removeAll(it) } ?: false)
+    changed = changed or (data.sources?.let { this.sources?.removeAll(it) } ?: false)
+    changed = changed or (data.links?.let { this.links?.removeAll(it) } ?: false)
+    return changed
 }
 
 fun FiltersData.initFields() {

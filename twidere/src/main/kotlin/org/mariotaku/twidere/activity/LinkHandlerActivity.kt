@@ -51,6 +51,7 @@ import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportMutesFragment
+import org.mariotaku.twidere.fragment.filter.FiltersSubscriptionsFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
@@ -386,6 +387,9 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_FILTERS_IMPORT_MUTES -> {
                 title = getString(R.string.title_select_users)
+            }
+            LINK_ID_FILTERS_SUBSCRIPTIONS -> {
+                title = getString(R.string.title_manage_filter_subscriptions)
             }
             else -> {
                 title = getString(R.string.app_name)
@@ -727,6 +731,10 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_FILTERS_IMPORT_MUTES -> {
                 fragment = FiltersImportMutesFragment()
+            }
+            LINK_ID_FILTERS_SUBSCRIPTIONS -> {
+                fragment = FiltersSubscriptionsFragment()
+                isAccountIdRequired = false
             }
             else -> {
                 return null

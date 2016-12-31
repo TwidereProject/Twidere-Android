@@ -68,14 +68,14 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
-                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS_IMPORT_BLOCKS).build()
+                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_BLOCKS).build()
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }
             REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
-                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS_IMPORT_MUTES).build()
+                intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_MUTES).build()
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }

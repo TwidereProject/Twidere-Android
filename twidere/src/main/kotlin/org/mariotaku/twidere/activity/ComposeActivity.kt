@@ -68,10 +68,12 @@ import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.model.getAccountUser
+import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
@@ -134,6 +136,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var composeKeyMetaState: Int = 0
     private var draft: Draft? = null
     private var nameFirst: Boolean = false
+    private var draftUniqueId: String? = null
     private var shouldSkipDraft: Boolean = false
 
     // Listeners
@@ -220,6 +223,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         outState.putParcelable(EXTRA_DRAFT, draft)
         outState.putBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS, shouldSaveAccounts)
         outState.putString(EXTRA_ORIGINAL_TEXT, originalText)
+        outState.putString(EXTRA_DRAFT_UNIQUE_ID, draftUniqueId)
         super.onSaveInstanceState(outState)
     }
 
@@ -436,7 +440,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     fun saveToDrafts(): Uri {
         val text = editText.text.toString()
         val draft = Draft()
-
+        draft.unique_id = this.draftUniqueId ?: UUID.randomUUID().toString()
         draft.action_type = getDraftAction(intent.action)
         draft.account_keys = accountsAdapter.selectedAccountKeys
         draft.text = text
@@ -575,11 +579,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (mediaList != null) {
                 addMedia(mediaList)
             }
-            inReplyToStatus = savedInstanceState.getParcelable<ParcelableStatus>(EXTRA_STATUS)
-            mentionUser = savedInstanceState.getParcelable<ParcelableUser>(EXTRA_USER)
-            draft = savedInstanceState.getParcelable<Draft>(EXTRA_DRAFT)
+            inReplyToStatus = savedInstanceState.getParcelable(EXTRA_STATUS)
+            mentionUser = savedInstanceState.getParcelable(EXTRA_USER)
+            draft = savedInstanceState.getParcelable(EXTRA_DRAFT)
             shouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS)
             originalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
+            draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
             setLabel(intent)
         } else {
             // The context was first created
@@ -842,6 +847,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun handleEditDraftIntent(draft: Draft?): Boolean {
         if (draft == null) return false
+        draftUniqueId = draft.unique_id_non_null
         editText.setText(draft.text)
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
@@ -854,6 +860,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             possiblySensitive = it.isPossiblySensitive
             inReplyToStatus = it.inReplyToStatus
         }
+        val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, draft._id.toString()).toString()
+        notificationManager.cancel(tag, TwidereConstants.NOTIFICATION_ID_DRAFTS)
         return true
     }
 
@@ -1908,9 +1916,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     companion object {
 
         // Constants
-        private val EXTRA_SHOULD_SAVE_ACCOUNTS = "should_save_accounts"
-        private val EXTRA_ORIGINAL_TEXT = "original_text"
-        private val DISCARD_STATUS_DIALOG_FRAGMENT_TAG = "discard_status"
+        private const val EXTRA_SHOULD_SAVE_ACCOUNTS = "should_save_accounts"
+        private const val EXTRA_ORIGINAL_TEXT = "original_text"
+        private const val EXTRA_DRAFT_UNIQUE_ID = "draft_unique_id"
+        private const val DISCARD_STATUS_DIALOG_FRAGMENT_TAG = "discard_status"
 
         val LOCATION_VALUE_PLACE = "place"
         val LOCATION_VALUE_COORDINATE = "coordinate"

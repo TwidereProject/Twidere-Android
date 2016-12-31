@@ -12,6 +12,10 @@ fun Collection<*>?.isNullOrEmpty(): Boolean {
     return this == null || this.isEmpty()
 }
 
-fun <T> MutableCollection<T>.addAllIgnoreDuplicates(collection: Collection<T>) {
-    addAll(collection.filter { it !in this })
+fun <T> MutableCollection<T>.addAllEnhanced(collection: Collection<T>, ignoreDuplicates: Boolean): Boolean {
+    if (ignoreDuplicates) {
+        return addAll(collection.filter { it !in this })
+    } else {
+        return addAll(collection)
+    }
 }

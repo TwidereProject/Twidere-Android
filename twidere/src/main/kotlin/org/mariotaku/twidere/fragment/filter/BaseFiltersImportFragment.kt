@@ -26,6 +26,7 @@ import org.mariotaku.twidere.adapter.iface.IContentCardAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_COUNT
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.MessageDialogFragment
@@ -44,11 +45,9 @@ import java.lang.ref.WeakReference
 /**
  * Created by mariotaku on 2016/12/26.
  */
-private const val EXTRA_COUNT = "count"
 
 abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<BaseFiltersImportFragment.SelectableUsersAdapter>(),
         LoaderManager.LoaderCallbacks<List<ParcelableUser>?> {
-
 
     protected var nextCursor: Long = -1
         private set

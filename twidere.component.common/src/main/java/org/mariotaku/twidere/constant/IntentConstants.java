@@ -212,4 +212,6 @@ public interface IntentConstants {
     String EXTRA_OBJECT = "object";
     String EXTRA_SIMPLE_LAYOUT = "simple_layout";
     String EXTRA_API_CONFIG = "api_config";
+    String EXTRA_COUNT = "count";
+
 }

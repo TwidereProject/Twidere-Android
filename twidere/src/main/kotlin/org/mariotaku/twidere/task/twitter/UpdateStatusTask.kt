@@ -516,6 +516,7 @@ class UpdateStatusTask(
 
     private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
         val draft = Draft()
+        draft.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
         draft.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
         draft.action_type = draftAction ?: Draft.Action.UPDATE_STATUS
         draft.text = statusUpdate.text

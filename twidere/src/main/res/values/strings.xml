@@ -869,6 +869,7 @@
     <string name="message_no_user_selected">No user selected</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_filter_possibility_sensitive_statuses">Filter sensitive tweets</string>
-    <string name="preference_title_filter_subscription">Filter subscription</string>
+    <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
+    <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
 </resources>

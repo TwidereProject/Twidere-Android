@@ -24,8 +24,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.ListFragment
+import android.support.v4.app.ListFragmentAccessor
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.AbsListView.OnScrollListener
+import android.widget.ProgressBar
+import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.view.ChameleonProgressBar
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TAB_POSITION
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
@@ -103,7 +110,14 @@ open class BaseListFragment : ListFragment(), OnScrollListener, RefreshScrollTop
         activityFirstCreated = true
     }
 
-    fun onPostStart() {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)!!
+        ((view.findViewById(ListFragmentAccessor.INTERNAL_PROGRESS_CONTAINER_ID) as ViewGroup).getChildAt(0) as ProgressBar).apply {
+            val appearance = ChameleonProgressBar.Appearance()
+            appearance.progressColor = Chameleon.getOverrideTheme(activity, activity).colorPrimary
+            ChameleonProgressBar.Appearance.apply(this, appearance)
+        }
+        return view
     }
 
     override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int,
@@ -129,7 +143,6 @@ open class BaseListFragment : ListFragment(), OnScrollListener, RefreshScrollTop
 
     override fun onStart() {
         super.onStart()
-        onPostStart()
     }
 
     override fun onStop() {

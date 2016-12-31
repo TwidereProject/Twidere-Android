@@ -27,6 +27,7 @@ import android.os.Bundle;
 
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.apache.commons.collections.primitives.IntList;
+import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.activity.HomeActivity;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
@@ -66,7 +67,7 @@ public class ActivityTracker implements Application.ActivityLifecycleCallbacks {
             mHomeActivityStarted = true;
         }
         // BEGIN HotMobi
-        if (mSessionEvent == null) {
+        if (mSessionEvent == null && BuildConfig.HOTMOBI_LOG_ENABLED) {
             mSessionEvent = SessionEvent.create(activity);
         }
         // END HotMobi
