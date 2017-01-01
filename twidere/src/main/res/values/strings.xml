@@ -872,4 +872,6 @@
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_extra_features_not_purchased">Enhanced features not purchased</string>
 </resources>
