@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.anjlab.android.iab.v3.Constants.BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED
 import kotlinx.android.synthetic.main.fragment_extra_features_introduction.*
 import kotlinx.android.synthetic.main.layout_extra_features_introduction.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.PURCHASE_RESPONSE_NOT_PURCHASED
 import org.mariotaku.twidere.fragment.BaseSupportFragment
 import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 
@@ -54,7 +54,7 @@ class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
             REQUEST_RESTORE_PURCHASE -> {
                 if (requestCode == Activity.RESULT_OK) {
                     activity?.recreate()
-                } else if (resultCode == BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED) {
+                } else if (resultCode == PURCHASE_RESPONSE_NOT_PURCHASED) {
                     Toast.makeText(context, R.string.message_extra_features_not_purchased, Toast.LENGTH_SHORT).show()
                 }
             }
