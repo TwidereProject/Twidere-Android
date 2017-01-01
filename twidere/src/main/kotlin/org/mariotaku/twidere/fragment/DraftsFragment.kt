@@ -117,6 +117,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_multi_select_drafts, menu)
+        listView.updateSelectionItems(menu)
         return true
     }
 
@@ -176,6 +177,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
                                            checked: Boolean) {
         updateTitle(mode)
+        listView.updateSelectionItems(mode.menu)
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {

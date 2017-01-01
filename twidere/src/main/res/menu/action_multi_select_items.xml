@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools">
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:ignore="AppCompatResource">
 
     <item
         android:id="@id/delete"
@@ -15,14 +16,17 @@
         android:visible="false">
         <item
             android:id="@+id/select_all"
+            android:showAsAction="never"
             android:title="@string/action_select_all"
             app:showAsAction="never"/>
         <item
             android:id="@+id/select_none"
+            android:showAsAction="never"
             android:title="@string/action_select_none"
             app:showAsAction="never"/>
         <item
             android:id="@+id/invert_selection"
+            android:showAsAction="never"
             android:title="@string/action_invert_selection"
             app:showAsAction="never"/>
     </group>

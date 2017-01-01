@@ -52,6 +52,7 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
     }
 
     override fun onBillingInitialized() {
+        // See https://github.com/anjlab/android-inapp-billing-v3/issues/156
         if (intent.action == ACTION_RESTORE_PURCHASE) {
             performRestorePurchase()
         } else {
@@ -68,8 +69,12 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
     }
 
     private fun handleError(billingResponse: Int) {
-        setResult(getResultCode(billingResponse))
-        finish()
+        if (billingResponse == BILLING_ERROR_OTHER_ERROR) {
+            getProductDetailsAndFinish()
+        } else {
+            setResult(getResultCode(billingResponse))
+            finish()
+        }
     }
 
     private fun handlePurchased(details: TransactionDetails) {
