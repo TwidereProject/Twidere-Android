@@ -3,9 +3,9 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1481804158000)
+--- twidere/build.gradle	(date 1483272161000)
 +++ twidere/build.gradle	(revision )
-@@ -6,7 +6,7 @@
+@@ -6,20 +6,20 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
@@ -14,7 +14,6 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  // END Non-FOSS component
  
  buildscript {
-@@ -15,13 +15,13 @@
      repositories {
          jcenter()
          // START Non-FOSS component
@@ -30,7 +29,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
  
          classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-@@ -51,7 +51,7 @@
+@@ -49,7 +49,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -39,7 +38,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -81,7 +81,7 @@
+@@ -79,7 +79,7 @@
      mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -48,7 +47,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -102,13 +102,13 @@
+@@ -95,13 +95,13 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -56,20 +55,20 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 -    googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
 -    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
--    googleCompile 'com.anjlab.android.iab.v3:library:1.0.36'
+-    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
 -    googleCompile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
 +//    googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
 +//    googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
 +//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
 +//    googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
-+//    googleCompile 'com.anjlab.android.iab.v3:library:1.0.36'
++//    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
 +//    googleCompile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.5:release@aar'
-@@ -217,5 +217,5 @@
+@@ -212,5 +212,5 @@
  }
  
  // START Non-FOSS component
