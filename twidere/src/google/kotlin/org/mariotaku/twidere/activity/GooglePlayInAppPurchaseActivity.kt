@@ -81,9 +81,9 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
         val weakThis = WeakReference(this)
         val dfRef = WeakReference(ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress"))
         task {
-            val bp = weakThis.get()?.billingProcessor ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
-            bp.loadOwnedPurchasesFromGoogle()
-            val details = bp.getPurchaseTransactionDetails(productId)
+            val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
+            activity.billingProcessor.loadOwnedPurchasesFromGoogle()
+            val details = activity.billingProcessor.getPurchaseTransactionDetails(activity.productId)
             return@task details ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
         }.successUi { details ->
             weakThis.get()?.handlePurchased(details)
@@ -106,9 +106,10 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
         val weakThis = WeakReference(this)
         val dfRef = WeakReference(ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress"))
         task {
-            val bp = weakThis.get()?.billingProcessor ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
+            val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
+            val bp = activity.billingProcessor
             bp.loadOwnedPurchasesFromGoogle()
-            val result = bp.getPurchaseTransactionDetails(productId)
+            val result = bp.getPurchaseTransactionDetails(activity.productId)
             return@task result ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
         }.successUi { details ->
             weakThis.get()?.handlePurchased(details)
