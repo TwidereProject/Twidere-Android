@@ -9,13 +9,14 @@ import org.mariotaku.twidere.R
  */
 
 class DummyExtraFeaturesChecker : ExtraFeaturesChecker() {
-
     override val introductionLayout: Int = R.layout.card_item_extra_features_purchase_introduction
-    override val statusLayout: Int = throw UnsupportedOperationException()
 
+    override val statusLayout: Int = throw UnsupportedOperationException()
     override fun isSupported(): Boolean = false
 
     override fun isEnabled(): Boolean = false
+
+    override fun destroyPurchase(): Boolean = false
 
     override fun createPurchaseIntent(context: Context): Intent = throw UnsupportedOperationException()
 
