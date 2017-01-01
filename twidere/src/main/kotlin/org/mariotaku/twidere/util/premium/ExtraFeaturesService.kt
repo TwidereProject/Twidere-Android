@@ -9,11 +9,12 @@ import java.util.*
  * Created by mariotaku on 2016/12/25.
  */
 
-abstract class ExtraFeaturesChecker {
+abstract class ExtraFeaturesService {
     protected lateinit var context: Context
 
     abstract val introductionLayout: Int
-    abstract val statusLayout: Int
+
+    abstract val dashboardLayouts: IntArray
 
     @CallSuper
     protected open fun init(context: Context) {
@@ -39,8 +40,8 @@ abstract class ExtraFeaturesChecker {
 
     companion object {
 
-        fun newInstance(context: Context): ExtraFeaturesChecker {
-            val instance = ServiceLoader.load(ExtraFeaturesChecker::class.java).first()
+        fun newInstance(context: Context): ExtraFeaturesService {
+            val instance = ServiceLoader.load(ExtraFeaturesService::class.java).first()
             instance.init(context)
             return instance
         }

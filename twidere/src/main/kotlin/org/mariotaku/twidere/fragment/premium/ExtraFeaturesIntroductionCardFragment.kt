@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.layout_extra_features_introduction.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.PURCHASE_RESPONSE_NOT_PURCHASED
 import org.mariotaku.twidere.fragment.BaseSupportFragment
-import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
  * Created by mariotaku on 2016/12/25.
@@ -20,7 +20,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 
 class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
 
-    lateinit var extraFeaturesChecker: ExtraFeaturesChecker
+    lateinit var extraFeaturesService: ExtraFeaturesService
 
     private val REQUEST_PURCHASE: Int = 301
     private val REQUEST_RESTORE_PURCHASE: Int = 302
@@ -28,11 +28,11 @@ class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
     // MARK: Fragment lifecycle
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        extraFeaturesChecker = ExtraFeaturesChecker.newInstance(context)
+        extraFeaturesService = ExtraFeaturesService.newInstance(context)
         purchaseButton.setOnClickListener {
-            startActivityForResult(extraFeaturesChecker.createPurchaseIntent(context), REQUEST_PURCHASE)
+            startActivityForResult(extraFeaturesService.createPurchaseIntent(context), REQUEST_PURCHASE)
         }
-        val restorePurchaseIntent = extraFeaturesChecker.createRestorePurchaseIntent(context)
+        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context)
         if (restorePurchaseIntent != null) {
             restorePurchaseHint.visibility = View.VISIBLE
             restorePurchaseButton.visibility = View.VISIBLE

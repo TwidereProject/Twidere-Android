@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
  * Created by mariotaku on 2016/12/25.
@@ -13,25 +13,25 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
 
 class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
 
-    private lateinit var extraFeaturesChecker: ExtraFeaturesChecker
+    private lateinit var extraFeaturesService: ExtraFeaturesService
 
     override fun onDestroy() {
-        extraFeaturesChecker.release()
+        extraFeaturesService.release()
         super.onDestroy()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        extraFeaturesChecker = ExtraFeaturesChecker.newInstance(context)
+        extraFeaturesService = ExtraFeaturesService.newInstance(context)
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { dialog, which ->
-            startActivity(extraFeaturesChecker.createPurchaseIntent(context))
+            startActivity(extraFeaturesService.createPurchaseIntent(context))
         }
         builder.setNegativeButton(R.string.action_later) { dialog, which ->
 
         }
-        val restorePurchaseIntent = extraFeaturesChecker.createRestorePurchaseIntent(context)
+        val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context)
         if (restorePurchaseIntent != null) {
             builder.setNeutralButton(R.string.action_restore_purchase) { dialog, which ->
                 startActivity(restorePurchaseIntent)

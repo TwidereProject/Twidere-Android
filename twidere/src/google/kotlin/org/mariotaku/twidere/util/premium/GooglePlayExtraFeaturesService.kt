@@ -11,12 +11,14 @@ import org.mariotaku.twidere.activity.GooglePlayInAppPurchaseActivity
  * Created by mariotaku on 2016/12/25.
  */
 
-class GooglePlayExtraFeaturesChecker() : ExtraFeaturesChecker() {
-    override val statusLayout: Int = R.layout.card_item_extra_features_status
-    override val introductionLayout: Int = R.layout.card_item_extra_features_purchase_introduction
+class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
     private val EXTRA_FEATURE_PRODUCT_ID = "twidere.extra.features"
 
     private lateinit var bp: BillingProcessor
+
+    override val dashboardLayouts: IntArray = intArrayOf(R.layout.card_item_extra_features_sync_status)
+
+    override val introductionLayout: Int = R.layout.card_item_extra_features_purchase_introduction
 
     override fun init(context: Context) {
         super.init(context)

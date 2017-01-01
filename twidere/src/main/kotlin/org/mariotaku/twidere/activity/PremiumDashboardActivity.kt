@@ -14,29 +14,32 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
-import org.mariotaku.twidere.util.premium.ExtraFeaturesChecker
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
 class PremiumDashboardActivity : BaseActivity() {
 
-    private lateinit var extraFeaturesChecker: ExtraFeaturesChecker
+    private lateinit var extraFeaturesService: ExtraFeaturesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        extraFeaturesChecker = ExtraFeaturesChecker.newInstance(this)
+        extraFeaturesService = ExtraFeaturesService.newInstance(this)
         setContentView(R.layout.activity_premium_dashboard)
-        if (extraFeaturesChecker.isSupported()) {
-            if (extraFeaturesChecker.isEnabled()) {
-                View.inflate(this, extraFeaturesChecker.statusLayout, cardsContainer)
+        if (extraFeaturesService.isSupported()) {
+            if (extraFeaturesService.isEnabled()) {
+                extraFeaturesService.dashboardLayouts.forEach {
+                    layout ->
+                    View.inflate(this, layout, cardsContainer)
+                }
             } else {
-                View.inflate(this, extraFeaturesChecker.introductionLayout, cardsContainer)
+                View.inflate(this, extraFeaturesService.introductionLayout, cardsContainer)
             }
         }
     }
 
     override fun onDestroy() {
-        extraFeaturesChecker.release()
+        extraFeaturesService.release()
         super.onDestroy()
     }
 
@@ -55,7 +58,7 @@ class PremiumDashboardActivity : BaseActivity() {
                     val recreate = AtomicBoolean()
                     task {
                         val activity = weakThis.get() ?: throw IllegalStateException()
-                        if (!activity.extraFeaturesChecker.destroyPurchase()) {
+                        if (!activity.extraFeaturesService.destroyPurchase()) {
                             throw IllegalStateException()
                         }
                     }.successUi {
