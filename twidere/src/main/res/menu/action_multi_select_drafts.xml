@@ -12,10 +12,21 @@
         android:icon="@drawable/ic_action_send"
         android:title="@string/action_send"
         app:showAsAction="ifRoom|withText"/>
-    <item
-        android:id="@id/save"
-        android:enabled="@bool/debug"
-        android:icon="@drawable/ic_action_save"
-        android:title="@string/action_save"
-        android:visible="@bool/debug"/>
+    <group
+        android:id="@+id/selection_group"
+        android:enabled="false"
+        android:visible="false">
+        <item
+            android:id="@+id/select_all"
+            android:title="@string/action_select_all"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/select_none"
+            android:title="@string/action_select_none"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/invert_selection"
+            android:title="@string/action_invert_selection"
+            app:showAsAction="never"/>
+    </group>
 </menu>

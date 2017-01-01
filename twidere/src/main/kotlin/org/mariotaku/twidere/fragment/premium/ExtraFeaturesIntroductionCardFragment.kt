@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment.premium
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,24 +19,35 @@ class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
 
     lateinit var extraFeaturesChecker: ExtraFeaturesChecker
 
+    private val REQUEST_PURCHASE: Int = 301
+    private val REQUEST_RESTORE_PURCHASE: Int = 302
+
     // MARK: Fragment lifecycle
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         extraFeaturesChecker = ExtraFeaturesChecker.newInstance(context)
         purchaseButton.setOnClickListener {
-            startActivity(extraFeaturesChecker.createPurchaseIntent(context))
+            startActivityForResult(extraFeaturesChecker.createPurchaseIntent(context), REQUEST_PURCHASE)
         }
         val restorePurchaseIntent = extraFeaturesChecker.createRestorePurchaseIntent(context)
         if (restorePurchaseIntent != null) {
             restorePurchaseHint.visibility = View.VISIBLE
             restorePurchaseButton.visibility = View.VISIBLE
             restorePurchaseButton.setOnClickListener {
-                startActivity(restorePurchaseIntent)
+                startActivityForResult(restorePurchaseIntent, REQUEST_RESTORE_PURCHASE)
             }
         } else {
             restorePurchaseHint.visibility = View.GONE
             restorePurchaseButton.visibility = View.GONE
             restorePurchaseButton.setOnClickListener(null)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_PURCHASE, REQUEST_RESTORE_PURCHASE -> {
+                activity?.recreate()
+            }
         }
     }
 

@@ -52,6 +52,10 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
+import org.mariotaku.twidere.extension.invertSelection
+import org.mariotaku.twidere.extension.selectAll
+import org.mariotaku.twidere.extension.selectNone
+import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -106,11 +110,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
         updateTitle(mode)
-        val checkedCount = listView.checkedItemCount
-        val listCount = listView.count
-        menu.setItemAvailability(R.id.select_none, checkedCount > 0)
-        menu.setItemAvailability(R.id.select_all, checkedCount < listCount)
-        menu.setItemAvailability(R.id.invert_selection, checkedCount > 0 && checkedCount < listCount)
+        listView.updateSelectionItems(menu)
         return true
     }
 
@@ -121,20 +121,13 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                 mode.finish()
             }
             R.id.select_all -> {
-                for (i in 0 until listView.count) {
-                    listView.setItemChecked(i, true)
-                }
+                listView.selectAll()
             }
             R.id.select_none -> {
-                for (i in 0 until listView.count) {
-                    listView.setItemChecked(i, false)
-                }
+                listView.selectNone()
             }
             R.id.invert_selection -> {
-                val positions = listView.checkedItemPositions
-                for (i in 0 until listView.count) {
-                    listView.setItemChecked(i, !positions.get(i))
-                }
+                listView.invertSelection()
             }
             else -> {
                 return false

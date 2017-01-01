@@ -15,11 +15,11 @@ abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
 
         val remoteFilters = FiltersData()
         if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Downloading remote filters")
+            Log.d(LOGTAG_SYNC, "Downloading remote filters")
         }
         val remoteModified = remoteFilters.loadFromRemote(snapshotFile.lastModified())
         if (BuildConfig.DEBUG && !remoteModified) {
-            Log.d(LOGTAG, "Remote filter unchanged, skip download")
+            Log.d(LOGTAG_SYNC, "Remote filter unchanged, skip download")
         }
         val filters: FiltersData = FiltersData().apply {
             read(context.contentResolver)
@@ -67,11 +67,11 @@ abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
 
         if (localModified) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG, "Uploading filters")
+                Log.d(LOGTAG_SYNC, "Uploading filters")
             }
             filters.saveToRemote(localModifiedTime)
         } else if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Local not modified, skip upload")
+            Log.d(LOGTAG_SYNC, "Local not modified, skip upload")
         }
         try {
             FileWriter(snapshotFile).use {
@@ -86,7 +86,7 @@ abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
         }
 
         if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Filters sync complete")
+            Log.d(LOGTAG_SYNC, "Filters sync complete")
         }
         return true
     }

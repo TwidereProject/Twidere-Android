@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:ignore="AppCompatResource">
+      xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@id/delete"
         android:icon="@drawable/ic_action_delete"
-        android:showAsAction="always"
         android:title="@string/action_delete"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -17,17 +15,14 @@
         android:visible="false">
         <item
             android:id="@+id/select_all"
-            android:showAsAction="never"
             android:title="@string/action_select_all"
             app:showAsAction="never"/>
         <item
             android:id="@+id/select_none"
-            android:showAsAction="never"
             android:title="@string/action_select_none"
             app:showAsAction="never"/>
         <item
             android:id="@+id/invert_selection"
-            android:showAsAction="never"
             android:title="@string/action_invert_selection"
             app:showAsAction="never"/>
     </group>

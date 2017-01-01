@@ -10,4 +10,12 @@
     <item quantity="many">تم تحديد <xliff:g id="items">%d</xliff:g> عنصراً</item>
     <item quantity="other">تم تحديد <xliff:g id="items">%d</xliff:g> عنصراً</item>
   </plurals>
+  <plurals name="created_at_with_N_tweets_per_day">
+    <item quantity="zero"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+    <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+    <item quantity="two"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+    <item quantity="few"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+    <item quantity="many"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> من التغريدات كل يوم)</item>
+  </plurals>
 </resources>

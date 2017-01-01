@@ -22,6 +22,7 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncHelper
 import org.mariotaku.twidere.util.sync.FileBasedFiltersDataSyncHelper
+import org.mariotaku.twidere.util.sync.LOGTAG_SYNC
 import java.io.IOException
 import java.util.*
 
@@ -54,7 +55,7 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
         try {
             helper.performSync()
         } catch (e: IOException) {
-            Log.w(LOGTAG, e)
+            Log.w(LOGTAG_SYNC, e)
         }
     }
 
@@ -64,7 +65,7 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
         try {
             helper.performSync()
         } catch (e: IOException) {
-            Log.w(LOGTAG, e)
+            Log.w(LOGTAG_SYNC, e)
         }
     }
 
@@ -151,10 +152,11 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
 
     }
 
+    companion object {
+        private fun DbxClientV2.newUploader(path: String, clientModified: Long) = files().uploadBuilder(path)
+                .withMode(WriteMode.OVERWRITE).withMute(true).withClientModified(Date(clientModified)).start()
+
+        private fun DbxClientV2.newDownloader(path: String) = files().downloadBuilder(path).start()
+    }
 }
 
-private const val LOGTAG = "Twidere.DBSync"
-private fun DbxClientV2.newUploader(path: String, clientModified: Long) = files().uploadBuilder(path)
-        .withMode(WriteMode.OVERWRITE).withMute(true).withClientModified(Date(clientModified)).start()
-
-private fun DbxClientV2.newDownloader(path: String) = files().downloadBuilder(path).start()

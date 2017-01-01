@@ -27,6 +27,11 @@ abstract class ExtraFeaturesChecker {
 
     abstract fun isEnabled(): Boolean
 
+    /**
+     * For debug purpose only, this will remove purchased product
+     */
+    abstract fun destroyPurchase(): Boolean
+
     abstract fun createPurchaseIntent(context: Context): Intent
 
     abstract fun createRestorePurchaseIntent(context: Context): Intent?

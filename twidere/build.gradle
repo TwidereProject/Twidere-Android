@@ -99,7 +99,7 @@ dependencies {
     googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
-    googleCompile 'com.anjlab.android.iab.v3:library:1.0.36'
+    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
     googleCompile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     // END Non-FOSS component

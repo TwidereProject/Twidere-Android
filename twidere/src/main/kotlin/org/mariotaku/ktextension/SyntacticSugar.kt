@@ -16,3 +16,7 @@ inline fun <F, T> F.convert(block: (F) -> T): T {
 fun rangeOfSize(start: Int, size: Int): IntRange {
     return IntRange(start, start + size)
 }
+
+fun LongArray.toStringArray(): Array<String> {
+    return Array(this.size) { idx -> this[idx].toString() }
+}

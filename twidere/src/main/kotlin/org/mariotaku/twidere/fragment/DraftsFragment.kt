@@ -27,12 +27,9 @@ import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.content.Intent
 import android.database.Cursor
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -45,10 +42,8 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
-import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_drafts.*
-import nl.komponents.kovenant.task
-import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
@@ -57,7 +52,10 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
-import org.mariotaku.twidere.extension.model.writeMimeMessageTo
+import org.mariotaku.twidere.extension.invertSelection
+import org.mariotaku.twidere.extension.selectAll
+import org.mariotaku.twidere.extension.selectNone
+import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
@@ -68,123 +66,11 @@ import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.Utils.getDefaultTextSize
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemClickListener, MultiChoiceModeListener {
 
     private lateinit var adapter: DraftsAdapter
-
-    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.action_multi_select_drafts, menu)
-        return true
-    }
-
-    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-        updateTitle(mode)
-        return true
-    }
-
-    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.delete -> {
-                val f = DeleteDraftsConfirmDialogFragment()
-                val args = Bundle()
-                args.putLongArray(IntentConstants.EXTRA_IDS, listView.checkedItemIds)
-                f.arguments = args
-                f.show(childFragmentManager, "delete_drafts_confirm")
-            }
-            R.id.send -> {
-                val checked = listView.checkedItemPositions
-                val list = ArrayList<Draft>()
-                for (i in 0 until checked.size()) {
-                    val position = checked.keyAt(i)
-                    if (checked.valueAt(i)) {
-                        list.add(adapter.getDraft(position))
-                    }
-                }
-                if (sendDrafts(list)) {
-                    val where = Expression.`in`(Column(Drafts._ID),
-                            RawItemArray(listView.checkedItemIds))
-                    context.contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
-                }
-            }
-            R.id.save -> {
-                val checked = listView.checkedItemPositions
-                val drafts = ArrayList<Draft>()
-                for (i in 0 until checked.size()) {
-                    val position = checked.keyAt(i)
-                    if (checked.valueAt(i)) {
-                        drafts.add(adapter.getDraft(position))
-                    }
-                }
-                task {
-                    val pubDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-                    val paths = drafts.map { draft ->
-                        val name = "${draft.timestamp}.eml"
-                        val destFile = File(pubDir, name)
-                        FileOutputStream(destFile).use {
-                            draft.writeMimeMessageTo(context, it)
-                            it.flush()
-                        }
-                        return@map destFile.absolutePath
-                    }
-                    MediaScannerConnection.scanFile(context, paths.toTypedArray(), null, null)
-                }.successUi {
-                    Toast.makeText(context, R.string.draft_saved, Toast.LENGTH_SHORT).show()
-                }.fail { ex ->
-                    Log.w(LOGTAG, ex)
-                }
-            }
-            else -> {
-                return false
-            }
-        }
-        mode.finish()
-        return true
-    }
-
-    override fun onDestroyActionMode(mode: ActionMode) {
-
-    }
-
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        val uri = Drafts.CONTENT_URI_UNSENT
-        val cols = Drafts.COLUMNS
-        val orderBy = Drafts.TIMESTAMP + " DESC"
-        return CursorLoader(activity, uri, cols, null, null, orderBy)
-    }
-
-    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
-        adapter.swapCursor(cursor)
-        setListShown(true)
-    }
-
-    override fun onLoaderReset(loader: Loader<Cursor?>) {
-        adapter.swapCursor(null)
-    }
-
-    override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
-                                           checked: Boolean) {
-        updateTitle(mode)
-    }
-
-    override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
-        val item = adapter.getDraft(position)
-        if (TextUtils.isEmpty(item.action_type)) {
-            editDraft(item)
-            return
-        }
-        when (item.action_type) {
-            "0", "1", Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                editDraft(item)
-            }
-        }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_drafts, container, false)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -208,9 +94,103 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
         super.onStart()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_drafts, container, false)
     }
+
+    // MARK: Loader callbacks
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
+        val uri = Drafts.CONTENT_URI_UNSENT
+        val cols = Drafts.COLUMNS
+        val orderBy = Drafts.TIMESTAMP + " DESC"
+        return CursorLoader(activity, uri, cols, null, null, orderBy)
+    }
+
+    override fun onLoadFinished(loader: Loader<Cursor?>, cursor: Cursor?) {
+        adapter.swapCursor(cursor)
+        setListShown(true)
+    }
+
+    override fun onLoaderReset(loader: Loader<Cursor?>) {
+        adapter.swapCursor(null)
+    }
+
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        mode.menuInflater.inflate(R.menu.action_multi_select_drafts, menu)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        updateTitle(mode)
+        listView.updateSelectionItems(menu)
+        return true
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete -> {
+                val f = DeleteDraftsConfirmDialogFragment()
+                val args = Bundle()
+                args.putLongArray(IntentConstants.EXTRA_IDS, listView.checkedItemIds)
+                f.arguments = args
+                f.show(childFragmentManager, "delete_drafts_confirm")
+                mode.finish()
+            }
+            R.id.send -> {
+                val checked = listView.checkedItemPositions
+                val list = ArrayList<Draft>()
+                for (i in 0 until checked.size()) {
+                    val position = checked.keyAt(i)
+                    if (checked.valueAt(i)) {
+                        list.add(adapter.getDraft(position))
+                    }
+                }
+                if (sendDrafts(list)) {
+                    val where = Expression.`in`(Column(Drafts._ID),
+                            RawItemArray(listView.checkedItemIds))
+                    context.contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
+                }
+                mode.finish()
+            }
+            R.id.select_all -> {
+                listView.selectAll()
+            }
+            R.id.select_none -> {
+                listView.selectNone()
+            }
+            R.id.invert_selection -> {
+                listView.invertSelection()
+            }
+            else -> {
+                return false
+            }
+        }
+        return true
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode) {
+
+    }
+
+
+    override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
+                                           checked: Boolean) {
+        updateTitle(mode)
+    }
+
+    override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
+        val item = adapter.getDraft(position)
+        if (TextUtils.isEmpty(item.action_type)) {
+            editDraft(item)
+            return
+        }
+        when (item.action_type) {
+            "0", "1", Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
+                editDraft(item)
+            }
+        }
+    }
+
 
     fun setListShown(listShown: Boolean) {
         listContainer.visibility = if (listShown) View.VISIBLE else View.GONE
@@ -284,31 +264,23 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
             private val activity: FragmentActivity,
             private val ids: LongArray
     ) : AsyncTask<Any, Any, Int>() {
-        private val notificationManager: NotificationManager
-        private val handler: Handler
-
-        init {
-            notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            handler = Handler(activity.mainLooper)
-        }
+        private val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         override fun doInBackground(vararg params: Any): Int? {
             val resolver = activity.contentResolver
-            val where = Expression.`in`(Column(Drafts._ID), RawItemArray(ids))
+            val where = Expression.inArgs(Column(Drafts._ID), ids.size)
             val projection = arrayOf(Drafts.MEDIA)
-            val c = resolver.query(Drafts.CONTENT_URI, projection, where.sql, null, null) ?: return 0
+            val c = resolver.query(Drafts.CONTENT_URI, projection, where.sql, ids.toStringArray(), null) ?: return 0
             val idxMedia = c.getColumnIndex(Drafts.MEDIA)
             c.moveToFirst()
             while (!c.isAfterLast) {
                 val mediaArray = JsonSerializer.parseArray(c.getString(idxMedia), ParcelableMediaUpdate::class.java)
-                if (mediaArray != null) {
-                    for (media in mediaArray) {
-                        val uri = Uri.parse(media.uri)
-                        if ("file" == uri.scheme) {
-                            val file = File(uri.path)
-                            if (!file.delete()) {
-                                Log.w(LOGTAG, String.format("Unable to delete %s", file))
-                            }
+                mediaArray?.forEach { media ->
+                    val uri = Uri.parse(media.uri)
+                    if ("file" == uri.scheme) {
+                        val file = File(uri.path)
+                        if (!file.delete()) {
+                            Log.w(LOGTAG, String.format("Unable to delete %s", file))
                         }
                     }
                 }

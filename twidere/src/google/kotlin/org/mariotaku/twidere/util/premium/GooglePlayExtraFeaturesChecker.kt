@@ -34,6 +34,10 @@ class GooglePlayExtraFeaturesChecker() : ExtraFeaturesChecker() {
         return bp.isValidTransactionDetails(details)
     }
 
+    override fun destroyPurchase(): Boolean {
+        return bp.consumePurchase(EXTRA_FEATURE_PRODUCT_ID)
+    }
+
     override fun createPurchaseIntent(context: Context): Intent {
         return Intent(context, GooglePlayInAppPurchaseActivity::class.java).apply {
             putExtra(GooglePlayInAppPurchaseActivity.EXTRA_PRODUCT_ID, EXTRA_FEATURE_PRODUCT_ID)
@@ -41,7 +45,10 @@ class GooglePlayExtraFeaturesChecker() : ExtraFeaturesChecker() {
     }
 
     override fun createRestorePurchaseIntent(context: Context): Intent? {
-        return null
+        return Intent(context, GooglePlayInAppPurchaseActivity::class.java).apply {
+            action = GooglePlayInAppPurchaseActivity.ACTION_RESTORE_PURCHASE
+            putExtra(GooglePlayInAppPurchaseActivity.EXTRA_PRODUCT_ID, EXTRA_FEATURE_PRODUCT_ID)
+        }
     }
 
 }
