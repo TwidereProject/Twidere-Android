@@ -111,8 +111,8 @@ fun FiltersData.parse(parser: XmlPullParser) {
         return item
     }
 
+    val stack = Stack<Any?>()
     var event = parser.eventType
-    var stack = Stack<Any?>()
     while (event != XmlPullParser.END_DOCUMENT) {
         when (event) {
             XmlPullParser.START_DOCUMENT -> {
@@ -128,10 +128,10 @@ fun FiltersData.parse(parser: XmlPullParser) {
             XmlPullParser.END_TAG -> {
                 val obj = stack.pop()
                 when (parser.name) {
-                    TAG_USER -> (obj as? FiltersData.UserItem).let { users.add(it) }
-                    TAG_KEYWORD -> (obj as? FiltersData.BaseItem).let { keywords.add(it) }
-                    TAG_SOURCE -> (obj as? FiltersData.BaseItem).let { sources.add(it) }
-                    TAG_LINK -> (obj as? FiltersData.BaseItem).let { links.add(it) }
+                    TAG_USER -> (obj as? FiltersData.UserItem)?.let { users.add(it) }
+                    TAG_KEYWORD -> (obj as? FiltersData.BaseItem)?.let { keywords.add(it) }
+                    TAG_SOURCE -> (obj as? FiltersData.BaseItem)?.let { sources.add(it) }
+                    TAG_LINK -> (obj as? FiltersData.BaseItem)?.let { links.add(it) }
                 }
             }
             XmlPullParser.TEXT -> {

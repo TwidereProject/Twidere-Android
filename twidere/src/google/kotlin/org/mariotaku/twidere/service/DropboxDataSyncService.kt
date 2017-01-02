@@ -3,16 +3,15 @@ package org.mariotaku.twidere.service
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.support.v7.app.NotificationCompat
 import android.util.Log
 import android.util.Xml
+import com.dropbox.core.DbxDownloader
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.NetworkIOException
 import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.DeleteArg
-import com.dropbox.core.v2.files.FileMetadata
-import com.dropbox.core.v2.files.ListFolderResult
-import com.dropbox.core.v2.files.WriteMode
+import com.dropbox.core.v2.files.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
@@ -20,10 +19,10 @@ import org.mariotaku.twidere.dropboxAuthTokenKey
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncHelper
-import org.mariotaku.twidere.util.sync.FileBasedFiltersDataSyncHelper
-import org.mariotaku.twidere.util.sync.LOGTAG_SYNC
-import java.io.IOException
+import org.mariotaku.twidere.util.sync.*
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlSerializer
+import java.io.*
 import java.util.*
 
 /**
@@ -45,28 +44,21 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
         val requestConfig = DbxRequestConfig.newBuilder("twidere-android/${BuildConfig.VERSION_NAME}")
                 .build()
         val client = DbxClientV2(requestConfig, authToken)
-        syncFilters(client)
-        uploadDrafts(client)
+        arrayOf(
+                DropboxDraftsSyncHelper(this, client),
+                DropboxFiltersDataSyncHelper(this, client),
+                DropboxPreferencesValuesSyncHelper(this, client, userColorNameManager.colorPreferences,
+                        UserColorsSyncProcessor, "/Common/user_colors.xml"),
+                DropboxPreferencesValuesSyncHelper(this, client, userColorNameManager.nicknamePreferences,
+                        UserNicknamesSyncProcessor, "/Common/user_nicknames.xml")
+        ).forEach { helper ->
+            try {
+                helper.performSync()
+            } catch (e: IOException) {
+                Log.w(LOGTAG_SYNC, e)
+            }
+        }
         nm.cancel(NOTIFICATION_ID_SYNC_DATA)
-    }
-
-    private fun uploadDrafts(client: DbxClientV2) {
-        val helper = DropboxDraftsSyncHelper(this, client)
-        try {
-            helper.performSync()
-        } catch (e: IOException) {
-            Log.w(LOGTAG_SYNC, e)
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun syncFilters(client: DbxClientV2) {
-        val helper = DropboxFiltersDataSyncHelper(this, client)
-        try {
-            helper.performSync()
-        } catch (e: IOException) {
-            Log.w(LOGTAG_SYNC, e)
-        }
     }
 
     class DropboxDraftsSyncHelper(context: Context, val client: DbxClientV2) : FileBasedDraftsSyncHelper<FileMetadata>(context) {
@@ -124,39 +116,134 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
 
     }
 
-    class DropboxFiltersDataSyncHelper(context: Context, val client: DbxClientV2) : FileBasedFiltersDataSyncHelper(context) {
-        override fun FiltersData.loadFromRemote(snapshotModifiedMillis: Long): Boolean {
-            client.newDownloader("/Common/filters.xml").use { downloader ->
-                // Local file is the same with remote version
-                if (Math.abs(downloader.result.clientModified.time - snapshotModifiedMillis) < 1000) {
-                    return false
-                }
-                val parser = Xml.newPullParser()
-                parser.setInput(downloader.inputStream, "UTF-8")
-                this.parse(parser)
-                this.initFields()
-                return true
-            }
+    internal class DropboxFiltersDataSyncHelper(
+            context: Context,
+            val client: DbxClientV2
+    ) : FileBasedFiltersDataSyncHelper<DbxDownloader<FileMetadata>, DropboxUploadSession<FiltersData>>(context) {
+        override fun DbxDownloader<FileMetadata>.getRemoteLastModified(): Long {
+            return result.clientModified.time
         }
 
-        override fun FiltersData.saveToRemote(localModifiedTime: Long): Boolean {
-            client.newUploader("/Common/filters.xml", localModifiedTime).use { uploader ->
-                val serializer = Xml.newSerializer()
-                serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
-                serializer.setOutput(uploader.outputStream, "UTF-8")
-                this.serialize(serializer)
-                uploader.finish()
-                return true
+        private val filePath = "/Common/filters.xml"
+
+        override fun newLoadFromRemoteSession(): DbxDownloader<FileMetadata> {
+            return client.newDownloader(filePath)
+        }
+
+        override fun DbxDownloader<FileMetadata>.loadFromRemote(): FiltersData {
+            val data = FiltersData()
+            data.parse(inputStream.newPullParser())
+            data.initFields()
+            return data
+        }
+
+        override fun DropboxUploadSession<FiltersData>.setRemoteLastModified(lastModified: Long) {
+            this.localModifiedTime = lastModified
+        }
+
+        override fun DropboxUploadSession<FiltersData>.saveToRemote(data: FiltersData): Boolean {
+            return this.uploadData(data)
+        }
+
+        override fun newSaveToRemoteSession(): DropboxUploadSession<FiltersData> {
+            return object : DropboxUploadSession<FiltersData>(filePath, client) {
+                override fun performUpload(uploader: UploadUploader, data: FiltersData) {
+                    data.serialize(uploader.outputStream.newSerializer(true))
+                }
             }
         }
 
     }
 
+
+    internal class DropboxPreferencesValuesSyncHelper(
+            context: Context,
+            val client: DbxClientV2,
+            preferences: SharedPreferences,
+            processor: FileBasedPreferencesValuesSyncHelper.Processor,
+            val filePath: String
+    ) : FileBasedPreferencesValuesSyncHelper<DbxDownloader<FileMetadata>,
+            DropboxUploadSession<Map<String, String>>>(context, preferences, processor) {
+        override fun DbxDownloader<FileMetadata>.getRemoteLastModified(): Long {
+            return result.clientModified.time
+        }
+
+        override fun DbxDownloader<FileMetadata>.loadFromRemote(): MutableMap<String, String> {
+            val data = HashMap<String, String>()
+            data.parse(inputStream.newPullParser())
+            return data
+        }
+
+        override fun newLoadFromRemoteSession(): DbxDownloader<FileMetadata> {
+            return client.newDownloader(filePath)
+        }
+
+        override fun newSaveToRemoteSession(): DropboxUploadSession<Map<String, String>> {
+            return object : DropboxUploadSession<Map<String, String>>(filePath, client) {
+                override fun performUpload(uploader: UploadUploader, data: Map<String, String>) {
+                    data.serialize(uploader.outputStream.newSerializer(true))
+                }
+            }
+        }
+
+        override fun DropboxUploadSession<Map<String, String>>.saveToRemote(data: MutableMap<String, String>): Boolean {
+            return this.uploadData(data)
+        }
+
+        override fun DropboxUploadSession<Map<String, String>>.setRemoteLastModified(lastModified: Long) {
+            this.localModifiedTime = lastModified
+        }
+    }
+
+    abstract internal class DropboxUploadSession<in Data>(val fileName: String, val client: DbxClientV2) : Closeable {
+        private var uploader: UploadUploader? = null
+
+        var localModifiedTime: Long = 0
+
+        override fun close() {
+            uploader?.close()
+        }
+
+        abstract fun performUpload(uploader: UploadUploader, data: Data)
+
+        fun uploadData(data: Data): Boolean {
+            uploader = client.newUploader(fileName, localModifiedTime).apply {
+                performUpload(this, data)
+                this.finish()
+            }
+            return true
+        }
+
+    }
+
     companion object {
+
+        private fun InputStream.newPullParser(): XmlPullParser {
+            val parser = Xml.newPullParser()
+            parser.setInput(this, "UTF-8")
+            return parser
+        }
+
+        private fun OutputStream.newSerializer(indent: Boolean = true): XmlSerializer {
+            val serializer = Xml.newSerializer()
+            serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", indent)
+            serializer.setOutput(this, "UTF-8")
+            return serializer
+        }
+
         private fun DbxClientV2.newUploader(path: String, clientModified: Long) = files().uploadBuilder(path)
                 .withMode(WriteMode.OVERWRITE).withMute(true).withClientModified(Date(clientModified)).start()
 
-        private fun DbxClientV2.newDownloader(path: String) = files().downloadBuilder(path).start()
+        private fun DbxClientV2.newDownloader(path: String): DbxDownloader<FileMetadata> {
+            try {
+                return files().downloadBuilder(path).start()
+            } catch (e: DownloadErrorException) {
+                if (e.errorValue?.pathValue?.isNotFound ?: false) {
+                    throw FileNotFoundException(path)
+                }
+                throw IOException(e)
+            }
+        }
     }
 }
 

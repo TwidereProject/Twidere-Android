@@ -1,23 +1,9 @@
 package org.mariotaku.twidere.extension.model
 
-import android.accounts.Account
-import android.accounts.AccountManager
-import android.support.annotation.ColorInt
-import com.bluelinelabs.logansquare.LoganSquare
+import org.mariotaku.ktextension.HexColorFormat
+import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.account.AccountExtras
-import org.mariotaku.twidere.model.account.StatusNetAccountExtras
-import org.mariotaku.twidere.model.account.TwitterAccountExtras
-import org.mariotaku.twidere.model.account.cred.BasicCredentials
-import org.mariotaku.twidere.model.account.cred.Credentials
-import org.mariotaku.twidere.model.account.cred.EmptyCredentials
-import org.mariotaku.twidere.model.account.cred.OAuthCredentials
-import org.mariotaku.twidere.util.ParseUtils
-import org.mariotaku.twidere.util.toHexColor
 
 
 fun android.accounts.Account.getCredentials(am: android.accounts.AccountManager): org.mariotaku.twidere.model.account.cred.Credentials {
@@ -89,7 +75,7 @@ fun android.accounts.Account.setActivated(am: android.accounts.AccountManager, a
 }
 
 fun android.accounts.Account.setColor(am: android.accounts.AccountManager, color: Int) {
-    am.setUserData(this, ACCOUNT_USER_DATA_COLOR, org.mariotaku.twidere.util.toHexColor(color))
+    am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 }
 
 fun android.accounts.Account.setPosition(am: android.accounts.AccountManager, position: Int) {

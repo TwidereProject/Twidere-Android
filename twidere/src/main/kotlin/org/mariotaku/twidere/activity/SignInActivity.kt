@@ -53,9 +53,7 @@ import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.convert
-import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
@@ -750,7 +748,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
 
             action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
-            action(ACCOUNT_USER_DATA_COLOR, toHexColor(color))
+            action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 
             action(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
             action(ACCOUNT_USER_DATA_EXTRAS, accountType.second?.convert { LoganSquare.serialize(it) })

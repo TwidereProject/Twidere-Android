@@ -1,103 +1,88 @@
 package org.mariotaku.twidere.util.sync
 
 import android.content.Context
-import android.util.Log
 import android.util.Xml
-import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.ktextension.nullableContentEquals
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.FiltersData
-import java.io.*
+import java.io.Closeable
+import java.io.File
+import java.io.IOException
 
-abstract class FileBasedFiltersDataSyncHelper(val context: Context) {
-    fun performSync(): Boolean {
-        val syncDataDir: File = context.syncDataDir.mkdirIfNotExists() ?: return false
-        val snapshotFile = File(syncDataDir, "filters.xml")
+abstract class FileBasedFiltersDataSyncHelper<DownloadSession : Closeable, UploadSession : Closeable>(
+        val context: Context
+) : SingleFileBasedDataSyncHelper<FiltersData, File, DownloadSession, UploadSession>() {
 
-        val remoteFilters = FiltersData()
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Downloading remote filters")
+    override fun File.loadSnapshot(): FiltersData {
+        return reader().use {
+            val snapshot = FiltersData()
+            val parser = Xml.newPullParser()
+            parser.setInput(it)
+            snapshot.parse(parser)
+            return@use snapshot
         }
-        val remoteModified = remoteFilters.loadFromRemote(snapshotFile.lastModified())
-        if (BuildConfig.DEBUG && !remoteModified) {
-            Log.d(LOGTAG_SYNC, "Remote filter unchanged, skip download")
+    }
+
+    override fun File.saveSnapshot(data: FiltersData) {
+        writer().use {
+            val serializer = Xml.newSerializer()
+            serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
+            serializer.setOutput(it)
+            data.serialize(serializer)
         }
-        val filters: FiltersData = FiltersData().apply {
+    }
+
+    override var File.snapshotLastModified: Long
+        get() = this.lastModified()
+        set(value) {
+            this.setLastModified(value)
+        }
+
+    override fun loadFromLocal(): FiltersData {
+        return FiltersData().apply {
             read(context.contentResolver)
             initFields()
         }
-
-        var localModified = false
-
-        val remoteAddedFilters = FiltersData()
-        val remoteDeletedFilters = FiltersData()
-        try {
-            val snapshot = FileReader(snapshotFile).use {
-                val snapshot = FiltersData()
-                val parser = Xml.newPullParser()
-                parser.setInput(it)
-                snapshot.parse(parser)
-                return@use snapshot
-            }
-            if (remoteModified) {
-                remoteAddedFilters.addAll(remoteFilters)
-                remoteAddedFilters.removeAll(snapshot)
-
-                remoteDeletedFilters.addAll(snapshot)
-                remoteDeletedFilters.removeAll(remoteFilters)
-            }
-
-            localModified = localModified or (snapshot != filters)
-        } catch (e: FileNotFoundException) {
-            remoteAddedFilters.addAll(remoteFilters)
-            remoteAddedFilters.removeAll(filters)
-
-            localModified = true
-        }
-
-        if (remoteModified) {
-            filters.addAll(remoteAddedFilters, true)
-            filters.removeAll(remoteDeletedFilters)
-
-            localModified = !remoteAddedFilters.isEmpty() || !remoteDeletedFilters.isEmpty()
-        }
-
-        filters.write(context.contentResolver)
-
-        val localModifiedTime = System.currentTimeMillis()
-
-        if (localModified) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG_SYNC, "Uploading filters")
-            }
-            filters.saveToRemote(localModifiedTime)
-        } else if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Local not modified, skip upload")
-        }
-        try {
-            FileWriter(snapshotFile).use {
-                val serializer = Xml.newSerializer()
-                serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true)
-                serializer.setOutput(it)
-                filters.serialize(serializer)
-            }
-            snapshotFile.setLastModified(localModifiedTime)
-        } catch (e: FileNotFoundException) {
-            // Ignore
-        }
-
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Filters sync complete")
-        }
-        return true
     }
 
-    /**
-     * Return false if remote not changed
-     */
-    @Throws(IOException::class)
-    protected abstract fun FiltersData.loadFromRemote(snapshotModifiedMillis: Long): Boolean
+    override fun FiltersData.saveToLocal() {
+        this.write(context.contentResolver)
+    }
 
-    @Throws(IOException::class)
-    protected abstract fun FiltersData.saveToRemote(localModifiedTime: Long): Boolean
+    override fun newData(): FiltersData {
+        return FiltersData()
+    }
 
+    override fun FiltersData.minus(data: FiltersData): FiltersData {
+        val diff = FiltersData()
+        diff.addAll(this, true)
+        diff.removeAllData(data)
+        return diff
+    }
+
+    override fun FiltersData.addAllData(data: FiltersData): Boolean {
+        return this.addAll(data, ignoreDuplicates = true)
+    }
+
+    override fun FiltersData.removeAllData(data: FiltersData): Boolean {
+        return this.removeAll(data)
+    }
+
+    override fun FiltersData.isDataEmpty(): Boolean {
+        return this.isEmpty()
+    }
+
+    override fun newSnapshotStore(): File {
+        val syncDataDir: File = context.syncDataDir.mkdirIfNotExists() ?: throw IOException()
+        return File(syncDataDir, "filters.xml")
+    }
+
+    override fun FiltersData.dataContentEquals(localData: FiltersData): Boolean {
+        return this.users.nullableContentEquals(localData.users)
+                && this.keywords.nullableContentEquals(localData.keywords)
+                && this.sources.nullableContentEquals(localData.sources)
+                && this.links.nullableContentEquals(localData.links)
+    }
+
+    override val whatData: String = "filters"
 }

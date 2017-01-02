@@ -19,3 +19,14 @@ fun <T> MutableCollection<T>.addAllEnhanced(collection: Collection<T>, ignoreDup
         return addAll(collection)
     }
 }
+
+fun <E> Collection<E>?.nullableContentEquals(other: Collection<E>?): Boolean {
+    if (this == null) return other.isNullOrEmpty()
+    return contentEquals(other!!)
+}
+
+fun <E> Collection<E>.contentEquals(other: Collection<E>): Boolean {
+    if (this === other) return true
+    if (this.size != other.size) return false
+    return this.containsAll(other) && other.containsAll(this)
+}

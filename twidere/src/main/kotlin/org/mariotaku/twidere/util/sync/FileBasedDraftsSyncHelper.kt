@@ -23,8 +23,11 @@ import java.util.*
  * Created by mariotaku on 2016/12/31.
  */
 
-abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
-    fun performSync(): Boolean {
+abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) : ISyncHelper {
+    override fun performSync(): Boolean {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOGTAG_SYNC, "Begin syncing drafts")
+        }
         val syncDataDir: File = context.syncDataDir.mkdirIfNotExists() ?: return false
         val snapshotsListFile = File(syncDataDir, "draft_ids.list")
 
@@ -101,14 +104,14 @@ abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
 
 
         // Upload local items
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && uploadLocalList.isNotEmpty()) {
             val fileList = uploadLocalList.joinToString(",") { it.filename }
             Log.d(LOGTAG_SYNC, "Uploading local drafts $fileList")
         }
         uploadDrafts(uploadLocalList)
 
         // Download remote items
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && downloadRemoteInfoList.isNotEmpty()) {
             val fileList = downloadRemoteInfoList.joinToString(",") { it.draftFileName }
             Log.d(LOGTAG_SYNC, "Downloading remote drafts $fileList")
         }
@@ -116,7 +119,7 @@ abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
                 downloadDrafts(downloadRemoteInfoList).map { DraftValuesCreator.create(it) })
 
         // Update local items
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && updateLocalInfoList.size() > 0) {
             val fileList = (0 until updateLocalInfoList.size()).joinToString(",") { updateLocalInfoList.valueAt(it).draftFileName }
             Log.d(LOGTAG_SYNC, "Updating local drafts $fileList")
         }
@@ -130,7 +133,7 @@ abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
         }
 
         // Remove local items
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && removeLocalIdsList.isNotEmpty()) {
             val fileList = removeLocalIdsList.joinToString(",") { "$it.eml" }
             Log.d(LOGTAG_SYNC, "Removing local drafts $fileList")
         }
@@ -138,7 +141,7 @@ abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
                 Drafts.UNIQUE_ID, removeLocalIdsList, null)
 
         // Remove remote items
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && removeRemoteInfoList.isNotEmpty()) {
             val fileList = removeRemoteInfoList.joinToString(",") { it.draftFileName }
             Log.d(LOGTAG_SYNC, "Removing remote drafts $fileList")
         }
@@ -157,7 +160,7 @@ abstract class FileBasedDraftsSyncHelper<RemoteFileInfo>(val context: Context) {
         }
 
         if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Drafts sync complete")
+            Log.d(LOGTAG_SYNC, "Finished syncing drafts")
         }
         return true
     }

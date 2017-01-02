@@ -20,6 +20,8 @@ abstract class BaseIntentService(tag: String) : IntentService(tag) {
     lateinit var extractor: Extractor
     @Inject
     lateinit var mediaLoader: MediaLoaderWrapper
+    @Inject
+    lateinit var userColorNameManager: UserColorNameManager
 
     override fun onCreate() {
         super.onCreate()
