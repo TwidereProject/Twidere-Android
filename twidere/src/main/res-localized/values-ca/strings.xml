@@ -387,7 +387,7 @@
   <string name="theme_color">Color del tema</string>
   <string name="wrong_url_format">El format de la URL és incorrecte.</string>
   <string name="wrong_username_password">La combinació usuari-contrasenya és incorrecta.</string>
-  <string name="network_error">Hi ha un error de connexió.</string>
+  <string name="message_network_error">Hi ha un error de connexió.</string>
   <string name="api_data_corrupted">Les dades de l\'API estan malmeses.</string>
   <string name="ssl_error">Error d\'SSL. Proveu d\'habilitar l\'opció «Ignora error d\'SSL».</string>
   <string name="wrong_api_key">La URL de l\'API o bé el parell clau de consumidor - secret és incorrecte. Si us plau, comproveu-los.</string>

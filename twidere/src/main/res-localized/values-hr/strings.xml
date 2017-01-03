@@ -348,7 +348,7 @@
   <string name="theme_color">Boja teme</string>
   <string name="wrong_url_format">Krivi URL format.</string>
   <string name="wrong_username_password">Krivo korisničko ime/lozinka.</string>
-  <string name="network_error">Greška mreže.</string>
+  <string name="message_network_error">Greška mreže.</string>
   <string name="api_data_corrupted">Korumpirani API podaci.</string>
   <string name="ssl_error">SSL greška, možda ćete morati uključiti opciju \"Ignoriraj SSL grešku\".</string>
   <string name="wrong_api_key">Nevaljani API url ili korisnički ključ/tajna, provjerite ih opet.</string>

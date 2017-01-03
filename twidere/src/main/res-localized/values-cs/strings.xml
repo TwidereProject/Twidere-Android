@@ -234,7 +234,7 @@
   <string name="your_profile_image">Váš profilový obrázek</string>
   <string name="wrong_url_format">Nesprávný formát adresy URL.</string>
   <string name="wrong_username_password">Nesprávné uživatelské jméno/heslo.</string>
-  <string name="network_error">Chyba sítě.</string>
+  <string name="message_network_error">Chyba sítě.</string>
   <string name="status_updated">Tweet odeslán.</string>
   <string name="profile_updated">Profil aktualizován.</string>
   <string name="profile_image_updated">Profilový obrázek aktualizován.</string>

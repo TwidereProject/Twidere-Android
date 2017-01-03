@@ -384,7 +384,7 @@
   <string name="theme_color">Téma színe</string>
   <string name="wrong_url_format">Nem megfelelő URL formátum.</string>
   <string name="wrong_username_password">Nem megfelelő felhasználónév/jelszó.</string>
-  <string name="network_error">Hálózati hiba.</string>
+  <string name="message_network_error">Hálózati hiba.</string>
   <string name="api_data_corrupted">Az API adatok sérültek.</string>
   <string name="ssl_error">SSL hiba. Lehet, hogy be kell kapcsolnod az \"SSL hibák figyelmen kívül hagyása\" opciót.</string>
   <string name="wrong_api_key">Érvénytelen API hivatkozás, vagy felhasználói kulcs/jelszó. Kérlek ellenőrizd őket újra.</string>

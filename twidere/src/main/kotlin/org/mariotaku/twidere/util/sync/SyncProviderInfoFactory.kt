@@ -31,5 +31,14 @@ abstract class SyncProviderInfoFactory {
             }
             return result
         }
+
+        fun getProviderEntry(context: Context, type: String): SyncProviderEntry? {
+            ServiceLoader.load(SyncProviderInfoFactory::class.java).forEach { factory ->
+                factory.getSupportedProviders(context).forEach { entry ->
+                    if (entry.type == type) return entry
+                }
+            }
+            return null
+        }
     }
 }

@@ -334,7 +334,7 @@
   <string name="theme_color">Temafärg</string>
   <string name="wrong_url_format">Fel URL-format.</string>
   <string name="wrong_username_password">Fel användarnamn eller lösenord.</string>
-  <string name="network_error">Network error.</string>
+  <string name="message_network_error">Network error.</string>
   <string name="api_data_corrupted">API-data korrupt.</string>
   <string name="empty_content">Empty content</string>
   <string name="theme_light">Ljus</string>

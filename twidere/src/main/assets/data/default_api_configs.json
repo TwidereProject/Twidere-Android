@@ -1,6 +1,7 @@
 [
   {
     "name": "Twidere",
+    "type": "twitter",
     "localized_name": "@string/provider_default",
     "api_url_format": "https://[DOMAIN.]twitter.com/",
     "auth_type": "oauth",
@@ -11,6 +12,7 @@
   },
   {
     "name": "Fanfou",
+    "type": "fanfou",
     "localized_name": "@string/provider_fanfou",
     "api_url_format": "http://api.fanfou.com/",
     "auth_type": "oauth",
@@ -21,6 +23,7 @@
   },
   {
     "name": "Quitter.se",
+    "type": "statusnet",
     "localized_name": "@string/provider_quitter_se",
     "api_url_format": "https://quitter.se/api/",
     "auth_type": "oauth",
@@ -31,6 +34,7 @@
   },
   {
     "name": "LoadAverage.org",
+    "type": "statusnet",
     "localized_name": "@string/provider_loadaverage_org",
     "api_url_format": "https://loadaverage.org/api/",
     "auth_type": "oauth",
@@ -41,6 +45,7 @@
   },
   {
     "name": "GNU Social.net",
+    "type": "statusnet",
     "localized_name": "@string/provider_gnusocial_net",
     "api_url_format": "https://gnusocial.net/api/",
     "auth_type": "oauth",
@@ -51,6 +56,7 @@
   },
   {
     "name": "GNU Social.de",
+    "type": "statusnet",
     "localized_name": "@string/provider_gnusocial_de",
     "api_url_format": "https://gnusocial.de/api/",
     "auth_type": "oauth",
@@ -61,6 +67,7 @@
   },
   {
     "name": "status.vinilox.eu",
+    "type": "statusnet",
     "api_url_format": "https://status.vinilox.eu/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,
@@ -70,6 +77,7 @@
   },
   {
     "name": "Quitter.im",
+    "type": "statusnet",
     "api_url_format": "https://quitter.im/api/",
     "auth_type": "oauth",
     "same_oauth_url": true,

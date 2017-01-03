@@ -387,7 +387,7 @@
   <string name="theme_color">테마 색상</string>
   <string name="wrong_url_format">잘못된 URL 양식입니다.</string>
   <string name="wrong_username_password">잘못된 사용자 이름 또는 비밀번호입니다.</string>
-  <string name="network_error">네트워크 오류입니다.</string>
+  <string name="message_network_error">네트워크 오류입니다.</string>
   <string name="api_data_corrupted">API 데이터가 파손되었습니다.</string>
   <string name="ssl_error">SSL 오류입니다. \"SSL 오류 무시\"를 설정할 필요가 있습니다.</string>
   <string name="wrong_api_key">부정확한 APL 주소 또는 컨슈머 키/시크릿입니다. 다시 한 번 확인해 주세요.</string>

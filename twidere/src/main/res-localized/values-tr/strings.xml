@@ -389,7 +389,7 @@
   <string name="theme_color">Tema rengi</string>
   <string name="wrong_url_format">Yanlış URL biçimi.</string>
   <string name="wrong_username_password">Yanlış kullanıcı adı / şifre.</string>
-  <string name="network_error">Bağlantı hatası.</string>
+  <string name="message_network_error">Bağlantı hatası.</string>
   <string name="api_data_corrupted">API verisi bozulmuş.</string>
   <string name="ssl_error">SSL hatası, \"SSL hatasını gözardı et\" seçeneğini seçmen gerekiyor olabilir.</string>
   <string name="wrong_api_key">Geçersiz API url\'si veya müşteri anahtar\'ı/gizli\'si, Lütfen onları tekrar kontrol edin.</string>

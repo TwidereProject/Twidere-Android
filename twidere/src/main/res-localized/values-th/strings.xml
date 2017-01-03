@@ -390,7 +390,7 @@
   <string name="theme_color">สีของธีม</string>
   <string name="wrong_url_format">รูปแบบ URL ผิด</string>
   <string name="wrong_username_password">username/password ไม่ถูกต้อง</string>
-  <string name="network_error">ข้อผิดพลาดของเครือข่าย</string>
+  <string name="message_network_error">ข้อผิดพลาดของเครือข่าย</string>
   <string name="api_data_corrupted">ข้อมูล API เสียหาย</string>
   <string name="ssl_error">SSL ผิดพลาด คุณต้องเปิดใช้</string>
   <string name="wrong_api_key">API URL หรือ consumer key/secret ไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง</string>

@@ -394,9 +394,10 @@
     <string name="mention_user">Mention <xliff:g id="user">%s</xliff:g></string>
     <string name="theme_color">Theme color</string>
     <string name="wrong_url_format">Wrong URL format.</string>
-    <string name="wrong_username_password">Wrong username/password.</string>
-    <string name="network_error">Network error.</string>
-    <string name="api_data_corrupted">API data corrupted.</string>
+    <string name="wrong_username_password">Wrong username/password</string>
+    <!-- Toast message for network errors -->
+    <string name="message_network_error">Network error</string>
+    <string name="api_data_corrupted">API data corrupted</string>
     <string name="ssl_error">SSL error, you may need to enable \"Ignore SSL error\" option.</string>
     <string name="wrong_api_key">Incorrect API url or consumer key/secret, please check them again.</string>
     <string name="status_updated">Tweet sent.</string>
@@ -884,5 +885,7 @@
     <string name="sync_provider_name_dropbox">Dropbox</string>
     <!-- [verb] Disconnect from network storage -->
     <string name="action_sync_disconnect">Disconnect</string>
+    <string name="action_sync_sync_now">Sync now</string>
     <string name="title_sync_settings">Sync settings</string>
+    <string name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
 </resources>

@@ -13,7 +13,8 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
-import org.mariotaku.twidere.constant.PURCHASE_RESPONSE_NOT_PURCHASED
+import org.mariotaku.twidere.constant.RESULT_NOT_PURCHASED
+import org.mariotaku.twidere.constant.RESULT_SERVICE_UNAVAILABLE
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import java.lang.ref.WeakReference
 
@@ -138,7 +139,8 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
         val resultCode = when (billingResponse) {
             BILLING_RESPONSE_RESULT_OK -> Activity.RESULT_OK
             BILLING_RESPONSE_RESULT_USER_CANCELED -> Activity.RESULT_CANCELED
-            BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED -> PURCHASE_RESPONSE_NOT_PURCHASED
+            BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE -> RESULT_SERVICE_UNAVAILABLE
+            BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED -> RESULT_NOT_PURCHASED
             else -> billingResponse
         }
         return resultCode

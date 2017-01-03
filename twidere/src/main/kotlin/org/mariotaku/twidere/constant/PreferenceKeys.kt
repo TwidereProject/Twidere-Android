@@ -10,6 +10,8 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.KEY_DISPLAY_PROFILE_IMAGE
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CUSTOM_API_TYPE
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -124,11 +126,12 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
     override fun read(preferences: SharedPreferences): CustomAPIConfig {
         val apiUrlFormat = preferences.getNonEmptyString(KEY_API_URL_FORMAT, DEFAULT_TWITTER_API_URL_FORMAT)
         val authType = preferences.getString(KEY_CREDENTIALS_TYPE, Credentials.Type.OAUTH)
+        val customApiType = preferences.getString(KEY_CUSTOM_API_TYPE, null) ?: AccountType.TWITTER
         val sameOAuthSigningUrl = preferences.getBoolean(KEY_SAME_OAUTH_SIGNING_URL, false)
         val noVersionSuffix = preferences.getBoolean(KEY_NO_VERSION_SUFFIX, false)
         val consumerKey = preferences.getNonEmptyString(KEY_CONSUMER_KEY, TWITTER_CONSUMER_KEY).trim()
         val consumerSecret = preferences.getNonEmptyString(KEY_CONSUMER_SECRET, TWITTER_CONSUMER_SECRET).trim()
-        return CustomAPIConfig("Default", apiUrlFormat, authType, sameOAuthSigningUrl,
+        return CustomAPIConfig("Default", customApiType, apiUrlFormat, authType, sameOAuthSigningUrl,
                 noVersionSuffix, consumerKey, consumerSecret)
     }
 
@@ -141,6 +144,7 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
             editor.remove(KEY_CONSUMER_SECRET)
         }
         editor.putString(KEY_API_URL_FORMAT, value.apiUrlFormat)
+        editor.putString(KEY_CUSTOM_API_TYPE, value.type)
         editor.putString(KEY_CREDENTIALS_TYPE, value.credentialsType)
         editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, value.isSameOAuthUrl)
         editor.putBoolean(KEY_NO_VERSION_SUFFIX, value.isNoVersionSuffix)

@@ -392,7 +392,7 @@
   <string name="theme_color">رنگ زمینه</string>
   <string name="wrong_url_format">قالب URL نادرست.</string>
   <string name="wrong_username_password">نام‌کاربری/گذرواژهٔ نادرست.</string>
-  <string name="network_error">خطای شبکه.</string>
+  <string name="message_network_error">خطای شبکه.</string>
   <string name="api_data_corrupted">داده‌های API خراب شده است.</string>
   <string name="ssl_error">خطای SSL، ممکن است نیاز داشته باشید که «خطای  SSL را نادیده بگیر» را فعال کنید.</string>
   <string name="wrong_api_key">نشانی API یا کلید/رمز مصرف‌کنندهٔ نادرست است، لطفاً دوباره آن‌ها را بررسی کنید.</string>

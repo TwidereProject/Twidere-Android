@@ -388,7 +388,7 @@
   <string name="theme_color">Warna tema</string>
   <string name="wrong_url_format">Format URL salah.</string>
   <string name="wrong_username_password">Nama/kata sandi salah.</string>
-  <string name="network_error">Masalah Jaringan.</string>
+  <string name="message_network_error">Masalah Jaringan.</string>
   <string name="api_data_corrupted">API data rusak.</string>
   <string name="ssl_error">Masalah SSL, Anda mungkin harus mengaktifkan opsi \"Abaikan masalah SSL\".</string>
   <string name="wrong_api_key">Kesalahan pada API url atau consumer key/secret, coba cek kembali.</string>

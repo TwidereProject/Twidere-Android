@@ -337,7 +337,7 @@
   <string name="theme_color">Kolor motywu</string>
   <string name="wrong_url_format">Nieprawidłowy format URL.</string>
   <string name="wrong_username_password">Błędna nazwa użytkownika / hasło.</string>
-  <string name="network_error">Błąd sieci.</string>
+  <string name="message_network_error">Błąd sieci.</string>
   <string name="api_data_corrupted">Dane API uszkodzone.</string>
   <string name="ssl_error">Błąd SSL, można spróbować włączyć opcję \"Ignoruj błąd SSL\".</string>
   <string name="wrong_api_key">Nieprawidłowy adres API lub klucz/hasło klienta, proszę sprawdzić dane ponownie.</string>

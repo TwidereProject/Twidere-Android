@@ -299,7 +299,7 @@
   <string name="theme_color">צבע ערכת הנושא</string>
   <string name="wrong_url_format">תבנית כתובת URL שגויה.</string>
   <string name="wrong_username_password">שם משתמש/סיסמה לא נכונים.</string>
-  <string name="network_error">שגיאת רשת.</string>
+  <string name="message_network_error">שגיאת רשת.</string>
   <string name="api_data_corrupted">נתוני הAPI פגומים.</string>
   <string name="ssl_error">שגיאת SSL, ייתכן שעליך להפעיל את האפשרות \"התעלם משגיאות SSL\".</string>
   <string name="wrong_api_key">כתובת URL שגויה לAPI או מפתח/סוד שגויים, אנא בדוק/י אותם שוב.</string>

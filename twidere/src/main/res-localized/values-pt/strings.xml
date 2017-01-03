@@ -392,7 +392,7 @@
   <string name="theme_color">Cor do tema</string>
   <string name="wrong_url_format">Formato de URL incorreto.</string>
   <string name="wrong_username_password">Usuário/senha incorretos.</string>
-  <string name="network_error">Erro de rede.</string>
+  <string name="message_network_error">Erro de rede.</string>
   <string name="api_data_corrupted">Dados da API corrompidos.</string>
   <string name="ssl_error">Erro de SSL, você pode ter que habilitar a opção \"Ignorar Erro de SSL\".</string>
   <string name="wrong_api_key">URL da API ou chave de usuário incorreta, verifique novamente.</string>

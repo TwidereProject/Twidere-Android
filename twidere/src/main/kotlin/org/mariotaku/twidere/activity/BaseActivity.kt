@@ -59,6 +59,8 @@ import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.support.ActivitySupport
+import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 import java.lang.reflect.InvocationTargetException
@@ -184,6 +186,8 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         }
         delegate.setLocalNightMode(nightMode)
         super.onCreate(savedInstanceState)
+        ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
+                ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
         GeneralComponentHelper.build(this).inject(this)
     }
 

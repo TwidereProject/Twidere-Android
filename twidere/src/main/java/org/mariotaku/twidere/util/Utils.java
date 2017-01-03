@@ -837,9 +837,9 @@ public final class Utils implements Constants {
             if (msg != null && msg.contains("!="))
                 return getErrorMessage(context, action, context.getString(R.string.ssl_error));
             else
-                return getErrorMessage(context, action, context.getString(R.string.network_error));
+                return getErrorMessage(context, action, context.getString(R.string.message_network_error));
         } else if (te.getCause() instanceof IOException)
-            return getErrorMessage(context, action, context.getString(R.string.network_error));
+            return getErrorMessage(context, action, context.getString(R.string.message_network_error));
         else if (te.getCause() instanceof JSONException)
             return getErrorMessage(context, action, context.getString(R.string.api_data_corrupted));
         else
@@ -1155,11 +1155,11 @@ public final class Utils implements Constants {
                                 context.getString(R.string.ssl_error));
                     } else {
                         message = context.getString(R.string.error_message_with_action, action,
-                                context.getString(R.string.network_error));
+                                context.getString(R.string.message_network_error));
                     }
                 } else if (te.getCause() instanceof IOException) {
                     message = context.getString(R.string.error_message_with_action, action,
-                            context.getString(R.string.network_error));
+                            context.getString(R.string.message_network_error));
                 } else {
                     message = context.getString(R.string.error_message_with_action, action,
                             trimLineBreak(te.getMessage()));

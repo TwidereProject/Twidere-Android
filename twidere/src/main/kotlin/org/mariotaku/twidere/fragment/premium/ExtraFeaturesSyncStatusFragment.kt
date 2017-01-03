@@ -23,10 +23,9 @@ import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 
 class ExtraFeaturesSyncStatusFragment : BaseSupportFragment() {
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        updateButtons()
+        updateSyncSettingActions()
         connectButton.setOnClickListener {
             val df = ConnectNetworkStorageSelectionDialogFragment()
             df.show(childFragmentManager, "connect_to_storage")
@@ -42,12 +41,17 @@ class ExtraFeaturesSyncStatusFragment : BaseSupportFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_CONNECT_NETWORK_STORAGE -> {
-                updateButtons()
+                updateSyncSettingActions()
             }
         }
     }
 
-    private fun updateButtons() {
+    override fun onResume() {
+        super.onResume()
+        updateSyncSettingActions()
+    }
+
+    private fun updateSyncSettingActions() {
         if (preferences[dataSyncProviderInfoKey] == null) {
             statusText.text = getText(R.string.message_sync_data_connect_hint)
             connectButton.visibility = View.VISIBLE

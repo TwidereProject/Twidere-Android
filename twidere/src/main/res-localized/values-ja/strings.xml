@@ -391,7 +391,7 @@
   <string name="theme_color">テーマ色</string>
   <string name="wrong_url_format">不正なURL形式です。</string>
   <string name="wrong_username_password">間違ったユーザー名/パスワードです。</string>
-  <string name="network_error">ネットワークエラー</string>
+  <string name="message_network_error">ネットワークエラー</string>
   <string name="api_data_corrupted">APIデータが破損しています。</string>
   <string name="ssl_error">SSLエラー、\"SSLエラーを無視\"設定をオンにしてください。</string>
   <string name="wrong_api_key">不正なAPI URLかconsumer key/secretなので修正してください。</string>

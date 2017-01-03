@@ -379,7 +379,7 @@
   <string name="theme_color">لون السِمَة</string>
   <string name="wrong_url_format">صيغة الرابط خاطئة.</string>
   <string name="wrong_username_password">إسم المستخدم أو كلمة السر خاطئة.</string>
-  <string name="network_error">خطأ في الشبكة.</string>
+  <string name="message_network_error">خطأ في الشبكة.</string>
   <string name="api_data_corrupted">بيانات الواجهة البرمجية تالفة.</string>
   <string name="ssl_error">خطأ في تشفير SSL، تحتاج لتفعيل خيار Ignore SSL error.</string>
   <string name="wrong_api_key">رابط API أو شيفرة consumer key/secret غير صحيحة ، تأكد منها مرة أخرى.</string>

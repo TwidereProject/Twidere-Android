@@ -392,7 +392,7 @@
   <string name="theme_color">主题颜色</string>
   <string name="wrong_url_format">URL格式错误</string>
   <string name="wrong_username_password">用户名/密码错误</string>
-  <string name="network_error">网络错误</string>
+  <string name="message_network_error">网络错误</string>
   <string name="api_data_corrupted">API数据损坏</string>
   <string name="ssl_error">SSL错误，你可能需要启用“忽略SSL错误”选项（可能降低安全性）</string>
   <string name="wrong_api_key">API地址或者consumer key/secret不正确，请检查</string>

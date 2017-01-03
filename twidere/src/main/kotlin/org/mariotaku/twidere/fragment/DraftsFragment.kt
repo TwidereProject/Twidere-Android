@@ -265,31 +265,37 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
     private class DeleteDraftsTask(
             private val activity: FragmentActivity,
             private val ids: LongArray
-    ) : AsyncTask<Any, Any, Int>() {
+    ) : AsyncTask<Any, Any, Unit>() {
         private val notificationManager = activity.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        override fun doInBackground(vararg params: Any): Int? {
+        override fun doInBackground(vararg params: Any) {
             val resolver = activity.contentResolver
             val where = Expression.inArgs(Column(Drafts._ID), ids.size)
             val projection = arrayOf(Drafts.MEDIA)
-            val c = resolver.query(Drafts.CONTENT_URI, projection, where.sql, ids.toStringArray(), null) ?: return 0
-            val idxMedia = c.getColumnIndex(Drafts.MEDIA)
-            c.moveToFirst()
-            while (!c.isAfterLast) {
-                val mediaArray = JsonSerializer.parseArray(c.getString(idxMedia), ParcelableMediaUpdate::class.java)
-                mediaArray?.forEach { media ->
-                    val uri = Uri.parse(media.uri)
-                    if ("file" == uri.scheme) {
-                        val file = File(uri.path)
-                        if (!file.delete()) {
-                            Log.w(LOGTAG, String.format("Unable to delete %s", file))
+            val selection = where.sql
+            val selectionArgs = ids.toStringArray()
+            val c = resolver.query(Drafts.CONTENT_URI, projection, selection, selectionArgs, null) ?: return
+            @Suppress("ConvertTryFinallyToUseCall")
+            try {
+                val idxMedia = c.getColumnIndex(Drafts.MEDIA)
+                c.moveToFirst()
+                while (!c.isAfterLast) {
+                    val mediaArray = JsonSerializer.parseArray(c.getString(idxMedia), ParcelableMediaUpdate::class.java)
+                    mediaArray?.forEach { media ->
+                        val uri = Uri.parse(media.uri)
+                        if ("file" == uri.scheme) {
+                            val file = File(uri.path)
+                            if (!file.delete()) {
+                                Log.w(LOGTAG, String.format("Unable to delete %s", file))
+                            }
                         }
                     }
+                    c.moveToNext()
                 }
-                c.moveToNext()
+            } finally {
+                c.close()
             }
-            c.close()
-            return resolver.delete(Drafts.CONTENT_URI, where.sql, null)
+            resolver.delete(Drafts.CONTENT_URI, selection, selectionArgs)
         }
 
         override fun onPreExecute() {
@@ -301,7 +307,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
             }
         }
 
-        override fun onPostExecute(result: Int?) {
+        override fun onPostExecute(result: Unit) {
             super.onPostExecute(result)
             (activity as IExtendedActivity).executeAfterFragmentResumed {
                 val activity = it as FragmentActivity

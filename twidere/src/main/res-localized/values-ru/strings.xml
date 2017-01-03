@@ -388,7 +388,7 @@
   <string name="theme_color">Цвет темы</string>
   <string name="wrong_url_format">Неверный URL формат</string>
   <string name="wrong_username_password">Неверный логин/пароль</string>
-  <string name="network_error">Ошибка сети</string>
+  <string name="message_network_error">Ошибка сети</string>
   <string name="api_data_corrupted">Данные API повреждены</string>
   <string name="ssl_error">Ошибка SSL, возможно вам нужно включить опцию \"Игнорировать ошибку SSL\".</string>
   <string name="wrong_api_key">Неправильный url-адрес API или пользовательский ключ/пароль, пожалуйста проверьте снова.</string>

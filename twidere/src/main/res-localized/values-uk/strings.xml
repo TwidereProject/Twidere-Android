@@ -390,7 +390,7 @@
   <string name="theme_color">Колір теми</string>
   <string name="wrong_url_format">Невірний формат URL.</string>
   <string name="wrong_username_password">Невірне ім\'я користувача/пароль.</string>
-  <string name="network_error">Помилка мережі.</string>
+  <string name="message_network_error">Помилка мережі.</string>
   <string name="api_data_corrupted">Дані API пошкоджені.</string>
   <string name="ssl_error">Помилка SSL, можливо, потрібно увімкнути параметр \"Ігнорувати помилку SSL\".</string>
   <string name="wrong_api_key">Невірне API url або ключ користувача, перевірте їх ще раз.</string>

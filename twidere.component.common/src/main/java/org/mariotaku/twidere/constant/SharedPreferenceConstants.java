@@ -225,6 +225,7 @@ public interface SharedPreferenceConstants {
     String KEY_NO_VERSION_SUFFIX = "no_version_suffix";
     @Preference(type = STRING, hasDefault = true, defaultString = Credentials.Type.OAUTH)
     String KEY_CREDENTIALS_TYPE = "credentials_type";
+    String KEY_CUSTOM_API_TYPE = "api_config_type";
     @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_KEY)
     String KEY_CONSUMER_KEY = "consumer_key";
     @Preference(type = STRING, hasDefault = true, defaultString = TWITTER_CONSUMER_SECRET)

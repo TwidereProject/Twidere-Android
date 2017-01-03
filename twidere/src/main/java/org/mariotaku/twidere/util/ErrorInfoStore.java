@@ -79,7 +79,7 @@ public class ErrorInfoStore {
             }
             case CODE_NETWORK_ERROR: {
                 return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,
-                        context.getString(R.string.network_error));
+                        context.getString(R.string.message_network_error));
             }
             case CODE_TIMESTAMP_ERROR: {
                 return new DisplayErrorInfo(code, R.drawable.ic_info_error_generic,

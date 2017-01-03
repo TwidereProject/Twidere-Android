@@ -369,7 +369,7 @@
   <string name="theme_color">Temafarge</string>
   <string name="wrong_url_format">Feil URL-format.</string>
   <string name="wrong_username_password">Feil brukernavn eller passord.</string>
-  <string name="network_error">Nettverksfeil.</string>
+  <string name="message_network_error">Nettverksfeil.</string>
   <string name="api_data_corrupted">API-data er skadet.</string>
   <string name="ssl_error">SSL-feil, du må kanskje aktivere \"Ignorer SSL-feil\"-valget.</string>
   <string name="wrong_api_key">Feil API-URL eller brukernøkkel/passord. Sjekk at de er riktig skrevet.</string>

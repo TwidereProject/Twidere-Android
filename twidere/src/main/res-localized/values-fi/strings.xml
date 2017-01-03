@@ -392,7 +392,7 @@
   <string name="theme_color">Teeman väri</string>
   <string name="wrong_url_format">Virheellinen URL-muoto.</string>
   <string name="wrong_username_password">Väärä käyttäjänimi/salasana.</string>
-  <string name="network_error">Verkkovirhe.</string>
+  <string name="message_network_error">Verkkovirhe.</string>
   <string name="api_data_corrupted">API-data on vioittunut.</string>
   <string name="ssl_error">SSL-virhe. Sinun täytyy ehkä ottaa käyttöön \'Ohita SSL-virhe\' -valinta.</string>
   <string name="wrong_api_key">Virheellinen API-osoite tai kulutusavain/salaus. Tarkista vielä kyseiset kentät.</string>

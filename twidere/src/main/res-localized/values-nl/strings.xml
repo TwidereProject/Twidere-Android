@@ -386,7 +386,7 @@
   <string name="theme_color">Themakleur</string>
   <string name="wrong_url_format">Verkeerde URL-indeling.</string>
   <string name="wrong_username_password">Verkeerde gebruikersnaam/wachtwoord.</string>
-  <string name="network_error">Netwerkfout</string>
+  <string name="message_network_error">Netwerkfout</string>
   <string name="api_data_corrupted">API-gegevens beschadigd.</string>
   <string name="ssl_error">SSL-fout. Wellicht moet je de optie \"Negeer SSL-fouten\" inschakelen.</string>
   <string name="wrong_api_key">Onjuiste API url of consument sleutel/geheim, controleer ze nog een keer.</string>

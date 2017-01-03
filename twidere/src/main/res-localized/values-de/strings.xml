@@ -392,7 +392,7 @@
   <string name="theme_color">Theme Farbe</string>
   <string name="wrong_url_format">Falsches URL-Format.</string>
   <string name="wrong_username_password">Falscher Benutzername/Passwort.</string>
-  <string name="network_error">Netzwerkfehler</string>
+  <string name="message_network_error">Netzwerkfehler</string>
   <string name="api_data_corrupted">API-Daten beschädigt.</string>
   <string name="ssl_error">SSL-Fehler, aktivieren von \"SSL-Fehler ignorieren\" könnte helfen.</string>
   <string name="wrong_api_key">API URL oder consumer key/secret ist nicht korrekt, bitte nochmals prüfen!</string>
