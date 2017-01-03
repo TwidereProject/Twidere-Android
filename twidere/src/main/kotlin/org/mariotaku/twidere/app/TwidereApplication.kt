@@ -27,7 +27,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
-import android.support.v7.app.AppCompatDelegate
 import android.util.Log
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
@@ -48,7 +47,6 @@ import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.apiLastChangeKey
 import org.mariotaku.twidere.constant.bugReportsKey
 import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
-import org.mariotaku.twidere.constant.nightModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
@@ -99,7 +97,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             StrictModeUtils.detectAllVmPolicy()
         }
         super.onCreate()
-        AppCompatDelegate.setDefaultNightMode(sharedPreferences[nightModeKey])
         startKovenant()
         initializeAsyncTask()
         initDebugMode()
@@ -233,9 +230,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_CREDENTIALS_TYPE,
             KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
                 preferences[apiLastChangeKey] = System.currentTimeMillis()
-            }
-            KEY_THEME -> {
-                AppCompatDelegate.setDefaultNightMode(preferences[nightModeKey])
             }
             KEY_EMOJI_SUPPORT -> {
                 externalThemeManager.reloadEmojiPreferences()

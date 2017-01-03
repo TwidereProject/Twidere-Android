@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -538,15 +537,6 @@ public class ThemeUtils implements Constants {
         if (toolbar instanceof TwidereToolbar) {
             ((TwidereToolbar) toolbar).setItemColor(contrastForegroundColor);
         }
-    }
-
-    public static void fixNightMode(Resources resources, Configuration newConfig) {
-        int currentNightMode = resources.getConfiguration().uiMode
-                & Configuration.UI_MODE_NIGHT_MASK;
-
-        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES)
-            newConfig.uiMode = (newConfig.uiMode & ~Configuration.UI_MODE_NIGHT_MASK)
-                    | Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static int getColorDependent(int color) {

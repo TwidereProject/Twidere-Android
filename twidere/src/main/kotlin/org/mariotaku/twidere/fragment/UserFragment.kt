@@ -48,6 +48,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.content.res.ResourcesCompat
+import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.ViewPager.OnPageChangeListener
 import android.support.v4.view.WindowCompat
@@ -1292,9 +1293,9 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
         }
         val taskColor: Int
         if (theme.isToolbarColored) {
-            taskColor = color
+            taskColor = ColorUtils.setAlphaComponent(color, 0xFF)
         } else {
-            taskColor = theme.colorToolbar
+            taskColor = ColorUtils.setAlphaComponent(theme.colorToolbar, 0xFF)
         }
         if (user != null) {
             val name = userColorNameManager.getDisplayName(user, nameFirst)

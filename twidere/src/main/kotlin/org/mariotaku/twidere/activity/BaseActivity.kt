@@ -29,6 +29,7 @@ import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.support.annotation.StyleRes
+import android.support.v4.graphics.ColorUtils
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
@@ -101,6 +102,10 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
         if (theme.isToolbarColored) {
             theme.colorToolbar = theme.colorPrimary
+        }
+        if (ThemeUtils.isTransparentBackground(themeBackgroundOption)) {
+            theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
+                    ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(this)))
         }
         theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
         theme.lightStatusBarMode = LightStatusBarMode.AUTO

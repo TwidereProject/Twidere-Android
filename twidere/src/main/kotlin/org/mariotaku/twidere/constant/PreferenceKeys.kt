@@ -10,11 +10,11 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.KEY_DISPLAY_PROFILE_IMAGE
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THEME
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
+import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 import org.mariotaku.twidere.view.ProfileImageView
 
@@ -73,6 +73,19 @@ object nightModeKey : KSimpleKey<Int>(KEY_THEME, AppCompatDelegate.MODE_NIGHT_NO
             AppCompatDelegate.MODE_NIGHT_YES -> VALUE_THEME_NAME_DARK
             else -> VALUE_THEME_NAME_AUTO
         })
+        return true
+    }
+}
+
+object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
+    override fun read(preferences: SharedPreferences): Int {
+        return preferences.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA)
+                .coerceIn(ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA)
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
+        editor.putInt(key, value.coerceIn(ThemeBackgroundPreference.MIN_ALPHA,
+                ThemeBackgroundPreference.MAX_ALPHA))
         return true
     }
 }
