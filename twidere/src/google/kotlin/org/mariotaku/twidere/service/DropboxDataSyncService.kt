@@ -15,10 +15,11 @@ import com.dropbox.core.v2.files.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.dropboxAuthTokenKey
+import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.model.sync.DropboxSyncProviderInfo
 import org.mariotaku.twidere.util.sync.*
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlSerializer
@@ -33,7 +34,7 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
     private val NOTIFICATION_ID_SYNC_DATA = 302
 
     override fun onHandleIntent(intent: Intent?) {
-        val authToken = preferences[dropboxAuthTokenKey] ?: return
+        val syncInfo = preferences[dataSyncProviderInfoKey] as? DropboxSyncProviderInfo ?: return
         val nb = NotificationCompat.Builder(this)
         nb.setSmallIcon(R.drawable.ic_stat_refresh)
         nb.setOngoing(true)
@@ -43,7 +44,7 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
         nm.notify(NOTIFICATION_ID_SYNC_DATA, nb.build())
         val requestConfig = DbxRequestConfig.newBuilder("twidere-android/${BuildConfig.VERSION_NAME}")
                 .build()
-        val client = DbxClientV2(requestConfig, authToken)
+        val client = DbxClientV2(requestConfig, syncInfo.authToken)
         arrayOf(
                 DropboxDraftsSyncHelper(this, client),
                 DropboxFiltersDataSyncHelper(this, client),

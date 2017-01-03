@@ -543,8 +543,8 @@
   <string name="export_settings">Ekspor pengaturan</string>
   <string name="export_settings_type_dialog_title">Ekspor pengaturan&#8230;</string>
   <string name="import_settings_type_dialog_title">Impor pengaturan&#8230;</string>
-  <string name="nicknames">Nama panggilan</string>
-  <string name="user_colors">Warna pengguna</string>
+  <string name="title_nicknames">Nama panggilan</string>
+  <string name="title_user_colors">Warna pengguna</string>
   <string name="progress">Progres</string>
   <string name="hidden_settings">Pengaturan tersembunyi</string>
   <string name="hidden_settings_warning_title">PERINGATAN: Pengaturan ini dapat merusak!</string>

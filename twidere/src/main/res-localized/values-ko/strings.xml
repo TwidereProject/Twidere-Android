@@ -541,8 +541,8 @@
   <string name="export_settings">설정 내보내기</string>
   <string name="export_settings_type_dialog_title">설정을 내보내는 중...</string>
   <string name="import_settings_type_dialog_title">설정을 가져오는 중...</string>
-  <string name="nicknames">별명</string>
-  <string name="user_colors">사용자 색상</string>
+  <string name="title_nicknames">별명</string>
+  <string name="title_user_colors">사용자 색상</string>
   <string name="progress">진행</string>
   <string name="hidden_settings">숨겨진 설정</string>
   <string name="hidden_settings_warning_title">경고: 이 설정은 위험할 수 있습니다!</string>

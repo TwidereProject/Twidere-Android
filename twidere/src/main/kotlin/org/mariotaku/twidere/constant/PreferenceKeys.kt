@@ -14,6 +14,8 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THEME
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.model.sync.SyncProviderInfo
+import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 import org.mariotaku.twidere.view.ProfileImageView
 
 /**
@@ -129,6 +131,30 @@ object defaultAPIConfigKey : KPreferenceKey<CustomAPIConfig> {
         editor.putString(KEY_CREDENTIALS_TYPE, value.credentialsType)
         editor.putBoolean(KEY_SAME_OAUTH_SIGNING_URL, value.isSameOAuthUrl)
         editor.putBoolean(KEY_NO_VERSION_SUFFIX, value.isNoVersionSuffix)
+        return true
+    }
+
+}
+
+object dataSyncProviderInfoKey : KPreferenceKey<SyncProviderInfo?> {
+    private const val PROVIDER_TYPE_KEY = "sync_provider_type"
+
+    override fun contains(preferences: SharedPreferences): Boolean {
+        return read(preferences) != null
+    }
+
+    override fun read(preferences: SharedPreferences): SyncProviderInfo? {
+        val type = preferences.getString(PROVIDER_TYPE_KEY, null) ?: return null
+        return SyncProviderInfoFactory.getInfoForType(type, preferences)
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: SyncProviderInfo?): Boolean {
+        if (value == null) {
+            editor.remove(PROVIDER_TYPE_KEY)
+        } else {
+            editor.putString(PROVIDER_TYPE_KEY, value.type)
+            value.writeToPreferences(editor)
+        }
         return true
     }
 

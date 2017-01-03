@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreferenceCompat android:title="@string/title_drafts"/>
+    <SwitchPreferenceCompat android:title="@string/title_filters"/>
+    <SwitchPreferenceCompat android:title="@string/title_nicknames"/>
+    <SwitchPreferenceCompat android:title="@string/title_user_colors"/>
+</PreferenceScreen>

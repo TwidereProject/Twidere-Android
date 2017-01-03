@@ -547,8 +547,8 @@
   <string name="export_settings">Exportar ajustes</string>
   <string name="export_settings_type_dialog_title">Exportar ajustes&#8230;</string>
   <string name="import_settings_type_dialog_title">Importar ajustes&#8230;</string>
-  <string name="nicknames">Apodos</string>
-  <string name="user_colors">Colores de usuario</string>
+  <string name="title_nicknames">Apodos</string>
+  <string name="title_user_colors">Colores de usuario</string>
   <string name="progress">Progreso</string>
   <string name="hidden_settings">Configuraciones ocultas</string>
   <string name="hidden_settings_warning_title">PRECAUCIÓN: ¡Estos ajustes pueden ser perjudiciales!</string>

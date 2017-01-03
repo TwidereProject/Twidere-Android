@@ -535,8 +535,8 @@
   <string name="export_settings">Beállítások exportálása</string>
   <string name="export_settings_type_dialog_title">Beállítások exportálása&#8230;</string>
   <string name="import_settings_type_dialog_title">Beállítások importálása&#8230;</string>
-  <string name="nicknames">Becenevek</string>
-  <string name="user_colors">Felhasználói színek</string>
+  <string name="title_nicknames">Becenevek</string>
+  <string name="title_user_colors">Felhasználói színek</string>
   <string name="progress">Folyamat</string>
   <string name="hidden_settings">Rejtett beállítások</string>
   <string name="hidden_settings_warning_title">FIGYELMEZTETÉS: Ezek a beállítások kárt okozhatnak!</string>

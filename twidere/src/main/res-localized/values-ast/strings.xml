@@ -546,8 +546,8 @@
   <string name="export_settings">Esportar axustes</string>
   <string name="export_settings_type_dialog_title">Esportar axustes&#8230;</string>
   <string name="import_settings_type_dialog_title">Importar axustes...</string>
-  <string name="nicknames">Nomatos</string>
-  <string name="user_colors">Colores d\'usuariu</string>
+  <string name="title_nicknames">Nomatos</string>
+  <string name="title_user_colors">Colores d\'usuariu</string>
   <string name="progress">Progresu</string>
   <string name="hidden_settings">Axustes anubríos</string>
   <string name="hidden_settings_warning_title">AVISU: ¡Estos axustes puen firite!</string>

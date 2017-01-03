@@ -109,7 +109,7 @@
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <string name="center">Centre</string>
-  <string name="user_colors">User colours</string>
+  <string name="title_user_colors">User colours</string>
   <string name="color">Colour</string>
   <string name="profile_text_color">Text colour</string>
   <string name="profile_background_color">Background colour</string>

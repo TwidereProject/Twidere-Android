@@ -535,8 +535,8 @@
   <string name="export_settings">تصدير الإعدادات</string>
   <string name="export_settings_type_dialog_title">تصدير الإعدادات&#8230;</string>
   <string name="import_settings_type_dialog_title">استيراد الإعدادات&#8230;</string>
-  <string name="nicknames">أسماء مستعارة</string>
-  <string name="user_colors">ألوان المستخدم</string>
+  <string name="title_nicknames">أسماء مستعارة</string>
+  <string name="title_user_colors">ألوان المستخدم</string>
   <string name="progress">التقدم</string>
   <string name="hidden_settings">إعدادات مخفية</string>
   <string name="hidden_settings_warning_title">تحذير: هذه الإعدادات قد تسبب ضررا!</string>

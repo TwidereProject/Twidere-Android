@@ -294,8 +294,8 @@
   <string name="back">Zpět</string>
   <string name="accept">Přijmout</string>
   <string name="deny">Odmítnout</string>
-  <string name="nicknames">Přezdívky</string>
-  <string name="user_colors">Uživatelské barvy</string>
+  <string name="title_nicknames">Přezdívky</string>
+  <string name="title_user_colors">Uživatelské barvy</string>
   <string name="progress">Průběh</string>
   <string name="hidden_settings">Skrytá nastavení</string>
   <string name="compose_now">Vytvořit hned</string>

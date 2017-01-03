@@ -486,8 +486,8 @@
   <string name="export_settings">Eksportuj ustawienia</string>
   <string name="export_settings_type_dialog_title">Eksportowanie ustawień&#8230;</string>
   <string name="import_settings_type_dialog_title">Importowanie ustawień&#8230;</string>
-  <string name="nicknames">Pseudonimy</string>
-  <string name="user_colors">Kolory użytkownika</string>
+  <string name="title_nicknames">Pseudonimy</string>
+  <string name="title_user_colors">Kolory użytkownika</string>
   <string name="progress">Postęp</string>
   <string name="hidden_settings">Ukryte ustawienia</string>
   <string name="hidden_settings_warning_title">UWAGA: Ustawienia te mogą szkodzić!</string>

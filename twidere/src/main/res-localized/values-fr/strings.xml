@@ -547,8 +547,8 @@
   <string name="export_settings">Exportation des paramètres</string>
   <string name="export_settings_type_dialog_title">Exportation des paramètres&#8230;</string>
   <string name="import_settings_type_dialog_title">Importation des paramètres&#8230;</string>
-  <string name="nicknames">Surnoms</string>
-  <string name="user_colors">Couleurs utilisateur</string>
+  <string name="title_nicknames">Surnoms</string>
+  <string name="title_user_colors">Couleurs utilisateur</string>
   <string name="progress">Avancement</string>
   <string name="hidden_settings">Paramètres cachés</string>
   <string name="hidden_settings_warning_title">ATTENTION : Ces paramètres peuvent faire mal !</string>

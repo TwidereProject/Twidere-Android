@@ -111,7 +111,7 @@ class FabricAnalyzer : Analyzer(), Constants {
 
     private fun AnswersEvent<*>.putAttributes(event: Analyzer.Event) {
         if (event.accountType != null) {
-            putCustomAttribute("Account type", event.accountType ?: "unknown")
+            putCustomAttribute("Account type", event.accountType)
         }
         if (event.accountHost != null) {
             putCustomAttribute("Account host", event.accountHost)

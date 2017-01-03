@@ -546,8 +546,8 @@
   <string name="export_settings">匯出設定</string>
   <string name="export_settings_type_dialog_title">匯出設定⋯</string>
   <string name="import_settings_type_dialog_title">匯入設定⋯</string>
-  <string name="nicknames">暱稱</string>
-  <string name="user_colors">用戶顏色標籤</string>
+  <string name="title_nicknames">暱稱</string>
+  <string name="title_user_colors">用戶顏色標籤</string>
   <string name="progress">進度</string>
   <string name="hidden_settings">隱藏設定</string>
   <string name="hidden_settings_warning_title">警告：這些設定受結界保護！</string>

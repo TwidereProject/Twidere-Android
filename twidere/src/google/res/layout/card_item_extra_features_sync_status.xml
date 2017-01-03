@@ -9,8 +9,8 @@
 
     <fragment
         android:id="@+id/extra_features_sync_status"
-        class="org.mariotaku.twidere.fragment.premium.PlayStoreExtraFeaturesSyncStatusFragment"
+        class="org.mariotaku.twidere.fragment.premium.ExtraFeaturesSyncStatusFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_extra_features_sync_status_play_store"/>
+        tools:layout="@layout/fragment_extra_features_sync_status"/>
 </android.support.v7.widget.CardView>

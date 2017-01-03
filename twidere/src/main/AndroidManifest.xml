@@ -465,9 +465,21 @@
             android:name=".activity.InvalidAccountAlertActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
+            android:name=".activity.FragmentContentActivity"
+            android:theme="@style/Theme.Twidere">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeActivity"/>
+        </activity>
+        <activity
             android:name=".activity.PremiumDashboardActivity"
             android:label="@string/title_premium_features_name"
-            android:theme="@style/Theme.Twidere"/>
+            android:theme="@style/Theme.Twidere">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.HomeActivity"/>
+        </activity>
 
         <service
             android:name=".service.RefreshService"

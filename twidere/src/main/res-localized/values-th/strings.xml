@@ -542,8 +542,8 @@
   <string name="export_settings">ส่งออกการตั้งค่า</string>
   <string name="export_settings_type_dialog_title">ส่งออกการตั้งค่า...</string>
   <string name="import_settings_type_dialog_title">นำเข้าการตั้งค่า...</string>
-  <string name="nicknames">ชื่อเล่น</string>
-  <string name="user_colors">สีของผู้ใช้</string>
+  <string name="title_nicknames">ชื่อเล่น</string>
+  <string name="title_user_colors">สีของผู้ใช้</string>
   <string name="progress">การดำเนินการ</string>
   <string name="hidden_settings">การตั้งค่าเพิ่มเติม</string>
   <string name="hidden_settings_warning_title">คำเตือน: การตั้งค่าเหล่านี้อาจทำมือถือคุณระเบิดได้</string>

@@ -499,8 +499,8 @@
   <string name="export_settings">Izvezi postavke</string>
   <string name="export_settings_type_dialog_title">Izvezi postavke&#8230;</string>
   <string name="import_settings_type_dialog_title">Uvezi postavke&#8230;</string>
-  <string name="nicknames">Nadimci</string>
-  <string name="user_colors">Korisničke boje</string>
+  <string name="title_nicknames">Nadimci</string>
+  <string name="title_user_colors">Korisničke boje</string>
   <string name="progress">Napredak</string>
   <string name="hidden_settings">Skrivene postavke</string>
   <string name="hidden_settings_warning_title">UPOZORENJE: Ovo postavke mogu vas ugristi!</string>

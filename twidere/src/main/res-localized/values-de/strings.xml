@@ -547,8 +547,8 @@
   <string name="export_settings">Einstellungen exportieren</string>
   <string name="export_settings_type_dialog_title">Einstellungen exportieren&#8230;</string>
   <string name="import_settings_type_dialog_title">Einstellungen importieren&#8230;</string>
-  <string name="nicknames">Spitznamen</string>
-  <string name="user_colors">Benutzerfarben</string>
+  <string name="title_nicknames">Spitznamen</string>
+  <string name="title_user_colors">Benutzerfarben</string>
   <string name="progress">Fortschritt</string>
   <string name="hidden_settings">Versteckte Einstellungen</string>
   <string name="hidden_settings_warning_title">ACHTUNG: Diese Einstellungen können Schaden anrichten!</string>

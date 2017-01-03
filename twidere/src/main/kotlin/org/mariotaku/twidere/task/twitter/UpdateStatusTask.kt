@@ -32,6 +32,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
@@ -84,6 +85,17 @@ class UpdateStatusTask(
 
     override fun afterExecute(handler: Any?, result: UpdateStatusResult) {
         stateCallback.afterExecute(result)
+        if (params != null) {
+            logUpdateStatus(params.first, params.second, result)
+        }
+    }
+
+    private fun logUpdateStatus(actionType: String, statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {
+        val mediaType = statusUpdate.media?.firstOrNull()?.type ?: ParcelableMedia.Type.UNKNOWN
+        val hasLocation = statusUpdate.location != null
+        val preciseLocation = statusUpdate.display_coordinates
+        Analyzer.log(UpdateStatus(result.accountTypes.firstOrNull(), actionType, mediaType,
+                hasLocation, preciseLocation, result.succeed))
     }
 
     @Throws(UpdateStatusException::class)
@@ -227,11 +239,11 @@ class UpdateStatusTask(
 
         stateCallback.onUpdatingStatus()
 
-        val result = UpdateStatusResult(arrayOfNulls<ParcelableStatus>(pendingUpdate.length),
-                arrayOfNulls<MicroBlogException>(pendingUpdate.length), draftId)
+        val result = UpdateStatusResult(pendingUpdate.length, draftId)
 
         for (i in 0 until pendingUpdate.length) {
             val account = statusUpdate.accounts[i]
+            result.accountTypes[i] = account.type
             val microBlog = MicroBlogAPIFactory.getInstance(context, account.key)
             var bodyAndSize: Pair<Body, Point>? = null
             try {
@@ -567,23 +579,26 @@ class UpdateStatusTask(
     class UpdateStatusResult {
         val statuses: Array<ParcelableStatus?>
         val exceptions: Array<MicroBlogException?>
+        val accountTypes: Array<String?>
 
         val exception: UpdateStatusException?
         val draftId: Long
 
         val succeed: Boolean get() = !statuses.contains(null)
 
-        constructor(statuses: Array<ParcelableStatus?>, exceptions: Array<MicroBlogException?>, draftId: Long) {
-            this.statuses = statuses
-            this.exceptions = exceptions
+        constructor(count: Int, draftId: Long) {
+            this.statuses = arrayOfNulls(count)
+            this.exceptions = arrayOfNulls(count)
+            this.accountTypes = arrayOfNulls(count)
             this.exception = null
             this.draftId = draftId
         }
 
         constructor(exception: UpdateStatusException, draftId: Long) {
             this.exception = exception
-            this.statuses = arrayOfNulls<ParcelableStatus>(0)
-            this.exceptions = arrayOfNulls<MicroBlogException>(0)
+            this.statuses = arrayOfNulls(0)
+            this.exceptions = arrayOfNulls(0)
+            this.accountTypes = arrayOfNulls(0)
             this.draftId = draftId
         }
     }

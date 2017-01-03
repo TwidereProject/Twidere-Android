@@ -540,8 +540,8 @@
   <string name="export_settings">Exporta els paràmetres</string>
   <string name="export_settings_type_dialog_title">Exporta els paràmetres&#8230;</string>
   <string name="import_settings_type_dialog_title">Importa paràmetres&#8230;</string>
-  <string name="nicknames">Sobrenoms</string>
-  <string name="user_colors">Colors de l\'usuari</string>
+  <string name="title_nicknames">Sobrenoms</string>
+  <string name="title_user_colors">Colors de l\'usuari</string>
   <string name="progress">Progrés</string>
   <string name="hidden_settings">Paràmetres ocults</string>
   <string name="hidden_settings_warning_title">ATENCIÓ: Aquests paràmetres són perillosos!</string>

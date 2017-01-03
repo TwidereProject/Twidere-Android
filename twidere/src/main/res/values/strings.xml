@@ -550,8 +550,8 @@
     <string name="export_settings">Export settings</string>
     <string name="export_settings_type_dialog_title">Export settings…</string>
     <string name="import_settings_type_dialog_title">Import settings…</string>
-    <string name="nicknames">Nicknames</string>
-    <string name="user_colors">User colors</string>
+    <string name="title_nicknames">Nicknames</string>
+    <string name="title_user_colors">User colors</string>
     <string name="progress">Progress</string>
     <string name="hidden_settings">Hidden settings</string>
     <string name="hidden_settings_warning_title">WARNING: These settings may harm!</string>
@@ -874,4 +874,15 @@
     <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_extra_features_not_purchased">Enhanced features not purchased</string>
+    <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+    <string name="action_sync_connect_to_storage">Connect</string>
+    <string name="title_dialog_sync_connect_to">Connect to…</string>
+    <string name="action_sync_settings">Settings</string>
+    <string name="message_sync_data_connect_hint">Connect Twidere with network storage to sync data</string>
+    <string name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
+    <string name="title_sync">Data sync</string>
+    <string name="sync_provider_name_dropbox">Dropbox</string>
+    <!-- [verb] Disconnect from network storage -->
+    <string name="action_sync_disconnect">Disconnect</string>
+    <string name="title_sync_settings">Sync settings</string>
 </resources>

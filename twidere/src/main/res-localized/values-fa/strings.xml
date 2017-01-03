@@ -547,8 +547,8 @@
   <string name="export_settings">صادر کردن تنظیمات</string>
   <string name="export_settings_type_dialog_title">صادر کردن تنظیمات&#8230;</string>
   <string name="import_settings_type_dialog_title">وارد کردن تنظیمات&#8230;</string>
-  <string name="nicknames">نام‌های مستعار</string>
-  <string name="user_colors">رنگ‌های کاربر</string>
+  <string name="title_nicknames">نام‌های مستعار</string>
+  <string name="title_user_colors">رنگ‌های کاربر</string>
   <string name="progress">پیشرفت</string>
   <string name="hidden_settings">تنظیمات پنهان</string>
   <string name="hidden_settings_warning_title">هشدار: این تنظمیمات ممکن است صدمه بزنند!</string>

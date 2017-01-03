@@ -544,8 +544,8 @@
   <string name="export_settings">設定のエクスポート</string>
   <string name="export_settings_type_dialog_title">設定をエクスポート中&#8230;</string>
   <string name="import_settings_type_dialog_title">設定のインポート&#8230;</string>
-  <string name="nicknames">ニックネーム</string>
-  <string name="user_colors">ユーザー色</string>
+  <string name="title_nicknames">ニックネーム</string>
+  <string name="title_user_colors">ユーザー色</string>
   <string name="progress">進捗</string>
   <string name="hidden_settings">隠し設定</string>
   <string name="hidden_settings_warning_title">警告: これらの設定は危なっかしいかも！</string>

@@ -542,8 +542,8 @@
   <string name="export_settings">Експорт налаштувань</string>
   <string name="export_settings_type_dialog_title">Експорт налаштувань&#8230;</string>
   <string name="import_settings_type_dialog_title">Імпорт налаштувань&#8230;</string>
-  <string name="nicknames">Псевдо</string>
-  <string name="user_colors">Кольори користувача</string>
+  <string name="title_nicknames">Псевдо</string>
+  <string name="title_user_colors">Кольори користувача</string>
   <string name="progress">Перебіг</string>
   <string name="hidden_settings">Приховані налаштування</string>
   <string name="hidden_settings_warning_title">УВАГА: Ці параметри можуть зашкодити!</string>

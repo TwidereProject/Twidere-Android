@@ -64,12 +64,6 @@
             android:summary="%s"
             android:title="@string/media_uploader"/>
 
-        <org.mariotaku.twidere.preference.TimelineSyncPreference
-            android:defaultValue=""
-            android:key="timeline_sync_service"
-            android:summary="%s"
-            android:title="@string/timeline_sync_service"/>
-
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:enabled="@bool/support_new_document_intent"

@@ -540,8 +540,8 @@
   <string name="export_settings">Экспортировать параметры</string>
   <string name="export_settings_type_dialog_title">Экспорт настроек&#8230;</string>
   <string name="import_settings_type_dialog_title">Импорт настроек&#8230;</string>
-  <string name="nicknames">Имена</string>
-  <string name="user_colors">Пользовательские цвета</string>
+  <string name="title_nicknames">Имена</string>
+  <string name="title_user_colors">Пользовательские цвета</string>
   <string name="progress">Прогресс</string>
   <string name="hidden_settings">Скрытые настройки</string>
   <string name="hidden_settings_warning_title">ОСТОРОЖНО: Изменение этих настроек может повлечь за собой последствия!</string>

@@ -541,8 +541,8 @@
   <string name="export_settings">Ayarları dışa aktar</string>
   <string name="export_settings_type_dialog_title">Ayarları dışa aktar&#8230;</string>
   <string name="import_settings_type_dialog_title">Ayarları içe aktar&#8230;</string>
-  <string name="nicknames">Lakaplar</string>
-  <string name="user_colors">Kullanıcı renkleri</string>
+  <string name="title_nicknames">Lakaplar</string>
+  <string name="title_user_colors">Kullanıcı renkleri</string>
   <string name="progress">İlerleme</string>
   <string name="hidden_settings">Gizli ayarlar</string>
   <string name="hidden_settings_warning_title">UYARI: Bu ayarları değiştirmek uygulamaya zarar verebilir!</string>

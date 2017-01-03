@@ -542,8 +542,8 @@
   <string name="export_settings">Esporta impostazioni</string>
   <string name="export_settings_type_dialog_title">Esporta impostazioni&#8230;</string>
   <string name="import_settings_type_dialog_title">Importa impostazioni&#8230;</string>
-  <string name="nicknames">Nickname</string>
-  <string name="user_colors">Colori personalizzati</string>
+  <string name="title_nicknames">Nickname</string>
+  <string name="title_user_colors">Colori personalizzati</string>
   <string name="progress">Avanzamento</string>
   <string name="hidden_settings">Impostazioni nascoste</string>
   <string name="hidden_settings_warning_title">ATTENZIONE: queste opzioni possono far male!</string>

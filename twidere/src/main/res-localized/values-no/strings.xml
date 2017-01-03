@@ -520,8 +520,8 @@
   <string name="export_settings">Eksporter innstillinger</string>
   <string name="export_settings_type_dialog_title">Eksporter innstillinger&#8230;</string>
   <string name="import_settings_type_dialog_title">Importer innstillinger&#8230;</string>
-  <string name="nicknames">Kallenavn</string>
-  <string name="user_colors">Brukerfarger</string>
+  <string name="title_nicknames">Kallenavn</string>
+  <string name="title_user_colors">Brukerfarger</string>
   <string name="progress">Fremdrift</string>
   <string name="hidden_settings">Skjulte innstillinger</string>
   <string name="hidden_settings_warning_title">ADVARSEL: Disse innstillingene kan være skadelige!</string>

@@ -546,8 +546,8 @@
   <string name="export_settings">Vie asetukset</string>
   <string name="export_settings_type_dialog_title">Vie asetukset&#8230;</string>
   <string name="import_settings_type_dialog_title">Tuo asetukset&#8230;</string>
-  <string name="nicknames">Kutsumanimet</string>
-  <string name="user_colors">Käyttäjän värit</string>
+  <string name="title_nicknames">Kutsumanimet</string>
+  <string name="title_user_colors">Käyttäjän värit</string>
   <string name="progress">Edistyminen</string>
   <string name="hidden_settings">Piilotetut asetukset</string>
   <string name="hidden_settings_warning_title">VAROITUS: Nämä asetukset voivat olla haitallisia!</string>

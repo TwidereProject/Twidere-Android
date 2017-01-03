@@ -546,8 +546,8 @@
   <string name="export_settings">Exportar configurações</string>
   <string name="export_settings_type_dialog_title">Exportar configurações...</string>
   <string name="import_settings_type_dialog_title">Importar configurações...</string>
-  <string name="nicknames">Apelidos</string>
-  <string name="user_colors">Cores de usuários</string>
+  <string name="title_nicknames">Apelidos</string>
+  <string name="title_user_colors">Cores de usuários</string>
   <string name="progress">Progresso</string>
   <string name="hidden_settings">Configurações ocultas</string>
   <string name="hidden_settings_warning_title">AVISO: Estas configurações podem causar encrencas!</string>

@@ -538,8 +538,8 @@
   <string name="export_settings">Exporteer instellingen</string>
   <string name="export_settings_type_dialog_title">Exporteer instellingen&#8230;</string>
   <string name="import_settings_type_dialog_title">Importeer instellingen&#8230;</string>
-  <string name="nicknames">Bijnamen</string>
-  <string name="user_colors">Gebruikerskleuren</string>
+  <string name="title_nicknames">Bijnamen</string>
+  <string name="title_user_colors">Gebruikerskleuren</string>
   <string name="progress">vooruitgang</string>
   <string name="hidden_settings">verborgen instellingen</string>
   <string name="hidden_settings_warning_title">OPGELET: Deze instellingen kunnen schade toebrengen!</string>

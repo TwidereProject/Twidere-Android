@@ -398,7 +398,7 @@
   <string name="export_settings">ייצא הגדרות</string>
   <string name="export_settings_type_dialog_title">ייצוא הגדרות&#8230;</string>
   <string name="import_settings_type_dialog_title">ייבוא הגדרות&#8230;</string>
-  <string name="nicknames">כינויים</string>
+  <string name="title_nicknames">כינויים</string>
   <string name="hidden_settings">הגדרות מוסתרות</string>
   <string name="hidden_settings_warning_title">אזהרה: הגדרות אלו עלולות לפגוע!</string>
   <string name="hidden_settings_warning_message">לעולם אל תשנה/י את ההגדרות האלו אם את/ה לא יודע/ת מה הן, אחרת הן:\n * יהרגו את החתול שלך\n * ישגרו טילים גרעיניים מצפון קוריאה\n * יהפכו את כל ה-Mahou Shoujo ל-Majo\n * יהרסו את היקום</string>
