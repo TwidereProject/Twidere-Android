@@ -1,9 +1,8 @@
 package org.mariotaku.twidere.model.sync
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import org.mariotaku.twidere.service.DropboxDataSyncService
+import org.mariotaku.twidere.util.sync.DropboxSyncController
 import org.mariotaku.twidere.util.sync.SyncController
 
 /**
@@ -27,17 +26,6 @@ class DropboxSyncProviderInfo(val authToken: String) : SyncProviderInfo(DropboxS
             val authToken = preferences.getString(KEY_DROPBOX_AUTH_TOKEN, null) ?: return null
             return DropboxSyncProviderInfo(authToken)
         }
-    }
-
-    class DropboxSyncController(val context: Context) : SyncController() {
-        override fun cleanupSyncCache() {
-
-        }
-
-        override fun performSync() {
-            context.startService(Intent(context, DropboxDataSyncService::class.java))
-        }
-
     }
 
 }

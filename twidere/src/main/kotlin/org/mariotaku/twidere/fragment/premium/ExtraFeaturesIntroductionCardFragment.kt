@@ -53,9 +53,10 @@ class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
                 activity?.recreate()
             }
             REQUEST_RESTORE_PURCHASE -> {
-                if (requestCode == Activity.RESULT_OK) {
-                    activity?.recreate()
-                } else when (resultCode) {
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        activity?.recreate()
+                    }
                     RESULT_NOT_PURCHASED -> {
                         Toast.makeText(context, R.string.message_extra_features_not_purchased, Toast.LENGTH_SHORT).show()
                     }

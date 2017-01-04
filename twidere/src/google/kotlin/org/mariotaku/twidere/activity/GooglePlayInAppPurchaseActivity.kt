@@ -71,11 +71,14 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
     }
 
     private fun handleError(billingResponse: Int) {
-        if (billingResponse == BILLING_ERROR_OTHER_ERROR) {
-            getProductDetailsAndFinish()
-        } else {
-            setResult(getResultCode(billingResponse))
-            finish()
+        when (billingResponse) {
+            BILLING_ERROR_OTHER_ERROR, BILLING_ERROR_INVALID_DEVELOPER_PAYLOAD -> {
+                getProductDetailsAndFinish()
+            }
+            else -> {
+                setResult(getResultCode(billingResponse))
+                finish()
+            }
         }
     }
 
