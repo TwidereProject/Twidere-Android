@@ -59,6 +59,8 @@ class DraftExtensionsTest {
             val stl = context.contentResolver.openInputStream(Uri.parse(expected.uri))
             val str = context.contentResolver.openInputStream(Uri.parse(actual.uri))
             Assert.assertTrue(IOUtils.contentEquals(stl, str))
+            stl.close()
+            str.close()
         }
     }
 }

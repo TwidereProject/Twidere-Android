@@ -80,7 +80,7 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
             val parameters = NonEmptyHashMap<String, String?>()
             parameters["alt_text"] = mediaItem.alt_text
             parameters["media_type"] = mediaItem.type.toString()
-            val storage = storageProvider.store(contentResolver.openInputStream(uri))
+            val storage = contentResolver.openInputStream(uri).use { storageProvider.store(it) }
             this.filename = uri.lastPathSegment
             this.contentTransferEncoding = MimeUtil.ENC_BASE64
             this.setBody(bodyFactory.binaryBody(storage), mimeType, parameters)

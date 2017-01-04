@@ -1,8 +1,7 @@
 package org.mariotaku.twidere.model
 
-import org.junit.Test
-
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
 /**
  * Created by mariotaku on 16/3/9.

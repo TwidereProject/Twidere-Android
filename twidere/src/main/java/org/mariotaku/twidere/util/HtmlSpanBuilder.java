@@ -103,52 +103,62 @@ public class HtmlSpanBuilder {
         return -1;
     }
 
-    public static class HtmlParseException extends RuntimeException {
-        public HtmlParseException() {
+    private static class HtmlParseException extends RuntimeException {
+        HtmlParseException() {
             super();
         }
 
-        public HtmlParseException(String detailMessage) {
+        HtmlParseException(String detailMessage) {
             super(detailMessage);
         }
 
-        public HtmlParseException(String detailMessage, Throwable throwable) {
+        HtmlParseException(String detailMessage, Throwable throwable) {
             super(detailMessage, throwable);
         }
 
-        public HtmlParseException(Throwable throwable) {
+        HtmlParseException(Throwable throwable) {
             super(throwable);
         }
     }
 
-    static class TagInfo {
+    private static class TagInfo {
         final int start;
         final String name;
         final Map<String, String> attributes;
 
-        public TagInfo(int start, String name, Map<String, String> attributes) {
+        TagInfo(int start, String name, Map<String, String> attributes) {
             this.start = start;
             this.name = name;
             this.attributes = attributes;
         }
 
-        public String getAttribute(String attr) {
+        String getAttribute(String attr) {
             return attributes.get(attr);
         }
     }
 
-    static class HtmlSpanHandler extends AbstractSimpleMarkupHandler {
+    private static class HtmlSpanHandler extends AbstractSimpleMarkupHandler {
         private final SpannableStringBuilder sb;
         List<TagInfo> tagInfo;
 
-        public HtmlSpanHandler() {
+        HtmlSpanHandler() {
             sb = new SpannableStringBuilder();
             tagInfo = new ArrayList<>();
         }
 
         @Override
         public void handleText(char[] buffer, int offset, int len, int line, int col) {
-            sb.append(HtmlEscapeHelper.unescape(new String(buffer, offset, len)));
+            int cur = offset;
+            while (cur < offset + len) {
+                // Find first line break
+                int lineBreakIndex;
+                for (lineBreakIndex = cur; lineBreakIndex < offset + len; lineBreakIndex++) {
+                    if (buffer[lineBreakIndex] == '\n') break;
+                }
+                sb.append(HtmlEscapeHelper.unescape(new String(buffer, cur, lineBreakIndex - cur)));
+                cur = lineBreakIndex + 1;
+            }
+
         }
 
         @Override
@@ -164,6 +174,13 @@ public class HtmlSpanBuilder {
         @Override
         public void handleOpenElement(String elementName, Map<String, String> attributes, int line, int col) {
             tagInfo.add(new TagInfo(sb.length(), elementName, attributes));
+        }
+
+        @Override
+        public void handleStandaloneElement(String elementName, Map<String, String> attributes,
+                                            boolean minimized, int line, int col) throws ParseException {
+            final TagInfo info = new TagInfo(sb.length(), elementName, attributes);
+            applyTag(sb, info.start, sb.length(), info);
         }
 
         public Spannable getText() {
