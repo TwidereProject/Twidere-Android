@@ -7,7 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.google.fragment_extra_features_sync_status.*
+import kotlinx.android.synthetic.main.fragment_extra_features_sync_status.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.FragmentContentActivity
