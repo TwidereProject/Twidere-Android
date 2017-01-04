@@ -84,7 +84,7 @@ public interface Constants extends TwidereConstants {
     String TWIDERE_PREVIEW_NICKNAME = "Twidere";
     String TWIDERE_PREVIEW_NAME = "Twidere Project";
     String TWIDERE_PREVIEW_SCREEN_NAME = "TwidereProject";
-    String TWIDERE_PREVIEW_TEXT_HTML = "Twidere is an open source twitter client for Android, see <a href='https://github.com/mariotaku/twidere'>github.com/mariotak&#8230;<a/>";
+    String TWIDERE_PREVIEW_TEXT_HTML = "Twidere is an open source twitter client for Android, see <a href='https://github.com/mariotaku/twidere'>github.com/mariotak&#8230;</a>";
     String TWIDERE_PREVIEW_TEXT_UNESCAPED = "Twidere is an open source twitter client for Android, see github.com/mariotak&#8230;";
     String TWIDERE_PREVIEW_SOURCE = "Twidere for Android";
 

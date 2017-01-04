@@ -55,10 +55,8 @@
             android:title="@string/title_filters"/>
         <item
             android:id="@id/premium_features"
-            android:enabled="@bool/debug"
             android:icon="@drawable/ic_action_infinity"
-            android:title="@string/title_premium_features_name"
-            android:visible="@bool/debug"/>
+            android:title="@string/title_premium_features_name"/>
         <item
             android:id="@id/settings"
             android:icon="@drawable/ic_action_settings"

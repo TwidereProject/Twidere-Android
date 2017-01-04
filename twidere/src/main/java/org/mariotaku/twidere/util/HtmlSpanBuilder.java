@@ -133,6 +133,7 @@ public class HtmlSpanBuilder {
         }
 
         String getAttribute(String attr) {
+            if (attributes == null) return null;
             return attributes.get(attr);
         }
     }
@@ -179,8 +180,10 @@ public class HtmlSpanBuilder {
         @Override
         public void handleStandaloneElement(String elementName, Map<String, String> attributes,
                                             boolean minimized, int line, int col) throws ParseException {
-            final TagInfo info = new TagInfo(sb.length(), elementName, attributes);
-            applyTag(sb, info.start, sb.length(), info);
+            if (minimized) {
+                final TagInfo info = new TagInfo(sb.length(), elementName, attributes);
+                applyTag(sb, info.start, sb.length(), info);
+            }
         }
 
         public Spannable getText() {
