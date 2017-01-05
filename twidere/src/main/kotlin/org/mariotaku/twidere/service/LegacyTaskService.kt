@@ -23,10 +23,11 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.support.annotation.StringDef
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.twidere.annotation.AutoRefreshType
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
@@ -39,7 +40,7 @@ import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
 
-class RefreshService : Service() {
+class LegacyTaskService : Service() {
 
     @Inject
     internal lateinit var preferences: SharedPreferencesWrapper
@@ -54,8 +55,7 @@ class RefreshService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val task = run {
             val action = intent?.action ?: return@run null
-            val type = getRefreshType(action) ?: return@run null
-            return@run createJobTask(this, type)
+            return@run createJobTask(this, action)
         } ?: run {
             stopSelfResult(startId)
             return START_NOT_STICKY
@@ -84,25 +84,37 @@ class RefreshService : Service() {
             get() = getSinceIds(accountKeys)
     }
 
-    companion object {
+    @StringDef(ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
+            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_TRENDS)
+    annotation class Action
 
-        fun createJobTask(context: Context, @AutoRefreshType refreshType: String): AbstractTask<*, *, () -> Unit>? {
-            when (refreshType) {
-                AutoRefreshType.HOME_TIMELINE -> {
+    companion object {
+        @Action
+        const val ACTION_REFRESH_HOME_TIMELINE = INTENT_PACKAGE_PREFIX + "REFRESH_HOME_TIMELINE"
+        @Action
+        const val ACTION_REFRESH_NOTIFICATIONS = INTENT_PACKAGE_PREFIX + "REFRESH_NOTIFICATIONS"
+        @Action
+        const val ACTION_REFRESH_DIRECT_MESSAGES = INTENT_PACKAGE_PREFIX + "REFRESH_DIRECT_MESSAGES"
+        @Action
+        const val ACTION_REFRESH_TRENDS = INTENT_PACKAGE_PREFIX + "REFRESH_TRENDS"
+
+        fun createJobTask(context: Context, @Action action: String): AbstractTask<*, *, () -> Unit>? {
+            when (action) {
+                ACTION_REFRESH_HOME_TIMELINE -> {
                     val task = GetHomeTimelineTask(context)
                     task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshHomeTimelineEnabled) { accountKeys ->
                         DataStoreUtils.getNewestStatusIds(context, Statuses.CONTENT_URI, accountKeys)
                     }
                     return task
                 }
-                AutoRefreshType.INTERACTIONS_TIMELINE -> {
+                ACTION_REFRESH_NOTIFICATIONS -> {
                     val task = GetActivitiesAboutMeTask(context)
                     task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
                         DataStoreUtils.getNewestActivityMaxPositions(context, Activities.AboutMe.CONTENT_URI, accountKeys)
                     }
                     return task
                 }
-                AutoRefreshType.DIRECT_MESSAGES -> {
+                ACTION_REFRESH_DIRECT_MESSAGES -> {
                     val task = GetReceivedDirectMessagesTask(context)
                     task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
                         DataStoreUtils.getNewestMessageIds(context, DirectMessages.Inbox.CONTENT_URI, accountKeys)
@@ -111,14 +123,6 @@ class RefreshService : Service() {
                 }
             }
             return null
-        }
-
-        @AutoRefreshType
-        fun getRefreshType(action: String): String? = when (action) {
-            ACTION_REFRESH_HOME_TIMELINE -> AutoRefreshType.HOME_TIMELINE
-            ACTION_REFRESH_NOTIFICATIONS -> AutoRefreshType.INTERACTIONS_TIMELINE
-            ACTION_REFRESH_DIRECT_MESSAGES -> AutoRefreshType.DIRECT_MESSAGES
-            else -> null
         }
 
         fun getRefreshAction(@AutoRefreshType type: String): String? = when (type) {

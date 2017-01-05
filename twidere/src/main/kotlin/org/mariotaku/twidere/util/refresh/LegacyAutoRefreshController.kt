@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.util.refresh
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -9,7 +9,7 @@ import android.support.v4.util.ArrayMap
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
-import org.mariotaku.twidere.service.RefreshService
+import org.mariotaku.twidere.service.LegacyTaskService
 import java.util.concurrent.TimeUnit
 
 class LegacyAutoRefreshController(
@@ -17,18 +17,13 @@ class LegacyAutoRefreshController(
         kPreferences: KPreferences
 ) : AutoRefreshController(context, kPreferences) {
 
-    private val alarmManager: AlarmManager
-
-    private val pendingIntents: ArrayMap<String, PendingIntent>
+    private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val pendingIntents: ArrayMap<String, PendingIntent> = ArrayMap()
 
     init {
-        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        pendingIntents = ArrayMap()
-
         AutoRefreshType.ALL.forEach { type ->
-            val action = RefreshService.getRefreshAction(type) ?: return@forEach
-            val intent = Intent(context, RefreshService::class.java)
+            val action = LegacyTaskService.getRefreshAction(type) ?: return@forEach
+            val intent = Intent(context, LegacyTaskService::class.java)
             intent.action = action
             pendingIntents[type] = PendingIntent.getService(context, 0, intent, 0)
         }

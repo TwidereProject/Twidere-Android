@@ -25,3 +25,35 @@ fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     }
     return list
 }
+
+/**
+ * Executes the given [block] function on this resource and then closes it down correctly whether an exception
+ * is thrown or not.
+ *
+ * @param block a function to process this closable resource.
+ * @return the result of [block] function on this closable resource.
+ */
+inline fun <R> Cursor.useCursor(block: (Cursor) -> R): R {
+    var closed = false
+    try {
+        return block(this)
+    } catch (e: Exception) {
+        closed = true
+        try {
+            this?.close()
+        } catch (closeException: Exception) {
+            // eat the closeException as we are already throwing the original cause
+            // and we don't want to mask the real exception
+
+            // TODO on Java 7 we should call
+            // e.addSuppressed(closeException)
+            // to work like try-with-resources
+            // http://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html#suppressed-exceptions
+        }
+        throw e
+    } finally {
+        if (!closed) {
+            this?.close()
+        }
+    }
+}

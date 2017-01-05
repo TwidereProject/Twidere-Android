@@ -403,7 +403,7 @@ public final class Utils implements Constants {
     public static String getReadPositionTagWithAccount(@NonNull final String tag,
                                                        @Nullable final UserKey accountKey) {
         if (accountKey == null) return tag;
-        return tag + "_" + accountKey;
+        return accountKey + ":" + tag;
     }
 
     public static ParcelableDirectMessage findDirectMessageInDatabases(final Context context,

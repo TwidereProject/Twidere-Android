@@ -299,7 +299,8 @@ class StreamingService : Service() {
             resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
             resolver.insert(Statuses.CONTENT_URI, values)
             val rt = status.retweetedStatus
-            if (rt != null && rt.extendedText.contains("@" + account.user.screen_name) || rt == null && status.extendedText.contains("@" + account.user.screen_name)) {
+            if (rt != null && rt.extendedText.contains("@" + account.user.screen_name) ||
+                    rt == null && status.extendedText.contains("@" + account.user.screen_name)) {
                 resolver.insert(Mentions.CONTENT_URI, values)
             }
         }

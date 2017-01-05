@@ -53,6 +53,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -204,7 +205,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     private val sharedPreferences: SharedPreferences by lazy {
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         prefs.registerOnSharedPreferenceChangeListener(this)
-        prefs
+        return@lazy prefs
     }
 
     override fun onTrimMemory(level: Int) {

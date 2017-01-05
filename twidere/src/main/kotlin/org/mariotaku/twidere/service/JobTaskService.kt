@@ -40,7 +40,7 @@ import javax.inject.Inject
  */
 @SuppressLint("Registered")
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-class JobRefreshService : JobService() {
+class JobTaskService : JobService() {
 
     @Inject
     internal lateinit var preferences: KPreferences
@@ -61,7 +61,7 @@ class JobRefreshService : JobService() {
 
         val task = run {
             val type = getRefreshType(params.jobId) ?: return@run null
-            return@run RefreshService.createJobTask(this, type)
+            return@run LegacyTaskService.createJobTask(this, type)
         } ?: return false
         task.callback = {
             this.jobFinished(params, false)
@@ -75,21 +75,22 @@ class JobRefreshService : JobService() {
     }
 
     companion object {
-        const val ID_REFRESH_HOME_TIMELINE = 1
-        const val ID_REFRESH_NOTIFICATIONS = 2
-        const val ID_REFRESH_DIRECT_MESSAGES = 3
+        const val JOB_ID_REFRESH_HOME_TIMELINE = 1
+        const val JOB_ID_REFRESH_NOTIFICATIONS = 2
+        const val JOB_ID_REFRESH_DIRECT_MESSAGES = 3
 
         fun getJobId(@AutoRefreshType type: String): Int = when (type) {
-            AutoRefreshType.HOME_TIMELINE -> JobRefreshService.ID_REFRESH_HOME_TIMELINE
-            AutoRefreshType.INTERACTIONS_TIMELINE -> JobRefreshService.ID_REFRESH_NOTIFICATIONS
-            AutoRefreshType.DIRECT_MESSAGES -> JobRefreshService.ID_REFRESH_DIRECT_MESSAGES
+            AutoRefreshType.HOME_TIMELINE -> JOB_ID_REFRESH_HOME_TIMELINE
+            AutoRefreshType.INTERACTIONS_TIMELINE -> JOB_ID_REFRESH_NOTIFICATIONS
+            AutoRefreshType.DIRECT_MESSAGES -> JOB_ID_REFRESH_DIRECT_MESSAGES
             else -> 0
         }
 
+        @LegacyTaskService.Action
         fun getRefreshType(jobId: Int): String? = when (jobId) {
-            JobRefreshService.ID_REFRESH_HOME_TIMELINE -> AutoRefreshType.HOME_TIMELINE
-            JobRefreshService.ID_REFRESH_NOTIFICATIONS -> AutoRefreshType.INTERACTIONS_TIMELINE
-            JobRefreshService.ID_REFRESH_DIRECT_MESSAGES -> AutoRefreshType.DIRECT_MESSAGES
+            JOB_ID_REFRESH_HOME_TIMELINE -> LegacyTaskService.ACTION_REFRESH_HOME_TIMELINE
+            JOB_ID_REFRESH_NOTIFICATIONS -> LegacyTaskService.ACTION_REFRESH_NOTIFICATIONS
+            JOB_ID_REFRESH_DIRECT_MESSAGES -> LegacyTaskService.ACTION_REFRESH_DIRECT_MESSAGES
             else -> null
         }
     }

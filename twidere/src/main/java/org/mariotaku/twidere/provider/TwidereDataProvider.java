@@ -88,6 +88,7 @@ import org.mariotaku.twidere.model.DraftCursorIndices;
 import org.mariotaku.twidere.model.ParcelableActivity;
 import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
+import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.StringLongPair;
@@ -113,7 +114,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 import org.mariotaku.twidere.receiver.NotificationReceiver;
-import org.mariotaku.twidere.service.BackgroundOperationService;
+import org.mariotaku.twidere.service.LengthyOperationsService;
 import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreFunctionsKt;
@@ -561,14 +562,14 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         nb.setAutoCancel(true);
         nb.setWhen(System.currentTimeMillis());
         nb.setSmallIcon(R.drawable.ic_stat_draft);
-        final Intent discardIntent = new Intent(context, BackgroundOperationService.class);
+        final Intent discardIntent = new Intent(context, LengthyOperationsService.class);
         discardIntent.setAction(INTENT_ACTION_DISCARD_DRAFT);
         final Uri draftUri = Uri.withAppendedPath(Drafts.CONTENT_URI, String.valueOf(draftId));
         discardIntent.setData(draftUri);
         nb.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard), PendingIntent.getService(context, 0,
                 discardIntent, PendingIntent.FLAG_ONE_SHOT));
 
-        final Intent sendIntent = new Intent(context, BackgroundOperationService.class);
+        final Intent sendIntent = new Intent(context, LengthyOperationsService.class);
         sendIntent.setAction(INTENT_ACTION_SEND_DRAFT);
         sendIntent.setData(draftUri);
         nb.addAction(R.drawable.ic_action_send, context.getString(R.string.action_send),
@@ -1254,7 +1255,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 Statuses.TABLE_NAME, selection).getSQL();
         final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
-        final String[] statusProjection = {Statuses.STATUS_ID};
+        final String[] statusProjection = {Statuses.POSITION_KEY};
         final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
                 filteredSelection, selectionArgs, null, null, Statuses.DEFAULT_SORT_ORDER);
         final Cursor userCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, userProjection,
@@ -1264,24 +1265,22 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             final int usersCount = userCursor.getCount();
             final int statusesCount = statusCursor.getCount();
             if (statusesCount == 0 || usersCount == 0) return;
-            final int idxStatusId = statusCursor.getColumnIndex(Statuses.STATUS_ID),
-                    idxUserName = userCursor.getColumnIndex(Statuses.USER_NAME),
-                    idxUserScreenName = userCursor.getColumnIndex(Statuses.USER_NAME),
-                    idxUserId = userCursor.getColumnIndex(Statuses.USER_NAME);
-            final long statusId = statusCursor.moveToFirst() ? statusCursor.getLong(idxStatusId) : -1;
+            final ParcelableStatusCursorIndices statusIndices = new ParcelableStatusCursorIndices(statusCursor),
+                    userIndices = new ParcelableStatusCursorIndices(userCursor);
+            final long positionKey = statusCursor.moveToFirst() ? statusCursor.getLong(statusIndices.position_key) : -1;
             final String notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
-                    userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
+            final String displayName = mUserColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+                    userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
                     mNameFirst);
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
-                final String othersName = mUserColorNameManager.getDisplayName(userCursor.getString(idxUserId),
-                        userCursor.getString(idxUserName), userCursor.getString(idxUserScreenName),
+                final String othersName = mUserColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+                        userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
                         mNameFirst);
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName);
             } else {
@@ -1297,9 +1296,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             builder.setContentText(notificationContent);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             builder.setContentIntent(getContentIntent(context, CustomTabType.HOME_TIMELINE,
-                    NotificationType.HOME_TIMELINE, accountKey, statusId));
+                    NotificationType.HOME_TIMELINE, accountKey, positionKey));
             builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.HOME_TIMELINE,
-                    accountKey, statusId, false));
+                    accountKey, positionKey, false));
             builder.setNumber(statusesCount);
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
             applyNotificationPreferences(builder, pref, pref.getHomeTimelineNotificationType());

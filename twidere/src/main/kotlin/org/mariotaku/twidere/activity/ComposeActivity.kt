@@ -84,7 +84,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
-import org.mariotaku.twidere.service.BackgroundOperationService
+import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -1315,7 +1315,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.in_reply_to_status = inReplyToStatus
         update.is_possibly_sensitive = isPossiblySensitive
         update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtras)?.attachmentUrl
-        BackgroundOperationService.updateStatusesAsync(this, action, update)
+        LengthyOperationsService.updateStatusesAsync(this, action, update)
         if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
             possiblySensitive = false
             shouldSaveAccounts = true

@@ -482,11 +482,11 @@
         </activity>
 
         <service
-            android:name=".service.RefreshService"
+            android:name=".service.LegacyTaskService"
             android:enabled="@bool/use_legacy_refresh_service"
             android:label="@string/label_refresh_service"/>
         <service
-            android:name=".service.JobRefreshService"
+            android:name=".service.JobTaskService"
             android:enabled="@bool/use_job_refresh_service"
             android:exported="true"
             android:label="@string/label_refresh_service"
@@ -495,7 +495,7 @@
             android:name=".service.StreamingService"
             android:label="@string/label_streaming_service"/>
         <service
-            android:name=".service.BackgroundOperationService"
+            android:name=".service.LengthyOperationsService"
             android:label="@string/label_background_operation_service"/>
         <service
             android:name=".service.AccountAuthenticatorService"

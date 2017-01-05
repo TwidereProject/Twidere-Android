@@ -37,8 +37,8 @@ import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.BaseIntentService
-import org.mariotaku.twidere.service.JobRefreshService
-import org.mariotaku.twidere.service.RefreshService
+import org.mariotaku.twidere.service.JobTaskService
+import org.mariotaku.twidere.service.LegacyTaskService
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
@@ -62,7 +62,7 @@ interface GeneralComponent {
 
     fun inject(obj: BaseDialogFragment)
 
-    fun inject(obj: RefreshService)
+    fun inject(obj: LegacyTaskService)
 
     fun inject(obj: ComposeActivity)
 
@@ -110,7 +110,7 @@ interface GeneralComponent {
 
     fun inject(task: GetStatusesTask)
 
-    fun inject(service: JobRefreshService)
+    fun inject(service: JobTaskService)
 
     fun inject(task: GetActivitiesTask)
 

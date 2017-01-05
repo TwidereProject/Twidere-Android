@@ -46,7 +46,7 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.service.BackgroundOperationService
+import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
@@ -249,7 +249,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             }
             update.text = commentText
             update.is_possibly_sensitive = status.is_possibly_sensitive
-            BackgroundOperationService.updateStatusesAsync(context, Draft.Action.QUOTE, update)
+            LengthyOperationsService.updateStatusesAsync(context, Draft.Action.QUOTE, update)
         } else {
             twitter.retweetStatusAsync(status.account_key, status.id)
         }

@@ -61,7 +61,7 @@ import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
-import org.mariotaku.twidere.service.BackgroundOperationService
+import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.Utils.getDefaultTextSize
@@ -214,7 +214,7 @@ class DraftsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, OnItemCl
             }
             when (item.action_type) {
                 Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                    BackgroundOperationService.updateStatusesAsync(context, item.action_type,
+                    LengthyOperationsService.updateStatusesAsync(context, item.action_type,
                             ParcelableStatusUpdateUtils.fromDraftItem(activity, item))
                 }
                 Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {

@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.util.refresh
 
 import android.content.Context
 import org.mariotaku.kpreferences.KPreferences

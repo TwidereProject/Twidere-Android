@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.dagger
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.os.Looper
 import android.support.v4.text.BidiFormatter
 import com.nostra13.universalimageloader.cache.disc.DiskCache
@@ -52,6 +53,9 @@ import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.media.UILFileCache
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.refresh.AutoRefreshController
+import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
+import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
 import java.io.IOException
 import javax.inject.Singleton
 
@@ -231,7 +235,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
-        if (application.resources.getBoolean(R.bool.use_job_refresh_service)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                application.resources.getBoolean(R.bool.use_job_refresh_service)) {
             return JobSchedulerAutoRefreshController(application, kPreferences)
         }
         return LegacyAutoRefreshController(application, kPreferences)
