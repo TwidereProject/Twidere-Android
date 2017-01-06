@@ -484,12 +484,12 @@
         <service
             android:name=".service.LegacyTaskService"
             android:enabled="@bool/use_legacy_refresh_service"
-            android:label="@string/label_refresh_service"/>
+            android:label="@string/label_refresh_and_sync_service"/>
         <service
             android:name=".service.JobTaskService"
             android:enabled="@bool/use_job_refresh_service"
             android:exported="true"
-            android:label="@string/label_refresh_service"
+            android:label="@string/label_refresh_and_sync_service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <service
             android:name=".service.StreamingService"

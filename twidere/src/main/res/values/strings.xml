@@ -42,6 +42,7 @@
     <string name="password">Password</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_refresh_service">Refresh service</string>
+    <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="action_open_in_browser">Open in browser</string>

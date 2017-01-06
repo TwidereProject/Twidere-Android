@@ -573,7 +573,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @IntDef(value = {
             FilterFlags.QUOTE_NOT_AVAILABLE,
             FilterFlags.BLOCKING_USER,
-            FilterFlags.BLOCKED_BY_USER
+            FilterFlags.BLOCKED_BY_USER,
+            FilterFlags.POSSIBILITY_SENSITIVE
     }, flag = true)
     public @interface FilterFlags {
         /**
@@ -583,6 +584,8 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
          * <li/>You were blocked by this user
          * <li/>You blocked/muted this user
          * <li/>Original tweet was marked sensitive and your account settings blocked them
+         * <li/>Original tweet was deleted
+         * <li/>Original tweet author blocked or blocked by quoted tweet author
          */
         long QUOTE_NOT_AVAILABLE = 0x1;
         /**
