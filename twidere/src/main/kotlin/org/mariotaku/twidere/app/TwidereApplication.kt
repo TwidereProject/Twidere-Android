@@ -54,6 +54,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
+import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -76,6 +77,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var kPreferences: KPreferences
     @Inject
     lateinit internal var autoRefreshController: AutoRefreshController
+    @Inject
+    lateinit internal var syncController: SyncController
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -109,6 +112,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         GeneralComponentHelper.build(this).inject(this)
 
         autoRefreshController.appStarted()
+        syncController.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
 

@@ -9,9 +9,9 @@ import java.io.Closeable
 import java.io.File
 import java.io.IOException
 
-abstract class FileBasedFiltersDataSyncHelper<DownloadSession : Closeable, UploadSession : Closeable>(
+abstract class FileBasedFiltersDataSyncAction<DownloadSession : Closeable, UploadSession : Closeable>(
         val context: Context
-) : SingleFileBasedDataSyncHelper<FiltersData, File, DownloadSession, UploadSession>() {
+) : SingleFileBasedDataSyncAction<FiltersData, File, DownloadSession, UploadSession>() {
 
     override fun File.loadSnapshot(): FiltersData {
         return reader().use {

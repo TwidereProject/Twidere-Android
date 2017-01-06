@@ -2,8 +2,8 @@ package org.mariotaku.twidere.model.sync
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.mariotaku.twidere.util.sync.DropboxSyncController
-import org.mariotaku.twidere.util.sync.SyncController
+import org.mariotaku.twidere.util.sync.SyncTaskRunner
+import org.mariotaku.twidere.util.sync.dropbox.DropboxSyncTaskRunner
 
 /**
  * Created by mariotaku on 2017/1/2.
@@ -14,8 +14,8 @@ class DropboxSyncProviderInfo(val authToken: String) : SyncProviderInfo(DropboxS
         editor.putString(KEY_DROPBOX_AUTH_TOKEN, authToken)
     }
 
-    override fun newSyncController(context: Context): SyncController {
-        return DropboxSyncController(context)
+    override fun newSyncTaskRunner(context: Context): SyncTaskRunner {
+        return DropboxSyncTaskRunner(context, authToken)
     }
 
     companion object {

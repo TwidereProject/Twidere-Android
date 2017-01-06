@@ -11,9 +11,9 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-abstract class FileBasedKeyValueSyncHelper<DownloadSession : Closeable, UploadSession : Closeable>(
+abstract class FileBasedKeyValueSyncAction<DownloadSession : Closeable, UploadSession : Closeable>(
         val context: Context
-) : SingleFileBasedDataSyncHelper<MutableMap<String, String>, File, DownloadSession, UploadSession>(), ISyncHelper {
+) : SingleFileBasedDataSyncAction<MutableMap<String, String>, File, DownloadSession, UploadSession>(), ISyncAction {
 
     private val TAG_ITEMS = "items"
     private val TAG_ITEM = "item"

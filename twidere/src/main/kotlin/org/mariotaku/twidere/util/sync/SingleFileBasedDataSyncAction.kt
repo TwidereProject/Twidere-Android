@@ -6,13 +6,13 @@ import java.io.Closeable
 import java.io.FileNotFoundException
 import java.io.IOException
 
-abstract class SingleFileBasedDataSyncHelper<Data, SnapshotStore, DownloadSession : Closeable, UploadSession : Closeable> : ISyncHelper {
+abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSession : Closeable, UploadSession : Closeable> : ISyncAction {
     private val TAG_ITEMS = "items"
     private val TAG_ITEM = "item"
 
     private val ATTR_KEY = "key"
 
-    override final fun performSync(): Boolean {
+    override final fun execute(): Boolean {
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG_SYNC, "Begin syncing $whatData")
         }

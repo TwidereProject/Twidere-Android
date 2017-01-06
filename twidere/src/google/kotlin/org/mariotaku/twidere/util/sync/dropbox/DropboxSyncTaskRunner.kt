@@ -1,25 +1,21 @@
-package org.mariotaku.twidere.service
+package org.mariotaku.twidere.util.sync.dropbox;
 
-import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.NotificationCompat
-import android.util.Log
 import android.util.Xml
 import com.dropbox.core.DbxDownloader
 import com.dropbox.core.DbxException
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.*
-import org.mariotaku.kpreferences.get
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.model.sync.DropboxSyncProviderInfo
+import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.sync.*
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlSerializer
@@ -27,44 +23,38 @@ import java.io.*
 import java.util.*
 
 /**
- * Created by mariotaku on 2016/12/7.
+ * Created by mariotaku on 2017/1/6.
  */
 
-class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
-    private val NOTIFICATION_ID_SYNC_DATA = 302
+class DropboxSyncTaskRunner(context: Context, val authToken: String) : SyncTaskRunner(context) {
 
-    override fun onHandleIntent(intent: Intent?) {
-        val syncInfo = preferences[dataSyncProviderInfoKey] as? DropboxSyncProviderInfo ?: return
-        val nb = NotificationCompat.Builder(this)
-        nb.setSmallIcon(R.drawable.ic_stat_refresh)
-        nb.setOngoing(true)
-        nb.setContentTitle("Syncing data")
-        nb.setContentText("Syncing using Dropbox")
-        val nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nm.notify(NOTIFICATION_ID_SYNC_DATA, nb.build())
+    override fun onRunningTask(action: String, callback: (Boolean) -> Unit): Boolean {
         val requestConfig = DbxRequestConfig.newBuilder("twidere-android/${BuildConfig.VERSION_NAME}")
                 .build()
-        val client = DbxClientV2(requestConfig, syncInfo.authToken)
-        arrayOf(
-                DropboxDraftsSyncHelper(this, client),
-                DropboxFiltersDataSyncHelper(this, client),
-                DropboxPreferencesValuesSyncHelper(this, client, userColorNameManager.colorPreferences,
-                        UserColorsSyncProcessor, "/Common/user_colors.xml"),
-                DropboxPreferencesValuesSyncHelper(this, client, userColorNameManager.nicknamePreferences,
-                        UserNicknamesSyncProcessor, "/Common/user_nicknames.xml")
-        ).forEach { helper ->
-            try {
-                helper.performSync()
-            } catch (e: IOException) {
-                Log.w(LOGTAG_SYNC, e)
-            } catch (e: Exception) {
-                Log.wtf(LOGTAG_SYNC, e)
-            }
+        val client = DbxClientV2(requestConfig, authToken)
+        val syncAction: ISyncAction = when (action) {
+            TaskServiceRunner.ACTION_SYNC_DRAFTS -> DropboxDraftsSyncAction(context, client)
+            TaskServiceRunner.ACTION_SYNC_FILTERS -> DropboxFiltersDataSyncAction(context, client)
+            TaskServiceRunner.ACTION_SYNC_USER_COLORS -> DropboxPreferencesValuesSyncAction(context,
+                    client, userColorNameManager.colorPreferences, UserColorsSyncProcessor,
+                    "/Common/user_colors.xml")
+            TaskServiceRunner.ACTION_SYNC_USER_NICKNAMES -> DropboxPreferencesValuesSyncAction(context,
+                    client, userColorNameManager.nicknamePreferences, UserNicknamesSyncProcessor,
+                    "/Common/user_nicknames.xml")
+            else -> null
+        } ?: return false
+        task {
+            syncAction.execute()
+        }.successUi {
+            callback(true)
+        }.failUi {
+            callback(false)
         }
-        nm.cancel(NOTIFICATION_ID_SYNC_DATA)
+        return true
     }
 
-    class DropboxDraftsSyncHelper(context: Context, val client: DbxClientV2) : FileBasedDraftsSyncHelper<FileMetadata>(context) {
+
+    class DropboxDraftsSyncAction(context: Context, val client: DbxClientV2) : FileBasedDraftsSyncAction<FileMetadata>(context) {
         @Throws(IOException::class)
         override fun Draft.saveToRemote(): FileMetadata {
             try {
@@ -134,10 +124,10 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
 
     }
 
-    internal class DropboxFiltersDataSyncHelper(
+    internal class DropboxFiltersDataSyncAction(
             context: Context,
             val client: DbxClientV2
-    ) : FileBasedFiltersDataSyncHelper<DbxDownloader<FileMetadata>, DropboxUploadSession<FiltersData>>(context) {
+    ) : FileBasedFiltersDataSyncAction<DbxDownloader<FileMetadata>, DropboxUploadSession<FiltersData>>(context) {
         override fun DbxDownloader<FileMetadata>.getRemoteLastModified(): Long {
             return result.clientModified.time
         }
@@ -174,13 +164,13 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
     }
 
 
-    internal class DropboxPreferencesValuesSyncHelper(
+    internal class DropboxPreferencesValuesSyncAction(
             context: Context,
             val client: DbxClientV2,
             preferences: SharedPreferences,
-            processor: FileBasedPreferencesValuesSyncHelper.Processor,
+            processor: Processor,
             val filePath: String
-    ) : FileBasedPreferencesValuesSyncHelper<DbxDownloader<FileMetadata>,
+    ) : FileBasedPreferencesValuesSyncAction<DbxDownloader<FileMetadata>,
             DropboxUploadSession<Map<String, String>>>(context, preferences, processor) {
         override fun DbxDownloader<FileMetadata>.getRemoteLastModified(): Long {
             return result.clientModified.time
@@ -277,4 +267,3 @@ class DropboxDataSyncService : BaseIntentService("dropbox_data_sync") {
         }
     }
 }
-

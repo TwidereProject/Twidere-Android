@@ -9,11 +9,11 @@ import java.util.*
  * Created by mariotaku on 2017/1/2.
  */
 
-abstract class FileBasedPreferencesValuesSyncHelper<DownloadSession : Closeable, UploadSession : Closeable>(
+abstract class FileBasedPreferencesValuesSyncAction<DownloadSession : Closeable, UploadSession : Closeable>(
         context: Context,
         var preferences: SharedPreferences,
         val processor: Processor
-) : FileBasedKeyValueSyncHelper<DownloadSession, UploadSession>(context) {
+) : FileBasedKeyValueSyncAction<DownloadSession, UploadSession>(context) {
 
     override final val snapshotFileName: String = processor.snapshotFileName
 

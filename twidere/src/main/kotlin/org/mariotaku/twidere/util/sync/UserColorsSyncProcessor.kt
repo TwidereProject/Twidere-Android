@@ -9,7 +9,7 @@ import org.mariotaku.ktextension.toHexColor
  * Created by mariotaku on 2017/1/2.
  */
 
-object UserColorsSyncProcessor : FileBasedPreferencesValuesSyncHelper.Processor {
+object UserColorsSyncProcessor : FileBasedPreferencesValuesSyncAction.Processor {
     override fun loadValue(map: MutableMap<String, String>, key: String, value: Any?) {
         if (value is Int) {
             map.put(key, toHexColor(value, format = HexColorFormat.RGB))

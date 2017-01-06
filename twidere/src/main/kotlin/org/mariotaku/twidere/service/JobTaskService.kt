@@ -24,14 +24,8 @@ import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
-import android.util.Log
-import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AutoRefreshType
-import org.mariotaku.twidere.constant.stopAutoRefreshWhenBatteryLowKey
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
 
@@ -43,7 +37,7 @@ import javax.inject.Inject
 class JobTaskService : JobService() {
 
     @Inject
-    internal lateinit var preferences: KPreferences
+    internal lateinit var taskServiceRunner: TaskServiceRunner
 
     override fun onCreate() {
         super.onCreate()
@@ -51,23 +45,10 @@ class JobTaskService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters): Boolean {
-        if (!Utils.isBatteryOkay(this) && preferences[stopAutoRefreshWhenBatteryLowKey]) {
-            // Low battery, don't refresh
-            return false
-        }
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Running job ${params.jobId}")
-        }
-
-        val task = run {
-            val type = getRefreshType(params.jobId) ?: return@run null
-            return@run LegacyTaskService.createJobTask(this, type)
-        } ?: return false
-        task.callback = {
+        val action = getTaskAction(params.jobId) ?: return false
+        return taskServiceRunner.runTask(action) {
             this.jobFinished(params, false)
         }
-        TaskStarter.execute(task)
-        return true
     }
 
     override fun onStopJob(params: JobParameters): Boolean {
@@ -75,22 +56,36 @@ class JobTaskService : JobService() {
     }
 
     companion object {
+        // DON'T CHANGE JOB ID ONCE CREATED!
         const val JOB_ID_REFRESH_HOME_TIMELINE = 1
         const val JOB_ID_REFRESH_NOTIFICATIONS = 2
         const val JOB_ID_REFRESH_DIRECT_MESSAGES = 3
+        const val JOB_ID_SYNC_DRAFTS = 21
+        const val JOB_ID_SYNC_FILTERS = 22
+        const val JOB_ID_SYNC_USER_NICKNAMES = 23
+        const val JOB_ID_SYNC_USER_COLORS = 24
 
-        fun getJobId(@AutoRefreshType type: String): Int = when (type) {
+        val JOB_IDS_REFRESH = intArrayOf(JOB_ID_REFRESH_HOME_TIMELINE, JOB_ID_REFRESH_NOTIFICATIONS,
+                JOB_ID_REFRESH_DIRECT_MESSAGES)
+        val JOB_IDS_SYNC = intArrayOf(JOB_ID_SYNC_DRAFTS, JOB_ID_SYNC_FILTERS,
+                JOB_ID_SYNC_USER_NICKNAMES, JOB_ID_SYNC_USER_COLORS)
+
+        fun getRefreshJobId(@AutoRefreshType type: String): Int = when (type) {
             AutoRefreshType.HOME_TIMELINE -> JOB_ID_REFRESH_HOME_TIMELINE
             AutoRefreshType.INTERACTIONS_TIMELINE -> JOB_ID_REFRESH_NOTIFICATIONS
             AutoRefreshType.DIRECT_MESSAGES -> JOB_ID_REFRESH_DIRECT_MESSAGES
             else -> 0
         }
 
-        @LegacyTaskService.Action
-        fun getRefreshType(jobId: Int): String? = when (jobId) {
-            JOB_ID_REFRESH_HOME_TIMELINE -> LegacyTaskService.ACTION_REFRESH_HOME_TIMELINE
-            JOB_ID_REFRESH_NOTIFICATIONS -> LegacyTaskService.ACTION_REFRESH_NOTIFICATIONS
-            JOB_ID_REFRESH_DIRECT_MESSAGES -> LegacyTaskService.ACTION_REFRESH_DIRECT_MESSAGES
+        @TaskServiceRunner.Action
+        fun getTaskAction(jobId: Int): String? = when (jobId) {
+            JOB_ID_REFRESH_HOME_TIMELINE -> TaskServiceRunner.ACTION_REFRESH_HOME_TIMELINE
+            JOB_ID_REFRESH_NOTIFICATIONS -> TaskServiceRunner.ACTION_REFRESH_NOTIFICATIONS
+            JOB_ID_REFRESH_DIRECT_MESSAGES -> TaskServiceRunner.ACTION_REFRESH_DIRECT_MESSAGES
+            JOB_ID_SYNC_DRAFTS -> TaskServiceRunner.ACTION_SYNC_DRAFTS
+            JOB_ID_SYNC_FILTERS -> TaskServiceRunner.ACTION_SYNC_FILTERS
+            JOB_ID_SYNC_USER_NICKNAMES -> TaskServiceRunner.ACTION_SYNC_USER_NICKNAMES
+            JOB_ID_SYNC_USER_COLORS -> TaskServiceRunner.ACTION_SYNC_USER_COLORS
             else -> null
         }
     }

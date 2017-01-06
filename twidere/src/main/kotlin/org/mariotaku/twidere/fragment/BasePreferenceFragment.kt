@@ -29,12 +29,14 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
+import com.squareup.otto.Bus
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.preference.RingtonePreference
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.sync.SyncController
 import javax.inject.Inject
 
 abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragment {
@@ -46,6 +48,10 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var kPreferences: KPreferences
+    @Inject
+    lateinit var syncController: SyncController
+    @Inject
+    lateinit var bus: Bus
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 

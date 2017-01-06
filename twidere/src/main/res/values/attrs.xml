@@ -80,6 +80,9 @@
         <attr name="android:action"/>
         <attr name="android:tag"/>
     </declare-styleable>
+    <declare-styleable name="SyncItemPreference">
+        <attr name="syncType" format="string"/>
+    </declare-styleable>
     <declare-styleable name="IconActionButton">
         <attr name="iabColor" format="color"/>
         <attr name="iabActivatedColor" format="color"/>

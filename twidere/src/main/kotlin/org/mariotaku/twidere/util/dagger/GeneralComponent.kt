@@ -34,6 +34,7 @@ import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
+import org.mariotaku.twidere.preference.sync.SyncItemPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.BaseIntentService
@@ -46,6 +47,7 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
+import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
 /**
@@ -141,4 +143,7 @@ interface GeneralComponent {
     fun inject(fragment: ThemedPreferenceDialogFragmentCompat)
 
     fun inject(service: BaseIntentService)
+
+    fun inject(runner: SyncTaskRunner)
+    fun inject(preference: SyncItemPreference)
 }

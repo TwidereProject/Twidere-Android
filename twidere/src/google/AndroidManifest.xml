@@ -51,6 +51,5 @@
             android:exported="false"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
 
-        <service android:name=".service.DropboxDataSyncService"/>
     </application>
 </manifest>

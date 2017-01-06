@@ -43,7 +43,6 @@ import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
@@ -56,6 +55,10 @@ import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
+import org.mariotaku.twidere.util.sync.JobSchedulerSyncController
+import org.mariotaku.twidere.util.sync.LegacySyncController
+import org.mariotaku.twidere.util.sync.SyncController
+import org.mariotaku.twidere.util.sync.SyncPreferences
 import java.io.IOException
 import javax.inject.Singleton
 
@@ -234,12 +237,33 @@ class ApplicationModule(private val application: Application) {
     }
 
     @Provides
+    @Singleton
     fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-                application.resources.getBoolean(R.bool.use_job_refresh_service)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return JobSchedulerAutoRefreshController(application, kPreferences)
         }
         return LegacyAutoRefreshController(application, kPreferences)
+    }
+
+    @Provides
+    @Singleton
+    fun syncController(kPreferences: KPreferences): SyncController {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return JobSchedulerSyncController(application)
+        }
+        return LegacySyncController(application)
+    }
+
+    @Provides
+    @Singleton
+    fun syncPreferences(): SyncPreferences {
+        return SyncPreferences(application)
+    }
+
+    @Provides
+    @Singleton
+    fun taskCreator(kPreferences: KPreferences, syncPreferences: SyncPreferences, bus: Bus): TaskServiceRunner {
+        return TaskServiceRunner(application, kPreferences, bus)
     }
 
     @Provides
@@ -248,6 +272,12 @@ class ApplicationModule(private val application: Application) {
         val features = DefaultFeatures()
         features.load(preferences)
         return features
+    }
+
+    @Provides
+    @Singleton
+    fun hotMobiLogger(): HotMobiLogger {
+        return HotMobiLogger(application)
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {
@@ -264,12 +294,6 @@ class ApplicationModule(private val application: Application) {
             return ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator)
         }
 
-    }
-
-    @Provides
-    @Singleton
-    fun hotMobiLogger(): HotMobiLogger {
-        return HotMobiLogger(application)
     }
 
     companion object {

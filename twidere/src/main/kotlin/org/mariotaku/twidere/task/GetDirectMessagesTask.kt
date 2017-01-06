@@ -30,7 +30,7 @@ import javax.inject.Inject
  */
 abstract class GetDirectMessagesTask(
         protected val context: Context
-) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.MessageListResponse>, () -> Unit>() {
+) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.MessageListResponse>, (Boolean) -> Unit>() {
     @Inject
     protected lateinit var errorInfoStore: ErrorInfoStore
     @Inject
@@ -124,7 +124,8 @@ abstract class GetDirectMessagesTask(
         bus.post(GetMessagesTaskEvent(databaseUri, true, null))
     }
 
-    override fun afterExecute(handler: (() -> Unit)?, result: List<TwitterWrapper.MessageListResponse>?) {
+    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterWrapper.MessageListResponse>?) {
         bus.post(GetMessagesTaskEvent(databaseUri, false, AsyncTwitterWrapper.getException(result)))
+        handler?.invoke(true)
     }
 }

@@ -888,4 +888,5 @@
     <string name="action_sync_sync_now">Sync now</string>
     <string name="title_sync_settings">Sync settings</string>
     <string name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
+    <string name="message_sync_last_synced_time">Last synced: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
 </resources>

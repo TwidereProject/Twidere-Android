@@ -6,13 +6,14 @@ import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import org.mariotaku.twidere.Constants.SHARED_PREFERENCES_NAME
+import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
-import org.mariotaku.twidere.util.sync.SyncController
+import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 
 /**
@@ -22,18 +23,26 @@ import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 class SyncSettingsFragment : BasePreferenceFragment() {
 
     private var providerInfo: SyncProviderInfo? = null
-    private var syncController: SyncController? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         providerInfo = kPreferences[dataSyncProviderInfoKey]
-        syncController = providerInfo?.newSyncController(context)
         setHasOptionsMenu(true)
     }
 
+    override fun onStart() {
+        super.onStart()
+        bus.register(this)
+    }
+
+    override fun onStop() {
+        bus.unregister(this)
+        super.onStop()
+    }
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        preferenceManager.sharedPreferencesName = SHARED_PREFERENCES_NAME
+        preferenceManager.sharedPreferencesName = SYNC_PREFERENCES_NAME
         addPreferencesFromResource(R.xml.preferences_sync)
     }
 
@@ -48,7 +57,8 @@ class SyncSettingsFragment : BasePreferenceFragment() {
                 df.show(childFragmentManager, "disconnect_confirm")
             }
             R.id.sync_now -> {
-                syncController?.performSync()
+                val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
+                syncController.performSync(providerInfo)
             }
             else -> {
                 return false
@@ -57,8 +67,14 @@ class SyncSettingsFragment : BasePreferenceFragment() {
         return true
     }
 
+    @Subscribe
+    fun onSyncFinishedEvent(event: TaskServiceRunner.SyncFinishedEvent) {
+        listView?.adapter?.notifyDataSetChanged()
+    }
+
     private fun cleanupAndDisconnect() {
-        syncController?.cleanupSyncCache()
+        val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
+        syncController.cleanupSyncCache(providerInfo)
         kPreferences[dataSyncProviderInfoKey] = null
         activity?.finish()
     }

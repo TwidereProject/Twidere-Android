@@ -6,7 +6,7 @@ import android.content.SharedPreferences
  * Created by mariotaku on 2017/1/2.
  */
 
-object UserNicknamesSyncProcessor : FileBasedPreferencesValuesSyncHelper.Processor {
+object UserNicknamesSyncProcessor : FileBasedPreferencesValuesSyncAction.Processor {
     override fun loadValue(map: MutableMap<String, String>, key: String, value: Any?) {
         if (value is String) {
             map.put(key, value)

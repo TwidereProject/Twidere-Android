@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--suppress AndroidElementNotAllowed -->
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <SwitchPreferenceCompat android:title="@string/title_drafts"/>
-    <SwitchPreferenceCompat android:title="@string/title_filters"/>
-    <SwitchPreferenceCompat android:title="@string/title_nicknames"/>
-    <SwitchPreferenceCompat android:title="@string/title_user_colors"/>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <org.mariotaku.twidere.preference.sync.SyncItemPreference
+        android:defaultValue="true"
+        android:title="@string/title_drafts"
+        app:syncType="drafts"/>
+    <org.mariotaku.twidere.preference.sync.SyncItemPreference
+        android:defaultValue="true"
+        android:title="@string/title_filters"
+        app:syncType="filters"/>
+    <org.mariotaku.twidere.preference.sync.SyncItemPreference
+        android:defaultValue="true"
+        android:title="@string/title_nicknames"
+        app:syncType="user_nicknames"/>
+    <org.mariotaku.twidere.preference.sync.SyncItemPreference
+        android:defaultValue="true"
+        android:title="@string/title_user_colors"
+        app:syncType="user_colors"/>
 </PreferenceScreen>

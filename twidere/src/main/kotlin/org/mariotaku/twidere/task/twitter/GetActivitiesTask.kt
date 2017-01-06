@@ -39,7 +39,7 @@ import javax.inject.Inject
  */
 abstract class GetActivitiesTask(
         protected val context: Context
-) : AbstractTask<RefreshTaskParam, Unit, () -> Unit>() {
+) : AbstractTask<RefreshTaskParam, Unit, (Boolean) -> Unit>() {
     @Inject
     lateinit var preferences: KPreferences
     @Inject
@@ -193,9 +193,10 @@ abstract class GetActivitiesTask(
     @Throws(MicroBlogException::class)
     protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
 
-    public override fun afterExecute(handler: (() -> Unit)?, result: Unit) {
+    public override fun afterExecute(handler: ((Boolean) -> Unit)?, result: Unit) {
         context.contentResolver.notifyChange(contentUri, null)
         bus.post(GetActivitiesTaskEvent(contentUri, false, null))
+        handler?.invoke(true)
     }
 
     protected abstract val contentUri: Uri
