@@ -765,8 +765,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun showAutoRefreshConfirm() {
-        val df = AutoRefreshConfirmDialogFragment()
-        df.show(supportFragmentManager, "auto_refresh_confirm")
+        if (isFinishing) return
+        executeAfterFragmentResumed { activity ->
+            val df = AutoRefreshConfirmDialogFragment()
+            df.show(activity.supportFragmentManager, "auto_refresh_confirm")
+        }
     }
 
     private fun setTabPosition(initialTab: Int) {

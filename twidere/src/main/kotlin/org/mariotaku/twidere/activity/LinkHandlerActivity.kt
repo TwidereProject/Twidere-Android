@@ -85,7 +85,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     override fun onFitSystemWindows(insets: Rect) {
         super.onFitSystemWindows(insets)
         val fragment = currentVisibleFragment
-        if (fragment is IBaseFragment) {
+        if (fragment is IBaseFragment<*>) {
             fragment.requestFitSystemWindows()
         }
     }

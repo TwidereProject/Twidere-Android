@@ -68,7 +68,7 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivity,
+open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
         KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
 
@@ -273,7 +273,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity, IThemedActivit
         actionHelper.dispatchOnResumeFragments()
     }
 
-    override fun executeAfterFragmentResumed(action: (IExtendedActivity) -> Unit) {
+    override fun executeAfterFragmentResumed(action: (BaseActivity) -> Unit) {
         actionHelper.executeAfterFragmentResumed(action)
     }
 

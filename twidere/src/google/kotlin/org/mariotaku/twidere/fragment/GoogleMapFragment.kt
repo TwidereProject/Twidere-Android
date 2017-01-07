@@ -37,7 +37,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LONGITUDE
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IMapFragment
 
-class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFragment {
+class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFragment<GoogleMapFragment> {
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 
@@ -108,7 +108,7 @@ class GoogleMapFragment : SupportMapFragment(), Constants, IMapFragment, IBaseFr
         }
     }
 
-    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (IBaseFragment) -> Unit) {
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (GoogleMapFragment) -> Unit) {
         actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 

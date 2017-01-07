@@ -19,19 +19,20 @@
 
 package org.mariotaku.twidere.activity.iface
 
+import android.support.v4.app.FragmentActivity
 import java.util.*
 
 /**
  * Created by mariotaku on 15/12/28.
  */
-interface IExtendedActivity {
+interface IExtendedActivity<out A : FragmentActivity> {
 
-    fun executeAfterFragmentResumed(action: (IExtendedActivity) -> Unit)
+    fun executeAfterFragmentResumed(action: (A) -> Unit)
 
-    class ActionHelper(private val activity: IExtendedActivity) {
+    class ActionHelper<out A: FragmentActivity>(private val activity: A) {
 
         private var fragmentResumed: Boolean = false
-        private val actionQueue = LinkedList<(IExtendedActivity) -> Unit>()
+        private val actionQueue = LinkedList<(A) -> Unit>()
 
         fun dispatchOnPause() {
             fragmentResumed = false
@@ -45,14 +46,14 @@ interface IExtendedActivity {
 
         private fun executePending() {
             if (!fragmentResumed) return
-            var action: ((IExtendedActivity) -> Unit)?
+            var action: ((A) -> Unit)?
             do {
                 action = actionQueue.poll()
                 action?.invoke(activity)
             } while (action != null)
         }
 
-        fun executeAfterFragmentResumed(action: (IExtendedActivity) -> Unit) {
+        fun executeAfterFragmentResumed(action: (A) -> Unit) {
             actionQueue.add(action)
             executePending()
         }

@@ -61,7 +61,7 @@ abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScroll
             for (i in 0 until count) {
                 if (i > currentItem - pageLimit - 1 || i < currentItem + pageLimit) {
                     val obj = pagerAdapter!!.instantiateItem(viewPager, i)
-                    if (obj is IBaseFragment) {
+                    if (obj is IBaseFragment<*>) {
                         obj.requestFitSystemWindows()
                     }
                 }

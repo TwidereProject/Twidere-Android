@@ -130,6 +130,7 @@ import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback
 import org.mariotaku.twidere.view.TabPagerIndicator
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
+import java.lang.ref.WeakReference
 import java.util.*
 
 class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener,
@@ -931,14 +932,14 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                         df?.dismiss()
                     }
                 }.successUi { result ->
-                    executeAfterFragmentResumed {
+                    executeAfterFragmentResumed { fragment ->
                         val df = AddRemoveUserListDialogFragment()
                         df.arguments = Bundle {
                             this[EXTRA_ACCOUNT_KEY] = user.account_key
                             this[EXTRA_USER_KEY] = user.key
                             this[EXTRA_USER_LISTS] = result
                         }
-                        df.show(fragmentManager, "add_remove_list")
+                        df.show(fragment.fragmentManager, "add_remove_list")
                     }
                 }.failUi {
                     Utils.showErrorMessage(context, R.string.action_getting_user_lists, it, false)
@@ -1594,14 +1595,15 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
             dialog.setOnShowListener {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = dialog.listView.checkedItemPositions
-
+                    val weakActivity = WeakReference(activity)
                     promiseOnUi {
-                        val activity = activity as IExtendedActivity
-                        activity.executeAfterFragmentResumed {
-                            ProgressDialogFragment.show(fragmentManager, "update_lists_progress")
+                        val activity = weakActivity.get() as? IExtendedActivity<*> ?: return@promiseOnUi
+                        activity.executeAfterFragmentResumed { activity ->
+                            ProgressDialogFragment.show(activity.supportFragmentManager, "update_lists_progress")
                         }
                     }.then {
-                        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
+                        val activity = weakActivity.get() ?: throw IllegalStateException()
+                        val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
                         val successfulStates = SparseBooleanArray()
                         try {
                             for (i in 0 until checkedPositions.size()) {
@@ -1620,9 +1622,10 @@ class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener
                             throw UpdateListsException(successfulStates)
                         }
                     }.alwaysUi {
-                        val activity = activity as IExtendedActivity
-                        activity.executeAfterFragmentResumed {
-                            val df = fragmentManager.findFragmentByTag("update_lists_progress") as? DialogFragment
+                        val activity = weakActivity.get() as? IExtendedActivity<*> ?: return@alwaysUi
+                        activity.executeAfterFragmentResumed { activity ->
+                            val manager = activity.supportFragmentManager
+                            val df = manager.findFragmentByTag("update_lists_progress") as? DialogFragment
                             df?.dismiss()
                         }
                     }.successUi {

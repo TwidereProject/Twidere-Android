@@ -25,7 +25,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
@@ -57,7 +56,7 @@ import java.io.File
 import javax.inject.Inject
 import android.Manifest.permission as AndroidPermissions
 
-class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActivity {
+class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
 
     @Inject
     lateinit var mFileCache: FileCache
@@ -342,20 +341,20 @@ class MediaViewerActivity : BaseActivity(), IExtendedActivity, IMediaViewerActiv
             private val PROGRESS_FRAGMENT_TAG = "progress"
 
             override fun dismissProgress() {
-                val activity = context as IExtendedActivity
+                val activity = context as IExtendedActivity<*>
                 activity.executeAfterFragmentResumed { activity ->
-                    val fm = (activity as FragmentActivity).supportFragmentManager
+                    val fm = activity.supportFragmentManager
                     val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
                     fragment?.dismiss()
                 }
             }
 
             override fun showProgress() {
-                val activity = context as IExtendedActivity
+                val activity = context as IExtendedActivity<*>
                 activity.executeAfterFragmentResumed { activity ->
                     val fragment = ProgressDialogFragment()
                     fragment.isCancelable = false
-                    fragment.show((activity as FragmentActivity).supportFragmentManager, PROGRESS_FRAGMENT_TAG)
+                    fragment.show(activity.supportFragmentManager, PROGRESS_FRAGMENT_TAG)
                 }
             }
 
