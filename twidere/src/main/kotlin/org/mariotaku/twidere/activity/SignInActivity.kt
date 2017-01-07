@@ -96,6 +96,7 @@ import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
+import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -305,17 +306,14 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING) {
             signInTask!!.cancel(true)
         }
-        if (apiConfig.credentialsType == Credentials.Type.OAUTH && editUsername.length() <= 0) {
+        if (apiConfig.credentialsType == Credentials.Type.OAUTH) {
             openBrowserLogin()
             return
         }
 
-        val consumerKey = MicroBlogAPIFactory.getOAuthToken(apiConfig.consumerKey, apiConfig.consumerSecret)
-        val apiUrlFormat = apiConfig.apiUrlFormat ?: DEFAULT_TWITTER_API_URL_FORMAT
         val username = editUsername.text.toString()
         val password = editPassword.text.toString()
-        signInTask = SignInTask(this, username, password, apiConfig.credentialsType, consumerKey, apiUrlFormat,
-                apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
+        signInTask = SignInTask(this, username, password, apiConfig)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
@@ -325,12 +323,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             signInTask?.cancel(true)
         }
         val verifier = intent.getStringExtra(EXTRA_OAUTH_VERIFIER)
-        val consumerKey = MicroBlogAPIFactory.getOAuthToken(apiConfig.consumerKey, apiConfig.consumerSecret)
         val requestToken = OAuthToken(intent.getStringExtra(EXTRA_REQUEST_TOKEN),
                 intent.getStringExtra(EXTRA_REQUEST_TOKEN_SECRET))
-        val apiUrlFormat = apiConfig.apiUrlFormat ?: DEFAULT_TWITTER_API_URL_FORMAT
-        signInTask = BrowserSignInTask(this, consumerKey, requestToken, verifier, apiUrlFormat,
-                apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
+        signInTask = BrowserSignInTask(this, apiConfig, requestToken, verifier)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
@@ -405,7 +400,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
         } else {
             val intent = Intent(this, HomeActivity::class.java)
-            //TODO refresh time lines
+            //TODO refresh timelines
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
@@ -437,7 +432,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         } else {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
         }
-        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType, errorReason = errorReason))
+        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
+                errorReason = errorReason, accountType = apiConfig.type))
     }
 
     internal fun dismissDialogFragment(tag: String) {
@@ -524,12 +520,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
      */
     internal class BrowserSignInTask(
             context: SignInActivity,
-            private val consumerKey: OAuthToken,
+            private val apiConfig: CustomAPIConfig,
             private val requestToken: OAuthToken,
-            private val oauthVerifier: String?,
-            private val apiUrlFormat: String,
-            private val sameOAuthSigningUrl: Boolean,
-            private val noVersionSuffix: Boolean
+            private val oauthVerifier: String?
     ) : AbstractSignInTask(context) {
 
         private val context: Context
@@ -540,11 +533,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
         @Throws(Exception::class)
         override fun performLogin(): SignInResponse {
-            val versionSuffix = if (noVersionSuffix) null else "1.1"
-            var endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    sameOAuthSigningUrl)
+            val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
+            var endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat,
+                    apiConfig.isSameOAuthUrl)
             val oauth = newMicroBlogInstance(context, endpoint = endpoint,
-                    auth = OAuthAuthorization(consumerKey.oauthToken, consumerKey.oauthTokenSecret),
+                    auth = OAuthAuthorization(apiConfig.consumerKey, apiConfig.consumerSecret),
                     cls = TwitterOAuth::class.java)
             val accessToken: OAuthToken
             if (oauthVerifier != null) {
@@ -552,16 +545,16 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             } else {
                 accessToken = oauth.getAccessToken(requestToken)
             }
-            val auth = OAuthAuthorization(consumerKey.oauthToken,
-                    consumerKey.oauthTokenSecret, accessToken)
-            endpoint = MicroBlogAPIFactory.getOAuthEndpoint(apiUrlFormat, "api", versionSuffix,
-                    sameOAuthSigningUrl)
+            val auth = OAuthAuthorization(apiConfig.consumerKey,
+                    apiConfig.consumerSecret, accessToken)
+            endpoint = MicroBlogAPIFactory.getOAuthEndpoint(apiConfig.apiUrlFormat, "api", versionSuffix,
+                    apiConfig.isSameOAuthUrl)
 
             val twitter = newMicroBlogInstance(context, endpoint = endpoint, auth = auth,
                     cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser)
+            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id!!
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
@@ -571,13 +564,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 color = account.getColor(am)
             }
             val credentials = OAuthCredentials()
-            credentials.api_url_format = apiUrlFormat
-            credentials.no_version_suffix = noVersionSuffix
+            credentials.api_url_format = apiConfig.apiUrlFormat
+            credentials.no_version_suffix = apiConfig.isNoVersionSuffix
 
-            credentials.same_oauth_signing_url = sameOAuthSigningUrl
+            credentials.same_oauth_signing_url = apiConfig.isSameOAuthUrl
 
-            credentials.consumer_key = consumerKey.oauthToken
-            credentials.consumer_secret = consumerKey.oauthTokenSecret
+            credentials.consumer_key = apiConfig.consumerKey
+            credentials.consumer_secret = apiConfig.consumerSecret
             credentials.access_token = accessToken.oauthToken
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
@@ -796,23 +789,15 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             activity: SignInActivity,
             private val username: String,
             private val password: String,
-            @Credentials.Type private val authType: String,
-            private val consumerKey: OAuthToken,
-            private val apiUrlFormat: String,
-            private val sameOAuthSigningUrl: Boolean,
-            private val noVersionSuffix: Boolean
+            private val apiConfig: CustomAPIConfig
     ) : AbstractSignInTask(activity) {
-        private val verificationCallback: InputLoginVerificationCallback
-        private val userAgent: String
-
-        init {
-            verificationCallback = InputLoginVerificationCallback()
-            userAgent = UserAgentUtils.getDefaultUserAgentString(activity)
-        }
+        private val verificationCallback = InputLoginVerificationCallback()
+        private val userAgent = UserAgentUtils.getDefaultUserAgentString(activity)
+        private val apiUrlFormat = apiConfig.apiUrlFormat ?: DEFAULT_TWITTER_API_URL_FORMAT
 
         @Throws(Exception::class)
         override fun performLogin(): SignInResponse {
-            when (authType) {
+            when (apiConfig.credentialsType) {
                 Credentials.Type.OAUTH -> return authOAuth()
                 Credentials.Type.XAUTH -> return authxAuth()
                 Credentials.Type.BASIC -> return authBasic()
@@ -825,9 +810,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private fun authOAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    sameOAuthSigningUrl)
-            val auth = OAuthAuthorization(consumerKey.oauthToken,
-                    consumerKey.oauthTokenSecret)
+                    apiConfig.isSameOAuthUrl)
+            val auth = OAuthAuthorization(apiConfig.consumerKey,
+                    apiConfig.consumerSecret)
             val oauth = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     cls = TwitterOAuth::class.java)
             val authenticator = OAuthPasswordAuthenticator(oauth,
@@ -842,19 +827,19 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private fun authxAuth(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
             var endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiUrlFormat,
-                    sameOAuthSigningUrl)
-            var auth = OAuthAuthorization(consumerKey.oauthToken,
-                    consumerKey.oauthTokenSecret)
+                    apiConfig.isSameOAuthUrl)
+            var auth = OAuthAuthorization(apiConfig.consumerKey,
+                    apiConfig.consumerSecret)
             val oauth = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     cls = TwitterOAuth::class.java)
             val accessToken = oauth.getAccessToken(username, password)
             var userId: String? = accessToken.userId
             if (userId == null) {
                 // Trying to fix up userId if accessToken doesn't contain one.
-                auth = OAuthAuthorization(consumerKey.oauthToken,
-                        consumerKey.oauthTokenSecret, accessToken)
-                endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat, sameOAuthSigningUrl,
-                        noVersionSuffix)
+                auth = OAuthAuthorization(apiConfig.consumerKey,
+                        apiConfig.consumerSecret, accessToken)
+                endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat, apiConfig.isSameOAuthUrl,
+                        apiConfig.isNoVersionSuffix)
                 val microBlog = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                         cls = MicroBlog::class.java)
                 userId = microBlog.verifyCredentials().id
@@ -865,7 +850,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)
         private fun authBasic(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
-            val versionSuffix = if (noVersionSuffix) null else "1.1"
+            val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
             val endpoint = Endpoint(MicroBlogAPIFactory.getApiUrl(apiUrlFormat, "api",
                     versionSuffix))
             val auth = BasicAuthorization(username, password)
@@ -885,7 +870,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser)
+            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
             val am = AccountManager.get(activity)
@@ -895,7 +880,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
             val credentials = BasicCredentials()
             credentials.api_url_format = apiUrlFormat
-            credentials.no_version_suffix = noVersionSuffix
+            credentials.no_version_suffix = apiConfig.isNoVersionSuffix
             credentials.username = username
             credentials.password = password
             return SignInResponse(account != null, Credentials.Type.BASIC, credentials, user,
@@ -906,7 +891,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         @Throws(MicroBlogException::class)
         private fun authTwipOMode(): SignInResponse {
             val activity = activityRef.get() ?: throw InterruptedException()
-            val versionSuffix = if (noVersionSuffix) null else "1.1"
+            val versionSuffix = if (apiConfig.isNoVersionSuffix) null else "1.1"
             val endpoint = Endpoint(MicroBlogAPIFactory.getApiUrl(apiUrlFormat, "api",
                     versionSuffix))
             val auth = EmptyAuthorization()
@@ -915,7 +900,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             val apiUser = twitter.verifyCredentials()
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser)
+            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
             val am = AccountManager.get(activity)
@@ -925,7 +910,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
             val credentials = EmptyCredentials()
             credentials.api_url_format = apiUrlFormat
-            credentials.no_version_suffix = noVersionSuffix
+            credentials.no_version_suffix = apiConfig.isNoVersionSuffix
 
             return SignInResponse(account != null, Credentials.Type.EMPTY, credentials, user, color,
                     accountType)
@@ -935,15 +920,15 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private fun getOAuthSignInResponse(activity: SignInActivity,
                                            accessToken: OAuthToken,
                                            userId: String, @Credentials.Type authType: String): SignInResponse {
-            val auth = OAuthAuthorization(consumerKey.oauthToken,
-                    consumerKey.oauthTokenSecret, accessToken)
+            val auth = OAuthAuthorization(apiConfig.consumerKey,
+                    apiConfig.consumerSecret, accessToken)
             val endpoint = MicroBlogAPIFactory.getOAuthRestEndpoint(apiUrlFormat,
-                    sameOAuthSigningUrl, noVersionSuffix)
+                    apiConfig.isSameOAuthUrl, apiConfig.isNoVersionSuffix)
             val twitter = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser)
+            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
             val am = AccountManager.get(activity)
@@ -953,12 +938,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             }
             val credentials = OAuthCredentials()
             credentials.api_url_format = apiUrlFormat
-            credentials.no_version_suffix = noVersionSuffix
+            credentials.no_version_suffix = apiConfig.isNoVersionSuffix
 
-            credentials.same_oauth_signing_url = sameOAuthSigningUrl
+            credentials.same_oauth_signing_url = apiConfig.isSameOAuthUrl
 
-            credentials.consumer_key = consumerKey.oauthToken
-            credentials.consumer_secret = consumerKey.oauthTokenSecret
+            credentials.consumer_key = apiConfig.consumerKey
+            credentials.consumer_secret = apiConfig.consumerSecret
             credentials.access_token = accessToken.oauthToken
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
@@ -1025,34 +1010,40 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
-        internal fun detectAccountType(twitter: MicroBlog, user: User): Pair<String, AccountExtras?> {
-            try {
-                // Get StatusNet specific resource
-                val config = twitter.statusNetConfig
-                val extras = StatusNetAccountExtras()
-                val site = config.site
-                if (site != null) {
-                    extras.textLimit = site.textLimit
+        @Throws(IOException::class)
+        internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
+            when (type) {
+                AccountType.STATUSNET -> {
+                    // Get StatusNet specific resource
+                    val config = twitter.statusNetConfig
+                    val extras = StatusNetAccountExtras()
+                    val site = config.site
+                    if (site != null) {
+                        extras.textLimit = site.textLimit
+                    }
+                    return Pair(AccountType.STATUSNET, extras)
                 }
-                return Pair(AccountType.STATUSNET, extras)
-            } catch (e: MicroBlogException) {
-                // Ignore
-            }
-
-            try {
-                // Get Twitter official only resource
-                val paging = Paging()
-                paging.count(1)
-                twitter.getActivitiesAboutMe(paging)
-                val extras = TwitterAccountExtras()
-                extras.setIsOfficialCredentials(true)
-                return Pair(AccountType.TWITTER, extras)
-            } catch (e: MicroBlogException) {
-                // Ignore
-            }
-
-            if (UserKeyUtils.isFanfouUser(user)) {
-                return Pair(AccountType.FANFOU, null)
+                AccountType.TWITTER -> {
+                    val extras = TwitterAccountExtras()
+                    try {
+                        // Get Twitter official only resource
+                        val paging = Paging()
+                        paging.count(1)
+                        twitter.getActivitiesAboutMe(paging)
+                        extras.setIsOfficialCredentials(true)
+                    } catch (e: MicroBlogException) {
+                        // Ignore
+                    }
+                    return Pair(AccountType.TWITTER, extras)
+                }
+                AccountType.FANFOU -> {
+                    return Pair(AccountType.FANFOU, null)
+                }
+                else -> {
+                    if (UserKeyUtils.isFanfouUser(user)) {
+                        return Pair(AccountType.FANFOU, null)
+                    }
+                }
             }
             return Pair(AccountType.TWITTER, null)
         }
