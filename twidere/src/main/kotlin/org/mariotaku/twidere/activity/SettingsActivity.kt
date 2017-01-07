@@ -44,8 +44,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_DARK
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_NAME_LIGHT
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
@@ -61,6 +59,11 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        if (savedInstanceState != null) {
+            shouldRecreate = savedInstanceState.getBoolean(EXTRA_SHOULD_RECREATE, shouldRecreate)
+            shouldRestart = savedInstanceState.getBoolean(EXTRA_SHOULD_RESTART, shouldRestart)
+        }
 
         val backgroundAlpha = currentThemeBackgroundAlpha
 
@@ -101,42 +104,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         }
     }
 
-    private fun initEntries() {
-        entriesAdapter.addHeader(getString(R.string.appearance))
-        entriesAdapter.addPreference("theme", R.drawable.ic_action_color_palette, getString(R.string.theme),
-                R.xml.preferences_theme)
-        entriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
-                R.xml.preferences_cards)
-
-        entriesAdapter.addHeader(getString(R.string.function))
-        entriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
-                CustomTabsFragment::class.java)
-        entriesAdapter.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
-                ExtensionsListFragment::class.java)
-        entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
-                R.xml.preferences_refresh)
-        entriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
-                R.xml.preferences_notifications)
-        entriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
-                R.xml.preferences_network)
-        entriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.action_compose),
-                R.xml.preferences_compose)
-        entriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
-                R.xml.preferences_content)
-        entriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.preference_title_storage),
-                R.xml.preferences_storage)
-        entriesAdapter.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
-                R.xml.preferences_other)
-
-        entriesAdapter.addHeader(getString(R.string.title_about))
-        entriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.title_about),
-                R.xml.preferences_about)
-        val browserArgs = Bundle()
-        browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html")
-        entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.title_open_source_license),
-                SupportBrowserFragment::class.java, browserArgs)
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == RESULT_SETTINGS_CHANGED && data != null) {
             shouldRecreate = data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)
@@ -144,11 +111,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
-
-
-    private val isTopSettings: Boolean
-        get() = java.lang.Boolean.parseBoolean("true")
-
 
     override fun finish() {
         if (shouldRecreate || shouldRestart) {
@@ -160,8 +122,10 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         super.finish()
     }
 
-    private fun finishNoRestart() {
-        super.finish()
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(EXTRA_SHOULD_RECREATE, shouldRecreate)
+        outState.putBoolean(EXTRA_SHOULD_RESTART, shouldRestart)
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -208,16 +172,49 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         openDetails(position)
     }
 
-    override fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int {
-        when (theme) {
-            VALUE_THEME_NAME_LIGHT -> {
-                return R.style.Theme_Twidere_Light
-            }
-            VALUE_THEME_NAME_DARK -> {
-                return R.style.Theme_Twidere_Dark
-            }
-        }
-        return super.getThemeResource(theme, themeColor, nightMode)
+    private fun finishNoRestart() {
+        super.finish()
+    }
+
+
+    private val isTopSettings: Boolean
+        get() = java.lang.Boolean.parseBoolean("true")
+
+
+    private fun initEntries() {
+        entriesAdapter.addHeader(getString(R.string.appearance))
+        entriesAdapter.addPreference("theme", R.drawable.ic_action_color_palette, getString(R.string.theme),
+                R.xml.preferences_theme)
+        entriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
+                R.xml.preferences_cards)
+
+        entriesAdapter.addHeader(getString(R.string.function))
+        entriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
+                CustomTabsFragment::class.java)
+        entriesAdapter.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
+                ExtensionsListFragment::class.java)
+        entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
+                R.xml.preferences_refresh)
+        entriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
+                R.xml.preferences_notifications)
+        entriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
+                R.xml.preferences_network)
+        entriesAdapter.addPreference("compose", R.drawable.ic_action_status_compose, getString(R.string.action_compose),
+                R.xml.preferences_compose)
+        entriesAdapter.addPreference("content", R.drawable.ic_action_twidere_square, getString(R.string.content),
+                R.xml.preferences_content)
+        entriesAdapter.addPreference("storage", R.drawable.ic_action_storage, getString(R.string.preference_title_storage),
+                R.xml.preferences_storage)
+        entriesAdapter.addPreference("other", R.drawable.ic_action_more_horizontal, getString(R.string.other_settings),
+                R.xml.preferences_other)
+
+        entriesAdapter.addHeader(getString(R.string.title_about))
+        entriesAdapter.addPreference("about", R.drawable.ic_action_info, getString(R.string.title_about),
+                R.xml.preferences_about)
+        val browserArgs = Bundle()
+        browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html")
+        entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.title_open_source_license),
+                SupportBrowserFragment::class.java, browserArgs)
     }
 
     private fun openDetails(position: Int) {

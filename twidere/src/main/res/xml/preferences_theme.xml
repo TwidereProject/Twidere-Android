@@ -13,6 +13,9 @@
         android:order="21"
         android:title="@string/theme">
         <extra
+            android:name="should_recreate"
+            android:value="true"/>
+        <extra
             android:name="recreate_activity"
             android:value="true"/>
     </org.mariotaku.twidere.preference.EntrySummaryListPreference>

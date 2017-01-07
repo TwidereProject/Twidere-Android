@@ -13,6 +13,11 @@
         <attr name="quoteIndicatorBackgroundColor" format="color"/>
         <attr name="linePageIndicatorStyle" format="reference"/>
         <attr name="mediaLabelBackground" format="color"/>
+
+    </declare-styleable>
+    <declare-styleable name="TwidereTheme">
+        <attr name="darkThemeResource" format="reference"/>
+        <attr name="lightThemeResource" format="reference"/>
     </declare-styleable>
 
     <declare-styleable name="ColorLabelView">

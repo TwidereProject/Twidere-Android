@@ -2,7 +2,6 @@ package org.mariotaku.twidere.constant
 
 import android.content.SharedPreferences
 import android.os.Build
-import android.support.v7.app.AppCompatDelegate
 import android.text.TextUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.toLong
@@ -59,25 +58,6 @@ val themeKey = KStringKey(KEY_THEME, VALUE_THEME_NAME_LIGHT)
 val themeColorKey = KIntKey(KEY_THEME_COLOR, 0)
 val filterUnavailableQuoteStatusesKey = KBooleanKey("filter_unavailable_quote_statuses", false)
 val filterPossibilitySensitiveStatusesKey = KBooleanKey("filter_possibility_sensitive_statuses", false)
-
-object nightModeKey : KSimpleKey<Int>(KEY_THEME, AppCompatDelegate.MODE_NIGHT_NO) {
-    override fun read(preferences: SharedPreferences): Int {
-        return when (preferences.getString(key, null)) {
-            VALUE_THEME_NAME_AUTO -> AppCompatDelegate.MODE_NIGHT_AUTO
-            VALUE_THEME_NAME_DARK -> AppCompatDelegate.MODE_NIGHT_YES
-            else -> AppCompatDelegate.MODE_NIGHT_NO
-        }
-    }
-
-    override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
-        editor.putString(key, when (value) {
-            AppCompatDelegate.MODE_NIGHT_NO -> VALUE_THEME_NAME_LIGHT
-            AppCompatDelegate.MODE_NIGHT_YES -> VALUE_THEME_NAME_DARK
-            else -> VALUE_THEME_NAME_AUTO
-        })
-        return true
-    }
-}
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

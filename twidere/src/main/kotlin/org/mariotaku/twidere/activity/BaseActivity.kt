@@ -51,7 +51,6 @@ import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
-import org.mariotaku.twidere.constant.nightModeKey
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -62,6 +61,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
+import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 import java.lang.reflect.InvocationTargetException
 import java.util.*
@@ -179,12 +179,10 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
             StrictModeUtils.detectAllThreadPolicy()
         }
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val nightMode = prefs[nightModeKey]
-        val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey], nightMode)
+        val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey])
         if (themeResource != 0) {
             setTheme(themeResource)
         }
-        delegate.setLocalNightMode(nightMode)
         super.onCreate(savedInstanceState)
         ActivitySupport.setTaskDescription(this, TaskDescriptionCompat(title.toString(), null,
                 ColorUtils.setAlphaComponent(overrideTheme.colorToolbar, 0xFF)))
@@ -386,7 +384,9 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
     }
 
     @StyleRes
-    protected open fun getThemeResource(theme: String, themeColor: Int, nightMode: Int): Int = 0
+    protected open fun getThemeResource(theme: String, themeColor: Int): Int {
+        return getCurrentThemeResource(this, theme)
+    }
 
     companion object {
 

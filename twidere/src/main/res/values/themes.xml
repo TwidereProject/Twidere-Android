@@ -1,55 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Twidere" parent="Theme.Twidere.Dark"/>
-
-    <style name="Theme.Twidere.Dialog" parent="Theme.Twidere.Dark.Dialog"/>
-
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.Dark.DialogWhenLarge.NoActionBar"/>
-
-    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere">
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
+    <style name="Theme.Twidere" parent="Theme.Twidere.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light</item>
     </style>
 
-
-    <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Dialog">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBarOverlay">false</item>
-        <item name="android:windowActionModeOverlay">false</item>
-
+    <style name="Theme.Twidere.Dialog" parent="Theme.Twidere.Dialog.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.Dialog</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.Dialog</item>
     </style>
 
-    <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.Dialog">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
-        <item name="android:windowMinWidthMinor">100%</item>
-        <item name="android:windowActionBarOverlay">false</item>
-        <item name="android:windowActionModeOverlay">false</item>
-
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.DialogWhenLarge.NoActionBar.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.DialogWhenLarge.NoActionBar</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.DialogWhenLarge.NoActionBar
+        </item>
     </style>
 
-    <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.Dialog">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@null</item>
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
+    <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere.NoActionBar.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.NoActionBar</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.NoActionBar</item>
+    </style>
+
+    <style name="Theme.Twidere.Compose" parent="Theme.Twidere.Compose.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.Compose</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.Compose</item>
+    </style>
+
+    <style name="Theme.Twidere.QuickSearchBar" parent="Theme.Twidere.QuickSearchBar.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.QuickSearchBar</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.QuickSearchBar</item>
+    </style>
+
+    <style name="Theme.Twidere.NoDisplay" parent="Theme.Twidere.NoDisplay.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.NoDisplay</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.NoDisplay</item>
     </style>
 
     <style name="Theme.Twidere.Viewer" parent="Theme.Twidere.Dark">

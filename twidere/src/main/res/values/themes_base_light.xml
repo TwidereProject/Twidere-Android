@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <style name="Theme.Twidere.Light" parent="Theme.AppCompat.Light">
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+        <item name="mediaLabelBackground">#dddddd</item>
+
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
+
+        <item name="actionBarTheme">@style/Theme.Twidere.Light.ActionBar</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.DarkActionBar" parent="Theme.Twidere.Light">
+        <item name="actionBarTheme">@style/Theme.Twidere.Dark.ActionBar</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.Light.DialogWhenLarge">
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
+
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Light.Dialog" parent="Theme.AppCompat.Light.Dialog">
+
+        <!-- Widget styles -->
+        <item name="android:listSeparatorTextViewStyle">@style/Widget.Light.TextView.ListSeparator
+        </item>
+        <item name="android:panelColorBackground">#e5e5e5</item>
+
+        <!-- Card UI styles -->
+        <item name="cardActionButtonStyle">@style/Widget.Light.CardActionButton</item>
+        <item name="profileImageStyle">@style/Widget.Light.ProfileImage</item>
+        <item name="profileImageStyleLarge">@style/Widget.Light.ProfileImage.Large</item>
+        <item name="cardItemBackgroundColor">@color/background_color_card_item_light</item>
+
+
+        <!-- Twidere specific styles -->
+        <item name="menuIconColor">@color/action_icon_dark</item>
+        <item name="messageBubbleColor">@color/message_bubble_color_light</item>
+        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_light</item>
+
+        <item name="colorToolbar">?colorPrimary</item>
+        <item name="isToolbarColored">true</item>
+
+        <item name="actionBarTheme">@null</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
+
+
+    <style name="Theme.Twidere.Light.NoActionBar" parent="Theme.Twidere.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.DarkActionBar.NoActionBar" parent="Theme.Twidere.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="Theme.Twidere.Light.ActionBar" parent="Theme.Twidere.Light">
+        <item name="colorPrimary">?android:colorBackground</item>
+        <item name="colorAccent">?android:colorBackground</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.NoDisplay" parent="Theme.Twidere.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowTitleStyle">@style/Widget.TextView.WindowTitle.NoDisplay</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.Compose" parent="Theme.Twidere.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.QuickSearchBar" parent="Theme.Twidere.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">false</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">100%</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:windowActionModeOverlay">false</item>
+    </style>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Twidere.DayNight" parent="Theme.Twidere.Light"/>
+
+    <style name="Theme.Twidere.Dialog.DayNight" parent="Theme.Twidere.Light.Dialog"/>
+
+    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar.DayNight" parent="Theme.Twidere.Light.DialogWhenLarge.NoActionBar"/>
+
+    <style name="Theme.Twidere.NoActionBar.DayNight" parent="Theme.Twidere.Light.NoActionBar"/>
+
+    <style name="Theme.Twidere.Compose.DayNight" parent="Theme.Twidere.Light.Compose"/>
+
+    <style name="Theme.Twidere.QuickSearchBar.DayNight" parent="Theme.Twidere.Light.QuickSearchBar"/>
+
+    <style name="Theme.Twidere.NoDisplay.DayNight" parent="Theme.Twidere.Light.NoDisplay"/>
+
+</resources>

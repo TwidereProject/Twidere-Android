@@ -32,7 +32,9 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.TwilightManagerAccessor;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
@@ -48,6 +50,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 import org.mariotaku.chameleon.ChameleonUtils;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
@@ -568,5 +571,12 @@ public class ThemeUtils implements Constants {
             hsv[2] *= by;
             return Color.HSVToColor(hsv);
         }
+    }
+
+    @StyleRes
+    public static int getCurrentTheme(@NotNull final Context context, @StyleRes final int lightTheme,
+                                      @StyleRes final int darkTheme) {
+        if (TwilightManagerAccessor.INSTANCE.isNight(context)) return darkTheme;
+        return lightTheme;
     }
 }
