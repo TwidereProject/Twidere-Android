@@ -437,7 +437,10 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                     event.isHasTranslateFeature = false
                 }
                 statusEvent = event
-                Analyzer.log(StatusView(details?.type, status.media_type))
+                Analyzer.log(StatusView(details?.type, status.media_type).apply {
+                    this.type = StatusView.getStatusType(status)
+                    this.source = HtmlEscapeHelper.toPlainText(status.source)
+                })
             } else if (readPosition != null) {
                 restoreReadPosition(readPosition)
             }

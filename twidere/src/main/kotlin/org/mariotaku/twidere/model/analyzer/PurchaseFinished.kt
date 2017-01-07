@@ -9,18 +9,11 @@ import org.mariotaku.twidere.util.Analyzer
  * Created by mariotaku on 2017/1/7.
  */
 
-data class Purchase(val productName: String) : Analyzer.Event {
-    override val name: String = "Purchase"
+data class PurchaseFinished(val productName: String) : Analyzer.Event {
+    override val name: String = "Purchase Finished"
     override var accountType: String? = null
-    var resultCode: Int = Activity.RESULT_OK
     var price: Double = Double.NaN
     var currency: String? = null
-
-    override fun forEachValues(action: (String, String?) -> Unit) {
-        if (resultCode != Activity.RESULT_OK) {
-            action("Fail reason", getFailReason(resultCode))
-        }
-    }
 
     companion object {
         const val NAME_EXTRA_FEATURES = "Enhanced Features"
@@ -35,9 +28,8 @@ data class Purchase(val productName: String) : Analyzer.Event {
             }
         }
 
-        fun fromActivityResult(name: String, resultCode: Int, data: Intent?): Purchase {
-            val result = Purchase(name)
-            result.resultCode = resultCode
+        fun create(name: String, data: Intent?): PurchaseFinished {
+            val result = PurchaseFinished(name)
             if (data != null) {
                 result.price = data.getDoubleExtra(EXTRA_PRICE, Double.NaN)
                 result.currency = data.getStringExtra(EXTRA_CURRENCY)

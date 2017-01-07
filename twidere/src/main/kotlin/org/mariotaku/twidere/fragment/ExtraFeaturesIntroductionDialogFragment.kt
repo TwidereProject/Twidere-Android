@@ -6,6 +6,10 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
+import org.mariotaku.twidere.model.analyzer.PurchaseConfirm
+import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.model.analyzer.PurchaseIntroduction
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
@@ -36,6 +40,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             } else {
                 activity.startActivityForResult(purchaseIntent, requestCode)
             }
+            Analyzer.log(PurchaseConfirm(PurchaseFinished.NAME_EXTRA_FEATURES))
         }
         builder.setNegativeButton(R.string.action_later) { dialog, which ->
 
@@ -54,6 +59,9 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             } else {
                 View.GONE
             }
+        }
+        if (savedInstanceState == null) {
+            Analyzer.log(PurchaseIntroduction(PurchaseFinished.NAME_EXTRA_FEATURES, "introduction dialog"))
         }
         return dialog
     }

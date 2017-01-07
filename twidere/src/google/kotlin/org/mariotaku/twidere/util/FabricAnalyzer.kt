@@ -22,7 +22,6 @@ package org.mariotaku.twidere.util
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.OnAccountsUpdateListener
-import android.app.Activity
 import android.app.Application
 import android.os.Build
 import com.crashlytics.android.Crashlytics
@@ -33,10 +32,7 @@ import org.mariotaku.ktextension.configure
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
-import org.mariotaku.twidere.model.analyzer.Purchase
-import org.mariotaku.twidere.model.analyzer.Search
-import org.mariotaku.twidere.model.analyzer.Share
-import org.mariotaku.twidere.model.analyzer.SignIn
+import org.mariotaku.twidere.model.analyzer.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -85,10 +81,23 @@ class FabricAnalyzer : Analyzer(), Constants {
                     putAttributes(event)
                 })
             }
-            is Purchase -> {
+            is PurchaseConfirm -> {
+                answers.logStartCheckout(configure(StartCheckoutEvent()) {
+                    event.forEachValues { name, value ->
+                        putCustomAttribute(name, value)
+                    }
+                })
+            }
+            is PurchaseIntroduction -> {
+                answers.logAddToCart(configure(AddToCartEvent()) {
+                    event.forEachValues { name, value ->
+                        putCustomAttribute(name, value)
+                    }
+                })
+            }
+            is PurchaseFinished -> {
                 answers.logPurchase(configure(PurchaseEvent()) {
                     putItemName(event.productName)
-                    putSuccess(event.resultCode == Activity.RESULT_OK)
                     if (!event.price.isNaN() && event.currency != null) {
                         putCurrency(Currency.getInstance(event.currency) ?: Currency.getInstance(Locale.getDefault()))
                         putItemPrice(BigDecimal(event.price))

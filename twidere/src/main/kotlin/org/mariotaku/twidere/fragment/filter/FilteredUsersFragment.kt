@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment.filter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -28,7 +29,7 @@ import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
-import org.mariotaku.twidere.model.analyzer.Purchase
+import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ContentValuesCreator
@@ -91,7 +92,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 startActivityForResult(intent, REQUEST_ADD_USER_SELECT_ACCOUNT)
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
-                Analyzer.log(Purchase.fromActivityResult(Purchase.NAME_EXTRA_FEATURES, resultCode, data))
+                if (resultCode == Activity.RESULT_OK) {
+                    Analyzer.log(PurchaseFinished.create(PurchaseFinished.NAME_EXTRA_FEATURES, data))
+                }
             }
         }
     }

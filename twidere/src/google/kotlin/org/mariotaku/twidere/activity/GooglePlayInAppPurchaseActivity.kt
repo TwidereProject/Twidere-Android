@@ -59,7 +59,7 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
     override fun onBillingInitialized() {
         // See https://github.com/anjlab/android-inapp-billing-v3/issues/156
         if (intent.action == ACTION_RESTORE_PURCHASE) {
-            performRestorePurchase()
+            getProductDetailsAndFinish()
         } else {
             billingProcessor.purchase(this, productId)
         }
@@ -91,10 +91,11 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
         finish()
     }
 
-    private fun performRestorePurchase() {
+
+    private fun getProductDetailsAndFinish() {
         executeAfterFragmentResumed {
             val weakThis = WeakReference(it as GooglePlayInAppPurchaseActivity)
-            val dfRef = WeakReference(ProgressDialogFragment.show(it.supportFragmentManager, "consume_purchase_progress"))
+            val dfRef = WeakReference(ProgressDialogFragment.show(it.supportFragmentManager, TAG_PURCHASE_PROCESS))
             task {
                 val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
                 val productId = activity.productId
@@ -116,38 +117,7 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
             }.alwaysUi {
                 weakThis.get()?.executeAfterFragmentResumed {
                     val fm = weakThis.get()?.supportFragmentManager
-                    val df = dfRef.get() ?: (fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment)
-                    df?.dismiss()
-                }
-            }
-        }
-    }
-
-    private fun getProductDetailsAndFinish() {
-        executeAfterFragmentResumed {
-            val weakThis = WeakReference(it as GooglePlayInAppPurchaseActivity)
-            val dfRef = WeakReference(ProgressDialogFragment.show(it.supportFragmentManager, "consume_purchase_progress"))
-            task {
-                val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
-                val bp = activity.billingProcessor
-                bp.loadOwnedPurchasesFromGoogle()
-                val skuDetails = bp.getPurchaseListingDetails(productId)
-                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ERROR)
-                val transactionDetails = bp.getPurchaseTransactionDetails(productId)
-                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
-                return@task Pair(skuDetails, transactionDetails)
-            }.successUi { result ->
-                weakThis.get()?.handlePurchased(result.first, result.second)
-            }.failUi { error ->
-                if (error is PurchaseException) {
-                    weakThis.get()?.handleError(error.code)
-                } else {
-                    weakThis.get()?.handleError(BILLING_RESPONSE_RESULT_ERROR)
-                }
-            }.alwaysUi {
-                weakThis.get()?.executeAfterFragmentResumed {
-                    val fm = weakThis.get()?.supportFragmentManager
-                    val df = dfRef.get() ?: (fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment)
+                    val df = dfRef.get() ?: (fm?.findFragmentByTag(TAG_PURCHASE_PROCESS) as? DialogFragment)
                     df?.dismiss()
                 }
             }
@@ -170,6 +140,8 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
     class PurchaseException(val code: Int) : Exception()
 
     companion object {
+        private const val TAG_PURCHASE_PROCESS = "get_purchase_process"
+
         const val EXTRA_PRODUCT_ID = "product_id"
         const val ACTION_RESTORE_PURCHASE = "${INTENT_PACKAGE_PREFIX}RESTORE_PURCHASE"
     }
