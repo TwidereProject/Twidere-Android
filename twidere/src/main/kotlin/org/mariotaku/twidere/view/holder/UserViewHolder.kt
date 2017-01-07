@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
 import org.mariotaku.twidere.view.NameView
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.iface.IColorLabelView
 import java.util.*
 
@@ -44,7 +45,7 @@ class UserViewHolder(
 ) : ViewHolder(itemView), OnClickListener, OnLongClickListener {
 
     private val itemContent: IColorLabelView
-    val profileImageView: ImageView
+    val profileImageView: ProfileImageView
     val profileTypeView: ImageView
     private val nameView: NameView
     private val externalIndicator: TextView
@@ -270,6 +271,7 @@ class UserViewHolder(
     }
 
     fun setupViewOptions() {
+        profileImageView.style = adapter.profileImageStyle
         setTextSize(adapter.textSize)
     }
 

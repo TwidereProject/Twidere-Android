@@ -624,6 +624,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (mediaMenuItem != null && mediaMenuItem.hasSubMenu()) {
             MenuUtils.addIntentToMenu(this, mediaMenuItem.subMenu, imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION)
         }
+        updateViewStyle()
         setMenu()
         updateLocationState()
         notifyAccountSelectionChanged()
@@ -631,6 +632,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         textChanged = false
 
         updateAttachedMediaView()
+    }
+
+    private fun updateViewStyle() {
+        accountProfileImage.style = preferences[profileImageStyleKey]
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {

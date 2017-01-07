@@ -48,10 +48,10 @@ open class BaseArrayAdapter<T>(
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
 
-    override val profileImageStyle: Int
-    override val textSize: Float
-    override val profileImageEnabled: Boolean
-    override val isShowAbsoluteTime: Boolean
+    final override val profileImageStyle: Int
+    final override val textSize: Float
+    final override val profileImageEnabled: Boolean
+    final override val isShowAbsoluteTime: Boolean
     val nameFirst: Boolean
 
     init {

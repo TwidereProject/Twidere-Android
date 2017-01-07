@@ -53,6 +53,7 @@ import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
@@ -65,6 +66,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
 import org.mariotaku.twidere.menu.AccountToggleProvider
@@ -159,7 +161,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
         })
 
         profileContainer.setOnClickListener(this)
-
+        accountProfileImageView.style = preferences[profileImageStyleKey]
         accountProfileBanner.setInAnimation(context, android.R.anim.fade_in)
         accountProfileBanner.setOutAnimation(context, android.R.anim.fade_out)
         accountProfileBanner.setFactory {
@@ -574,13 +576,17 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
     internal class AccountSpaceViewHolder(itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView)
 
-    internal class AccountProfileImageViewHolder(val adapter: AccountSelectorAdapter, itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView), OnClickListener {
+    internal class AccountProfileImageViewHolder(
+            val adapter: AccountSelectorAdapter,
+            itemView: View
+    ) : RecyclerPagerAdapter.ViewHolder(itemView), OnClickListener {
 
         val iconView: ShapedImageView
 
         init {
             itemView.setOnClickListener(this)
             iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
+            iconView.style = adapter.profileImageStyle
         }
 
         override fun onClick(v: View) {
@@ -593,7 +599,9 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
             private val inflater: LayoutInflater,
             private val fragment: AccountsDashboardFragment
     ) : RecyclerPagerAdapter() {
-        private val mediaLoader: MediaLoaderWrapper
+
+        internal var profileImageStyle: Int = fragment.preferences[profileImageStyleKey]
+        internal var mediaLoader: MediaLoaderWrapper = fragment.mediaLoader
 
         var accounts: Array<AccountDetails>? = null
             set(value) {
@@ -619,9 +627,6 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
                 notifyPagesChanged(invalidateCache = true)
             }
 
-        init {
-            mediaLoader = fragment.mediaLoader
-        }
 
         fun getAdapterAccount(position: Int): AccountDetails? {
             return accounts?.getOrNull(position - accountStart + 1)
