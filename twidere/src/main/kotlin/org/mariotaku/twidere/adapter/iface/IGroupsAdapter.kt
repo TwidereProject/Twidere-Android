@@ -25,7 +25,7 @@ import org.mariotaku.twidere.view.holder.GroupViewHolder
 /**
  * Created by mariotaku on 15/4/16.
  */
-interface IGroupsAdapter<in Data> : IContentCardAdapter {
+interface IGroupsAdapter<in Data> : IContentAdapter {
 
     val groupsCount: Int
 

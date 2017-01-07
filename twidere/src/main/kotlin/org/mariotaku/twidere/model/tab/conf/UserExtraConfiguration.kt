@@ -10,13 +10,13 @@ import kotlinx.android.synthetic.main.layout_extra_config_user.view.*
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.display
-import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
+import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 /**
  * Created by mariotaku on 2016/11/28.
@@ -26,7 +26,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
     var value: ParcelableUser? = null
         private set
 
-    private lateinit var viewHolder: TwoLineWithIconViewHolder
+    private lateinit var viewHolder: SimpleUserViewHolder
     private lateinit var dependencyHolder: DependencyHolder
     private lateinit var hintView: View
 
@@ -49,9 +49,11 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
             fragment.startExtraConfigurationActivityForResult(this@UserExtraConfiguration, intent, 1)
         }
         hintView = view.selectUserHint
-        viewHolder = TwoLineWithIconViewHolder(view.listItem)
+        val adapter = DummyItemAdapter(context)
+        adapter.updateOptions()
+        viewHolder = SimpleUserViewHolder(view.listItem, adapter)
 
-        viewHolder.view.visibility = View.GONE
+        viewHolder.itemView.visibility = View.GONE
         hintView.visibility = View.VISIBLE
     }
 
@@ -60,8 +62,8 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val user: ParcelableUser = data!!.getParcelableExtra(EXTRA_USER)
-                    viewHolder.display(user, dependencyHolder.mediaLoader, dependencyHolder.userColorNameManager, true)
-                    viewHolder.view.visibility = View.VISIBLE
+                    viewHolder.displayUser(user)
+                    viewHolder.itemView.visibility = View.VISIBLE
                     hintView.visibility = View.GONE
 
                     this.value = user

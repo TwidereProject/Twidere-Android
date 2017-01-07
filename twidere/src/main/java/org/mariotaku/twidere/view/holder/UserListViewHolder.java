@@ -67,7 +67,7 @@ public class UserListViewHolder extends ViewHolder implements View.OnClickListen
 
     public void displayUserList(ParcelableUserList userList) {
 
-        final Context context = adapter.getContext();
+        final Context context = itemView.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final UserColorNameManager manager = adapter.getUserColorNameManager();
 

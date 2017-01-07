@@ -23,16 +23,11 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
-import org.mariotaku.twidere.constant.displayProfileImageKey
-import org.mariotaku.twidere.constant.profileImageStyleKey
-import org.mariotaku.twidere.constant.showAbsoluteTimeKey
-import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -43,10 +38,6 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     private var data: List<ParcelableUser>? = null
 
     override val showAccountsColor: Boolean = false
-    override val profileImageStyle: Int
-    override val textSize: Float
-    override val profileImageEnabled: Boolean
-    override val isShowAbsoluteTime: Boolean
     override var userClickListener: IUsersAdapter.UserClickListener? = null
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
     override var friendshipClickListener: IUsersAdapter.FriendshipClickListener? = null
@@ -54,10 +45,6 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
 
     init {
         inflater = LayoutInflater.from(context)
-        textSize = preferences[textSizeKey].toFloat()
-        profileImageStyle = preferences[profileImageStyleKey]
-        profileImageEnabled = preferences[displayProfileImageKey]
-        isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
     }
 
     fun getData(): List<ParcelableUser>? {

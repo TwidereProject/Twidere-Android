@@ -40,7 +40,6 @@ import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereLinkify;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.view.CardMediaContainer;
-import org.mariotaku.twidere.view.ShapedImageView;
 import org.mariotaku.twidere.view.holder.IncomingMessageViewHolder;
 import org.mariotaku.twidere.view.holder.MessageViewHolder;
 
@@ -53,15 +52,11 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
     private static final int ITEM_VIEW_TYPE_MESSAGE_INCOMING = 2;
     private final int mOutgoingMessageColor;
     private final int mIncomingMessageColor;
-    private final boolean mDisplayProfileImage;
 
-    @ShapedImageView.ShapeStyle
-    private final int mProfileImageStyle;
     private final int mMediaPreviewStyle;
 
     private final LayoutInflater mInflater;
     private final MediaLoadingHandler mMediaLoadingHandler;
-    private final int mTextSize;
 
     private Cursor mCursor;
     private ParcelableDirectMessageCursorIndices mIndices;
@@ -72,9 +67,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         super(context);
         mInflater = LayoutInflater.from(context);
         mLinkify = new TwidereLinkify(new DirectMessageOnLinkClickHandler(context, null, preferences));
-        mTextSize = preferences.getInt(KEY_TEXT_SIZE, context.getResources().getInteger(R.integer.default_text_size));
-        mDisplayProfileImage = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true);
-        mProfileImageStyle = Utils.getProfileImageStyle(preferences.getString(KEY_PROFILE_IMAGE_STYLE, null));
         mMediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null));
         mMediaLoadingHandler = new MediaLoadingHandler(R.id.media_preview_progress);
         mIncomingMessageColor = ThemeUtils.getUserAccentColor(context);
@@ -154,16 +146,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         return null;
     }
 
-    @Override
-    public final int getProfileImageStyle() {
-        return mProfileImageStyle;
-    }
-
-    @Override
-    public boolean getProfileImageEnabled() {
-        return mDisplayProfileImage;
-    }
-
     public ParcelableDirectMessage getDirectMessage(final int position) {
         final Cursor c = mCursor;
         if (c == null || c.isClosed()) return null;
@@ -192,10 +174,6 @@ public class MessageConversationAdapter extends BaseRecyclerViewAdapter<ViewHold
         return mEventListener;
     }
 
-    @Override
-    public float getTextSize() {
-        return mTextSize;
-    }
 
     static class EventListener implements CardMediaContainer.OnMediaClickListener {
 

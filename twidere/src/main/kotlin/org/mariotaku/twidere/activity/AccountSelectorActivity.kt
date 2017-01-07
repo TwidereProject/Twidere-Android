@@ -93,7 +93,6 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         adapter = AccountDetailsAdapter(this).apply {
             setSwitchEnabled(!isSingleSelection)
             setSortEnabled(false)
-            isProfileImageDisplayed = preferences.getBoolean(KEY_DISPLAY_PROFILE_IMAGE, true)
             val am = AccountManager.get(context)
             val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), false)
             val extraKeys = keysWhiteList

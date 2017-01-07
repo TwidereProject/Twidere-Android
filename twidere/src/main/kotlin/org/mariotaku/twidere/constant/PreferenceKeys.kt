@@ -12,6 +12,7 @@ import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CUSTOM_API_TYPE
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -24,7 +25,6 @@ import org.mariotaku.twidere.view.ProfileImageView
  * Created by mariotaku on 16/8/25.
  */
 
-val mediaPreviewStyleKey = KStringKey(KEY_MEDIA_PREVIEW_STYLE, VALUE_MEDIA_PREVIEW_STYLE_CROP)
 val textSizeKey = KIntKey(KEY_TEXT_SIZE, 15)
 val nameFirstKey = KBooleanKey(KEY_NAME_FIRST, true)
 val displayProfileImageKey = KBooleanKey(KEY_DISPLAY_PROFILE_IMAGE, true)
@@ -100,6 +100,19 @@ object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ProfileIm
 
     override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
         editor.putString(key, if (value == ProfileImageView.SHAPE_CIRCLE) VALUE_PROFILE_IMAGE_STYLE_ROUND else VALUE_PROFILE_IMAGE_STYLE_SQUARE)
+        return true
+    }
+
+}
+
+object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP) {
+    override fun read(preferences: SharedPreferences): Int {
+        if (preferences.getString(key, null) == VALUE_MEDIA_PREVIEW_STYLE_SCALE) return VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE
+        return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
+        editor.putString(key, if (value == VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE) VALUE_MEDIA_PREVIEW_STYLE_SCALE else VALUE_MEDIA_PREVIEW_STYLE_CROP)
         return true
     }
 

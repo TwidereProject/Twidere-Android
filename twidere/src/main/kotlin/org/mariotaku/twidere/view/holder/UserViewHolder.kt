@@ -115,8 +115,7 @@ class UserViewHolder(
     }
 
     fun displayUser(user: ParcelableUser) {
-
-        val context = adapter.context
+        val context = itemView.context
         val loader = adapter.mediaLoader
         val manager = adapter.userColorNameManager
         val twitter = adapter.twitterWrapper
@@ -277,7 +276,7 @@ class UserViewHolder(
     private fun RelativeLayout.LayoutParams.clearVerticalRules() {
         intArrayOf(RelativeLayout.ABOVE, RelativeLayout.BELOW, RelativeLayout.ALIGN_BASELINE,
                 RelativeLayout.ALIGN_TOP, RelativeLayout.ALIGN_BOTTOM).forEach { verb ->
-            removeRule(verb)
+            addRule(verb, 0)
         }
     }
 

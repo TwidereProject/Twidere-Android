@@ -68,7 +68,7 @@ public class GroupViewHolder extends ViewHolder implements View.OnClickListener,
     }
 
     public void displayGroup(ParcelableGroup group) {
-        final Context context = adapter.getContext();
+        final Context context = itemView.getContext();
         final MediaLoaderWrapper loader = adapter.getMediaLoader();
         final BidiFormatter formatter = adapter.getBidiFormatter();
 

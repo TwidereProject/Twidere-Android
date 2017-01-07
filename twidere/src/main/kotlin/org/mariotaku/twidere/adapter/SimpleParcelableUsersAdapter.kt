@@ -23,21 +23,14 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.Utils.configBaseAdapter
-import org.mariotaku.twidere.util.display
-import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
+import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 class SimpleParcelableUsersAdapter @JvmOverloads constructor(
         context: Context,
         layoutRes: Int = R.layout.list_item_simple_user
-) : BaseArrayAdapter<ParcelableUser>(context, layoutRes), IBaseAdapter {
-
-    init {
-        configBaseAdapter(context, this)
-    }
+) : BaseArrayAdapter<ParcelableUser>(context, layoutRes) {
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)
@@ -50,18 +43,14 @@ class SimpleParcelableUsersAdapter @JvmOverloads constructor(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
-        val tag = view.tag
-        val holder: TwoLineWithIconViewHolder
-        if (tag is TwoLineWithIconViewHolder) {
-            holder = tag
-        } else {
-            holder = TwoLineWithIconViewHolder(view)
-            view.tag = holder
+        val holder = view.tag as? SimpleUserViewHolder ?: run {
+            val h = SimpleUserViewHolder(view, this)
+            view.tag = h
+            return@run h
         }
-
         val user = getItem(position)
 
-        holder.display(user, mediaLoader, userColorNameManager, isProfileImageDisplayed)
+        holder.displayUser(user)
         return view
     }
 

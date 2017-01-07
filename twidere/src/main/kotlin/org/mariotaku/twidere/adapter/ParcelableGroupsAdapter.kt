@@ -30,7 +30,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.view.holder.GroupViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -38,10 +38,6 @@ import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 class ParcelableGroupsAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), Constants, IGroupsAdapter<List<ParcelableGroup>> {
     override val showAccountsColor: Boolean
         get() = false
-    override val profileImageStyle: Int
-    override val textSize: Float
-    override val profileImageEnabled: Boolean
-    override val isShowAbsoluteTime: Boolean
     override val nameFirst: Boolean
     override var groupAdapterListener: IGroupsAdapter.GroupAdapterListener? = null
 
@@ -53,11 +49,7 @@ class ParcelableGroupsAdapter(context: Context) : LoadMoreSupportAdapter<Recycle
     init {
         mEventListener = EventListener(this)
         inflater = LayoutInflater.from(context)
-        textSize = preferences[textSizeKey].toFloat()
-        profileImageStyle = preferences[profileImageStyleKey]
-        profileImageEnabled = preferences[displayProfileImageKey]
         nameFirst = preferences[nameFirstKey]
-        isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
     }
 
     fun getData(): List<ParcelableGroup>? {

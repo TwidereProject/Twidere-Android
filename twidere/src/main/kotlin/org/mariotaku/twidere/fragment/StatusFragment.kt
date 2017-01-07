@@ -88,9 +88,8 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
-import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -1253,9 +1252,6 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
                 notifyDataSetChanged()
             }
 
-            val textSize: Float
-                get() = statusAdapter.textSize
-
             val countItemsCount: Int
                 get() {
                     if (counts == null) return 0
@@ -1440,17 +1436,13 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
         private val mItemCounts: IntArray
 
         override val nameFirst: Boolean
-        private val mTextSize: Int
         private val cardBackgroundColor: Int
-        override val profileImageStyle: Int
         override val mediaPreviewStyle: Int
         override val linkHighlightingStyle: Int
         override val mediaPreviewEnabled: Boolean
-        override val profileImageEnabled: Boolean
         override val sensitiveContentEnabled: Boolean
         private val mShowCardActions: Boolean
         override val useStarsForLikes: Boolean
-        override val isShowAbsoluteTime: Boolean
         private var mDetailMediaExpanded: Boolean = false
 
         var status: ParcelableStatus? = null
@@ -1497,25 +1489,18 @@ class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<Par
             cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
                     ThemeUtils.getThemeBackgroundOption(context),
                     ThemeUtils.getUserThemeBackgroundAlpha(context))
-            nameFirst = preferences.getBoolean(SharedPreferenceConstants.KEY_NAME_FIRST, true)
-            mTextSize = preferences.getInt(SharedPreferenceConstants.KEY_TEXT_SIZE, res.getInteger(R.integer.default_text_size))
-            profileImageStyle = Utils.getProfileImageStyle(preferences.getString(SharedPreferenceConstants.KEY_PROFILE_IMAGE_STYLE, null))
-            mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE, null))
+            nameFirst = preferences[nameFirstKey]
+            mediaPreviewStyle = preferences[mediaPreviewStyleKey]
             linkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(SharedPreferenceConstants.KEY_LINK_HIGHLIGHT_OPTION, null))
-            profileImageEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_PROFILE_IMAGE, true)
-            mediaPreviewEnabled = Utils.isMediaPreviewEnabled(context, preferences)
+            mediaPreviewEnabled = preferences[mediaPreviewKey]
             sensitiveContentEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)
-            mShowCardActions = !preferences.getBoolean(SharedPreferenceConstants.KEY_HIDE_CARD_ACTIONS, false)
-            useStarsForLikes = preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)
-            isShowAbsoluteTime = preferences.getBoolean(SharedPreferenceConstants.KEY_SHOW_ABSOLUTE_TIME)
+            mShowCardActions = !preferences[hideCardActionsKey]
+            useStarsForLikes = preferences[iWantMyStarsBackKey]
             val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context,
                     preferences)
             listener.setAdapter(this)
             twidereLinkify = TwidereLinkify(listener)
         }
-
-        override val textSize: Float
-            get() = mTextSize.toFloat()
 
         override fun getStatus(position: Int): ParcelableStatus? {
             val itemType = getItemType(position)

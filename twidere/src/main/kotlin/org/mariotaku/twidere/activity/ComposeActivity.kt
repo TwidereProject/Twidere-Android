@@ -1403,17 +1403,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     internal class AccountIconsAdapter(private val activity: ComposeActivity) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity) {
-        private val mInflater: LayoutInflater
-        private val selection: MutableMap<UserKey, Boolean>
-        val isNameFirst: Boolean
+        private val inflater: LayoutInflater = activity.layoutInflater
+        private val selection: MutableMap<UserKey, Boolean> = HashMap()
+        val isNameFirst: Boolean = preferences[nameFirstKey]
 
         private var accounts: Array<AccountDetails>? = null
 
         init {
             setHasStableIds(true)
-            mInflater = activity.layoutInflater
-            selection = HashMap<UserKey, Boolean>()
-            isNameFirst = preferences[nameFirstKey]
         }
 
         val imageLoader: MediaLoaderWrapper
@@ -1449,7 +1446,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             get() = selectedAccountKeys.isEmpty()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountIconViewHolder {
-            val view = mInflater.inflate(R.layout.adapter_item_compose_account, parent, false)
+            val view = inflater.inflate(R.layout.adapter_item_compose_account, parent, false)
             return AccountIconViewHolder(this, view)
         }
 

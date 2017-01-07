@@ -4,9 +4,10 @@ import android.content.Context
 import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.adapter.iface.*
-import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
+import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
+import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
+import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.getActivityStatus
@@ -19,13 +20,13 @@ import javax.inject.Inject
  * Created by mariotaku on 16/1/22.
  */
 class DummyItemAdapter @JvmOverloads constructor(
-        override val context: Context,
+        val context: Context,
         override val twidereLinkify: TwidereLinkify = TwidereLinkify(null),
         private val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null
-) : IStatusesAdapter<Any>, IUsersAdapter<Any>, IUserListsAdapter<Any>, SharedPreferenceConstants {
+) : IStatusesAdapter<Any>, IUsersAdapter<Any>, IUserListsAdapter<Any> {
 
-    private val preferences: SharedPreferencesWrapper
-    override val mediaLoadingHandler: MediaLoadingHandler
+    @Inject
+    lateinit var preferences: SharedPreferencesWrapper
     @Inject
     override lateinit var mediaLoader: MediaLoaderWrapper
     @Inject
@@ -34,6 +35,7 @@ class DummyItemAdapter @JvmOverloads constructor(
     override lateinit var userColorNameManager: UserColorNameManager
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
+    override val mediaLoadingHandler: MediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
 
     override var profileImageStyle: Int = 0
     override var mediaPreviewStyle: Int = 0
@@ -57,8 +59,6 @@ class DummyItemAdapter @JvmOverloads constructor(
 
     init {
         GeneralComponentHelper.build(context).inject(this)
-        preferences = SharedPreferencesWrapper.getInstance(context, TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
         updateOptions()
     }
 
@@ -70,20 +70,6 @@ class DummyItemAdapter @JvmOverloads constructor(
     override fun getItemCount(): Int {
         return 0
     }
-
-    override var loadMoreIndicatorPosition: Long
-        @IndicatorPosition
-        get() = ILoadMoreSupportAdapter.NONE
-        set(@IndicatorPosition position) {
-
-        }
-
-    override var loadMoreSupportedPosition: Long
-        @IndicatorPosition
-        get() = ILoadMoreSupportAdapter.NONE
-        set(@IndicatorPosition supported) {
-
-        }
 
     override fun getStatus(position: Int): ParcelableStatus? {
         if (adapter is ParcelableStatusesAdapter) {

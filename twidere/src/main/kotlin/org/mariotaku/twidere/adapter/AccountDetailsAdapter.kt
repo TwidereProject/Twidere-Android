@@ -24,30 +24,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.iface.IBaseAdapter
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.AccountViewHolder
-import javax.inject.Inject
 
-class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(context, R.layout.list_item_account), IBaseAdapter {
+class AccountDetailsAdapter(context: Context) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account) {
 
-    @Inject
-    lateinit override var mediaLoader: MediaLoaderWrapper
-
-    override val linkHighlightOption: Int
-        get() = 0
-
-    override var textSize: Float = 0f
-
-    override var isDisplayNameFirst: Boolean = true
-
-    override var isShowAccountColor: Boolean = true
-
-    override var isProfileImageDisplayed: Boolean = false
     private var sortEnabled: Boolean = false
     private var switchEnabled: Boolean = false
     var accountToggleListener: ((Int, Boolean) -> Unit)? = null
@@ -72,7 +56,7 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         holder.name.text = details.user.name
         holder.screenName.text = String.format("@%s", details.user.screen_name)
         holder.setAccountColor(details.color)
-        if (isProfileImageDisplayed) {
+        if (profileImageEnabled) {
             mediaLoader.displayProfileImage(holder.profileImage, details.user)
         } else {
             mediaLoader.cancelDisplayTask(holder.profileImage)
@@ -86,11 +70,6 @@ class AccountDetailsAdapter(context: Context) : ArrayAdapter<AccountDetails>(con
         holder.setSortEnabled(sortEnabled)
         return view
     }
-
-    override fun setLinkHighlightOption(option: String) {
-
-    }
-
 
     override fun hasStableIds(): Boolean {
         return true

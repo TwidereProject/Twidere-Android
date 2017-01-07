@@ -10,7 +10,7 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * Created by mariotaku on 14/11/18.
  */
-interface IStatusesAdapter<in Data> : IContentCardAdapter, IGapSupportedAdapter {
+interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     @TwidereLinkify.HighlightStyle
     val linkHighlightingStyle: Int

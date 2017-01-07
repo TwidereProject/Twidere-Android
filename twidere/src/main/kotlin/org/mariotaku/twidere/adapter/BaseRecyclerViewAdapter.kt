@@ -22,6 +22,12 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
+import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.adapter.iface.IContentAdapter
+import org.mariotaku.twidere.constant.displayProfileImageKey
+import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.constant.showAbsoluteTimeKey
+import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -31,25 +37,34 @@ import javax.inject.Inject
  */
 abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         val context: Context
-) : RecyclerView.Adapter<VH>() {
+) : RecyclerView.Adapter<VH>(), IContentAdapter {
     @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
+    override final lateinit var twitterWrapper: AsyncTwitterWrapper
     @Inject
-    lateinit var readStateManager: ReadStateManager
+    override final lateinit var mediaLoader: MediaLoaderWrapper
     @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-    @Inject
-    lateinit var multiSelectManager: MultiSelectManager
-    @Inject
-    lateinit var userColorNameManager: UserColorNameManager
+    override final lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
-    lateinit var bidiFormatter: BidiFormatter
+    lateinit var readStateManager: ReadStateManager
+    @Inject
+    lateinit var multiSelectManager: MultiSelectManager
+    @Inject
+    override final lateinit var bidiFormatter: BidiFormatter
+
+    override final val profileImageStyle: Int
+    override final val textSize: Float
+    override final val profileImageEnabled: Boolean
+    override final val isShowAbsoluteTime: Boolean
 
     init {
         //noinspection unchecked
         GeneralComponentHelper.build(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
+        profileImageStyle = preferences[profileImageStyleKey]
+        textSize = preferences[textSizeKey].toFloat()
+        profileImageEnabled = preferences[displayProfileImageKey]
+        isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
     }
 
 }

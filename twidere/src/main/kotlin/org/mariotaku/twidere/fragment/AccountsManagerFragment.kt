@@ -60,7 +60,6 @@ class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallb
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
         adapter = AccountDetailsAdapter(context).apply {
-            Utils.configBaseAdapter(context, this)
             setSortEnabled(true)
             setSwitchEnabled(true)
             accountToggleListener = { pos, checked ->
