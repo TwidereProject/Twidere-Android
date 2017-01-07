@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.Constants.*
+import com.anjlab.android.iab.v3.SkuDetails
 import com.anjlab.android.iab.v3.TransactionDetails
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.constant.EXTRA_CURRENCY
+import org.mariotaku.twidere.constant.EXTRA_PRICE
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.constant.RESULT_NOT_PURCHASED
 import org.mariotaku.twidere.constant.RESULT_SERVICE_UNAVAILABLE
@@ -82,8 +85,9 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
         }
     }
 
-    private fun handlePurchased(details: TransactionDetails) {
-        setResult(RESULT_OK)
+    private fun handlePurchased(sku: SkuDetails, transaction: TransactionDetails) {
+        val data = Intent().putExtra(EXTRA_PRICE, sku.priceValue).putExtra(EXTRA_CURRENCY, sku.currency)
+        setResult(RESULT_OK, data)
         finish()
     }
 
@@ -93,11 +97,16 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
             val dfRef = WeakReference(ProgressDialogFragment.show(it.supportFragmentManager, "consume_purchase_progress"))
             task {
                 val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
-                activity.billingProcessor.loadOwnedPurchasesFromGoogle()
-                val details = activity.billingProcessor.getPurchaseTransactionDetails(activity.productId)
-                return@task details ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
-            }.successUi { details ->
-                weakThis.get()?.handlePurchased(details)
+                val productId = activity.productId
+                val bp = activity.billingProcessor
+                bp.loadOwnedPurchasesFromGoogle()
+                val skuDetails = bp.getPurchaseListingDetails(productId)
+                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ERROR)
+                val transactionDetails = bp.getPurchaseTransactionDetails(productId)
+                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
+                return@task Pair(skuDetails, transactionDetails)
+            }.successUi { result ->
+                weakThis.get()?.handlePurchased(result.first, result.second)
             }.failUi { error ->
                 if (error is PurchaseException) {
                     weakThis.get()?.handleError(error.code)
@@ -122,10 +131,13 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
                 val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
                 val bp = activity.billingProcessor
                 bp.loadOwnedPurchasesFromGoogle()
-                val result = bp.getPurchaseTransactionDetails(activity.productId)
-                return@task result ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
-            }.successUi { details ->
-                weakThis.get()?.handlePurchased(details)
+                val skuDetails = bp.getPurchaseListingDetails(productId)
+                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ERROR)
+                val transactionDetails = bp.getPurchaseTransactionDetails(productId)
+                        ?: throw PurchaseException(BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED)
+                return@task Pair(skuDetails, transactionDetails)
+            }.successUi { result ->
+                weakThis.get()?.handlePurchased(result.first, result.second)
             }.failUi { error ->
                 if (error is PurchaseException) {
                     weakThis.get()?.handleError(error.code)
@@ -149,6 +161,7 @@ class GooglePlayInAppPurchaseActivity : BaseActivity(), BillingProcessor.IBillin
             BILLING_RESPONSE_RESULT_USER_CANCELED -> Activity.RESULT_CANCELED
             BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE -> RESULT_SERVICE_UNAVAILABLE
             BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED -> RESULT_NOT_PURCHASED
+            BILLING_RESPONSE_RESULT_ERROR -> RESULT_NOT_PURCHASED
             else -> billingResponse
         }
         return resultCode

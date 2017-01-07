@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.View
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
@@ -26,7 +27,15 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
         builder.setPositiveButton(R.string.action_purchase) { dialog, which ->
-            startActivity(extraFeaturesService.createPurchaseIntent(context))
+            val requestCode = arguments?.getInt(EXTRA_REQUEST_CODE) ?: 0
+            val purchaseIntent = extraFeaturesService.createPurchaseIntent(context)
+            if (requestCode == 0) {
+                startActivity(purchaseIntent)
+            } else if (parentFragment != null) {
+                parentFragment.startActivityForResult(purchaseIntent, requestCode)
+            } else {
+                activity.startActivityForResult(purchaseIntent, requestCode)
+            }
         }
         builder.setNegativeButton(R.string.action_later) { dialog, which ->
 

@@ -13,6 +13,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.RESULT_NOT_PURCHASED
 import org.mariotaku.twidere.constant.RESULT_SERVICE_UNAVAILABLE
 import org.mariotaku.twidere.fragment.BaseSupportFragment
+import org.mariotaku.twidere.model.analyzer.Purchase
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
@@ -50,7 +52,12 @@ class ExtraFeaturesIntroductionCardFragment : BaseSupportFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_PURCHASE -> {
-                activity?.recreate()
+                Analyzer.log(Purchase.fromActivityResult(Purchase.NAME_EXTRA_FEATURES, resultCode, data))
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        activity?.recreate()
+                    }
+                }
             }
             REQUEST_RESTORE_PURCHASE -> {
                 when (resultCode) {

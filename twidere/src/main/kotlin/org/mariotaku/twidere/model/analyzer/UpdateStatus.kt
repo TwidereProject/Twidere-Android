@@ -1,6 +1,8 @@
 package org.mariotaku.twidere.model.analyzer
 
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.draftActionTypeString
+import org.mariotaku.twidere.extension.model.parcelableMediaTypeString
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.util.Analyzer
@@ -30,29 +32,10 @@ data class UpdateStatus(
         get() = "Tweet"
 
     override fun forEachValues(action: (String, String?) -> Unit) {
-        action("Status Type", actionTypeString(actionType))
-        action("Media Type", mediaTypeString(mediaType))
+        action("Status Type", draftActionTypeString(actionType))
+        action("Media Type", parcelableMediaTypeString(mediaType))
         action("Location Type", locationType)
         action("Success", success.toString())
     }
 
-    fun actionTypeString(@Draft.Action action: String?): String {
-        return when (action) {
-            Draft.Action.QUOTE -> "quote"
-            Draft.Action.REPLY -> "reply"
-            else -> "tweet"
-        }
-    }
-
-    fun mediaTypeString(@ParcelableMedia.Type type: Int): String {
-        return when (type) {
-            ParcelableMedia.Type.IMAGE -> "image"
-            ParcelableMedia.Type.VIDEO -> "video"
-            ParcelableMedia.Type.ANIMATED_GIF -> "gif"
-            ParcelableMedia.Type.CARD_ANIMATED_GIF -> "gif"
-            ParcelableMedia.Type.EXTERNAL_PLAYER -> "external"
-            ParcelableMedia.Type.VARIABLE_TYPE -> "variable"
-            else -> "unknown"
-        }
-    }
 }

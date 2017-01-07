@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -21,12 +22,15 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
+import org.mariotaku.twidere.model.analyzer.Purchase
 import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -86,6 +90,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivityForResult(intent, REQUEST_ADD_USER_SELECT_ACCOUNT)
             }
+            REQUEST_PURCHASE_EXTRA_FEATURES -> {
+                Analyzer.log(Purchase.fromActivityResult(Purchase.NAME_EXTRA_FEATURES, resultCode, data))
+            }
         }
     }
 
@@ -123,6 +130,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             startActivityForResult(intent, requestCode)
         } else {
             val df = ExtraFeaturesIntroductionDialogFragment()
+            df.arguments = Bundle {
+                putInt(EXTRA_REQUEST_CODE, REQUEST_PURCHASE_EXTRA_FEATURES)
+            }
             df.show(childFragmentManager, "extra_features_introduction")
         }
         return true

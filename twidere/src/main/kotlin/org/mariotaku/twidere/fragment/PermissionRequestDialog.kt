@@ -8,8 +8,7 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_PERMISSIONS
+import org.mariotaku.twidere.constant.IntentConstants.*
 
 /**
  * Created by mariotaku on 2016/12/13.
@@ -36,7 +35,7 @@ class PermissionRequestDialog : BaseDialogFragment() {
     }
 
     companion object {
-        const val EXTRA_REQUEST_CODE = "request_code"
+
         fun show(fragmentManager: FragmentManager, message: String, permissions: Array<String>, requestCode: Int): PermissionRequestDialog {
             val df = PermissionRequestDialog()
             df.arguments = Bundle {

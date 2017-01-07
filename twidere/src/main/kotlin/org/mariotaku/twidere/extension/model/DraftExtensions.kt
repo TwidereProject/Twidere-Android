@@ -242,3 +242,11 @@ private class BodyPartHandler(private val context: Context, private val draft: D
     }
 }
 
+
+fun draftActionTypeString(@Draft.Action action: String?): String {
+    return when (action) {
+        Draft.Action.QUOTE -> "quote"
+        Draft.Action.REPLY -> "reply"
+        else -> "tweet"
+    }
+}
