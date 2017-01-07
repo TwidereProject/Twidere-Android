@@ -118,6 +118,11 @@ class DropboxSyncTaskRunner(context: Context, val authToken: String) : SyncTaskR
                     listResult = client.files().listFolderContinue(listResult.cursor)
                 }
             } catch (e: DbxException) {
+                if (e is ListFolderErrorException) {
+                    if (e.errorValue?.pathValue?.isNotFound ?: false) {
+                        return emptyList()
+                    }
+                }
                 throw IOException(e)
             }
             return result

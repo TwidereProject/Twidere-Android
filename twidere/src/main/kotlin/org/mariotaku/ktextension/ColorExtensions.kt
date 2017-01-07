@@ -10,6 +10,6 @@ import java.util.*
 fun toHexColor(@ColorInt color: Int, format: HexColorFormat = HexColorFormat.ARGB) = format.transform(color)
 
 enum class HexColorFormat(val transform: (Int) -> String) {
-    ARGB({ "%08X".format(Locale.ROOT, it) }),
-    RGB({ "%06X".format(Locale.ROOT, 0xFFFFFF and it) })
+    ARGB({ "#%08X".format(Locale.ROOT, it) }),
+    RGB({ "#%06X".format(Locale.ROOT, 0xFFFFFF and it) })
 }
