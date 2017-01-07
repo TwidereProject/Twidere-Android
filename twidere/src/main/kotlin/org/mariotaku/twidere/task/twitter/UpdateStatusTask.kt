@@ -10,6 +10,7 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import android.util.Pair
+import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageSize
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaUploadEvent
@@ -705,8 +706,12 @@ class UpdateStatusTask(
                             sizeLimit.x, sizeLimit.y)
                     o.inJustDecodeBounds = false
                     if (o.outWidth > 0 && o.outHeight > 0 && mediaType != "image/gif") {
+                        val displayOptions = DisplayImageOptions.Builder()
+                                .considerExifParams(true)
+                                .build()
                         val bitmap = mediaLoader.loadImageSync(mediaUri.toString(),
-                                ImageSize(o.outWidth, o.outHeight).scaleDown(o.inSampleSize))
+                                ImageSize(o.outWidth, o.outHeight).scaleDown(o.inSampleSize),
+                                displayOptions)
 
                         if (bitmap != null) {
                             size.set(bitmap.width, bitmap.height)
