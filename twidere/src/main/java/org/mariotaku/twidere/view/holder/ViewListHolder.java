@@ -22,9 +22,7 @@ package org.mariotaku.twidere.view.holder;
 import android.content.Context;
 import android.view.View;
 
-import org.mariotaku.twidere.Constants;
-
-public class ViewListHolder implements Constants {
+public class ViewListHolder {
 
     public View view;
 

@@ -23,11 +23,10 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
 import org.mariotaku.twidere.util.PermissionsManager
-import org.mariotaku.twidere.view.holder.CheckableTwoLineWithIconViewHolder
+import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 
 class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line) {
 
@@ -44,12 +43,12 @@ class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context,
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
 
-        val holder: CheckableTwoLineWithIconViewHolder
+        val holder: TwoLineWithIconViewHolder
         val tag = view.tag
-        if (tag is CheckableTwoLineWithIconViewHolder) {
+        if (tag is TwoLineWithIconViewHolder) {
             holder = tag
         } else {
-            holder = CheckableTwoLineWithIconViewHolder(view)
+            holder = TwoLineWithIconViewHolder(view)
             view.tag = holder
         }
 
