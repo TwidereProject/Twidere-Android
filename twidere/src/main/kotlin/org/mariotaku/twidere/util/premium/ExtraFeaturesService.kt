@@ -3,6 +3,7 @@ package org.mariotaku.twidere.util.premium
 import android.content.Context
 import android.content.Intent
 import android.support.annotation.CallSuper
+import org.mariotaku.twidere.R
 import java.util.*
 
 /**
@@ -12,9 +13,7 @@ import java.util.*
 abstract class ExtraFeaturesService {
     protected lateinit var context: Context
 
-    abstract val introductionLayout: Int
-
-    abstract val dashboardLayouts: IntArray
+    abstract fun getDashboardLayouts(): IntArray
 
     @CallSuper
     protected open fun init(context: Context) {
@@ -26,19 +25,26 @@ abstract class ExtraFeaturesService {
 
     abstract fun isSupported(): Boolean
 
-    abstract fun isEnabled(): Boolean
+    abstract fun isEnabled(feature: String): Boolean
 
     /**
      * For debug purpose only, this will remove purchased product
      */
     abstract fun destroyPurchase(): Boolean
 
-    abstract fun createPurchaseIntent(context: Context): Intent
+    abstract fun createPurchaseIntent(context: Context, feature: String): Intent?
 
-    abstract fun createRestorePurchaseIntent(context: Context): Intent?
+    abstract fun createRestorePurchaseIntent(context: Context, feature: String): Intent?
 
+    data class Introduction(val icon: Int, val description: String)
 
     companion object {
+
+        const val FEATURE_FEATURES_PACK = "features_pack"
+        const val FEATURE_FILTERS_IMPORT = "import_filters"
+        const val FEATURE_FILTERS_SUBSCRIPTION = "filters_subscriptions"
+        const val FEATURE_SYNC_DATA = "sync_data"
+        const val FEATURE_SCHEDULE_STATUS = "schedule_status"
 
         fun newInstance(context: Context): ExtraFeaturesService {
             val instance = ServiceLoader.load(ExtraFeaturesService::class.java).first()
@@ -46,5 +52,19 @@ abstract class ExtraFeaturesService {
             return instance
         }
 
+        fun getIntroduction(context: Context, feature: String): Introduction {
+            return when (feature) {
+                FEATURE_FEATURES_PACK -> Introduction(R.drawable.ic_action_infinity, "")
+                FEATURE_FILTERS_IMPORT -> Introduction(R.drawable.ic_action_speaker_muted,
+                        context.getString(R.string.extra_feature_description_filters_import))
+                FEATURE_SYNC_DATA -> Introduction(R.drawable.ic_action_refresh,
+                        context.getString(R.string.extra_feature_description_sync_data))
+                FEATURE_FILTERS_SUBSCRIPTION -> Introduction(R.drawable.ic_action_speaker_muted,
+                        context.getString(R.string.extra_feature_description_filters_subscription))
+                FEATURE_SCHEDULE_STATUS -> Introduction(R.drawable.ic_action_time,
+                        context.getString(R.string.extra_feature_description_schedule_status))
+                else -> throw UnsupportedOperationException(feature)
+            }
+        }
     }
 }

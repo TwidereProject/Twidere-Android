@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import org.mariotaku.kpreferences.KPreferences
-import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -23,7 +22,6 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
@@ -40,8 +38,6 @@ import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
 
-    private lateinit var extraFeaturesService: ExtraFeaturesService
-
     public override val contentColumns: Array<String>
         get() = TwidereDataStore.Filters.Users.COLUMNS
 
@@ -50,13 +46,8 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        extraFeaturesService = ExtraFeaturesService.newInstance(context)
     }
 
-    override fun onDestroy() {
-        extraFeaturesService.release()
-        super.onDestroy()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
@@ -93,7 +84,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    Analyzer.log(PurchaseFinished.create(PurchaseFinished.NAME_EXTRA_FEATURES, data))
+                    Analyzer.log(PurchaseFinished.create(data!!))
                 }
             }
         }
@@ -129,14 +120,12 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             else -> return false
         }
 
-        if (!isExtraFeatures || extraFeaturesService.isEnabled()) {
+        if (!isExtraFeatures || extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
             startActivityForResult(intent, requestCode)
         } else {
-            val df = ExtraFeaturesIntroductionDialogFragment()
-            df.arguments = Bundle {
-                putInt(EXTRA_REQUEST_CODE, REQUEST_PURCHASE_EXTRA_FEATURES)
-            }
-            df.show(childFragmentManager, "extra_features_introduction")
+            ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
+                    feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
+                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
         }
         return true
     }

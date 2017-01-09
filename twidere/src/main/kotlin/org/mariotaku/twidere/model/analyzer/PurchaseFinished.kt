@@ -1,8 +1,7 @@
 package org.mariotaku.twidere.model.analyzer
 
-import android.app.Activity
 import android.content.Intent
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
 import org.mariotaku.twidere.util.Analyzer
 
 /**
@@ -18,22 +17,12 @@ data class PurchaseFinished(val productName: String) : Analyzer.Event {
     companion object {
         const val NAME_EXTRA_FEATURES = "Enhanced Features"
 
-        internal fun getFailReason(resultCode: Int): String {
-            return when (resultCode) {
-                Activity.RESULT_CANCELED -> "cancelled"
-                RESULT_SERVICE_UNAVAILABLE -> "service unavailable"
-                RESULT_INTERNAL_ERROR -> "internal error"
-                RESULT_NOT_PURCHASED -> "not purchased"
-                else -> "unknown"
-            }
-        }
-
-        fun create(name: String, data: Intent?): PurchaseFinished {
-            val result = PurchaseFinished(name)
-            if (data != null) {
-                result.price = data.getDoubleExtra(EXTRA_PRICE, Double.NaN)
-                result.currency = data.getStringExtra(EXTRA_CURRENCY)
-            }
+        fun create(data: Intent): PurchaseFinished {
+            val purchaseResult: AbsExtraFeaturePurchaseActivity.PurchaseResult
+                    = data.getParcelableExtra(AbsExtraFeaturePurchaseActivity.EXTRA_PURCHASE_RESULT)
+            val result = PurchaseFinished(purchaseResult.feature)
+            result.price = purchaseResult.price
+            result.currency = purchaseResult.currency
             return result
         }
     }

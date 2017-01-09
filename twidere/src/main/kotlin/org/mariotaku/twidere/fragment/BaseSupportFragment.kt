@@ -27,6 +27,7 @@ import com.squareup.otto.Bus
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
 open class BaseSupportFragment : Fragment(), IBaseFragment<BaseSupportFragment> {
@@ -56,6 +57,8 @@ open class BaseSupportFragment : Fragment(), IBaseFragment<BaseSupportFragment> 
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject
     lateinit var validator: TwidereValidator
+    @Inject
+    lateinit var extraFeaturesService: ExtraFeaturesService
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 
@@ -84,6 +87,7 @@ open class BaseSupportFragment : Fragment(), IBaseFragment<BaseSupportFragment> 
     }
 
     override fun onDestroy() {
+        extraFeaturesService.release()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }

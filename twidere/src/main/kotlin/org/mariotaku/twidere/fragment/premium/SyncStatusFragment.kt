@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment.premium
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -10,27 +11,40 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_extra_features_sync_status.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.FragmentContentActivity
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseSupportFragment
+import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
+import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 
 /**
  * Created by mariotaku on 2016/12/28.
  */
 
-class ExtraFeaturesSyncStatusFragment : BaseSupportFragment() {
+class SyncStatusFragment : BaseSupportFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         updateSyncSettingActions()
         connectButton.setOnClickListener {
+            if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SYNC_DATA)) {
+                showExtraFeaturesIntroduction()
+                return@setOnClickListener
+            }
             val df = ConnectNetworkStorageSelectionDialogFragment()
             df.show(childFragmentManager, "connect_to_storage")
         }
         settingsButton.setOnClickListener {
+            if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SYNC_DATA)) {
+                showExtraFeaturesIntroduction()
+                return@setOnClickListener
+            }
             val intent = Intent(context, FragmentContentActivity::class.java)
             intent.putExtra(FragmentContentActivity.EXTRA_FRAGMENT, SyncSettingsFragment::class.java.name)
             intent.putExtra(FragmentContentActivity.EXTRA_TITLE, getString(R.string.title_sync_settings))
@@ -43,12 +57,23 @@ class ExtraFeaturesSyncStatusFragment : BaseSupportFragment() {
             REQUEST_CONNECT_NETWORK_STORAGE -> {
                 updateSyncSettingActions()
             }
+            REQUEST_PURCHASE_EXTRA_FEATURES -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Analyzer.log(PurchaseFinished.create(data!!))
+                }
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         updateSyncSettingActions()
+    }
+
+    private fun showExtraFeaturesIntroduction() {
+        ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
+                feature = ExtraFeaturesService.FEATURE_SYNC_DATA,
+                requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
     }
 
     private fun updateSyncSettingActions() {

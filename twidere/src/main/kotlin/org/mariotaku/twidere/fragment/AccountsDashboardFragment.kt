@@ -80,7 +80,9 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.view.ShapedImageView
 import java.util.*
 
-class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<AccountsInfo>, OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback, NavigationView.OnNavigationItemSelectedListener {
+class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<AccountsInfo>,
+        OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private val systemWindowsInsets = Rect()
 
@@ -342,6 +344,7 @@ class AccountsDashboardFragment : BaseSupportFragment(), LoaderCallbacks<Account
 
         menu.setItemAvailability(R.id.favorites, useStarsForLikes)
         menu.setItemAvailability(R.id.likes, !useStarsForLikes)
+        menu.setItemAvailability(R.id.premium_features, extraFeaturesService.isSupported())
         var hasLists = false
         var hasGroups = false
         var hasPublicTimeline = false

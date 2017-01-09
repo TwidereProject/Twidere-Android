@@ -128,6 +128,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val twitter = adapter.twitterWrapper
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
+        val colorNameManager = adapter.userColorNameManager
         val nameFirst = adapter.nameFirst
         val showCardActions = isCardActionsShown
 
@@ -154,7 +155,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
             statusContentUpperSpace.visibility = View.GONE
         } else if (status.retweet_id != null) {
-            val retweetedBy = UserColorNameManager.decideDisplayName(status.retweet_user_nickname,
+            val retweetedBy = colorNameManager.getDisplayName(status.retweeted_by_user_key!!,
                     status.retweeted_by_user_name, status.retweeted_by_user_screen_name, nameFirst)
             statusInfoLabel.text = context.getString(R.string.name_retweeted, formatter.unicodeWrap(retweetedBy))
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_retweet)
@@ -162,8 +163,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             statusInfoIcon.visibility = View.VISIBLE
 
             statusContentUpperSpace.visibility = View.GONE
-        } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_id != null && displayInReplyTo) {
-            val inReplyTo = UserColorNameManager.decideDisplayName(status.in_reply_to_user_nickname,
+        } else if (status.in_reply_to_status_id != null && status.in_reply_to_user_key != null && displayInReplyTo) {
+            val inReplyTo = colorNameManager.getDisplayName(status.in_reply_to_user_key!!,
                     status.in_reply_to_name, status.in_reply_to_screen_name, nameFirst)
             statusInfoLabel.text = context.getString(R.string.in_reply_to_name, formatter.unicodeWrap(inReplyTo))
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_reply)
@@ -189,9 +190,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedNameView.visibility = View.VISIBLE
                 quotedTextView.visibility = View.VISIBLE
 
-                quotedNameView.setName(UserColorNameManager.decideNickname(status.quoted_user_nickname,
+                val quoted_user_key = status.quoted_user_key!!
+                quotedNameView.setName(colorNameManager.getUserNickname(quoted_user_key,
                         status.quoted_user_name))
-                quotedNameView.setScreenName("@" + status.quoted_user_screen_name)
+                quotedNameView.setScreenName("@${status.quoted_user_screen_name}")
 
                 var quotedDisplayEnd = -1
                 if (status.extras.quoted_display_text_range != null) {
@@ -220,8 +222,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedTextView.visibility = View.VISIBLE
                 }
 
-                if (status.quoted_user_color != 0) {
-                    quotedView.drawStart(status.quoted_user_color)
+                val quoted_user_color = colorNameManager.getUserColor(quoted_user_key)
+                if (quoted_user_color != 0) {
+                    quotedView.drawStart(quoted_user_color)
                 } else {
                     quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
                 }
@@ -289,7 +292,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         } else {
             timeView.setTime(status.timestamp)
         }
-        nameView.setName(UserColorNameManager.decideNickname(status.user_nickname, status.user_name))
+
+        nameView.setName(colorNameManager.getUserNickname(status.user_key, status.user_name))
         nameView.setScreenName("@${status.user_screen_name}")
 
         if (adapter.profileImageEnabled) {

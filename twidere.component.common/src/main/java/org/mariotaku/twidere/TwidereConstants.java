@@ -183,6 +183,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int REQUEST_SETTINGS = 19;
     int REQUEST_OPEN_DOCUMENT = 20;
     int REQUEST_REQUEST_PERMISSIONS = 30;
+    int REQUEST_PURCHASE_EXTRA_FEATURES = 41;
 
     int TABLE_ID_ACCOUNTS = 1;
     int TABLE_ID_STATUSES = 12;

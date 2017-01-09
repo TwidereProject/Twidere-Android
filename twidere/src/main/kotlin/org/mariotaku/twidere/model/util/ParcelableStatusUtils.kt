@@ -125,7 +125,7 @@ object ParcelableStatusUtils {
         result.in_reply_to_name = getInReplyToName(status)
         result.in_reply_to_screen_name = status.inReplyToScreenName
         result.in_reply_to_status_id = status.inReplyToStatusId
-        result.in_reply_to_user_id = getInReplyToUserId(status, accountKey)
+        result.in_reply_to_user_key = getInReplyToUserId(status, accountKey)
 
         val user = status.user
         result.user_key = UserKeyUtils.fromUser(user)
@@ -280,8 +280,8 @@ object ParcelableStatusUtils {
             status.retweet_user_nickname = manager.getUserNickname(status.retweeted_by_user_key!!)
         }
 
-        if (status.in_reply_to_user_id != null) {
-            status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_id!!)
+        if (status.in_reply_to_user_key != null) {
+            status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_key!!)
         }
     }
 

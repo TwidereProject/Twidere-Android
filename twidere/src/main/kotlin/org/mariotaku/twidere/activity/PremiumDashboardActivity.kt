@@ -27,12 +27,8 @@ class PremiumDashboardActivity : BaseActivity() {
         extraFeaturesService = ExtraFeaturesService.newInstance(this)
         setContentView(R.layout.activity_premium_dashboard)
         if (extraFeaturesService.isSupported()) {
-            if (extraFeaturesService.isEnabled()) {
-                extraFeaturesService.dashboardLayouts.forEach { layout ->
-                    View.inflate(this, layout, cardsContainer)
-                }
-            } else {
-                View.inflate(this, extraFeaturesService.introductionLayout, cardsContainer)
+            extraFeaturesService.getDashboardLayouts().forEach { layout ->
+                View.inflate(this, layout, cardsContainer)
             }
         }
     }

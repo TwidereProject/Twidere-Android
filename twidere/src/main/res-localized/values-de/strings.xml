@@ -852,8 +852,8 @@
   <string name="extra_features_description">Unterstütze Twidere und erhalte erweiterte Funktionen</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">Wenn du die erweiterten Funktionen bereits erworben hast, kannst du \"Wiederherstellen\" verwenden um diese wiederherzustellen.</string>
-  <string name="extra_features_name_sync_data">Synchronisieren von Daten wie Filter und Entwürfe</string>
-  <string name="extra_features_name_import_filter_list">Importiere Filterliste von blockierten/stummgeschalteten</string>
+  <string name="extra_feature_description_sync_data">Synchronisieren von Daten wie Filter und Entwürfe</string>
+  <string name="extra_feature_description_filters_import">Importiere Filterliste von blockierten/stummgeschalteten</string>
   <string name="title_error_invalid_account">Ungültiges Konto</string>
   <string name="message_error_invalid_account">Einige Kontodaten sind beschädigt, Twidere entfernt diese Konten um einen Absturz zu verhindern.</string>
   <string name="title_premium_features_name">Twidere ∞</string>

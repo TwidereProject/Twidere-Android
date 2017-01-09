@@ -852,8 +852,8 @@
   <string name="extra_features_description">支持 Twidere 并获得增强功能</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">如果你已经购买增强功能，可以使用“恢复”来恢复购买。</string>
-  <string name="extra_features_name_sync_data">同步数据，如过滤器和草稿</string>
-  <string name="extra_features_name_import_filter_list">从被隐藏/阻止的用户导入过滤列表</string>
+  <string name="extra_feature_description_sync_data">同步数据，如过滤器和草稿</string>
+  <string name="extra_feature_description_filters_import">从被隐藏/阻止的用户导入过滤列表</string>
   <string name="title_error_invalid_account">帐号无效</string>
   <string name="message_error_invalid_account">一些帐号数据已损坏，Twidere 将删除这些帐户以避免崩溃。</string>
   <string name="title_premium_features_name">Twidere ∞</string>

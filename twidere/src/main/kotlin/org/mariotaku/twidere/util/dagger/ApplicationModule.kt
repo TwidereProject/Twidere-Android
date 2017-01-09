@@ -52,6 +52,7 @@ import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.media.UILFileCache
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
@@ -247,7 +248,7 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun syncController(kPreferences: KPreferences): SyncController {
+    fun syncController(): SyncController {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return JobSchedulerSyncController(application)
         }
@@ -262,7 +263,7 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun taskCreator(kPreferences: KPreferences, syncPreferences: SyncPreferences, bus: Bus): TaskServiceRunner {
+    fun taskCreator(kPreferences: KPreferences, bus: Bus): TaskServiceRunner {
         return TaskServiceRunner(application, kPreferences, bus)
     }
 
@@ -278,6 +279,12 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun hotMobiLogger(): HotMobiLogger {
         return HotMobiLogger(application)
+    }
+
+    @Provides
+    @Singleton
+    fun extraFeaturesService(): ExtraFeaturesService {
+        return ExtraFeaturesService.newInstance(application)
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {

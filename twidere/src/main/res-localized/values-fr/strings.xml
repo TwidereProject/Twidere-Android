@@ -851,7 +851,7 @@
   <string name="extra_features_description">Soutenez Twidere et accédez à des fonctionnalités avancées</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser \'Restaurer\' pour importer vos achats.</string>
-  <string name="extra_features_name_sync_data">Synchroniser les données tel que les filtres et brouillons</string>
+  <string name="extra_feature_description_sync_data">Synchroniser les données tel que les filtres et brouillons</string>
   <string name="title_error_invalid_account">Compte non valide</string>
   <string name="message_error_invalid_account">Certaines données de compte sont corrompues, Twidere va supprimer ces comptes pour éviter de planter.</string>
   <string name="title_premium_features_name">Twidere ∞</string>

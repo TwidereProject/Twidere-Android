@@ -134,9 +134,9 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     public String in_reply_to_status_id;
     @ParcelableThisPlease
     @JsonField(name = "in_reply_to_user_id", typeConverter = UserKeyConverter.class)
-    @CursorField(value = Statuses.IN_REPLY_TO_USER_ID, converter = UserKeyCursorFieldConverter.class)
+    @CursorField(value = Statuses.IN_REPLY_TO_USER_KEY, converter = UserKeyCursorFieldConverter.class)
     @Nullable
-    public UserKey in_reply_to_user_id;
+    public UserKey in_reply_to_user_key;
     @ParcelableThisPlease
     @JsonField(name = "my_retweet_id")
     @CursorField(Statuses.MY_RETWEET_ID)
@@ -413,7 +413,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", favorite_count=" + favorite_count +
                 ", reply_count=" + reply_count +
                 ", in_reply_to_status_id='" + in_reply_to_status_id + '\'' +
-                ", in_reply_to_user_id=" + in_reply_to_user_id +
+                ", in_reply_to_user_id=" + in_reply_to_user_key +
                 ", my_retweet_id='" + my_retweet_id + '\'' +
                 ", quoted_id='" + quoted_id + '\'' +
                 ", quoted_timestamp=" + quoted_timestamp +

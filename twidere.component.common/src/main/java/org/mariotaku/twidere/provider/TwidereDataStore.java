@@ -782,7 +782,7 @@ public interface TwidereDataStore {
 
         String IN_REPLY_TO_STATUS_ID = "in_reply_to_status_id";
 
-        String IN_REPLY_TO_USER_ID = "in_reply_to_user_id";
+        String IN_REPLY_TO_USER_KEY = "in_reply_to_user_id";
 
         String IN_REPLY_TO_USER_NAME = "in_reply_to_user_name";
 

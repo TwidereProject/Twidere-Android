@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/extra_features_sync_status"
-        class="org.mariotaku.twidere.fragment.premium.ExtraFeaturesSyncStatusFragment"
+        class="org.mariotaku.twidere.fragment.premium.SyncStatusFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_extra_features_sync_status"/>
