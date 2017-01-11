@@ -71,6 +71,12 @@
             android:summary="@string/preference_multitasking_summary"
             android:title="@string/preference_multitasking"/>
 
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:key="chrome_custom_tab"
+            android:summary="@string/preference_summary_chrome_custom_tab"
+            android:title="@string/preference_title_chrome_custom_tab"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory

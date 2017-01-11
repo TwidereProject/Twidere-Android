@@ -36,6 +36,7 @@ import org.mariotaku.twidere.activity.WebLinkHandlerActivity
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.constant.chromeCustomTabKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
@@ -161,15 +162,26 @@ open class OnLinkClickHandler(
 
     protected open fun openLink(link: String) {
         if (manager != null && manager.isActive) return
+        val uri = Uri.parse(link)
+        if (!preferences[chromeCustomTabKey]) {
+            val viewIntent = Intent(Intent.ACTION_VIEW, uri)
+            viewIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+            try {
+                return context.startActivity(viewIntent)
+            } catch (e: ActivityNotFoundException) {
+                // Ignore
+            }
+            return
+        }
         val builder = CustomTabsIntent.Builder()
         (ChameleonUtils.getActivity(context) as? Chameleon.Themeable)?.overrideTheme?.let { theme ->
             builder.setToolbarColor(theme.colorToolbar)
         }
         val intent = builder.build()
         try {
-            intent.launchUrl(context, Uri.parse(link))
+            intent.launchUrl(context, uri)
         } catch (e: ActivityNotFoundException) {
-            // TODO
+            // Ignore
         }
 
     }

@@ -42,7 +42,6 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
         super.onDestroy()
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!billingProcessor.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -127,7 +126,7 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
             BILLING_RESPONSE_RESULT_USER_CANCELED -> Activity.RESULT_CANCELED
             BILLING_RESPONSE_RESULT_SERVICE_UNAVAILABLE -> RESULT_SERVICE_UNAVAILABLE
             BILLING_RESPONSE_RESULT_ITEM_NOT_OWNED -> RESULT_NOT_PURCHASED
-            BILLING_RESPONSE_RESULT_ERROR -> RESULT_NOT_PURCHASED
+            BILLING_RESPONSE_RESULT_ERROR -> RESULT_INTERNAL_ERROR
             else -> billingResponse
         }
         return resultCode
@@ -138,6 +137,5 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
     companion object {
         private const val TAG_PURCHASE_PROCESS = "get_purchase_process"
 
-        const val EXTRA_PRODUCT_ID = "product_id"
     }
 }

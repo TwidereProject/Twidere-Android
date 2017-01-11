@@ -894,4 +894,6 @@
     <string name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
     <string name="message_sync_last_synced_time">Last synced: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
     <string name="action_purchase_features_pack">Buy features pack</string>
+    <string name="preference_title_chrome_custom_tab">Chrome custom tab</string>
+    <string name="preference_summary_chrome_custom_tab">Open links in Chrome custom tab</string>
 </resources>
