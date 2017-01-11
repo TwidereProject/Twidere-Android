@@ -24,7 +24,7 @@ Build variant:
 - [ ] Google
 - [ ] F-Droid
 
-Microblogging service:
+Micro-blogging service:
 
 - [ ] Twitter
 - [ ] Fanfou
