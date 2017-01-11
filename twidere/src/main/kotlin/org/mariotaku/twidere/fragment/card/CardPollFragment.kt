@@ -72,8 +72,8 @@ class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<Pa
         loaderManager.initLoader(0, null, this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_card_poll, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_card_poll, container, false)
     }
 
     override fun fitSystemWindows(insets: Rect) {
