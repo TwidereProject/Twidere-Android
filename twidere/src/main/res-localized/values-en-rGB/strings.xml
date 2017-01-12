@@ -82,7 +82,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Likes</string>
   <string name="tab_editor_hint_name">Name</string>
-  <string name="refresh">Refresh</string>
+  <string name="action_refresh">Refresh</string>
   <string name="settings_refresh">Refresh</string>
   <string name="retry">Retry</string>
   <string name="more">More</string>

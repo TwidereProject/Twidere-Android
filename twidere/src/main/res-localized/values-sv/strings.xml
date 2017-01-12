@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Gillningar</string>
   <string name="tab_editor_hint_name">Namn</string>
-  <string name="refresh">Uppdatera</string>
+  <string name="action_refresh">Uppdatera</string>
   <string name="settings_refresh">Uppdatera</string>
   <string name="retry">Försök igen</string>
   <string name="more">Mer</string>

@@ -134,7 +134,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">마음</string>
   <string name="tab_editor_hint_name">이름</string>
-  <string name="refresh">새로고침</string>
+  <string name="action_refresh">새로고침</string>
   <string name="settings_refresh">새로고침</string>
   <string name="retry">다시 시도</string>
   <string name="more">기타</string>

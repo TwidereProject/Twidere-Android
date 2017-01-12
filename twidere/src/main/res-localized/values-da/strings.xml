@@ -121,7 +121,7 @@
   <string name="title_favorites">Favoritter</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="tab_editor_hint_name">Navn</string>
-  <string name="refresh">Genopfrisk</string>
+  <string name="action_refresh">Genopfrisk</string>
   <string name="settings_refresh">Genopfrisk</string>
   <string name="retry">Prøv igen</string>
   <string name="more">Mere</string>

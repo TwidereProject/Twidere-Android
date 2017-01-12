@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Вподобання</string>
   <string name="tab_editor_hint_name">Ім\'я</string>
-  <string name="refresh">Оновлення</string>
+  <string name="action_refresh">Оновлення</string>
   <string name="settings_refresh">Оновлення</string>
   <string name="retry">Повторити спробу</string>
   <string name="more">Більше</string>

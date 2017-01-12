@@ -193,7 +193,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 CustomTabsFragment::class.java)
         entriesAdapter.addPreference("extension", R.drawable.ic_action_extension, getString(R.string.extensions),
                 ExtensionsListFragment::class.java)
-        entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.refresh),
+        entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.action_refresh),
                 R.xml.preferences_refresh)
         entriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
                 R.xml.preferences_notifications)

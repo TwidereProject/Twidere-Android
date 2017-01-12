@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">いいね</string>
   <string name="tab_editor_hint_name">名前</string>
-  <string name="refresh">更新</string>
+  <string name="action_refresh">更新</string>
   <string name="settings_refresh">更新</string>
   <string name="retry">再試行</string>
   <string name="more">設定</string>

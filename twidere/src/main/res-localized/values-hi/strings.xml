@@ -108,7 +108,7 @@
   <string name="title_favorites">पसंदीदा</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="tab_editor_hint_name">नाम</string>
-  <string name="refresh">ताज़ा</string>
+  <string name="action_refresh">ताज़ा</string>
   <string name="settings_refresh">ताज़ा</string>
   <string name="retry">पुन: प्रयास</string>
   <string name="more">अधिक</string>

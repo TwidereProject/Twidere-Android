@@ -134,7 +134,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Beğen</string>
   <string name="tab_editor_hint_name">Ad</string>
-  <string name="refresh">Yenile</string>
+  <string name="action_refresh">Yenile</string>
   <string name="settings_refresh">Yenile</string>
   <string name="retry">Tekrar Dene</string>
   <string name="more">Dahası</string>

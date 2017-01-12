@@ -56,7 +56,7 @@
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="navigation.refresh"
             android:tag="navigation"
-            android:title="@string/refresh"/>
+            android:title="@string/action_refresh"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="navigation.back"
             android:tag="navigation"

@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">ถูกใจ</string>
   <string name="tab_editor_hint_name">ชื่อ</string>
-  <string name="refresh">โหลดใหม่</string>
+  <string name="action_refresh">โหลดใหม่</string>
   <string name="settings_refresh">โหลดใหม่</string>
   <string name="retry">ลองอีกครั้ง</string>
   <string name="more">เพิ่มเติม</string>

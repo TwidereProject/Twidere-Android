@@ -134,7 +134,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Curtidas</string>
   <string name="tab_editor_hint_name">Nome</string>
-  <string name="refresh">Atualizar</string>
+  <string name="action_refresh">Atualizar</string>
   <string name="settings_refresh">Atualizar</string>
   <string name="retry">Tentar novamente</string>
   <string name="more">Mais</string>

@@ -11,10 +11,10 @@
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
     <item
-        android:id="@+id/sync_now"
+        android:id="@+id/refresh"
         android:enabled="@bool/debug"
         android:showAsAction="never"
-        android:title="@string/action_sync_sync_now"
+        android:title="@string/action_refresh"
         android:visible="@bool/debug"
         app:showAsAction="never"/>
 

@@ -126,7 +126,7 @@
   <string name="title_favorites">Ulubione</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="tab_editor_hint_name">Nazwa</string>
-  <string name="refresh">Odśwież</string>
+  <string name="action_refresh">Odśwież</string>
   <string name="settings_refresh">Odśwież</string>
   <string name="retry">Ponów</string>
   <string name="more">Więcej</string>

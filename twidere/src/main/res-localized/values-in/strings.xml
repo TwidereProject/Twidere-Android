@@ -131,7 +131,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Suka</string>
   <string name="tab_editor_hint_name">Nama</string>
-  <string name="refresh">Segarkan</string>
+  <string name="action_refresh">Segarkan</string>
   <string name="settings_refresh">Perbaharui</string>
   <string name="retry">Coba lagi</string>
   <string name="more">Lebih</string>

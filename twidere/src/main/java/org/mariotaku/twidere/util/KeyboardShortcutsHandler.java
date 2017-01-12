@@ -52,7 +52,7 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
         sActionLabelMap.put(ACTION_NAVIGATION_PAGE_DOWN, R.string.page_down);
         sActionLabelMap.put(ACTION_NAVIGATION_PAGE_UP, R.string.page_up);
         sActionLabelMap.put(ACTION_NAVIGATION_TOP, R.string.jump_to_top);
-        sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.refresh);
+        sActionLabelMap.put(ACTION_NAVIGATION_REFRESH, R.string.action_refresh);
         sActionLabelMap.put(ACTION_NAVIGATION_PREVIOUS_TAB, R.string.previous_tab);
         sActionLabelMap.put(ACTION_NAVIGATION_NEXT_TAB, R.string.next_tab);
         sActionLabelMap.put(ACTION_NAVIGATION_BACK, R.string.keyboard_shortcut_back);

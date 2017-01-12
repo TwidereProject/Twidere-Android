@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Like</string>
   <string name="tab_editor_hint_name">Nome</string>
-  <string name="refresh">Aggiorna</string>
+  <string name="action_refresh">Aggiorna</string>
   <string name="settings_refresh">Aggiorna</string>
   <string name="retry">Riprova</string>
   <string name="more">Altro</string>

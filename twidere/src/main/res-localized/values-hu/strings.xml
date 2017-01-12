@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Kedvelés</string>
   <string name="tab_editor_hint_name">Név</string>
-  <string name="refresh">Frissít</string>
+  <string name="action_refresh">Frissít</string>
   <string name="settings_refresh">Frissítés</string>
   <string name="retry">Újrapróbál</string>
   <string name="more">Tovább</string>

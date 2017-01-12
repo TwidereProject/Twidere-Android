@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog
 import android.view.*
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
+import okhttp3.HttpUrl
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.isEmpty
@@ -58,7 +59,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 df.show(fragmentManager, "add_url_subscription")
                 return true
             }
-            R.id.sync_now -> {
+            R.id.refresh -> {
                 val dfRef = WeakReference(ProgressDialogFragment.show(childFragmentManager, "refresh_filters"))
                 val task = RefreshFiltersSubscriptionsTask(context)
                 task.callback = {
@@ -133,7 +134,9 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
                 fun updateEnableState() {
-                    positiveButton.isEnabled = !editName.empty && !editUrl.empty
+                    val nameValid = !editName.empty
+                    val urlValid = HttpUrl.parse(editUrl.text.toString()) != null
+                    positiveButton.isEnabled = nameValid && urlValid
                 }
 
                 val watcher = object : SimpleTextWatcher() {

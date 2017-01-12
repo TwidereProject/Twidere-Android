@@ -131,7 +131,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Likes</string>
   <string name="tab_editor_hint_name">Naam</string>
-  <string name="refresh">Vernieuwen</string>
+  <string name="action_refresh">Vernieuwen</string>
   <string name="settings_refresh">Vernieuwen</string>
   <string name="retry">Opnieuw proberen</string>
   <string name="more">Meer</string>

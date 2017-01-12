@@ -124,7 +124,7 @@
   <string name="title_favorites">מועדפים</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="tab_editor_hint_name">שם</string>
-  <string name="refresh">רענן</string>
+  <string name="action_refresh">רענן</string>
   <string name="settings_refresh">רענן</string>
   <string name="retry">נסה שנית</string>
   <string name="more">עוד</string>

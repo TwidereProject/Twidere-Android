@@ -129,7 +129,7 @@
   <string name="title_favorites">Favoriti</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="tab_editor_hint_name">Ime</string>
-  <string name="refresh">Osvježi</string>
+  <string name="action_refresh">Osvježi</string>
   <string name="settings_refresh">Osvježi</string>
   <string name="retry">Pokušaj ponovno</string>
   <string name="more">Više</string>

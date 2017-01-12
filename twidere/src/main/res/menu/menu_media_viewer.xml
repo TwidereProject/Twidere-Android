@@ -22,7 +22,7 @@
     <item
         android:id="@id/refresh"
         android:icon="@drawable/ic_action_refresh"
-        android:title="@string/refresh"
+        android:title="@string/action_refresh"
         app:showAsAction="ifRoom" />
     <item
         android:id="@id/share"

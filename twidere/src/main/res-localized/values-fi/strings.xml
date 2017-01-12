@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Tykkäykset</string>
   <string name="tab_editor_hint_name">Nimi</string>
-  <string name="refresh">Päivitys</string>
+  <string name="action_refresh">Päivitys</string>
   <string name="settings_refresh">Päivitä</string>
   <string name="retry">Yritä uudelleen</string>
   <string name="more">Lisää</string>

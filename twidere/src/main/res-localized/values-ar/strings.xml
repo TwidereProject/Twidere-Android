@@ -125,7 +125,7 @@
   <!-- [noun] Twitter's favorite, in the plural -->
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">إعجاب</string>
-  <string name="refresh">تحديث</string>
+  <string name="action_refresh">تحديث</string>
   <string name="settings_refresh">تحديث</string>
   <string name="retry">إعادة المحاولة</string>
   <string name="more">المزيد</string>
