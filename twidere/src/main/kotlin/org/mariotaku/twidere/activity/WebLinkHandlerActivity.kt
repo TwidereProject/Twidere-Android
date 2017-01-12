@@ -254,7 +254,17 @@ class WebLinkHandlerActivity : Activity(), Constants {
                 handledIntent.action = Intent.ACTION_SEND
                 val text = uri.getQueryParameter("text")
                 val url = uri.getQueryParameter("url")
-                handledIntent.putExtra(Intent.EXTRA_TEXT, Utils.getShareStatus(this, text, url))
+                val sb = StringBuilder()
+                if (!text.isNullOrEmpty()) {
+                    sb.append(text)
+                }
+                if (!url.isNullOrEmpty()) {
+                    if (!sb.isEmpty()) {
+                        sb.append(" ")
+                    }
+                    sb.append(url)
+                }
+                handledIntent.putExtra(Intent.EXTRA_TEXT, sb.toString())
                 return Pair.create(handledIntent, true)
             }
         }
