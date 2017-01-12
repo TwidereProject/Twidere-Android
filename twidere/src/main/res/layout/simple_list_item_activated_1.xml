@@ -24,9 +24,8 @@
     android:gravity="center_vertical"
     android:minHeight="?android:listPreferredItemHeightSmall"
     android:paddingEnd="?android:listPreferredItemPaddingEnd"
-    android:paddingLeft="?android:listPreferredItemPaddingLeft"
-    android:paddingRight="?android:listPreferredItemPaddingRight"
+    android:paddingLeft="?listPreferredItemPaddingLeft"
+    android:paddingRight="?listPreferredItemPaddingRight"
     android:paddingStart="?android:listPreferredItemPaddingStart"
-    android:tag="tint_background|accent_color"
-    android:textAppearance="?android:textAppearanceListItemSmall"
+    android:textAppearance="?textAppearanceListItemSmall"
     app:backgroundTint="?colorControlActivated"/>

@@ -30,10 +30,6 @@ class SimpleParcelableUserListsAdapter(
         context: Context
 ) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_two_line) {
 
-    fun appendData(data: List<ParcelableUserList>) {
-        setData(data, false)
-    }
-
     override fun getItemId(position: Int): Long {
         return (if (getItem(position) != null) getItem(position).hashCode() else -1).toLong()
     }

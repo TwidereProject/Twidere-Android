@@ -900,4 +900,6 @@
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
     <string name="title_subscription_name">Name</string>
     <string name="title_subscription_url">URL</string>
+    <string name="title_filters_subscription_invalid">Invalid subscription</string>
+    <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -136,7 +136,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
     class FilterUsersListAdapter(
             context: Context
-    ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_2, null,
+    ) : SimpleCursorAdapter(context, R.layout.list_item_two_line, null,
             emptyArray(), IntArray(0), 0) {
 
         @Inject
@@ -156,8 +156,12 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         override fun bindView(view: View, context: Context?, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val indices = this.indices!!
+            val icon = view.findViewById(android.R.id.icon)
             val text1 = view.findViewById(android.R.id.text1) as TextView
             val text2 = view.findViewById(android.R.id.text2) as TextView
+
+            icon.visibility = View.GONE
+
             val userId = UserKey.valueOf(cursor.getString(indices.userKey))
             val name = cursor.getString(indices.name)
             val screenName = cursor.getString(indices.screenName)
