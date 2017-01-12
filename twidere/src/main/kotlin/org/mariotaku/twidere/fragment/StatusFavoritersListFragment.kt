@@ -27,7 +27,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.StatusFavoritersLoader
 import org.mariotaku.twidere.model.UserKey
 
-class StatusFavoritersListFragment : CursorSupportUsersListFragment() {
+class StatusFavoritersListFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)

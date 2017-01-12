@@ -10,6 +10,7 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
 import org.mariotaku.twidere.service.LegacyTaskService
+import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_FILTERS_SUBSCRIPTIONS
 import java.util.concurrent.TimeUnit
 
 class LegacyAutoRefreshController(
@@ -31,6 +32,7 @@ class LegacyAutoRefreshController(
 
     override fun appStarted() {
         rescheduleAll()
+        rescheduleFiltersSubscriptionsRefresh()
     }
 
     override fun unschedule(type: String) {
@@ -45,6 +47,15 @@ class LegacyAutoRefreshController(
             val triggerAt = SystemClock.elapsedRealtime() + interval
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, interval, pendingIntent)
         }
+    }
+
+    private fun rescheduleFiltersSubscriptionsRefresh() {
+        val interval = TimeUnit.HOURS.toMillis(4)
+        val triggerAt = SystemClock.elapsedRealtime() + interval
+        val intent = Intent(context, LegacyTaskService::class.java)
+        intent.action = ACTION_REFRESH_FILTERS_SUBSCRIPTIONS
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, interval,
+                PendingIntent.getService(context, 0, intent, 0))
     }
 
 }

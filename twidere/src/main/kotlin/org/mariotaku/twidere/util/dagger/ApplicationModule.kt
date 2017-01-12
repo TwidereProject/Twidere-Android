@@ -287,6 +287,12 @@ class ApplicationModule(private val application: Application) {
         return ExtraFeaturesService.newInstance(application)
     }
 
+    @Provides
+    @Singleton
+    fun etagCache(): ETagCache {
+        return ETagCache(application)
+    }
+
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {
         val cacheDir = Utils.getExternalCacheDir(application, dirName)
         val fallbackCacheDir = Utils.getInternalCacheDir(application, dirName)

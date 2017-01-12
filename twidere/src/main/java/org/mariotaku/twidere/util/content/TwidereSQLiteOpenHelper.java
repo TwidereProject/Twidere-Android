@@ -108,6 +108,7 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
         db.execSQL(createTable(Filters.Keywords.TABLE_NAME, Filters.Keywords.COLUMNS, Filters.Keywords.TYPES, true));
         db.execSQL(createTable(Filters.Sources.TABLE_NAME, Filters.Sources.COLUMNS, Filters.Sources.TYPES, true));
         db.execSQL(createTable(Filters.Links.TABLE_NAME, Filters.Links.COLUMNS, Filters.Links.TYPES, true));
+        db.execSQL(createTable(Filters.Subscriptions.TABLE_NAME, Filters.Subscriptions.COLUMNS, Filters.Subscriptions.TYPES, true));
         db.setTransactionSuccessful();
         db.endTransaction();
 
@@ -328,6 +329,8 @@ public final class TwidereSQLiteOpenHelper extends SQLiteOpenHelper implements C
                 oldVersion < 49, filtersAlias);
         safeUpgrade(db, Filters.Links.TABLE_NAME, Filters.Links.COLUMNS, Filters.Links.TYPES,
                 oldVersion < 49, filtersAlias);
+        safeUpgrade(db, Filters.Subscriptions.TABLE_NAME, Filters.Subscriptions.COLUMNS,
+                Filters.Subscriptions.TYPES, false, null);
     }
 
     private void migrateLegacyAccounts(SQLiteDatabase db) {

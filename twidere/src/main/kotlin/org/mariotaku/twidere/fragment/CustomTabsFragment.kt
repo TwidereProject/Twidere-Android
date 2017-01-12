@@ -70,7 +70,7 @@ import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 import java.lang.ref.WeakReference
 
-class CustomTabsFragment : BaseSupportFragment(), LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
+class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoiceModeListener {
 
     private lateinit var adapter: CustomTabsAdapter
 

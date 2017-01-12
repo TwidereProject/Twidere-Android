@@ -34,6 +34,7 @@ import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
+import org.mariotaku.twidere.preference.PremiumEntryPreference
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
@@ -47,6 +48,7 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
+import org.mariotaku.twidere.util.filter.UrlFiltersSubscriptionProvider
 import org.mariotaku.twidere.util.sync.SyncTaskRunner
 import javax.inject.Singleton
 
@@ -58,7 +60,7 @@ import javax.inject.Singleton
 interface GeneralComponent {
     fun inject(adapter: DummyItemAdapter)
 
-    fun inject(obj: BaseSupportFragment)
+    fun inject(obj: BaseFragment)
 
     fun inject(obj: MultiSelectEventHandler)
 
@@ -145,5 +147,10 @@ interface GeneralComponent {
     fun inject(service: BaseIntentService)
 
     fun inject(runner: SyncTaskRunner)
+
     fun inject(preference: SyncItemPreference)
+
+    fun inject(provider: UrlFiltersSubscriptionProvider)
+
+    fun inject(preference: PremiumEntryPreference)
 }

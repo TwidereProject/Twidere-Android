@@ -50,7 +50,7 @@ import org.mariotaku.twidere.util.support.removeAccountSupport
  * Sort and toggle account availability
  * Created by mariotaku on 14/10/26.
  */
-class AccountsManagerFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<List<AccountDetails>>,
+class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<List<AccountDetails>>,
         AdapterView.OnItemClickListener {
 
     private lateinit var adapter: AccountDetailsAdapter

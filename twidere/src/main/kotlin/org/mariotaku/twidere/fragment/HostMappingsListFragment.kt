@@ -188,7 +188,7 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = activity
             val builder = AlertDialog.Builder(context)
-            builder.setView(R.layout.dialog_host_mapping)
+            builder.setView(R.layout.dialog_add_host_mapping)
             builder.setTitle(R.string.add_host_mapping)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)

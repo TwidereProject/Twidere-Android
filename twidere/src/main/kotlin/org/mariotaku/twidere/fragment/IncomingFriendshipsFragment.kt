@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-class IncomingFriendshipsFragment : CursorSupportUsersListFragment(), IUsersAdapter.RequestClickListener {
+class IncomingFriendshipsFragment : CursorUsersListFragment(), IUsersAdapter.RequestClickListener {
 
     public override fun onCreateUsersLoader(context: Context, args: Bundle,
                                             fromUser: Boolean): CursorSupportUsersLoader {

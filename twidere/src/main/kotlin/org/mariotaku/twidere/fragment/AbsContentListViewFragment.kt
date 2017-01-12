@@ -41,7 +41,7 @@ import org.mariotaku.twidere.util.TwidereColorUtils
 /**
  * Created by mariotaku on 15/4/16.
  */
-abstract class AbsContentListViewFragment<A : ListAdapter> : BaseSupportFragment(),
+abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport,
         AbsListView.OnScrollListener {
     private lateinit var scrollHandler: ListViewScrollHandler

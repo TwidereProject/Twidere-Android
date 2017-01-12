@@ -30,7 +30,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
-open class BaseSupportFragment : Fragment(), IBaseFragment<BaseSupportFragment> {
+open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
 
     // Utility classes
     @Inject
@@ -72,7 +72,7 @@ open class BaseSupportFragment : Fragment(), IBaseFragment<BaseSupportFragment> 
         GeneralComponentHelper.build(context!!).inject(this)
     }
 
-    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseSupportFragment) -> Unit) {
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseFragment) -> Unit) {
         actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 

@@ -23,7 +23,7 @@ import android.os.Bundle
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_URI
 import org.mariotaku.twidere.util.ParseUtils
 
-open class SupportBrowserFragment : BaseSupportWebViewFragment() {
+open class BrowserFragment : BaseWebViewFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

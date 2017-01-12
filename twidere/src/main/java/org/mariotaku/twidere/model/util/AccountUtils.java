@@ -199,6 +199,7 @@ public class AccountUtils {
     public static boolean isAccountValid(@NonNull AccountManager am, Account account) {
         if (TextUtils.isEmpty(am.peekAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE))) return false;
         if (TextUtils.isEmpty(am.getUserData(account, ACCOUNT_USER_DATA_KEY))) return false;
+        if (TextUtils.isEmpty(am.getUserData(account, ACCOUNT_USER_DATA_USER))) return false;
         return true;
     }
 

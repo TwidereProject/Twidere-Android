@@ -88,11 +88,6 @@ open class BaseListFragment : ListFragment(), OnScrollListener, RefreshScrollTop
             return arguments?.getInt(EXTRA_TAB_POSITION, -1) ?: -1
         }
 
-    fun invalidateOptionsMenu() {
-        val activity = activity ?: return
-        activity.invalidateOptionsMenu()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         instanceStateSaved = savedInstanceState != null

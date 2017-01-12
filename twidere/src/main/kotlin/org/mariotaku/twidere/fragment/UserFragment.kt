@@ -135,7 +135,7 @@ import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 import java.lang.ref.WeakReference
 import java.util.*
 
-class UserFragment : BaseSupportFragment(), OnClickListener, OnLinkClickListener,
+class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
         SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,

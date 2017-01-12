@@ -40,7 +40,7 @@ import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.UserViewHolder
 import java.util.*
 
-class UserListMembersFragment : CursorSupportUsersListFragment() {
+class UserListMembersFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context,
                                             args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {

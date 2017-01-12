@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.util.filter
 
 import android.content.Context
+import org.mariotaku.twidere.util.JsonSerializer
 
 /**
  * Created by mariotaku on 2017/1/9.
@@ -8,10 +9,13 @@ import android.content.Context
 
 abstract class LocalFiltersSubscriptionProvider(val context: Context) : FiltersSubscriptionProvider {
     companion object {
-        fun forName(context: Context, name: String): FiltersSubscriptionProvider? {
+        fun forName(context: Context, name: String, arguments: String?): FiltersSubscriptionProvider? {
             when (name) {
                 "url" -> {
-                    return UrlFiltersSubscriptionProvider(context)
+                    if (arguments == null) return null
+                    val argsObj = JsonSerializer.parse(arguments,
+                            UrlFiltersSubscriptionProvider.Arguments::class.java) ?: return null
+                    return UrlFiltersSubscriptionProvider(context, argsObj)
                 }
             }
             return null

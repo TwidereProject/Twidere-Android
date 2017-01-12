@@ -32,7 +32,7 @@ class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
 
     override fun isEnabled(feature: String): Boolean {
         if (bp.hasValidTransaction(PRODUCT_ID_EXTRA_FEATURES_PACK)) return true
-        val productId = getProductId(feature) ?: return false
+        val productId = getProductId(feature)
         return bp.hasValidTransaction(productId)
     }
 

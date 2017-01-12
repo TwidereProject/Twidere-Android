@@ -57,3 +57,6 @@ inline fun <R> Cursor.useCursor(block: (Cursor) -> R): R {
         }
     }
 }
+
+val Cursor.isEmpty: Boolean
+    get() = count == 0

@@ -21,12 +21,12 @@ package org.mariotaku.twidere.fragment.card
 
 import android.os.Bundle
 import org.mariotaku.twidere.Constants.EXTRA_URI
-import org.mariotaku.twidere.fragment.SupportBrowserFragment
+import org.mariotaku.twidere.fragment.BrowserFragment
 
 /**
  * Created by mariotaku on 15/1/6.
  */
-class CardBrowserFragment : SupportBrowserFragment() {
+class CardBrowserFragment : BrowserFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val settings = webView!!.settings

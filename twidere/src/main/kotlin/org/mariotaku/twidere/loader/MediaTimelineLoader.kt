@@ -22,8 +22,7 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-import android.text.TextUtils
-import org.apache.commons.lang3.StringUtils
+import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
@@ -84,11 +83,13 @@ class MediaTimelineLoader(
                     val query = SearchQuery("from:$screenName filter:media exclude:retweets")
                     query.paging(paging)
                     val result = ResponseList<Status>()
-                    for (status in microBlog.search(query)) {
+                    microBlog.search(query).filterTo(result) { status ->
                         val user = status.user
-                        if (userKey != null && TextUtils.equals(user.id, userKey.id) || StringUtils.endsWithIgnoreCase(user.screenName, this.screenName)) {
-                            result.add(status)
+                        if (status.mediaEntities.isNullOrEmpty()) {
+                            return@filterTo false
                         }
+                        return@filterTo user.id == userKey?.id
+                                || user.screenName.equals(this.screenName, ignoreCase = true)
                     }
                     return result
                 }

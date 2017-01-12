@@ -28,7 +28,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.model.ParcelableUser
 
-abstract class CursorSupportUsersListFragment : ParcelableUsersFragment() {
+abstract class CursorUsersListFragment : ParcelableUsersFragment() {
 
     protected var nextCursor: Long = -1
         private set

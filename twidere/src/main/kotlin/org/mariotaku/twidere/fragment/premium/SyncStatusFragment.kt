@@ -15,7 +15,7 @@ import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.activity.FragmentContentActivity
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.fragment.BaseSupportFragment
+import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
@@ -27,7 +27,7 @@ import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
  * Created by mariotaku on 2016/12/28.
  */
 
-class SyncStatusFragment : BaseSupportFragment() {
+class SyncStatusFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

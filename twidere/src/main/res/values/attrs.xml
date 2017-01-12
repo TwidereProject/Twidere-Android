@@ -138,6 +138,9 @@
     <declare-styleable name="AccountDashboardHeaderView">
         <attr name="sizeMeasurementId" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="PremiumEntryPreference">
+        <attr name="requiredFeature" format="string"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

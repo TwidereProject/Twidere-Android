@@ -60,6 +60,7 @@ class JobTaskService : JobService() {
         const val JOB_ID_REFRESH_HOME_TIMELINE = 1
         const val JOB_ID_REFRESH_NOTIFICATIONS = 2
         const val JOB_ID_REFRESH_DIRECT_MESSAGES = 3
+        const val JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS = 19
         const val JOB_ID_SYNC_DRAFTS = 21
         const val JOB_ID_SYNC_FILTERS = 22
         const val JOB_ID_SYNC_USER_NICKNAMES = 23
@@ -82,6 +83,7 @@ class JobTaskService : JobService() {
             JOB_ID_REFRESH_HOME_TIMELINE -> TaskServiceRunner.ACTION_REFRESH_HOME_TIMELINE
             JOB_ID_REFRESH_NOTIFICATIONS -> TaskServiceRunner.ACTION_REFRESH_NOTIFICATIONS
             JOB_ID_REFRESH_DIRECT_MESSAGES -> TaskServiceRunner.ACTION_REFRESH_DIRECT_MESSAGES
+            JOB_ID_REFRESH_FILTERS_SUBSCRIPTIONS -> TaskServiceRunner.ACTION_REFRESH_FILTERS_SUBSCRIPTIONS
             JOB_ID_SYNC_DRAFTS -> TaskServiceRunner.ACTION_SYNC_DRAFTS
             JOB_ID_SYNC_FILTERS -> TaskServiceRunner.ACTION_SYNC_FILTERS
             JOB_ID_SYNC_USER_NICKNAMES -> TaskServiceRunner.ACTION_SYNC_USER_NICKNAMES

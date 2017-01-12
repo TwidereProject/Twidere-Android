@@ -26,7 +26,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.UserListSubscribersLoader
 import org.mariotaku.twidere.model.UserKey
 
-class UserListSubscribersFragment : CursorSupportUsersListFragment() {
+class UserListSubscribersFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val listId = args.getString(EXTRA_LIST_ID)

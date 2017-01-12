@@ -30,7 +30,7 @@ import org.mariotaku.twidere.util.support.WebSettingsSupport
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
 
 @SuppressLint("SetJavaScriptEnabled")
-open class BaseSupportWebViewFragment : BaseSupportFragment() {
+open class BaseWebViewFragment : BaseFragment() {
 
     private var internalWebView: WebView? = null
     private var webViewAvailable: Boolean = false

@@ -26,7 +26,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.GroupMembersLoader
 import org.mariotaku.twidere.model.UserKey
 
-class GroupMembersFragment : CursorSupportUsersListFragment() {
+class GroupMembersFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context,
                                             args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {

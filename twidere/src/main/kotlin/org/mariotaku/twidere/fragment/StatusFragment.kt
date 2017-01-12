@@ -119,7 +119,7 @@ import java.util.*
  * Displays status details
  * Created by mariotaku on 14/12/5.
  */
-class StatusFragment : BaseSupportFragment(), LoaderCallbacks<SingleResponse<ParcelableStatus>>,
+class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<ParcelableStatus>>,
         OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback, ContentListSupport {
     private var mItemDecoration: DividerItemDecoration? = null
 

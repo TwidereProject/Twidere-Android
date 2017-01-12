@@ -214,7 +214,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         val browserArgs = Bundle()
         browserArgs.putString(EXTRA_URI, "file:///android_asset/gpl-3.0-standalone.html")
         entriesAdapter.addPreference("license", R.drawable.ic_action_open_source, getString(R.string.title_open_source_license),
-                SupportBrowserFragment::class.java, browserArgs)
+                BrowserFragment::class.java, browserArgs)
     }
 
     private fun openDetails(position: Int) {

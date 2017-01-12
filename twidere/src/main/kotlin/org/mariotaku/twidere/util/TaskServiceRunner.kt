@@ -16,6 +16,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.GetHomeTimelineTask
 import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask
+import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 
 /**
  * Created by mariotaku on 2017/1/6.
@@ -29,7 +30,8 @@ class TaskServiceRunner(
 
     fun runTask(@Action action: String, callback: (Boolean) -> Unit): Boolean {
         when (action) {
-            ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS, ACTION_REFRESH_DIRECT_MESSAGES -> {
+            ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
+            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
                 val task = createRefreshTask(action) ?: return false
                 task.callback = callback
                 TaskStarter.execute(task)
@@ -70,12 +72,15 @@ class TaskServiceRunner(
                 }
                 return task
             }
+            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS -> {
+                return RefreshFiltersSubscriptionsTask(context)
+            }
         }
         return null
     }
 
-    @StringDef(ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS,
-            ACTION_REFRESH_DIRECT_MESSAGES, ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS,
+    @StringDef(ACTION_REFRESH_HOME_TIMELINE, ACTION_REFRESH_NOTIFICATIONS, ACTION_REFRESH_DIRECT_MESSAGES,
+            ACTION_REFRESH_FILTERS_SUBSCRIPTIONS, ACTION_SYNC_DRAFTS, ACTION_SYNC_FILTERS,
             ACTION_SYNC_USER_NICKNAMES, ACTION_SYNC_USER_COLORS)
     @Retention(AnnotationRetention.SOURCE)
     annotation class Action
@@ -105,6 +110,8 @@ class TaskServiceRunner(
         @Action
         const val ACTION_REFRESH_DIRECT_MESSAGES = INTENT_PACKAGE_PREFIX + "REFRESH_DIRECT_MESSAGES"
         @Action
+        const val ACTION_REFRESH_FILTERS_SUBSCRIPTIONS = INTENT_PACKAGE_PREFIX + "REFRESH_FILTERS_SUBSCRIPTIONS"
+        @Action
         const val ACTION_SYNC_DRAFTS = INTENT_PACKAGE_PREFIX + "SYNC_DRAFTS"
         @Action
         const val ACTION_SYNC_FILTERS = INTENT_PACKAGE_PREFIX + "SYNC_FILTERS"
@@ -120,3 +127,4 @@ class TaskServiceRunner(
     data class SyncFinishedEvent(val syncType: String, val success: Boolean)
 
 }
+

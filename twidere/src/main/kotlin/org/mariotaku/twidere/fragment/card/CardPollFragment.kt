@@ -48,7 +48,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.fragment.BaseSupportFragment
+import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -62,7 +62,7 @@ import java.util.*
 /**
  * Created by mariotaku on 15/12/20.
  */
-class CardPollFragment : BaseSupportFragment(), LoaderManager.LoaderCallbacks<ParcelableCardEntity?>, View.OnClickListener {
+class CardPollFragment : BaseFragment(), LoaderManager.LoaderCallbacks<ParcelableCardEntity?>, View.OnClickListener {
     private var fetchedCard: ParcelableCardEntity? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

@@ -27,7 +27,7 @@ import org.mariotaku.twidere.loader.UserFriendsLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 
-class UserFriendsFragment : CursorSupportUsersListFragment() {
+class UserFriendsFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context,
                                             args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {

@@ -27,7 +27,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.StatusRetweetersLoader
 import org.mariotaku.twidere.model.UserKey
 
-class StatusRetweetersListFragment : CursorSupportUsersListFragment() {
+class StatusRetweetersListFragment : CursorUsersListFragment() {
 
     public override fun onCreateUsersLoader(context: Context,
                                             args: Bundle,

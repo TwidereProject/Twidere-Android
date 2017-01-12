@@ -64,7 +64,7 @@ import org.mariotaku.twidere.task.UpdateProfileImageTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.iface.IExtendedView.OnSizeChangedListener
 
-class UserProfileEditorFragment : BaseSupportFragment(), OnSizeChangedListener, TextWatcher,
+class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWatcher,
         OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUser>>,
         KeyboardShortcutsHandler.TakeAllKeyboardShortcut {
 

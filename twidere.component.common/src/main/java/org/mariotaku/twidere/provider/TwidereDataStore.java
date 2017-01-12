@@ -629,6 +629,7 @@ public interface TwidereDataStore {
             String CONTENT_PATH = Filters.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
             Uri CONTENT_URI = Uri.withAppendedPath(Filters.CONTENT_URI, CONTENT_PATH_SEGMENT);
 
+            String NAME = "name";
             String COMPONENT = "component";
             String ARGUMENTS = "arguments";
 

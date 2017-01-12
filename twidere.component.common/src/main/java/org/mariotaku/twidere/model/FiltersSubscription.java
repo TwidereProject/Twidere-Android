@@ -14,6 +14,9 @@ public class FiltersSubscription {
     @CursorField(value = Filters.Subscriptions._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     public long id;
 
+    @CursorField(Filters.Subscriptions.NAME)
+    public String name;
+
     @CursorField(Filters.Subscriptions.COMPONENT)
     public String component;
 
@@ -41,6 +44,7 @@ public class FiltersSubscription {
         return "FiltersSubscription{" +
                 "arguments='" + arguments + '\'' +
                 ", id=" + id +
+                ", name='" + name + '\'' +
                 ", component='" + component + '\'' +
                 '}';
     }

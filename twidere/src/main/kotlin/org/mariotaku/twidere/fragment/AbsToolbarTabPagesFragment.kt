@@ -33,7 +33,7 @@ import org.mariotaku.twidere.view.TabPagerIndicator
 /**
  * Created by mariotaku on 16/3/16.
  */
-abstract class AbsToolbarTabPagesFragment : BaseSupportFragment(), RefreshScrollTopInterface,
+abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInterface,
         SupportFragmentCallback, IBaseFragment.SystemWindowsInsetsCallback, ControlBarOffsetListener,
         HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 

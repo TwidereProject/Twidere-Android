@@ -64,7 +64,7 @@ import static org.mariotaku.twidere.Constants.KEY_TCP_DNS_QUERY;
  * Network diagnostics
  * Created by mariotaku on 16/2/9.
  */
-public class NetworkDiagnosticsFragment extends BaseSupportFragment {
+public class NetworkDiagnosticsFragment extends BaseFragment {
 
     private TextView mLogTextView;
     private Button mStartDiagnosticsButton;

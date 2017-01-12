@@ -284,20 +284,21 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         return count;
     }
 
-    private static boolean shouldReplaceOnConflict(final int table_id) {
-        switch (table_id) {
+    private static int getConflictAlgorithm(final int tableId) {
+        switch (tableId) {
             case TABLE_ID_CACHED_HASHTAGS:
             case TABLE_ID_CACHED_STATUSES:
             case TABLE_ID_CACHED_USERS:
             case TABLE_ID_CACHED_RELATIONSHIPS:
             case TABLE_ID_SEARCH_HISTORY:
+                return SQLiteDatabase.CONFLICT_REPLACE;
             case TABLE_ID_FILTERED_USERS:
             case TABLE_ID_FILTERED_KEYWORDS:
             case TABLE_ID_FILTERED_SOURCES:
             case TABLE_ID_FILTERED_LINKS:
-                return true;
+                return SQLiteDatabase.CONFLICT_IGNORE;
         }
-        return false;
+        return SQLiteDatabase.CONFLICT_NONE;
     }
 
     @Override
@@ -363,14 +364,17 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_IGNORE);
                 }
-            } else if (shouldReplaceOnConflict(tableId)) {
-                for (final ContentValues values : valuesArray) {
-                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
-                            values, SQLiteDatabase.CONFLICT_REPLACE);
-                }
             } else {
-                for (final ContentValues values : valuesArray) {
-                    newIds[result++] = mDatabaseWrapper.insert(table, null, values);
+                final int conflictAlgorithm = getConflictAlgorithm(tableId);
+                if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
+                    for (final ContentValues values : valuesArray) {
+                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                                values, conflictAlgorithm);
+                    }
+                } else {
+                    for (final ContentValues values : valuesArray) {
+                        newIds[result++] = mDatabaseWrapper.insert(table, null, values);
+                    }
                 }
             }
             mDatabaseWrapper.setTransactionSuccessful();
@@ -513,9 +517,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             default: {
-                if (shouldReplaceOnConflict(tableId)) {
+                final int conflictAlgorithm = getConflictAlgorithm(tableId);
+                if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
                     rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
-                            SQLiteDatabase.CONFLICT_REPLACE);
+                            conflictAlgorithm);
                 } else if (table != null) {
                     rowId = mDatabaseWrapper.insert(table, null, values);
                 } else {

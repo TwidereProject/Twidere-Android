@@ -35,7 +35,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.iface.IMapFragment
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
 
-class WebMapFragment : BaseSupportWebViewFragment(), IMapFragment {
+class WebMapFragment : BaseWebViewFragment(), IMapFragment {
 
     private var latitude: Double = 0.toDouble()
     private var longitude: Double = 0.toDouble()

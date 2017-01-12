@@ -20,32 +20,35 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/element_spacing_large">
 
-    <CheckBox
-        android:id="@+id/exclude"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exclude_this_host"/>
+        android:hint="@string/title_subscription_name"
+        android:inputType="text"
+        android:maxLines="1"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/title_subscription_name"
+        app:met_primaryColor="?colorAccent"/>
 
-    <EditText
-        android:id="@+id/host"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/host_mapping_host"
-        android:inputType="text|textUri"
-        android:maxLines="1"/>
-
-    <EditText
-        android:id="@+id/address"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/url"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="@string/host_mapping_address"
-        android:inputType="text|textUri"
-        android:maxLines="1"/>
+        android:hint="@string/title_subscription_url"
+        android:inputType="textUri"
+        android:maxLines="1"
+        app:met_baseColor="?android:textColorPrimary"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelText="@string/title_subscription_url"
+        app:met_primaryColor="?colorAccent"/>
 
 </LinearLayout>

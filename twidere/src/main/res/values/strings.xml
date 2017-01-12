@@ -118,6 +118,7 @@
     <string name="action_quote">Quote</string>
     <!-- [verb] Add mute filter rule -->
     <string name="action_add_filter_rule">Add rule</string>
+    <string name="action_add_filters_subscription">Add subscription</string>
     <string name="text_size">Text size</string>
     <string name="text_size_summary">Text size of tweets.</string>
     <string name="cannot_get_location">Can\'t get your location.</string>
@@ -896,4 +897,7 @@
     <string name="action_purchase_features_pack">Buy features pack</string>
     <string name="preference_title_chrome_custom_tab">Chrome custom tab</string>
     <string name="preference_summary_chrome_custom_tab">Open links in Chrome custom tab</string>
+    <string name="hint_empty_filters_subscriptions">No subscriptions</string>
+    <string name="title_subscription_name">Name</string>
+    <string name="title_subscription_url">URL</string>
 </resources>

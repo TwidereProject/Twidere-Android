@@ -137,6 +137,8 @@ public class DataStoreUtils implements Constants {
                 TABLE_ID_FILTERED_SOURCES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Links.CONTENT_PATH,
                 TABLE_ID_FILTERED_LINKS);
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Filters.Subscriptions.CONTENT_PATH,
+                TABLE_ID_FILTERS_SUBSCRIPTIONS);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.CONTENT_PATH,
                 TABLE_ID_DIRECT_MESSAGES);
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DirectMessages.Inbox.CONTENT_PATH,
@@ -517,6 +519,8 @@ public class DataStoreUtils implements Constants {
                 return Filters.Sources.TABLE_NAME;
             case TwidereConstants.TABLE_ID_FILTERED_LINKS:
                 return Filters.Links.TABLE_NAME;
+            case TwidereConstants.TABLE_ID_FILTERS_SUBSCRIPTIONS:
+                return Filters.Subscriptions.TABLE_NAME;
             case TwidereConstants.TABLE_ID_DIRECT_MESSAGES_INBOX:
                 return DirectMessages.Inbox.TABLE_NAME;
             case TwidereConstants.TABLE_ID_DIRECT_MESSAGES_OUTBOX:
