@@ -35,7 +35,7 @@ import org.osmdroid.views.overlay.ItemizedOverlay
 import org.osmdroid.views.overlay.OverlayItem
 import java.util.*
 
-class OpenStreetMapViewerFragment : BaseSupportFragment(), Constants {
+class OpenStreetMapViewerFragment : BaseFragment(), Constants {
 
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0

@@ -42,6 +42,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -576,6 +578,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
             FilterFlags.BLOCKED_BY_USER,
             FilterFlags.POSSIBILITY_SENSITIVE
     }, flag = true)
+    @Retention(RetentionPolicy.SOURCE)
     public @interface FilterFlags {
         /**
          * Original tweet of a quote tweet is unavailable.
