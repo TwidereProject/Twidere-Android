@@ -4,10 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SimpleCursorAdapter
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -28,9 +32,11 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.ContentValuesCreator
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -38,16 +44,13 @@ import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
 
-    public override val contentColumns: Array<String>
-        get() = TwidereDataStore.Filters.Users.COLUMNS
-
-    override val contentUri: Uri
-        get() = TwidereDataStore.Filters.Users.CONTENT_URI
+    override val contentUri: Uri = Filters.Users.CONTENT_URI
+    override val contentColumns: Array<String> = Filters.Users.COLUMNS
+    override val sortOrder: String? = "${Filters.Users.SOURCE} >= 0"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
@@ -56,10 +59,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 val user = data!!.getParcelableExtra<ParcelableUser>(EXTRA_USER)
                 val values = ContentValuesCreator.createFilteredUser(user)
                 val resolver = context.contentResolver
-                val where = Expression.equalsArgs(TwidereDataStore.Filters.Users.USER_KEY).sql
+                val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
                 val whereArgs = arrayOf(user.key.toString())
-                resolver.delete(TwidereDataStore.Filters.Users.CONTENT_URI, where, whereArgs)
-                resolver.insert(TwidereDataStore.Filters.Users.CONTENT_URI, values)
+                resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)
+                resolver.insert(Filters.Users.CONTENT_URI, values)
             }
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK) return
@@ -137,7 +140,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     class FilterUsersListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.list_item_two_line, null,
-            emptyArray(), IntArray(0), 0) {
+            emptyArray(), IntArray(0), 0), SelectableItemAdapter {
 
         @Inject
         lateinit var userColorNameManager: UserColorNameManager
@@ -147,6 +150,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         private val nameFirst: Boolean
 
         private var indices: `FiltersData$UserItemCursorIndices`? = null
+        private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
         init {
             GeneralComponentHelper.build(context).inject(this)
@@ -168,6 +172,17 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             val displayName = userColorNameManager.getDisplayName(userId, name, screenName,
                     nameFirst)
             text1.text = displayName
+
+            val ssb = SpannableStringBuilder(displayName)
+            if (cursor.getLong(indices.source) >= 0) {
+                val start = ssb.length
+                ssb.append("*")
+                val end = start + 1
+                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
+                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            text1.text = ssb
             text2.text = userId.host
         }
 
@@ -179,6 +194,13 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             return old
         }
 
+        override fun isSelectable(position: Int): Boolean {
+            val cursor = this.cursor ?: return false
+            if (cursor.moveToPosition(position)) {
+                return cursor.getLong(indices!!.source) < 0
+            }
+            return false
+        }
     }
 
 }

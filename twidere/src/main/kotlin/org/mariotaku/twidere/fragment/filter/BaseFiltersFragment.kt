@@ -25,23 +25,25 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import android.database.Cursor
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.SimpleCursorAdapter
 import android.support.v7.app.AlertDialog
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextUtils
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
 import android.widget.AbsListView
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.AutoCompleteTextView
 import android.widget.ListView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.sqliteqb.library.Columns
@@ -57,8 +59,11 @@ import org.mariotaku.twidere.extension.selectNone
 import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.model.`FiltersData$BaseItemCursorIndices`
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.ParseUtils
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.Utils
 
 
@@ -73,7 +78,9 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     private var actionMode: ActionMode? = null
 
-    abstract val contentUri: Uri
+    protected abstract val contentUri: Uri
+    protected abstract val contentColumns: Array<String>
+    protected open val sortOrder: String? = "${Filters.SOURCE} >= 0"
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -141,6 +148,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
                                            checked: Boolean) {
+        val adapter = this.adapter
+        if (adapter is SelectableItemAdapter) {
+            if (!adapter.isSelectable(position) && checked) {
+                listView.setItemChecked(position, false)
+            }
+        }
         updateTitle(mode)
         mode.invalidate()
     }
@@ -165,7 +178,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        return CursorLoader(activity, contentUri, contentColumns, null, null, null)
+        return CursorLoader(activity, contentUri, contentColumns, null, null, sortOrder)
     }
 
     override fun onLoadFinished(loader: Loader<Cursor?>, data: Cursor?) {
@@ -211,7 +224,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         context.contentResolver.delete(contentUri, where.sql, Array(ids.size) { ids[it].toString() })
     }
 
-    protected abstract val contentColumns: Array<String>
 
     private fun updateTitle(mode: ActionMode?) {
         if (listView == null || mode == null || activity == null) return
@@ -276,18 +288,52 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
 
     }
 
+    interface SelectableItemAdapter {
+        fun isSelectable(position: Int): Boolean
+    }
+
 
     private class FilterListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_1, null,
-            from, to, 0) {
-        companion object {
+            emptyArray(), intArrayOf(), 0), SelectableItemAdapter {
 
-            private val from = arrayOf(Filters.VALUE)
+        private var indices: `FiltersData$BaseItemCursorIndices`? = null
+        private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
-            private val to = intArrayOf(android.R.id.text1)
+        override fun swapCursor(c: Cursor?): Cursor? {
+            val old = super.swapCursor(c)
+            if (c != null) {
+                indices = `FiltersData$BaseItemCursorIndices`(c)
+            }
+            return old
         }
 
+        override fun bindView(view: View, context: Context, cursor: Cursor) {
+            super.bindView(view, context, cursor)
+            val indices = this.indices!!
+            val text1 = view.findViewById(android.R.id.text1) as TextView
+
+            val ssb = SpannableStringBuilder(cursor.getString(indices.value))
+            if (cursor.getLong(indices.source) >= 0) {
+                val start = ssb.length
+                ssb.append("*")
+                val end = start + 1
+                val drawable = ContextCompat.getDrawable(context, R.drawable.ic_action_sync)
+                drawable.setColorFilter(secondaryTextColor, PorterDuff.Mode.SRC_ATOP)
+                ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            text1.text = ssb
+        }
+
+
+        override fun isSelectable(position: Int): Boolean {
+            val cursor = this.cursor ?: return false
+            if (cursor.moveToPosition(position)) {
+                return cursor.getLong(indices!!.source) < 0
+            }
+            return false
+        }
     }
 
     companion object {

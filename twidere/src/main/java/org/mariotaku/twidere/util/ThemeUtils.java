@@ -67,6 +67,7 @@ public class ThemeUtils implements Constants {
     public static final int DARK_COLOR_THRESHOLD = 128;
 
     public static final int[] ATTRS_TEXT_COLOR_PRIMARY = {android.R.attr.textColorPrimary};
+    public static final int[] ATTRS_TEXT_COLOR_SECONDARY = {android.R.attr.textColorSecondary};
 
     private ThemeUtils() {
         throw new AssertionError("ThemeUtils should never be instantiated");
@@ -198,6 +199,15 @@ public class ThemeUtils implements Constants {
 
     public static int getTextColorPrimary(final Context context) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_PRIMARY);
+        try {
+            return a.getColor(0, Color.TRANSPARENT);
+        } finally {
+            a.recycle();
+        }
+    }
+
+    public static int getTextColorSecondary(final Context context) {
+        final TypedArray a = context.obtainStyledAttributes(ATTRS_TEXT_COLOR_SECONDARY);
         try {
             return a.getColor(0, Color.TRANSPARENT);
         } finally {

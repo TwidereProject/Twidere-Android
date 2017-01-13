@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 41.2 (35397) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_sync-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_sync-mdpi">
+            <path d="M16,8 L16,5 L12,9 L16,13 L16,10 C19.31,10 22,12.69 22,16 C22,17.01 21.75,17.97 21.3,18.8 L22.76,20.26 C23.54,19.03 24,17.57 24,16 C24,11.58 20.42,8 16,8 L16,8 Z M16,22 C12.69,22 10,19.31 10,16 C10,14.99 10.25,14.03 10.7,13.2 L9.24,11.74 C8.46,12.97 8,14.43 8,16 C8,20.42 11.58,24 16,24 L16,27 L20,23 L16,19 L16,22 Z" id="Shape" fill="#FFFFFF"></path>
+            <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
+        </g>
+    </g>
+</svg>
