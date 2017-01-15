@@ -866,9 +866,6 @@ public interface TwidereDataStore {
 
         String ACCOUNT_COLOR = "account_color";
 
-        String USER_COLOR = "user_color";
-        String QUOTED_USER_COLOR = "quoted_user_color";
-        String RETWEET_USER_COLOR = "retweet_user_color";
         String USER_NICKNAME = "user_nickname";
 
         String QUOTED_USER_NICKNAME = "quoted_user_nickname";

@@ -19,26 +19,21 @@
 
 package org.mariotaku.twidere.util;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.LruCache;
 
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.UserKeyUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
 import java.util.Map;
 import java.util.Set;
@@ -47,13 +42,19 @@ import static android.text.TextUtils.isEmpty;
 
 public class UserColorNameManager implements TwidereConstants {
 
+    private final static String NICKNAME_NULL = ".#NULL#";
+
     private final SharedPreferences colorPreferences, nicknamePreferences;
+    private final LruCache<String, Integer> colorCache;
+    private final LruCache<String, String> nicknameCache;
     private final Context context;
 
     public UserColorNameManager(Context context) {
         this.context = context;
         colorPreferences = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         nicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        colorCache = new LruCache<>(512);
+        nicknameCache = new LruCache<>(256);
     }
 
     public SharedPreferences getColorPreferences() {
@@ -87,7 +88,7 @@ public class UserColorNameManager implements TwidereConstants {
     public void clearUserColor(@NonNull final UserKey userKey) {
         final SharedPreferences.Editor editor = colorPreferences.edit();
         final String userKeyString = userKey.toString();
-        updateColor(userKeyString, 0);
+        colorCache.remove(userKeyString);
         editor.remove(userKeyString);
         editor.apply();
     }
@@ -95,7 +96,7 @@ public class UserColorNameManager implements TwidereConstants {
     public void setUserColor(@NonNull final UserKey userKey, final int color) {
         final SharedPreferences.Editor editor = colorPreferences.edit();
         final String userKeyString = userKey.toString();
-        updateColor(userKeyString, color);
+        colorCache.put(userKeyString, color);
         editor.putInt(userKeyString, color);
         editor.apply();
     }
@@ -103,7 +104,7 @@ public class UserColorNameManager implements TwidereConstants {
     public void setUserNickname(@NonNull final UserKey userKey, final String nickname) {
         final SharedPreferences.Editor editor = nicknamePreferences.edit();
         final String userKeyString = userKey.toString();
-        updateNickname(userKeyString, null);
+        nicknameCache.put(userKeyString, nickname);
         editor.putString(userKeyString, nickname);
         editor.apply();
     }
@@ -111,63 +112,11 @@ public class UserColorNameManager implements TwidereConstants {
     public void clearUserNickname(@NonNull final UserKey userKey) {
         final SharedPreferences.Editor editor = nicknamePreferences.edit();
         final String userKeyString = userKey.toString();
-        updateNickname(userKeyString, null);
+        nicknameCache.remove(userKeyString);
         editor.remove(userKeyString);
         editor.apply();
     }
 
-    private void updateColor(String userKey, int color) {
-        final ContentResolver cr = context.getContentResolver();
-        ContentValues cv = new ContentValues();
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.USER_COLOR, Statuses.USER_KEY,
-                color, cv);
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.QUOTED_USER_COLOR,
-                Statuses.QUOTED_USER_KEY, color, cv);
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.RETWEET_USER_COLOR,
-                Statuses.RETWEETED_BY_USER_KEY, color, cv);
-
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_COLOR,
-                Activities.STATUS_USER_KEY, color, cv);
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_COLOR,
-                Activities.STATUS_RETWEETED_BY_USER_KEY, color, cv);
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_COLOR,
-                Activities.STATUS_QUOTED_USER_KEY, color, cv);
-    }
-
-    private void updateNickname(String userKey, String nickname) {
-        final ContentResolver cr = context.getContentResolver();
-        ContentValues cv = new ContentValues();
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.USER_NICKNAME, Statuses.USER_KEY,
-                nickname, cv);
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.QUOTED_USER_NICKNAME,
-                Statuses.QUOTED_USER_KEY, nickname, cv);
-        updateColumn(cr, Statuses.CONTENT_URI, userKey, Statuses.RETWEET_USER_NICKNAME,
-                Statuses.RETWEETED_BY_USER_KEY, nickname, cv);
-
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_USER_NICKNAME,
-                Activities.STATUS_USER_KEY, nickname, cv);
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_RETWEET_USER_NICKNAME,
-                Activities.STATUS_RETWEETED_BY_USER_KEY, nickname, cv);
-        updateColumn(cr, Activities.AboutMe.CONTENT_URI, userKey, Activities.STATUS_QUOTED_USER_NICKNAME,
-                Activities.STATUS_QUOTED_USER_KEY, nickname, cv);
-    }
-
-    private static void updateColumn(ContentResolver cr, Uri uri, String userKey, String valueColumn,
-                                     String whereColumn, int value, ContentValues temp) {
-        temp.clear();
-        temp.put(valueColumn, value);
-        cr.update(uri, temp, Expression.equalsArgs(whereColumn).getSQL(),
-                new String[]{userKey});
-    }
-
-
-    private static void updateColumn(ContentResolver cr, Uri uri, String userKey, String valueColumn,
-                                     String whereColumn, String value, ContentValues temp) {
-        temp.clear();
-        temp.put(valueColumn, value);
-        cr.update(uri, temp, Expression.equalsArgs(whereColumn).getSQL(),
-                new String[]{userKey});
-    }
 
     public String getDisplayName(final ParcelableUser user, final boolean nameFirst) {
         return getDisplayName(user.key, user.name, user.screen_name, nameFirst);
@@ -201,21 +150,17 @@ public class UserColorNameManager implements TwidereConstants {
     }
 
     public int getUserColor(@NonNull final String userId) {
-        return colorPreferences.getInt(userId, Color.TRANSPARENT);
+        final Integer cached = colorCache.get(userId);
+        if (cached != null) return cached;
+        final int color = colorPreferences.getInt(userId, Color.TRANSPARENT);
+        colorCache.put(userId, color);
+        return color;
     }
 
     @Nullable
     public String getUserNickname(@NonNull final UserKey userKey) {
         final String userKeyString = userKey.toString();
-        if (nicknamePreferences.contains(userKey.getId())) {
-            String nick = nicknamePreferences.getString(userKey.getId(), null);
-            SharedPreferences.Editor editor = nicknamePreferences.edit();
-            editor.remove(userKey.getId());
-            editor.putString(userKeyString, nick);
-            editor.apply();
-            return nick;
-        }
-        return nicknamePreferences.getString(userKeyString, null);
+        return getUserNicknameInternal(userKeyString);
     }
 
     @Nullable
@@ -235,7 +180,16 @@ public class UserColorNameManager implements TwidereConstants {
     }
 
     private String getUserNicknameInternal(@NonNull final String userId) {
-        return nicknamePreferences.getString(userId, null);
+        final String cached = nicknameCache.get(userId);
+        if (NICKNAME_NULL.equals(cached)) return null;
+        if (cached != null) return cached;
+        final String nickname = nicknamePreferences.getString(userId, null);
+        if (nickname != null) {
+            nicknameCache.put(userId, nickname);
+        } else {
+            nicknameCache.put(userId, NICKNAME_NULL);
+        }
+        return nickname;
     }
 
     public interface UserColorChangedListener {

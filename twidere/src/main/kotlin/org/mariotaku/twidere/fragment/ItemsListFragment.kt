@@ -122,7 +122,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
                 MenuUtils.setupForStatus(context, preferences, menu, status,
-                        twitterWrapper)
+                        twitterWrapper, userColorNameManager)
             }
         }
     }

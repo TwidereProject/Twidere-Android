@@ -268,13 +268,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
             }
 
-            itemContent.drawStart(status.user_color)
+            itemContent.drawStart(colorNameManager.getUserColor(status.user_key))
         } else {
             quotedView.visibility = View.GONE
 
+            val userColor = colorNameManager.getUserColor(status.user_key)
+
             if (status.is_retweet) {
-                val retweetUserColor = status.retweet_user_color
-                val userColor = status.user_color
+                val retweetUserColor = colorNameManager.getUserColor(status.retweeted_by_user_key!!)
                 if (retweetUserColor == 0) {
                     itemContent.drawStart(userColor)
                 } else if (userColor == 0) {
@@ -283,7 +284,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemContent.drawStart(retweetUserColor, userColor)
                 }
             } else {
-                itemContent.drawStart(status.user_color)
+                itemContent.drawStart(userColor)
             }
         }
 

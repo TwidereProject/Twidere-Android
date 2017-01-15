@@ -182,15 +182,6 @@ public final class ContentValuesCreator implements TwidereConstants {
             activity.status_spans = status.spans;
             activity.status_text_plain = status.text_plain;
             activity.status_source = status.source;
-
-            activity.status_user_color = status.user_color;
-            activity.status_retweet_user_color = status.retweet_user_color;
-            activity.status_quoted_user_color = status.quoted_user_color;
-
-            activity.status_user_nickname = status.user_nickname;
-            activity.status_in_reply_to_user_nickname = status.in_reply_to_user_nickname;
-            activity.status_retweet_user_nickname = status.retweet_user_nickname;
-            activity.status_quoted_user_nickname = status.quoted_user_nickname;
         }
         ParcelableActivityValuesCreator.writeTo(activity, values);
         return values;

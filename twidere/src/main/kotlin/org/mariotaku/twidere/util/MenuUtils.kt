@@ -36,6 +36,7 @@ import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.setMenuItemIcon
 import org.mariotaku.twidere.Constants
@@ -44,6 +45,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.DestroyStatusDialogFragment
@@ -113,10 +115,11 @@ object MenuUtils {
                        preferences: SharedPreferencesWrapper,
                        menu: Menu,
                        status: ParcelableStatus,
-                       twitter: AsyncTwitterWrapper) {
+                       twitter: AsyncTwitterWrapper,
+                       manager: UserColorNameManager) {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                 status.account_key, true) ?: return
-        setupForStatus(context, preferences, menu, status, account, twitter)
+        setupForStatus(context, preferences, menu, status, account, twitter, manager)
     }
 
     @UiThread
@@ -125,11 +128,12 @@ object MenuUtils {
                        menu: Menu,
                        status: ParcelableStatus,
                        details: AccountDetails,
-                       twitter: AsyncTwitterWrapper) {
+                       twitter: AsyncTwitterWrapper,
+                       manager: UserColorNameManager) {
         if (menu is ContextMenu) {
             menu.setHeaderTitle(context.getString(R.string.status_menu_title_format,
-                    UserColorNameManager.decideDisplayName(status.user_nickname, status.user_name,
-                            status.user_screen_name, preferences.getBoolean(SharedPreferenceConstants.KEY_NAME_FIRST)),
+                    manager.getDisplayName(status.user_key, status.user_name, status.user_screen_name,
+                            preferences[nameFirstKey]),
                     status.text_unescaped))
         }
         val retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet)

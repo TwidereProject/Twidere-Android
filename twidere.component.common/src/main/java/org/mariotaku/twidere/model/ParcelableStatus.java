@@ -321,34 +321,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @JsonField(name = "account_color")
     @CursorField(Statuses.ACCOUNT_COLOR)
     public int account_color;
-    @ParcelableThisPlease
-    @JsonField(name = "user_color")
-    @CursorField(Statuses.USER_COLOR)
-    public int user_color;
-    @ParcelableThisPlease
-    @JsonField(name = "quoted_user_color")
-    @CursorField(Statuses.QUOTED_USER_COLOR)
-    public int quoted_user_color;
-    @ParcelableThisPlease
-    @JsonField(name = "retweet_user_color")
-    @CursorField(Statuses.RETWEET_USER_COLOR)
-    public int retweet_user_color;
-    @ParcelableThisPlease
-    @JsonField(name = "user_nickname")
-    @CursorField(Statuses.USER_NICKNAME)
-    public String user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "quoted_user_nickname")
-    @CursorField(Statuses.QUOTED_USER_NICKNAME)
-    public String quoted_user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "retweet_user_nickname")
-    @CursorField(Statuses.RETWEET_USER_NICKNAME)
-    public String retweet_user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "in_reply_to_user_nickname")
-    @CursorField(Statuses.IN_REPLY_TO_USER_NICKNAME)
-    public String in_reply_to_user_nickname;
 
     @CursorField(Statuses.INSERTED_DATE)
     public long inserted_date;
@@ -461,13 +433,6 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
                 ", quoted_spans=" + Arrays.toString(quoted_spans) +
                 ", is_filtered=" + is_filtered +
                 ", account_color=" + account_color +
-                ", user_color=" + user_color +
-                ", quoted_user_color=" + quoted_user_color +
-                ", retweet_user_color=" + retweet_user_color +
-                ", user_nickname='" + user_nickname + '\'' +
-                ", quoted_user_nickname='" + quoted_user_nickname + '\'' +
-                ", retweet_user_nickname='" + retweet_user_nickname + '\'' +
-                ", in_reply_to_user_nickname='" + in_reply_to_user_nickname + '\'' +
                 ", inserted_date=" + inserted_date +
                 ", is_pinned_status=" + is_pinned_status +
                 '}';

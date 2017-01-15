@@ -464,7 +464,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper)
+                MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper,
+                        userColorNameManager)
             }
         }
     }

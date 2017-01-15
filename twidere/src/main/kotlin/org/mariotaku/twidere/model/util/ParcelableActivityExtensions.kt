@@ -25,13 +25,5 @@ fun ParcelableActivity.getActivityStatus(): ParcelableStatus? {
         else -> return null
     }
     status.account_color = account_color
-    status.user_color = status_user_color
-    status.retweet_user_color = status_retweet_user_color
-    status.quoted_user_color = status_quoted_user_color
-
-    status.user_nickname = status_user_nickname
-    status.in_reply_to_user_nickname = status_in_reply_to_user_nickname
-    status.retweet_user_nickname = status_retweet_user_nickname
-    status.quoted_user_nickname = status_quoted_user_nickname
     return status
 }

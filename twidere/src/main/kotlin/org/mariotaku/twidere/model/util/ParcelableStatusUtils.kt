@@ -268,21 +268,6 @@ object ParcelableStatusUtils {
 
     fun updateExtraInformation(status: ParcelableStatus, details: AccountDetails, manager: UserColorNameManager) {
         status.account_color = details.color
-        status.user_color = manager.getUserColor(status.user_key)
-        status.user_nickname = manager.getUserNickname(status.user_key)
-
-        if (status.quoted_user_key != null) {
-            status.quoted_user_color = manager.getUserColor(status.quoted_user_key!!)
-            status.quoted_user_nickname = manager.getUserNickname(status.quoted_user_key!!)
-        }
-        if (status.retweeted_by_user_key != null) {
-            status.retweet_user_color = manager.getUserColor(status.retweeted_by_user_key!!)
-            status.retweet_user_nickname = manager.getUserNickname(status.retweeted_by_user_key!!)
-        }
-
-        if (status.in_reply_to_user_key != null) {
-            status.in_reply_to_user_nickname = manager.getUserNickname(status.in_reply_to_user_key!!)
-        }
     }
 
     fun Status.inferExternalUrl(): String? {
