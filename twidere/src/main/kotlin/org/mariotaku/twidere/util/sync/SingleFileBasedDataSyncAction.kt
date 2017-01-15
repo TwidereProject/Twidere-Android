@@ -64,15 +64,15 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
         if (remoteModified) {
             if (remoteDeletedData != null) {
                 localData.removeAllData(remoteDeletedData)
+                removeFromLocal(remoteDeletedData)
                 localModified = localModified or !remoteDeletedData.isDataEmpty()
             }
             if (remoteAddedData != null) {
                 localData.addAllData(remoteAddedData)
+                addToLocal(remoteAddedData)
                 localModified = localModified or !remoteAddedData.isDataEmpty()
             }
         }
-
-        localData.saveToLocal()
 
         val localModifiedTime = System.currentTimeMillis()
 
@@ -125,7 +125,9 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
     // Local save/load operations
     protected abstract fun loadFromLocal(): Data
 
-    protected abstract fun Data.saveToLocal()
+    protected abstract fun addToLocal(data: Data)
+
+    protected abstract fun removeFromLocal(data: Data)
 
     // Remote operations
     @Throws(FileNotFoundException::class, IOException::class)

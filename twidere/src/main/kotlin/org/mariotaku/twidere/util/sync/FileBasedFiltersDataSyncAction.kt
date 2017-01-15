@@ -5,6 +5,8 @@ import android.util.Xml
 import org.mariotaku.ktextension.nullableContentEquals
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.Closeable
 import java.io.File
 import java.io.IOException
@@ -45,8 +47,19 @@ abstract class FileBasedFiltersDataSyncAction<DownloadSession : Closeable, Uploa
         }
     }
 
-    override fun FiltersData.saveToLocal() {
-        this.write(context.contentResolver, deleteOld = true)
+    override fun addToLocal(data: FiltersData) {
+        data.write(context.contentResolver, deleteOld = false)
+    }
+
+    override fun removeFromLocal(data: FiltersData) {
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Users.CONTENT_URI,
+                Filters.Users.USER_KEY, data.users?.map { it.userKey }, null)
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Keywords.CONTENT_URI,
+                Filters.Keywords.VALUE, data.keywords?.map { it.value }, null)
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Sources.CONTENT_URI,
+                Filters.Sources.VALUE, data.sources?.map { it.value }, null)
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Links.CONTENT_URI,
+                Filters.Links.VALUE, data.links?.map { it.value }, null)
     }
 
     override fun newData(): FiltersData {

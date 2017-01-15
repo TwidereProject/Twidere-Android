@@ -19,11 +19,18 @@ abstract class FileBasedPreferencesValuesSyncAction<DownloadSession : Closeable,
 
     override final val whatData: String = processor.whatData
 
-    override final fun MutableMap<String, String>.saveToLocal() {
+    override fun addToLocal(data: MutableMap<String, String>) {
         val editor = preferences.edit()
-        editor.clear()
-        for ((k, v) in this) {
+        for ((k, v) in data) {
             processor.saveValue(editor, k, v)
+        }
+        editor.apply()
+    }
+
+    override fun removeFromLocal(data: MutableMap<String, String>) {
+        val editor = preferences.edit()
+        for ((k, v) in data) {
+            editor.remove(k)
         }
         editor.apply()
     }

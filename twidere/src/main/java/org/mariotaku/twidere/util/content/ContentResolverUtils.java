@@ -23,6 +23,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.mariotaku.sqliteqb.library.ArgsArray;
@@ -41,14 +42,14 @@ public class ContentResolverUtils {
     }
 
     public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                     @NonNull final String inColumn, final Collection<T> colValues,
+                                     @NonNull final String inColumn, @Nullable final Collection<T> colValues,
                                      final String extraWhere) {
         if (colValues == null) return 0;
         return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere);
     }
 
     public static int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                 @NonNull final String inColumn, final Object colValues,
+                                 @NonNull final String inColumn, @Nullable final Object colValues,
                                  final String extraWhere) {
         if (colValues == null) return 0;
         final int colValuesLength = Array.getLength(colValues), blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
