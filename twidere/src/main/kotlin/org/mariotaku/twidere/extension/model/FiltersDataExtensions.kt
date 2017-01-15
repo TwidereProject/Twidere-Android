@@ -45,20 +45,32 @@ fun FiltersData.read(cr: ContentResolver, loadSubscription: Boolean = false) {
     this.links = readBaseItems(Filters.Links.CONTENT_URI)
 }
 
-fun FiltersData.write(cr: ContentResolver) {
+fun FiltersData.write(cr: ContentResolver, deleteOld: Boolean = true) {
     if (users != null) {
+        if (deleteOld) {
+            cr.delete(Filters.Users.CONTENT_URI, null, null)
+        }
         ContentResolverUtils.bulkInsert(cr, Filters.Users.CONTENT_URI,
                 users.map(`FiltersData$UserItemValuesCreator`::create))
     }
     if (keywords != null) {
+        if (deleteOld) {
+            cr.delete(Filters.Keywords.CONTENT_URI, null, null)
+        }
         ContentResolverUtils.bulkInsert(cr, Filters.Keywords.CONTENT_URI,
                 keywords.map(`FiltersData$BaseItemValuesCreator`::create))
     }
     if (sources != null) {
+        if (deleteOld) {
+            cr.delete(Filters.Sources.CONTENT_URI, null, null)
+        }
         ContentResolverUtils.bulkInsert(cr, Filters.Sources.CONTENT_URI,
                 sources.map(`FiltersData$BaseItemValuesCreator`::create))
     }
     if (links != null) {
+        if (deleteOld) {
+            cr.delete(Filters.Links.CONTENT_URI, null, null)
+        }
         ContentResolverUtils.bulkInsert(cr, Filters.Links.CONTENT_URI,
                 links.map(`FiltersData$BaseItemValuesCreator`::create))
     }

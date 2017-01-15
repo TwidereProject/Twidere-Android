@@ -46,7 +46,7 @@ abstract class FileBasedFiltersDataSyncAction<DownloadSession : Closeable, Uploa
     }
 
     override fun FiltersData.saveToLocal() {
-        this.write(context.contentResolver)
+        this.write(context.contentResolver, deleteOld = true)
     }
 
     override fun newData(): FiltersData {
