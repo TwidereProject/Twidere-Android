@@ -903,14 +903,6 @@ public interface TwidereDataStore {
         String IS_GAP = "status_is_gap";
 
         String ACCOUNT_COLOR = "account_color";
-        String STATUS_USER_COLOR = "status_user_color";
-        String STATUS_QUOTED_USER_COLOR = "status_quoted_user_color";
-        String STATUS_RETWEET_USER_COLOR = "status_retweet_user_color";
-
-        String STATUS_USER_NICKNAME = "status_user_nickname";
-        String STATUS_QUOTED_USER_NICKNAME = "status_quoted_user_nickname";
-        String STATUS_RETWEET_USER_NICKNAME = "status_retweet_user_nickname";
-        String STATUS_IN_REPLY_TO_USER_NICKNAME = "status_in_reply_to_user_nickname";
 
         String MIN_SORT_POSITION = "min_position";
         String MAX_SORT_POSITION = "max_position";

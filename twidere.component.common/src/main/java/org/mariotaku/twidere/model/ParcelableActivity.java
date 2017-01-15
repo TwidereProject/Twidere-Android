@@ -142,36 +142,6 @@ public class ParcelableActivity implements Comparable<ParcelableActivity>, Parce
     @JsonField(name = "account_color")
     @CursorField(Activities.ACCOUNT_COLOR)
     public int account_color;
-    @ParcelableThisPlease
-    @JsonField(name = "status_user_color")
-    @CursorField(Activities.STATUS_USER_COLOR)
-    public int status_user_color;
-    @ParcelableThisPlease
-    @JsonField(name = "status_quoted_user_color")
-    @CursorField(Activities.STATUS_QUOTED_USER_COLOR)
-    public int status_quoted_user_color;
-    @ParcelableThisPlease
-    @JsonField(name = "status_retweet_user_color")
-    @CursorField(Activities.STATUS_RETWEET_USER_COLOR)
-    public int status_retweet_user_color;
-
-    @ParcelableThisPlease
-    @JsonField(name = "status_user_nickname")
-    @CursorField(Activities.STATUS_USER_NICKNAME)
-    public String status_user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "status_quoted_user_nickname")
-    @CursorField(Activities.STATUS_QUOTED_USER_NICKNAME)
-    public String status_quoted_user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "status_retweet_user_nickname")
-    @CursorField(Activities.STATUS_RETWEET_USER_NICKNAME)
-    public String status_retweet_user_nickname;
-    @ParcelableThisPlease
-    @JsonField(name = "status_in_reply_to_user_nickname")
-    @CursorField(Activities.STATUS_IN_REPLY_TO_USER_NICKNAME)
-    public String status_in_reply_to_user_nickname;
-
 
     @CursorField(value = Activities.STATUS_QUOTE_SPANS, converter = LoganSquareCursorFieldConverter.class)
     public SpanItem[] status_quote_spans;
