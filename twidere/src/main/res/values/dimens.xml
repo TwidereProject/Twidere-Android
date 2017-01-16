@@ -36,11 +36,6 @@
     <dimen name="minimum_element_size">48dp</dimen>
     <dimen name="drawer_width_home">288dp</dimen>
     <dimen name="drawer_offset_home">72dp</dimen>
-    <dimen name="accounts_drawer_name_size">16sp</dimen>
-    <dimen name="accounts_drawer_screen_name_size">14sp</dimen>
-    <dimen name="accounts_drawer_default_indicator_size">12sp</dimen>
-    <dimen name="accounts_drawer_switch_label_size">16sp</dimen>
-    <dimen name="accounts_drawer_child_size">16sp</dimen>
     <dimen name="float_action_button_size">56dp</dimen>
     <dimen name="float_action_button_icon_size">24dp</dimen>
     <dimen name="action_button_size">56dp</dimen>
@@ -94,6 +89,8 @@
     <dimen name="toolbar_elevation">8dp</dimen>
 
     <dimen name="element_size_quick_search_bar_item_icon">40dp</dimen>
+
+    <dimen name="home_page_margin">1dp</dimen>
 
     <dimen name="settings_panel_width_entries">240dp</dimen>
     <dimen name="settings_panel_margin_start_details">@dimen/element_size_normal</dimen>

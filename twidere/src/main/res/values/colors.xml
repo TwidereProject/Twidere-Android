@@ -42,4 +42,6 @@
     <color name="quote_indicator_background_dark">#40aaaaaa</color>
     <color name="quote_indicator_background_light">#40333333</color>
 
+    <color name="home_page_margin_color">#20333333</color>
+
 </resources>

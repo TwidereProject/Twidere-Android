@@ -795,7 +795,13 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        //        mViewPager.setOffscreenPageLimit(mPagerAdapter.getCount() / 2);
+        if (pagerAdapter.getPageWidth(0) < 1) {
+            mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
+            mainPager.setPageMarginDrawable(R.color.home_page_margin_color)
+        } else {
+            mainPager.pageMargin = 0
+            mainPager.setPageMarginDrawable(null)
+        }
     }
 
     private fun setupSlidingMenu() {
