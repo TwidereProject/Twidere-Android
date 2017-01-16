@@ -34,6 +34,7 @@ import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.CompoundButton.OnCheckedChangeListener
+import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.apache.commons.lang3.StringUtils
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
@@ -42,22 +43,24 @@ import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 
-class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, OnSharedPreferenceChangeListener {
+class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFragment.HostMappingAdapter>(),
+        AdapterView.OnItemClickListener, MultiChoiceModeListener, OnSharedPreferenceChangeListener {
 
-    private var mAdapter: HostMappingAdapter? = null
-    private var mHostMapping: SharedPreferencesWrapper? = null
+    private lateinit var hostMapping: SharedPreferencesWrapper
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        mHostMapping = SharedPreferencesWrapper.getInstance(activity,
+        hostMapping = SharedPreferencesWrapper.getInstance(activity,
                 Constants.HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        mHostMapping!!.registerOnSharedPreferenceChangeListener(this)
-        mAdapter = HostMappingAdapter(activity)
-        listAdapter = mAdapter
+        hostMapping.registerOnSharedPreferenceChangeListener(this)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
         reloadHostMappings()
+    }
+
+    override fun onCreateAdapter(context: Context): HostMappingAdapter {
+        return HostMappingAdapter(activity)
     }
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -73,15 +76,12 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
     override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.delete -> {
-                val editor = mHostMapping!!.edit()
+                val editor = hostMapping.edit()
                 val array = listView!!.checkedItemPositions ?: return false
-                var i = 0
-                val size = array.size()
-                while (i < size) {
+                for (i in 0 until array.size()) {
                     if (array.valueAt(i)) {
-                        editor.remove(mAdapter!!.getItem(i))
+                        editor.remove(adapter.getItem(i).first)
                     }
-                    i++
                 }
                 editor.apply()
                 reloadHostMappings()
@@ -102,9 +102,8 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
         inflater!!.inflate(R.menu.menu_host_mapping, menu)
     }
 
-    override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
-        val host = mAdapter!!.getItem(position)
-        val address = mAdapter!!.getAddress(host)
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val (host, address) = adapter.getItem(position)
         val args = Bundle()
         args.putString(EXTRA_HOST, host)
         args.putString(EXTRA_ADDRESS, address)
@@ -135,8 +134,16 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
     }
 
     fun reloadHostMappings() {
-        if (mAdapter == null) return
-        mAdapter!!.reload()
+        adapter.clear()
+        adapter.addAll(hostMapping.all.mapNotNull { entry ->
+            val value = entry.value?.toString() ?: return@mapNotNull null
+            return@mapNotNull Pair(entry.key, value)
+        })
+        if (adapter.isEmpty) {
+            showEmpty(R.drawable.ic_info_info_generic, getString(R.string.add_host_mapping))
+        } else {
+            showContent()
+        }
     }
 
     private fun updateTitle(mode: ActionMode?) {
@@ -235,37 +242,21 @@ class HostMappingsListFragment : BaseListFragment(), MultiChoiceModeListener, On
         }
     }
 
-    internal class HostMappingAdapter(context: Context) : ArrayAdapter<String>(context, android.R.layout.simple_list_item_activated_2) {
-
-        private val mHostMapping: SharedPreferences
-
-        init {
-            mHostMapping = context.getSharedPreferences(Constants.HOST_MAPPING_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        }
+    class HostMappingAdapter(context: Context) : ArrayAdapter<Pair<String, String>>(context,
+            android.R.layout.simple_list_item_activated_2) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = super.getView(position, convertView, parent)
             val text1 = view.findViewById(android.R.id.text1) as TextView
             val text2 = view.findViewById(android.R.id.text2) as TextView
-            val key = getItem(position)
+            val (key, value) = getItem(position)
             text1.text = key
-            val value = getAddress(key)
-            if (StringUtils.equals(key, value)) {
+            if (key == value) {
                 text2.setText(R.string.excluded)
             } else {
                 text2.text = value
             }
             return view
-        }
-
-        fun reload() {
-            clear()
-            val all = mHostMapping.all
-            addAll(all.keys)
-        }
-
-        fun getAddress(key: String): String {
-            return mHostMapping.getString(key, null)
         }
     }
 

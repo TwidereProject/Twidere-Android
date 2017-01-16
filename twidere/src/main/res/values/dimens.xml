@@ -95,4 +95,7 @@
 
     <dimen name="element_size_quick_search_bar_item_icon">40dp</dimen>
 
+    <dimen name="settings_panel_width_entries">240dp</dimen>
+    <dimen name="settings_panel_margin_start_details">@dimen/element_size_normal</dimen>
+
 </resources>

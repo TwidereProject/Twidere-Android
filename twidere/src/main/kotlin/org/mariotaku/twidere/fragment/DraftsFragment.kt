@@ -43,6 +43,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import kotlinx.android.synthetic.main.fragment_drafts.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -52,6 +53,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.textSizeKey
 import org.mariotaku.twidere.extension.invertSelection
 import org.mariotaku.twidere.extension.selectAll
 import org.mariotaku.twidere.extension.selectNone
@@ -64,7 +66,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.AsyncTaskUtils
 import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.Utils.getDefaultTextSize
 import java.io.File
 import java.util.*
 
@@ -75,7 +76,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter = DraftsAdapter(activity).apply {
-            textSize = preferences.getInt(KEY_TEXT_SIZE, getDefaultTextSize(activity)).toFloat()
+            textSize = preferences[textSizeKey].toFloat()
         }
 
         listView.adapter = adapter

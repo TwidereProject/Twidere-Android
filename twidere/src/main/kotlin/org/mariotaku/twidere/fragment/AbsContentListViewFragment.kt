@@ -113,9 +113,6 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val view = view!!
-        val context = view.context
         val backgroundColor = ThemeUtils.getThemeBackgroundColor(context)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)

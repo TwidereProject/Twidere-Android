@@ -568,11 +568,6 @@ public final class Utils implements Constants {
         return null;
     }
 
-    public static int getDefaultTextSize(final Context context) {
-        if (context == null) return 15;
-        return context.getResources().getInteger(R.integer.default_text_size);
-    }
-
     public static String getErrorMessage(final Context context, final CharSequence message) {
         if (context == null) return ParseUtils.parseString(message);
         if (TextUtils.isEmpty(message)) return context.getString(R.string.error_unknown_error);

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -31,8 +32,10 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
-import android.widget.ListView
+import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -42,24 +45,25 @@ import org.mariotaku.twidere.loader.ExtensionsListLoader
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
 import org.mariotaku.twidere.util.PermissionsManager
 
-class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<ExtensionInfo>> {
+class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
+        LoaderCallbacks<List<ExtensionInfo>>, AdapterView.OnItemClickListener {
 
     private var packageManager: PackageManager? = null
-    private var permissionsManager: PermissionsManager? = null
 
+    private var permissionsManager: PermissionsManager? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         packageManager = activity.packageManager
         permissionsManager = PermissionsManager(activity)
-        listAdapter = ExtensionsAdapter(activity)
-        listView.setOnCreateContextMenuListener(this)
+
+        listView.onItemClickListener = this
+
         loaderManager.initLoader(0, null, this)
-        setEmptyText(getString(R.string.no_extension_installed))
-        setListShown(false)
+        showProgress()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onCreateAdapter(context: Context): ExtensionsAdapter {
+        return ExtensionsAdapter(activity)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {
@@ -67,28 +71,32 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
     }
 
     override fun onLoadFinished(loader: Loader<List<ExtensionInfo>>, data: List<ExtensionInfo>) {
-        (listAdapter as ExtensionsAdapter).setData(data)
-        setListShown(true)
+        adapter.setData(data)
+        if (data.isNullOrEmpty()) {
+            showEmpty(R.drawable.ic_info_info_generic, getString(R.string.no_extension_installed))
+        } else {
+            showContent()
+        }
     }
 
     override fun onLoaderReset(loader: Loader<List<ExtensionInfo>>) {
-        (listAdapter as ExtensionsAdapter).setData(null)
+        adapter.setData(null)
     }
 
-    override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
-        openSettings((listAdapter as ExtensionsAdapter).getItem(position))
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        openSettings(adapter.getItem(position))
     }
 
     override fun onResume() {
         super.onResume()
-        (listAdapter as ExtensionsAdapter).notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
         val inflater = MenuInflater(v.context)
         inflater.inflate(R.menu.action_extension, menu)
         val adapterMenuInfo = menuInfo as AdapterContextMenuInfo
-        val extensionInfo = (listAdapter as ExtensionsAdapter).getItem(adapterMenuInfo.position)
+        val extensionInfo = adapter.getItem(adapterMenuInfo.position)
         if (extensionInfo.pname != null && extensionInfo.settings != null) {
             val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
             intent.setClassName(extensionInfo.pname, extensionInfo.settings)
@@ -101,7 +109,7 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val adapterMenuInfo = item!!.menuInfo as AdapterContextMenuInfo
-        val extensionInfo = (listAdapter as ExtensionsAdapter).getItem(adapterMenuInfo.position)
+        val extensionInfo = adapter.getItem(adapterMenuInfo.position)
         when (item.itemId) {
             R.id.settings -> {
                 openSettings(extensionInfo)
@@ -111,7 +119,7 @@ class ExtensionsListFragment : BaseListFragment(), LoaderCallbacks<List<Extensio
             }
             R.id.revoke -> {
                 permissionsManager!!.revoke(extensionInfo.pname)
-                (listAdapter as ExtensionsAdapter).notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
             }
             else -> {
                 return false

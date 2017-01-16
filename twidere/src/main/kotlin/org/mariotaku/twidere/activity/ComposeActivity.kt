@@ -244,7 +244,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         setMenu()
         updateTextCount()
-        val textSize = preferences.getInt(KEY_TEXT_SIZE, Utils.getDefaultTextSize(this))
+        val textSize = preferences[textSizeKey]
         editText.textSize = textSize * 1.25f
     }
 

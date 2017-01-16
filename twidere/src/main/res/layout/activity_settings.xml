@@ -25,7 +25,7 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_width="240dp"
+        android:layout_width="@dimen/settings_panel_width_entries"
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
@@ -43,8 +43,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:layout_marginLeft="@dimen/element_size_normal"
-        android:layout_marginStart="@dimen/element_size_normal"
+        android:layout_marginLeft="@dimen/settings_panel_margin_start_details"
+        android:layout_marginStart="@dimen/settings_panel_margin_start_details"
         android:clickable="true"
         tools:background="?android:colorBackground"/>
 </android.support.v4.widget.SlidingPaneLayout>

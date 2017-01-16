@@ -3,7 +3,6 @@
 
     <integer name="nyan_star_rows">15</integer>
     <integer name="nyan_star_cols">19</integer>
-    <integer name="default_text_size">17</integer>
     <integer name="unread_count_text_size">12</integer>
     <integer name="default_multi_column_list_count">2</integer>
     <integer name="theme_preview_pane_space_weight">2</integer>
