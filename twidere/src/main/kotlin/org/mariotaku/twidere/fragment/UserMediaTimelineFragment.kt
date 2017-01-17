@@ -137,7 +137,13 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        IntentUtils.openStatus(context, adapter.getStatus(position)!!, null)
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(context, status, null)
+    }
+
+    override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(context, status.account_key, status.quoted_id)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

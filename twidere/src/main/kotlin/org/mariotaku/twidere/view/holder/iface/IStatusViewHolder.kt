@@ -19,10 +19,8 @@
 
 package org.mariotaku.twidere.view.holder.iface
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
-
 import org.mariotaku.twidere.adapter.iface.ContentCardClickListener
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -30,7 +28,6 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.CardMediaContainer
-import org.mariotaku.twidere.view.holder.GapViewHolder
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -55,42 +52,15 @@ interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
     interface StatusClickListener : ContentCardClickListener, IGapSupportedAdapter.GapClickListener {
 
-        fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int)
+        fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {}
 
-        fun onStatusClick(holder: IStatusViewHolder, position: Int)
+        fun onStatusClick(holder: IStatusViewHolder, position: Int) {}
 
-        fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean
+        fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {}
 
-        fun onUserProfileClick(holder: IStatusViewHolder, position: Int)
+        fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean = false
+
+        fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {}
     }
 
-    abstract class SimpleStatusClickListener : StatusClickListener {
-        override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
-
-        }
-
-        override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-
-        }
-
-        override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
-            return false
-        }
-
-        override fun onGapClick(holder: GapViewHolder, position: Int) {
-
-        }
-
-        override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
-
-        }
-
-        override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-
-        }
-
-        override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
-
-        }
-    }
 }

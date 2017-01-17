@@ -7,3 +7,4 @@ import org.mariotaku.twidere.model.ParcelableStatus
  */
 val ParcelableStatus.media_type: Int
     get() = media?.firstOrNull()?.type ?: 0
+

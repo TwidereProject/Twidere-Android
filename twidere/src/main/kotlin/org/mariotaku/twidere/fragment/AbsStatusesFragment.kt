@@ -399,7 +399,13 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        IntentUtils.openStatus(activity, adapter.getStatus(position)!!, null)
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(activity, status, null)
+    }
+
+    override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

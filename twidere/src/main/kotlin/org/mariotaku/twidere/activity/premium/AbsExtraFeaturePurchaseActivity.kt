@@ -2,11 +2,9 @@ package org.mariotaku.twidere.activity.premium
 
 import android.content.Context
 import android.content.Intent
-import android.os.Parcel
-import android.os.Parcelable
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants
-import paperparcel.PaperParcel
+import org.mariotaku.twidere.model.premium.PurchaseResult
 
 /**
  * Created by mariotaku on 2017/1/8.
@@ -23,19 +21,6 @@ abstract class AbsExtraFeaturePurchaseActivity : BaseActivity() {
     protected fun finishWithResult(result: PurchaseResult) {
         setResult(RESULT_OK, Intent().putExtra(EXTRA_PURCHASE_RESULT, result))
         finish()
-    }
-
-    @PaperParcel
-    data class PurchaseResult(val feature: String, val price: Double, val currency: String) : Parcelable {
-        companion object {
-            @JvmField val CREATOR = PaperParcelAbsExtraFeaturePurchaseActivity_PurchaseResult.CREATOR
-        }
-
-        override fun describeContents() = 0
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            PaperParcelAbsExtraFeaturePurchaseActivity_PurchaseResult.writeToParcel(this, dest, flags)
-        }
     }
 
     companion object {

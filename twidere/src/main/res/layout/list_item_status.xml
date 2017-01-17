@@ -223,6 +223,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/mediaPreview"
             android:layout_marginTop="@dimen/element_spacing_small"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
             android:paddingBottom="@dimen/element_spacing_small"
             android:paddingEnd="@dimen/element_spacing_small"
             android:paddingLeft="@dimen/element_spacing_normal"

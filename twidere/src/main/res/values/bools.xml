@@ -3,7 +3,9 @@
 
     <bool name="default_display_tab_label">false</bool>
     <bool name="support_new_document_intent">false</bool>
-    <bool name="home_display_icon">false</bool>
     <bool name="has_font_family">false</bool>
+
+    <!-- Config for home screen -->
+    <bool name="home_tab_has_multiple_columns">false</bool>
 
 </resources>

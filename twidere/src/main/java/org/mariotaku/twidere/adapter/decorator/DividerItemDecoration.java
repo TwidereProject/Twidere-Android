@@ -17,7 +17,6 @@
 package org.mariotaku.twidere.adapter.decorator;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -26,6 +25,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.State;
+import android.support.v7.widget.TintTypedArray;
 import android.view.View;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
@@ -46,7 +46,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private int mDecorationStart = -1, mDecorationEnd = -1, mDecorationEndOffset;
 
     public DividerItemDecoration(Context context, int orientation) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
+        final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, null, ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
         setOrientation(orientation);

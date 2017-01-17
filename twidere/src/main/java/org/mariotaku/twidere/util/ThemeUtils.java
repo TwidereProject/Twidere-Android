@@ -169,7 +169,12 @@ public class ThemeUtils implements Constants {
     }
 
     public static Drawable getSelectableItemBackgroundDrawable(final Context context) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground});
+        return getDrawableFromThemeAttribute(context, android.R.attr.selectableItemBackground);
+    }
+
+
+    public static Drawable getDrawableFromThemeAttribute(final Context context, int attr) {
+        final TypedArray a = context.obtainStyledAttributes(new int[]{attr});
         try {
             return a.getDrawable(0);
         } finally {

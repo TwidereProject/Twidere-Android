@@ -46,10 +46,15 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
     override fun onCreateAdapter(context: Context): VariousItemsAdapter {
         val adapter = VariousItemsAdapter(context)
         val dummyItemAdapter = adapter.dummyAdapter
-        dummyItemAdapter.statusClickListener = object : IStatusViewHolder.SimpleStatusClickListener() {
+        dummyItemAdapter.statusClickListener = object : IStatusViewHolder.StatusClickListener {
             override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
                 val status = dummyItemAdapter.getStatus(position) ?: return
                 IntentUtils.openStatus(getContext(), status, null)
+            }
+
+            override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+                val status = dummyItemAdapter.getStatus(position) ?: return
+                IntentUtils.openStatus(getContext(), status.account_key, status.quoted_id)
             }
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {

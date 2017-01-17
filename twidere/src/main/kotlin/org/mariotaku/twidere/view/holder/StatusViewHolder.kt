@@ -444,6 +444,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         favoriteButton.setOnClickListener(eventListener)
 
         mediaLabel.setOnClickListener(eventListener)
+
+        quotedView.setOnClickListener(eventListener)
     }
 
 
@@ -576,6 +578,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             when (v) {
                 holder.itemContent -> {
                     listener.onStatusClick(holder, position)
+                }
+                holder.quotedView -> {
+                    listener.onQuotedStatusClick(holder, position)
                 }
                 holder.itemMenu -> {
                     listener.onItemMenuClick(holder, v, position)

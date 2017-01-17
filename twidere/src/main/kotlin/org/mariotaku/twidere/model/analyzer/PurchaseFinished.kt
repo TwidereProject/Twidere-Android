@@ -1,7 +1,8 @@
 package org.mariotaku.twidere.model.analyzer
 
 import android.content.Intent
-import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
+import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity.Companion.EXTRA_PURCHASE_RESULT
+import org.mariotaku.twidere.model.premium.PurchaseResult
 import org.mariotaku.twidere.util.Analyzer
 
 /**
@@ -18,8 +19,7 @@ data class PurchaseFinished(val productName: String) : Analyzer.Event {
         const val NAME_EXTRA_FEATURES = "Enhanced Features"
 
         fun create(data: Intent): PurchaseFinished {
-            val purchaseResult: AbsExtraFeaturePurchaseActivity.PurchaseResult
-                    = data.getParcelableExtra(AbsExtraFeaturePurchaseActivity.EXTRA_PURCHASE_RESULT)
+            val purchaseResult: PurchaseResult = data.getParcelableExtra(EXTRA_PURCHASE_RESULT)
             val result = PurchaseFinished(purchaseResult.feature)
             result.price = purchaseResult.price
             result.currency = purchaseResult.currency

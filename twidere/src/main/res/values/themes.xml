@@ -11,10 +11,9 @@
         <item name="lightThemeResource">@style/Theme.Twidere.Light.Dialog</item>
     </style>
 
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar" parent="Theme.Twidere.DialogWhenLarge.NoActionBar.DayNight">
-        <item name="darkThemeResource">@style/Theme.Twidere.Dark.DialogWhenLarge.NoActionBar</item>
-        <item name="lightThemeResource">@style/Theme.Twidere.Light.DialogWhenLarge.NoActionBar
-        </item>
+    <style name="Theme.Twidere.Content" parent="Theme.Twidere.Content.DayNight">
+        <item name="darkThemeResource">@style/Theme.Twidere.Dark.Content</item>
+        <item name="lightThemeResource">@style/Theme.Twidere.Light.Content</item>
     </style>
 
     <style name="Theme.Twidere.NoActionBar" parent="Theme.Twidere.NoActionBar.DayNight">

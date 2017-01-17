@@ -303,7 +303,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     }
 
-
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
         AbsStatusesFragment.handleStatusActionClick(context, fragmentManager, twitterWrapper,
@@ -311,7 +310,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        IntentUtils.openStatus(activity, adapter.getStatus(position)!!, null)
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
+    }
+
+    override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+        val status = adapter.getStatus(position) ?: return
+        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
@@ -2056,29 +2061,33 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     }
 
-    class StatusActivitySummaryLoader(context: Context, private val mAccountKey: UserKey, private val mStatusId: String) : AsyncTaskLoader<StatusActivity>(context) {
+    class StatusActivitySummaryLoader(
+            context: Context,
+            private val accountKey: UserKey,
+            private val statusId: String
+    ) : AsyncTaskLoader<StatusActivity>(context) {
 
         override fun loadInBackground(): StatusActivity? {
             val context = context
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), mAccountKey, true) ?: return null
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return null
             if (AccountType.TWITTER != details.type) {
                 return null
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, mAccountKey) ?: return null
+            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return null
             val paging = Paging()
             paging.setCount(10)
-            val activitySummary = StatusActivity(mStatusId, emptyList())
+            val activitySummary = StatusActivity(statusId, emptyList())
             val retweeters = ArrayList<ParcelableUser>()
             try {
-                for (status in twitter.getRetweets(mStatusId, paging)) {
-                    val user = ParcelableUserUtils.fromUser(status.user, mAccountKey)
+                for (status in twitter.getRetweets(statusId, paging)) {
+                    val user = ParcelableUserUtils.fromUser(status.user, accountKey)
                     if (!DataStoreUtils.isFilteringUser(context, user.key.toString())) {
                         retweeters.add(user)
                     }
                 }
                 activitySummary.retweeters = retweeters
                 val countValues = ContentValues()
-                val status = twitter.showStatus(mStatusId)
+                val status = twitter.showStatus(statusId)
                 activitySummary.favoriteCount = status.favoriteCount
                 activitySummary.retweetCount = status.retweetCount
                 activitySummary.replyCount = status.replyCount
@@ -2093,7 +2102,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                         Expression.or(
                                 Expression.equalsArgs(Statuses.STATUS_ID),
                                 Expression.equalsArgs(Statuses.RETWEET_ID)))
-                val statusWhereArgs = arrayOf(mAccountKey.toString(), mStatusId, mStatusId)
+                val statusWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
                 cr.update(Statuses.CONTENT_URI, countValues, statusWhere.sql, statusWhereArgs)
                 val activityWhere = Expression.and(
                         Expression.equalsArgs(Activities.ACCOUNT_KEY),
@@ -2102,7 +2111,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Activities.STATUS_RETWEET_ID)))
 
                 val pStatus = ParcelableStatusUtils.fromStatus(status,
-                        mAccountKey, false)
+                        accountKey, false)
                 cr.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(pStatus))
 
                 val activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,
@@ -2145,7 +2154,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             var retweetCount: Long = 0
     ) {
 
-
         fun isStatus(status: ParcelableStatus): Boolean {
             return TextUtils.equals(statusId, if (status.is_retweet) status.retweet_id else status.id)
         }
@@ -2153,13 +2161,18 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     data class ReadPosition(var statusId: Long, var offsetTop: Int)
 
-    private class StatusDividerItemDecoration(context: Context, private val statusAdapter: StatusAdapter, orientation: Int) : DividerItemDecoration(context, orientation) {
+    private class StatusDividerItemDecoration(
+            context: Context,
+            private val statusAdapter: StatusAdapter,
+            orientation: Int
+    ) : DividerItemDecoration(context, orientation) {
 
         override fun isDividerEnabled(childPos: Int): Boolean {
             if (childPos >= statusAdapter.itemCount || childPos < 0) return false
             val itemType = statusAdapter.getItemType(childPos)
             when (itemType) {
-                StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE, StatusAdapter.ITEM_IDX_REPLY_ERROR, StatusAdapter.ITEM_IDX_SPACE -> return false
+                StatusAdapter.ITEM_IDX_REPLY_LOAD_MORE, StatusAdapter.ITEM_IDX_REPLY_ERROR,
+                StatusAdapter.ITEM_IDX_SPACE -> return false
             }
             return true
         }

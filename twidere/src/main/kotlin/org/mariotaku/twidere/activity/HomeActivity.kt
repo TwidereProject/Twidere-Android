@@ -94,7 +94,8 @@ import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallb
 import org.mariotaku.twidere.view.HomeDrawerLayout
 import org.mariotaku.twidere.view.TabPagerIndicator
 
-class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback, OnLongClickListener, DrawerLayout.DrawerListener {
+class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, SupportFragmentCallback,
+        OnLongClickListener, DrawerLayout.DrawerListener {
 
     private val accountUpdatedListener = AccountUpdatedListener(this)
 
@@ -338,7 +339,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         drawerToggle = ActionBarDrawerToggle(this, homeMenu, R.string.open_accounts_dashboard,
                 R.string.close_accounts_dashboard)
         homeContent.setOnFitSystemWindowsListener(this)
-        pagerAdapter = SupportTabsAdapter(this, supportFragmentManager, mainTabs, tabColumns)
+        pagerAdapter = SupportTabsAdapter(this, supportFragmentManager, mainTabs)
         mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
@@ -533,7 +534,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun onDestroy() {
-
         stopService(Intent(this, StreamingService::class.java))
 
         // Delete unused items in databases.
@@ -795,12 +795,14 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        if (pagerAdapter.getPageWidth(0) < 1) {
+        if (resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
-            mainPager.setPageMarginDrawable(R.color.home_page_margin_color)
+            mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
+            pagerAdapter.pageWidth = resources.getDimension(R.dimen.preferred_tab_column_width) / resources.displayMetrics.widthPixels
         } else {
             mainPager.pageMargin = 0
             mainPager.setPageMarginDrawable(null)
+            pagerAdapter.pageWidth = 1f
         }
     }
 

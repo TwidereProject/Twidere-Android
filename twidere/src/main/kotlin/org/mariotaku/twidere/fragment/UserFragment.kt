@@ -315,7 +315,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followContainer.follow.compoundDrawablePadding = Math.round(followContainer.follow.textSize * 0.25f)
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
 
-        val resolver = context.contentResolver
+        val resolver = context.applicationContext.contentResolver
         task {
             resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
             resolver.insert(CachedRelationships.CONTENT_URI, ParcelableRelationshipValuesCreator.create(userRelationship))

@@ -358,6 +358,11 @@ abstract class AbsActivitiesFragment protected constructor() :
         IntentUtils.openStatus(context, status, null)
     }
 
+    override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+        val status = getActivityStatus(position) ?: return
+        IntentUtils.openStatus(context, status.account_key, status.quoted_id)
+    }
+
     private fun getActivityStatus(position: Int): ParcelableStatus? {
         return adapter.getActivity(position)?.getActivityStatus()
     }

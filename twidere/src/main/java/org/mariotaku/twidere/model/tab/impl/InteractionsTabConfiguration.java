@@ -119,14 +119,19 @@ public class InteractionsTabConfiguration extends TabConfiguration {
             final View view = getView();
             final CheckBox checkBox = (CheckBox) view.findViewById(android.R.id.checkbox);
             final TextView titleView = (TextView) view.findViewById(android.R.id.title);
+            final TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
             view.setEnabled(hasOfficial);
             titleView.setEnabled(hasOfficial);
+            summaryView.setEnabled(hasOfficial);
             checkBox.setEnabled(hasOfficial);
             if (hasOfficial) {
                 checkBox.setChecked(valueBackup);
+                summaryView.setVisibility(View.GONE);
             } else {
                 valueBackup = checkBox.isChecked();
                 checkBox.setChecked(true);
+                summaryView.setText(R.string.summary_interactions_not_available);
+                summaryView.setVisibility(View.VISIBLE);
             }
         }
 

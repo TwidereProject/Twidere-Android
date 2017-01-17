@@ -5,7 +5,7 @@
 
     <style name="Theme.Twidere.Dialog.DayNight" parent="Theme.Twidere.Light.Dialog"/>
 
-    <style name="Theme.Twidere.DialogWhenLarge.NoActionBar.DayNight" parent="Theme.Twidere.Light.DialogWhenLarge.NoActionBar"/>
+    <style name="Theme.Twidere.Content.DayNight" parent="Theme.Twidere.Light.Content"/>
 
     <style name="Theme.Twidere.NoActionBar.DayNight" parent="Theme.Twidere.Light.NoActionBar"/>
 

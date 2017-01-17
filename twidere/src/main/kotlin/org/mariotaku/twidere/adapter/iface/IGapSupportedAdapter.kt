@@ -37,13 +37,12 @@ interface IGapSupportedAdapter {
 
     interface GapClickListener {
 
-        fun onGapClick(holder: GapViewHolder, position: Int)
+        fun onGapClick(holder: GapViewHolder, position: Int) {}
 
     }
 
     companion object {
-
-        val ITEM_VIEW_TYPE_GAP = 1
+        const val ITEM_VIEW_TYPE_GAP = 1
     }
 
 

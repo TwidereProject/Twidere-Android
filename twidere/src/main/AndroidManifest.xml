@@ -297,7 +297,7 @@
         <activity
             android:name=".activity.LinkHandlerActivity"
             android:parentActivityName=".activity.HomeActivity"
-            android:theme="@style/Theme.Twidere"
+            android:theme="@style/Theme.Twidere.Content"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

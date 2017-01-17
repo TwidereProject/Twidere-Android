@@ -132,6 +132,8 @@ public abstract class TabConfiguration {
         private final String key;
         private StringHolder title;
         @Nullable
+        private StringHolder summary;
+        @Nullable
         private StringHolder headerTitle;
         private int position;
         private boolean mutable;
@@ -155,13 +157,32 @@ public abstract class TabConfiguration {
             this.title = title;
         }
 
+        @Nullable
+        public StringHolder getSummary() {
+            return summary;
+        }
+
+        public void setSummary(@Nullable StringHolder summary) {
+            this.summary = summary;
+        }
+
         public ExtraConfiguration title(StringHolder title) {
             setTitle(title);
             return this;
         }
 
+        public ExtraConfiguration summary(StringHolder summary) {
+            setSummary(summary);
+            return this;
+        }
+
         public ExtraConfiguration title(@StringRes int titleRes) {
             setTitle(StringHolder.resource(titleRes));
+            return this;
+        }
+
+        public ExtraConfiguration summary(@StringRes int summaryRes) {
+            setSummary(StringHolder.resource(summaryRes));
             return this;
         }
 

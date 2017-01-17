@@ -30,17 +30,35 @@
     android:orientation="horizontal"
     tools:ignore="Overdraw">
 
-    <TextView
-        android:id="@android:id/title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:maxLines="1"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="?android:textColorPrimary"/>
+        android:minHeight="48dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:textColorPrimary"
+            tools:text="Title"/>
+
+        <TextView
+            android:id="@android:id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:textColorSecondary"
+            tools:text="This is summary text"/>
+    </LinearLayout>
 
     <CheckBox
         android:id="@android:id/checkbox"
@@ -53,6 +71,7 @@
         android:layout_weight="0"
         android:clickable="false"
         android:focusable="false"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>

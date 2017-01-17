@@ -44,33 +44,7 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
-    <style name="Theme.Twidere.Dark.DialogWhenLarge.NoActionBar" parent="Theme.AppCompat.DialogWhenLarge">
-
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowActionModeOverlay">false</item>
-
-        <!-- Widget styles -->
-        <item name="android:listSeparatorTextViewStyle">@style/Widget.Dark.TextView.ListSeparator
-        </item>
-
-        <!-- Card UI styles -->
-        <item name="cardActionButtonStyle">@style/Widget.CardActionButton</item>
-        <item name="profileImageStyle">@style/Widget.ProfileImage</item>
-        <item name="profileImageStyleLarge">@style/Widget.ProfileImage.Large</item>
-        <item name="cardItemBackgroundColor">@color/background_color_card_item_dark</item>
-
-        <!-- Twidere specific styles -->
-        <item name="menuIconColor">@color/action_icon_light</item>
-        <item name="messageBubbleColor">@color/message_bubble_color_dark</item>
-        <item name="quoteIndicatorBackgroundColor">@color/quote_indicator_background_dark</item>
-
-        <item name="colorToolbar">@color/background_color_action_bar_dark</item>
-        <item name="isToolbarColored">false</item>
-
-        <item name="actionBarTheme">@null</item>
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
-    </style>
+    <style name="Theme.Twidere.Dark.Content" parent="Theme.Twidere.Dark"/>
 
     <style name="Theme.Twidere.Dark.Dialog" parent="Theme.AppCompat.Dialog">
 

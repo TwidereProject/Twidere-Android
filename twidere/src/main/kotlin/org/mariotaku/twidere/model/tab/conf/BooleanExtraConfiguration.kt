@@ -15,7 +15,11 @@ import org.mariotaku.twidere.model.tab.TabConfiguration
 /**
  * Created by mariotaku on 2016/12/5.
  */
-open class BooleanExtraConfiguration(key: String, val defaultValue: BooleanHolder) : TabConfiguration.ExtraConfiguration(key) {
+open class BooleanExtraConfiguration(
+        key: String,
+        val defaultValue: BooleanHolder
+) : TabConfiguration.ExtraConfiguration(key) {
+
     open var value: Boolean
         get() = checkBox.isChecked
         set(value) {
@@ -33,7 +37,16 @@ open class BooleanExtraConfiguration(key: String, val defaultValue: BooleanHolde
     override fun onViewCreated(context: Context, view: View, fragment: CustomTabsFragment.TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
         val titleView = view.findViewById(android.R.id.title) as TextView
+        val summaryView = view.findViewById(android.R.id.summary) as TextView
         titleView.text = title.createString(context)
+
+        val summary = this.summary
+        if (summary != null) {
+            summaryView.visibility = View.VISIBLE
+            summaryView.text = summary.createString(context)
+        } else {
+            summaryView.visibility = View.GONE
+        }
 
         checkBox = view.findViewById(android.R.id.checkbox) as CheckBox
         checkBox.visibility = View.VISIBLE

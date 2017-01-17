@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Twidere.Dark.Content" parent="Theme.Twidere.Dark.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:listDivider" tools:ignore="PrivateResource">
+            @drawable/abc_list_divider_mtrl_alpha
+        </item>
+        <item name="dividerVertical">?android:listDivider</item>
+        <item name="dividerHorizontal">?android:listDivider</item>
+    </style>
+
+    <style name="Theme.Twidere.Light.Content" parent="Theme.Twidere.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:listDivider" tools:ignore="PrivateResource">
+            @drawable/abc_list_divider_mtrl_alpha
+        </item>
+        <item name="dividerVertical">?android:listDivider</item>
+        <item name="dividerHorizontal">?android:listDivider</item>
+    </style>
+</resources>

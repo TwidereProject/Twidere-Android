@@ -23,15 +23,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.AppCompatTextView;
-import android.text.format.DateUtils;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
-import org.mariotaku.twidere.R;
 
 import java.lang.ref.WeakReference;
 
-import static android.text.format.DateUtils.getRelativeTimeSpanString;
 import static org.mariotaku.twidere.util.Utils.formatSameDayTime;
 
 public class ShortTimeView extends AppCompatTextView implements Constants {
@@ -83,10 +80,10 @@ public class ShortTimeView extends AppCompatTextView implements Constants {
         } else {
             final long current = System.currentTimeMillis();
             if (Math.abs(current - mTime) > 60 * 1000) {
-                setText(getRelativeTimeSpanString(mTime, System.currentTimeMillis(),
-                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL));
+//                setText(getRelativeTimeSpanString(mTime, System.currentTimeMillis(),
+//                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL));
             } else {
-                setText(R.string.just_now);
+//                setText(R.string.just_now);
             }
         }
     }

@@ -2,6 +2,8 @@
 <resources>
 
     <bool name="default_display_tab_label">true</bool>
-    <bool name="home_display_icon">true</bool>
+
+    <!-- Config for home screen -->
+    <bool name="home_tab_has_multiple_columns">true</bool>
 
 </resources>

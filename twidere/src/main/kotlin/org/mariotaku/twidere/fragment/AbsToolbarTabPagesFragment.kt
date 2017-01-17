@@ -45,7 +45,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val activity = activity
-        pagerAdapter = SupportTabsAdapter(activity, childFragmentManager, null, 1)
+        pagerAdapter = SupportTabsAdapter(activity, childFragmentManager, null)
         viewPager.adapter = pagerAdapter
         viewPager.offscreenPageLimit = 2
         viewPager.addOnPageChangeListener(this)

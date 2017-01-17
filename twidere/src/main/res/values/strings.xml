@@ -903,4 +903,5 @@
     <string name="title_filters_subscription_invalid">Invalid subscription</string>
     <string name="title_filters_subscription_url">URL</string>
     <string name="label_filters_subscription">Subscription</string>
+    <string name="summary_interactions_not_available">Only available with official keys</string>
 </resources>

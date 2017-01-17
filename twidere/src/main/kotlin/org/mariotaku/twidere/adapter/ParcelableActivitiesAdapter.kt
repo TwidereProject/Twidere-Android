@@ -361,6 +361,8 @@ class ParcelableActivitiesAdapter(
 
         fun onStatusClick(holder: IStatusViewHolder, position: Int)
 
+        fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int)
+
     }
 
     internal class StubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -417,29 +419,28 @@ class ParcelableActivitiesAdapter(
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener != null) {
-                adapter.activityAdapterListener!!.onStatusClick(holder, position)
-            }
+            adapter.activityAdapterListener?.onStatusClick(holder, position)
+        }
+
+
+        override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
+            val adapter = adapterRef.get() ?: return
+            adapter.activityAdapterListener?.onQuotedStatusClick(holder, position)
         }
 
         override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener != null) {
-                adapter.activityAdapterListener!!.onMediaClick(holder, view, media, statusPosition)
-            }
+            adapter.activityAdapterListener?.onMediaClick(holder, view, media, statusPosition)
         }
 
         override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener == null) return
-            adapter.activityAdapterListener!!.onActivityClick(holder, position)
+            adapter.activityAdapterListener?.onActivityClick(holder, position)
         }
 
         override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
             val adapter = adapterRef.get() ?: return
-            if (adapter.activityAdapterListener != null) {
-                adapter.activityAdapterListener!!.onStatusMenuClick(holder as StatusViewHolder, menuView, position)
-            }
+            adapter.activityAdapterListener?.onStatusMenuClick(holder as StatusViewHolder, menuView, position)
         }
     }
 

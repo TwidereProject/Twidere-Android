@@ -15,6 +15,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.model.premium.PurchaseResult
 import org.mariotaku.twidere.util.premium.GooglePlayExtraFeaturesService
 import java.lang.ref.WeakReference
 
@@ -82,7 +83,10 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
     }
 
     private fun handlePurchased(sku: SkuDetails, transaction: TransactionDetails) {
-        val result = PurchaseResult(requestingFeature, sku.priceValue, sku.currency)
+        val result = PurchaseResult()
+        result.feature = requestingFeature
+        result.price = sku.priceValue
+        result.currency = sku.currency
         finishWithResult(result)
     }
 

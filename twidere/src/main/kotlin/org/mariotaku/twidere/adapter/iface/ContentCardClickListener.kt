@@ -26,7 +26,7 @@ import android.view.View
  * Created by mariotaku on 14/12/3.
  */
 interface ContentCardClickListener {
-    fun onItemActionClick(holder: ViewHolder, id: Int, position: Int)
+    fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {}
 
-    fun onItemMenuClick(holder: ViewHolder, menuView: View, position: Int)
+    fun onItemMenuClick(holder: ViewHolder, menuView: View, position: Int) {}
 }
