@@ -798,11 +798,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
-            pagerAdapter.pageWidth = resources.getDimension(R.dimen.preferred_tab_column_width) / resources.displayMetrics.widthPixels
+            pagerAdapter.hasMultipleColumns = true
         } else {
             mainPager.pageMargin = 0
             mainPager.setPageMarginDrawable(null)
-            pagerAdapter.pageWidth = 1f
+            pagerAdapter.hasMultipleColumns = false
         }
     }
 

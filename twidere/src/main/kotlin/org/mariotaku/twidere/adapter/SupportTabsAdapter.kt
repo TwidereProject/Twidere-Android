@@ -27,6 +27,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.model.SupportTabSpec
@@ -43,6 +44,8 @@ class SupportTabsAdapter @JvmOverloads constructor(
         fm: FragmentManager,
         private val indicator: PagerIndicator? = null
 ) : SupportFixedFragmentStatePagerAdapter(fm), TabProvider, TabListener {
+
+    var hasMultipleColumns: Boolean = false
 
     private val tab = ArrayList<SupportTabSpec>()
 
@@ -91,7 +94,11 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     override fun getPageWidth(position: Int): Float {
-        return pageWidth
+        if (hasMultipleColumns) {
+            val resources = context.resources
+            return resources.getDimension(R.dimen.preferred_tab_column_width) / resources.displayMetrics.widthPixels
+        }
+        return 1f
     }
 
     override fun getItem(position: Int): Fragment {
@@ -152,6 +159,4 @@ class SupportTabsAdapter @JvmOverloads constructor(
 
         private val EXTRA_ADAPTER_POSITION = "adapter_position"
     }
-
-    var pageWidth: Float = 1f
 }

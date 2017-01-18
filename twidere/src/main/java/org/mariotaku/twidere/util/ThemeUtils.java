@@ -37,6 +37,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.TwilightManagerAccessor;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.TwidereToolbar;
 import android.util.TypedValue;
@@ -174,7 +175,7 @@ public class ThemeUtils implements Constants {
 
 
     public static Drawable getDrawableFromThemeAttribute(final Context context, int attr) {
-        final TypedArray a = context.obtainStyledAttributes(new int[]{attr});
+        final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, null, new int[]{attr});
         try {
             return a.getDrawable(0);
         } finally {

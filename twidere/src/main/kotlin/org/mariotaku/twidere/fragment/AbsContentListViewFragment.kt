@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener
 import android.view.*
@@ -45,11 +46,14 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         OnRefreshListener, RefreshScrollTopInterface, ControlBarOffsetListener, ContentListSupport,
         AbsListView.OnScrollListener {
     private lateinit var scrollHandler: ListViewScrollHandler
+    // Data fields
+    private val systemWindowsInsets = Rect()
+
+    protected open val overrideDivider: Drawable?
+        get() = ThemeUtils.getDrawableFromThemeAttribute(context, android.R.attr.listDivider)
 
     override lateinit var adapter: A
 
-    // Data fields
-    private val systemWindowsInsets = Rect()
 
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
         updateRefreshProgressOffset()
@@ -127,6 +131,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         }
         listView.adapter = adapter
         listView.clipToPadding = false
+        overrideDivider?.let { listView.divider = it }
         scrollHandler = ListViewScrollHandler(this, ListViewScrollHandler.ListViewCallback(listView)).apply {
             this.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
             this.onScrollListener = this@AbsContentListViewFragment
