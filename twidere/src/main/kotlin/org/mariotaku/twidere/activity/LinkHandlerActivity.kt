@@ -43,12 +43,8 @@ import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
-import org.mariotaku.twidere.constant.CompatibilityConstants
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
-import org.mariotaku.twidere.constant.KeyboardShortcutConstants
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
-import org.mariotaku.twidere.constant.iWantMyStarsBackKey
+import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FiltersFragment
 import org.mariotaku.twidere.fragment.filter.FiltersImportBlocksFragment
@@ -64,7 +60,7 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.Utils.LINK_ID_FILTERS_IMPORT_BLOCKS
-import org.mariotaku.twidere.util.Utils.matchLinkId
+import org.mariotaku.twidere.util.linkhandler.TwidereLinkMatcher
 
 class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IControlBarActivity,
         SupportFragmentCallback {
@@ -85,8 +81,11 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         controlBarShowHideHelper = ControlBarShowHideHelper(this)
         multiSelectHandler.dispatchOnCreate()
 
-        val uri = intent.data
-        val linkId = matchLinkId(uri)
+        val uri = intent.data ?: run {
+            finish()
+            return
+        }
+        val linkId = TwidereLinkMatcher.match(uri)
         intent.setExtrasClassLoader(classLoader)
         val fragment: Fragment
         try {
@@ -413,6 +412,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_FILTERS_IMPORT_MUTES -> {
                 title = getString(R.string.title_select_users)
             }
+            LINK_ID_FILTERS_SUBSCRIPTIONS_ADD,
             LINK_ID_FILTERS_SUBSCRIPTIONS -> {
                 title = getString(R.string.title_manage_filter_subscriptions)
             }
@@ -759,6 +759,15 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_FILTERS_SUBSCRIPTIONS -> {
                 fragment = FiltersSubscriptionsFragment()
+                isAccountIdRequired = false
+            }
+            LINK_ID_FILTERS_SUBSCRIPTIONS_ADD -> {
+                val url = uri.getQueryParameter("url") ?: return null
+                val name = uri.getQueryParameter("name")
+                fragment = FiltersSubscriptionsFragment()
+                args.putString(IntentConstants.EXTRA_ACTION, FiltersSubscriptionsFragment.ACTION_ADD_URL_SUBSCRIPTION)
+                args.putString(FiltersSubscriptionsFragment.EXTRA_ADD_SUBSCRIPTION_URL, url)
+                args.putString(FiltersSubscriptionsFragment.EXTRA_ADD_SUBSCRIPTION_NAME, name)
                 isAccountIdRequired = false
             }
             else -> {

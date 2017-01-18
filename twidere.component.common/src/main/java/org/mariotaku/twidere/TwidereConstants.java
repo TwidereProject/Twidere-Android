@@ -127,6 +127,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PATH_FILTERS_IMPORT_BLOCKS = "import/blocks";
     String PATH_FILTERS_IMPORT_MUTES = "import/mutes";
     String PATH_FILTERS_SUBSCRIPTIONS = "subscriptions";
+    String PATH_FILTERS_SUBSCRIPTIONS_ADD = "subscriptions/add";
 
     String QUERY_PARAM_ACCOUNT_KEY = "account_key";
     String QUERY_PARAM_ACCOUNT_HOST = "account_host";

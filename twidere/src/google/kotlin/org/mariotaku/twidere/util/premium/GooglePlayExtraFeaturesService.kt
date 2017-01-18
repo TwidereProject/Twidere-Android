@@ -13,7 +13,6 @@ import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
  */
 
 class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
-    private val PRODUCT_ID_EXTRA_FEATURES_PACK = "twidere.extra.features"
 
     private lateinit var bp: BillingProcessor
 
@@ -37,7 +36,12 @@ class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
     }
 
     override fun destroyPurchase(): Boolean {
-        return bp.consumePurchase(PRODUCT_ID_EXTRA_FEATURES_PACK)
+        bp.consumePurchase(PRODUCT_ID_EXTRA_FEATURES_PACK)
+        bp.consumePurchase(PRODUCT_ID_DATA_SYNC)
+        bp.consumePurchase(PRODUCT_ID_FILTERS_IMPORT)
+        bp.consumePurchase(PRODUCT_ID_FILTERS_SUBSCRIPTION)
+        bp.consumePurchase(PRODUCT_ID_SCHEDULE_STATUS)
+        return true
     }
 
     override fun createPurchaseIntent(context: Context, feature: String): Intent? {
@@ -56,14 +60,20 @@ class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
     }
 
     companion object {
+        private const val PRODUCT_ID_EXTRA_FEATURES_PACK = "twidere.extra.features"
+        private const val PRODUCT_ID_DATA_SYNC = "twidere.extra.feature.data_sync"
+        private const val PRODUCT_ID_FILTERS_IMPORT = "twidere.extra.feature.filter_import"
+        private const val PRODUCT_ID_FILTERS_SUBSCRIPTION = "twidere.extra.feature.filter_subscription"
+        private const val PRODUCT_ID_SCHEDULE_STATUS = "twidere.extra.feature.schedule_status"
+
         @JvmStatic
         fun getProductId(feature: String): String {
             return when (feature) {
-                FEATURE_FEATURES_PACK -> "twidere.extra.features"
-                FEATURE_SYNC_DATA -> "twidere.extra.feature.data_sync"
-                FEATURE_FILTERS_IMPORT -> "twidere.extra.feature.filter_import"
-                FEATURE_FILTERS_SUBSCRIPTION -> "twidere.extra.feature.filter_subscription"
-                FEATURE_SCHEDULE_STATUS -> "twidere.extra.feature.schedule_status"
+                FEATURE_FEATURES_PACK -> PRODUCT_ID_EXTRA_FEATURES_PACK
+                FEATURE_SYNC_DATA -> PRODUCT_ID_DATA_SYNC
+                FEATURE_FILTERS_IMPORT -> PRODUCT_ID_FILTERS_IMPORT
+                FEATURE_FILTERS_SUBSCRIPTION -> PRODUCT_ID_FILTERS_SUBSCRIPTION
+                FEATURE_SCHEDULE_STATUS -> PRODUCT_ID_SCHEDULE_STATUS
                 else -> throw UnsupportedOperationException(feature)
             }
         }

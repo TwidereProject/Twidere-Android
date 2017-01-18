@@ -1,10 +1,13 @@
 package org.mariotaku.twidere.fragment.filter
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
@@ -16,19 +19,28 @@ import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import okhttp3.HttpUrl
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.isEmpty
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION
+import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
 import org.mariotaku.twidere.extension.model.getComponentLabel
 import org.mariotaku.twidere.extension.model.setupUrl
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
+import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
 import org.mariotaku.twidere.model.FiltersSubscriptionCursorIndices
 import org.mariotaku.twidere.model.FiltersSubscriptionValuesCreator
+import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
+import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
@@ -49,6 +61,53 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         listContainer.visibility = View.GONE
         progressContainer.visibility = View.VISIBLE
         loaderManager.initLoader(0, null, this)
+
+
+        if (!extraFeaturesService.isSupported()) {
+            activity?.finish()
+            return
+        }
+
+        if (savedInstanceState == null) {
+            when (arguments?.getString(EXTRA_ACTION)) {
+                ACTION_ADD_URL_SUBSCRIPTION -> {
+                    if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION).not()) {
+                        val df = ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
+                                ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)
+                        df.setTargetFragment(this, REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE)
+                    } else {
+                        showAddUrlSubscription()
+                    }
+                }
+                else -> {
+                    val df = ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
+                            ExtraFeaturesService.FEATURE_FILTERS_SUBSCRIPTION)
+                    df.setTargetFragment(this, REQUEST_PURCHASE_EXTRA_FEATURES)
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Analyzer.log(PurchaseFinished.create(data!!))
+                    executeAfterFragmentResumed { fragment ->
+                        (fragment as FiltersSubscriptionsFragment).showAddUrlSubscription()
+                    }
+                } else {
+                    activity?.finish()
+                }
+            }
+            REQUEST_PURCHASE_EXTRA_FEATURES -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Analyzer.log(PurchaseFinished.create(data!!))
+                } else {
+                    activity?.finish()
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -63,12 +122,18 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 return true
             }
             R.id.refresh -> {
-                val dfRef = WeakReference(ProgressDialogFragment.show(childFragmentManager, "refresh_filters"))
-                val task = RefreshFiltersSubscriptionsTask(context)
-                task.callback = {
-                    dfRef.get()?.dismiss()
+                executeAfterFragmentResumed { fragment ->
+                    val dfRef = WeakReference(ProgressDialogFragment.show(fragment.childFragmentManager, "refresh_filters"))
+                    val task = RefreshFiltersSubscriptionsTask(fragment.context)
+                    val fragmentRef = WeakReference(fragment)
+                    task.callback = {
+                        fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
+                            val df = dfRef.get() ?: fragment.childFragmentManager.findFragmentByTag("refresh_filters") as? DialogFragment
+                            df?.dismiss()
+                        }
+                    }
+                    TaskStarter.execute(task)
                 }
-                TaskStarter.execute(task)
                 return true
             }
             else -> return false
@@ -103,6 +168,15 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         }
         listContainer.visibility = View.VISIBLE
         progressContainer.visibility = View.GONE
+    }
+
+    private fun showAddUrlSubscription() {
+        val df = AddUrlSubscriptionDialogFragment()
+        df.arguments = Bundle {
+            this[EXTRA_ADD_SUBSCRIPTION_URL] = arguments?.getString(EXTRA_ADD_SUBSCRIPTION_URL)
+            this[EXTRA_ADD_SUBSCRIPTION_NAME] = arguments?.getString(EXTRA_ADD_SUBSCRIPTION_NAME)
+        }
+        df.show(fragmentManager, "add_url_subscription")
     }
 
     class FilterSubscriptionsAdapter(context: Context) : SimpleCursorAdapter(context,
@@ -163,10 +237,24 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 }
                 editName.addTextChangedListener(watcher)
                 editUrl.addTextChangedListener(watcher)
+
+                val args = arguments
+                if (savedInstanceState == null && args != null) {
+                    editName.setText(args.getString(EXTRA_ADD_SUBSCRIPTION_NAME))
+                    editUrl.setText(args.getString(EXTRA_ADD_SUBSCRIPTION_URL))
+                }
+
                 updateEnableState()
             }
             return dialog
         }
+    }
+
+    companion object {
+        const val ACTION_ADD_URL_SUBSCRIPTION = "${INTENT_PACKAGE_PREFIX}ADD_URL_FILTERS_SUBSCRIPTION"
+        const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
+        const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
+        const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
     }
 }
 

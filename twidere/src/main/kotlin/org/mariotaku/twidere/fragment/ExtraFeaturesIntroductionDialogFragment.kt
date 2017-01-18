@@ -1,6 +1,9 @@
 package org.mariotaku.twidere.fragment
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
@@ -43,12 +46,12 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             Analyzer.log(PurchaseConfirm(PurchaseFinished.NAME_EXTRA_FEATURES))
         }
         builder.setNegativeButton(R.string.action_later) { dialog, which ->
-
+            onDialogCancelled()
         }
         val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context, feature)
         if (restorePurchaseIntent != null) {
             builder.setNeutralButton(R.string.action_restore_purchase) { dialog, which ->
-                startActivity(restorePurchaseIntent)
+                startActivityForResultOnTarget(restorePurchaseIntent)
             }
         }
         val dialog = builder.create()
@@ -75,14 +78,30 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         return dialog
     }
 
+    override fun onCancel(dialog: DialogInterface?) {
+        onDialogCancelled()
+    }
+
+    private fun onDialogCancelled() {
+        if (targetRequestCode != 0) {
+            targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null)
+        }
+    }
+
     private fun startPurchase(feature: String) {
-        val purchaseIntent = extraFeaturesService.createPurchaseIntent(context, feature)
-        if (requestCode == 0) {
-            startActivity(purchaseIntent)
+        val purchaseIntent = extraFeaturesService.createPurchaseIntent(context, feature) ?: return
+        startActivityForResultOnTarget(purchaseIntent)
+    }
+
+    private fun startActivityForResultOnTarget(intent: Intent) {
+        if (targetFragment != null) {
+            targetFragment.startActivityForResult(intent, targetRequestCode)
+        } else if (requestCode == 0) {
+            startActivity(intent)
         } else if (parentFragment != null) {
-            parentFragment.startActivityForResult(purchaseIntent, requestCode)
+            parentFragment.startActivityForResult(intent, requestCode)
         } else {
-            activity.startActivityForResult(purchaseIntent, requestCode)
+            activity.startActivityForResult(intent, requestCode)
         }
     }
 

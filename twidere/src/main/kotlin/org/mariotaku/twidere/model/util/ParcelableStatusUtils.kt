@@ -155,6 +155,7 @@ object ParcelableStatusUtils {
             result.spans = textWithIndices.spans
             result.extras.display_text_range = textWithIndices.range
         }
+
         result.media = ParcelableMediaUtils.fromStatus(status)
         result.source = status.source
         result.location = getLocation(status)
@@ -189,10 +190,6 @@ object ParcelableStatusUtils {
 
     private fun isHtml(text: String): Boolean {
         return text.contains("<") && text.contains(">")
-    }
-
-    private fun isFanfouStatus(accountKey: UserKey): Boolean {
-        return USER_TYPE_FANFOU_COM == accountKey.host
     }
 
     private fun getInReplyToUserId(status: Status, accountKey: UserKey): UserKey? {
