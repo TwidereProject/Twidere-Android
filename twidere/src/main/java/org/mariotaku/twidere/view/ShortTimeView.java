@@ -23,9 +23,12 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 
 import java.lang.ref.WeakReference;
 
@@ -76,16 +79,21 @@ public class ShortTimeView extends AppCompatTextView implements Constants {
 
     private void invalidateTime() {
         if (mShowAbsoluteTime) {
-            setText(formatSameDayTime(getContext(), mTime));
+            setTextIfChanged(formatSameDayTime(getContext(), mTime));
         } else {
             final long current = System.currentTimeMillis();
             if (Math.abs(current - mTime) > 60 * 1000) {
-//                setText(getRelativeTimeSpanString(mTime, System.currentTimeMillis(),
-//                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL));
+                setTextIfChanged(DateUtils.getRelativeTimeSpanString(mTime, System.currentTimeMillis(),
+                        DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL));
             } else {
-//                setText(R.string.just_now);
+                setTextIfChanged(getContext().getString(R.string.just_now));
             }
         }
+    }
+
+    private void setTextIfChanged(CharSequence text) {
+        if (TextUtils.equals(text, getText())) return;
+        setText(text);
     }
 
     private static class TickerRunnable implements Runnable {
