@@ -1,9 +1,10 @@
-package org.mariotaku.twidere.activity
+package org.mariotaku.twidere.activity.sync
 
 import android.os.Bundle
 import com.dropbox.core.android.Auth
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.Constants.DROPBOX_APP_KEY
+import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
 import org.mariotaku.twidere.model.sync.DropboxSyncProviderInfo
 

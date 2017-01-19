@@ -19,6 +19,7 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
+import org.mariotaku.twidere.model.sync.SyncProviderEntry
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
@@ -77,12 +78,14 @@ class SyncStatusFragment : BaseFragment() {
     }
 
     private fun updateSyncSettingActions() {
-        if (preferences[dataSyncProviderInfoKey] == null) {
+        val providerInfo = preferences[dataSyncProviderInfoKey]
+        if (providerInfo == null) {
             statusText.text = getText(R.string.message_sync_data_connect_hint)
             connectButton.visibility = View.VISIBLE
             settingsButton.visibility = View.GONE
         } else {
-            statusText.text = getString(R.string.message_sync_data_synced_with_name, "Dropbox")
+            val providerEntry = SyncProviderInfoFactory.getProviderEntry(context, providerInfo.type)!!
+            statusText.text = getString(R.string.message_sync_data_synced_with_name, providerEntry.name)
             connectButton.visibility = View.GONE
             settingsButton.visibility = View.VISIBLE
         }

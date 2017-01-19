@@ -15,7 +15,10 @@ import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncAction
 import java.io.IOException
 import java.util.*
 
-class DropboxDraftsSyncAction(context: Context, val client: DbxClientV2) : FileBasedDraftsSyncAction<FileMetadata>(context) {
+class DropboxDraftsSyncAction(
+        context: Context,
+        val client: DbxClientV2
+) : FileBasedDraftsSyncAction<FileMetadata>(context) {
     @Throws(IOException::class)
     override fun Draft.saveToRemote(): FileMetadata {
         try {

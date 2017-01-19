@@ -37,6 +37,7 @@ import android.widget.RadioGroup
 import android.widget.RadioGroup.OnCheckedChangeListener
 import android.widget.TextView
 import android.widget.Toast
+import com.bluelinelabs.logansquare.LoganSquare
 import kotlinx.android.synthetic.main.activity_api_editor.*
 import kotlinx.android.synthetic.main.layout_api_editor.*
 import kotlinx.android.synthetic.main.layout_api_editor_advanced_fields.*
@@ -62,6 +63,38 @@ import javax.inject.Inject
 
 class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListener, CompoundButton.OnCheckedChangeListener {
     private var editNoVersionSuffixChanged: Boolean = false
+
+    private lateinit var apiConfig: CustomAPIConfig
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_api_editor)
+
+        if (savedInstanceState != null) {
+            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
+        } else {
+            apiConfig = intent.getParcelableExtra(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
+        }
+
+        editAuthType.setOnCheckedChangeListener(this)
+        editNoVersionSuffix.setOnCheckedChangeListener(this)
+        save.setOnClickListener(this)
+        apiUrlFormatHelp.setOnClickListener(this)
+
+        loadDefaults.visibility = View.VISIBLE
+        loadDefaults.setOnClickListener(this)
+
+        editApiUrlFormat.setText(apiConfig.apiUrlFormat)
+        editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
+        editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
+        editConsumerKey.setText(apiConfig.consumerKey)
+        editConsumerSecret.setText(apiConfig.consumerSecret)
+
+        editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
+        if (editAuthType.checkedRadioButtonId == -1) {
+            oauth.isChecked = true
+        }
+    }
 
     override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
         val authType = getCheckedAuthType(checkedId)
@@ -97,10 +130,6 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         }
     }
 
-    private fun checkApiUrl(): Boolean {
-        return MicroBlogAPIFactory.verifyApiFormat(editApiUrlFormat.text.toString())
-    }
-
     public override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(EXTRA_API_CONFIG, createCustomAPIConfig())
         super.onSaveInstanceState(outState)
@@ -113,8 +142,22 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         finish()
     }
 
+
+    private fun checkApiUrl(): Boolean {
+        return MicroBlogAPIFactory.verifyApiFormat(editApiUrlFormat.text.toString())
+    }
+
+    private fun applyApiConfig() {
+        editApiUrlFormat.setText(apiConfig.apiUrlFormat)
+        editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
+        editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
+        editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
+        editConsumerKey.setText(apiConfig.consumerKey)
+        editConsumerSecret.setText(apiConfig.consumerSecret)
+    }
+
     private fun createCustomAPIConfig(): CustomAPIConfig {
-        return CustomAPIConfig().apply {
+        return apiConfig.apply {
             this.apiUrlFormat = editApiUrlFormat.text.toString()
             this.credentialsType = getCheckedAuthType(editAuthType.checkedRadioButtonId)
             this.isSameOAuthUrl = editSameOAuthSigningUrl.isChecked
@@ -124,53 +167,12 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_api_editor)
-
-        val apiConfig: CustomAPIConfig
-        if (savedInstanceState != null) {
-            apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)
-        } else {
-            apiConfig = intent.getParcelableExtra(EXTRA_API_CONFIG) ?: kPreferences[defaultAPIConfigKey]
-        }
-
-        editAuthType.setOnCheckedChangeListener(this)
-        editNoVersionSuffix.setOnCheckedChangeListener(this)
-        save.setOnClickListener(this)
-        apiUrlFormatHelp.setOnClickListener(this)
-
-        loadDefaults.visibility = View.VISIBLE
-        loadDefaults.setOnClickListener(this)
-
-        editApiUrlFormat.setText(apiConfig.apiUrlFormat)
-        editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
-        editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
-        editConsumerKey.setText(apiConfig.consumerKey)
-        editConsumerSecret.setText(apiConfig.consumerSecret)
-
-        editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
-        if (editAuthType.checkedRadioButtonId == -1) {
-            oauth.isChecked = true
-        }
-    }
-
-
-    private fun setAPIConfig(apiConfig: CustomAPIConfig) {
-        editApiUrlFormat.setText(apiConfig.apiUrlFormat)
-        editAuthType.check(getAuthTypeId(apiConfig.credentialsType))
-        editSameOAuthSigningUrl.isChecked = apiConfig.isSameOAuthUrl
-        editNoVersionSuffix.isChecked = apiConfig.isNoVersionSuffix
-        editConsumerKey.setText(apiConfig.consumerKey)
-        editConsumerSecret.setText(apiConfig.consumerSecret)
-    }
 
     class LoadDefaultsChooserDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener,
             LoaderManager.LoaderCallbacks<List<CustomAPIConfig>?> {
         private lateinit var adapter: ArrayAdapter<CustomAPIConfig>
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val context = context
             val configs = CustomAPIConfig.listDefault(context)
             adapter = CustomAPIConfigArrayAdapter(context, configs)
             val builder = AlertDialog.Builder(context)
@@ -182,7 +184,9 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {
-            (activity as APIEditorActivity).setAPIConfig(adapter.getItem(which))
+            val activity = activity as APIEditorActivity
+            activity.apiConfig = adapter.getItem(which)
+            activity.applyApiConfig()
             dismiss()
         }
 
@@ -212,17 +216,16 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
             override fun loadInBackground(): List<CustomAPIConfig>? {
                 val request = HttpRequest(GET.METHOD, DEFAULT_API_CONFIGS_URL,
                         null, null, null)
-                var response: HttpResponse? = null
                 try {
-                    response = client.newCall(request).execute()
-                    if (response!!.isSuccessful) {
-                        val `is` = response.body.stream()
-                        return JsonSerializer.parseList(`is`, CustomAPIConfig::class.java)
+                    return client.newCall(request).execute().use { response ->
+                        if (response.isSuccessful) {
+                            return@use LoganSquare.parseList(response.body.stream(),
+                                    CustomAPIConfig::class.java)
+                        }
+                        return@use null
                     }
                 } catch (e: IOException) {
                     // Ignore
-                } finally {
-                    Utils.closeSilently(response)
                 }
                 return null
             }

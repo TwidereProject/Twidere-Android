@@ -477,6 +477,7 @@
         <activity
             android:name=".activity.PremiumDashboardActivity"
             android:label="@string/title_premium_features_name"
+            android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere">
 
             <meta-data

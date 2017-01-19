@@ -8,7 +8,8 @@
     "same_oauth_url": true,
     "no_version_suffix": false,
     "consumer_key": "i5XtSVfoWjLjKlnrvhiLPMZC0",
-    "consumer_secret": "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH"
+    "consumer_secret": "sQncmZ2atQR6tKbqnnAtqjrECqN8k6FD4p4OoNS0XTDkUz3HGH",
+    "sign_up_url": "https://twitter.com/signup"
   },
   {
     "name": "Fanfou",
@@ -19,7 +20,8 @@
     "same_oauth_url": true,
     "no_version_suffix": true,
     "consumer_key": "86d1146dda1d21d59351008a1d1058fd",
-    "consumer_secret": "c00f4b83dbfc52e2ed78a21d4edfc3cc"
+    "consumer_secret": "c00f4b83dbfc52e2ed78a21d4edfc3cc",
+    "sign_up_url": "http://fanfou.com/register"
   },
   {
     "name": "Quitter.se",
@@ -30,7 +32,8 @@
     "same_oauth_url": true,
     "no_version_suffix": true,
     "consumer_key": "3584cd86bd8e04948be15650acbd0d59",
-    "consumer_secret": "84a39eff81c0a0ecbfba5239d25c0367"
+    "consumer_secret": "84a39eff81c0a0ecbfba5239d25c0367",
+    "sign_up_url": "https://quitter.se/"
   },
   {
     "name": "LoadAverage.org",

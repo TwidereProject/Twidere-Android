@@ -31,7 +31,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.DropboxAuthStarterActivity"
+            android:name=".activity.sync.DropboxAuthStarterActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
+        <activity
+            android:name=".activity.sync.GoogleDriveAuthActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name="com.dropbox.core.android.AuthActivity"

@@ -17,8 +17,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -44,8 +43,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
                 android:inputType="textEmailAddress"
-                android:typeface="normal"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:typeface="normal" />
 
             <EditText
                 android:id="@+id/editPassword"
@@ -54,49 +53,39 @@
                 android:layout_marginTop="8dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                android:typeface="normal"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:typeface="normal" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/signInSignUpContainer"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signIn"
+            style="?android:buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:orientation="horizontal"
-            android:padding="8dp">
+            android:minHeight="@dimen/element_size_normal"
+            android:text="@string/sign_in"
+            app:backgroundTint="@color/material_light_green" />
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/signUp"
-                style="?android:buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@string/register"/>
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/signIn"
-                style="?android:buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:minHeight="@dimen/element_size_normal"
-                android:text="@string/sign_in"
-                app:backgroundTint="@color/material_light_green"/>
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/signUp"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|center_vertical"
+            android:minHeight="@dimen/element_size_xsmall"
+            android:text="@string/register"
+            android:textAppearance="?android:textAppearanceSmall" />
 
         <Button
             android:id="@+id/passwordSignIn"
             style="?android:borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:clickable="true"
-            android:gravity="center_vertical"
-            android:minHeight="36dp"
-            android:text="@string/password_sign_in_twitter_only"
-            android:textAppearance="?android:textAppearanceSmall"/>
+            android:gravity="start|center_vertical"
+            android:minHeight="@dimen/element_size_xsmall"
+            android:text="@string/label_password_sign_in"
+            android:textAppearance="?android:textAppearanceSmall" />
+
     </LinearLayout>
 </ScrollView>
