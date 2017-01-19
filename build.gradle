@@ -87,7 +87,7 @@ subprojects {
 def loadSigningConfig(def cfg, def file) {
     Properties signingProp = new Properties()
     signingProp.load(file.newInputStream())
-    cfg.setStoreFile(new File((String) signingProp.get('storeFile')))
+    cfg.setStoreFile(rootProject.file(signingProp.get('storeFile')))
     cfg.setStorePassword((String) signingProp.get('storePassword'))
     cfg.setKeyAlias((String) signingProp.get('keyAlias'))
     cfg.setKeyPassword((String) signingProp.get('keyPassword'))
