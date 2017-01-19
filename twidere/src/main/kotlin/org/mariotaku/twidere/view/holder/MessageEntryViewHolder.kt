@@ -75,7 +75,7 @@ class MessageEntryViewHolder(private val adapter: MessageEntriesAdapter, itemVie
         nameView.setScreenName("@" + screenName)
         nameView.updateText(adapter.bidiFormatter)
         textView.text = toPlainText(cursor.getString(ConversationEntries.IDX_TEXT_UNESCAPED))
-        timeView.setTime(timestamp)
+        timeView.time = timestamp
         if (isOutgoing) {
             timeView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_indicator_sent, 0)
         } else {

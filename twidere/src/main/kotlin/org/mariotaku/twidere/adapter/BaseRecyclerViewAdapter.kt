@@ -56,7 +56,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     override final val profileImageStyle: Int
     override final val textSize: Float
     override final val profileImageEnabled: Boolean
-    override final val isShowAbsoluteTime: Boolean
+    override final val showAbsoluteTime: Boolean
 
     init {
         //noinspection unchecked
@@ -64,7 +64,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         profileImageStyle = preferences[profileImageStyleKey]
         textSize = preferences[textSizeKey].toFloat()
         profileImageEnabled = preferences[displayProfileImageKey]
-        isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
+        showAbsoluteTime = preferences[showAbsoluteTimeKey]
     }
 
 }

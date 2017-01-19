@@ -102,7 +102,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
             textView.text = text
         }
-        timeView.setTime(System.currentTimeMillis())
+        timeView.time = System.currentTimeMillis()
         val showCardActions = isCardActionsShown
         if (adapter.mediaPreviewEnabled) {
             mediaPreview.visibility = View.VISIBLE
@@ -288,10 +288,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             }
         }
 
-        if (status.is_retweet) {
-            timeView.setTime(status.retweet_timestamp)
+        timeView.time = if (status.is_retweet) {
+            status.retweet_timestamp
         } else {
-            timeView.setTime(status.timestamp)
+            status.timestamp
         }
 
         nameView.setName(colorNameManager.getUserNickname(status.user_key, status.user_name))
@@ -496,7 +496,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 favoriteCountView.textColors.defaultColor, favColor, favStyle)
         drawable.mutate()
         favoriteIcon.setImageDrawable(drawable)
-        timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
+        timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
         favoriteIcon.activatedColor = favColor
     }

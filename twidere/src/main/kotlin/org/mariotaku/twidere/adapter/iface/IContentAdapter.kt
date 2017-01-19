@@ -47,5 +47,5 @@ interface IContentAdapter {
 
     val bidiFormatter: BidiFormatter
 
-    val isShowAbsoluteTime: Boolean
+    val showAbsoluteTime: Boolean
 }

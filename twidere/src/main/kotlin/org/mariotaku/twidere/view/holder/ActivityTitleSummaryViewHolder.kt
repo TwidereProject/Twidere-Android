@@ -82,7 +82,7 @@ class ActivityTitleSummaryViewHolder(
         val spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small)
         lp.leftMargin = spacing
         MarginLayoutParamsCompat.setMarginStart(lp, spacing)
-        timeView.setShowAbsoluteTime(adapter.isShowAbsoluteTime)
+        timeView.showAbsoluteTime = adapter.showAbsoluteTime
     }
 
     fun displayActivity(activity: ParcelableActivity) {
@@ -100,7 +100,7 @@ class ActivityTitleSummaryViewHolder(
         titleView.text = message.title
         summaryView.text = message.summary
         summaryView.visibility = if (summaryView.length() > 0) View.VISIBLE else View.GONE
-        timeView.setTime(activity.timestamp)
+        timeView.time = activity.timestamp
         if (adapter.showAccountsColor) {
             itemContent.drawEnd(activity.account_color)
         } else {

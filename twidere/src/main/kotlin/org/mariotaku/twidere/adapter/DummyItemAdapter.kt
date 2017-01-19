@@ -46,7 +46,7 @@ class DummyItemAdapter @JvmOverloads constructor(
     override var profileImageEnabled: Boolean = false
     override var sensitiveContentEnabled: Boolean = false
     override var mediaPreviewEnabled: Boolean = false
-    override var isShowAbsoluteTime: Boolean = false
+    override var showAbsoluteTime: Boolean = false
     override var friendshipClickListener: IUsersAdapter.FriendshipClickListener? = null
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
     override var statusClickListener: IStatusViewHolder.StatusClickListener? = null
@@ -183,6 +183,6 @@ class DummyItemAdapter @JvmOverloads constructor(
         showCardActions = !preferences[hideCardActionsKey]
         linkHighlightingStyle = preferences[linkHighlightOptionKey]
         useStarsForLikes = preferences[iWantMyStarsBackKey]
-        isShowAbsoluteTime = preferences[showAbsoluteTimeKey]
+        showAbsoluteTime = preferences[showAbsoluteTimeKey]
     }
 }
