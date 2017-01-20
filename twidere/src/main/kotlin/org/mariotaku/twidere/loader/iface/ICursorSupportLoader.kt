@@ -23,9 +23,9 @@ package org.mariotaku.twidere.loader.iface
  * Created by mariotaku on 15/4/29.
  */
 interface ICursorSupportLoader {
-    val cursor: Long
+    val cursor: Long get() = -1
 
-    val nextCursor: Long
+    val nextCursor: Long get() = -1
 
-    val prevCursor: Long
+    val prevCursor: Long get() = -1
 }

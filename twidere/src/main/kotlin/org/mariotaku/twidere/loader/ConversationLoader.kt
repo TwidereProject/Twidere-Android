@@ -48,8 +48,8 @@ class ConversationLoader(
         adapterData: List<ParcelableStatus>?,
         fromUser: Boolean,
         loadingMore: Boolean
-) : MicroBlogAPIStatusesLoader(context, status.account_key, sinceId, maxId, -1, adapterData, null, -1,
-        fromUser, loadingMore) {
+) : MicroBlogAPIStatusesLoader(context, status.account_key, sinceId, maxId, -1, adapterData, null,
+        -1, fromUser, loadingMore) {
 
     private val status: ParcelableStatus
     private var canLoadAllReplies: Boolean = false

@@ -62,9 +62,9 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         val dataToRemove = HashSet<ParcelableStatus>()
         for (i in 0 until list.size) {
             val status = list[i]
-            if (TextUtils.equals(status.id, statusId) || TextUtils.equals(status.retweet_id, statusId)) {
+            if (status.id == statusId || status.retweet_id == statusId) {
                 dataToRemove.add(status)
-            } else if (TextUtils.equals(status.my_retweet_id, statusId)) {
+            } else if (status.my_retweet_id == statusId) {
                 status.my_retweet_id = null
                 status.retweet_count = status.retweet_count - 1
             }
@@ -87,11 +87,13 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (sinceIds != null) {
             args.putString(EXTRA_SINCE_ID, sinceIds[0])
         }
-        if (page > 0) {
-            args.putInt(EXTRA_PAGE, page)
-        }
         args.putBoolean(EXTRA_LOADING_MORE, param.isLoadingMore)
         args.putBoolean(EXTRA_FROM_USER, true)
+        if (param is StatusesRefreshTaskParam) {
+            if (param.page > 0) {
+                args.putInt(EXTRA_PAGE, param.page)
+            }
+        }
         loaderManager.restartLoader(0, args, this)
         return true
     }
@@ -154,8 +156,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         val status = adapter.getStatus(idx) ?: return
         val accountKeys = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
-        page += pageDelta
-        val param = BaseRefreshTaskParam(accountKeys, maxIds, null)
+        val param = StatusesRefreshTaskParam(accountKeys, maxIds, null, page + pageDelta)
         param.isLoadingMore = true
         getStatuses(param)
     }
@@ -255,5 +256,12 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         }
 
     }
+
+    protected class StatusesRefreshTaskParam(
+            accountKeys: Array<UserKey>,
+            maxIds: Array<String?>?,
+            sinceIds: Array<String?>?,
+            var page: Int = -1
+    ) : BaseRefreshTaskParam(accountKeys, maxIds, sinceIds)
 
 }

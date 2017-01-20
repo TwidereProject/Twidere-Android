@@ -44,8 +44,7 @@ class UserMentionsFragment : StatusesSearchFragment() {
         val makeGap = args.getBoolean(EXTRA_MAKE_GAP, true)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return UserMentionsLoader(activity, accountKey, screenName, maxId, sinceId, page,
-                adapterData, savedStatusesFileArgs, tabPosition, fromUser, makeGap,
-                loadingMore)
+                adapterData, savedStatusesFileArgs, tabPosition, fromUser, makeGap, loadingMore)
     }
 
 

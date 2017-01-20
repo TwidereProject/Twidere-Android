@@ -3,7 +3,7 @@ package org.mariotaku.twidere.model
 /**
  * Created by mariotaku on 16/2/11.
  */
-class BaseRefreshTaskParam(
+open class BaseRefreshTaskParam(
         override val accountKeys: Array<UserKey>,
         override val maxIds: Array<String?>?,
         override val sinceIds: Array<String?>?,

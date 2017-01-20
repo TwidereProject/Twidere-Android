@@ -106,6 +106,11 @@ public class Paging extends SimpleValueMap {
         return this;
     }
 
+    public Paging cursor(String cursor) {
+        setCursor(cursor);
+        return this;
+    }
+
     public Paging rpp(int rpp) {
         setRpp(rpp);
         return this;

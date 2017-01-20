@@ -27,7 +27,9 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.UniversalSearchQuery
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -54,18 +56,35 @@ open class TweetSearchLoader(
                                     details: AccountDetails,
                                     paging: Paging): List<Status> {
         if (query == null) throw MicroBlogException("Empty query")
-        val processedQuery = processQuery(details, query)
+        val queryText = processQuery(details, query)
         when (details.type) {
             AccountType.TWITTER -> {
-                val query = SearchQuery(processedQuery)
-                query.paging(paging)
-                return microBlog.search(query)
+                if (details.extras?.official ?: false) {
+                    var universalQueryText = queryText
+                    if (maxId != null) {
+                        universalQueryText += " max_id:$maxId"
+                    }
+                    if (sinceId != null) {
+                        universalQueryText += " since_id:$sinceId"
+                    }
+
+                    val universalQuery = UniversalSearchQuery(universalQueryText)
+                    universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
+                    universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
+                    universalQuery.setPaging(paging)
+                    val searchResult = microBlog.universalSearch(universalQuery)
+                    return searchResult.modules.mapNotNull { it.status?.data }
+                }
+
+                val searchQuery = SearchQuery(queryText)
+                searchQuery.paging(paging)
+                return microBlog.search(searchQuery)
             }
             AccountType.STATUSNET -> {
-                return microBlog.searchStatuses(processedQuery, paging)
+                return microBlog.searchStatuses(queryText, paging)
             }
             AccountType.FANFOU -> {
-                return microBlog.searchPublicTimeline(processedQuery, paging)
+                return microBlog.searchPublicTimeline(queryText, paging)
             }
         }
         throw MicroBlogException("Not implemented")
@@ -73,7 +92,7 @@ open class TweetSearchLoader(
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
-            return String.format("%s exclude:retweets", query)
+            return "$query exclude:retweets"
         }
         return query
     }
