@@ -98,12 +98,12 @@ dependencies {
     // START Non-FOSS component
     googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
     googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
-    googleCompile "com.google.android.gms:play-services-drive:$play_services_version"
     googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
     googleCompile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') { transitive = true }
     googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
     googleCompile 'com.dropbox.core:dropbox-core-sdk:2.1.2'
     googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
+    googleCompile 'com.google.apis:google-api-services-drive:v3-rev55-1.22.0'
     // END Non-FOSS component
 
     fdroidCompile 'org.osmdroid:osmdroid-android:5.5:release@aar'

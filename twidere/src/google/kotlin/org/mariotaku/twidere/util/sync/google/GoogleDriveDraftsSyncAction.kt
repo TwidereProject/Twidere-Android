@@ -1,14 +1,11 @@
 package org.mariotaku.twidere.util.sync.google
 
 import android.content.Context
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.drive.Drive
-import com.google.android.gms.drive.DriveFile
-import com.google.android.gms.drive.DriveId
-import com.google.android.gms.drive.MetadataChangeSet
+import com.google.api.client.util.DateTime
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.model.File
 import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.readMimeMessageFrom
-import org.mariotaku.twidere.extension.model.writeMimeMessageTo
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncAction
 import java.io.IOException
@@ -16,18 +13,16 @@ import java.util.*
 
 class GoogleDriveDraftsSyncAction(
         context: Context,
-        val client: GoogleApiClient
+        val drive: Drive
 ) : FileBasedDraftsSyncAction<GoogleDriveDraftsSyncAction.DriveFileInfo>(context) {
     @Throws(IOException::class)
     override fun Draft.saveToRemote(): DriveFileInfo {
         try {
-            val folder = Drive.DriveApi.getAppFolder(client)
-            val driveContents = Drive.DriveApi.newDriveContents(client).await().driveContents
-            this.writeMimeMessageTo(context, driveContents.outputStream)
             val filename = "/Drafts/$filename"
-            val changeSet = MetadataChangeSet.Builder().setTitle(filename).build()
-            val driveFile = folder.createFile(client, changeSet, driveContents).await().driveFile
-            return DriveFileInfo(driveFile.driveId, filename, Date())
+            val modifiedTime = DateTime(timestamp)
+            val create = drive.files().create(File().setName(filename).setModifiedTime(modifiedTime))
+            val file = create.execute()
+            return DriveFileInfo(file.id, file.originalFilename, Date())
         } catch (e: Exception) {
             throw IOException(e)
         }
@@ -36,9 +31,8 @@ class GoogleDriveDraftsSyncAction(
     @Throws(IOException::class)
     override fun Draft.loadFromRemote(info: DriveFileInfo): Boolean {
         try {
-            val file = info.driveId.asDriveFile()
-            val result = file.open(client, DriveFile.MODE_READ_ONLY, null).await()
-            result.driveContents.inputStream.use {
+            val get = drive.files().get(info.fileId)
+            get.executeAsInputStream().use {
                 val parsed = this.readMimeMessageFrom(context, it)
                 if (parsed) {
                     this.timestamp = info.draftTimestamp
@@ -55,7 +49,7 @@ class GoogleDriveDraftsSyncAction(
     override fun removeDrafts(list: List<DriveFileInfo>): Boolean {
         try {
             list.forEach { info ->
-                info.driveId.asDriveFile().delete(client).await()
+                drive.files().delete(info.fileId).execute()
             }
             return true
         } catch (e: Exception) {
@@ -66,7 +60,8 @@ class GoogleDriveDraftsSyncAction(
     @Throws(IOException::class)
     override fun removeDraft(info: DriveFileInfo): Boolean {
         try {
-            return info.driveId.asDriveFile().delete(client).await().isSuccess
+            drive.files().delete(info.fileId).execute()
+            return true
         } catch (e: Exception) {
             throw IOException(e)
         }
@@ -78,12 +73,11 @@ class GoogleDriveDraftsSyncAction(
 
     @Throws(IOException::class)
     override fun listRemoteDrafts(): List<DriveFileInfo> {
-        val pendingResult = Drive.DriveApi.getAppFolder(client).listChildren(client)
         val result = ArrayList<DriveFileInfo>()
         try {
-            val requestResult = pendingResult.await()
-            requestResult.metadataBuffer.mapTo(result) { metadata ->
-                DriveFileInfo(metadata.driveId, metadata.originalFilename, metadata.modifiedDate)
+            val list = drive.files().list()
+            list.execute().files.mapTo(result) { file ->
+                DriveFileInfo(file.id, file.originalFilename, Date(file.modifiedTime.value))
             }
         } catch (e: Exception) {
             throw IOException(e)
@@ -91,6 +85,6 @@ class GoogleDriveDraftsSyncAction(
         return result
     }
 
-    data class DriveFileInfo(val driveId: DriveId, val name: String, val modifiedDate: Date)
+    data class DriveFileInfo(val fileId: String, val name: String, val modifiedDate: Date)
 
 }
