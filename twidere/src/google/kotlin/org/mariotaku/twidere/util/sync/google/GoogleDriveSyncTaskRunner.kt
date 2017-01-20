@@ -27,6 +27,8 @@ class GoogleDriveSyncTaskRunner(context: Context, val accessToken: String) : Syn
             else -> null
         } ?: return false
         task {
+            val about = drive.about().get().execute()
+            println(about)
             syncAction.execute()
         }.successUi {
             callback(true)

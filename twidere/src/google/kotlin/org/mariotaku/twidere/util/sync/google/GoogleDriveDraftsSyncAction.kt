@@ -20,9 +20,9 @@ class GoogleDriveDraftsSyncAction(
         try {
             val filename = "/Drafts/$filename"
             val modifiedTime = DateTime(timestamp)
-            val create = drive.files().create(File().setName(filename).setModifiedTime(modifiedTime))
+            val create = drive.files().create(File().setOriginalFilename(filename).setModifiedTime(modifiedTime))
             val file = create.execute()
-            return DriveFileInfo(file.id, file.originalFilename, Date())
+            return DriveFileInfo(file.id, file.originalFilename, Date(timestamp))
         } catch (e: Exception) {
             throw IOException(e)
         }
