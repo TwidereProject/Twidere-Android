@@ -60,15 +60,7 @@ open class TweetSearchLoader(
         when (details.type) {
             AccountType.TWITTER -> {
                 if (details.extras?.official ?: false) {
-                    var universalQueryText = queryText
-                    if (maxId != null) {
-                        universalQueryText += " max_id:$maxId"
-                    }
-                    if (sinceId != null) {
-                        universalQueryText += " since_id:$sinceId"
-                    }
-
-                    val universalQuery = UniversalSearchQuery(universalQueryText)
+                    val universalQuery = UniversalSearchQuery(queryText)
                     universalQuery.setModules(UniversalSearchQuery.Module.TWEET)
                     universalQuery.setResultType(UniversalSearchQuery.ResultType.RECENT)
                     universalQuery.setPaging(paging)
@@ -92,9 +84,23 @@ open class TweetSearchLoader(
 
     protected open fun processQuery(details: AccountDetails, query: String): String {
         if (details.type == AccountType.TWITTER) {
+            if (details.extras?.official ?: false) {
+                return smQuery(query)
+            }
             return "$query exclude:retweets"
         }
         return query
+    }
+
+    protected fun smQuery(query: String): String {
+        var universalQueryText = query
+        if (maxId != null) {
+            universalQueryText += " max_id:$maxId"
+        }
+        if (sinceId != null) {
+            universalQueryText += " since_id:$sinceId"
+        }
+        return universalQueryText
     }
 
     @WorkerThread

@@ -21,6 +21,7 @@ package org.mariotaku.twidere.loader
 
 import android.content.Context
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.official
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -42,8 +43,11 @@ class UserMentionsLoader(
         tabPosition, fromUser, makeGap, loadingMore) {
 
     override fun processQuery(details: AccountDetails, query: String): String {
-        val screenName = if (query.startsWith("@")) query.substring(1) else query
+        val screenName = query.substringAfter("@")
         if (details.type == AccountType.TWITTER) {
+            if (details.extras?.official ?: false) {
+                return smQuery("to:$screenName")
+            }
             return "to:$screenName exclude:retweets"
         }
         return "@$screenName -RT"
