@@ -10,6 +10,7 @@ import org.mariotaku.twidere.Constants.KEY_DISPLAY_PROFILE_IMAGE
 import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials

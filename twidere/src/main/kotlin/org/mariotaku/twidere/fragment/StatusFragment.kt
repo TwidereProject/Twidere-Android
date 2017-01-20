@@ -291,8 +291,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition) ?: return
-        IntentUtils.openMedia(activity, status, media, null,
-                preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
+        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+                preferences[displaySensitiveContentsKey])
 
         val event = MediaEvent.create(activity, status, media, TimelineType.DETAILS,
                 adapter.mediaPreviewEnabled)
@@ -311,7 +311,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position) ?: return
-        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
+        IntentUtils.openStatus(activity, status)
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -332,15 +332,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)!!
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                status.user_screen_name, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                Referral.TIMELINE_STATUS)
+                status.user_screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.TIMELINE_STATUS,
+                null)
     }
 
     override fun onMediaClick(view: View, media: ParcelableMedia?, accountKey: UserKey, extraId: Long) {
         val status = adapter.status
         if (status == null || media == null) return
-        IntentUtils.openMediaDirectly(activity, accountKey, status, media, null,
-                preferences.getBoolean(KEY_NEW_DOCUMENT_API))
+        IntentUtils.openMediaDirectly(activity, accountKey, status, media, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                null)
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, TimelineType.OTHER,
                 adapter.mediaPreviewEnabled)
@@ -678,8 +678,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     private fun onUserClick(user: ParcelableUser) {
-        IntentUtils.openUserProfile(context, user, null, true,
-                Referral.TIMELINE_STATUS)
+        IntentUtils.openUserProfile(context, user, true, Referral.TIMELINE_STATUS,
+                null)
     }
 
     class LoadSensitiveImageConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -1057,15 +1057,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.profileContainer -> {
                     val activity = fragment.activity
                     IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                            status.user_screen_name, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            Referral.STATUS)
+                            status.user_screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.STATUS,
+                            null)
                 }
                 retweetedByView -> {
                     if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.context, status.account_key,
                                 status.retweeted_by_user_key, status.retweeted_by_user_screen_name,
-                                null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                                Referral.STATUS)
+                                preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.STATUS,
+                                null)
                     }
                 }
                 locationView -> {
@@ -1406,8 +1406,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
             private fun expandOrOpenMedia(current: ParcelableMedia) {
                 if (adapter.isDetailMediaExpanded) {
-                    IntentUtils.openMedia(adapter.context, adapter.status, current, null,
-                            preferences[newDocumentApiKey])
+                    IntentUtils.openMedia(adapter.context, adapter.status!!, current,
+                            preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
                     return
                 }
                 adapter.isDetailMediaExpanded = true
@@ -1448,7 +1448,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var recyclerView: RecyclerView? = null
         private var statusViewHolder: DetailStatusViewHolder? = null
 
-        private val mItemCounts: IntArray
+        private val itemCounts: IntArray
 
         override val nameFirst: Boolean
         private val cardBackgroundColor: Int
@@ -1492,13 +1492,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         init {
             setHasStableIds(true)
             val context = fragment.activity
-            val res = context.resources
-            mItemCounts = IntArray(ITEM_TYPES_SUM)
+            itemCounts = IntArray(ITEM_TYPES_SUM)
             // There's always a space at the end of the list
-            mItemCounts[ITEM_IDX_SPACE] = 1
-            mItemCounts[ITEM_IDX_STATUS] = 1
-            mItemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = 1
-            mItemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1
+            itemCounts[ITEM_IDX_SPACE] = 1
+            itemCounts[ITEM_IDX_STATUS] = 1
+            itemCounts[ITEM_IDX_CONVERSATION_LOAD_MORE] = 1
+            itemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1
             inflater = LayoutInflater.from(context)
             mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
             cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
@@ -1506,13 +1505,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     ThemeUtils.getUserThemeBackgroundAlpha(context))
             nameFirst = preferences[nameFirstKey]
             mediaPreviewStyle = preferences[mediaPreviewStyleKey]
-            linkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(SharedPreferenceConstants.KEY_LINK_HIGHLIGHT_OPTION, null))
+            linkHighlightingStyle = preferences[linkHighlightOptionKey]
             mediaPreviewEnabled = preferences[mediaPreviewKey]
             sensitiveContentEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)
             mShowCardActions = !preferences[hideCardActionsKey]
             useStarsForLikes = preferences[iWantMyStarsBackKey]
-            val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context,
-                    preferences)
+            val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
             listener.setAdapter(this)
             twidereLinkify = TwidereLinkify(listener)
         }
@@ -1538,7 +1536,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         fun getIndexStart(index: Int): Int {
             if (index == 0) return 0
-            return TwidereMathUtils.sum(mItemCounts, 0, index - 1)
+            return TwidereMathUtils.sum(itemCounts, 0, index - 1)
         }
 
         override fun getStatusId(position: Int): String? {
@@ -1795,7 +1793,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun getItemCount(): Int {
             if (status == null) return 0
-            return TwidereMathUtils.sum(mItemCounts)
+            return TwidereMathUtils.sum(itemCounts)
         }
 
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {
@@ -1809,12 +1807,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         private fun setTypeCount(idx: Int, size: Int) {
-            mItemCounts[idx] = size
+            itemCounts[idx] = size
             notifyDataSetChanged()
         }
 
         fun getTypeCount(idx: Int): Int {
-            return mItemCounts[idx]
+            return itemCounts[idx]
         }
 
         fun setReplyError(error: CharSequence?) {

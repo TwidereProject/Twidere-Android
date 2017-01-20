@@ -27,9 +27,11 @@ import android.view.MenuItem
 import android.view.View
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.UserListMembersLoader
 import org.mariotaku.twidere.model.ParcelableUserList
@@ -82,7 +84,6 @@ class UserListMembersFragment : CursorUsersListFragment() {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
-        val userList = userList ?: return
         val args = arguments
         val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
@@ -91,7 +92,7 @@ class UserListMembersFragment : CursorUsersListFragment() {
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         inflater.inflate(R.menu.action_user_list_member, menu)
         val user = adapter.getUser(contextMenuInfo!!.position)
-        menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences.getBoolean(KEY_NAME_FIRST)))
+        menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
     }
 
     override fun onContextItemSelected(item: MenuItem?): Boolean {

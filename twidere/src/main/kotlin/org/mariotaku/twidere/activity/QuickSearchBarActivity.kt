@@ -127,18 +127,18 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         when (adapter.getItemViewType(position)) {
             SuggestionsAdapter.VIEW_TYPE_USER_SUGGESTION_ITEM -> {
                 IntentUtils.openUserProfile(this, selectedAccountDetails?.key,
-                        UserKey.valueOf(item.extra_id!!), item.summary, null,
-                        preferences[newDocumentApiKey],
-                        Referral.DIRECT)
+                        UserKey.valueOf(item.extra_id!!), item.summary, preferences[newDocumentApiKey],
+                        Referral.DIRECT,
+                        null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_USER_SCREEN_NAME -> {
                 IntentUtils.openUserProfile(this, selectedAccountDetails?.key, null, item.title,
-                        null, preferences[newDocumentApiKey], Referral.DIRECT)
+                        preferences[newDocumentApiKey], Referral.DIRECT, null)
                 finish()
             }
             SuggestionsAdapter.VIEW_TYPE_SAVED_SEARCH, SuggestionsAdapter.VIEW_TYPE_SEARCH_HISTORY -> {
-                IntentUtils.openSearch(this, selectedAccountDetails?.key, item.title)
+                IntentUtils.openSearch(this, selectedAccountDetails?.key, item.title!!)
                 finish()
             }
         }

@@ -215,7 +215,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     }
 
     private fun updateFavoritedStatus(status: ParcelableStatus) {
-        val context = activity ?: return
         replaceStatusStates(status)
     }
 

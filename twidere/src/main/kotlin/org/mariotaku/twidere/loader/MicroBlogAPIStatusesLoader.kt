@@ -159,7 +159,7 @@ abstract class MicroBlogAPIStatusesLoader(
                 val item = ParcelableStatusUtils.fromStatus(status, accountKey, insertGap && isGapEnabled && minIdx == i)
                 item.position_key = GetStatusesTask.getPositionKey(item.timestamp, item.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
-                ParcelableStatusUtils.updateExtraInformation(item, details, userColorNameManager)
+                ParcelableStatusUtils.updateExtraInformation(item, details)
                 data.add(item)
             }
         }

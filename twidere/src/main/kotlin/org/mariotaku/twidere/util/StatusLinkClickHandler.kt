@@ -23,6 +23,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -46,7 +47,8 @@ open class StatusLinkClickHandler(
         if (current == null || current.open_browser) {
             openLink(link)
         } else {
-            IntentUtils.openMedia(context, status, current, null, preferences[newDocumentApiKey])
+            IntentUtils.openMedia(context, status, current, preferences[newDocumentApiKey],
+                    preferences[displaySensitiveContentsKey])
         }
     }
 

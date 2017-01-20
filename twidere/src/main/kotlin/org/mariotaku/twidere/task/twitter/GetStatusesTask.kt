@@ -177,7 +177,7 @@ abstract class GetStatusesTask(
                 val item = statuses[i]
                 val status = ParcelableStatusUtils.fromStatus(item, accountKey,
                         false)
-                ParcelableStatusUtils.updateExtraInformation(status, details, manager)
+                ParcelableStatusUtils.updateExtraInformation(status, details)
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 status.inserted_date = System.currentTimeMillis()

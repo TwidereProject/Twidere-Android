@@ -25,6 +25,7 @@ import com.squareup.otto.Bus
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
 open class BaseDialogFragment : DialogFragment() {
@@ -43,6 +44,8 @@ open class BaseDialogFragment : DialogFragment() {
     lateinit var keyboardShortcutsHandler: KeyboardShortcutsHandler
     @Inject
     lateinit var bus: Bus
+    @Inject
+    lateinit var extraFeaturesService: ExtraFeaturesService
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -50,6 +53,7 @@ open class BaseDialogFragment : DialogFragment() {
     }
 
     override fun onDestroy() {
+        extraFeaturesService.release()
         super.onDestroy()
         DebugModeUtils.watchReferenceLeak(this)
     }

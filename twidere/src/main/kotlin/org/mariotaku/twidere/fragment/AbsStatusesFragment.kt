@@ -47,11 +47,9 @@ import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
-import org.mariotaku.twidere.constant.readFromBottomKey
-import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -354,8 +352,8 @@ abstract class AbsStatusesFragment protected constructor() :
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition) ?: return
-        IntentUtils.openMedia(activity, status, media, null,
-                preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
+        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+                preferences[displaySensitiveContentsKey])
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, timelineType,
                 adapter.mediaPreviewEnabled)
@@ -420,11 +418,11 @@ abstract class AbsStatusesFragment protected constructor() :
     }
 
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
-        val status = adapter.getStatus(position)
-        val intent = IntentUtils.userProfile(status!!.account_key, status.user_key,
+        val status = adapter.getStatus(position)!!
+        val intent = IntentUtils.userProfile(status.account_key, status.user_key,
                 status.user_screen_name, Referral.TIMELINE_STATUS,
                 status.extras.user_statusnet_profile_url)
-        IntentUtils.applyNewDocument(intent, preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API))
+        IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
         startActivity(intent)
     }
 

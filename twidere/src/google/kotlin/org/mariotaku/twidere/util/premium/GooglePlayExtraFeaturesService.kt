@@ -12,7 +12,7 @@ import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
  * Created by mariotaku on 2016/12/25.
  */
 
-class GooglePlayExtraFeaturesService() : ExtraFeaturesService() {
+class GooglePlayExtraFeaturesService : ExtraFeaturesService() {
 
     private lateinit var bp: BillingProcessor
 

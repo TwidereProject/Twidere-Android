@@ -20,11 +20,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 class PremiumDashboardActivity : BaseActivity() {
 
-    private lateinit var extraFeaturesService: ExtraFeaturesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        extraFeaturesService = ExtraFeaturesService.newInstance(this)
         setContentView(R.layout.activity_premium_dashboard)
         if (extraFeaturesService.isSupported()) {
             extraFeaturesService.getDashboardLayouts().forEach { layout ->

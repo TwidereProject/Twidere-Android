@@ -263,7 +263,7 @@ object ParcelableStatusUtils {
         }
     }
 
-    fun updateExtraInformation(status: ParcelableStatus, details: AccountDetails, manager: UserColorNameManager) {
+    fun updateExtraInformation(status: ParcelableStatus, details: AccountDetails) {
         status.account_color = details.color
     }
 

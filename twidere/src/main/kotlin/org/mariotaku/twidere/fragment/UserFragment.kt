@@ -100,6 +100,8 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
@@ -626,7 +628,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     @Referral
                     val referral = arguments.getString(EXTRA_REFERRAL)
                     IntentUtils.openUserProfile(activity, accountKey, user.key, user.screen_name,
-                            null, preferences.getBoolean(KEY_NEW_DOCUMENT_API), referral)
+                            preferences.getBoolean(KEY_NEW_DOCUMENT_API), referral, null)
                 }
             }
         }
@@ -1143,8 +1145,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val profileImage = ParcelableMediaUtils.image(url)
                 profileImage.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileImage)
-                IntentUtils.openMedia(activity, user.account_key, false, null, media, null,
-                        preferences.getBoolean(KEY_NEW_DOCUMENT_API))
+                IntentUtils.openMedia(activity, user.account_key, media, null, false,
+                        preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.profileBanner -> {
                 val bannerUrl = ParcelableUserUtils.getProfileBannerUrl(user) ?: return
@@ -1153,8 +1155,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val profileBanner = ParcelableMediaUtils.image(url)
                 profileBanner.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileBanner)
-                IntentUtils.openMedia(activity, user.account_key, false, null, media, null,
-                        preferences.getBoolean(KEY_NEW_DOCUMENT_API))
+                IntentUtils.openMedia(activity, user.account_key, media, null, false,
+                        preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.listedContainer -> {
                 IntentUtils.openUserLists(getActivity(), user.account_key, user.key,
@@ -1191,8 +1193,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val user = user ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
-                IntentUtils.openUserProfile(activity, user.account_key, null, link, null,
-                        preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.USER_MENTION)
+                IntentUtils.openUserProfile(activity, user.account_key, null, link, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                        Referral.USER_MENTION, null)
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {

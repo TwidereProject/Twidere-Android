@@ -233,14 +233,14 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val account = accountsAdapter.selectedAccount ?: return
                 val activity = activity
                 if (account.user != null) {
-                    IntentUtils.openUserProfile(activity, account.user!!, null,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            Referral.SELF_PROFILE)
+                    IntentUtils.openUserProfile(activity, account.user!!, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                            Referral.SELF_PROFILE,
+                            null)
                 } else {
                     IntentUtils.openUserProfile(activity, account.key, account.key,
-                            account.user.screen_name, null,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                            Referral.SELF_PROFILE)
+                            account.user.screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
+                            Referral.SELF_PROFILE,
+                            null)
                 }
             }
         }

@@ -76,7 +76,6 @@ class DefaultAPIPreference @JvmOverloads constructor(context: Context,
         private var editNoVersionSuffixChanged: Boolean = false
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val preference = preference
             val dialog = super.onCreateDialog(savedInstanceState)
             dialog.setOnShowListener { dialog ->
 

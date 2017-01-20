@@ -150,8 +150,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val account = adapter.getItem(position)
-        IntentUtils.openUserProfile(context, account.user, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                Referral.SELF_PROFILE)
+        IntentUtils.openUserProfile(context, account.user, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.SELF_PROFILE,
+                null)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<AccountDetails>> {

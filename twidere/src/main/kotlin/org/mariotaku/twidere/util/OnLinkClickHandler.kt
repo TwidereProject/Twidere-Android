@@ -37,6 +37,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.chromeCustomTabKey
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
@@ -62,8 +63,8 @@ open class OnLinkClickHandler(
 
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
-                IntentUtils.openUserProfile(context, accountKey, null, link, null,
-                        preferences[newDocumentApiKey], Referral.USER_MENTION)
+                IntentUtils.openUserProfile(context, accountKey, null, link, preferences[newDocumentApiKey],
+                        Referral.USER_MENTION, null)
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
@@ -103,8 +104,8 @@ open class OnLinkClickHandler(
                                         }
                                         val screenName = orig.substring(1, length)
                                         IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
-                                                screenName, null, preferences[newDocumentApiKey],
-                                                Referral.USER_MENTION)
+                                                screenName, preferences[newDocumentApiKey], Referral.USER_MENTION,
+                                                null)
                                         return true
                                     }
                                 } else if (TwidereLinkify.isHashSymbol(ch) && TwidereLinkify.isHashSymbol(orig[length - 1])) {
@@ -138,9 +139,9 @@ open class OnLinkClickHandler(
                 return true
             }
             TwidereLinkify.LINK_TYPE_USER_ID -> {
-                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
-                        preferences[newDocumentApiKey],
-                        Referral.USER_MENTION)
+                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, preferences[newDocumentApiKey],
+                        Referral.USER_MENTION,
+                        null)
                 return true
             }
         }
@@ -156,8 +157,8 @@ open class OnLinkClickHandler(
 
     protected open fun openMedia(accountKey: UserKey, extraId: Long, sensitive: Boolean, link: String, start: Int, end: Int) {
         val media = arrayOf(ParcelableMediaUtils.image(link))
-        IntentUtils.openMedia(context, accountKey, sensitive, null, media, null,
-                preferences[newDocumentApiKey])
+        IntentUtils.openMedia(context, accountKey, media, null, sensitive, preferences[newDocumentApiKey],
+                preferences[displaySensitiveContentsKey])
     }
 
     protected open fun openLink(link: String) {

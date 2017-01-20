@@ -73,7 +73,7 @@ class ParcelableStatusLoader(
         if (details == null) return SingleResponse(MicroBlogException("No account"))
         try {
             val status = findStatus(context, accountKey, statusId)
-            ParcelableStatusUtils.updateExtraInformation(status, details, userColorNameManager)
+            ParcelableStatusUtils.updateExtraInformation(status, details)
             val response = SingleResponse(status)
             response.extras[EXTRA_ACCOUNT] = details
             return response

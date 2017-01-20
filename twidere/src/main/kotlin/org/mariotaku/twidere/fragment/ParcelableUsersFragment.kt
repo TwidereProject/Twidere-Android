@@ -30,6 +30,7 @@ import android.view.KeyEvent
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.commons.parcel.ParcelUtils
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
@@ -40,6 +41,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -143,8 +145,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun onUserClick(holder: UserViewHolder, position: Int) {
         val user = adapter.getUser(position) ?: return
-        IntentUtils.openUserProfile(activity, user, null,
-                preferences.getBoolean(SharedPreferenceConstants.KEY_NEW_DOCUMENT_API), userReferral)
+        IntentUtils.openUserProfile(activity, user, preferences[newDocumentApiKey], userReferral)
     }
 
     override fun onFollowClicked(holder: UserViewHolder, position: Int) {

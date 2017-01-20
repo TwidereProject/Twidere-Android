@@ -51,10 +51,8 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.readFromBottomKey
-import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -299,7 +297,8 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
         val status = adapter.getActivity(position)?.getActivityStatus() ?: return
-        IntentUtils.openMedia(activity, status, media, null, preferences.getBoolean(KEY_NEW_DOCUMENT_API))
+        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
+                null)
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, timelineType, adapter.mediaPreviewEnabled)
         HotMobiLogger.getInstance(activity).log(status.account_key, event)

@@ -58,6 +58,7 @@ import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
@@ -92,6 +93,8 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var permissionsManager: PermissionsManager
+    @Inject
+    lateinit var extraFeaturesService: ExtraFeaturesService
 
     private val actionHelper = IExtendedActivity.ActionHelper(this)
 

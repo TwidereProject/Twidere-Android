@@ -387,11 +387,7 @@ class ParcelableActivitiesAdapter(
 
     internal class EventListener(adapter: ParcelableActivitiesAdapter) : IStatusViewHolder.StatusClickListener, IGapSupportedAdapter.GapClickListener, IActivitiesAdapter.ActivityEventListener {
 
-        val adapterRef: WeakReference<ParcelableActivitiesAdapter>
-
-        init {
-            adapterRef = WeakReference(adapter)
-        }
+        val adapterRef = WeakReference(adapter)
 
         override fun onGapClick(holder: GapViewHolder, position: Int) {
             val adapter = adapterRef.get() ?: return
@@ -413,8 +409,8 @@ class ParcelableActivitiesAdapter(
             val adapter = adapterRef.get() ?: return
             val status = adapter.getActivity(position)?.getActivityStatus() ?: return
             IntentUtils.openUserProfile(adapter.context, status.account_key, status.user_key,
-                    status.user_screen_name, null, adapter.preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                    Referral.TIMELINE_STATUS)
+                    status.user_screen_name, adapter.preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.TIMELINE_STATUS,
+                    null)
         }
 
         override fun onStatusClick(holder: IStatusViewHolder, position: Int) {

@@ -310,8 +310,8 @@ public final class Utils implements Constants {
     public static Intent createStatusShareIntent(@NonNull final Context context, @NonNull final ParcelableStatus status) {
         final Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.getStatusShareSubject(context, status));
-        intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.getStatusShareText(context, status));
+        intent.putExtra(Intent.EXTRA_SUBJECT, IntentUtils.INSTANCE.getStatusShareSubject(context, status));
+        intent.putExtra(Intent.EXTRA_TEXT, IntentUtils.INSTANCE.getStatusShareText(context, status));
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         return intent;
     }

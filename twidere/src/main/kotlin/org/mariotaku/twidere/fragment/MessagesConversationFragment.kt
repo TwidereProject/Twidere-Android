@@ -401,7 +401,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
         if (menuInfo == null) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
-        val message = adapter!!.getDirectMessage(contextMenuInfo!!.position)
+        val message = adapter!!.getDirectMessage(contextMenuInfo!!.position)!!
         menu.setHeaderTitle(message.text_unescaped)
         inflater.inflate(R.menu.action_direct_message, menu)
     }
