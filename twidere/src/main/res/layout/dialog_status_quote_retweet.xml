@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -17,15 +19,17 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView android:id="@+id/status_container"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_large"
-            android:paddingRight="@dimen/element_spacing_large"
-            android:paddingTop="@dimen/element_spacing_normal">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/status_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/element_spacing_normal"
+    android:paddingLeft="@dimen/element_spacing_large"
+    android:paddingRight="@dimen/element_spacing_large"
+    android:paddingTop="@dimen/element_spacing_normal">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,9 +49,10 @@
                 android:focusable="true"
                 android:hint="@string/comment_hint"
                 android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                android:visibility="visible">
+                android:visibility="visible"
+                app:backgroundTint="?colorAccent">
 
-                <requestFocus/>
+                <requestFocus />
             </org.mariotaku.twidere.view.ComposeEditText>
 
             <org.mariotaku.twidere.view.StatusTextCountView
@@ -64,7 +69,7 @@
                 android:gravity="center_vertical|start"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
-                tools:text="140"/>
+                tools:text="140" />
 
             <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/comment_menu"
@@ -76,10 +81,10 @@
                 android:layout_below="@+id/edit_comment"
                 android:color="?android:textColorTertiary"
                 android:focusable="false"
-                android:src="@drawable/ic_action_more_vertical"/>
+                android:src="@drawable/ic_action_more_vertical" />
         </RelativeLayout>
 
-        <include layout="@layout/list_item_status"/>
+        <include layout="@layout/list_item_status" />
     </LinearLayout>
 
 </ScrollView>

@@ -78,6 +78,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.view.ShapedImageView
+import java.lang.ref.WeakReference
 import java.util.*
 
 class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
@@ -762,23 +763,23 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
          * Handles a request to start the Loader.
          */
         override fun onStartLoading() {
-
+            val weakLoader = WeakReference(this)
             // Start watching for changes in the app data.
             if (contentObserver == null) {
-                contentObserver = object : ContentObserver(Handler(Looper.getMainLooper())) {
+                contentObserver = object : ContentObserver(null) {
                     override fun onChange(selfChange: Boolean) {
-                        onContentChanged()
+                        weakLoader.get()?.onContentChanged()
                     }
 
                     override fun onChange(selfChange: Boolean, uri: Uri?) {
-                        onContentChanged()
+                        weakLoader.get()?.onContentChanged()
                     }
                 }
                 context.contentResolver.registerContentObserver(Drafts.CONTENT_URI, true, contentObserver)
             }
             if (accountListener == null) {
                 accountListener = OnAccountsUpdateListener {
-                    onContentChanged()
+                    weakLoader.get()?.onContentChanged()
                 }
                 AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener!!, updateImmediately = false)
             }
