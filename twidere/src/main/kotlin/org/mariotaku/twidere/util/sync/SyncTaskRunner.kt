@@ -6,6 +6,7 @@ import nl.komponents.kovenant.task
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -54,9 +55,16 @@ abstract class SyncTaskRunner(val context: Context) {
     }
 
     fun performSync() {
-        TaskServiceRunner.ACTIONS_SYNC.forEach { action ->
-            this.runTask(action)
+        val actions = TaskServiceRunner.ACTIONS_SYNC.toCollection(LinkedList())
+        val runnable = object : Runnable {
+            override fun run() {
+                val action = actions.poll() ?: return
+                runTask(action) {
+                    this.run()
+                }
+            }
         }
+        runnable.run()
     }
 
     companion object {

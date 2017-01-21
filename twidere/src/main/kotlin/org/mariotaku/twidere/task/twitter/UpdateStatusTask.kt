@@ -42,6 +42,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
+import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import java.io.*
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -744,27 +745,7 @@ class UpdateStatusTask(
             return Pair(FileBody(cis, "attachment", cis.length(), contentType), size)
         }
 
-        internal class DirectByteArrayOutputStream : ByteArrayOutputStream {
-            constructor() : super()
-            constructor(size: Int) : super(size)
-
-            fun inputStream(close: Boolean): InputStream {
-                return DirectInputStream(this, close)
-            }
-
-            internal class DirectInputStream(
-                    val os: DirectByteArrayOutputStream,
-                    val close: Boolean
-            ) : ByteArrayInputStream(os.buf, 0, os.count) {
-                override fun close() {
-                    if (close) {
-                        os.close()
-                    }
-                    super.close()
-                }
-            }
-        }
-
 
     }
+
 }

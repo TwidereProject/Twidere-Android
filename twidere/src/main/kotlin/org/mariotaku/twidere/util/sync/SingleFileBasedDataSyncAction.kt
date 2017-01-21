@@ -16,6 +16,11 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG_SYNC, "Begin syncing $whatData")
         }
+
+        if (!setup()) {
+            return false
+        }
+
         val snapshotStore = newSnapshotStore()
 
         var remoteData: Data? = null
@@ -36,6 +41,9 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
                 }
             }
         } catch (e: FileNotFoundException) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOGTAG_SYNC, "Remote $whatData doesn't exists, will upload new one")
+            }
             shouldCreateRemote = true
         }
 
@@ -147,6 +155,8 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
     protected abstract fun UploadSession.saveToRemote(data: Data): Boolean
 
     protected abstract fun Data.dataContentEquals(localData: Data): Boolean
+
+    protected open fun setup(): Boolean = true
 
     protected open val whatData: String = "data"
 

@@ -15,7 +15,7 @@ import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncAction
 import java.io.IOException
 import java.util.*
 
-class DropboxDraftsSyncAction(
+internal class DropboxDraftsSyncAction(
         context: Context,
         val client: DbxClientV2
 ) : FileBasedDraftsSyncAction<FileMetadata>(context) {

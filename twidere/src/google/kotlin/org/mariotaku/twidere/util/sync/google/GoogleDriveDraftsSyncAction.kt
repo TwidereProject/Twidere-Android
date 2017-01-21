@@ -3,68 +3,62 @@ package org.mariotaku.twidere.util.sync.google
 import android.content.Context
 import com.google.api.client.util.DateTime
 import com.google.api.services.drive.Drive
-import com.google.api.services.drive.model.File
 import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.readMimeMessageFrom
+import org.mariotaku.twidere.extension.model.writeMimeMessageTo
 import org.mariotaku.twidere.model.Draft
+import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncAction
 import java.io.IOException
 import java.util.*
 
-class GoogleDriveDraftsSyncAction(
+
+internal class GoogleDriveDraftsSyncAction(
         context: Context,
         val drive: Drive
-) : FileBasedDraftsSyncAction<GoogleDriveDraftsSyncAction.DriveFileInfo>(context) {
+) : FileBasedDraftsSyncAction<DriveFileInfo>(context) {
+
+    val draftsDirName = "Drafts"
+    val draftMimeType = "message/rfc822"
+
+    private lateinit var folderId: String
+    private val files = drive.files()
+
     @Throws(IOException::class)
     override fun Draft.saveToRemote(): DriveFileInfo {
-        try {
-            val filename = "/Drafts/$filename"
-            val modifiedTime = DateTime(timestamp)
-            val create = drive.files().create(File().setOriginalFilename(filename).setModifiedTime(modifiedTime))
-            val file = create.execute()
-            return DriveFileInfo(file.id, file.originalFilename, Date(timestamp))
-        } catch (e: Exception) {
-            throw IOException(e)
-        }
+        val os = DirectByteArrayOutputStream()
+        this.writeMimeMessageTo(context, os)
+        val file = files.updateOrCreate(filename, draftMimeType, folderId, stream = os.inputStream(true), fileConfig = {
+            it.modifiedTime = DateTime(timestamp)
+        })
+        return DriveFileInfo(file.id, file.name, Date(timestamp))
     }
 
     @Throws(IOException::class)
     override fun Draft.loadFromRemote(info: DriveFileInfo): Boolean {
-        try {
-            val get = drive.files().get(info.fileId)
-            get.executeAsInputStream().use {
-                val parsed = this.readMimeMessageFrom(context, it)
-                if (parsed) {
-                    this.timestamp = info.draftTimestamp
-                    this.unique_id = info.draftFileName.substringBeforeLast(".eml")
-                }
-                return parsed
+        val get = files.get(info.fileId)
+        get.executeAsInputStream().use {
+            val parsed = this.readMimeMessageFrom(context, it)
+            if (parsed) {
+                this.timestamp = info.draftTimestamp
+                this.unique_id = info.draftFileName.substringBeforeLast(".eml")
             }
-        } catch (e: Exception) {
-            throw IOException(e)
+            return parsed
         }
     }
 
     @Throws(IOException::class)
     override fun removeDrafts(list: List<DriveFileInfo>): Boolean {
-        try {
-            list.forEach { info ->
-                drive.files().delete(info.fileId).execute()
-            }
-            return true
-        } catch (e: Exception) {
-            throw IOException(e)
+        list.forEach { info ->
+            files.delete(info.fileId).execute()
         }
+        return true
     }
 
     @Throws(IOException::class)
     override fun removeDraft(info: DriveFileInfo): Boolean {
-        try {
-            drive.files().delete(info.fileId).execute()
-            return true
-        } catch (e: Exception) {
-            throw IOException(e)
-        }
+        files.delete(info.fileId).execute()
+        return true
     }
 
     override val DriveFileInfo.draftTimestamp: Long get() = this.modifiedDate.time
@@ -74,17 +68,25 @@ class GoogleDriveDraftsSyncAction(
     @Throws(IOException::class)
     override fun listRemoteDrafts(): List<DriveFileInfo> {
         val result = ArrayList<DriveFileInfo>()
-        try {
-            val list = drive.files().list()
-            list.execute().files.mapTo(result) { file ->
-                DriveFileInfo(file.id, file.originalFilename, Date(file.modifiedTime.value))
+        var pageToken: String?
+        do {
+            val executeResult = files.list().apply {
+                q = "'$folderId' in parents and mimeType = '$draftMimeType' and trashed = false"
+            }.execute()
+            executeResult.files.filter { file ->
+                file.mimeType == draftMimeType
+            }.mapTo(result) { file ->
+                val lastModified = file.modifiedTime ?: file.createdTime
+                DriveFileInfo(file.id, file.name, Date(lastModified?.value ?: 0))
             }
-        } catch (e: Exception) {
-            throw IOException(e)
-        }
+            pageToken = executeResult.nextPageToken
+        } while (pageToken != null)
         return result
     }
 
-    data class DriveFileInfo(val fileId: String, val name: String, val modifiedDate: Date)
+    override fun setup(): Boolean {
+        folderId = files.getOrCreate(draftsDirName, folderMimeType).id
+        return true
+    }
 
 }
