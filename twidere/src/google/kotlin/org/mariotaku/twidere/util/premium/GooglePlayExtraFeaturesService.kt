@@ -27,7 +27,7 @@ class GooglePlayExtraFeaturesService : ExtraFeaturesService() {
         bp.release()
     }
 
-    override fun isSupported(): Boolean = true
+    override fun isSupported(): Boolean = BillingProcessor.isIabServiceAvailable(context)
 
     override fun isEnabled(feature: String): Boolean {
         if (bp.hasValidTransaction(PRODUCT_ID_EXTRA_FEATURES_PACK)) return true

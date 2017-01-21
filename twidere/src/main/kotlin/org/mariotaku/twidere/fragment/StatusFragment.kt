@@ -840,29 +840,33 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                         itemView.quotedText.visibility = View.VISIBLE
                     }
 
-                    itemView.quoteIndicator.color = colorNameManager.getUserColor(status.quoted_user_key!!)
+                    val quotedUserColor = colorNameManager.getUserColor(status.quoted_user_key!!)
+                    if (quotedUserColor != 0) {
+                        itemView.quotedView.drawStart(quotedUserColor)
+                    } else {
+                        itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
+                                R.attr.quoteIndicatorBackgroundColor, 0))
+                    }
 
                     val quotedMedia = status.quoted_media
 
                     if (quotedMedia?.isEmpty() ?: true) {
-                        itemView.quotedMediaPreviewContainer.visibility = View.GONE
+                        itemView.quotedMediaLabel.visibility = View.GONE
                         itemView.quotedMediaPreview.visibility = View.GONE
-                        itemView.quotedMediaPreviewPlaceholder.visibility = View.GONE
                     } else if (adapter.isDetailMediaExpanded) {
-                        itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                        itemView.quotedMediaLabel.visibility = View.GONE
                         itemView.quotedMediaPreview.visibility = View.VISIBLE
-                        itemView.quotedMediaPreviewPlaceholder.visibility = View.GONE
                         itemView.quotedMediaPreview.displayMedia(quotedMedia, loader, status.account_key, -1,
                                 adapter.fragment, null)
                     } else {
-                        itemView.quotedMediaPreviewContainer.visibility = View.VISIBLE
+                        itemView.quotedMediaLabel.visibility = View.VISIBLE
                         itemView.quotedMediaPreview.visibility = View.GONE
-                        itemView.quotedMediaPreviewPlaceholder.visibility = View.VISIBLE
                     }
                 } else {
                     itemView.quotedName.visibility = View.GONE
                     itemView.quotedText.visibility = View.VISIBLE
-                    itemView.quotedMediaPreviewContainer.visibility = View.GONE
+                    itemView.quotedMediaLabel.visibility = View.GONE
+                    itemView.quotedMediaPreview.visibility = View.GONE
 
                     // Not available
                     val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))
@@ -871,7 +875,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                             string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                     itemView.quotedText.text = string
 
-                    itemView.quoteIndicator.color = 0
+                    itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
+                            R.attr.quoteIndicatorBackgroundColor, 0))
                 }
             } else {
                 itemView.quotedView.visibility = View.GONE
