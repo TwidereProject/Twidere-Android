@@ -47,7 +47,9 @@ abstract class ExtraFeaturesService {
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
 
         fun newInstance(context: Context): ExtraFeaturesService {
-            val instance = ServiceLoader.load(ExtraFeaturesService::class.java).first()
+            val instance = ServiceLoader.load(ExtraFeaturesService::class.java).firstOrNull() ?: run {
+                return@run DummyExtraFeaturesService()
+            }
             instance.init(context)
             return instance
         }
