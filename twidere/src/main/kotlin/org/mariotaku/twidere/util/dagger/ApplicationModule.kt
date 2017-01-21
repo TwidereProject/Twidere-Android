@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.dagger
 
 import android.app.Application
 import android.content.Context
+import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
 import android.support.v4.text.BidiFormatter
@@ -291,6 +292,11 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun etagCache(): ETagCache {
         return ETagCache(application)
+    }
+
+    @Provides
+    fun locationManager(): LocationManager {
+        return application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {

@@ -110,8 +110,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     lateinit var validator: TwidereValidator
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
+    @Inject
+    lateinit var locationManager: LocationManager
 
-    private lateinit var locationManager: LocationManager
     private lateinit var itemTouchHelper: ItemTouchHelper
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
     private var currentTask: AsyncTask<Any, Any, *>? = null
@@ -229,9 +230,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onStart() {
         super.onStart()
-        imageUploaderUsed = !ServicePickerPreference.isNoneValue(preferences.getString(KEY_MEDIA_UPLOADER, null))
-        statusShortenerUsed = !ServicePickerPreference.isNoneValue(preferences.getString(KEY_STATUS_SHORTENER, null))
-        if (preferences[attachLocationKey]) {
+
+        imageUploaderUsed = !ServicePickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
+        statusShortenerUsed = !ServicePickerPreference.isNoneValue(kPreferences[statusShortenerKey])
+        if (kPreferences[attachLocationKey]) {
             if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)) {
                 try {
                     startLocationUpdateIfEnabled()
@@ -480,7 +482,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
@@ -504,8 +505,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
         locationSwitch.max = LOCATION_OPTIONS.size
-        val attachLocation = preferences[attachLocationKey]
-        val attachPreciseLocation = preferences[attachPreciseLocationKey]
+        val attachLocation = kPreferences[attachLocationKey]
+        val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
         if (attachLocation) {
             if (attachPreciseLocation) {
                 locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_COORDINATE)
@@ -530,10 +531,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     attachPreciseLocationChecked = false
                 }
             }
-            preferences.edit()
-                    .putBoolean(KEY_ATTACH_LOCATION, attachLocationChecked)
-                    .putBoolean(KEY_ATTACH_PRECISE_LOCATION, attachPreciseLocationChecked)
-                    .apply()
+            kPreferences.edit {
+                this[attachLocationKey] = attachLocationChecked
+                this[attachPreciseLocationKey] = attachPreciseLocationChecked
+            }
             if (attachLocationChecked) {
                 requestOrUpdateLocation()
             } else if (locationListener != null) {
@@ -599,7 +600,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             setLabel(intent)
             val selectedAccountIds = accountsAdapter.selectedAccountKeys
             if (ArrayUtils.isEmpty(selectedAccountIds)) {
-                val idsInPrefs: Array<UserKey> = UserKey.arrayOf(preferences.getString(KEY_COMPOSE_ACCOUNTS, null)) ?: emptyArray()
+                val idsInPrefs: Array<UserKey> = kPreferences[composeAccountsKey] ?: emptyArray()
                 val intersection: Array<UserKey> = defaultAccountIds.intersect(listOf(*idsInPrefs)).toTypedArray()
 
                 if (intersection.isEmpty()) {
