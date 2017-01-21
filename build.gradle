@@ -36,6 +36,11 @@ subprojects {
         ext.mariotaku_commons_library_version = '0.9.11'
         ext.mariotaku_restfu_version = '0.9.34'
         ext.play_services_version = '10.0.1'
+        ext.crashlyrics_version = '2.6.6'
+        ext.fabric_plugin_version = '1.22.0'
+        ext.dropbox_core_sdk_version = '2.1.2'
+        ext.google_api_drive_version = 'v3-rev55-1.22.0'
+
     }
     afterEvaluate { project ->
 
