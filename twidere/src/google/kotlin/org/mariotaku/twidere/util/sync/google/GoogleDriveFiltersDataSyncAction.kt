@@ -12,6 +12,7 @@ import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import org.mariotaku.twidere.util.sync.FileBasedFiltersDataSyncAction
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 
 internal class GoogleDriveFiltersDataSyncAction(
@@ -25,17 +26,20 @@ internal class GoogleDriveFiltersDataSyncAction(
     private val files = drive.files()
 
     override fun newLoadFromRemoteSession(): CloseableAny<File> {
-        val file = files.getOrNull(fileName, xmlMimeType, commonFolderId) ?: throw FileNotFoundException()
+        val file = drive.getFileOrNull(fileName, xmlMimeType, commonFolderId,
+                conflictResolver = ::resolveFilesConflict) ?: run {
+            throw FileNotFoundException()
+        }
         return CloseableAny(file)
     }
 
     override fun CloseableAny<File>.getRemoteLastModified(): Long {
-        return (obj.modifiedTime ?: obj.createdTime)?.value ?: 0
+        return obj.modifiedTime?.value ?: throw IOException("Modified time should not be null")
     }
 
     override fun CloseableAny<File>.loadFromRemote(): FiltersData {
         val data = FiltersData()
-        data.parse(files.get(obj.id).executeAsInputStream().newPullParser(charset = Charsets.UTF_8))
+        data.parse(files.get(obj.id).executeMediaAsInputStream().newPullParser(charset = Charsets.UTF_8))
         data.initFields()
         return data
     }
@@ -49,7 +53,7 @@ internal class GoogleDriveFiltersDataSyncAction(
     }
 
     override fun newSaveToRemoteSession(): GoogleDriveUploadSession<FiltersData> {
-        return object : GoogleDriveUploadSession<FiltersData>(fileName, commonFolderId, xmlMimeType, files) {
+        return object : GoogleDriveUploadSession<FiltersData>(fileName, commonFolderId, xmlMimeType, drive) {
             override fun FiltersData.toInputStream(): InputStream {
                 val os = DirectByteArrayOutputStream()
                 this.serialize(os.newSerializer(charset = Charsets.UTF_8, indent = true))
@@ -60,7 +64,7 @@ internal class GoogleDriveFiltersDataSyncAction(
 
 
     override fun setup(): Boolean {
-        commonFolderId = files.getOrCreate("Common", folderMimeType).id
+        commonFolderId = drive.getFileOrCreate("Common", folderMimeType, conflictResolver = ::resolveFoldersConflict).id
         return true
     }
 

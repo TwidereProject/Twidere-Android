@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.util.sync.google
 
 import android.content.Context
+import android.util.Log
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
@@ -8,13 +9,11 @@ import com.google.api.services.drive.Drive
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.model.sync.GoogleDriveSyncProviderInfo
 import org.mariotaku.twidere.util.TaskServiceRunner
-import org.mariotaku.twidere.util.sync.ISyncAction
-import org.mariotaku.twidere.util.sync.SyncTaskRunner
-import org.mariotaku.twidere.util.sync.UserColorsSyncProcessor
-import org.mariotaku.twidere.util.sync.UserNicknamesSyncProcessor
-import org.mariotaku.twidere.util.sync.dropbox.DropboxPreferencesValuesSyncAction
+import org.mariotaku.twidere.util.sync.*
+import java.io.IOException
 
 
 /**
@@ -48,6 +47,9 @@ class GoogleDriveSyncTaskRunner(context: Context, val refreshToken: String) : Sy
         }.successUi {
             callback(true)
         }.failUi {
+            if (BuildConfig.DEBUG) {
+                Log.w(LOGTAG_SYNC, "Sync $action failed", it)
+            }
             callback(false)
         }
         return true

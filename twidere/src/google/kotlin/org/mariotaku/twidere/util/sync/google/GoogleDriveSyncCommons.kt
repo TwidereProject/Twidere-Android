@@ -6,6 +6,7 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import java.io.InputStream
 
+
 /**
  * Created by mariotaku on 1/21/17.
  */
@@ -13,11 +14,29 @@ import java.io.InputStream
 
 internal const val folderMimeType = "application/vnd.google-apps.folder"
 internal const val xmlMimeType = "application/xml"
+internal const val requiredRequestFields = "id, name, mimeType, modifiedTime"
 
+internal fun Drive.getFileOrNull(
+        name: String,
+        mimeType: String?,
+        parent: String? = "root",
+        trashed: Boolean = false,
+        conflictResolver: ((Drive, List<File>) -> File)? = null
+): File? {
+    val result = findFilesOrNull(name, mimeType, parent, trashed) ?: return null
+    if (result.size > 1 && conflictResolver != null) {
+        return conflictResolver(this, result)
+    }
+    return result.firstOrNull()
+}
 
-internal fun Drive.Files.getOrNull(name: String, mimeType: String?, parent: String? = "root",
-                                   trashed: Boolean = false): File? {
-    val find = list()
+internal fun Drive.findFilesOrNull(
+        name: String,
+        mimeType: String?,
+        parent: String? = "root",
+        trashed: Boolean = false
+): List<File>? {
+    val find = files().list()
     var query = "name = '$name'"
     if (parent != null) {
         query += " and '$parent' in parents"
@@ -27,8 +46,9 @@ internal fun Drive.Files.getOrNull(name: String, mimeType: String?, parent: Stri
     }
     query += " and trashed = $trashed"
     find.q = query
+    find.fields = "files($requiredRequestFields)"
     try {
-        return find.execute().files.firstOrNull()
+        return find.execute().files
     } catch (e: GoogleJsonResponseException) {
         if (e.statusCode == 404) {
             return null
@@ -38,18 +58,37 @@ internal fun Drive.Files.getOrNull(name: String, mimeType: String?, parent: Stri
     }
 }
 
-internal fun Drive.Files.getOrCreate(name: String, mimeType: String, parent: String = "root",
-                                     trashed: Boolean = false): File {
-    return getOrNull(name, mimeType, parent, trashed) ?: run {
-        val fileMetadata = File()
-        fileMetadata.name = name
-        fileMetadata.mimeType = mimeType
-        fileMetadata.parents = listOf(parent)
-        return@run create(fileMetadata).execute()
+internal fun Drive.getFileOrCreate(
+        name: String,
+        mimeType: String,
+        parent: String = "root",
+        trashed: Boolean = false,
+        conflictResolver: ((Drive, List<File>) -> File)? = null
+): File {
+    val result = findFilesOrCreate(name, mimeType, parent, trashed)
+    if (result.size > 1 && conflictResolver != null) {
+        return conflictResolver(this, result)
+    }
+    return result.first()
+}
+
+internal fun Drive.findFilesOrCreate(
+        name: String,
+        mimeType: String,
+        parent: String = "root",
+        trashed: Boolean = false
+): List<File> {
+    return findFilesOrNull(name, mimeType, parent, trashed) ?: run {
+        val file = File()
+        file.name = name
+        file.mimeType = mimeType
+        file.parents = listOf(parent)
+        val create = files().create(file)
+        return@run listOf(create.execute())
     }
 }
 
-internal fun Drive.Files.updateOrCreate(
+internal fun Drive.updateOrCreate(
         name: String,
         mimeType: String,
         parent: String = "root",
@@ -57,13 +96,12 @@ internal fun Drive.Files.updateOrCreate(
         stream: InputStream,
         fileConfig: ((file: File) -> Unit)? = null
 ): File {
+    val files = files()
     return run {
-        val find = list()
+        val find = files.list()
         find.q = "name = '$name' and '$parent' in parents and mimeType = '$mimeType' and trashed = $trashed"
-        try {
-            val file = find.execute().files.firstOrNull() ?: return@run null
-            fileConfig?.invoke(file)
-            return@run update(file.id, file, InputStreamContent(mimeType, stream)).execute()
+        val fileId = try {
+            find.execute().files.firstOrNull()?.id ?: return@run null
         } catch (e: GoogleJsonResponseException) {
             if (e.statusCode == 404) {
                 return@run null
@@ -71,12 +109,47 @@ internal fun Drive.Files.updateOrCreate(
                 throw e
             }
         }
+        return@run files.performUpdate(fileId, name, mimeType, stream, fileConfig)
     } ?: run {
         val file = File()
         file.name = name
         file.mimeType = mimeType
         file.parents = listOf(parent)
         fileConfig?.invoke(file)
-        return@run create(file, InputStreamContent(mimeType, stream)).execute()
+        val create = files.create(file, InputStreamContent(mimeType, stream))
+        return@run create.execute()
     }
+}
+
+internal fun Drive.Files.performUpdate(
+        fileId: String,
+        name: String,
+        mimeType: String,
+        stream: InputStream,
+        fileConfig: ((file: File) -> Unit)? = null
+): File {
+    val file = File()
+    file.name = name
+    file.mimeType = mimeType
+    fileConfig?.invoke(file)
+    val update = update(fileId, file, InputStreamContent(mimeType, stream))
+    update.fields = requiredRequestFields
+    return update.execute()
+}
+
+internal fun resolveFilesConflict(client: Drive, list: List<File>): File {
+    // Use newest file
+    val newest = list.maxBy { it.modifiedTime.value }!!
+
+    // Delete all others
+    val batch = client.batch()
+    val callback = SimpleJsonBatchCallback<Void>()
+    val files = client.files()
+    list.filterNot { it == newest }.forEach { files.delete(it.id).queue(batch, callback) }
+    batch.execute()
+    return newest
+}
+
+internal fun resolveFoldersConflict(client: Drive, list: List<File>): File {
+    return list.first()
 }

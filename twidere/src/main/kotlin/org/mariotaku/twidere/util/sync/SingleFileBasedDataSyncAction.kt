@@ -42,7 +42,7 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
             }
         } catch (e: FileNotFoundException) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG_SYNC, "Remote $whatData doesn't exists, will upload new one")
+                Log.d(LOGTAG_SYNC, "Remote $whatData doesn't exist, will upload new one")
             }
             shouldCreateRemote = true
         }

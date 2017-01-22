@@ -82,9 +82,11 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
                 downloadRemoteInfoList.add(remoteDraft)
             } else if (remoteDraft.draftTimestamp - localDraft.timestamp > 1000) {
                 // Local is older, update from remote
+                localDraft.remote_extras = remoteDraft.draftRemoteExtras
                 updateLocalInfoList[localDraft._id] = remoteDraft
             } else if (localDraft.timestamp - remoteDraft.draftTimestamp > 1000) {
                 // Local is newer, upload local
+                localDraft.remote_extras = remoteDraft.draftRemoteExtras
                 uploadLocalList.add(localDraft)
             }
         }
@@ -111,48 +113,58 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
 
 
         // Upload local items
-        if (BuildConfig.DEBUG && uploadLocalList.isNotEmpty()) {
-            val fileList = uploadLocalList.joinToString(",") { it.filename }
-            Log.d(LOGTAG_SYNC, "Uploading local drafts $fileList")
+        if (uploadLocalList.isNotEmpty()) {
+            if (BuildConfig.DEBUG) {
+                val fileList = uploadLocalList.joinToString(",") { it.filename }
+                Log.d(LOGTAG_SYNC, "Uploading local drafts $fileList")
+            }
+            uploadDrafts(uploadLocalList)
         }
-        uploadDrafts(uploadLocalList)
 
         // Download remote items
-        if (BuildConfig.DEBUG && downloadRemoteInfoList.isNotEmpty()) {
-            val fileList = downloadRemoteInfoList.joinToString(",") { it.draftFileName }
-            Log.d(LOGTAG_SYNC, "Downloading remote drafts $fileList")
+        if (downloadRemoteInfoList.isNotEmpty()) {
+            if (BuildConfig.DEBUG) {
+                val fileList = downloadRemoteInfoList.joinToString(",") { it.draftFileName }
+                Log.d(LOGTAG_SYNC, "Downloading remote drafts $fileList")
+            }
+            ContentResolverUtils.bulkInsert(context.contentResolver, Drafts.CONTENT_URI,
+                    downloadDrafts(downloadRemoteInfoList).map { DraftValuesCreator.create(it) })
         }
-        ContentResolverUtils.bulkInsert(context.contentResolver, Drafts.CONTENT_URI,
-                downloadDrafts(downloadRemoteInfoList).map { DraftValuesCreator.create(it) })
 
         // Update local items
-        if (BuildConfig.DEBUG && updateLocalInfoList.size() > 0) {
-            val fileList = (0 until updateLocalInfoList.size()).joinToString(",") { updateLocalInfoList.valueAt(it).draftFileName }
-            Log.d(LOGTAG_SYNC, "Updating local drafts $fileList")
-        }
-        for (index in 0 until updateLocalInfoList.size()) {
-            val draft = Draft()
-            if (draft.loadFromRemote(updateLocalInfoList.valueAt(index))) {
-                val where = Expression.equalsArgs(Drafts._ID).sql
-                val whereArgs = arrayOf(updateLocalInfoList.keyAt(index).toString())
-                context.contentResolver.update(Drafts.CONTENT_URI, DraftValuesCreator.create(draft), where, whereArgs)
+        if (updateLocalInfoList.size() > 0) {
+            if (BuildConfig.DEBUG) {
+                val fileList = (0 until updateLocalInfoList.size()).joinToString(",") { updateLocalInfoList.valueAt(it).draftFileName }
+                Log.d(LOGTAG_SYNC, "Updating local drafts $fileList")
+            }
+            for (index in 0 until updateLocalInfoList.size()) {
+                val draft = Draft()
+                if (draft.loadFromRemote(updateLocalInfoList.valueAt(index))) {
+                    val where = Expression.equalsArgs(Drafts._ID).sql
+                    val whereArgs = arrayOf(updateLocalInfoList.keyAt(index).toString())
+                    context.contentResolver.update(Drafts.CONTENT_URI, DraftValuesCreator.create(draft), where, whereArgs)
+                }
             }
         }
 
         // Remove local items
-        if (BuildConfig.DEBUG && removeLocalIdsList.isNotEmpty()) {
-            val fileList = removeLocalIdsList.joinToString(",") { "$it.eml" }
-            Log.d(LOGTAG_SYNC, "Removing local drafts $fileList")
+        if (removeLocalIdsList.isNotEmpty()) {
+            if (BuildConfig.DEBUG) {
+                val fileList = removeLocalIdsList.joinToString(",") { "$it.eml" }
+                Log.d(LOGTAG_SYNC, "Removing local drafts $fileList")
+            }
+            ContentResolverUtils.bulkDelete(context.contentResolver, Drafts.CONTENT_URI,
+                    Drafts.UNIQUE_ID, removeLocalIdsList, null)
         }
-        ContentResolverUtils.bulkDelete(context.contentResolver, Drafts.CONTENT_URI,
-                Drafts.UNIQUE_ID, removeLocalIdsList, null)
 
         // Remove remote items
-        if (BuildConfig.DEBUG && removeRemoteInfoList.isNotEmpty()) {
-            val fileList = removeRemoteInfoList.joinToString(",") { it.draftFileName }
-            Log.d(LOGTAG_SYNC, "Removing remote drafts $fileList")
+        if (removeRemoteInfoList.isNotEmpty()) {
+            if (BuildConfig.DEBUG) {
+                val fileList = removeRemoteInfoList.joinToString(",") { it.draftFileName }
+                Log.d(LOGTAG_SYNC, "Removing remote drafts $fileList")
+            }
+            removeDrafts(removeRemoteInfoList)
         }
-        removeDrafts(removeRemoteInfoList)
 
         snapshotsListFile.writer().use { writer ->
             val cur = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null)!!
@@ -216,6 +228,7 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
 
     abstract val RemoteFileInfo.draftFileName: String
     abstract val RemoteFileInfo.draftTimestamp: Long
+    open val RemoteFileInfo.draftRemoteExtras: String? get() = null
 
     @Throws(IOException::class)
     open fun setup(): Boolean = true

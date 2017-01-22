@@ -2,19 +2,14 @@ package org.mariotaku.twidere.util.sync.google
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.dropbox.core.DbxDownloader
-import com.dropbox.core.v2.DbxClientV2
-import com.dropbox.core.v2.files.FileMetadata
-import com.dropbox.core.v2.files.UploadUploader
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
-import org.mariotaku.twidere.extension.model.serialize
 import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.extension.newSerializer
-import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import org.mariotaku.twidere.util.sync.FileBasedPreferencesValuesSyncAction
 import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 import java.util.*
 
@@ -32,22 +27,25 @@ internal class GoogleDrivePreferencesValuesSyncAction(
     private val files = drive.files()
 
     override fun newLoadFromRemoteSession(): CloseableAny<File> {
-        val file = files.getOrNull(fileName, xmlMimeType, commonFolderId) ?: throw FileNotFoundException()
+        val file = drive.getFileOrNull(fileName, xmlMimeType, commonFolderId,
+                conflictResolver = ::resolveFilesConflict) ?: run {
+            throw FileNotFoundException()
+        }
         return CloseableAny(file)
     }
 
     override fun CloseableAny<File>.getRemoteLastModified(): Long {
-        return (obj.modifiedTime ?: obj.createdTime)?.value ?: 0
+        return obj.modifiedTime?.value ?: throw IOException("Modified time should not be null")
     }
 
     override fun CloseableAny<File>.loadFromRemote(): MutableMap<String, String> {
         val data = HashMap<String, String>()
-        data.parse(files.get(obj.id).executeAsInputStream().newPullParser())
+        data.parse(files.get(obj.id).executeMediaAsInputStream().newPullParser())
         return data
     }
 
     override fun newSaveToRemoteSession(): GoogleDriveUploadSession<Map<String, String>> {
-        return object : GoogleDriveUploadSession<Map<String, String>>(fileName, commonFolderId, xmlMimeType, files) {
+        return object : GoogleDriveUploadSession<Map<String, String>>(fileName, commonFolderId, xmlMimeType, drive) {
             override fun Map<String, String>.toInputStream(): InputStream {
                 val os = DirectByteArrayOutputStream()
                 this.serialize(os.newSerializer(charset = Charsets.UTF_8, indent = true))
@@ -66,7 +64,7 @@ internal class GoogleDrivePreferencesValuesSyncAction(
     }
 
     override fun setup(): Boolean {
-        commonFolderId = files.getOrCreate("Common", folderMimeType).id
+        commonFolderId = drive.getFileOrCreate("Common", folderMimeType, conflictResolver = ::resolveFoldersConflict).id
         return true
     }
 }

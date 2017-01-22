@@ -11,7 +11,7 @@ abstract internal class GoogleDriveUploadSession<in Data>(
         val name: String,
         val parentId: String,
         val mimeType: String,
-        val files: Drive.Files
+        val drive: Drive
 ) : Closeable {
     private var uploader: UploadUploader? = null
 
@@ -25,7 +25,7 @@ abstract internal class GoogleDriveUploadSession<in Data>(
     abstract fun Data.toInputStream(): InputStream
 
     fun uploadData(data: Data): Boolean {
-        files.updateOrCreate(name, mimeType, parentId, stream = data.toInputStream(), fileConfig = {
+        drive.updateOrCreate(name, mimeType, parentId, stream = data.toInputStream(), fileConfig = {
             it.modifiedTime = DateTime(localModifiedTime)
         })
         return true
