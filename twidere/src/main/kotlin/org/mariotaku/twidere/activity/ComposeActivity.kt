@@ -29,6 +29,7 @@ import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
@@ -51,6 +52,7 @@ import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
+import android.webkit.MimeTypeMap
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -67,6 +69,7 @@ import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.pickncrop.library.MediaPickerActivity
+import org.mariotaku.pickncrop.library.PNCUtils
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -150,9 +153,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && intent != null) {
                     val src = MediaPickerActivity.getMediaUris(intent)
-                    val dst = Array(src.size) { createTempImageUri(it) }
-                    currentTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst,
-                            ParcelableMedia.Type.IMAGE, true))
+                    currentTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, true))
                 }
             }
             REQUEST_EDIT_IMAGE -> {
@@ -766,8 +767,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         setMenu()
     }
 
-    private fun createTempImageUri(extraNum: Int): Uri {
-        val file = File(cacheDir, "tmp_image_${System.currentTimeMillis()}_$extraNum")
+    private fun createTempImageUri(extraNum: Int, ext: String): Uri {
+        val file = File(cacheDir, "tmp_media_${System.currentTimeMillis()}_$extraNum.$ext")
         return Uri.fromFile(file)
     }
 
@@ -781,7 +782,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         get() = mediaList.toTypedArray()
 
     private val mediaList: List<ParcelableMediaUpdate>
-        get() = mediaPreviewAdapter.asList
+        get() = mediaPreviewAdapter.asList()
 
     private fun handleDefaultIntent(intent: Intent?): Boolean {
         if (intent == null) return false
@@ -803,27 +804,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             if (stream != null) {
                 val src = arrayOf(stream)
-                val dst = arrayOf(createTempImageUri(0))
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst, getMediaType(intent.type,
-                        ParcelableMedia.Type.IMAGE), false))
+                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
             }
         } else if (Intent.ACTION_SEND_MULTIPLE == action) {
             shouldSaveAccounts = false
             val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
             if (extraStream != null) {
                 val src = extraStream.toTypedArray()
-                val dst = extraStream.mapIndexed { i, uri -> createTempImageUri(i) }.toTypedArray()
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst, getMediaType(intent.type,
-                        ParcelableMedia.Type.IMAGE), false))
+                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
             }
         } else {
             shouldSaveAccounts = !hasAccountIds
             val data = intent.data
             if (data != null) {
                 val src = arrayOf(data)
-                val dst = arrayOf(createTempImageUri(0))
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst, getMediaType(intent.type,
-                        ParcelableMedia.Type.IMAGE), false))
+                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
             }
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
@@ -832,11 +827,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
         return true
-    }
-
-    @ParcelableMedia.Type
-    private fun getMediaType(type: String, @ParcelableMedia.Type defType: Int): Int {
-        return defType
     }
 
     private fun handleEditDraftIntent(draft: Draft?): Boolean {
@@ -1503,62 +1493,69 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    internal class AddMediaTask(activity: ComposeActivity, val sources: Array<Uri>, val mDestinations: Array<Uri>, val mMediaType: Int,
-                                val mDeleteSrc: Boolean) : AsyncTask<Any, Any, BooleanArray>() {
+    internal class AddMediaTask(
+            activity: ComposeActivity,
+            val sources: Array<Uri>,
+            val deleteSrc: Boolean
+    ) : AsyncTask<Any, Any, List<ParcelableMediaUpdate>?>() {
 
-        val mActivityRef: WeakReference<ComposeActivity>
+        val activityRef: WeakReference<ComposeActivity> = WeakReference(activity)
 
-        init {
-            mActivityRef = WeakReference(activity)
-        }
+        override fun doInBackground(vararg params: Any): List<ParcelableMediaUpdate>? {
+            val activity = activityRef.get() ?: return null
+            val resolver = activity.contentResolver
+            return sources.mapIndexedNotNull { index, source ->
 
-        override fun doInBackground(vararg params: Any): BooleanArray {
-            val activity = mActivityRef.get() ?: return BooleanArray(0)
-            val result = BooleanArray(sources.size)
-            for (i in 0 until sources.size) {
-                val source = sources[i]
-                val destination = mDestinations[i]
                 var st: InputStream? = null
                 var os: OutputStream? = null
                 try {
-                    val resolver = activity.contentResolver
+                    val sourceMimeType = resolver.getType(source)
+                    val mediaType = sourceMimeType?.let {
+                        return@let when {
+                            it.startsWith("video/") -> ParcelableMedia.Type.VIDEO
+                            it.startsWith("image/") -> ParcelableMedia.Type.IMAGE
+                            else -> ParcelableMedia.Type.IMAGE
+                        }
+                    } ?: ParcelableMedia.Type.IMAGE
+                    val extension = sourceMimeType?.let { mimeType ->
+                        MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+                    } ?: "tmp"
+                    val destination = activity.createTempImageUri(index, extension)
                     st = resolver.openInputStream(source)
                     os = resolver.openOutputStream(destination)
                     if (st == null || os == null) throw FileNotFoundException()
                     StreamUtils.copy(st, os, null, null)
-                    if (ContentResolver.SCHEME_FILE == source.scheme && mDeleteSrc) {
-                        val file = File(source.path)
-                        if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("Unable to delete %s", file))
+                    if (deleteSrc) {
+                        try {
+                            PNCUtils.deleteMedia(activity, source)
+                        } catch (e: SecurityException) {
+                            Log.w(LOGTAG, e)
                         }
                     }
-                    result[i] = true
+                    return@mapIndexedNotNull ParcelableMediaUpdate(destination.toString(), mediaType)
                 } catch (e: IOException) {
                     if (BuildConfig.DEBUG) {
                         Log.w(LOGTAG, e)
                     }
-                    result[i] = false
+                    return@mapIndexedNotNull null
                 } finally {
                     Utils.closeSilently(os)
                     Utils.closeSilently(st)
                 }
-
             }
-            return result
         }
 
-        override fun onPostExecute(result: BooleanArray) {
-            val activity = mActivityRef.get() ?: return
+        override fun onPostExecute(media: List<ParcelableMediaUpdate>?) {
+            val activity = activityRef.get() ?: return
+            if (media == null) return
             activity.setProgressVisible(false)
-            for (destination in mDestinations) {
-                activity.addMedia(ParcelableMediaUpdate(destination.toString(), mMediaType))
-            }
+            activity.addMedia(media)
             activity.setMenu()
             activity.updateTextCount()
         }
 
         override fun onPreExecute() {
-            val activity = mActivityRef.get() ?: return
+            val activity = activityRef.get() ?: return
             activity.setProgressVisible(true)
         }
     }
@@ -1712,19 +1709,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             activity: ComposeActivity,
             val dragStartListener: SimpleItemTouchHelperCallback.OnStartDragListener
     ) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(activity), SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
-        val inflater: LayoutInflater
+        private val inflater = LayoutInflater.from(activity)
 
         init {
             setHasStableIds(true)
-            inflater = LayoutInflater.from(activity)
         }
 
         fun onStartDrag(viewHolder: ViewHolder) {
             dragStartListener.onStartDrag(viewHolder)
         }
 
-        val asList: List<ParcelableMediaUpdate>
-            get() = Collections.unmodifiableList(data)
+        fun asList(): List<ParcelableMediaUpdate> = Collections.unmodifiableList(data)
 
         override fun getItemId(position: Int): Long {
             return getItem(position).hashCode().toLong()
@@ -1776,16 +1771,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class MediaPreviewViewHolder(itemView: View) : ViewHolder(itemView), OnLongClickListener, OnClickListener {
 
-        val imageView: ImageView
-        val removeView: View
-        val editView: View
+        internal val imageView = itemView.findViewById(R.id.image) as ImageView
+        internal val videoIndicatorView = itemView.findViewById(R.id.videoIndicator)
+        internal val removeView = itemView.findViewById(R.id.remove)
+        internal val editView = itemView.findViewById(R.id.edit)
         var adapter: MediaPreviewAdapter? = null
 
         init {
-            imageView = itemView.findViewById(R.id.image) as ImageView
-            removeView = itemView.findViewById(R.id.remove)
-            editView = itemView.findViewById(R.id.edit)
-
             itemView.setOnLongClickListener(this)
             itemView.setOnClickListener(this)
             removeView.setOnClickListener(this)
@@ -1794,6 +1786,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
             adapter.mediaLoader.displayPreviewImage(media.uri, imageView)
+            videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
         }
 
         override fun onLongClick(v: View): Boolean {
