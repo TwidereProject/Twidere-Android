@@ -1,93 +1,120 @@
 package org.mariotaku.twidere.extension.model
 
+import android.accounts.Account
+import android.accounts.AccountManager
+import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.account.AccountExtras
+import org.mariotaku.twidere.model.account.StatusNetAccountExtras
+import org.mariotaku.twidere.model.account.TwitterAccountExtras
+import org.mariotaku.twidere.model.account.cred.BasicCredentials
+import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.model.account.cred.EmptyCredentials
+import org.mariotaku.twidere.model.account.cred.OAuthCredentials
+import org.mariotaku.twidere.util.ParseUtils
 
 
-fun android.accounts.Account.getCredentials(am: android.accounts.AccountManager): org.mariotaku.twidere.model.account.cred.Credentials {
+fun Account.getCredentials(am: AccountManager): Credentials {
     val authToken = am.peekAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE) ?: run {
-        throw IllegalStateException("AuthToken is null for ${this}")
+        for (i in 0 until 5) {
+            Thread.sleep(50L)
+            val token = am.peekAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE)
+            if (token != null) return@run token
+        }
+        throw NullPointerException("AuthToken is null for ${this}")
     }
-    return org.mariotaku.twidere.extension.model.parseCredentials(authToken, getCredentialsType(am))
+    return parseCredentials(authToken, getCredentialsType(am))
 }
 
-@org.mariotaku.twidere.model.account.cred.Credentials.Type
-fun android.accounts.Account.getCredentialsType(am: android.accounts.AccountManager): String {
-    return am.getUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE) ?: org.mariotaku.twidere.model.account.cred.Credentials.Type.OAUTH
+@Credentials.Type
+fun Account.getCredentialsType(am: AccountManager): String {
+    return am.getUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE) ?: Credentials.Type.OAUTH
 }
 
-fun android.accounts.Account.getAccountKey(am: android.accounts.AccountManager): org.mariotaku.twidere.model.UserKey {
-    val accountKeyString = am.getUserData(this, ACCOUNT_USER_DATA_KEY) ?: run {
-        throw IllegalStateException("UserKey is null for ${this}")
-    }
-    return org.mariotaku.twidere.model.UserKey.valueOf(accountKeyString)
+fun Account.getAccountKey(am: AccountManager): UserKey {
+    return UserKey.valueOf(am.getNonNullUserData(this, ACCOUNT_USER_DATA_KEY))
 }
 
-fun android.accounts.Account.setAccountKey(am: android.accounts.AccountManager, accountKey: org.mariotaku.twidere.model.UserKey) {
+fun Account.setAccountKey(am: AccountManager, accountKey: UserKey) {
     am.setUserData(this, ACCOUNT_USER_DATA_KEY, accountKey.toString())
 }
 
-fun android.accounts.Account.getAccountUser(am: android.accounts.AccountManager): org.mariotaku.twidere.model.ParcelableUser {
-    val user = com.bluelinelabs.logansquare.LoganSquare.parse(am.getUserData(this, ACCOUNT_USER_DATA_USER), org.mariotaku.twidere.model.ParcelableUser::class.java)
+fun Account.getAccountUser(am: AccountManager): ParcelableUser {
+    val user = LoganSquare.parse(am.getNonNullUserData(this, ACCOUNT_USER_DATA_USER), ParcelableUser::class.java)
     user.is_cache = true
     return user
 }
 
-fun android.accounts.Account.setAccountUser(am: android.accounts.AccountManager, user: org.mariotaku.twidere.model.ParcelableUser) {
-    am.setUserData(this, ACCOUNT_USER_DATA_USER, com.bluelinelabs.logansquare.LoganSquare.serialize(user))
+fun Account.setAccountUser(am: AccountManager, user: ParcelableUser) {
+    am.setUserData(this, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
 }
 
 @android.support.annotation.ColorInt
-fun android.accounts.Account.getColor(am: android.accounts.AccountManager): Int {
-    return org.mariotaku.twidere.util.ParseUtils.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR), 0)
+fun Account.getColor(am: AccountManager): Int {
+    return ParseUtils.parseColor(am.getUserData(this, ACCOUNT_USER_DATA_COLOR), 0)
 }
 
-fun android.accounts.Account.getPosition(am: android.accounts.AccountManager): Int {
+fun Account.getPosition(am: AccountManager): Int {
     return am.getUserData(this, ACCOUNT_USER_DATA_POSITION).toInt(-1)
 }
 
-fun android.accounts.Account.getAccountExtras(am: android.accounts.AccountManager): org.mariotaku.twidere.model.account.AccountExtras? {
+fun Account.getAccountExtras(am: AccountManager): AccountExtras? {
     val json = am.getUserData(this, ACCOUNT_USER_DATA_EXTRAS) ?: return null
     when (getAccountType(am)) {
-        org.mariotaku.twidere.annotation.AccountType.TWITTER -> {
-            return com.bluelinelabs.logansquare.LoganSquare.parse(json, org.mariotaku.twidere.model.account.TwitterAccountExtras::class.java)
+        AccountType.TWITTER -> {
+            return LoganSquare.parse(json, TwitterAccountExtras::class.java)
         }
-        org.mariotaku.twidere.annotation.AccountType.STATUSNET -> {
-            return com.bluelinelabs.logansquare.LoganSquare.parse(json, org.mariotaku.twidere.model.account.StatusNetAccountExtras::class.java)
+        AccountType.STATUSNET -> {
+            return LoganSquare.parse(json, StatusNetAccountExtras::class.java)
         }
     }
     return null
 }
 
-@org.mariotaku.twidere.annotation.AccountType
-fun android.accounts.Account.getAccountType(am: android.accounts.AccountManager): String {
-    return am.getUserData(this, ACCOUNT_USER_DATA_TYPE) ?: org.mariotaku.twidere.annotation.AccountType.TWITTER
+@AccountType
+fun Account.getAccountType(am: AccountManager): String {
+    return am.getUserData(this, ACCOUNT_USER_DATA_TYPE) ?: AccountType.TWITTER
 }
 
-fun android.accounts.Account.isActivated(am: android.accounts.AccountManager): Boolean {
-    return am.getUserData(this, ACCOUNT_USER_DATA_ACTIVATED).orEmpty().toBoolean()
+fun Account.isActivated(am: AccountManager): Boolean {
+    return am.getUserData(this, ACCOUNT_USER_DATA_ACTIVATED)?.toBoolean() ?: true
 }
 
-fun android.accounts.Account.setActivated(am: android.accounts.AccountManager, activated: Boolean) {
+fun Account.setActivated(am: AccountManager, activated: Boolean) {
     am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, activated.toString())
 }
 
-fun android.accounts.Account.setColor(am: android.accounts.AccountManager, color: Int) {
+fun Account.setColor(am: AccountManager, color: Int) {
     am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 }
 
-fun android.accounts.Account.setPosition(am: android.accounts.AccountManager, position: Int) {
+fun Account.setPosition(am: AccountManager, position: Int) {
     am.setUserData(this, ACCOUNT_USER_DATA_POSITION, position.toString())
 }
 
+private fun AccountManager.getNonNullUserData(account: Account, key: String): String {
+    return getUserData(account, key) ?: run {
+        // Rare case, assume account manager service is not running
+        for (i in 0 until 5) {
+            Thread.sleep(50L)
+            val data = getUserData(account, key)
+            if (data != null) return data
+        }
+        throw NullPointerException("NonNull userData $key is null for $account")
+    }
+}
 
-private fun parseCredentials(authToken: String, @org.mariotaku.twidere.model.account.cred.Credentials.Type authType: String): org.mariotaku.twidere.model.account.cred.Credentials {
+private fun parseCredentials(authToken: String, @Credentials.Type authType: String): Credentials {
     when (authType) {
-        org.mariotaku.twidere.model.account.cred.Credentials.Type.OAUTH, org.mariotaku.twidere.model.account.cred.Credentials.Type.XAUTH -> return com.bluelinelabs.logansquare.LoganSquare.parse(authToken, org.mariotaku.twidere.model.account.cred.OAuthCredentials::class.java)
-        org.mariotaku.twidere.model.account.cred.Credentials.Type.BASIC -> return com.bluelinelabs.logansquare.LoganSquare.parse(authToken, org.mariotaku.twidere.model.account.cred.BasicCredentials::class.java)
-        org.mariotaku.twidere.model.account.cred.Credentials.Type.EMPTY -> return com.bluelinelabs.logansquare.LoganSquare.parse(authToken, org.mariotaku.twidere.model.account.cred.EmptyCredentials::class.java)
+        Credentials.Type.OAUTH, Credentials.Type.XAUTH -> return LoganSquare.parse(authToken, OAuthCredentials::class.java)
+        Credentials.Type.BASIC -> return LoganSquare.parse(authToken, BasicCredentials::class.java)
+        Credentials.Type.EMPTY -> return LoganSquare.parse(authToken, EmptyCredentials::class.java)
     }
     throw UnsupportedOperationException()
 }
