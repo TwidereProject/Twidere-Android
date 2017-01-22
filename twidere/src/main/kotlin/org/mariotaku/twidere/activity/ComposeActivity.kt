@@ -32,6 +32,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
@@ -65,6 +66,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.toTypedArray
+import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -145,10 +147,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         when (requestCode) {
-            REQUEST_TAKE_PHOTO, REQUEST_PICK_IMAGE, REQUEST_OPEN_DOCUMENT -> {
+            REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && intent != null) {
-                    val src = arrayOf(intent.data)
-                    val dst = arrayOf(createTempImageUri(0))
+                    val src = MediaPickerActivity.getMediaUris(intent)
+                    val dst = Array(src.size) { createTempImageUri(it) }
                     currentTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, dst,
                             ParcelableMedia.Type.IMAGE, true))
                 }
@@ -328,11 +330,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.take_photo -> {
-                takePhoto()
-            }
             R.id.add_image, R.id.add_image_sub_item -> {
-                pickImage()
+                requestOrPickMedia()
             }
             R.id.drafts -> {
                 IntentUtils.openDrafts(this)
@@ -366,19 +365,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                                 intent.putExtra(EXTRA_IN_REPLY_TO_SCREEN_NAME, it.user_screen_name)
                             }
                             startActivityForResult(intent, REQUEST_EXTENSION_COMPOSE)
-                        } else if (INTENT_ACTION_EXTENSION_EDIT_IMAGE == action) {
-                            // final ComponentName cmp = intent.getComponent();
-                            // if (cmp == null || !hasMedia()) return false;
-                            // final String name = new
-                            // File(mMediaUri.getPath()).getName();
-                            // final Uri data =
-                            // Uri.withAppendedPath(CacheFiles.CONTENT_URI,
-                            // Uri.encode(name));
-                            // intent.setData(data);
-                            // grantUriPermission(cmp.getPackageName(), data,
-                            // Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            // startActivityForResult(intent,
-                            // REQUEST_EDIT_IMAGE);
                         } else {
                             startActivity(intent)
                         }
@@ -700,8 +686,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                                 Spanned.SPAN_INCLUSIVE_INCLUSIVE)
                     }
                     if (!imageSources.isEmpty()) {
-                        val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity).getImage(Uri.parse(imageSources[0])).build()
-                        startActivityForResult(intent, REQUEST_PICK_IMAGE)
+                        val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
+                                .getMedia(Uri.parse(imageSources[0]))
+                                .build()
+                        startActivityForResult(intent, REQUEST_PICK_MEDIA)
                     }
                 }
             }
@@ -950,10 +938,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 return handleReplyMultipleIntent(screenNames, accountKey, inReplyToStatus)
             }
             INTENT_ACTION_COMPOSE_TAKE_PHOTO -> {
-                return takePhoto()
+                requestOrTakePhoto()
+                return true
             }
             INTENT_ACTION_COMPOSE_PICK_IMAGE -> {
-                return pickImage()
+                requestOrPickMedia()
+                return true
             }
         }
         // Unknown action or no intent extras
@@ -1112,9 +1102,37 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         setMenu()
     }
 
-    private fun pickImage(): Boolean {
-        val intent = ThemedMediaPickerActivity.withThemed(this).pickImage().build()
-        startActivityForResult(intent, REQUEST_PICK_IMAGE)
+    private fun requestOrTakePhoto() {
+        if (checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+            takePhoto()
+            return
+        }
+        ActivityCompat.requestPermissions(this, arrayOf(AndroidPermission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_TAKE_PHOTO_PERMISSION)
+    }
+
+    private fun takePhoto(): Boolean {
+        val intent = ThemedMediaPickerActivity.withThemed(this).takePhoto().build()
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO)
+        return true
+    }
+
+    private fun requestOrPickMedia() {
+        if (checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+            pickMedia()
+            return
+        }
+        ActivityCompat.requestPermissions(this, arrayOf(AndroidPermission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_PICK_MEDIA_PERMISSION)
+    }
+
+    private fun pickMedia(): Boolean {
+        val intent = ThemedMediaPickerActivity.withThemed(this)
+                .containsVideo(true)
+                .videoOnly(false)
+                .allowMultiple(true)
+                .build()
+        startActivityForResult(intent, REQUEST_PICK_MEDIA)
         return true
     }
 
@@ -1181,7 +1199,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     } catch (e: SecurityException) {
                         // That should not happen
                     }
-
                 } else {
                     Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
                     kPreferences.edit {
@@ -1190,6 +1207,18 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     }
                     locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
                 }
+            }
+            REQUEST_TAKE_PHOTO_PERMISSION -> {
+                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.message_compose_write_storage_permission_not_granted, Toast.LENGTH_SHORT).show()
+                }
+                takePhoto()
+            }
+            REQUEST_PICK_MEDIA_PERMISSION -> {
+                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.message_compose_write_storage_permission_not_granted, Toast.LENGTH_SHORT).show()
+                }
+                pickMedia()
             }
         }
     }
@@ -1253,12 +1282,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             Toast.makeText(this, R.string.cannot_get_location, Toast.LENGTH_SHORT).show()
         }
         return provider != null
-    }
-
-    private fun takePhoto(): Boolean {
-        val intent = ThemedMediaPickerActivity.withThemed(this).takePhoto().build()
-        startActivityForResult(intent, REQUEST_TAKE_PHOTO)
-        return true
     }
 
     private fun requestOrUpdateLocation() {
@@ -1931,7 +1954,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         private val LOCATION_OPTIONS = arrayOf(LOCATION_VALUE_NONE, LOCATION_VALUE_PLACE, LOCATION_VALUE_COORDINATE)
 
         private const val REQUEST_ATTACH_LOCATION_PERMISSION = 301
-        private const val REQUEST_ATTACH_MEDIA_PERMISSION = 302
+        private const val REQUEST_PICK_MEDIA_PERMISSION = 302
+        private const val REQUEST_TAKE_PHOTO_PERMISSION = 303
 
         internal fun getDraftAction(intentAction: String?): String {
             if (intentAction == null) {

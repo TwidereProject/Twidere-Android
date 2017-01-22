@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Lähetä</string>
   <string name="add_image">Lisää kuva</string>
-  <string name="take_photo">Ota valokuva</string>
+  <string name="action_take_photo">Ota valokuva</string>
   <string name="status_hint">Mitä tapahtuu?</string>
   <string name="sign_up">Rekisteröidy</string>
   <string name="sign_in">Kirjaudu</string>

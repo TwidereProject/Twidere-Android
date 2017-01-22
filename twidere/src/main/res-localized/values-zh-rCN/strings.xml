@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">发送</string>
   <string name="add_image">添加图片</string>
-  <string name="take_photo">拍照</string>
+  <string name="action_take_photo">拍照</string>
   <string name="status_hint">你在做什么？</string>
   <string name="sign_up">注册</string>
   <string name="sign_in">登录</string>

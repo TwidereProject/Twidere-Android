@@ -59,7 +59,7 @@
     </string-array>
     <string-array name="entries_compose_now_action">
         <item>@string/action_compose</item>
-        <item>@string/take_photo</item>
+        <item>@string/action_take_photo</item>
         <item>@string/add_image</item>
     </string-array>
     <string-array name="entries_media_preview_style">

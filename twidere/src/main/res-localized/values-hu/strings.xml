@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Elküld</string>
   <string name="add_image">Kép hozzáadása</string>
-  <string name="take_photo">Fotó készítése</string>
+  <string name="action_take_photo">Fotó készítése</string>
   <string name="status_hint">Mi történik?</string>
   <string name="sign_up">Feliratkozás</string>
   <string name="sign_in">Bejelentkezés</string>

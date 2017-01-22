@@ -9,7 +9,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gửi</string>
   <string name="add_image">Thêm ảnh</string>
-  <string name="take_photo">Chụp ảnh</string>
+  <string name="action_take_photo">Chụp ảnh</string>
   <string name="sign_up">Đăng ký</string>
   <string name="sign_in">Đăng nhập</string>
   <!-- [verb] Save settings/files etc. -->

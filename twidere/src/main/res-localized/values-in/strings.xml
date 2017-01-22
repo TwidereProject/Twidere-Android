@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Kirim</string>
   <string name="add_image">Tambahkan gambar</string>
-  <string name="take_photo">Ambil gambar</string>
+  <string name="action_take_photo">Ambil gambar</string>
   <string name="status_hint">Apa yang terjadi ?</string>
   <string name="sign_up">Daftar</string>
   <string name="sign_in">Masuk</string>

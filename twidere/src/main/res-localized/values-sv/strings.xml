@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Skicka</string>
   <string name="add_image">Lägg till bild</string>
-  <string name="take_photo">Ta foto</string>
+  <string name="action_take_photo">Ta foto</string>
   <string name="status_hint">Vad händer?</string>
   <string name="sign_up">Registrera</string>
   <string name="sign_in">Logga in</string>

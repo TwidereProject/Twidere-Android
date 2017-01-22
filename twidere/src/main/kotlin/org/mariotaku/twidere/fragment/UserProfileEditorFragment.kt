@@ -95,6 +95,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
                 val intent = ThemedMediaPickerActivity.withThemed(activity)
                         .aspectRatio(1, 1)
                         .maximumSize(512, 512)
+                        .containsVideo(false)
                         .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE)
             }
@@ -102,13 +103,14 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
                 val intent = ThemedMediaPickerActivity.withThemed(activity)
                         .aspectRatio(3, 1)
                         .maximumSize(1500, 500)
+                        .containsVideo(false)
                         .addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
                         .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
             }
             R.id.editProfileBackground -> {
                 val intent = ThemedMediaPickerActivity.withThemed(activity)
-                        .pickMedia(false, false, false)
+                        .containsVideo(false)
                         .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE)
             }

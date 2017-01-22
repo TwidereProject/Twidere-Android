@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">भेजें</string>
   <string name="add_image">छवि जोड़ें</string>
-  <string name="take_photo">तस्वीर लो</string>
+  <string name="action_take_photo">तस्वीर लो</string>
   <string name="status_hint">क्या हो रहा है</string>
   <string name="sign_up">साइन अप करें</string>
   <string name="sign_in">साइन इन करें</string>

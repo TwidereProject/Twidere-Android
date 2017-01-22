@@ -166,7 +166,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String OAUTH_CALLBACK_URL = PROTOCOL_TWIDERE + "com.twitter.oauth/";
 
     int REQUEST_TAKE_PHOTO = 1;
-    int REQUEST_PICK_IMAGE = 2;
+    int REQUEST_PICK_MEDIA = 2;
     int REQUEST_SELECT_ACCOUNT = 3;
     int REQUEST_COMPOSE = 4;
     int REQUEST_EDIT_API = 5;

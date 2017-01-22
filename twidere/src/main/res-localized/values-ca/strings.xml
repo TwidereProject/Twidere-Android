@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Envia</string>
   <string name="add_image">Afegeix una imatge</string>
-  <string name="take_photo">Fes una foto</string>
+  <string name="action_take_photo">Fes una foto</string>
   <string name="status_hint">Què està passant?</string>
   <string name="sign_up">Registreu-me</string>
   <string name="sign_in">Inicia la sessió</string>

@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Poslat</string>
   <string name="add_image">Přidat obrázek</string>
-  <string name="take_photo">Vyfotit</string>
+  <string name="action_take_photo">Vyfotit</string>
   <string name="status_hint">Co se děje?</string>
   <string name="sign_up">Zaregistrovat se</string>
   <string name="sign_in">Přihlásit se</string>

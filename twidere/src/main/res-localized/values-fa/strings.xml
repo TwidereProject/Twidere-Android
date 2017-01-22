@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ارسال</string>
   <string name="add_image">افزودن تصویر</string>
-  <string name="take_photo">عکس گرفتن</string>
+  <string name="action_take_photo">عکس گرفتن</string>
   <string name="status_hint">چه خبر؟</string>
   <string name="sign_up">ثبت‌نام</string>
   <string name="sign_in">ورود</string>

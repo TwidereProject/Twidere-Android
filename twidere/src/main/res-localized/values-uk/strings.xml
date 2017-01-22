@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Надіслати</string>
   <string name="add_image">Додати зображення</string>
-  <string name="take_photo">Зробити світлину</string>
+  <string name="action_take_photo">Зробити світлину</string>
   <string name="status_hint">Що трапилося?</string>
   <string name="sign_up">Реєстрація</string>
   <string name="sign_in">Увійти</string>

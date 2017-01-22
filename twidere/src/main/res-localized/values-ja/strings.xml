@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">送信</string>
   <string name="add_image">画像を追加</string>
-  <string name="take_photo">写真を撮る</string>
+  <string name="action_take_photo">写真を撮る</string>
   <string name="status_hint">いまどうしてる？</string>
   <string name="sign_up">新規登録</string>
   <string name="sign_in">ログイン</string>

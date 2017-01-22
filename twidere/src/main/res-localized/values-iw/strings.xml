@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">שלח</string>
   <string name="add_image">הוסף תמונה</string>
-  <string name="take_photo">צלם תמונה</string>
+  <string name="action_take_photo">צלם תמונה</string>
   <string name="status_hint">מה קורה?</string>
   <string name="sign_up">הרשם</string>
   <string name="sign_in">היכנס</string>

@@ -10,7 +10,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Wyślij</string>
   <string name="add_image">Dodaj obraz</string>
-  <string name="take_photo">Zrób zdjęcie</string>
+  <string name="action_take_photo">Zrób zdjęcie</string>
   <string name="status_hint">Co się dzieje?</string>
   <string name="sign_up">Zarejestruj się</string>
   <string name="sign_in">Zaloguj się</string>

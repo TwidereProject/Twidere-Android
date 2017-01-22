@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gönder</string>
   <string name="add_image">Resim ekle</string>
-  <string name="take_photo">Fotoğraf çek</string>
+  <string name="action_take_photo">Fotoğraf çek</string>
   <string name="status_hint">Neler oluyor?</string>
   <string name="sign_up">Kaydol</string>
   <string name="sign_in">Giriş yap</string>

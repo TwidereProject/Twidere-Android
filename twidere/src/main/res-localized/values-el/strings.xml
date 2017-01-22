@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Αποστολή</string>
   <string name="add_image">Προσθήκη εικόνας</string>
-  <string name="take_photo">Τραβήξτε φωτογραφία</string>
+  <string name="action_take_photo">Τραβήξτε φωτογραφία</string>
   <string name="status_hint">Τι συμβαίνει;</string>
   <string name="sign_up">Εγγραφή</string>
   <string name="sign_in">Σύνδεση</string>

@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ส่ง</string>
   <string name="add_image">เพิ่มรูปภาพ</string>
-  <string name="take_photo">ถ่ายรูป</string>
+  <string name="action_take_photo">ถ่ายรูป</string>
   <string name="status_hint">มีอะไรเกิดขึ้นบ้าง?</string>
   <string name="sign_up">สมัครสมาชิก</string>
   <string name="sign_in">เข้าสู่ระบบ</string>

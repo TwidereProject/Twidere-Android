@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Univar</string>
   <string name="add_image">Amestar imaxe</string>
-  <string name="take_photo">Facer semeya</string>
+  <string name="action_take_photo">Facer semeya</string>
   <string name="status_hint">¿Qué ta asocediendo?</string>
   <string name="sign_up">Rexistrase</string>
   <string name="sign_in">Aniciar sesión</string>

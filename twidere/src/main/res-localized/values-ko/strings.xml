@@ -11,7 +11,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">보내기</string>
   <string name="add_image">이미지 추가</string>
-  <string name="take_photo">사진 촬영</string>
+  <string name="action_take_photo">사진 촬영</string>
   <string name="status_hint">무슨 일이 일어나고 있나요?</string>
   <string name="sign_up">가입</string>
   <string name="sign_in">로그인</string>

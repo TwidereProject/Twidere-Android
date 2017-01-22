@@ -145,7 +145,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            REQUEST_PICK_IMAGE -> {
+            REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data!!.dataString != null) {
                     imageUri = data.dataString
                     updateAddImageButton()
@@ -367,7 +367,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
             }
             addImage -> {
                 val intent = ThemedMediaPickerActivity.withThemed(activity).build()
-                startActivityForResult(intent, REQUEST_PICK_IMAGE)
+                startActivityForResult(intent, REQUEST_PICK_MEDIA)
             }
             actionBarCustomView.queryButton -> {
                 val account = actionBarCustomView.accountSpinner.selectedItem as AccountDetails

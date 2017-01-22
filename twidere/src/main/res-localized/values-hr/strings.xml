@@ -9,7 +9,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Pošalji</string>
   <string name="add_image">Dodaj sliku</string>
-  <string name="take_photo">Uslikaj fotografiju</string>
+  <string name="action_take_photo">Uslikaj fotografiju</string>
   <string name="status_hint">Što se događa?</string>
   <string name="sign_up">Registracija</string>
   <string name="sign_in">Prijava</string>

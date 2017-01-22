@@ -9,7 +9,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
   <string name="add_image">Tilføj billede</string>
-  <string name="take_photo">Tag billede</string>
+  <string name="action_take_photo">Tag billede</string>
   <string name="status_hint">Hvad sker der?</string>
   <string name="sign_up">Tilmeld</string>
   <string name="sign_in">Log ind</string>

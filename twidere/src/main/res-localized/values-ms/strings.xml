@@ -10,7 +10,7 @@
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Hantar</string>
   <string name="add_image">Tambah gambar</string>
-  <string name="take_photo">Tangkap gambar</string>
+  <string name="action_take_photo">Tangkap gambar</string>
   <!-- [verb] Save settings/files etc. -->
   <!-- [verb] Edit image/settings etc. -->
   <string name="edit_api">Olah API</string>
