@@ -48,7 +48,7 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
-import org.mariotaku.twidere.activity.ThemedImagePickerActivity
+import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -91,20 +91,25 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
         if (user == null || task != null && !task.isFinished)
             return
         when (view.id) {
-            R.id.profileImage -> {
-            }
-            R.id.profileBanner -> {
-            }
             R.id.editProfileImage -> {
-                val intent = ThemedImagePickerActivity.withThemed(activity).aspectRatio(1, 1).maximumSize(512, 512).build()
+                val intent = ThemedMediaPickerActivity.withThemed(activity)
+                        .aspectRatio(1, 1)
+                        .maximumSize(512, 512)
+                        .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_IMAGE)
             }
             R.id.editProfileBanner -> {
-                val intent = ThemedImagePickerActivity.withThemed(activity).aspectRatio(3, 1).maximumSize(1500, 500).addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER).build()
+                val intent = ThemedMediaPickerActivity.withThemed(activity)
+                        .aspectRatio(3, 1)
+                        .maximumSize(1500, 500)
+                        .addEntry(getString(R.string.remove), "remove_banner", RESULT_REMOVE_BANNER)
+                        .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BANNER_IMAGE)
             }
             R.id.editProfileBackground -> {
-                val intent = ThemedImagePickerActivity.withThemed(activity).build()
+                val intent = ThemedMediaPickerActivity.withThemed(activity)
+                        .pickMedia(false, false, false)
+                        .build()
                 startActivityForResult(intent, REQUEST_UPLOAD_PROFILE_BACKGROUND_IMAGE)
             }
             R.id.setLinkColor -> {

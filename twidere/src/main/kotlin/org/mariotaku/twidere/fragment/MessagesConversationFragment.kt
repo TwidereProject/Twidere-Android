@@ -59,7 +59,7 @@ import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.activity.ThemedImagePickerActivity
+import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.MessageConversationAdapter
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
@@ -366,7 +366,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
                 sendDirectMessage()
             }
             addImage -> {
-                val intent = ThemedImagePickerActivity.withThemed(activity).build()
+                val intent = ThemedMediaPickerActivity.withThemed(activity).build()
                 startActivityForResult(intent, REQUEST_PICK_IMAGE)
             }
             actionBarCustomView.queryButton -> {
