@@ -3,7 +3,7 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1484982866000)
+--- twidere/build.gradle	(date 1485067986000)
 +++ twidere/build.gradle	(revision )
 @@ -7,20 +7,20 @@
  apply plugin: 'androidsvgdrawable'
@@ -47,30 +47,38 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -96,14 +96,14 @@
+@@ -96,18 +96,18 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
 -    googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
 -    googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
 -    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
--    googleCompile("com.crashlytics.sdk.android:crashlytics:$crashlyrics_version@aar") { transitive = true }
+-    googleCompile("com.crashlytics.sdk.android:crashlytics:$crashlyrics_version@aar") {
+-        transitive = true
+-    }
 -    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
 -    googleCompile "com.dropbox.core:dropbox-core-sdk:$dropbox_core_sdk_version"
 -    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
--    googleCompile "com.google.apis:google-api-services-drive:$google_api_drive_version"
+-    googleCompile("com.google.apis:google-api-services-drive:$google_api_drive_version") {
+-        exclude group: 'org.apache.httpcomponents'
+-    }
 +//    googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
 +//    googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
 +//    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
-+//    googleCompile("com.crashlytics.sdk.android:crashlytics:$crashlyrics_version@aar") { transitive = true }
++//    googleCompile("com.crashlytics.sdk.android:crashlytics:$crashlyrics_version@aar") {
++//        transitive = true
++//    }
 +//    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
 +//    googleCompile "com.dropbox.core:dropbox-core-sdk:$dropbox_core_sdk_version"
 +//    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
-+//    googleCompile "com.google.apis:google-api-services-drive:$google_api_drive_version"
++//    googleCompile("com.google.apis:google-api-services-drive:$google_api_drive_version") {
++//        exclude group: 'org.apache.httpcomponents'
++//    }
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.5:release@aar'
-@@ -214,5 +214,5 @@
+@@ -218,5 +218,5 @@
  }
  
  // START Non-FOSS component
