@@ -363,7 +363,9 @@ class UpdateStatusTask(
         if (mediaIds != null) {
             status.mediaIds(*mediaIds)
         }
-        status.possiblySensitive(statusUpdate.is_possibly_sensitive)
+        if (statusUpdate.is_possibly_sensitive) {
+            status.possiblySensitive(statusUpdate.is_possibly_sensitive)
+        }
         return microBlog.updateStatus(status)
     }
 
