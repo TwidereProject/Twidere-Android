@@ -39,8 +39,10 @@ import java.util.Map;
 import java.util.Set;
 
 import static android.text.TextUtils.isEmpty;
+import static org.mariotaku.twidere.TwidereConstants.USER_COLOR_PREFERENCES_NAME;
+import static org.mariotaku.twidere.TwidereConstants.USER_NICKNAME_PREFERENCES_NAME;
 
-public class UserColorNameManager implements TwidereConstants {
+public class UserColorNameManager {
 
     private final static String NICKNAME_NULL = ".#NULL#";
 

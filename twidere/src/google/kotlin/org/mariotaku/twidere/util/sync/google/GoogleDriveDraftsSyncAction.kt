@@ -82,19 +82,22 @@ internal class GoogleDriveDraftsSyncAction(
     @Throws(IOException::class)
     override fun listRemoteDrafts(): List<DriveFileInfo> {
         val result = ArrayList<DriveFileInfo>()
-        var pageToken: String?
+        var nextPageToken: String? = null
         do {
             val listResult = files.list().apply {
-                fields = "files($requiredRequestFields)"
-                q = "'$folderId' in parents and mimeType = '$draftMimeType' and trashed = false"
+                this.fields = requiredFilesRequestFields
+                this.q = "'$folderId' in parents and mimeType = '$draftMimeType' and trashed = false"
+                if (nextPageToken != null) {
+                    this.pageToken = nextPageToken
+                }
             }.execute()
             listResult.files.filter { file ->
                 file.mimeType == draftMimeType
             }.mapTo(result) { file ->
                 DriveFileInfo(file.id, file.name, Date(file.modifiedTime.value))
             }
-            pageToken = listResult.nextPageToken
-        } while (pageToken != null)
+            nextPageToken = listResult.nextPageToken
+        } while (nextPageToken != null)
         return result
     }
 

@@ -1,10 +1,15 @@
 package org.mariotaku.twidere.util.sync.google
 
+import com.google.api.client.googleapis.json.GoogleJsonError
 import com.google.api.client.googleapis.json.GoogleJsonResponseException
+import com.google.api.client.http.HttpHeaders
 import com.google.api.client.http.InputStreamContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
+import com.google.common.collect.HashMultimap
+import java.io.IOException
 import java.io.InputStream
+import java.util.*
 
 
 /**
@@ -14,7 +19,8 @@ import java.io.InputStream
 
 internal const val folderMimeType = "application/vnd.google-apps.folder"
 internal const val xmlMimeType = "application/xml"
-internal const val requiredRequestFields = "id, name, mimeType, modifiedTime"
+internal const val requiredRequestFields = "id, name, parents, mimeType, modifiedTime"
+internal const val requiredFilesRequestFields = "files($requiredRequestFields)"
 
 internal fun Drive.getFileOrNull(
         name: String,
@@ -46,9 +52,11 @@ internal fun Drive.findFilesOrNull(
     }
     query += " and trashed = $trashed"
     find.q = query
-    find.fields = "files($requiredRequestFields)"
+    find.fields = requiredFilesRequestFields
     try {
-        return find.execute().files
+        val files = find.execute().files
+        if (files.isEmpty()) return null
+        return files
     } catch (e: GoogleJsonResponseException) {
         if (e.statusCode == 404) {
             return null
@@ -100,6 +108,7 @@ internal fun Drive.updateOrCreate(
     return run {
         val find = files.list()
         find.q = "name = '$name' and '$parent' in parents and mimeType = '$mimeType' and trashed = $trashed"
+        find.fields = requiredFilesRequestFields
         val fileId = try {
             find.execute().files.firstOrNull()?.id ?: return@run null
         } catch (e: GoogleJsonResponseException) {
@@ -117,6 +126,7 @@ internal fun Drive.updateOrCreate(
         file.parents = listOf(parent)
         fileConfig?.invoke(file)
         val create = files.create(file, InputStreamContent(mimeType, stream))
+        create.fields = requiredRequestFields
         return@run create.execute()
     }
 }
@@ -138,7 +148,7 @@ internal fun Drive.Files.performUpdate(
 }
 
 internal fun resolveFilesConflict(client: Drive, list: List<File>): File {
-    // Use newest file
+    // Pick newest file
     val newest = list.maxBy { it.modifiedTime.value }!!
 
     // Delete all others
@@ -151,5 +161,85 @@ internal fun resolveFilesConflict(client: Drive, list: List<File>): File {
 }
 
 internal fun resolveFoldersConflict(client: Drive, list: List<File>): File {
-    return list.first()
+    val files = client.files()
+
+    // Pick newest folder
+    val newest = list.maxBy { it.modifiedTime.value }!!
+
+    // Build a map with all conflicting folders
+    val query = list.joinToString(" or ") { "'${it.id}' in parents" }
+    val filesList = ArrayList<File>()
+
+    val conflictFilesMap = HashMultimap.create<String, File>()
+    var nextPageToken: String? = null
+    do {
+        val result = files.list().apply {
+            this.q = query
+            this.fields = requiredFilesRequestFields
+            if (nextPageToken != null) {
+                this.pageToken = nextPageToken
+            }
+        }.execute()
+        result.files.forEach { file ->
+            file.parents.forEach { parentId ->
+                if (parentId == newest.id) {
+                    filesList.add(file)
+                } else {
+                    conflictFilesMap.put(parentId, file)
+                }
+            }
+        }
+        nextPageToken = result.nextPageToken
+    } while (nextPageToken != null)
+
+    // Files in this list will be moved to newest folder
+    val insertList = ArrayList<File>()
+    // Files in this list will be removed
+    val removeList = ArrayList<File>()
+
+    for ((k, l) in conflictFilesMap.asMap()) {
+        for (v in l) {
+            val find = filesList.find { it.name == v.name }
+            if (find == null) {
+                insertList.add(v)
+            } else if (find.modifiedTime.value > v.modifiedTime.value) {
+                // Our file is newer, remove `v`
+                removeList.add(v)
+            } else {
+                // `v` is newer, update ours
+                insertList.add(v)
+                removeList.add(find)
+            }
+        }
+    }
+
+    list.filterNotTo(removeList) { it == newest }
+
+    if (insertList.isNotEmpty()) {
+        val callback = object : SimpleJsonBatchCallback<File>() {
+            override fun onFailure(error: GoogleJsonError, headers: HttpHeaders) {
+                throw IOException(error.message)
+            }
+        }
+        client.batch().apply {
+            insertList.forEach { file ->
+                files.update(file.id, File()).apply {
+                    this.addParents = newest.id
+                    this.removeParents = file.parents?.joinToString(",")
+                }.queue(this, callback)
+            }
+        }.execute()
+    }
+
+    if (removeList.isNotEmpty()) {
+        val callback = SimpleJsonBatchCallback<Void>()
+        client.batch().apply {
+            removeList.forEach { file ->
+                files.delete(file.id).queue(this, callback)
+            }
+        }.execute()
+    }
+
+    return newest
+
 }
