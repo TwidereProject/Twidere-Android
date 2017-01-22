@@ -1,10 +1,8 @@
 package org.mariotaku.twidere.util.sync
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.sync.DropboxAuthStarterActivity
 import org.mariotaku.twidere.activity.sync.GoogleDriveAuthActivity
@@ -17,7 +15,6 @@ import java.util.*
 /**
  * Created by mariotaku on 2017/1/2.
  */
-
 class NonFreeSyncProviderInfoFactory : SyncProviderInfoFactory() {
     override fun getInfoForType(type: String, preferences: SharedPreferences): SyncProviderInfo? {
         return when (type) {
@@ -32,11 +29,9 @@ class NonFreeSyncProviderInfoFactory : SyncProviderInfoFactory() {
         list.add(SyncProviderEntry(DropboxSyncProviderInfo.TYPE,
                 context.getString(R.string.sync_provider_name_dropbox),
                 Intent(context, DropboxAuthStarterActivity::class.java)))
-        if (BuildConfig.DEBUG) {
-            list.add(SyncProviderEntry(GoogleDriveSyncProviderInfo.TYPE,
-                    context.getString(R.string.sync_provider_name_google_drive),
-                    Intent(context, GoogleDriveAuthActivity::class.java)))
-        }
+        list.add(SyncProviderEntry(GoogleDriveSyncProviderInfo.TYPE,
+                context.getString(R.string.sync_provider_name_google_drive),
+                Intent(context, GoogleDriveAuthActivity::class.java)))
         return list
     }
 }
