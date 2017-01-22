@@ -30,7 +30,7 @@ class GoogleDriveAuthActivity : BaseActivity(), GoogleApiClient.ConnectionCallba
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(Scope(DriveScopes.DRIVE))
+                .requestScopes(Scope(DriveScopes.DRIVE_APPDATA))
                 .requestServerAuthCode(GoogleDriveSyncProviderInfo.WEB_CLIENT_ID, true)
                 .build()
 
