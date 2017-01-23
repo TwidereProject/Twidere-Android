@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.support.annotation.UiThread
@@ -22,6 +23,9 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.ktextension.addAllTo
+import org.mariotaku.ktextension.toDouble
+import org.mariotaku.ktextension.toInt
+import org.mariotaku.ktextension.toLong
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
@@ -39,6 +43,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -271,7 +276,7 @@ class UpdateStatusTask(
                                 result.exceptions[i] = MicroBlogException(
                                         context.getString(R.string.error_too_many_photos_fanfou))
                             } else {
-                                val sizeLimit = SizeLimit(width = 2048, height = 1536)
+                                val sizeLimit = getSizeLimit(account)
                                 mediaBody = getBodyFromMedia(context, mediaLoader,
                                         Uri.parse(statusUpdate.media[0].uri),
                                         sizeLimit, statusUpdate.media[0].type,
@@ -332,7 +337,8 @@ class UpdateStatusTask(
                     if (pendingUpdate.sharedMediaIds != null) {
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
-                        val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, update, ownerIds, true)
+                        val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload,
+                                account, update, ownerIds, true)
                         mediaIds = ids
                         deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                         deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -346,7 +352,8 @@ class UpdateStatusTask(
                 AccountType.STATUSNET -> {
                     // TODO use their native API
                     val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                    val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, update, ownerIds, false)
+                    val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, account,
+                            update, ownerIds, false)
                     mediaIds = ids
                     deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                     deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -456,9 +463,9 @@ class UpdateStatusTask(
     @Throws(UploadException::class)
     private fun uploadAllMediaShared(
             upload: TwitterUpload,
+            account: AccountDetails,
             update: ParcelableStatusUpdate,
-            ownerIds: Array<String>,
-            chucked: Boolean
+            ownerIds: Array<String>, chucked: Boolean
     ): SharedMediaUploadResult {
         val deleteOnSuccess = ArrayList<MediaDeletionItem>()
         val deleteAlways = ArrayList<MediaDeletionItem>()
@@ -467,7 +474,7 @@ class UpdateStatusTask(
             //noinspection TryWithIdenticalCatches
             var body: MediaStreamBody? = null
             try {
-                val sizeLimit = SizeLimit(width = 2048, height = 1536)
+                val sizeLimit = getSizeLimit(account)
                 body = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
                         media.type, ContentLengthInputStream.ReadListener { length, position ->
                     stateCallback.onUploadingProgressChanged(index, position, length)
@@ -558,7 +565,6 @@ class UpdateStatusTask(
         }
     }
 
-
     private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
         val draft = Draft()
         draft.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
@@ -578,6 +584,12 @@ class UpdateStatusTask(
         val resolver = context.contentResolver
         val draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft)) ?: return -1
         return NumberUtils.toLong(draftUri.lastPathSegment, -1)
+    }
+
+    private fun getSizeLimit(details: AccountDetails): SizeLimit {
+        val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
+        val videoLimit = AccountExtras.VideoLimit.twitterDefault()
+        return SizeLimit(imageLimit, videoLimit)
     }
 
     internal class PendingStatusUpdate(val length: Int, defaultText: String) {
@@ -705,8 +717,8 @@ class UpdateStatusTask(
     }
 
     data class SizeLimit(
-            val width: Int,
-            val height: Int
+            val image: AccountExtras.ImageLimit,
+            val video: AccountExtras.VideoLimit
     )
 
     data class MediaStreamBody(
@@ -770,20 +782,15 @@ class UpdateStatusTask(
                 }
                 return@run null
             }
-            val data = run {
-                if (sizeLimit != null) {
-                    when (type) {
-                        ParcelableMedia.Type.IMAGE -> {
-                            return@run imageStream(context, resolver, mediaLoader, mediaUri,
-                                    mediaType, sizeLimit)
-                        }
-                        ParcelableMedia.Type.VIDEO -> {
-                            return@run videoStream(context, resolver, mediaUri, mediaType)
-                        }
-                    }
-                }
-                return@run null
-            }
+
+            val data = if (sizeLimit != null) when (type) {
+                ParcelableMedia.Type.IMAGE -> imageStream(context, resolver, mediaLoader, mediaUri,
+                        mediaType, sizeLimit)
+                ParcelableMedia.Type.VIDEO -> videoStream(context, resolver, mediaUri, mediaType,
+                        sizeLimit)
+                else -> null
+            } else null
+
             val cis = data?.stream ?: run {
                 val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
                 val length = st.available().toLong()
@@ -816,8 +823,9 @@ class UpdateStatusTask(
                 mediaType = o.outMimeType
             }
             val size = Point(o.outWidth, o.outHeight)
+            val imageLimit = sizeLimit.image
             o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
-                    sizeLimit.width, sizeLimit.height)
+                    imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             if (o.outWidth > 0 && o.outHeight > 0 && mediaType != "image/gif") {
                 val displayOptions = DisplayImageOptions.Builder()
@@ -852,8 +860,42 @@ class UpdateStatusTask(
                 context: Context,
                 resolver: ContentResolver,
                 mediaUri: Uri,
-                defaultType: String?
+                defaultType: String?,
+                sizeLimit: SizeLimit
         ): MediaStreamData? {
+            var mediaType = defaultType
+            val videoLimit = sizeLimit.video
+            val geometry = Point()
+            var duration = -1L
+            var framerate = -1.0
+            // TODO only transcode video if needed, use `MediaMetadataRetriever`
+            val retriever = MediaMetadataRetriever()
+            try {
+                retriever.setDataSource(context, mediaUri)
+                val extractedMimeType = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE)
+                if (extractedMimeType != null) {
+                    mediaType = extractedMimeType
+                }
+                geometry.x = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH).toInt(-1)
+                geometry.y = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT).toInt(-1)
+                duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong(-1)
+                framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDouble(-1.0)
+            } catch (e: Exception) {
+                // Ignore
+            } finally {
+                try {
+                    retriever.release()
+                } catch (e: Exception) {
+                    // Ignore
+                }
+            }
+
+            if (videoLimit.checkGeometry(geometry.x, geometry.y)
+                    && videoLimit.checkFrameRate(framerate)) {
+                // Size valid, upload directly
+                return null
+            }
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 return null
             }
@@ -883,8 +925,8 @@ class UpdateStatusTask(
                 tempFile.delete()
                 return null
             }
-            return MediaStreamData(ContentLengthInputStream(tempFile.inputStream(),
-                    tempFile.length()), defaultType, null, null, listOf(FileMediaDeletionItem(tempFile)))
+            return MediaStreamData(ContentLengthInputStream(tempFile.inputStream(), tempFile.length()),
+                    mediaType, geometry, null, listOf(FileMediaDeletionItem(tempFile)))
         }
 
         internal class MediaStreamData(

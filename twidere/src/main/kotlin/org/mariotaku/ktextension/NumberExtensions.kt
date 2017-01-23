@@ -20,10 +20,10 @@ fun String?.toInt(def: Int): Int {
     }
 }
 
-fun String.toDoubleOrNull(): Double? {
+fun String?.toDouble(def: Double): Double {
     try {
-        return toDouble()
+        return this?.toDouble() ?: def
     } catch (e: NumberFormatException) {
-        return null
+        return def
     }
 }
