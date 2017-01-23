@@ -29,7 +29,6 @@ import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.BaseColumns
@@ -331,6 +330,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.take_photo -> {
+                requestOrOpenCamera()
+            }
             R.id.add_image, R.id.add_image_sub_item -> {
                 requestOrPickMedia()
             }
@@ -928,7 +930,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 return handleReplyMultipleIntent(screenNames, accountKey, inReplyToStatus)
             }
             INTENT_ACTION_COMPOSE_TAKE_PHOTO -> {
-                requestOrTakePhoto()
+                requestOrOpenCamera()
                 return true
             }
             INTENT_ACTION_COMPOSE_PICK_IMAGE -> {
@@ -1092,18 +1094,25 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         setMenu()
     }
 
-    private fun requestOrTakePhoto() {
+    private fun requestOrOpenCamera() {
         if (checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
-            takePhoto()
+            openCamera()
             return
         }
         ActivityCompat.requestPermissions(this, arrayOf(AndroidPermission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_TAKE_PHOTO_PERMISSION)
+                REQUEST_OPEN_CAMERA_PERMISSION)
     }
 
-    private fun takePhoto(): Boolean {
-        val intent = ThemedMediaPickerActivity.withThemed(this).takePhoto().build()
-        startActivityForResult(intent, REQUEST_TAKE_PHOTO)
+    private fun openCamera(): Boolean {
+        val builder = ThemedMediaPickerActivity.withThemed(this)
+        if (intent.action == INTENT_ACTION_COMPOSE_TAKE_PHOTO) {
+            builder.takePhoto()
+        } else {
+            builder.pickSources(arrayOf(MediaPickerActivity.SOURCE_CAMERA, MediaPickerActivity.SOURCE_CAMCORDER))
+            builder.containsVideo(true)
+            builder.videoOnly(false)
+        }
+        startActivityForResult(builder.build(), REQUEST_TAKE_PHOTO)
         return true
     }
 
@@ -1118,10 +1127,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun pickMedia(): Boolean {
         val intent = ThemedMediaPickerActivity.withThemed(this)
+                .pickMedia()
                 .containsVideo(true)
                 .videoOnly(false)
                 .allowMultiple(true)
-                .videoQuality(0) // Low quality
                 .build()
         startActivityForResult(intent, REQUEST_PICK_MEDIA)
         return true
@@ -1199,11 +1208,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     locationSwitch.checkedPosition = LOCATION_OPTIONS.indexOf(LOCATION_VALUE_NONE)
                 }
             }
-            REQUEST_TAKE_PHOTO_PERMISSION -> {
+            REQUEST_OPEN_CAMERA_PERMISSION -> {
                 if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
                     Toast.makeText(this, R.string.message_compose_write_storage_permission_not_granted, Toast.LENGTH_SHORT).show()
                 }
-                takePhoto()
+                openCamera()
             }
             REQUEST_PICK_MEDIA_PERMISSION -> {
                 if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
@@ -1953,7 +1962,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         private const val REQUEST_ATTACH_LOCATION_PERMISSION = 301
         private const val REQUEST_PICK_MEDIA_PERMISSION = 302
-        private const val REQUEST_TAKE_PHOTO_PERMISSION = 303
+        private const val REQUEST_OPEN_CAMERA_PERMISSION = 303
 
         internal fun getDraftAction(intentAction: String?): String {
             if (intentAction == null) {

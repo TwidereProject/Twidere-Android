@@ -5,11 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
+        android:id="@id/take_photo"
+        android:icon="@drawable/ic_action_camera"
+        android:title="@string/action_take_photo"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"/>
+    <item
         android:id="@id/add_image"
         android:icon="@drawable/ic_action_gallery"
         android:title="@string/add_image"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@+id/media_menu"
         android:icon="@drawable/ic_action_gallery"
@@ -21,12 +27,12 @@
             <item
                 android:id="@+id/add_image_sub_item"
                 android:icon="@drawable/ic_action_gallery"
-                android:title="@string/add_image" />
+                android:title="@string/add_image"/>
             <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"
                 android:icon="@drawable/ic_action_warning"
-                android:title="@string/mark_as_sensitive" />
+                android:title="@string/mark_as_sensitive"/>
         </menu>
     </item>
     <item
@@ -34,11 +40,11 @@
         android:icon="@drawable/ic_action_draft"
         android:title="@string/title_drafts"
         app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
+        tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@+id/schedule"
         android:icon="@drawable/ic_action_time"
         android:title="@string/send_at"
-        app:showAsAction="never" />
+        app:showAsAction="never"/>
 
 </menu>
