@@ -329,27 +329,20 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 else -> {
                     if (imageUri != null) {
                         val mediaUri = Uri.parse(imageUri)
-                        var bodyAndSize: Pair<Body, Point?>? = null
-                        try {
-                            bodyAndSize = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
-                                    mediaUri, null, ParcelableMedia.Type.IMAGE,
-                                    MessageMediaUploadListener(this, notificationManager,
-                                            builder, text))
-                            val uploadResp = uploadMedia(twitterUpload, bodyAndSize.first)
-                            val response = twitter.sendDirectMessage(recipientId,
-                                    text, uploadResp.id)
-                            directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
-                                    accountKey, true)
-                        } finally {
-                            Utils.closeSilently(bodyAndSize?.first)
-                        }
-                        val path = Utils.getImagePathFromUri(this, mediaUri)
-                        if (path != null) {
-                            val file = File(path)
-                            if (!file.delete()) {
-                                Log.d(LOGTAG, String.format("unable to delete %s", path))
+                        val listener = MessageMediaUploadListener(this, notificationManager,
+                                builder, text)
+                        val uploadResp = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
+                                mediaUri, null, ParcelableMedia.Type.IMAGE, listener).use { body ->
+                            val resp = uploadMedia(twitterUpload, body.body)
+                            body.deleteOnSuccess?.forEach { item ->
+                                item.delete(this)
                             }
+                            return@use resp
                         }
+                        val response = twitter.sendDirectMessage(recipientId,
+                                text, uploadResp.id)
+                        directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
+                                accountKey, true)
                     } else {
                         val response = twitter.sendDirectMessage(recipientId, text)
                         directMessage = ParcelableDirectMessageUtils.fromDirectMessage(response,
