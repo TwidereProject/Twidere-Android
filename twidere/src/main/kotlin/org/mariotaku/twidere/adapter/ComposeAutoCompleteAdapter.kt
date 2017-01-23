@@ -61,7 +61,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
     private var mExtraIdIdx: Int = 0
     private var mValueIdx: Int = 0
     var accountKey: UserKey? = null
-    private var mToken: Char = ' '
+    private var token: Char = ' '
 
     init {
         GeneralComponentHelper.build(context).inject(this)
@@ -118,14 +118,14 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
         return cursor.getString(mValueIdx)
     }
 
-    override fun runQueryOnBackgroundThread(constraint: CharSequence): Cursor? {
-        if (TextUtils.isEmpty(constraint)) return null
+    override fun runQueryOnBackgroundThread(constraint: CharSequence?): Cursor? {
+        if (constraint == null || constraint.isEmpty()) return null
         val token = constraint[0]
-        if (getNormalizedSymbol(token) == getNormalizedSymbol(mToken)) {
+        if (getNormalizedSymbol(token) == getNormalizedSymbol(this.token)) {
             val filter = filterQueryProvider
             if (filter != null) return filter.runQuery(constraint)
         }
-        mToken = token
+        this.token = token
         val builder = Suggestions.AutoComplete.CONTENT_URI.buildUpon()
         builder.appendQueryParameter(QUERY_PARAM_QUERY, constraint.subSequence(1, constraint.length).toString())
         when (getNormalizedSymbol(token)) {

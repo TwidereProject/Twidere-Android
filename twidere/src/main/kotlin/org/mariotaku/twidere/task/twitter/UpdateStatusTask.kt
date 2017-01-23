@@ -114,22 +114,25 @@ class UpdateStatusTask(
 
         val pendingUpdate = PendingStatusUpdate(update)
 
-        uploadMedia(uploader, update, pendingUpdate)
-        shortenStatus(shortener, update, pendingUpdate)
-
         val result: UpdateStatusResult
         try {
-            result = requestUpdateStatus(update, pendingUpdate, draftId)
-        } catch (e: IOException) {
-            return UpdateStatusResult(UpdateStatusException(e), draftId)
-        }
+            uploadMedia(uploader, update, pendingUpdate)
+            shortenStatus(shortener, update, pendingUpdate)
 
-        mediaUploadCallback(uploader, pendingUpdate, result)
-        statusShortenCallback(shortener, pendingUpdate, result)
+            try {
+                result = requestUpdateStatus(update, pendingUpdate, draftId)
+            } catch (e: IOException) {
+                return UpdateStatusResult(UpdateStatusException(e), draftId)
+            }
 
-        // Cleanup
-        pendingUpdate.deleteOnSuccess.forEach { delete ->
-            delete.delete(context)
+            mediaUploadCallback(uploader, pendingUpdate, result)
+            statusShortenCallback(shortener, pendingUpdate, result)
+
+            // Cleanup
+            pendingUpdate.deleteOnSuccess.forEach { item -> item.delete(context) }
+        } finally {
+            // Cleanup
+            pendingUpdate.deleteAlways.forEach { item -> item.delete(context) }
         }
         return result
     }
@@ -329,9 +332,10 @@ class UpdateStatusTask(
                     if (pendingUpdate.sharedMediaIds != null) {
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
-                        val (ids, deleteOnSuccess) = uploadAllMediaShared(upload, update, ownerIds, true)
+                        val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, update, ownerIds, true)
                         mediaIds = ids
-                        deleteOnSuccess?.addAllTo(pendingUpdate.deleteOnSuccess)
+                        deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
+                        deleteAlways.addAllTo(pendingUpdate.deleteAlways)
                         pendingUpdate.sharedMediaIds = mediaIds
                     }
                 }
@@ -342,9 +346,10 @@ class UpdateStatusTask(
                 AccountType.STATUSNET -> {
                     // TODO use their native API
                     val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                    val (ids, deleteOnSuccess) = uploadAllMediaShared(upload, update, ownerIds, false)
+                    val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, update, ownerIds, false)
                     mediaIds = ids
-                    deleteOnSuccess?.addAllTo(pendingUpdate.deleteOnSuccess)
+                    deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
+                    deleteAlways.addAllTo(pendingUpdate.deleteAlways)
                 }
                 else -> {
                     mediaIds = null
@@ -454,8 +459,9 @@ class UpdateStatusTask(
             update: ParcelableStatusUpdate,
             ownerIds: Array<String>,
             chucked: Boolean
-    ): Pair<Array<String>, List<MediaDeletionItem>?> {
+    ): SharedMediaUploadResult {
         val deleteOnSuccess = ArrayList<MediaDeletionItem>()
+        val deleteAlways = ArrayList<MediaDeletionItem>()
         val mediaIds = update.media.mapIndexed { index, media ->
             val resp: MediaUploadResponse
             //noinspection TryWithIdenticalCatches
@@ -486,6 +492,7 @@ class UpdateStatusTask(
                 Utils.closeSilently(body)
             }
             body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
+            body?.deleteAlways?.addAllTo(deleteAlways)
             if (media.alt_text?.isNotEmpty() ?: false) {
                 try {
                     upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
@@ -495,7 +502,7 @@ class UpdateStatusTask(
             }
             return@mapIndexed resp.id
         }
-        return Pair(mediaIds.toTypedArray(), deleteOnSuccess)
+        return SharedMediaUploadResult(mediaIds.toTypedArray(), deleteOnSuccess, deleteAlways)
     }
 
 
@@ -590,6 +597,7 @@ class UpdateStatusTask(
         val statusShortenResults: Array<StatusShortenResult?> = arrayOfNulls(length)
 
         val deleteOnSuccess: ArrayList<MediaDeletionItem> = arrayListOf()
+        val deleteAlways: ArrayList<MediaDeletionItem> = arrayListOf()
 
     }
 
@@ -704,7 +712,8 @@ class UpdateStatusTask(
     data class MediaStreamBody(
             val body: Body,
             val geometry: Point?,
-            val deleteOnSuccess: List<MediaDeletionItem>?
+            val deleteOnSuccess: List<MediaDeletionItem>?,
+            val deleteAlways: List<MediaDeletionItem>?
     ) : Closeable {
         override fun close() {
             body.close()
@@ -717,7 +726,12 @@ class UpdateStatusTask(
 
     data class UriMediaDeletionItem(val uri: Uri) : MediaDeletionItem {
         override fun delete(context: Context): Boolean {
-            return PNCUtils.deleteMedia(context, uri)
+            try {
+                return PNCUtils.deleteMedia(context, uri)
+            } catch (e: SecurityException) {
+                // Ignore
+                return false
+            }
         }
     }
 
@@ -727,6 +741,12 @@ class UpdateStatusTask(
         }
 
     }
+
+    internal data class SharedMediaUploadResult(
+            val ids: Array<String>,
+            val deleteOnSuccess: List<MediaDeletionItem>,
+            val deleteAlways: List<MediaDeletionItem>
+    )
 
     companion object {
 
@@ -772,9 +792,11 @@ class UpdateStatusTask(
             cis.setReadListener(readListener)
             val mimeType = data?.type ?: mediaType ?: "application/octet-stream"
             val body = FileBody(cis, "attachment", cis.length(), ContentType.parse(mimeType))
-            val deletionList: MutableList<MediaDeletionItem> = mutableListOf(UriMediaDeletionItem(mediaUri))
-            data?.deleteOnSuccess?.addAllTo(deletionList)
-            return MediaStreamBody(body, data?.geometry, deletionList)
+            val deleteOnSuccess: MutableList<MediaDeletionItem> = mutableListOf(UriMediaDeletionItem(mediaUri))
+            val deleteAlways: MutableList<MediaDeletionItem> = mutableListOf()
+            data?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
+            data?.deleteAlways?.addAllTo(deleteAlways)
+            return MediaStreamBody(body, data?.geometry, deleteOnSuccess, deleteAlways)
         }
 
 
@@ -820,7 +842,7 @@ class UpdateStatusTask(
                         }
                     }
                     return MediaStreamData(ContentLengthInputStream(tempFile), mediaType, size,
-                            listOf(FileMediaDeletionItem(tempFile)))
+                            null, listOf(FileMediaDeletionItem(tempFile)))
                 }
             }
             return null
@@ -862,14 +884,15 @@ class UpdateStatusTask(
                 return null
             }
             return MediaStreamData(ContentLengthInputStream(tempFile.inputStream(),
-                    tempFile.length()), defaultType, null, listOf(FileMediaDeletionItem(tempFile)))
+                    tempFile.length()), defaultType, null, null, listOf(FileMediaDeletionItem(tempFile)))
         }
 
         internal class MediaStreamData(
                 val stream: ContentLengthInputStream?,
                 val type: String?,
                 val geometry: Point?,
-                val deleteOnSuccess: List<MediaDeletionItem>?
+                val deleteOnSuccess: List<MediaDeletionItem>?,
+                val deleteAlways: List<MediaDeletionItem>?
         )
 
 
