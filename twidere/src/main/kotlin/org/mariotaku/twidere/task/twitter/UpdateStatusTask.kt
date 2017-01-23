@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.task.twitter
 
-import android.content.ContentProvider
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -8,15 +7,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
-import android.util.Pair
 import android.webkit.MimeTypeMap
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageSize
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaUploadEvent
+import net.ypresto.androidtranscoder.MediaTranscoder
+import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
@@ -46,7 +47,10 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
-import java.io.*
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -250,7 +254,7 @@ class UpdateStatusTask(
             val account = statusUpdate.accounts[i]
             result.accountTypes[i] = account.type
             val microBlog = MicroBlogAPIFactory.getInstance(context, account.key)
-            var bodyAndSize: Pair<Body, Point>? = null
+            var bodyAndSize: Pair<Body, Point?>? = null
             try {
                 when (account.type) {
                     AccountType.FANFOU -> {
@@ -261,7 +265,7 @@ class UpdateStatusTask(
                                 result.exceptions[i] = MicroBlogException(
                                         context.getString(R.string.error_too_many_photos_fanfou))
                             } else {
-                                val sizeLimit = Point(2048, 1536)
+                                val sizeLimit = SizeLimit(width = 2048, height = 1536)
                                 bodyAndSize = getBodyFromMedia(context, mediaLoader,
                                         Uri.parse(statusUpdate.media[0].uri),
                                         sizeLimit, statusUpdate.media[0].type,
@@ -443,16 +447,18 @@ class UpdateStatusTask(
         val mediaIds = update.media.mapIndexed { index, media ->
             val resp: MediaUploadResponse
             //noinspection TryWithIdenticalCatches
-            var bodyAndSize: Pair<Body, Point>? = null
+            var bodyAndSize: Pair<Body, Point?>? = null
             try {
-                val sizeLimit = Point(2048, 1536)
+                val sizeLimit = SizeLimit(width = 2048, height = 1536)
                 bodyAndSize = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
                         media.type, ContentLengthInputStream.ReadListener { length, position ->
                     stateCallback.onUploadingProgressChanged(index, position, length)
                 })
                 val mediaUploadEvent = MediaUploadEvent.create(context, media)
                 mediaUploadEvent.setFileSize(bodyAndSize.first.length())
-                mediaUploadEvent.setGeometry(bodyAndSize.second.x, bodyAndSize.second.y)
+                bodyAndSize.second?.let { geometry ->
+                    mediaUploadEvent.setGeometry(geometry.x, geometry.y)
+                }
                 if (chucked) {
                     resp = uploadMediaChucked(upload, bodyAndSize.first, ownerIds)
                 } else {
@@ -686,17 +692,23 @@ class UpdateStatusTask(
         fun beforeExecute()
     }
 
+    data class SizeLimit(val width: Int, val height: Int)
+
     companion object {
 
         private val BULK_SIZE = 256 * 1024// 128 Kib
 
         @Throws(IOException::class)
-        fun getBodyFromMedia(context: Context, mediaLoader: MediaLoaderWrapper,
-                             mediaUri: Uri, sizeLimit: Point? = null,
-                             @ParcelableMedia.Type type: Int,
-                             readListener: ContentLengthInputStream.ReadListener): Pair<Body, Point> {
+        fun getBodyFromMedia(
+                context: Context,
+                mediaLoader: MediaLoaderWrapper,
+                mediaUri: Uri,
+                sizeLimit: SizeLimit? = null,
+                @ParcelableMedia.Type type: Int,
+                readListener: ContentLengthInputStream.ReadListener
+        ): Pair<Body, Point?> {
             val resolver = context.contentResolver
-            var mediaType = resolver.getType(mediaUri) ?: run {
+            val mediaType = resolver.getType(mediaUri) ?: run {
                 if (mediaUri.scheme == ContentResolver.SCHEME_FILE) {
                     mediaUri.lastPathSegment?.substringAfterLast(".")?.let { ext ->
                         return@run MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
@@ -704,58 +716,130 @@ class UpdateStatusTask(
                 }
                 return@run null
             }
-            val size = Point()
-            val cis = run {
-                if (type == ParcelableMedia.Type.IMAGE && sizeLimit != null) {
-                    val length: Long
-                    val o = BitmapFactory.Options()
-                    o.inJustDecodeBounds = true
-                    BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
-                    if (o.outMimeType != null) {
-                        mediaType = o.outMimeType
-                    }
-                    size.set(o.outWidth, o.outHeight)
-                    o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
-                            sizeLimit.x, sizeLimit.y)
-                    o.inJustDecodeBounds = false
-                    if (o.outWidth > 0 && o.outHeight > 0 && mediaType != "image/gif") {
-                        val displayOptions = DisplayImageOptions.Builder()
-                                .considerExifParams(true)
-                                .build()
-                        val bitmap = mediaLoader.loadImageSync(mediaUri.toString(),
-                                ImageSize(o.outWidth, o.outHeight).scaleDown(o.inSampleSize),
-                                displayOptions)
-
-                        if (bitmap != null) {
-                            size.set(bitmap.width, bitmap.height)
-                            val os = DirectByteArrayOutputStream()
-                            when (mediaType) {
-                                "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
-                                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
-                                }
-                                else -> {
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
-                                }
-                            }
-                            length = os.size().toLong()
-                            return@run ContentLengthInputStream(os.inputStream(true), length)
+            val data = run {
+                if (sizeLimit != null) {
+                    when (type) {
+                        ParcelableMedia.Type.IMAGE -> {
+                            return@run imageStream(resolver, mediaLoader, mediaUri, mediaType, sizeLimit)
+                        }
+                        ParcelableMedia.Type.VIDEO -> {
+                            return@run videoStream(context, resolver, mediaUri, mediaType)
                         }
                     }
                 }
+                return@run null
+            }
+            val cis = data?.stream ?: run {
                 val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
                 val length = st.available().toLong()
-                return@run ContentLengthInputStream(st, length)
+                return@run TypedContentLengthInputStream(st, length, null)
             }
-
             cis.setReadListener(readListener)
-            val contentType = if (mediaType != null) {
+            val contentType = if (cis.type != null) {
+                ContentType.parse(cis.type)
+            } else if (mediaType != null) {
                 ContentType.parse(mediaType)
             } else {
                 ContentType.parse("application/octet-stream")
             }
-            return Pair(FileBody(cis, "attachment", cis.length(), contentType), size)
+            return Pair(FileBody(cis, "attachment", cis.length(), contentType), data?.geometry)
         }
 
+
+        private fun imageStream(
+                resolver: ContentResolver,
+                mediaLoader: MediaLoaderWrapper,
+                mediaUri: Uri,
+                defaultType: String?,
+                sizeLimit: SizeLimit
+        ): MediaStreamData? {
+            val length: Long
+            var mediaType = defaultType
+            val o = BitmapFactory.Options()
+            o.inJustDecodeBounds = true
+            BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+            if (o.outMimeType != null) {
+                mediaType = o.outMimeType
+            }
+            val size = Point(o.outWidth, o.outHeight)
+            o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
+                    sizeLimit.width, sizeLimit.height)
+            o.inJustDecodeBounds = false
+            if (o.outWidth > 0 && o.outHeight > 0 && mediaType != "image/gif") {
+                val displayOptions = DisplayImageOptions.Builder()
+                        .considerExifParams(true)
+                        .build()
+                val bitmap = mediaLoader.loadImageSync(mediaUri.toString(),
+                        ImageSize(o.outWidth, o.outHeight).scaleDown(o.inSampleSize),
+                        displayOptions)
+
+                if (bitmap != null) {
+                    size.set(bitmap.width, bitmap.height)
+                    val os = DirectByteArrayOutputStream()
+                    when (mediaType) {
+                        "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
+                        }
+                        else -> {
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                        }
+                    }
+                    length = os.size().toLong()
+                    return MediaStreamData(TypedContentLengthInputStream(os.inputStream(true), length, mediaType), size)
+                }
+            }
+            return null
+        }
+
+        private fun videoStream(
+                context: Context,
+                resolver: ContentResolver,
+                mediaUri: Uri,
+                defaultType: String?
+        ): MediaStreamData? {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                return null
+            }
+            val ext = mediaUri.lastPathSegment.substringAfterLast(".")
+            val pfd = resolver.openFileDescriptor(mediaUri, "r")
+            val strategy = MediaFormatStrategyPresets.createAndroid720pStrategy()
+            val listener = object : MediaTranscoder.Listener {
+                override fun onTranscodeFailed(exception: Exception?) {
+                }
+
+                override fun onTranscodeCompleted() {
+                }
+
+                override fun onTranscodeProgress(progress: Double) {
+                }
+
+                override fun onTranscodeCanceled() {
+                }
+
+            }
+            val tempFile = File.createTempFile("twidere__encoded_video_", ".$ext", context.cacheDir)
+            val future = MediaTranscoder.getInstance().transcodeVideo(pfd.fileDescriptor,
+                    tempFile.absolutePath, strategy, listener)
+            try {
+                future.get()
+            } catch (e: Exception) {
+                tempFile.delete()
+                return null
+            }
+            return MediaStreamData(TypedContentLengthInputStream(tempFile.inputStream(),
+                    tempFile.length(), defaultType), null)
+        }
+
+        internal class MediaStreamData(
+                val stream: TypedContentLengthInputStream?,
+                val geometry: Point?
+        )
+
+        internal class TypedContentLengthInputStream(
+                st: InputStream,
+                length: Long,
+                val type: String?
+        ) : ContentLengthInputStream(st, length)
 
     }
 

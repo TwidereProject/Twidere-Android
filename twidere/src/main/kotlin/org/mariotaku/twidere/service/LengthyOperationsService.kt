@@ -37,7 +37,6 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationCompat.Builder
 import android.text.TextUtils
 import android.util.Log
-import android.util.Pair
 import android.widget.Toast
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
@@ -279,7 +278,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 }
             })
             task.callback = this
-            task.params = Pair.create(actionType, item)
+            task.params = Pair(actionType, item)
             handler.post { ManualTaskStarter.invokeBeforeExecute(task) }
 
             val result = ManualTaskStarter.invokeExecute(task)
@@ -330,7 +329,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 else -> {
                     if (imageUri != null) {
                         val mediaUri = Uri.parse(imageUri)
-                        var bodyAndSize: Pair<Body, Point>? = null
+                        var bodyAndSize: Pair<Body, Point?>? = null
                         try {
                             bodyAndSize = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
                                     mediaUri, null, ParcelableMedia.Type.IMAGE,

@@ -1121,6 +1121,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 .containsVideo(true)
                 .videoOnly(false)
                 .allowMultiple(true)
+                .videoQuality(0) // Low quality
                 .build()
         startActivityForResult(intent, REQUEST_PICK_MEDIA)
         return true
