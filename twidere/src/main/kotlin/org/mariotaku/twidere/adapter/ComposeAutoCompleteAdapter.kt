@@ -23,15 +23,14 @@ import android.content.Context
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
 import android.support.v4.widget.SimpleCursorAdapter
-import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
-import org.apache.commons.lang3.StringUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.MediaLoaderWrapper
@@ -54,12 +53,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
     private val displayProfileImage: Boolean
     private val profileImageStyle: Int
 
-    private var mTypeIdx: Int = 0
-    private var mIconIdx: Int = 0
-    private var mTitleIdx: Int = 0
-    private var mSummaryIdx: Int = 0
-    private var mExtraIdIdx: Int = 0
-    private var mValueIdx: Int = 0
+    private var indices: SuggestionItem.Indices? = null
     var accountKey: UserKey? = null
     private var token: Char = ' '
 
@@ -70,18 +64,19 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
     }
 
     override fun bindView(view: View, context: Context?, cursor: Cursor) {
+        val indices = this.indices!!
         val text1 = view.findViewById(android.R.id.text1) as TextView
         val text2 = view.findViewById(android.R.id.text2) as TextView
         val icon = view.findViewById(android.R.id.icon) as ProfileImageView
 
         icon.style = profileImageStyle
 
-        if (Suggestions.AutoComplete.TYPE_USERS == cursor.getString(mTypeIdx)) {
-            text1.text = userColorNameManager.getUserNickname(cursor.getString(mExtraIdIdx),
-                    cursor.getString(mTitleIdx))
-            text2.text = String.format("@%s", cursor.getString(mSummaryIdx))
+        if (Suggestions.AutoComplete.TYPE_USERS == cursor.getString(indices.type)) {
+            text1.text = userColorNameManager.getUserNickname(cursor.getString(indices.extra_id),
+                    cursor.getString(indices.title))
+            text2.text = String.format("@%s", cursor.getString(indices.summary))
             if (displayProfileImage) {
-                val profileImageUrl = cursor.getString(mIconIdx)
+                val profileImageUrl = cursor.getString(indices.icon)
                 mediaLoader.displayProfileImage(icon, profileImageUrl)
             } else {
                 mediaLoader.cancelDisplayTask(icon)
@@ -89,7 +84,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
 
             icon.clearColorFilter()
         } else {
-            text1.text = String.format("#%s", cursor.getString(mTitleIdx))
+            text1.text = String.format("#%s", cursor.getString(indices.title))
             text2.setText(R.string.hashtag)
 
             icon.setImageResource(R.drawable.ic_action_hashtag)
@@ -106,16 +101,17 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
         }
     }
 
-    override fun convertToString(cursor: Cursor?): CharSequence {
-        when (StringUtils.defaultIfEmpty(cursor!!.getString(mTypeIdx), "")) {
+    override fun convertToString(cursor: Cursor): CharSequence {
+        val indices = this.indices!!
+        when (cursor.getString(indices.type)) {
             Suggestions.AutoComplete.TYPE_HASHTAGS -> {
-                return '#' + cursor.getString(mValueIdx)
+                return '#' + cursor.getString(indices.value)
             }
             Suggestions.AutoComplete.TYPE_USERS -> {
-                return '@' + cursor.getString(mValueIdx)
+                return '@' + cursor.getString(indices.value)
             }
         }
-        return cursor.getString(mValueIdx)
+        return cursor.getString(indices.value)
     }
 
     override fun runQueryOnBackgroundThread(constraint: CharSequence?): Cursor? {
@@ -146,12 +142,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
 
     override fun swapCursor(cursor: Cursor?): Cursor? {
         if (cursor != null) {
-            mTypeIdx = cursor.getColumnIndex(Suggestions.AutoComplete.TYPE)
-            mTitleIdx = cursor.getColumnIndex(Suggestions.AutoComplete.TITLE)
-            mSummaryIdx = cursor.getColumnIndex(Suggestions.AutoComplete.SUMMARY)
-            mExtraIdIdx = cursor.getColumnIndex(Suggestions.AutoComplete.EXTRA_ID)
-            mIconIdx = cursor.getColumnIndex(Suggestions.AutoComplete.ICON)
-            mValueIdx = cursor.getColumnIndex(Suggestions.AutoComplete.VALUE)
+            indices = SuggestionItem.Indices(cursor)
         }
         return super.swapCursor(cursor)
     }

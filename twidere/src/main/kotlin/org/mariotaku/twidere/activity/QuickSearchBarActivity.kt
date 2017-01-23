@@ -50,6 +50,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATIO
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
@@ -256,39 +257,16 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         searchQuery.setSelection(query.length)
     }
 
-    internal class SuggestionItem(cursor: Cursor, indices: SuggestionsAdapter.Indices) {
-
-
-        val title: String?
-        val summary: String?
-        val _id: Long
-        val extra_id: String?
-
-        init {
-            _id = cursor.getLong(indices._id)
-            title = cursor.getString(indices.title)
-            summary = cursor.getString(indices.summary)
-            extra_id = cursor.getString(indices.extra_id)
-        }
-    }
-
     class SuggestionsAdapter internal constructor(
             private val activity: QuickSearchBarActivity
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
-        private val inflater: LayoutInflater
-        private val mediaLoader: MediaLoaderWrapper
-        private val userColorNameManager: UserColorNameManager
-        private val removedPositions: SortableIntList?
+        private val inflater: LayoutInflater = LayoutInflater.from(activity)
+        private val mediaLoader: MediaLoaderWrapper = activity.mediaLoader
+        private val userColorNameManager: UserColorNameManager = activity.userColorNameManager
+        private val removedPositions: SortableIntList? = SortableIntList()
 
-        private var indices: Indices? = null
-
-        init {
-            removedPositions = SortableIntList()
-            mediaLoader = activity.mediaLoader
-            userColorNameManager = activity.userColorNameManager
-            inflater = LayoutInflater.from(activity)
-        }
+        private var indices: SuggestionItem.Indices? = null
 
         override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
             when (getActualItemViewType(cursor.position)) {
@@ -389,7 +367,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         override fun swapCursor(newCursor: Cursor?): Cursor? {
-            indices = if (newCursor != null) Indices(newCursor) else null
+            indices = if (newCursor != null) SuggestionItem.Indices(newCursor) else null
             removedPositions!!.clear()
             return super.swapCursor(newCursor)
         }
@@ -436,47 +414,18 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         internal class SearchViewHolder(view: View) {
 
-            internal val icon: ImageView
-            internal val text1: TextView
-            internal val edit_query: View
-
-            init {
-                icon = view.findViewById(android.R.id.icon) as ImageView
-                text1 = view.findViewById(android.R.id.text1) as TextView
-                edit_query = view.findViewById(R.id.edit_query)
-            }
+            internal val icon: ImageView = view.findViewById(android.R.id.icon) as ImageView
+            internal val text1: TextView = view.findViewById(android.R.id.text1) as TextView
+            internal val edit_query: View = view.findViewById(R.id.edit_query)
 
         }
 
         internal class UserViewHolder(view: View) {
 
-            internal val icon: ImageView
-            internal val text1: TextView
-            internal val text2: TextView
+            internal val icon: ImageView = view.findViewById(android.R.id.icon) as ImageView
+            internal val text1: TextView = view.findViewById(android.R.id.text1) as TextView
+            internal val text2: TextView = view.findViewById(android.R.id.text2) as TextView
 
-            init {
-                icon = view.findViewById(android.R.id.icon) as ImageView
-                text1 = view.findViewById(android.R.id.text1) as TextView
-                text2 = view.findViewById(android.R.id.text2) as TextView
-            }
-        }
-
-        internal class Indices(cursor: Cursor) {
-            internal val _id: Int
-            internal val type: Int
-            internal val title: Int
-            internal val summary: Int
-            internal val icon: Int
-            internal val extra_id: Int
-
-            init {
-                _id = cursor.getColumnIndex(Suggestions._ID)
-                type = cursor.getColumnIndex(Suggestions.TYPE)
-                title = cursor.getColumnIndex(Suggestions.TITLE)
-                summary = cursor.getColumnIndex(Suggestions.SUMMARY)
-                icon = cursor.getColumnIndex(Suggestions.ICON)
-                extra_id = cursor.getColumnIndex(Suggestions.EXTRA_ID)
-            }
         }
 
         companion object {
