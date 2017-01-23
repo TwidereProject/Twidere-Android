@@ -26,7 +26,6 @@ import android.app.Service
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Point
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -41,6 +40,8 @@ import android.widget.Toast
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
@@ -70,8 +71,8 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.deleteDrafts
 import org.mariotaku.twidere.util.io.ContentLengthInputStream.ReadListener
-import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -147,12 +148,17 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
     }
 
+    @SuppressLint("Recycle")
     private fun handleDiscardDraftIntent(intent: Intent) {
         val data = intent.data ?: return
-        notificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS)
-        val id = data.lastPathSegment.toLong(-1)
-        val where = Expression.equals(Drafts._ID, id)
-        contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
+        task {
+            if (deleteDrafts(this, longArrayOf(data.lastPathSegment.toLong(-1))) < 1) {
+                throw IOException()
+            }
+            return@task data
+        }.successUi { uri ->
+            notificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS)
+        }
     }
 
     private fun handleSendDirectMessageIntent(intent: Intent) {
