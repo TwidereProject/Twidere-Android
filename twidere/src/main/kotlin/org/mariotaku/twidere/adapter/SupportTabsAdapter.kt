@@ -94,9 +94,17 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     override fun getPageWidth(position: Int): Float {
+        val columnCount = count
+        if (columnCount == 0) return 1f
         if (hasMultipleColumns) {
             val resources = context.resources
-            return resources.getDimension(R.dimen.preferred_tab_column_width) / resources.displayMetrics.widthPixels
+            val screenWidth = resources.displayMetrics.widthPixels
+            val preferredColumnWidth = resources.getDimension(R.dimen.preferred_tab_column_width)
+            val pageWidth = preferredColumnWidth / screenWidth
+            if (columnCount * preferredColumnWidth < screenWidth) {
+                return 1f / columnCount
+            }
+            return pageWidth
         }
         return 1f
     }

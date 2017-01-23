@@ -100,8 +100,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private val accountUpdatedListener = AccountUpdatedListener(this)
 
     private var selectedAccountToSearch: AccountDetails? = null
-    private var tabColumns: Int = 0
-
 
     private lateinit var multiSelectHandler: MultiSelectEventHandler
 
@@ -334,8 +332,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val refreshOnStart = preferences.getBoolean(SharedPreferenceConstants.KEY_REFRESH_ON_START, false)
         var tabDisplayOptionInt = Utils.getTabDisplayOptionInt(this)
 
-        tabColumns = resources.getInteger(R.integer.default_tab_columns)
-
         drawerToggle = ActionBarDrawerToggle(this, homeMenu, R.string.open_accounts_dashboard,
                 R.string.close_accounts_dashboard)
         homeContent.setOnFitSystemWindowsListener(this)
@@ -343,7 +339,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         mainPager.adapter = pagerAdapter
         mainTabs.setViewPager(mainPager)
         mainTabs.setOnPageChangeListener(this)
-        mainTabs.setColumns(tabColumns)
         if (tabDisplayOptionInt == 0) {
             tabDisplayOptionInt = TabPagerIndicator.DisplayOption.ICON
         }
@@ -561,7 +556,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun getControlBarOffset(): Float {
-        if (tabColumns > 1) {
+        if (mainTabs.columns > 1) {
             val lp = actionsButton.layoutParams
             val total: Float
             if (lp is MarginLayoutParams) {
@@ -576,7 +571,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun setControlBarOffset(offset: Float) {
-        val translationY = if (tabColumns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
+        val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
         toolbar.translationY = translationY.toFloat()
         windowOverlay.translationY = translationY.toFloat()
         val lp = actionsButton.layoutParams
@@ -795,14 +790,16 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        if (resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
+        if (pagerAdapter.count > 1 && resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
             pagerAdapter.hasMultipleColumns = true
+            mainTabs.columns = Math.floor(1.0 / pagerAdapter.getPageWidth(0)).toInt()
         } else {
             mainPager.pageMargin = 0
             mainPager.setPageMarginDrawable(null)
             pagerAdapter.hasMultipleColumns = false
+            mainTabs.columns = 1
         }
     }
 
