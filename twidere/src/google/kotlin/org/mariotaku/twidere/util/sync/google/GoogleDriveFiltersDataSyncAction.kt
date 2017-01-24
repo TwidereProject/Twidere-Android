@@ -9,8 +9,8 @@ import org.mariotaku.twidere.extension.model.serialize
 import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.extension.newSerializer
 import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import org.mariotaku.twidere.util.sync.FileBasedFiltersDataSyncAction
+import org.mariotaku.twidere.util.tempFileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
@@ -56,9 +56,9 @@ internal class GoogleDriveFiltersDataSyncAction(
     override fun newSaveToRemoteSession(): GoogleDriveUploadSession<FiltersData> {
         return object : GoogleDriveUploadSession<FiltersData>(fileName, commonFolderId, xmlMimeType, drive) {
             override fun FiltersData.toInputStream(): InputStream {
-                val os = DirectByteArrayOutputStream()
-                this.serialize(os.newSerializer(charset = Charsets.UTF_8, indent = true))
-                return os.inputStream(true)
+                return tempFileInputStream(context) {
+                    this.serialize(it.newSerializer(charset = Charsets.UTF_8, indent = true))
+                }
             }
         }
     }

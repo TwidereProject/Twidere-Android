@@ -259,7 +259,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     val exception = result.exception
                     val exceptions = result.exceptions
                     if (exception != null) {
-                        Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                        val cause = exception.cause
+                        if (cause is MicroBlogException) {
+                            Toast.makeText(context, cause.errors?.firstOrNull()?.message ?: cause.message,
+                                    Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, exception.message, Toast.LENGTH_SHORT).show()
+                        }
                         failed = true
                         Log.w(LOGTAG, exception)
                     } else for (e in exceptions) {

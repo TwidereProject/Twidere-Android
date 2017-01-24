@@ -8,8 +8,8 @@ import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.readMimeMessageFrom
 import org.mariotaku.twidere.extension.model.writeMimeMessageTo
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.util.io.DirectByteArrayOutputStream
 import org.mariotaku.twidere.util.sync.FileBasedDraftsSyncAction
+import org.mariotaku.twidere.util.tempFileInputStream
 import java.io.IOException
 import java.util.*
 
@@ -27,20 +27,21 @@ internal class GoogleDriveDraftsSyncAction(
 
     @Throws(IOException::class)
     override fun Draft.saveToRemote(): DriveFileInfo {
-        val os = DirectByteArrayOutputStream()
-        this.writeMimeMessageTo(context, os)
-        val driveId = this.remote_extras
-        val `is` = os.inputStream(true)
-        val fileConfig: (File) -> Unit = {
-            it.modifiedTime = DateTime(timestamp)
+        tempFileInputStream(context) { os ->
+            this.writeMimeMessageTo(context, os)
+        }.use {
+            val driveId = this.remote_extras
+            val fileConfig: (File) -> Unit = {
+                it.modifiedTime = DateTime(timestamp)
+            }
+            val file = if (driveId != null) {
+                drive.files().performUpdate(driveId, filename, draftMimeType, stream = it, fileConfig = fileConfig)
+            } else {
+                drive.updateOrCreate(name = filename, mimeType = draftMimeType, parent = folderId,
+                        spaces = appDataFolderSpace, stream = it, fileConfig = fileConfig)
+            }
+            return DriveFileInfo(file.id, file.name, Date(file.modifiedTime.value))
         }
-        val file = if (driveId != null) {
-            drive.files().performUpdate(driveId, filename, draftMimeType, stream = `is`, fileConfig = fileConfig)
-        } else {
-            drive.updateOrCreate(name = filename, mimeType = draftMimeType, parent = folderId,
-                    spaces = appDataFolderSpace, stream = `is`, fileConfig = fileConfig)
-        }
-        return DriveFileInfo(file.id, file.name, Date(file.modifiedTime.value))
     }
 
     @Throws(IOException::class)

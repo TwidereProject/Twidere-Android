@@ -25,10 +25,12 @@ abstract internal class GoogleDriveUploadSession<in Data>(
     abstract fun Data.toInputStream(): InputStream
 
     fun uploadData(data: Data): Boolean {
-        drive.updateOrCreate(name = name, mimeType = mimeType, parent = parentId,
-                spaces = appDataFolderSpace, stream = data.toInputStream(), fileConfig = {
-            it.modifiedTime = DateTime(localModifiedTime)
-        })
+        data.toInputStream().use {
+            drive.updateOrCreate(name = name, mimeType = mimeType, parent = parentId,
+                    spaces = appDataFolderSpace, stream = it, fileConfig = {
+                it.modifiedTime = DateTime(localModifiedTime)
+            })
+        }
         return true
     }
 

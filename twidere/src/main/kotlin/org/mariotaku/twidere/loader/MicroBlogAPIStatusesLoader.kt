@@ -43,12 +43,8 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
-import org.mariotaku.twidere.util.JsonSerializer
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.TwidereArrayUtils
-import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
@@ -237,10 +233,9 @@ abstract class MicroBlogAPIStatusesLoader(
         val databaseItemLimit = preferences[loadItemLimitKey]
         try {
             val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
-            fileCache.save(key, ByteArrayInputStream(byteArrayOf())) { current, total -> true }
-            fileCache.get(key)?.outputStream()?.use {
-                LoganSquare.serialize(statuses, it, ParcelableStatus::class.java)
-            }
+            fileCache.save(key, tempFileInputStream(context) { os ->
+                LoganSquare.serialize(statuses, os, ParcelableStatus::class.java)
+            }) { current, total -> true }
         } catch (e: Exception) {
             // Ignore
             if (BuildConfig.DEBUG && e !is IOException) {
