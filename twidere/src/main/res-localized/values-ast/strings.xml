@@ -391,9 +391,10 @@
   <string name="mention_user">Mentar a <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Color del tema</string>
   <string name="wrong_url_format">Formatu d\'URL incorreutu.</string>
-  <string name="wrong_username_password">Nome d\'usuariu/contraseña incorreutos.</string>
-  <string name="message_network_error">Fallu de rede.</string>
-  <string name="api_data_corrupted">Datos d\'API toyíos.</string>
+  <string name="wrong_username_password">Nome d\'usuariu/contraseña incorreutos</string>
+  <!-- Toast message for network errors -->
+  <string name="message_network_error">Fallu de rede</string>
+  <string name="api_data_corrupted">Datos d\'API toyíos</string>
   <string name="ssl_error">Fallu SSL, quiciabes precises habilitar la opción «Inorar fallu SSL».</string>
   <string name="wrong_api_key">URL d\'API o clave/secretu de consumidor incorreutos. Compruébalos de nueves, por favor.</string>
   <string name="status_updated">Unvióse\'l tuit.</string>
@@ -819,11 +820,14 @@
   <string name="filter_everywhere">Peñerar en tolos llaos</string>
   <string name="filter_everywhere_description">Peñeraráse en Twidere:\n  ·Tuits d\'usuarios\n  ·Tuits mentando a esti usuariu\n  ·Retuits/Cites d\'esti usuariu</string>
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">Saltar</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">Más sero</string>
   <string name="message_permission_request_compose_location">Twidere precisa\'l permisu d\'allugamientu p\'amestar l\'allugamientu a los tuits.</string>
   <string name="message_permission_request_save_media">Twidere precisa\'l permisu d\'almacenamientu pa guardar multimedia.</string>
   <string name="message_permission_request_share_media">Twidere precisa\'l permisu d\'almacenamientu pa compartir medios con delles aplicaciones.</string>
+  <string name="hint_accounts_dashboard_message">Esliza dende\'l berbesu esquierdu pa ver el panel de cuentes.</string>
+  <string name="preference_randomize_account_name">Nome de cuenta al debalu</string>
   <string name="preference_randomize_account_name_summary">Nun permite qu\'otres aplicaciones consigan el to nome lleendo les cuentes, ameyora la privacidá.</string>
   <string name="preference_randomize_account_rename_accounts_confirm">¿Renomar cuentes esistentes?</string>
   <string name="message_auto_refresh_confirm">¿Habilitar l\'auto-refrescu pa consiguir tuits nuevos?</string>
@@ -839,6 +843,7 @@
   <string name="extra_features_description">Sofita Twidere pa consiguir carauterístiques ameyoraes</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">Si yá merquesti les carauterístiques ameyoraes, pues usar «Restaurar» pa restaurar la merca.</string>
+  <string name="extra_feature_description_schedule_status">Planificar tuit (unviar más sero)</string>
   <string name="title_error_invalid_account">Cuenta non válida</string>
   <string name="message_error_invalid_account">Toyéronse dellos datos de la cuenta, agora Twidere desniciarálos pa evitar que casque.</string>
   <string name="title_premium_features_name">Twidere ∞</string>
@@ -846,6 +851,20 @@
   <string name="action_import">Importar</string>
   <string name="action_select_all">Esbillar too</string>
   <string name="action_invert_selection">Invertir esbilla</string>
+  <string name="message_no_user_selected">Nun s\'esbillaron usuarios</string>
   <string name="preference_title_advanced">Avanzáu</string>
   <string name="preference_title_filter_manage_subscriptions">Xestionar</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Axustes</string>
+  <string name="message_sync_data_synced_with_name">Agora Twidere ta sincronizáu con <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
+  <string name="title_sync">Sincronización de datos</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Desconeutar</string>
+  <string name="action_sync_sync_now">Sincronizar agora</string>
+  <string name="title_sync_settings">Axustes de sincronización</string>
+  <string name="title_subscription_name">Nome</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -154,6 +154,7 @@
   <string name="send_direct_message">DM भेजें</string>
   <string name="extensions">एक्सटेंशन</string>
   <string name="uninstall">अनइनस्टाल</string>
+  <!-- Toast message for network errors -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <!-- 'Tweet' here is a verb -->
@@ -170,4 +171,9 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">उन्नत</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">सेटिंग्स</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">नाम</string>
 </resources>

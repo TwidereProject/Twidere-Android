@@ -12,6 +12,7 @@
   <string name="action_send">发送</string>
   <string name="add_image">添加图片</string>
   <string name="action_take_photo">拍照</string>
+  <string name="action_record_video">录像</string>
   <string name="status_hint">你在做什么？</string>
   <string name="sign_up">注册</string>
   <string name="sign_in">登录</string>
@@ -42,6 +43,7 @@
   <string name="password">密码</string>
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_refresh_service">刷新服务</string>
+  <string name="label_refresh_and_sync_service">刷新和同步服务</string>
   <string name="label_streaming_service">实时流服务</string>
   <string name="label_background_operation_service">后台操作服务</string>
   <string name="action_open_in_browser">在浏览器中打开</string>
@@ -116,6 +118,7 @@
   <string name="action_quote">引用</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">添加规则</string>
+  <string name="action_add_filters_subscription">添加订阅</string>
   <string name="text_size">文字尺寸</string>
   <string name="text_size_summary">推文的字号</string>
   <string name="cannot_get_location">不能获得你的位置</string>
@@ -392,6 +395,7 @@
   <string name="theme_color">主题颜色</string>
   <string name="wrong_url_format">URL格式错误</string>
   <string name="wrong_username_password">用户名/密码错误</string>
+  <!-- Toast message for network errors -->
   <string name="message_network_error">网络错误</string>
   <string name="api_data_corrupted">API数据损坏</string>
   <string name="ssl_error">SSL错误，你可能需要启用“忽略SSL错误”选项（可能降低安全性）</string>
@@ -850,10 +854,13 @@
   <string name="action_restore_purchase">恢复</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 并获得增强功能</string>
+  <string name="extra_features_pack_description">或购买功能包，以获取所有功能 （包括将来的版本中的功能）</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">如果你已经购买增强功能，可以使用“恢复”来恢复购买。</string>
-  <string name="extra_feature_description_sync_data">同步数据，如过滤器和草稿</string>
+  <string name="extra_feature_description_sync_data">与 Dropbox、Google 云端硬盘等同步数据</string>
   <string name="extra_feature_description_filters_import">从被隐藏/阻止的用户导入过滤列表</string>
+  <string name="extra_feature_description_filters_subscription">过滤器订阅</string>
+  <string name="extra_feature_description_schedule_status">推文排期（稍后发送）</string>
   <string name="title_error_invalid_account">帐号无效</string>
   <string name="message_error_invalid_account">一些帐号数据已损坏，Twidere 将删除这些帐户以避免崩溃。</string>
   <string name="title_premium_features_name">Twidere ∞</string>
@@ -868,4 +875,35 @@
   <string name="preference_title_filter_subscriptions">过滤器订阅</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="title_manage_filter_subscriptions">过滤器订阅</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_extra_features_not_purchased">尚未购买增强功能</string>
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">连接</string>
+  <string name="title_dialog_sync_connect_to">连接到&#8230;</string>
+  <string name="action_sync_settings">设定</string>
+  <string name="message_sync_data_connect_hint">将 Twidere 连接到网络存储来同步数据</string>
+  <string name="message_sync_data_synced_with_name">Twidere 现在已经和 <xliff:g example="ownCloud" id="name">%s</xliff:g> 同步</string>
+  <string name="title_sync">数据同步</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <string name="sync_provider_name_google_drive">Google 云端硬盘</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">断开连接</string>
+  <string name="action_sync_sync_now">现在同步</string>
+  <string name="title_sync_settings">同步设定</string>
+  <string name="message_sync_disconnect_from_name_confirm">从 <xliff:g example="ownCloud" id="name">%s</xliff:g> 断开连接？</string>
+  <string name="message_sync_last_synced_time">上次同步： <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
+  <string name="action_purchase_features_pack">购买功能包</string>
+  <string name="preference_title_chrome_custom_tab">Chrome 自定义标签页</string>
+  <string name="preference_summary_chrome_custom_tab">在 Chrome 自定义标签页中打开链接</string>
+  <string name="hint_empty_filters_subscriptions">没有订阅</string>
+  <string name="title_subscription_name">名称</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_invalid">无效的订阅</string>
+  <string name="title_filters_subscription_url">URL</string>
+  <string name="label_filters_subscription">订阅</string>
+  <string name="summary_interactions_not_available">仅对官方令牌有效</string>
+  <string name="label_password_sign_in">密码登录</string>
+  <string name="message_compose_write_storage_permission_not_granted">需要权限来删除拍摄的照片或视频</string>
+  <string name="message_video_too_short">视频太短</string>
+  <string name="message_video_too_long">视频太长</string>
 </resources>

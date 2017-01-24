@@ -45,6 +45,6 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> suka</item>
   </plurals>
   <plurals name="N_votes">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> suara</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> pilih</item>
   </plurals>
 </resources>

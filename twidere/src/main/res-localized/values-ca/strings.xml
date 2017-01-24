@@ -386,9 +386,7 @@
   <string name="mention_user">Menciona a <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Color del tema</string>
   <string name="wrong_url_format">El format de la URL és incorrecte.</string>
-  <string name="wrong_username_password">La combinació usuari-contrasenya és incorrecta.</string>
-  <string name="message_network_error">Hi ha un error de connexió.</string>
-  <string name="api_data_corrupted">Les dades de l\'API estan malmeses.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">Error d\'SSL. Proveu d\'habilitar l\'opció «Ignora error d\'SSL».</string>
   <string name="wrong_api_key">La URL de l\'API o bé el parell clau de consumidor - secret és incorrecte. Si us plau, comproveu-los.</string>
   <string name="status_updated">S\'ha enviat la piulada.</string>
@@ -811,4 +809,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avançades</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Paràmetres</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nom</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -239,7 +239,7 @@
   <string name="tcp_dns_query_summary">استخدام بروتوكول TCP لتقديم طلبات DNS لتجنب خداع DNS.</string>
   <string name="dns_server">خادم DNS</string>
   <string name="dns_server_summary">تعيين ملقم DNS لطلبات الشبكة.</string>
-  <string name="activities_about_me">أحداثي</string>
+  <string name="activities_about_me">الاحداث المتعلقة بي</string>
   <string name="activities_by_friends">أحداث الأصدقاء</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> فضّل تغريدتك.</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="other">%2$s</xliff:g> فضّلا تغريدتك.</string>
@@ -378,9 +378,7 @@
   <string name="mention_user">الإشارة إلى <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">لون السِمَة</string>
   <string name="wrong_url_format">صيغة الرابط خاطئة.</string>
-  <string name="wrong_username_password">إسم المستخدم أو كلمة السر خاطئة.</string>
-  <string name="message_network_error">خطأ في الشبكة.</string>
-  <string name="api_data_corrupted">بيانات الواجهة البرمجية تالفة.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">خطأ في تشفير SSL، تحتاج لتفعيل خيار Ignore SSL error.</string>
   <string name="wrong_api_key">رابط API أو شيفرة consumer key/secret غير صحيحة ، تأكد منها مرة أخرى.</string>
   <string name="status_updated">أُرسلت التغريدة.</string>
@@ -657,4 +655,10 @@
   <string name="title_premium_features_name">تويدر ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">متقدم</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">الاعدادات</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_url">الموقع</string>
+  <string name="title_filters_subscription_url">الموقع</string>
 </resources>

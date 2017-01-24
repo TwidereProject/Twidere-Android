@@ -389,9 +389,7 @@
   <string name="mention_user">Menziona <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Colore del tema</string>
   <string name="wrong_url_format">Formato URL sbagliato.</string>
-  <string name="wrong_username_password">Username/password sbagliati.</string>
-  <string name="message_network_error">Errore di rete.</string>
-  <string name="api_data_corrupted">Dati delle API corrotti.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">Errore SSL, dovresti poter abilitare l\'opzione \"Ignora errori SSL\".</string>
   <string name="wrong_api_key">URL delle API non corretto, o consumer key/secret errata. Per favore, controllale.</string>
   <string name="status_updated">Tweet inviato.</string>
@@ -795,4 +793,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avanzate</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Impostazioni</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nome</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

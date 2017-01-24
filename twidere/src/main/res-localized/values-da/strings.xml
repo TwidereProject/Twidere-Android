@@ -264,6 +264,7 @@
   <string name="hashtag">Hashtag</string>
   <string name="title_edit_profile">Rediger profil</string>
   <string name="title_edit_details">Rediger detaljer</string>
+  <!-- Toast message for network errors -->
   <string name="theme_light">Lys</string>
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
@@ -286,4 +287,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avanceret</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Indstillinger</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Navn</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

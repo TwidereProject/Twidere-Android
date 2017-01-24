@@ -44,6 +44,7 @@
   <string name="label_refresh_service">Atualizar serviço</string>
   <string name="label_streaming_service">Serviço de streaming</string>
   <string name="label_background_operation_service">Serviço de operação em segundo plano</string>
+  <string name="action_open_in_browser">Abrir no navegador</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Excluir</string>
   <!-- [verb] Action for performing retweet -->
@@ -391,9 +392,10 @@
   <string name="mention_user">Citar <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Cor do tema</string>
   <string name="wrong_url_format">Formato de URL incorreto.</string>
-  <string name="wrong_username_password">Usuário/senha incorretos.</string>
-  <string name="message_network_error">Erro de rede.</string>
-  <string name="api_data_corrupted">Dados da API corrompidos.</string>
+  <string name="wrong_username_password">Usuário/senha incorretos</string>
+  <!-- Toast message for network errors -->
+  <string name="message_network_error">Erro de rede</string>
+  <string name="api_data_corrupted">Dados da API corrompidos</string>
   <string name="ssl_error">Erro de SSL, você pode ter que habilitar a opção \"Ignorar Erro de SSL\".</string>
   <string name="wrong_api_key">URL da API ou chave de usuário incorreta, verifique novamente.</string>
   <string name="status_updated">Tweet enviado.</string>
@@ -807,13 +809,27 @@
   <string name="sign_in_with_ellip">Entrar com...</string>
   <string name="edit_description">Editar descrição</string>
   <string name="no_status_content_text">Nenhum conteúdo</string>
+  <string name="label_status_not_available">Tweet não disponível</string>
+  <string name="share_link">Compartilhar link</string>
+  <string name="hide_retweets">Ocultar retweets</string>
+  <string name="hide_quotes">Ocultar comentários</string>
+  <string name="hide_replies">Ocultar respostas</string>
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">Pular</string>
   <!-- Used for decide something later, like permission request -->
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">Reembolsar</string>
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avançado</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Configurações</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nome</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -233,8 +233,7 @@
   <string name="profile_image">Profilový obrázek</string>
   <string name="your_profile_image">Váš profilový obrázek</string>
   <string name="wrong_url_format">Nesprávný formát adresy URL.</string>
-  <string name="wrong_username_password">Nesprávné uživatelské jméno/heslo.</string>
-  <string name="message_network_error">Chyba sítě.</string>
+  <!-- Toast message for network errors -->
   <string name="status_updated">Tweet odeslán.</string>
   <string name="profile_updated">Profil aktualizován.</string>
   <string name="profile_image_updated">Profilový obrázek aktualizován.</string>
@@ -397,4 +396,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Pokročilé</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Nastavení</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Jméno</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

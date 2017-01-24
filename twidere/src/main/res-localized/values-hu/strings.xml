@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Kedvelés</string>
   <string name="tab_editor_hint_name">Név</string>
-  <string name="action_refresh">Frissít</string>
+  <string name="action_refresh">Frissítés</string>
   <string name="settings_refresh">Frissítés</string>
   <string name="retry">Újrapróbál</string>
   <string name="more">Tovább</string>
@@ -383,9 +383,9 @@
   <string name="mention_user"><xliff:g id="user">%s</xliff:g> említése</string>
   <string name="theme_color">Téma színe</string>
   <string name="wrong_url_format">Nem megfelelő URL formátum.</string>
-  <string name="wrong_username_password">Nem megfelelő felhasználónév/jelszó.</string>
-  <string name="message_network_error">Hálózati hiba.</string>
-  <string name="api_data_corrupted">Az API adatok sérültek.</string>
+  <string name="wrong_username_password">Nem megfelelő felhasználónév/jelszó</string>
+  <!-- Toast message for network errors -->
+  <string name="message_network_error">Hálózati hiba</string>
   <string name="ssl_error">SSL hiba. Lehet, hogy be kell kapcsolnod az \"SSL hibák figyelmen kívül hagyása\" opciót.</string>
   <string name="wrong_api_key">Érvénytelen API hivatkozás, vagy felhasználói kulcs/jelszó. Kérlek ellenőrizd őket újra.</string>
   <string name="status_updated">Tweet elküldve.</string>
@@ -772,16 +772,36 @@
   <string name="group">Csoport</string>
   <string name="location_countrywide">Országos</string>
   <string name="error_title_device_incompatible">Inkompatibilis eszköz</string>
+  <string name="sign_in_service_google_id">Google ID</string>
   <string name="sign_in_service_twitter">Twitter</string>
   <string name="sign_in_service_email">E-mail</string>
   <string name="edit_description">Leírás szerkesztése</string>
   <string name="no_status_content_text">Nincs tartalom</string>
+  <string name="hide_quotes">Idézetek elrejtése</string>
+  <string name="hide_replies">Válaszok elrejtése</string>
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">Kihagyás</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Később</string>
+  <string name="title_select_users">Felhasználók kiválasztása</string>
+  <string name="action_purchase">Vásárlás</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">Visszaállítás</string>
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
+  <string name="title_error_invalid_account">Érvénytelen fiók</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Fejlett</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Beállítások</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Kapcsolat bontása</string>
+  <string name="title_sync_settings">Szinkronizálási beállítások</string>
+  <string name="message_sync_last_synced_time">Utolsó szinkronizálás: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
+  <string name="title_subscription_name">Név</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

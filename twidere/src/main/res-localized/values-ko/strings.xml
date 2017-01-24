@@ -386,9 +386,7 @@
   <string name="mention_user"><xliff:g id="user">%s</xliff:g>님에게 멘션</string>
   <string name="theme_color">테마 색상</string>
   <string name="wrong_url_format">잘못된 URL 양식입니다.</string>
-  <string name="wrong_username_password">잘못된 사용자 이름 또는 비밀번호입니다.</string>
-  <string name="message_network_error">네트워크 오류입니다.</string>
-  <string name="api_data_corrupted">API 데이터가 파손되었습니다.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL 오류입니다. \"SSL 오류 무시\"를 설정할 필요가 있습니다.</string>
   <string name="wrong_api_key">부정확한 APL 주소 또는 컨슈머 키/시크릿입니다. 다시 한 번 확인해 주세요.</string>
   <string name="status_updated">트윗이 전송되었습니다.</string>
@@ -815,4 +813,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">고급</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">설정</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">이름</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

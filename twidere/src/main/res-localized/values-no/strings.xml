@@ -368,9 +368,7 @@
   <string name="mention_user">Omtal <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Temafarge</string>
   <string name="wrong_url_format">Feil URL-format.</string>
-  <string name="wrong_username_password">Feil brukernavn eller passord.</string>
-  <string name="message_network_error">Nettverksfeil.</string>
-  <string name="api_data_corrupted">API-data er skadet.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL-feil, du må kanskje aktivere \"Ignorer SSL-feil\"-valget.</string>
   <string name="wrong_api_key">Feil API-URL eller brukernøkkel/passord. Sjekk at de er riktig skrevet.</string>
   <string name="status_updated">Tweet sendt.</string>
@@ -719,4 +717,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avansert</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Innstillinger</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Navn</string>
+  <string name="title_subscription_url">Nettadresse</string>
+  <string name="title_filters_subscription_url">Nettadresse</string>
 </resources>

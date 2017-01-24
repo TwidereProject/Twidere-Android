@@ -42,6 +42,7 @@
   <string name="password">Contraseña</string>
   <string name="label_data_provider">Proveedor de base de datos Twidere</string>
   <string name="label_refresh_service">Recargar servicio</string>
+  <string name="label_refresh_and_sync_service">Recargar y sincronizar servicio</string>
   <string name="label_streaming_service">Servicio en directo</string>
   <string name="label_background_operation_service">Servicio en segundo plano</string>
   <string name="action_open_in_browser">Abrir en el navegador</string>
@@ -391,9 +392,10 @@
   <string name="mention_user">Mencionar a <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Color del tema</string>
   <string name="wrong_url_format">El formato del URL es incorrecto.</string>
-  <string name="wrong_username_password">Usuario/contraseña incorrectos.</string>
-  <string name="message_network_error">Error de red.</string>
-  <string name="api_data_corrupted">datos de la API dañados.</string>
+  <string name="wrong_username_password">Usuario/contraseña incorrectos</string>
+  <!-- Toast message for network errors -->
+  <string name="message_network_error">Error de red</string>
+  <string name="api_data_corrupted">Datos de la API dañados</string>
   <string name="ssl_error">Error de SSL. Posiblemente necesites activar la opción \"Ignorar errores SSL\".</string>
   <string name="wrong_api_key">API url o clave de consumidor/secreta incorrecta, por favor, compruébalo de nuevo.</string>
   <string name="status_updated">Tweet enviado.</string>
@@ -547,7 +549,7 @@
   <string name="export_settings">Exportar ajustes</string>
   <string name="export_settings_type_dialog_title">Exportar ajustes&#8230;</string>
   <string name="import_settings_type_dialog_title">Importar ajustes&#8230;</string>
-  <string name="title_nicknames">Apodos</string>
+  <string name="title_nicknames">Nicknames</string>
   <string name="title_user_colors">Colores de usuario</string>
   <string name="progress">Progreso</string>
   <string name="hidden_settings">Configuraciones ocultas</string>
@@ -832,19 +834,63 @@
   <string name="message_permission_request_share_media">Twidere necesita permiso de almacenamiento para el intercambio de archivos con otras aplicaciones.</string>
   <string name="hint_accounts_dashboard_title">Panel de cuentas</string>
   <string name="hint_accounts_dashboard_message">Deslice el borde de la pantalla para abrir el panel de control de cuentas.</string>
+  <string name="preference_randomize_account_name">Usar nombre aleatorio de cuenta</string>
+  <string name="preference_randomize_account_name_summary">No permitir a otras aplicaciones obtener el nombre accediendo a las cuentas, mejora la privacidad.</string>
   <string name="preference_randomize_account_rename_accounts_confirm">¿Cambiar el nombre de cuentas existentes?</string>
+  <string name="message_auto_refresh_confirm">¿Activar la autoactualización para obtener nuevos tweets automáticamente?</string>
+  <string name="error_info_oauth_timestamp_error">Por favor, verifique los ajustes de fecha y hora del sistema.</string>
+  <string name="fab_visible">Botón Flotante de acción</string>
+  <string name="fab_visible_summary">Mostrar el Botón Flotante de Acción</string>
+  <string name="status_format_time_source"><xliff:g ejemplo="0:00, Jan 1 2017" id="tiempo">%1$s</xliff:g> · <xliff:g ejemplo="Twidere para Android" id="fuente">%2$s</xliff:g></string>
+  <string name="status_format_source"><xliff:g ejemplo="Twidere para Android" id="fuente">%s</xliff:g></string>
+  <string name="preference_filter_unavailable_quote_statuses">Filtrar las citas no disponibles</string>
+  <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
+  <string name="action_filter_import_from_muted_users">Importar de usuarios silenciados</string>
   <string name="title_select_users">Seleccione los usuarios</string>
   <string name="action_purchase">Comprar</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Restaurar</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Apoyar Twidere y obtener características mejoradas</string>
+  <string name="extra_features_pack_description">O compra el pack de características para desbloquearlo (incluyendo características futuras)</string>
   <!-- Enhanced (paid) features title -->
+  <string name="extra_features_restore_purchase_hint">Si ya ha adquirido las características mejoradas, puede utilizar \"Restaurar\" para restaurar la compra.</string>
+  <string name="extra_feature_description_sync_data">Sincronizar datos con Dropbox, Google Drive etc</string>
+  <string name="extra_feature_description_filters_import">Importar lista de filtros de bloqueados/silenciados</string>
+  <string name="extra_feature_description_filters_subscription">Filtra la lista de suscripciones</string>
+  <string name="extra_feature_description_schedule_status">Planifica tu tweet (envíalo más tarde)</string>
+  <string name="title_error_invalid_account">Cuenta no válida</string>
+  <string name="message_error_invalid_account">Los datos de algunas cuentas están dañados, Twidere quitará esas cuentas para evitar fallos.</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="action_import">Importación</string>
   <string name="action_select_all">Seleccionar todo</string>
   <string name="action_select_none">Seleccionar ninguno</string>
   <string name="action_invert_selection">Invertir selección</string>
+  <string name="message_no_user_selected">Ningún usuario seleccionado</string>
   <string name="preference_title_advanced">Avanzado</string>
+  <string name="preference_filter_possibility_sensitive_statuses">Filtrar twits sensibles</string>
+  <string name="preference_title_filter_subscriptions">Filtrar suscripciones</string>
+  <string name="preference_title_filter_manage_subscriptions">Administrar</string>
+  <string name="title_manage_filter_subscriptions">Filtrar suscripciones</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_extra_features_not_purchased">Características extra no compradas</string>
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">Conectar</string>
+  <string name="title_dialog_sync_connect_to">Conectar a&#8230;</string>
+  <string name="action_sync_settings">Ajustes</string>
+  <string name="message_sync_data_connect_hint">Conectar Twidere con la red para sincronizar los datos</string>
+  <string name="message_sync_data_synced_with_name">Twidere se ha conectado con <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
+  <string name="title_sync">Sincronización de datos</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Desconectar</string>
+  <string name="action_sync_sync_now">Sincronizar ahora</string>
+  <string name="title_sync_settings">Sincronizar ajustes</string>
+  <string name="message_sync_disconnect_from_name_confirm">¿Desconectar de <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
+  <string name="message_sync_last_synced_time">Última sincronización: <xliff:g example="2017/1/1 12:00" id="time">%s</xliff:g></string>
+  <string name="action_purchase_features_pack">Comprar características extra</string>
+  <string name="title_subscription_name">Nombre</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

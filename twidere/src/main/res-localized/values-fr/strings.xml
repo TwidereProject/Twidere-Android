@@ -12,7 +12,7 @@
   <string name="action_send">Envoyer</string>
   <string name="add_image">Ajouter une image</string>
   <string name="action_take_photo">Prendre une photo</string>
-  <string name="status_hint">Quoi de neuf?</string>
+  <string name="status_hint">Quoi de neuf ?</string>
   <string name="sign_up">S\'inscrire</string>
   <string name="sign_in">Se connecter</string>
   <string name="api_url_format">Format de l\'adresse API</string>
@@ -391,9 +391,7 @@
   <string name="mention_user">Mention <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Couleur du thème</string>
   <string name="wrong_url_format">Format d\'URL érroné.</string>
-  <string name="wrong_username_password">Mauvais nom d\'utilisateur/mot de passe.</string>
-  <string name="message_network_error">Erreur réseau.</string>
-  <string name="api_data_corrupted">Données API corrompues.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">Erreur SSL, vous pouvez avoir besoin d\'activer l\'option \"Ignorer les erreurs SSL\".</string>
   <string name="wrong_api_key">URL de l\'API ou clé client/mot de passe incorrect, merci de vérifier à nouveau.</string>
   <string name="status_updated">Tweet envoyé.</string>
@@ -851,7 +849,6 @@
   <string name="extra_features_description">Soutenez Twidere et accédez à des fonctionnalités avancées</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser \'Restaurer\' pour importer vos achats.</string>
-  <string name="extra_feature_description_sync_data">Synchroniser les données tel que les filtres et brouillons</string>
   <string name="title_error_invalid_account">Compte non valide</string>
   <string name="message_error_invalid_account">Certaines données de compte sont corrompues, Twidere va supprimer ces comptes pour éviter de planter.</string>
   <string name="title_premium_features_name">Twidere ∞</string>
@@ -863,5 +860,14 @@
   <string name="message_no_user_selected">Pas d\'utilisateur sélectionné</string>
   <string name="preference_title_advanced">Avancé</string>
   <string name="preference_filter_possibility_sensitive_statuses">Filtrer les tweets sensibles</string>
+  <string name="preference_title_filter_subscriptions">Filtrer les abonnements</string>
   <string name="preference_title_filter_manage_subscriptions">Gérer</string>
+  <string name="title_manage_filter_subscriptions">Filtrer les abonnements</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Paramètres</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nom</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

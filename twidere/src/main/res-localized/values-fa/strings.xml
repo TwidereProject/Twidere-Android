@@ -391,9 +391,7 @@
   <string name="mention_user">اشاره به <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">رنگ زمینه</string>
   <string name="wrong_url_format">قالب URL نادرست.</string>
-  <string name="wrong_username_password">نام‌کاربری/گذرواژهٔ نادرست.</string>
-  <string name="message_network_error">خطای شبکه.</string>
-  <string name="api_data_corrupted">داده‌های API خراب شده است.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">خطای SSL، ممکن است نیاز داشته باشید که «خطای  SSL را نادیده بگیر» را فعال کنید.</string>
   <string name="wrong_api_key">نشانی API یا کلید/رمز مصرف‌کنندهٔ نادرست است، لطفاً دوباره آن‌ها را بررسی کنید.</string>
   <string name="status_updated">توییت فرستاده شد.</string>
@@ -836,4 +834,11 @@
   <string name="title_premium_features_name">توییدر ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">پیش‌رفته</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">تنظیمات</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">نام</string>
+  <string name="title_subscription_url">پیوند</string>
+  <string name="title_filters_subscription_url">پیوند</string>
 </resources>

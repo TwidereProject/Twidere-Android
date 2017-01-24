@@ -12,7 +12,7 @@
   <string name="action_send">Kirim</string>
   <string name="add_image">Tambahkan gambar</string>
   <string name="action_take_photo">Ambil gambar</string>
-  <string name="status_hint">Apa yang terjadi ?</string>
+  <string name="status_hint">Apa yang terjadi?</string>
   <string name="sign_up">Daftar</string>
   <string name="sign_in">Masuk</string>
   <string name="api_url_format">Format URL API</string>
@@ -42,8 +42,10 @@
   <string name="password">Kata Sandi</string>
   <string name="label_data_provider">Penyedia jasa basis data Twidere</string>
   <string name="label_refresh_service">Segarkan layanan</string>
+  <string name="label_refresh_and_sync_service">Muat ulang &amp; Menyinkronisasikan layanan</string>
   <string name="label_streaming_service">Layanan streaming</string>
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
+  <string name="action_open_in_browser">Buka melalui browser</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Hapus</string>
   <!-- [verb] Action for performing retweet -->
@@ -106,6 +108,8 @@
   <string name="action_set_color">Tetapkan warna</string>
   <string name="action_clear">Bersihkan</string>
   <string name="action_pick_color">Pilih warna</string>
+  <string name="action_follow">Ikuti</string>
+  <string name="action_unfollow">Setop ikuti</string>
   <string name="leftside_compose_button">Tombol susun di kiri</string>
   <string name="leftside_compose_button_summary">Pasang tombol susun di kiri.</string>
   <string name="load_item_limit">Memuat batas item</string>
@@ -125,13 +129,14 @@
   <string name="user_list_details_is_public">Publik</string>
   <string name="user_profile_description">Deskripsi</string>
   <string name="user_profile_location">Lokasi</string>
+  <string name="user_profile_url">Alamat web</string>
   <string name="user_profile_name">Nama</string>
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">Favorit</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Suka</string>
   <string name="tab_editor_hint_name">Nama</string>
-  <string name="action_refresh">Segarkan</string>
+  <string name="action_refresh">Perbaharui</string>
   <string name="settings_refresh">Perbaharui</string>
   <string name="retry">Coba lagi</string>
   <string name="more">Lebih</string>
@@ -387,9 +392,10 @@
   <string name="mention_user">Menyebut <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Warna tema</string>
   <string name="wrong_url_format">Format URL salah.</string>
-  <string name="wrong_username_password">Nama/kata sandi salah.</string>
-  <string name="message_network_error">Masalah Jaringan.</string>
-  <string name="api_data_corrupted">API data rusak.</string>
+  <string name="wrong_username_password">Nama pengguna atau kata sandi salah</string>
+  <!-- Toast message for network errors -->
+  <string name="message_network_error">Permasalahan pada jaringan</string>
+  <string name="api_data_corrupted">Data API rusak</string>
   <string name="ssl_error">Masalah SSL, Anda mungkin harus mengaktifkan opsi \"Abaikan masalah SSL\".</string>
   <string name="wrong_api_key">Kesalahan pada API url atau consumer key/secret, coba cek kembali.</string>
   <string name="status_updated">Twit terkirim.</string>
@@ -789,6 +795,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="new_document_api">API Dokumen Baru</string>
   <string name="new_document_api_summary">Buka profil dan media pada tugas baru</string>
+  <string name="preference_multitasking">Multitasking</string>
   <string name="preference_multitasking_summary">Buka profil dan media pada tugas baru</string>
   <string name="drawer_toggle">Tombol laci</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
@@ -814,6 +821,7 @@
   <string name="pinned_status">Tweet Disematkan</string>
   <string name="add_or_remove_from_list">Tambah atau hapus dari daftar</string>
   <!-- Enhanced (paid) features title -->
+  <string name="title_extra_features">Fitur yang disempurnakan</string>
   <string name="filter_everywhere">Saring segalanya</string>
   <string name="filter_everywhere_description">Hal berikut akan disaring pada Twidere: ·Cuitan pengguna. ·Cuitan yang menyebut akun pengguna ini. Cuitan ulang/Kutipan dari pengguna ini</string>
   <string name="message_toast_added_to_filter">Tambahkan ke penyaringan.</string>
@@ -826,10 +834,63 @@
   <string name="message_permission_request_share_media">Twidere meminta ijin untuk membagikan media pada beberapa aplikasi.</string>
   <string name="hint_accounts_dashboard_title">Panel Akun</string>
   <string name="hint_accounts_dashboard_message">Geser dari ujung layar untuk membuka panel akun.</string>
+  <string name="preference_randomize_account_name">Hasilkan nama akun secara acak</string>
+  <string name="preference_randomize_account_name_summary">Menghalau aplikasi lain untuk mengambil nama Anda dengan cara membaca akun, meningkatkan privasi.</string>
+  <string name="preference_randomize_account_rename_accounts_confirm">Ganti nama akun yang ada?</string>
+  <string name="message_auto_refresh_confirm">Memperbolehkan pembaharuan otomatis untuk mendapatkan tweet secara otomatis?</string>
+  <string name="error_info_oauth_timestamp_error">Mohon cek tanggal sistem Anda &amp; pengaturan waktu.</string>
+  <string name="fab_visible">Tombol aksi yang melayang</string>
+  <string name="fab_visible_summary">Tampilkan tombol aksi yang melayang</string>
+  <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
+  <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
+  <string name="preference_filter_unavailable_quote_statuses">Menyaring kutipan yang tidak tersedia</string>
+  <string name="action_filter_import_from_blocked_users">Mengimpor dari pengguna yang diblokir</string>
+  <string name="action_filter_import_from_muted_users">Mengimpor dari pengguna yang didiamkan</string>
+  <string name="title_select_users">Pilih pengguna</string>
+  <string name="action_purchase">Beli</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">Memulihkan</string>
   <!-- Enhanced (paid) features description -->
+  <string name="extra_features_description">Dukung Twidere dan dapatkan fitur yang telah disempurnakan</string>
+  <string name="extra_features_pack_description">Atau beli paket berisikan fitur-fitur untuk mendapatkan seluruh fitur-fitur (termasuk fitur-fitur mendatang)</string>
   <!-- Enhanced (paid) features title -->
+  <string name="extra_features_restore_purchase_hint">Jika anda terlanjur membeli fitur yang telah disempurnakan, anda dapat menggunakan \'Restore\' untuk membatalkan pembelian.</string>
+  <string name="extra_feature_description_sync_data">Sinkronisasi data dengan Dropbox, Google Drive, dll</string>
+  <string name="extra_feature_description_filters_import">Mengimpor daftar penyaringan dari blok/didiamkan</string>
+  <string name="extra_feature_description_filters_subscription">Menyaring daftar langganan</string>
+  <string name="extra_feature_description_schedule_status">Jadwalkan tweer (kirim nanti)</string>
+  <string name="title_error_invalid_account">Akun salah</string>
+  <string name="message_error_invalid_account">Beberapa data akun rusak, Twidere akan menghapus akun tersebut untuk mencegah kerusakan.</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">Impor</string>
+  <string name="action_select_all">Pilih semua</string>
+  <string name="action_select_none">Tidak memilih</string>
+  <string name="action_invert_selection">Membalikkan pilihan</string>
+  <string name="message_no_user_selected">Tidak ada pengguna yang dipilih</string>
   <string name="preference_title_advanced">Lanjutan</string>
+  <string name="preference_filter_possibility_sensitive_statuses">Penyaringan tweet sensitif</string>
+  <string name="preference_title_filter_subscriptions">Penyaringan langganan</string>
+  <string name="preference_title_filter_manage_subscriptions">Atur</string>
+  <string name="title_manage_filter_subscriptions">Menyaring langganan</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_extra_features_not_purchased">Fitur yang disempurnakan tidak dibeli</string>
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">Menghubungkan</string>
+  <string name="title_dialog_sync_connect_to">Menghubungkan ke&#8230;</string>
+  <string name="action_sync_settings">Pengaturan</string>
+  <string name="message_sync_data_connect_hint">Sambungkan Twidere dengan penyimpanan jaringan untuk sinkronisasi data</string>
+  <string name="message_sync_data_synced_with_name">Twidere telah disinkronisasikan dengan <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
+  <string name="title_sync">Sinkronasi Data</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Putuskan</string>
+  <string name="action_sync_sync_now">Sinkronkan sekarang</string>
+  <string name="title_sync_settings">Sinkronisasi pengaturan</string>
+  <string name="message_sync_disconnect_from_name_confirm">Putuskan dari <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
+  <string name="message_sync_last_synced_time">Terakhir disinkronkan: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
+  <string name="action_purchase_features_pack">Beli paket fitur</string>
+  <string name="title_subscription_name">Nama</string>
+  <string name="title_subscription_url">Alamat web</string>
+  <string name="title_filters_subscription_url">Alamat web</string>
 </resources>

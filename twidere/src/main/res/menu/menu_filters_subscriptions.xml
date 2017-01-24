@@ -12,10 +12,9 @@
         tools:ignore="AlwaysShowAction"/>
     <item
         android:id="@+id/refresh"
-        android:enabled="@bool/debug"
+        android:icon="@drawable/ic_action_refresh"
         android:showAsAction="never"
         android:title="@string/action_refresh"
-        android:visible="@bool/debug"
         app:showAsAction="never"/>
 
 </menu>

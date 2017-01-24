@@ -391,6 +391,7 @@
   <string name="theme_color">テーマ色</string>
   <string name="wrong_url_format">不正なURL形式です。</string>
   <string name="wrong_username_password">間違ったユーザー名/パスワードです。</string>
+  <!-- Toast message for network errors -->
   <string name="message_network_error">ネットワークエラー</string>
   <string name="api_data_corrupted">APIデータが破損しています。</string>
   <string name="ssl_error">SSLエラー、\"SSLエラーを無視\"設定をオンにしてください。</string>
@@ -823,4 +824,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">詳細設定</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">設定</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">名前</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

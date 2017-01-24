@@ -12,6 +12,7 @@
   <string name="action_send">發送</string>
   <string name="add_image">新增圖片</string>
   <string name="action_take_photo">拍照</string>
+  <string name="action_record_video">錄影</string>
   <string name="status_hint">您在做什麼？</string>
   <string name="sign_up">註冊</string>
   <string name="sign_in">登入</string>
@@ -27,7 +28,7 @@
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">編輯</string>
   <string name="edit_api">編輯 API</string>
-  <string name="title_home">主頁</string>
+  <string name="title_home">首頁</string>
   <string name="title_mentions">提及</string>
   <string name="error_occurred">發生錯誤，請重試</string>
   <string name="error_already_logged_in">您已經登入</string>
@@ -42,6 +43,7 @@
   <string name="password">密碼</string>
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_refresh_service">刷新服務</string>
+  <string name="label_refresh_and_sync_service">刷新和同步服務</string>
   <string name="label_streaming_service">實時流服務</string>
   <string name="label_background_operation_service">後台操作服務</string>
   <string name="action_open_in_browser">在瀏覽器中打開</string>
@@ -78,7 +80,7 @@
   <string name="clear_cache">清除緩存</string>
   <string name="clear_cache_summary">清除儲存的個人資料圖片緩存</string>
   <string name="clear_databases">清除資料庫</string>
-  <string name="clear_databases_summary">清除資料庫中的推文、私信等。不必擔心，你的帳號資訊不會遺失</string>
+  <string name="clear_databases_summary">清除資料庫中的推文、私信等。不必擔心，你的帳號訊息不會遺失</string>
   <string name="in_reply_to_name">回覆<xliff:g id="user_name">%s</xliff:g></string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g>轉推了</string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g>和另一人轉推了</string>
@@ -86,8 +88,8 @@
   <string name="retweeted_by_name">由<xliff:g id="user_name">%s</xliff:g>轉推</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>和其他<xliff:g id="retweet_count">%2$d</xliff:g>人已轉推</string>
   <string name="retweeted_by_count">由<xliff:g id="retweet_count">%d</xliff:g>人轉推</string>
-  <string name="title_users_retweeted_this">轉推了這條推文的用戶</string>
-  <string name="title_users_favorited_this">收藏這條推文的用戶</string>
+  <string name="title_users_retweeted_this">轉推了這條推文的使用者</string>
+  <string name="title_users_favorited_this">收藏這條推文的使用者</string>
   <string name="title_users_liked_this">喜歡它的使用者</string>
   <string name="reply_to">回覆<xliff:g id="user_name">%s</xliff:g></string>
   <string name="quote_user">引用<xliff:g id="user_name">%s</xliff:g></string>
@@ -95,10 +97,10 @@
   <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="title_filters">過濾</string>
   <string name="search_type_statuses">推文</string>
-  <string name="search_type_users">用戶</string>
-  <string name="title_user">用戶</string>
-  <string name="filter_type_users">用戶</string>
-  <string name="filter_type_keywords">關鍵詞</string>
+  <string name="search_type_users">使用者</string>
+  <string name="title_user">使用者</string>
+  <string name="filter_type_users">使用者</string>
+  <string name="filter_type_keywords">關鍵字</string>
   <string name="filter_type_sources">來源</string>
   <string name="filter_type_links">連結</string>
   <string name="content">內容</string>
@@ -116,6 +118,7 @@
   <string name="action_quote">引用</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">新增規則</string>
+  <string name="action_add_filters_subscription">添加訂閱</string>
   <string name="text_size">文字尺寸</string>
   <string name="text_size_summary">推文的字體大小</string>
   <string name="cannot_get_location">無法取得您的位置</string>
@@ -147,7 +150,7 @@
   <string name="search_hint">搜尋推文或用戶</string>
   <string name="remember_position">記住位置</string>
   <string name="remember_position_summary">打開Twidere時，恢復到退出前列表/頁面的位置</string>
-  <string name="user_blocked">你封鎖了這個用戶</string>
+  <string name="user_blocked">你封鎖了這個使用者</string>
   <string name="users_blocked">你封鎖了這些用戶</string>
   <string name="user_unblocked">您解除了對這個用戶的封鎖</string>
   <string name="reported_user_for_spam">您已回報這個用戶發送垃圾訊息</string>
@@ -291,9 +294,9 @@
   <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g>轉推了<xliff:g id="target">%2$s</xliff:g>的推文</string>
   <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g>轉推了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%3$s</xliff:g>的推文</string>
   <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g>把<xliff:g id="target">%2$s</xliff:g>加入了列表</string>
-  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>添加了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g>到列表</string>
+  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g>新增了<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g>到列表</string>
   <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> 建立了列表 <xliff:g id="target">%2$s</xliff:g></string>
-  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g>創建了列表<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g></string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g>建立了列表<xliff:g id="target">%2$s</xliff:g>和<xliff:g id="other">%1$s</xliff:g></string>
   <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> 加入了Twitter</string>
   <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g>和<xliff:g id="other">%2$s</xliff:g>加入了Twitter</string>
   <string name="status_not_updated">推文未發送</string>
@@ -378,7 +381,7 @@
   <string name="default_ringtone">預設鈴聲</string>
   <string name="phishing_link_warning">釣魚連結警告</string>
   <string name="phishing_link_warning_summary">於您試圖打開私信中可能的釣魚連結時發出警告</string>
-  <string name="phishing_link_warning_message_1">您正在打開私信中一個可能是釣魚網站的連結。\n\n請在輸入任何個人資訊前，認真檢查網站的網址。</string>
+  <string name="phishing_link_warning_message_1">您正在打開私信中一個可能是釣魚網站的連結。\n\n請在輸入任何個人訊息前，認真檢查網站的網址。</string>
   <string name="phishing_link_warning_message_2">確定繼續嗎？</string>
   <string name="profile_images">個人資料圖片</string>
   <string name="preview_images">推文預覽圖片</string>
@@ -392,6 +395,7 @@
   <string name="theme_color">主題顏色</string>
   <string name="wrong_url_format">URL 格式錯誤</string>
   <string name="wrong_username_password">用戶名/密碼錯誤</string>
+  <!-- Toast message for network errors -->
   <string name="message_network_error">網路錯誤</string>
   <string name="api_data_corrupted">API 資料毀損</string>
   <string name="ssl_error">SSL錯誤，你可能需要啟用“忽略SSL錯誤”選項（可能降低安全性）</string>
@@ -401,6 +405,7 @@
   <string name="status_favorited">推文已收藏</string>
   <string name="status_unfavorited">推文已取消收藏</string>
   <string name="status_liked">已喜歡了推文</string>
+  <string name="status_like_removed">已取消喜歡了推文。</string>
   <string name="status_retweeted">已轉推</string>
   <string name="retweet_cancelled">轉推已取消</string>
   <string name="direct_message_sent">私信已發送</string>
@@ -422,7 +427,7 @@
   <string name="profile_image_updated">個人資料圖片已更新</string>
   <string name="created_list">建立了列表 \"<xliff:g id="list">%s</xliff:g>\"</string>
   <string name="deleted_list">刪除了列表 \"<xliff:g id="list">%s</xliff:g>\"</string>
-  <string name="updated_list_details">更新了列表\"<xliff:g id="list">%s</xliff:g>\"的詳細資訊</string>
+  <string name="updated_list_details">更新了列表\"<xliff:g id="list">%s</xliff:g>\"的詳細訊息</string>
   <string name="subscribed_to_list">訂閲了列表\"<xliff:g id="list">%s</xliff:g>\"</string>
   <string name="unsubscribed_from_list">取消訂閲了列表\"<xliff:g id="list">%s</xliff:g>\"</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> 被新增到了 "<xliff:g id="list">%2$s</xliff:g>\" 列表</string>
@@ -478,7 +483,7 @@
   <string name="source_filter_name">來源<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user">封鎖<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user_confirm_message">您確定要封鎖<xliff:g id="name">%s</xliff:g>嗎？</string>
-  <string name="filter_user_confirm_message">添加<xliff:g example="Username" id="name">%s</xliff:g>到過濾器？</string>
+  <string name="filter_user_confirm_message">新增<xliff:g example="Username" id="name">%s</xliff:g>到過濾器？</string>
   <string name="unfollow_user">取消關注<xliff:g id="name">%s</xliff:g></string>
   <string name="unfollow_user_confirm_message">取消關注<xliff:g id="name">%s</xliff:g>嗎？你將不會在時間軸中看到這個用戶的推文。</string>
   <string name="delete_user_list">刪除列表<xliff:g id="name">%s</xliff:g></string>
@@ -623,7 +628,7 @@
   <string name="draft_saved">草稿已儲存</string>
   <string name="open_twitter_links">打開Twitter鏈接</string>
   <string name="type_name_to_search">輸入姓名搜尋</string>
-  <string name="no_user_found">沒有找到用戶</string>
+  <string name="no_user_found">沒有找到使用者</string>
   <string name="members">成員</string>
   <string name="subscribers">訂閱者</string>
   <string name="read_from_bottom">從底部閱讀</string>
@@ -632,21 +637,21 @@
   <string name="register">註冊</string>
   <string name="follows">關注</string>
   <string name="belongs_to">屬於</string>
-  <string name="blocked_by_user_summary">因為<xliff:g id="name">%s</xliff:g>太傻逼看不懂你在說什麼，所以阻止了你的關注</string>
+  <string name="blocked_by_user_summary">因為<xliff:g id="name">%s</xliff:g>太傻逼看不懂你在說什麼，所以封鎖了你</string>
   <string name="select_accounts">選擇帳號</string>
   <string name="media_preview">媒體預覽</string>
   <string name="edit_tabs">編輯標籤頁</string>
   <string name="no_location">沒有位置</string>
   <string name="getting_location">獲取位置</string>
   <string name="save_to_gallery">儲存到相簿</string>
-  <string name="usage_statistics">使用資訊統計</string>
+  <string name="usage_statistics">使用訊息統計</string>
   <string name="research_hot_mobile">數據驅動的移動網絡研究</string>
   <string name="unknown_location">未知位置</string>
   <string name="ellipsis">&#8230;</string>
-  <string name="import_export_settings">導入/導出設定</string>
+  <string name="import_export_settings">匯入/匯出設定</string>
   <string name="usage_statistics_header_summary">Twidere參與了一些研究項目，加入這些項目幫助Twidere和更多應用做得更好。</string>
   <string name="no_tab">沒有標籤頁</string>
-  <string name="user_protected_summary">你需要向這個受保護的用戶發送關注請求來查看推文</string>
+  <string name="user_protected_summary">你需要向這個受保護的使用者發送關注請求來查看推文</string>
   <string name="no_account">沒有帳號</string>
   <string name="permission_description_shorten_status">應用程序可以為Twidere縮短推文，所以它可以訪問你正在發送的推文。</string>
   <string name="permission_description_upload_media">應用程序可以為Twidere上傳媒體，所以它可以訪問你正在發送的推文中的媒體。</string>
@@ -696,7 +701,7 @@
   <string name="user_list_details">列表詳情</string>
   <string name="invalid_list_name">只能包含字母、數字、“-”和“_”且必須以字母開始</string>
   <string name="delete_conversation">刪除對話</string>
-  <string name="delete_conversation_confirm_message">刪除此對話的所有資訊？</string>
+  <string name="delete_conversation_confirm_message">刪除此對話的所有訊息？</string>
   <string name="delete_message_confirm_message">刪除這條消息嗎？</string>
   <string name="name_first_summary_on">優先顯示名字</string>
   <string name="name_first_summary_off">優先顯示 \@screenname</string>
@@ -790,6 +795,7 @@
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="new_document_api">新文件 API</string>
+  <string name="preference_multitasking">多任務</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="group">群組</string>
   <string name="your_coarse_location">您的大致位置</string>
@@ -812,6 +818,7 @@
   <string name="pinned_status">置頂推文</string>
   <string name="add_or_remove_from_list">從列表新增或移除</string>
   <!-- Enhanced (paid) features title -->
+  <string name="title_extra_features">增強功能</string>
   <string name="filter_everywhere">全面過濾</string>
   <string name="filter_everywhere_description">這些會在 Twidere 中被過濾\n  ·使用者的推文\n  ·提及使用者的推文\n  ·使用者的轉推或引用</string>
   <string name="message_toast_added_to_filter">已添加到過濾器</string>
@@ -821,10 +828,46 @@
   <string name="action_later">稍後</string>
   <string name="hint_accounts_dashboard_title">帳號面板</string>
   <string name="hint_accounts_dashboard_message">從屏幕邊緣滑動來打開帳號面板</string>
+  <string name="preference_randomize_account_name">隨機帳號名稱</string>
+  <string name="preference_randomize_account_rename_accounts_confirm">重新命名已有的帳號?</string>
+  <string name="message_auto_refresh_confirm">開啟自動更新自動取得新推文?</string>
+  <string name="error_info_oauth_timestamp_error">請檢查你的系統日期與時間設定。</string>
+  <string name="fab_visible">浮動操作鈕</string>
+  <string name="fab_visible_summary">顯示浮動操作鈕</string>
+  <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
+  <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
+  <string name="preference_filter_unavailable_quote_statuses">過濾顯示為\"不可用\"的引用</string>
+  <string name="action_filter_import_from_blocked_users">從被封鎖的使用者匯入</string>
+  <string name="action_filter_import_from_muted_users">從被靜音的使用者匯入</string>
+  <string name="title_select_users">選擇使用者</string>
+  <string name="action_purchase">購買</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">修復</string>
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
+  <string name="extra_feature_description_filters_import">從被封鎖/靜音的使用者導入過濾列表</string>
+  <string name="title_error_invalid_account">帳號無效</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">匯入</string>
+  <string name="action_select_all">全選</string>
+  <string name="action_select_none">全不選擇</string>
+  <string name="action_invert_selection">反選</string>
+  <string name="message_no_user_selected">沒有選擇使用者</string>
   <string name="preference_title_advanced">高級</string>
+  <string name="preference_filter_possibility_sensitive_statuses">過濾敏感推文</string>
+  <string name="preference_title_filter_subscriptions">過濾器訂閱</string>
+  <string name="preference_title_filter_manage_subscriptions">管理</string>
+  <string name="title_manage_filter_subscriptions">過濾器訂閱</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">設定</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="hint_empty_filters_subscriptions">沒有訂閱</string>
+  <string name="title_subscription_name">名稱</string>
+  <string name="title_subscription_url">網址</string>
+  <string name="title_filters_subscription_invalid">無效的訂閱</string>
+  <string name="title_filters_subscription_url">網址</string>
+  <string name="label_filters_subscription">訂閱</string>
+  <string name="label_password_sign_in">使用密碼登錄</string>
 </resources>

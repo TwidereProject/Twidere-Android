@@ -4,8 +4,8 @@
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
   <string name="app_description">Din egna Twitter-app</string>
-  <string name="action_compose">Komponera</string>
-  <string name="title_compose">Komponera</string>
+  <string name="action_compose">Skriv</string>
+  <string name="title_compose">Skriv</string>
   <string name="add_account">Lägg till konto</string>
   <string name="settings">Inställningar</string>
   <!-- [verb] Send tweet/message -->
@@ -109,8 +109,8 @@
   <string name="action_pick_color">Välj färg</string>
   <string name="action_follow">Följ</string>
   <string name="action_unfollow">Sluta följa</string>
-  <string name="leftside_compose_button">Vänstra sidan komponeraknappen</string>
-  <string name="leftside_compose_button_summary">Placera komponeraknappen på vänstra sidan.</string>
+  <string name="leftside_compose_button">Vänster sida komponeraknappen</string>
+  <string name="leftside_compose_button_summary">Placera Skriv-knappen på vänster sida.</string>
   <string name="load_item_limit">Läs in objektgräns</string>
   <string name="load_item_limit_summary">Välj max mängd objekt per laddning.</string>
   <string name="action_quote">Citat</string>
@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Gillningar</string>
   <string name="tab_editor_hint_name">Namn</string>
-  <string name="action_refresh">Uppdatera</string>
+  <string name="action_refresh">Refresh</string>
   <string name="settings_refresh">Uppdatera</string>
   <string name="retry">Försök igen</string>
   <string name="more">Mer</string>
@@ -264,6 +264,45 @@
   <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweetade din tweet.</string>
   <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> retweetade din tweet.</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweetade din tweet.</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> retweetade din tweet.</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweetade en tweet som du är taggad i.</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> retweetade en tweet som du är taggad i.</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweetade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> retweetade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> gillade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> gillade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> gillade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> gillade en tweet som du är omnämnd i.</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> har lagt till dig i sin lista.</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> har lagt till dig i sin lista <xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> har lagt till dig i sina listor.</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> taggade dig.</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> taggade dig.</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> gillade en tweet som du är taggad i.</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> gillade en tweet som du är taggad i.</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> gillade en tweet som du är taggad i.</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> gillade en tweet som du är taggad i.</string>
+  <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> gillar <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
+  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> gillar <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+  <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> gillar <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
+  <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> gillar <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%3$s</xliff:g>\'s tweets.</string>
+  <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> följer <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> följer <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%3$s</xliff:g>.</string>
+  <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweetade <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
+  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> retweetade <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%3$s</xliff:g>\'s tweets.</string>
+  <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> lade till <xliff:g id="target">%2$s</xliff:g> till sin lista.</string>
+  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> lade till <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%1$s</xliff:g> till sin lista.</string>
+  <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> skapade listan <xliff:g id="target">%2$s</xliff:g>.</string>
+  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> skapade listan <xliff:g id="target">%2$s</xliff:g> och <xliff:g id="other">%1$s</xliff:g>.</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> gick med i Twitter.</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> och <xliff:g id="other">%2$s</xliff:g> gick med i Twitter.</string>
+  <string name="status_not_updated">Tweetet skickades inte.</string>
+  <string name="status_not_updated_summary">Tweetet skickades inte och har sparats i utkastet.</string>
+  <string name="incoming_friendships">Väntande följarförfrågningar</string>
+  <string name="send_follow_request">Skicka följarförfrågan</string>
+  <string name="follow_request_sent">Följarförfrågan har skickats</string>
+  <string name="title_status">Tweet</string>
+  <string name="preview">Förhandsgranskning</string>
   <string name="connection_timeout">Connection timeout</string>
   <string name="both">Both</string>
   <string name="browser_sign_in">Browser sign in</string>
@@ -289,12 +328,23 @@
   <string name="action_deleting">Tar bort</string>
   <string name="action_updating_profile">Uppdaterar profil</string>
   <string name="action_updating_profile_image">Uppdaterar profilbild</string>
+  <string name="action_updating_profile_banner_image">Uppdaterar sidhuvudsfotot</string>
+  <string name="action_updating_profile_background_image">Uppdaterar bakgrundsbilden</string>
+  <string name="action_removing_profile_banner_image">Tar bort sidhuvudsfotot</string>
   <string name="action_updating_details">Uppdaterar detaljer</string>
   <string name="action_blocking">Blockerar</string>
   <string name="action_unblocking">Avblockerar</string>
   <string name="action_following">Följer</string>
   <string name="action_unfollowing">Slutar följa</string>
+  <string name="action_creating_list">Skapar lista</string>
+  <string name="action_adding_member">Lägger till medlem</string>
+  <string name="action_modifying_lists">Ändrar lista</string>
+  <string name="action_signing_in">Loggar in</string>
+  <string name="action_retweeting">Retweetar</string>
+  <string name="action_reporting_for_spam">Rapporterar för skräppost</string>
+  <string name="action_subscribing_to_list">Prenumererar på lista</string>
   <string name="action_unsubscribing_from_list">unsubscribing from list</string>
+  <string name="action_saving_search">Sparar sök</string>
   <string name="action_deleting_search">Tar bort sök</string>
   <string name="action_accepting_follow_request">Accepterar följarförfrågan</string>
   <string name="action_denying_follow_request">Nekar följarförfrågan</string>
@@ -333,19 +383,81 @@
   <string name="mention_user">Nämn <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Temafärg</string>
   <string name="wrong_url_format">Fel URL-format.</string>
-  <string name="wrong_username_password">Fel användarnamn eller lösenord.</string>
-  <string name="message_network_error">Network error.</string>
-  <string name="api_data_corrupted">API-data korrupt.</string>
+  <!-- Toast message for network errors -->
+  <string name="no_close_after_status_updated_summary">En liten gåva för Chatterbox</string>
+  <string name="status_saved_to_draft">Tweetet sparades till utkastet</string>
+  <string name="default_account">Standardkonto</string>
   <string name="empty_content">Empty content</string>
+  <string name="fast_image_loading">Snabb bildinläsning</string>
+  <string name="fast_image_loading_summary">Aktivera för att bilder ska läsas in snabbare, inaktivera om vissa bilder inte kan visas.</string>
+  <string name="select_user_list">Välj användarlista</string>
+  <string name="select_user">Välj användare</string>
+  <string name="created_by">Skapad av <xliff:g id="created_by">%s</xliff:g></string>
+  <string name="add_to_list">Lägg till i listan</string>
+  <string name="account_delete_confirm_title">Ta bort konto</string>
+  <string name="account_delete_confirm_message">Det här kontot kommer att tas bort från Twidere.</string>
+  <string name="theme">Tema</string>
+  <string name="theme_dark">Mörk</string>
   <string name="theme_light">Ljus</string>
+  <string name="theme_auto">Automatisk</string>
+  <string name="settings_interface">Gränssnitt</string>
+  <string name="no_rule">Ingen regel</string>
+  <string name="safety">Säkerhet</string>
+  <string name="updating_status_notification">Skickar tweetet...</string>
+  <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
+  <string name="query">Förfrågan</string>
+  <string name="input_text">Inmatningstext</string>
+  <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lista</string>
+  <string name="lists_following_user_with_name">Listor som följer <xliff:g id="name">%s</xliff:g></string>
+  <string name="highlight">Framhäv</string>
+  <string name="underline">Understreck</string>
   <string name="link_highlight_option">Link highlight option</string>
+  <string name="users_statuses">Användares tweets</string>
+  <string name="name_first">Visa namn först</string>
+  <string name="next_step">Nästa</string>
   <!-- Previous item (tweet, user etc.) -->
+  <string name="previous_item">Föregående</string>
   <!-- Next item (tweet, user etc.) -->
+  <string name="next_item">Nästa</string>
+  <string name="invalid_tab">Ogiltig flik</string>
+  <string name="send_crash_report">Skicka kraschrapport till Twidere</string>
+  <string name="add_to_filter">Lägg till i filter</string>
+  <string name="user_filter_name">Användare: <xliff:g id="name">%s</xliff:g></string>
+  <string name="keyword_filter_name">Nyckelord: <xliff:g id="name">%s</xliff:g></string>
+  <string name="source_filter_name">Källa: <xliff:g id="name">%s</xliff:g></string>
+  <string name="block_user">Blockera <xliff:g id="name">%s</xliff:g></string>
+  <string name="block_user_confirm_message">Blockera <xliff:g example="Username" id="name">%s</xliff:g>? Den här användaren kommer inte att kunna följa dig, omnämna dig eller att kunna skicka direktmeddelanden till dig.</string>
+  <string name="filter_user_confirm_message">Lägg till <xliff:g example="Username" id="name">%s</xliff:g> till filtret?</string>
+  <string name="unfollow_user">Sluta följa <xliff:g id="name">%s</xliff:g></string>
+  <string name="unfollow_user_confirm_message">Sluta följa <xliff:g id="name">%s</xliff:g>? Du kommer inte längre att se några tweets från den här användaren.</string>
+  <string name="delete_user_list">Ta bort lista <xliff:g id="name">%s</xliff:g></string>
+  <string name="delete_user_list_confirm_message">Ta bort listan <xliff:g id="name">%s</xliff:g>? Det går inte att ångra.</string>
+  <string name="unsubscribe_from_user_list">Avsluta prenumerationen på listan <xliff:g id="name">%s</xliff:g></string>
+  <string name="unsubscribe_from_user_list_confirm_message">Avsluta prenumerationen på listan <xliff:g id="name">%s</xliff:g>? Du kan prenumerera på den här listan senare.</string>
+  <string name="destroy_status">Ta bort tweet</string>
+  <string name="destroy_status_confirm_message">Ta bort det här tweetet?</string>
+  <string name="destroy_saved_search">Ta bort den sparade sökningen \"<xliff:g id="name">%s</xliff:g>\"</string>
+  <string name="destroy_saved_search_confirm_message">Ta bort den sparade sökningen \"<xliff:g id="name">%s</xliff:g>\"? Du kan spara den här sökningen på nytt senare.</string>
+  <string name="signing_in_error_browser_sign_in_hint">Ett fel uppstod när du loggade in, du kan behöva använda dig av den webbläsarbaserade inloggningen. (Det kommer att förbise anpassade API-inställningar under inloggningen)</string>
   <string name="tab_display_option_icon">Ikon</string>
   <string name="accept">Acceptera</string>
+  <string name="import_settings">Importera inställningar</string>
+  <string name="export_settings">Exportera inställningar</string>
+  <string name="export_settings_type_dialog_title">Exporterar inställningar...</string>
+  <string name="import_settings_type_dialog_title">Importerar inställningar...</string>
+  <string name="title_nicknames">Användarnamn</string>
+  <string name="title_user_colors">Användarfärger</string>
+  <string name="progress">Framsteg</string>
+  <string name="hidden_settings">Dolda inställningar</string>
+  <string name="hidden_settings_warning_title">VARNING: Dessa inställningar kan få din katt bortrövad!</string>
+  <string name="hidden_settings_warning_message">Ändra ALDRIG dessa inställningar om du inte vet vad dom gör - det kan resultera i att din katt blir bortrövad av utomjordingar, postapokalyptiska naturkatastrofer och/eller leda till universums undergång!</string>
+  <string name="load_more_from_top">Läs in mer från toppen</string>
+  <string name="load_more_from_top_summary">Användbart om du föredrar att läsa från botten till toppen</string>
+  <string name="compose_now">Skriv nu</string>
   <string name="search">Sök</string>
   <!-- 'Tweet' here is a verb -->
   <string name="overwrite">Skriv över</string>
+  <string name="name_first_summary_on">Visa namn först</string>
   <string name="play">Spela</string>
   <string name="pause">Pausa</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
@@ -362,4 +474,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avancerad</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Inställningar</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Namn</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -37,6 +37,7 @@
   <!-- [verb] Action for unblocking user -->
   <string name="other_settings">Alte configurări</string>
   <string name="uninstall">Dezinstalare</string>
+  <!-- Toast message for network errors -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <string name="search">Căutare</string>
@@ -56,4 +57,8 @@
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Setari</string>
+  <!-- [verb] Disconnect from network storage -->
 </resources>

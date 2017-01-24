@@ -387,9 +387,7 @@
   <string name="mention_user">Mencionar <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Cor do Tema</string>
   <string name="wrong_url_format">Formato URL erróneo.</string>
-  <string name="wrong_username_password">Erro no nome de usuario ou contrasinal.</string>
-  <string name="message_network_error">Erro de rede.</string>
-  <string name="api_data_corrupted">Datos API corruptos.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">Erro SSL, se cadra precisas activar a opción \"Ignorar erro SSL\".</string>
   <string name="wrong_api_key">URL da API ou clave cliente incorrectas, por favor comproba de novo.</string>
   <string name="status_updated">Chío enviado.</string>
@@ -811,4 +809,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Avanzado</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Configuración</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nome</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -388,9 +388,7 @@
   <string name="mention_user">dahil et: <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Tema rengi</string>
   <string name="wrong_url_format">Yanlış URL biçimi.</string>
-  <string name="wrong_username_password">Yanlış kullanıcı adı / şifre.</string>
-  <string name="message_network_error">Bağlantı hatası.</string>
-  <string name="api_data_corrupted">API verisi bozulmuş.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL hatası, \"SSL hatasını gözardı et\" seçeneğini seçmen gerekiyor olabilir.</string>
   <string name="wrong_api_key">Geçersiz API url\'si veya müşteri anahtar\'ı/gizli\'si, Lütfen onları tekrar kontrol edin.</string>
   <string name="status_updated">Tweet gönderildi.</string>
@@ -820,4 +818,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Gelişmiş</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Ayarlar</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Ad</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

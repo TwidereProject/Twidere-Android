@@ -135,7 +135,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Tykkäykset</string>
   <string name="tab_editor_hint_name">Nimi</string>
-  <string name="action_refresh">Päivitys</string>
+  <string name="action_refresh">Päivitä</string>
   <string name="settings_refresh">Päivitä</string>
   <string name="retry">Yritä uudelleen</string>
   <string name="more">Lisää</string>
@@ -391,9 +391,7 @@
   <string name="mention_user">Mainitse <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Teeman väri</string>
   <string name="wrong_url_format">Virheellinen URL-muoto.</string>
-  <string name="wrong_username_password">Väärä käyttäjänimi/salasana.</string>
-  <string name="message_network_error">Verkkovirhe.</string>
-  <string name="api_data_corrupted">API-data on vioittunut.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL-virhe. Sinun täytyy ehkä ottaa käyttöön \'Ohita SSL-virhe\' -valinta.</string>
   <string name="wrong_api_key">Virheellinen API-osoite tai kulutusavain/salaus. Tarkista vielä kyseiset kentät.</string>
   <string name="status_updated">Twiitti lähetetty.</string>
@@ -799,4 +797,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Lisäasetukset</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Asetukset</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nimi</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -347,9 +347,7 @@
   <string name="mention_user">Spomeni <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Boja teme</string>
   <string name="wrong_url_format">Krivi URL format.</string>
-  <string name="wrong_username_password">Krivo korisničko ime/lozinka.</string>
-  <string name="message_network_error">Greška mreže.</string>
-  <string name="api_data_corrupted">Korumpirani API podaci.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL greška, možda ćete morati uključiti opciju \"Ignoriraj SSL grešku\".</string>
   <string name="wrong_api_key">Nevaljani API url ili korisnički ključ/tajna, provjerite ih opet.</string>
   <string name="status_updated">Tweet poslan.</string>
@@ -681,4 +679,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Napredno</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Postavke</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Ime</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

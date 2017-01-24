@@ -385,9 +385,7 @@
   <string name="mention_user">Vermeldt <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Themakleur</string>
   <string name="wrong_url_format">Verkeerde URL-indeling.</string>
-  <string name="wrong_username_password">Verkeerde gebruikersnaam/wachtwoord.</string>
-  <string name="message_network_error">Netwerkfout</string>
-  <string name="api_data_corrupted">API-gegevens beschadigd.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL-fout. Wellicht moet je de optie \"Negeer SSL-fouten\" inschakelen.</string>
   <string name="wrong_api_key">Onjuiste API url of consument sleutel/geheim, controleer ze nog een keer.</string>
   <string name="status_updated">Tweet verzonden.</string>
@@ -821,4 +819,9 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Geavanceerd</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Instellingen</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Naam</string>
 </resources>

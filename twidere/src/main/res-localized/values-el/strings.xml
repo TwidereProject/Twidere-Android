@@ -116,6 +116,7 @@
   <string name="error_message_tweet_shortener_not_found">Δεν βρέθηκε ο συντομευτής tweet, ίσως να έχει απεγκατασταθεί.</string>
   <string name="show_absolute_time">Εμφάνιση απόλυτου χρόνου</string>
   <string name="user_mentions">Αναφορές χρήστη</string>
+  <!-- Toast message for network errors -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <string name="search">Αναζήτηση</string>
@@ -135,4 +136,8 @@
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Ρυθμίσεις</string>
+  <!-- [verb] Disconnect from network storage -->
 </resources>

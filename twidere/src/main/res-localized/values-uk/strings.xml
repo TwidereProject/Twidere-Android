@@ -389,9 +389,7 @@
   <string name="mention_user">Згадка <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Колір теми</string>
   <string name="wrong_url_format">Невірний формат URL.</string>
-  <string name="wrong_username_password">Невірне ім\'я користувача/пароль.</string>
-  <string name="message_network_error">Помилка мережі.</string>
-  <string name="api_data_corrupted">Дані API пошкоджені.</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">Помилка SSL, можливо, потрібно увімкнути параметр \"Ігнорувати помилку SSL\".</string>
   <string name="wrong_api_key">Невірне API url або ключ користувача, перевірте їх ще раз.</string>
   <string name="status_updated">Твіт надіслано.</string>
@@ -821,4 +819,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Додатково</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Параметри</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Ім\'я</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

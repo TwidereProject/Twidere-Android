@@ -104,6 +104,7 @@
   <string name="action_favoriting">favouriting</string>
   <string name="action_unfavoriting">unfavouriting</string>
   <string name="theme_color">Theme colour</string>
+  <!-- Toast message for network errors -->
   <string name="status_favorited">Tweet favourited.</string>
   <string name="status_unfavorited">Tweet favourited.</string>
   <!-- Previous item (tweet, user etc.) -->
@@ -129,4 +130,11 @@
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">Advanced</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Settings</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Name</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

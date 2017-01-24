@@ -42,6 +42,7 @@
   <string name="password">Пароль</string>
   <string name="label_data_provider">Провайдер базы данных Twidere</string>
   <string name="label_refresh_service">Сервис обновления</string>
+  <string name="label_refresh_and_sync_service">Сервис обновления и синхронизации</string>
   <string name="label_streaming_service">Сервис стриминга</string>
   <string name="label_background_operation_service">Служба фоновой деятельности</string>
   <string name="action_open_in_browser">Открыть в браузере</string>
@@ -162,7 +163,9 @@
   <string name="proxy_username">Логин прокси</string>
   <string name="proxy_password">Пароль прокси</string>
   <!-- [verb] Action for blocking user -->
+  <string name="action_block">Заблокировать</string>
   <!-- [verb] Action for unblocking user -->
+  <string name="action_unblock">Разблокировать</string>
   <string name="report_for_spam">Сообщить о спаме</string>
   <string name="action_report_spam">Сообщить о спаме</string>
   <string name="twitter_mute_user">Игнорировать пользователя</string>
@@ -321,6 +324,8 @@
   <string name="action_refreshing_direct_messages">обновление личных сообщений</string>
   <string name="action_favoriting">в избранное</string>
   <string name="action_unfavoriting">удалить из избранного</string>
+  <string name="action_liking">нравится</string>
+  <string name="action_cancelling_like">отменить лайк</string>
   <string name="action_deleting">удаление</string>
   <string name="action_updating_profile">обновление профиля</string>
   <string name="action_updating_profile_image">обновление изображения профиля</string>
@@ -387,7 +392,8 @@
   <string name="mention_user">Упоминание <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">Цвет темы</string>
   <string name="wrong_url_format">Неверный URL формат</string>
-  <string name="wrong_username_password">Неверный логин/пароль</string>
+  <string name="wrong_username_password">Неправильное имя пользователя или пароль</string>
+  <!-- Toast message for network errors -->
   <string name="message_network_error">Ошибка сети</string>
   <string name="api_data_corrupted">Данные API повреждены</string>
   <string name="ssl_error">Ошибка SSL, возможно вам нужно включить опцию \"Игнорировать ошибку SSL\".</string>
@@ -396,6 +402,8 @@
   <string name="status_deleted">Твит удален</string>
   <string name="status_favorited">Твит добавлен в избранное</string>
   <string name="status_unfavorited">Твит удален из избранного</string>
+  <string name="status_liked">Твит нравится.</string>
+  <string name="status_like_removed">Лайк удалён.</string>
   <string name="status_retweeted">Ретвит выполнен</string>
   <string name="retweet_cancelled">Ретвит отменен</string>
   <string name="direct_message_sent">Личное сообщение отправлено</string>
@@ -473,6 +481,7 @@
   <string name="source_filter_name">Источник:<xliff:g id="name">%s</xliff:g></string>
   <string name="block_user">Заблокировать <xliff:g id="name">%s</xliff:g></string>
   <string name="block_user_confirm_message">Заблокировать <xliff:g id="name">%s</xliff:g>? Этот пользователь не сможет подписаться, упоминать а так же слать вам личные сообщения.</string>
+  <string name="filter_user_confirm_message">Добавить <xliff:g example="Username" id="name">%s </xliff:g> в фильтр?</string>
   <string name="unfollow_user">Отписаться от <xliff:g id="name">%s</xliff:g></string>
   <string name="unfollow_user_confirm_message">Отписаться от <xliff:g id="name">%s</xliff:g>? Вы не будете видеть твиты от этого пользователя.</string>
   <string name="delete_user_list">Удалить список <xliff:g id="name">%s</xliff:g></string>
@@ -540,7 +549,7 @@
   <string name="export_settings">Экспортировать параметры</string>
   <string name="export_settings_type_dialog_title">Экспорт настроек&#8230;</string>
   <string name="import_settings_type_dialog_title">Импорт настроек&#8230;</string>
-  <string name="title_nicknames">Имена</string>
+  <string name="title_nicknames">Ники</string>
   <string name="title_user_colors">Пользовательские цвета</string>
   <string name="progress">Прогресс</string>
   <string name="hidden_settings">Скрытые настройки</string>
@@ -786,6 +795,7 @@
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="new_document_api">Новый документ API</string>
   <string name="new_document_api_summary">Открыть профиль и медиа-файлы в новой задачи</string>
+  <string name="preference_multitasking">Многозадачность</string>
   <string name="preference_multitasking_summary">Открыть профиль и медиа-файлы в новой задачи</string>
   <string name="drawer_toggle">Отобразить шторку</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
@@ -811,12 +821,76 @@
   <string name="pinned_status">Закреплённый твит</string>
   <string name="add_or_remove_from_list">Добавить или удалить из списка</string>
   <!-- Enhanced (paid) features title -->
+  <string name="title_extra_features">Расширенные возможности</string>
+  <string name="filter_everywhere">Фильтровать везде</string>
+  <string name="filter_everywhere_description">В Twidere будут отфильтрованы:\n · Твиты пользователя\n · Упоминания пользователя\n · Ретвиты/цитаты этого пользователя</string>
+  <string name="message_toast_added_to_filter">Добавлено в фильтр.</string>
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">Пропустить</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Позже</string>
+  <string name="message_permission_request_compose_location">Twidere требуется разрешение расположения для добавления его в твиты.</string>
+  <string name="message_permission_request_save_media">Twidere требуется разрешение хранения для сохранения мультимедиа.</string>
+  <string name="message_permission_request_share_media">Twidere необходимо разрешение хранения для совместного использования мультимедиа для некоторых приложений.</string>
+  <string name="hint_accounts_dashboard_title">Панель учетных записей</string>
+  <string name="hint_accounts_dashboard_message">Проведите пальцем от края экрана, чтобы открыть панель учетных записей.</string>
+  <string name="preference_randomize_account_name">Сгенерировать случайное имя учетной записи</string>
+  <string name="preference_randomize_account_name_summary">Запретить другим приложениям получать ваше имя путем чтения учетных записей, улучшает конфиденциальность.</string>
+  <string name="preference_randomize_account_rename_accounts_confirm">Переименовать существующие учетные записи?</string>
+  <string name="message_auto_refresh_confirm">Включить автоматическое обновление для получения новых твитов автоматически?</string>
+  <string name="error_info_oauth_timestamp_error">Пожалуйста, проверьте ваши системную дату и настройки времени.</string>
+  <string name="fab_visible">Плавающие кнопки</string>
+  <string name="fab_visible_summary">Показать плавающие кнопки</string>
+  <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s </xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s </xliff:g></string>
+  <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s </xliff:g></string>
+  <string name="preference_filter_unavailable_quote_statuses">Фильтровать недоступные цитаты</string>
+  <string name="action_filter_import_from_blocked_users">Импортировать список заблокированных пользователей</string>
+  <string name="action_filter_import_from_muted_users">Импортировать список приглушенных пользователей</string>
+  <string name="title_select_users">Выбор пользователей</string>
+  <string name="action_purchase">Купить</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">Восстановить</string>
   <!-- Enhanced (paid) features description -->
+  <string name="extra_features_description">Поддержать Twidere и получить дополнительные возможности</string>
+  <string name="extra_features_pack_description">Или купить пакет возможностей (в том числе и будущих выпусках)</string>
   <!-- Enhanced (paid) features title -->
+  <string name="extra_features_restore_purchase_hint">Если вы уже приобрели расширенные функции, можно использовать «Восстановить» для восстановления покупки.</string>
+  <string name="extra_feature_description_sync_data">Синхронизация с Dropbox, Google Drive и др.</string>
+  <string name="extra_feature_description_filters_import">Импортировать список блокированных/заглушенных</string>
+  <string name="extra_feature_description_filters_subscription">Фильтровать список подписок</string>
+  <string name="extra_feature_description_schedule_status">Расписание твитов</string>
+  <string name="title_error_invalid_account">Неправильная учетная запись</string>
+  <string name="message_error_invalid_account">Некоторые учетные данные были повреждены, Twidere удалит эти учетные записи для предотвращения ошибок.</string>
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">Импорт</string>
+  <string name="action_select_all">Выбрать все</string>
+  <string name="action_select_none">Ничего не выбирать</string>
+  <string name="action_invert_selection">Инвертировать выбор</string>
+  <string name="message_no_user_selected">Пользователь не выбран</string>
   <string name="preference_title_advanced">Расширенный</string>
+  <string name="preference_filter_possibility_sensitive_statuses">Фильтровать твиты с деликатными материалами</string>
+  <string name="preference_title_filter_subscriptions">Фильтровать подписки</string>
+  <string name="preference_title_filter_manage_subscriptions">Управление</string>
+  <string name="title_manage_filter_subscriptions">Фильтровать подписки</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_extra_features_not_purchased">Расширенные возможности не приобретены</string>
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">Подключиться</string>
+  <string name="title_dialog_sync_connect_to">Подключиться к&#8230;</string>
+  <string name="action_sync_settings">Настройки</string>
+  <string name="message_sync_data_connect_hint">Подключение Twidere к сетевому хранилищу для синхронизации</string>
+  <string name="message_sync_data_synced_with_name">Twidere теперь синхронизирован с <xliff:g example="ownCloud" id="name">%s </xliff:g></string>
+  <string name="title_sync">Синхронизация данных</string>
+  <string name="sync_provider_name_dropbox">Dropbox</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">Отключиться</string>
+  <string name="action_sync_sync_now">Синхронизировать сейчас</string>
+  <string name="title_sync_settings">Настройки синхронизации</string>
+  <string name="message_sync_disconnect_from_name_confirm">Отключиться от <xliff:g example="ownCloud" id="name">%s </xliff:g>?</string>
+  <string name="message_sync_last_synced_time">Последняя синхронизация: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
+  <string name="action_purchase_features_pack">Купить дополнительные возможности</string>
+  <string name="title_subscription_name">Имя</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

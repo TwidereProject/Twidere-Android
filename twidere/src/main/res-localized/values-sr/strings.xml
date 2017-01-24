@@ -19,6 +19,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <!-- [verb] Action for blocking user -->
   <!-- [verb] Action for unblocking user -->
+  <!-- Toast message for network errors -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Next item (tweet, user etc.) -->
   <!-- 'Tweet' here is a verb -->
@@ -33,4 +34,7 @@
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <!-- [verb] Disconnect from network storage -->
 </resources>

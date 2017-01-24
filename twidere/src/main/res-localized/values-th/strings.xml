@@ -389,9 +389,7 @@
   <string name="mention_user">เมนชั่น <xliff:g id="user">%s</xliff:g></string>
   <string name="theme_color">สีของธีม</string>
   <string name="wrong_url_format">รูปแบบ URL ผิด</string>
-  <string name="wrong_username_password">username/password ไม่ถูกต้อง</string>
-  <string name="message_network_error">ข้อผิดพลาดของเครือข่าย</string>
-  <string name="api_data_corrupted">ข้อมูล API เสียหาย</string>
+  <!-- Toast message for network errors -->
   <string name="ssl_error">SSL ผิดพลาด คุณต้องเปิดใช้</string>
   <string name="wrong_api_key">API URL หรือ consumer key/secret ไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง</string>
   <string name="status_updated">ข้อความถูกส่งแล้ว</string>
@@ -821,4 +819,11 @@
   <string name="title_premium_features_name">Twidere ∞</string>
   <!-- [verb] Perform import action -->
   <string name="preference_title_advanced">ขั้นสูง</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">ตั้งค่า</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">ชื่อ</string>
+  <string name="title_subscription_url">URL</string>
+  <string name="title_filters_subscription_url">URL</string>
 </resources>

@@ -142,6 +142,7 @@
   <string name="default_ringtone">Nada dering lalai</string>
   <string name="profile_images">Imej profil</string>
   <string name="theme_color">Warna tema</string>
+  <!-- Toast message for network errors -->
   <string name="label_original_status">Tweet asal</string>
   <string name="default_account">Akaun lalai</string>
   <string name="select_user">Pilih pengguna</string>
@@ -175,4 +176,9 @@
   <!-- Enhanced (paid) features description -->
   <!-- Enhanced (paid) features title -->
   <!-- [verb] Perform import action -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_settings">Tetapan</string>
+  <!-- [verb] Disconnect from network storage -->
+  <string name="title_subscription_name">Nama</string>
 </resources>
