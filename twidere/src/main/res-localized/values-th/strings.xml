@@ -429,7 +429,7 @@
   <string name="unsubscribe">เลิกรับข่าวสาร</string>
   <string name="background_toast_notification">แจ้งเตือน Toast ของพื้นหลัง</string>
   <string name="background_toast_notification_summary">แสดงการแจ้งเตือน Toast เมื่อเปลี่ยนเป็นเบื้องหลัง</string>
-  <string name="original_status">ทวีตเดิม</string>
+  <string name="label_original_status">ทวีตเดิม</string>
   <string name="ask">ถาม</string>
   <string name="no_close_after_status_updated">เปิดหน้า \"ประพันธ์\" หลังจากส่งทวีตแล้ว</string>
   <string name="no_close_after_status_updated_summary">ของขวัญเล็กๆ น้อยๆ จาก chatterbox</string>
@@ -804,7 +804,7 @@
   <string name="sign_in_with_ellip">ลงชื่อเข้าใช้ด้วย...</string>
   <string name="edit_description">แก้ไขคำอธิบาย</string>
   <string name="no_status_content_text">ไม่มีเนื้อหา</string>
-  <string name="status_not_available_text">ทวิตไม่พร้อมใช้งาน</string>
+  <string name="label_status_not_available">ทวิตไม่พร้อมใช้งาน</string>
   <string name="share_link">แชร์ลิงค์</string>
   <string name="hide_retweets">ซ่อนรีทวิต</string>
   <string name="hide_quotes">ซ่อนคำอ้างอิง</string>

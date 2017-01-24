@@ -433,7 +433,7 @@
   <string name="unsubscribe">退订</string>
   <string name="background_toast_notification">背景Toast通知</string>
   <string name="background_toast_notification_summary">切换到后台后显示Toast通知</string>
-  <string name="original_status">原推文</string>
+  <string name="label_original_status">原推文</string>
   <string name="ask">询问</string>
   <string name="no_close_after_status_updated">发送推文之后仍然保持“撰写”开启</string>
   <string name="no_close_after_status_updated_summary">话痨专属</string>
@@ -810,7 +810,7 @@
   <string name="sign_in_with_ellip">登录方式&#8230;</string>
   <string name="edit_description">编辑描述</string>
   <string name="no_status_content_text">没有内容</string>
-  <string name="status_not_available_text">推文不可用</string>
+  <string name="label_status_not_available">推文不可用</string>
   <string name="share_link">分享链接</string>
   <string name="hide_retweets">隐藏转推</string>
   <string name="hide_quotes">隐藏引用</string>

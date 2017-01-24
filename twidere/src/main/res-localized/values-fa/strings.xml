@@ -433,7 +433,7 @@
   <string name="unsubscribe">مشترک نشدن</string>
   <string name="background_toast_notification">آگاهی تست پس‌زمینه</string>
   <string name="background_toast_notification_summary">نمایش آگاهی تست هنگام تعویض به پس‌زمینه</string>
-  <string name="original_status">توییت اصلی</string>
+  <string name="label_original_status">توییت اصلی</string>
   <string name="ask">پرسش</string>
   <string name="no_close_after_status_updated">باز نگه داشتن «ایجاد»، پس از ارسال توییت</string>
   <string name="no_close_after_status_updated_summary">هدیه‌ای گوچک برای پرحرف‌ها</string>
@@ -809,7 +809,7 @@
   <string name="sign_in_with_ellip">ورود با&#8230;</string>
   <string name="edit_description">ویرایش توضیح</string>
   <string name="no_status_content_text">بدون محتوا</string>
-  <string name="status_not_available_text">توییت موجود نیست</string>
+  <string name="label_status_not_available">توییت موجود نیست</string>
   <string name="share_link">هم‌رسانی پیوند</string>
   <string name="hide_retweets">پنهان کردن بازتوییت‌ها</string>
   <string name="hide_quotes">پنهان کردن نقل‌قول‌ها</string>

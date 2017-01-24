@@ -433,7 +433,7 @@
   <string name="unsubscribe">Sair</string>
   <string name="background_toast_notification">Notificação toast em segundo plano</string>
   <string name="background_toast_notification_summary">Exibir notificações toast quando estiver rodando em segundo plano</string>
-  <string name="original_status">Tweet original</string>
+  <string name="label_original_status">Tweet original</string>
   <string name="ask">Perguntar</string>
   <string name="no_close_after_status_updated">Manter a tela de edição aberta após o tweet ser enviado</string>
   <string name="no_close_after_status_updated_summary">Um presentinho para os tagarelas</string>

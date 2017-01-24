@@ -376,7 +376,7 @@
   <string name="unsubscribe">Wypisz</string>
   <string name="background_toast_notification">Powiadomienia Toast</string>
   <string name="background_toast_notification_summary">Pokazuje powiadomienia Toas gdy aplikacja działa w tle</string>
-  <string name="original_status">Oryginalny tweet</string>
+  <string name="label_original_status">Oryginalny tweet</string>
   <string name="ask">Zapytaj</string>
   <string name="no_close_after_status_updated">Zostaw okno \"Tweetnij\" otwarte po wysłaniu tweeta</string>
   <string name="no_close_after_status_updated_summary">Drobny prezent dla gaduł</string>

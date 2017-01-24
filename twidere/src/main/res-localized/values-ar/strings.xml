@@ -418,7 +418,7 @@
   <string name="unsubscribe">إلغاء الإشتراك</string>
   <string name="background_toast_notification">التنبيهات البسيطة في الخلفية</string>
   <string name="background_toast_notification_summary">اظهار التنبيهات الخفيفة اذا تحولت الى الخلفية</string>
-  <string name="original_status">التغريدة الأصلية</string>
+  <string name="label_original_status">التغريدة الأصلية</string>
   <string name="ask">سأل</string>
   <string name="no_close_after_status_updated">ترك \"كتابة التغريدة\" مفتوح بعد إرسال التغريدة</string>
   <string name="no_close_after_status_updated_summary">لا تغلق النافذة عندما ترسل التغريدة</string>

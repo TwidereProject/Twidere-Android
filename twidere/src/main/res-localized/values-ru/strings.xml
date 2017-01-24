@@ -427,7 +427,7 @@
   <string name="unsubscribe">Отписаться</string>
   <string name="background_toast_notification">Фоновое всплывающее уведомление</string>
   <string name="background_toast_notification_summary">Показывать всплывающее уведомление когда свернуто в фон</string>
-  <string name="original_status">Исходный твит</string>
+  <string name="label_original_status">Исходный твит</string>
   <string name="ask">Спросить</string>
   <string name="no_close_after_status_updated">Оставлять \"Написать\" открытым после отправки твита</string>
   <string name="no_close_after_status_updated_summary">Небольшой подарок для любителей поболтать</string>
@@ -802,7 +802,7 @@
   <string name="sign_in_with_ellip">Вход с помощью...</string>
   <string name="edit_description">Изменить описание</string>
   <string name="no_status_content_text">Нет содержимого</string>
-  <string name="status_not_available_text">Твит недоступен</string>
+  <string name="label_status_not_available">Твит недоступен</string>
   <string name="share_link">Поделиться</string>
   <string name="hide_retweets">Скрыть ретвиты</string>
   <string name="hide_quotes">Скрыть цитируемые</string>

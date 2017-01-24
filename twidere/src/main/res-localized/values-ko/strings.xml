@@ -426,7 +426,7 @@
   <string name="unsubscribe">구독 취소</string>
   <string name="background_toast_notification">백그라운드 토스트 알림</string>
   <string name="background_toast_notification_summary">백그라운드로 전환되었을 때 토스트 알림을 보여줍니다.</string>
-  <string name="original_status">원본 트윗</string>
+  <string name="label_original_status">원본 트윗</string>
   <string name="ask">물어보기</string>
   <string name="no_close_after_status_updated">\"작성\"창을 트윗을 보내고도 유지한다</string>
   <string name="no_close_after_status_updated_summary">트윗 입력창에 작은 특전이 있습니다.</string>

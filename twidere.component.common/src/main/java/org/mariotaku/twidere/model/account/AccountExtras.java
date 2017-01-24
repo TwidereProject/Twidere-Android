@@ -46,6 +46,9 @@ public interface AccountExtras extends Parcelable {
 
     @JsonObject
     class VideoLimit {
+
+        boolean supported;
+
         @JsonField(name = "min_width")
         int minWidth;
         @JsonField(name = "min_height")
@@ -73,6 +76,23 @@ public interface AccountExtras extends Parcelable {
         double minFrameRate;
         @JsonField(name = "max_frame_rate")
         double maxFrameRate;
+
+        @JsonField(name = "min_duration_sync")
+        long minDurationSync;
+        @JsonField(name = "min_duration_async")
+        long minDurationAsync;
+        @JsonField(name = "max_duration_sync")
+        long maxDurationSync;
+        @JsonField(name = "max_duration_async")
+        long maxDurationAsync;
+
+        public boolean isSupported() {
+            return supported;
+        }
+
+        public void setSupported(boolean supported) {
+            this.supported = supported;
+        }
 
         public int getMinWidth() {
             return minWidth;
@@ -162,6 +182,38 @@ public interface AccountExtras extends Parcelable {
             this.maxFrameRate = maxFrameRate;
         }
 
+        public long getMinDurationSync() {
+            return minDurationSync;
+        }
+
+        public void setMinDurationSync(long minDurationSync) {
+            this.minDurationSync = minDurationSync;
+        }
+
+        public long getMinDurationAsync() {
+            return minDurationAsync;
+        }
+
+        public void setMinDurationAsync(long minDurationAsync) {
+            this.minDurationAsync = minDurationAsync;
+        }
+
+        public long getMaxDurationSync() {
+            return maxDurationSync;
+        }
+
+        public void setMaxDurationSync(long maxDurationSync) {
+            this.maxDurationSync = maxDurationSync;
+        }
+
+        public long getMaxDurationAsync() {
+            return maxDurationAsync;
+        }
+
+        public void setMaxDurationAsync(long maxDurationAsync) {
+            this.maxDurationAsync = maxDurationAsync;
+        }
+
         @SuppressWarnings("RedundantIfStatement")
         public boolean checkGeometry(int width, int height) {
             // Check w & h
@@ -189,6 +241,24 @@ public interface AccountExtras extends Parcelable {
             return inRange(frameRate, getMinFrameRate(), getMaxFrameRate());
         }
 
+        public boolean checkMinDuration(long duration, boolean async) {
+            final long limit = async ? getMinDurationAsync() : getMinDurationSync();
+            if (limit <= 0) return true;
+            return duration >= limit;
+        }
+
+        public boolean checkMaxDuration(long duration, boolean async) {
+            final long limit = async ? getMaxDurationAsync() : getMaxDurationSync();
+            if (limit <= 0) return true;
+            return duration <= limit;
+        }
+
+        public boolean checkSize(long size, boolean async) {
+            final long limit = async ? getMaxSizeAsync() : getMaxSizeSync();
+            if (limit <= 0) return true;
+            return size < limit;
+        }
+
         @SuppressWarnings("RedundantIfStatement")
         private boolean inRange(int num, int min, int max) {
             if (min > 0 && num < min) return false;
@@ -205,6 +275,7 @@ public interface AccountExtras extends Parcelable {
 
         public static VideoLimit twitterDefault() {
             VideoLimit videoLimit = new VideoLimit();
+            videoLimit.setSupported(true);
             videoLimit.setMinWidth(32);
             videoLimit.setMinHeight(32);
             videoLimit.setMaxWidth(1280);
@@ -216,6 +287,16 @@ public interface AccountExtras extends Parcelable {
             videoLimit.setMaxSizeAsync(512 * 1024 * 1024);
             videoLimit.setMinFrameRate(0);
             videoLimit.setMaxFrameRate(40);
+            videoLimit.setMinDurationSync(500); // 0.5s
+            videoLimit.setMinDurationAsync(500); // 0.5s
+            videoLimit.setMaxDurationSync(30000); // 30s
+            videoLimit.setMaxDurationAsync(140000); // 140s
+            return videoLimit;
+        }
+
+        public static VideoLimit unsupported() {
+            VideoLimit videoLimit = new VideoLimit();
+            videoLimit.setSupported(false);
             return videoLimit;
         }
     }

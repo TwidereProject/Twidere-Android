@@ -869,7 +869,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     itemView.quotedMediaPreview.visibility = View.GONE
 
                     // Not available
-                    val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))
+                    val string = SpannableString.valueOf(context.getString(R.string.label_status_not_available))
                     string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
                             android.R.attr.textColorTertiary, itemView.text.currentTextColor)), 0,
                             string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)

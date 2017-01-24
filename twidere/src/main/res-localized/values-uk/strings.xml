@@ -429,7 +429,7 @@
   <string name="unsubscribe">Відписатися</string>
   <string name="background_toast_notification">Спливаюче фонове сповіщення</string>
   <string name="background_toast_notification_summary">Показувати спливаючі сповіщення при переключенні у фоновий режим</string>
-  <string name="original_status">Первісний твіт</string>
+  <string name="label_original_status">Первісний твіт</string>
   <string name="ask">Запитати</string>
   <string name="no_close_after_status_updated">Не закривати вікно створення твіту після надсилання</string>
   <string name="no_close_after_status_updated_summary">Маленький подарунок для базіки</string>
@@ -804,7 +804,7 @@
   <string name="sign_in_with_ellip">Увійти через&#8230;</string>
   <string name="edit_description">Редагувати опис</string>
   <string name="no_status_content_text">Немає вмісту</string>
-  <string name="status_not_available_text">Твіт недоступний</string>
+  <string name="label_status_not_available">Твіт недоступний</string>
   <string name="share_link">Поділитися посиланням</string>
   <string name="hide_retweets">Сховати ретвіти</string>
   <string name="hide_quotes">Сховати цитати</string>

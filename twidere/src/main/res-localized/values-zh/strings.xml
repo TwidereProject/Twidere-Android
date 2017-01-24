@@ -432,7 +432,7 @@
   <string name="unsubscribe">退訂</string>
   <string name="background_toast_notification">背景 Toast 通知</string>
   <string name="background_toast_notification_summary">切換到背景後顯示 Toast 通知</string>
-  <string name="original_status">原推文</string>
+  <string name="label_original_status">原推文</string>
   <string name="ask">詢問</string>
   <string name="no_close_after_status_updated">發送推文之後仍然保持\"撰寫\"開啟</string>
   <string name="no_close_after_status_updated_summary">給不二的小禮物</string>
@@ -803,7 +803,7 @@
   <string name="sign_in_with_ellip">登入方式&#8230;</string>
   <string name="edit_description">編輯簡介</string>
   <string name="no_status_content_text">沒有內容</string>
-  <string name="status_not_available_text">推文不可用</string>
+  <string name="label_status_not_available">推文不可用</string>
   <string name="share_link">分享連結</string>
   <string name="hide_retweets">隱藏轉推</string>
   <string name="hide_quotes">隱藏引用</string>

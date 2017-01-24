@@ -425,7 +425,7 @@
   <string name="unsubscribe">Uitschrijven</string>
   <string name="background_toast_notification">Achtergrond Toast-melding</string>
   <string name="background_toast_notification_summary">Laat Toast-melding zien wanneer er naar de achtergrond geschakeld wordt</string>
-  <string name="original_status">Originele tweet</string>
+  <string name="label_original_status">Originele tweet</string>
   <string name="ask">Vraag</string>
   <string name="no_close_after_status_updated">Hou \"Componeren\" open na versturen van een tweet</string>
   <string name="no_close_after_status_updated_summary">Een klein cadeau voor chatterbox</string>
@@ -804,7 +804,7 @@
   <string name="sign_in_with_ellip">Inloggen met&#8230;</string>
   <string name="edit_description">Bewerk omschrijving</string>
   <string name="no_status_content_text">Geen inhoud</string>
-  <string name="status_not_available_text">Tweet niet beschikbaar</string>
+  <string name="label_status_not_available">Tweet niet beschikbaar</string>
   <string name="share_link">Link delen</string>
   <string name="hide_retweets">Retweets verbergen</string>
   <string name="hide_quotes">Quotes verbergen</string>

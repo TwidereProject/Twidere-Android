@@ -427,7 +427,7 @@
   <string name="unsubscribe">Anular subscrición</string>
   <string name="background_toast_notification">Notificación Toast en segundo plano</string>
   <string name="background_toast_notification_summary">Amosar notificación Toast cando se cambia a segundo plano</string>
-  <string name="original_status">Chío orixinal</string>
+  <string name="label_original_status">Chío orixinal</string>
   <string name="ask">Pregunta</string>
   <string name="no_close_after_status_updated">Deixar aberta a caixa \"Escribir\" despois de chiar</string>
   <string name="no_close_after_status_updated_summary">Un pequeno agasallo para chatterbox</string>

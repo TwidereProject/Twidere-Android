@@ -428,7 +428,7 @@
   <string name="unsubscribe">Abonelikten çık</string>
   <string name="background_toast_notification">Arkaplan Toast bildirimi</string>
   <string name="background_toast_notification_summary">Arkaplanda çalışırken Tost mesajlarını göster</string>
-  <string name="original_status">Orijinal tweet</string>
+  <string name="label_original_status">Orijinal tweet</string>
   <string name="ask">Sor</string>
   <string name="no_close_after_status_updated">Tweeti gönderdikten sonra \"Yeni tweet\"i açık tut</string>
   <string name="no_close_after_status_updated_summary">Geveze için küçük bir hediye</string>
@@ -803,7 +803,7 @@
   <string name="sign_in_with_ellip">Şununla giriş yap&#8230;</string>
   <string name="edit_description">Açıklama düzenle</string>
   <string name="no_status_content_text">İçerik yok</string>
-  <string name="status_not_available_text">Tweet mevcut değil</string>
+  <string name="label_status_not_available">Tweet mevcut değil</string>
   <string name="share_link">Bağlantı paylaş</string>
   <string name="hide_retweets">Retweet\'leri gizle</string>
   <string name="hide_quotes">Alıntıları gizle</string>

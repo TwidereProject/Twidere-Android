@@ -408,7 +408,7 @@
   <string name="unsubscribe">Avslutt abonnement</string>
   <string name="background_toast_notification">Varsler i bakgrunnen</string>
   <string name="background_toast_notification_summary">Vis popup-varsler når appen kjører i bakgrunnen</string>
-  <string name="original_status">Opprinnelig tweet</string>
+  <string name="label_original_status">Opprinnelig tweet</string>
   <string name="ask">Spør</string>
   <string name="no_close_after_status_updated">Behold «Skriv»-vinduet etter sendte tweets</string>
   <string name="no_close_after_status_updated_summary">En liten gave for Chatterbox</string>

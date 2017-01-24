@@ -142,7 +142,7 @@
   <string name="default_ringtone">Nada dering lalai</string>
   <string name="profile_images">Imej profil</string>
   <string name="theme_color">Warna tema</string>
-  <string name="original_status">Tweet asal</string>
+  <string name="label_original_status">Tweet asal</string>
   <string name="default_account">Akaun lalai</string>
   <string name="select_user">Pilih pengguna</string>
   <string name="theme">Tema</string>

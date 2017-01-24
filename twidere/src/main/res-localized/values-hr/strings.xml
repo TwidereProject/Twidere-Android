@@ -387,7 +387,7 @@
   <string name="unsubscribe">Otkaži pretplatu</string>
   <string name="background_toast_notification">Pozadinska Toast obavijest</string>
   <string name="background_toast_notification_summary">Prikaži Toast obavijest kada je u pozadini</string>
-  <string name="original_status">Originalni tweet</string>
+  <string name="label_original_status">Originalni tweet</string>
   <string name="ask">Pitaj</string>
   <string name="no_close_after_status_updated">Ostavi \"Sastavi\" otvorenim kada je tweet poslan</string>
   <string name="no_close_after_status_updated_summary">Maleni poklon za brbljavce</string>

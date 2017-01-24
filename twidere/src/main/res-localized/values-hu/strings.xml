@@ -423,7 +423,7 @@
   <string name="unsubscribe">Leiratkozás</string>
   <string name="background_toast_notification">Felugró értesítés a háttérben</string>
   <string name="background_toast_notification_summary">Mutassa a felugró értesítéseket mikor a háttérben van</string>
-  <string name="original_status">Fiók törlése</string>
+  <string name="label_original_status">Fiók törlése</string>
   <string name="ask">Kérdezzen</string>
   <string name="no_close_after_status_updated">Maradjon nyitva a szerkesztő tweet után</string>
   <string name="no_close_after_status_updated_summary">Egy apró ajándék a locsifecsiknek</string>

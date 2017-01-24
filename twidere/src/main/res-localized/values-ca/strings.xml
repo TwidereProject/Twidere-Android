@@ -426,7 +426,7 @@
   <string name="unsubscribe">Canceŀla la subscripció</string>
   <string name="background_toast_notification">Notificació en segon pla</string>
   <string name="background_toast_notification_summary">Mostra una notificació emergent en canviar a segon pla</string>
-  <string name="original_status">Piulada original</string>
+  <string name="label_original_status">Piulada original</string>
   <string name="ask">Pregunta</string>
   <string name="no_close_after_status_updated">Mantén el menú «redacta» obert després d\'haver enviat la piulada</string>
   <string name="no_close_after_status_updated_summary">Un regalet per a «chatterbox»</string>

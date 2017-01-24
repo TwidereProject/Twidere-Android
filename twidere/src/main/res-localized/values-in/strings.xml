@@ -429,7 +429,7 @@
   <string name="unsubscribe">Batal ikuti</string>
   <string name="background_toast_notification">Notifikasi Toast latar belakang</string>
   <string name="background_toast_notification_summary">Tampilkan notifikasi Toast saat diset ke latar belakang</string>
-  <string name="original_status">Cuit asli</string>
+  <string name="label_original_status">Cuit asli</string>
   <string name="ask">Bertanya</string>
   <string name="no_close_after_status_updated">Tetap \"Menulis\" terbuka setelah tweet terkirim</string>
   <string name="no_close_after_status_updated_summary">Pemberian kecil untuk chatterbox</string>
@@ -805,7 +805,7 @@
   <string name="sign_in_with_ellip">Masuk menggunakan&#8230;</string>
   <string name="edit_description">Mengubah deskripsi</string>
   <string name="no_status_content_text">Tanpa konten</string>
-  <string name="status_not_available_text">Tweet tidak tersedia</string>
+  <string name="label_status_not_available">Tweet tidak tersedia</string>
   <string name="share_link">Bagikan tautan</string>
   <string name="hide_retweets">Sembunyikan retweet</string>
   <string name="hide_quotes">Sembunyikan kutipan</string>

@@ -431,7 +431,7 @@
   <string name="unsubscribe">保存を解除</string>
   <string name="background_toast_notification">バックグラウンドトースト通知</string>
   <string name="background_toast_notification_summary">バックグラウンドに切り替わったときにトースト通知を表示します。</string>
-  <string name="original_status">元のツイート</string>
+  <string name="label_original_status">元のツイート</string>
   <string name="ask">尋ねる</string>
   <string name="no_close_after_status_updated">編集画面をツイート送信後に開いたままにする</string>
   <string name="no_close_after_status_updated_summary">ツイート編集画面の動作を変更します。</string>
@@ -806,7 +806,7 @@
   <string name="sign_in_with_ellip">ログイン方法</string>
   <string name="edit_description">説明を編集</string>
   <string name="no_status_content_text">コンテンツがありません</string>
-  <string name="status_not_available_text">このツイートは利用できません</string>
+  <string name="label_status_not_available">このツイートは利用できません</string>
   <string name="share_link">共有リンク</string>
   <string name="hide_retweets">リツイートを非表示</string>
   <string name="hide_quotes">引用リツイートを非表示</string>

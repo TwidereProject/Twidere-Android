@@ -433,7 +433,7 @@
   <string name="unsubscribe">Poista tilaus</string>
   <string name="background_toast_notification">Taustapalvelun ilmoitukset tilapalkissa</string>
   <string name="background_toast_notification_summary">Näytä tilapalkin ilmoitukset, kun ohjelma on taustalla</string>
-  <string name="original_status">Alkuperäinen twiitti</string>
+  <string name="label_original_status">Alkuperäinen twiitti</string>
   <string name="ask">Kysy</string>
   <string name="no_close_after_status_updated">Pidä Kirjoita-näkymä auki twiitin lähettämisen jälkeen</string>
   <string name="no_close_after_status_updated_summary">Pieni lisä chatterboxiin</string>

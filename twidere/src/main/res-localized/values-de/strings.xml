@@ -433,7 +433,7 @@
   <string name="unsubscribe">Abbestellen</string>
   <string name="background_toast_notification">Hintergrundbenachrichtigung</string>
   <string name="background_toast_notification_summary">Benachrichtigung einblenden, wenn die App in den Hintergrund geht</string>
-  <string name="original_status">Original-Tweet</string>
+  <string name="label_original_status">Original-Tweet</string>
   <string name="ask">Frage</string>
   <string name="no_close_after_status_updated">Eingabemaske geöffnet lassen, nachdem der Tweet gesendet wurde</string>
   <string name="no_close_after_status_updated_summary">Ein kleines Geschenk an die Chatterbox</string>
@@ -810,7 +810,7 @@
   <string name="sign_in_with_ellip">Anmelden mit&#8230;</string>
   <string name="edit_description">Beschreibung bearbeiten</string>
   <string name="no_status_content_text">Ohne Inhalt</string>
-  <string name="status_not_available_text">Tweet nicht verfügbar</string>
+  <string name="label_status_not_available">Tweet nicht verfügbar</string>
   <string name="share_link">Link teilen</string>
   <string name="hide_retweets">Retweets verbergen</string>
   <string name="hide_quotes">Zitate verbergen</string>

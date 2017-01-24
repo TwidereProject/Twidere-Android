@@ -433,7 +433,7 @@
   <string name="unsubscribe">Se désabonner</string>
   <string name="background_toast_notification">Notification de fond</string>
   <string name="background_toast_notification_summary">Afficher une notification lorsque l\'application est en arrière-plan</string>
-  <string name="original_status">Tweet original</string>
+  <string name="label_original_status">Tweet original</string>
   <string name="ask">Demander</string>
   <string name="no_close_after_status_updated">Gardez « Composer » ouvert après avoir envoyé le tweet</string>
   <string name="no_close_after_status_updated_summary">Un petit cadeau pour Chatterbox</string>
@@ -810,7 +810,7 @@
   <string name="sign_in_with_ellip">Se connecter avec&#8230;</string>
   <string name="edit_description">Éditer la description</string>
   <string name="no_status_content_text">Aucun contenu</string>
-  <string name="status_not_available_text">Tweet non disponible</string>
+  <string name="label_status_not_available">Tweet non disponible</string>
   <string name="share_link">Partager le lien</string>
   <string name="hide_retweets">Masquer les retweets</string>
   <string name="hide_quotes">Masquer les citations</string>

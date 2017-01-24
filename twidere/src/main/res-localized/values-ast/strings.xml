@@ -432,7 +432,7 @@
   <string name="unsubscribe">Desoscribise</string>
   <string name="background_toast_notification">Fondu de burbuyes d\'avisu</string>
   <string name="background_toast_notification_summary">Amuesa una burbuya d\'avisu al camudar de fondu</string>
-  <string name="original_status">Tuit orixinal</string>
+  <string name="label_original_status">Tuit orixinal</string>
   <string name="ask">Entrugar</string>
   <string name="no_close_after_status_updated">Caltener abiertu «Componer» dempués d\'unviar el tuit</string>
   <string name="no_close_after_status_updated_summary">Un regalín pa «Chatterbox»</string>
@@ -807,7 +807,7 @@
   <string name="sign_in_with_ellip">Aniciar sesión con&#8230;</string>
   <string name="edit_description">Editar descripción</string>
   <string name="no_status_content_text">Ensin conteníu</string>
-  <string name="status_not_available_text">Tuit non disponible</string>
+  <string name="label_status_not_available">Tuit non disponible</string>
   <string name="share_link">Compartir enllaz</string>
   <string name="hide_retweets">Anubrir retuits</string>
   <string name="hide_quotes">Anubrir cites</string>

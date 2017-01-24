@@ -337,8 +337,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                         val mediaUri = Uri.parse(imageUri)
                         val listener = MessageMediaUploadListener(this, notificationManager,
                                 builder, text)
+                        val chucked = details.type == AccountType.TWITTER
                         val uploadResp = UpdateStatusTask.getBodyFromMedia(this, mediaLoader,
-                                mediaUri, null, ParcelableMedia.Type.IMAGE, listener).use { body ->
+                                mediaUri, null, ParcelableMedia.Type.IMAGE, chucked, listener).use { body ->
                             val resp = uploadMedia(twitterUpload, body.body)
                             body.deleteOnSuccess?.forEach { item ->
                                 item.delete(this)

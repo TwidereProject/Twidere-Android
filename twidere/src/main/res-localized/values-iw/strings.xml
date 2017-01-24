@@ -326,7 +326,7 @@
   <string name="added_user_to_list">המשתמש <xliff:g id="user">%1$s</xliff:g> נוסף לרשימה "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="deleted_user_from_list">המשתמש <xliff:g id="user">%1$s</xliff:g> נמחק מהרשימה "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="delete_user_from_list_confirm">מחק את <xliff:g id="user">%1$s</xliff:g> מהרשימה "<xliff:g id="list">%2$s</xliff:g>\"?</string>
-  <string name="original_status">ציוץ מקורי</string>
+  <string name="label_original_status">ציוץ מקורי</string>
   <string name="no_close_after_status_updated">אל תסגור את \"כתוב\" לאחר שליחת ציוץ</string>
   <string name="no_close_after_status_updated_summary">מתנה קטנה לchatterbox</string>
   <string name="status_saved_to_draft">הציוץ נשמר לטיוטה.</string>

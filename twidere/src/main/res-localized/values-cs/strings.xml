@@ -383,7 +383,7 @@
   <string name="sign_in_with_ellip">Přihlásit se pomocí&#8230;</string>
   <string name="edit_description">Upravit popis</string>
   <string name="no_status_content_text">Žádný obsah</string>
-  <string name="status_not_available_text">Tweet není k dispozici</string>
+  <string name="label_status_not_available">Tweet není k dispozici</string>
   <string name="share_link">Sdílet odkaz</string>
   <string name="hide_replies">Skrýt odpovědi</string>
   <string name="no_extension_installed">Žádná nainstalovaná rozšíření</string>

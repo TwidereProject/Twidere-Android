@@ -429,7 +429,7 @@
   <string name="unsubscribe">Cancellati</string>
   <string name="background_toast_notification">Notifica in background</string>
   <string name="background_toast_notification_summary">Mostra le notifiche toast quando si passa in background</string>
-  <string name="original_status">Tweet originale</string>
+  <string name="label_original_status">Tweet originale</string>
   <string name="ask">Chiedi</string>
   <string name="no_close_after_status_updated">Mantieni \"Componi\" aperto dopo aver inviato il tweet</string>
   <string name="no_close_after_status_updated_summary">Un piccolo regalo per i chiacchieroni</string>
@@ -780,7 +780,7 @@
   <string name="sign_in_with_ellip">Collegati con&#8230;</string>
   <string name="edit_description">Modifica descrizione</string>
   <string name="no_status_content_text">Nessun contenuto</string>
-  <string name="status_not_available_text">Tweet non disponibile</string>
+  <string name="label_status_not_available">Tweet non disponibile</string>
   <string name="share_link">Condividi link</string>
   <string name="hide_retweets">Nascondi retweets</string>
   <string name="hide_quotes">Nascondi citazioni</string>

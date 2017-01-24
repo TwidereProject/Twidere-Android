@@ -12,6 +12,7 @@ import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -185,8 +186,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             quotedView.visibility = View.VISIBLE
 
             val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
-            if (quoteContentAvailable) {
-
+            val isFanfouStatus = status.account_key.host == USER_TYPE_FANFOU_COM
+            if (quoteContentAvailable && !isFanfouStatus) {
                 quotedNameView.visibility = View.VISIBLE
                 quotedTextView.visibility = View.VISIBLE
 
@@ -229,41 +230,30 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
                 }
 
-                if (status.quoted_media?.isNotEmpty() ?: false) {
-
-                    if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
-                        // Sensitive content, show label instead of media view
-                        quotedMediaPreview.visibility = View.GONE
-                        quotedMediaLabel.visibility = View.VISIBLE
-                    } else if (!adapter.mediaPreviewEnabled) {
-                        // Media preview disabled, just show label
-                        quotedMediaPreview.visibility = View.GONE
-                        quotedMediaLabel.visibility = View.VISIBLE
-                    } else {
-                        // Show media
-                        quotedMediaPreview.visibility = View.VISIBLE
-                        quotedMediaLabel.visibility = View.GONE
-
-                        quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1,
-                                null, null)
-                    }
-                } else {
-                    // No media, hide all related views
-                    quotedMediaPreview.visibility = View.GONE
-                    quotedMediaLabel.visibility = View.GONE
-                }
+                displayQuotedMedia(loader, status)
             } else {
                 quotedNameView.visibility = View.GONE
                 quotedTextView.visibility = View.VISIBLE
-                quotedMediaPreview.visibility = View.GONE
-                quotedMediaLabel.visibility = View.GONE
 
-                // Not available
-                val string = SpannableString.valueOf(context.getString(R.string.status_not_available_text))
-                string.setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                        android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
-                        string.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                quotedTextView.text = string
+                if (quoteContentAvailable) {
+                    displayQuotedMedia(loader, status)
+                } else {
+                    quotedMediaPreview.visibility = View.GONE
+                    quotedMediaLabel.visibility = View.GONE
+                }
+
+                val quoteHint = if (!quoteContentAvailable) {
+                    // Display 'not available' label
+                    context.getString(R.string.label_status_not_available)
+                } else {
+                    // Display 'original status' label
+                    context.getString(R.string.label_original_status)
+                }
+                quotedTextView.text = SpannableString.valueOf(quoteHint).apply {
+                    setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                            android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
+                            length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
 
                 quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
             }
@@ -421,6 +411,32 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         nameView.updateText(formatter)
         quotedNameView.updateText(formatter)
 
+    }
+
+    private fun displayQuotedMedia(loader: MediaLoaderWrapper, status: ParcelableStatus) {
+        if (status.quoted_media?.isNotEmpty() ?: false) {
+
+            if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
+                // Sensitive content, show label instead of media view
+                quotedMediaPreview.visibility = View.GONE
+                quotedMediaLabel.visibility = View.VISIBLE
+            } else if (!adapter.mediaPreviewEnabled) {
+                // Media preview disabled, just show label
+                quotedMediaPreview.visibility = View.GONE
+                quotedMediaLabel.visibility = View.VISIBLE
+            } else {
+                // Show media
+                quotedMediaPreview.visibility = View.VISIBLE
+                quotedMediaLabel.visibility = View.GONE
+
+                quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1,
+                        null, null)
+            }
+        } else {
+            // No media, hide all related views
+            quotedMediaPreview.visibility = View.GONE
+            quotedMediaLabel.visibility = View.GONE
+        }
     }
 
     override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey, extraId: Long) {

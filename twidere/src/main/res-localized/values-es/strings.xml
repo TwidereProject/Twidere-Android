@@ -433,7 +433,7 @@
   <string name="unsubscribe">Desuscribirse</string>
   <string name="background_toast_notification">Notificaciones emergentes en segundo plano</string>
   <string name="background_toast_notification_summary">Mostrar notificaciones emergentes cuando esté activa en segundo plano</string>
-  <string name="original_status">Tweet original</string>
+  <string name="label_original_status">Tweet original</string>
   <string name="ask">Preguntar</string>
   <string name="no_close_after_status_updated">Mantener «redactar» abierto después de enviar el tweet</string>
   <string name="no_close_after_status_updated_summary">Un pequeño regalo para chatterbox</string>
@@ -810,7 +810,7 @@
   <string name="sign_in_with_ellip">Registrarse con&#8230;</string>
   <string name="edit_description">Editar descripción</string>
   <string name="no_status_content_text">No hay contenido</string>
-  <string name="status_not_available_text">Tweet no disponible</string>
+  <string name="label_status_not_available">Tweet no disponible</string>
   <string name="share_link">Compartir enlace</string>
   <string name="hide_retweets">Esconder retweets</string>
   <string name="hide_quotes">Esconder citas</string>

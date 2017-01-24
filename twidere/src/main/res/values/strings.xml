@@ -440,7 +440,7 @@
     <string name="unsubscribe">Unsubscribe</string>
     <string name="background_toast_notification">Background Toast notification</string>
     <string name="background_toast_notification_summary">Show Toast notification when switched to background</string>
-    <string name="original_status">Original tweet</string>
+    <string name="label_original_status">Original tweet</string>
     <string name="ask">Ask</string>
     <string name="no_close_after_status_updated">Keep \"Compose\" open after tweet sent</string>
     <string name="no_close_after_status_updated_summary">A little gift for chatterbox</string>
@@ -817,7 +817,7 @@
     <string name="sign_in_with_ellip">Sign in with…</string>
     <string name="edit_description">Edit description</string>
     <string name="no_status_content_text">No content</string>
-    <string name="status_not_available_text">Tweet not available</string>
+    <string name="label_status_not_available">Tweet not available</string>
     <string name="share_link">Share link</string>
     <string name="hide_retweets">Hide retweets</string>
     <string name="hide_quotes">Hide quotes</string>
@@ -908,4 +908,6 @@
     <string name="summary_interactions_not_available">Only available with official keys</string>
     <string name="label_password_sign_in">Password sign in</string>
     <string name="message_compose_write_storage_permission_not_granted">Permission is required to delete taken photo/video</string>
+    <string name="message_video_too_short">Video too short</string>
+    <string name="message_video_too_long">Video too long</string>
 </resources>
