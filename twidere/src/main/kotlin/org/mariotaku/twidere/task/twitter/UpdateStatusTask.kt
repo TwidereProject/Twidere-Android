@@ -885,8 +885,9 @@ class UpdateStatusTask(
                 retriever.releaseSafe()
             }
 
-            if (videoLimit.checkGeometry(geometry.x, geometry.y) && videoLimit.checkFrameRate(framerate)
-                    && videoLimit.checkSize(size, chucked)) {
+            if (geometry.x > 0 && geometry.y > 0 && videoLimit.checkGeometry(geometry.x, geometry.y)
+                    && framerate > 0 && videoLimit.checkFrameRate(framerate)
+                    && size > 0 && videoLimit.checkSize(size, chucked)) {
                 // Size valid, upload directly
                 DebugLog.d(LOGTAG, "Upload video directly")
                 return null
