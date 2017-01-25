@@ -1080,7 +1080,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     IntentUtils.openMap(adapter.context, location.latitude, location.longitude)
                 }
                 itemView.quotedView -> {
-                    IntentUtils.openStatus(adapter.context, status.account_key, status.quoted_id)
+                    val quotedId = status.quoted_id ?: return
+                    IntentUtils.openStatus(adapter.context, status.account_key, quotedId)
                 }
                 itemView.translateLabel -> {
                     fragment.loadTranslation(adapter.status)

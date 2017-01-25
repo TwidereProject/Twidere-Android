@@ -47,9 +47,12 @@ import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.Referral
-import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.readFromBottomKey
+import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -403,7 +406,8 @@ abstract class AbsStatusesFragment protected constructor() :
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position) ?: return
-        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
+        val quotedId = status.quoted_id ?: return
+        IntentUtils.openStatus(activity, status.account_key, quotedId)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
