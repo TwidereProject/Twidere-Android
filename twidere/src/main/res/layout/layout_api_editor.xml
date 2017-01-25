@@ -48,9 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLines="1"
                 android:text="@string/api_url_format"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:maxLines="1"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
 
             <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/apiUrlFormatHelp"
@@ -67,8 +67,22 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textUri"
-            tools:text="https://api.twitter.com/"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            tools:text="https://api.twitter.com/"/>
+
+        <TextView
+            android:id="@+id/labelAccountType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_account_type"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <Spinner
+            android:id="@+id/accountTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            tools:listitem="@layout/support_simple_spinner_dropdown_item"/>
 
         <TextView
             android:id="@+id/labelAuthType"
@@ -80,7 +94,8 @@
         <HorizontalScrollView
             android:id="@+id/authTypeScroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal">
 
             <RadioGroup
                 android:id="@+id/editAuthType"
@@ -119,6 +134,10 @@
             </RadioGroup>
         </HorizontalScrollView>
 
-        <include layout="@layout/layout_api_editor_advanced_fields"/>
+        <include
+            layout="@layout/layout_api_editor_advanced_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"/>
     </LinearLayout>
 </ScrollView>

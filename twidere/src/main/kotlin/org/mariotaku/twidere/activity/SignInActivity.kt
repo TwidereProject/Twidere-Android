@@ -48,14 +48,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import org.mariotaku.chameleon.Chameleon
-import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
@@ -71,7 +68,6 @@ import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
@@ -81,6 +77,7 @@ import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.model.getColor
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.official
+import org.mariotaku.twidere.fragment.APIEditorDialogFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.CustomAPIConfig
@@ -106,7 +103,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
+class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDialogFragment.APIEditorCallback {
     private lateinit var apiConfig: CustomAPIConfig
     private var apiChangeTimestamp: Long = 0
     private var signInTask: AbstractSignInTask? = null
@@ -208,20 +205,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
 
     }
 
-    internal fun updateSignInType() {
-        when (apiConfig.credentialsType) {
-            Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
-                usernamePasswordContainer.visibility = View.VISIBLE
-            }
-            Credentials.Type.EMPTY -> {
-                usernamePasswordContainer.visibility = View.GONE
-            }
-            else -> {
-                usernamePasswordContainer.visibility = View.GONE
-            }
-        }
-    }
-
     override fun onClick(v: View) {
         when (v) {
             signUp -> {
@@ -279,21 +262,15 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
                     return false
                 setDefaultAPI()
-                val intent = Intent(this, APIEditorActivity::class.java)
-                intent.putExtra(EXTRA_API_CONFIG, apiConfig)
-                startActivityForResult(intent, REQUEST_EDIT_API)
+                val df = APIEditorDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_API_CONFIG] = apiConfig
+                    this[APIEditorDialogFragment.EXTRA_SHOW_LOAD_DEFAULTS] = true
+                }
+                df.show(supportFragmentManager, "edit_api_config")
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    internal fun openBrowserLogin(): Boolean {
-        if (apiConfig.credentialsType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
-            return true
-        val intent = Intent(this, BrowserSignInActivity::class.java)
-        intent.putExtra(EXTRA_API_CONFIG, apiConfig)
-        startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN)
-        return false
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -307,15 +284,45 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         return true
     }
 
-    public override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(EXTRA_API_CONFIG, apiConfig)
         outState.putLong(EXTRA_API_LAST_CHANGE, apiChangeTimestamp)
         super.onSaveInstanceState(outState)
     }
 
-
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         setSignInButton()
+    }
+
+    override fun onSaveAPIConfig(config: CustomAPIConfig) {
+        apiConfig = config
+
+        updateSignInType()
+        setSignInButton()
+        invalidateOptionsMenu()
+    }
+
+    internal fun updateSignInType() {
+        when (apiConfig.credentialsType) {
+            Credentials.Type.XAUTH, Credentials.Type.BASIC -> {
+                usernamePasswordContainer.visibility = View.VISIBLE
+            }
+            Credentials.Type.EMPTY -> {
+                usernamePasswordContainer.visibility = View.GONE
+            }
+            else -> {
+                usernamePasswordContainer.visibility = View.GONE
+            }
+        }
+    }
+
+    internal fun openBrowserLogin(): Boolean {
+        if (apiConfig.credentialsType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
+            return true
+        val intent = Intent(this, BrowserSignInActivity::class.java)
+        intent.putExtra(EXTRA_API_CONFIG, apiConfig)
+        startActivityForResult(intent, REQUEST_BROWSER_SIGN_IN)
+        return false
     }
 
     internal fun doLogin() {
@@ -333,6 +340,81 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
 
+    internal fun onSignInResult(result: SignInResponse) {
+        val am = AccountManager.get(this)
+        setSignInButton()
+        if (result.alreadyLoggedIn) {
+            result.updateAccount(am)
+            Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
+        } else {
+            result.addAccount(am, preferences[randomizeAccountNameKey])
+            Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
+                    officialKey = result.accountType.second?.official ?: false))
+            finishSignIn()
+        }
+    }
+
+
+    internal fun dismissDialogFragment(tag: String) {
+        executeAfterFragmentResumed {
+            val fm = supportFragmentManager
+            val f = fm.findFragmentByTag(tag)
+            if (f is DialogFragment) {
+                f.dismiss()
+            }
+            Unit
+        }
+    }
+
+    internal fun onSignInError(exception: Exception) {
+        if (BuildConfig.DEBUG) {
+            Log.w(LOGTAG, exception)
+        }
+        var errorReason: String? = null
+        if (exception is AuthenticityTokenException) {
+            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_api_key"
+        } else if (exception is WrongUserPassException) {
+            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_username_password"
+        } else if (exception is SignInTask.WrongBasicCredentialException) {
+            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_username_password"
+        } else if (exception is SignInTask.WrongAPIURLFormatException) {
+            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            errorReason = "wrong_api_key"
+        } else if (exception is LoginVerificationException) {
+            Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show()
+            errorReason = "login_verification_failed"
+        } else if (exception is AuthenticationException) {
+            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception.cause, true)
+        } else {
+            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
+        }
+        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
+                errorReason = errorReason, accountType = apiConfig.type))
+    }
+
+    internal fun onSignInStart() {
+        showSignInProgressDialog()
+    }
+
+    internal fun showSignInProgressDialog() {
+        executeAfterFragmentResumed {
+            if (isFinishing) return@executeAfterFragmentResumed
+            val fm = supportFragmentManager
+            val ft = fm.beginTransaction()
+            val fragment = ProgressDialogFragment()
+            fragment.isCancelable = false
+            fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS)
+        }
+    }
+
+    internal fun setUsernamePassword(username: String, password: String) {
+        editUsername.setText(username)
+        editPassword.setText(password)
+    }
+
     private fun doBrowserLogin(intent: Intent?) {
         if (intent == null) return
         if (signInTask?.status == AsyncTask.Status.RUNNING) {
@@ -344,7 +426,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         signInTask = BrowserSignInTask(this, apiConfig, requestToken, verifier)
         AsyncTaskUtils.executeTask<AbstractSignInTask, Any>(signInTask)
     }
-
 
     private fun setDefaultAPI() {
         val apiLastChange = preferences.getLong(KEY_API_LAST_CHANGE, apiChangeTimestamp)
@@ -405,19 +486,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         }
     }
 
-    internal fun onSignInResult(result: SignInResponse) {
-        val am = AccountManager.get(this)
-        setSignInButton()
-        if (result.alreadyLoggedIn) {
-            result.updateAccount(am)
-            Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
-        } else {
-            result.addAccount(am, preferences[randomizeAccountNameKey])
-            Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
-                    officialKey = result.accountType.second?.official ?: false))
-            finishSignIn()
-        }
-    }
 
     private fun finishSignIn() {
         if (accountAuthenticatorResponse != null) {
@@ -431,67 +499,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
             startActivity(intent)
         }
         finish()
-    }
-
-    internal fun onSignInError(exception: Exception) {
-        if (BuildConfig.DEBUG) {
-            Log.w(LOGTAG, exception)
-        }
-        var errorReason: String? = null
-        if (exception is AuthenticityTokenException) {
-            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is WrongUserPassException) {
-            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongBasicCredentialException) {
-            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_username_password"
-        } else if (exception is SignInTask.WrongAPIURLFormatException) {
-            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
-            errorReason = "wrong_api_key"
-        } else if (exception is LoginVerificationException) {
-            Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show()
-            errorReason = "login_verification_failed"
-        } else if (exception is AuthenticationException) {
-            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception.cause, true)
-        } else {
-            Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception, true)
-        }
-        Analyzer.log(SignIn(false, credentialsType = apiConfig.credentialsType,
-                errorReason = errorReason, accountType = apiConfig.type))
-    }
-
-    internal fun dismissDialogFragment(tag: String) {
-        executeAfterFragmentResumed {
-            val fm = supportFragmentManager
-            val f = fm.findFragmentByTag(tag)
-            if (f is DialogFragment) {
-                f.dismiss()
-            }
-            Unit
-        }
-    }
-
-    internal fun onSignInStart() {
-        showSignInProgressDialog()
-    }
-
-    internal fun showSignInProgressDialog() {
-        executeAfterFragmentResumed {
-            if (isFinishing) return@executeAfterFragmentResumed
-            val fm = supportFragmentManager
-            val ft = fm.beginTransaction()
-            val fragment = ProgressDialogFragment()
-            fragment.isCancelable = false
-            fragment.show(ft, FRAGMENT_TAG_SIGN_IN_PROGRESS)
-        }
-    }
-
-
-    internal fun setUsernamePassword(username: String, password: String) {
-        editUsername.setText(username)
-        editPassword.setText(password)
     }
 
     internal abstract class AbstractSignInTask(activity: SignInActivity) : AsyncTask<Any, Runnable, SingleResponse<SignInResponse>>() {
@@ -1032,7 +1039,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
     companion object {
 
         val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
-        private val TWITTER_SIGNUP_URL = "https://twitter.com/signup"
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
@@ -1040,27 +1046,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
         internal fun detectAccountType(twitter: MicroBlog, user: User, type: String?): Pair<String, AccountExtras?> {
             when (type) {
                 AccountType.STATUSNET -> {
-                    // Get StatusNet specific resource
-                    val config = twitter.statusNetConfig
-                    val extras = StatusNetAccountExtras()
-                    val site = config.site
-                    if (site != null) {
-                        extras.textLimit = site.textLimit
-                    }
-                    return Pair(AccountType.STATUSNET, extras)
+                    return getStatusNetAccountType(twitter)
                 }
                 AccountType.TWITTER -> {
-                    val extras = TwitterAccountExtras()
-                    try {
-                        // Get Twitter official only resource
-                        val paging = Paging()
-                        paging.count(1)
-                        twitter.getActivitiesAboutMe(paging)
-                        extras.setIsOfficialCredentials(true)
-                    } catch (e: MicroBlogException) {
-                        // Ignore
-                    }
-                    return Pair(AccountType.TWITTER, extras)
+                    return getTwitterAccountType(twitter)
                 }
                 AccountType.FANFOU -> {
                     return Pair(AccountType.FANFOU, null)
@@ -1072,6 +1061,31 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher {
                 }
             }
             return Pair(AccountType.TWITTER, null)
+        }
+
+        private fun getStatusNetAccountType(twitter: MicroBlog): Pair<String, StatusNetAccountExtras> {
+            // Get StatusNet specific resource
+            val config = twitter.statusNetConfig
+            val extras = StatusNetAccountExtras()
+            val site = config.site
+            if (site != null) {
+                extras.textLimit = site.textLimit
+            }
+            return Pair(AccountType.STATUSNET, extras)
+        }
+
+        private fun getTwitterAccountType(twitter: MicroBlog): Pair<String, TwitterAccountExtras> {
+            val extras = TwitterAccountExtras()
+            try {
+                // Get Twitter official only resource
+                val paging = Paging()
+                paging.count(1)
+                twitter.getActivitiesAboutMe(paging)
+                extras.setIsOfficialCredentials(true)
+            } catch (e: MicroBlogException) {
+                // Ignore
+            }
+            return Pair(AccountType.TWITTER, extras)
         }
     }
 

@@ -80,8 +80,16 @@ public final class CustomAPIConfig implements Parcelable {
         return type;
     }
 
+    public void setType(@Nullable String type) {
+        this.type = type;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLocalizedName(Context context) {
@@ -92,6 +100,10 @@ public final class CustomAPIConfig implements Parcelable {
             return res.getString(id);
         }
         return name;
+    }
+
+    public void setLocalizedName(String localizedName) {
+        this.localizedName = localizedName;
     }
 
     public String getApiUrlFormat() {
@@ -145,6 +157,10 @@ public final class CustomAPIConfig implements Parcelable {
     @Nullable
     public String getSignUpUrl() {
         return signUpUrl;
+    }
+
+    public void setSignUpUrl(@Nullable String signUpUrl) {
+        this.signUpUrl = signUpUrl;
     }
 
     @Override

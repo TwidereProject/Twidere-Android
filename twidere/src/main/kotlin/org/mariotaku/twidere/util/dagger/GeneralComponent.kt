@@ -24,7 +24,6 @@ import dagger.Component
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.MediaViewerActivity
-import org.mariotaku.twidere.activity.iface.APIEditorActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
@@ -134,7 +133,7 @@ interface GeneralComponent {
 
     fun inject(task: UpdateProfileImageTask<Any>)
 
-    fun inject(loader: APIEditorActivity.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
+    fun inject(loader: APIEditorDialogFragment.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
 
     fun inject(task: UpdateStatusTask)
 
