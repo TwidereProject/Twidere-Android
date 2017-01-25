@@ -9,14 +9,14 @@
     android:padding="@dimen/element_spacing_large">
 
     <LinearLayout
-        android:id="@+id/name_icon"
+        android:id="@+id/nameIconContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <Spinner
-            android:id="@+id/tab_icon_spinner"
+            android:id="@+id/tabIconSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/element_spacing_normal"
@@ -36,7 +36,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/account_container"
+        android:id="@+id/accountContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -44,7 +44,7 @@
         <include layout="@layout/list_item_section_header"/>
 
         <Spinner
-            android:id="@+id/account_spinner"
+            android:id="@+id/accountSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/element_spacing_normal"
@@ -52,7 +52,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/extra_config_container"
+        android:id="@+id/extraConfigContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"/>

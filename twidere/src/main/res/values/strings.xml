@@ -910,4 +910,5 @@
     <string name="message_compose_write_storage_permission_not_granted">Permission is required to delete taken photo/video</string>
     <string name="message_video_too_short">Video too short</string>
     <string name="message_video_too_long">Video too long</string>
+    <string name="message_tab_field_is_required">Field \"<xliff:g example="Field" id="name">%s</xliff:g>\" is required</string>
 </resources>

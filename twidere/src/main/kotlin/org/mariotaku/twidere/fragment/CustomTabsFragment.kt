@@ -258,11 +258,11 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             }
 
             val tabName = dialog.findViewById(R.id.tabName) as EditText
-            val iconSpinner = dialog.findViewById(R.id.tab_icon_spinner) as Spinner
-            val accountSpinner = dialog.findViewById(R.id.account_spinner) as Spinner
-            val accountContainer = dialog.findViewById(R.id.account_container)!!
+            val iconSpinner = dialog.findViewById(R.id.tabIconSpinner) as Spinner
+            val accountSpinner = dialog.findViewById(R.id.accountSpinner) as Spinner
+            val accountContainer = dialog.findViewById(R.id.accountContainer)!!
             val accountSectionHeader = accountContainer.sectionHeader
-            val extraConfigContainer = dialog.findViewById(R.id.extra_config_container) as LinearLayout
+            val extraConfigContainer = dialog.findViewById(R.id.extraConfigContainer) as LinearLayout
 
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
 
@@ -360,10 +360,13 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     }
                 }
                 tab.extras = CustomTabUtils.newTabExtras(tabType)
-                extraConfigurations.forEach {
+                extraConfigurations.forEach { extraConf ->
                     // Make sure immutable configuration skipped in edit mode
-                    if (editMode && !it.isMutable) return@forEach
-                    if (!conf.applyExtraConfigurationTo(tab, it)) {
+                    if (editMode && !extraConf.isMutable) return@forEach
+                    if (!conf.applyExtraConfigurationTo(tab, extraConf)) {
+                        val titleString = extraConf.title.createString(context)
+                        Toast.makeText(context, getString(R.string.message_tab_field_is_required,
+                                titleString), Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
                 }
@@ -383,7 +386,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         override fun getAccount(): AccountDetails? {
-            return (dialog.findViewById(R.id.account_spinner) as Spinner).selectedItem as? AccountDetails
+            return (dialog.findViewById(R.id.accountSpinner) as Spinner).selectedItem as? AccountDetails
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -417,11 +420,10 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
     internal class TabIconsAdapter(context: Context) : ArrayAdapter<DrawableHolder>(context, R.layout.spinner_item_custom_tab_icon) {
 
-        private val iconColor: Int
+        private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
 
         init {
             setDropDownViewResource(R.layout.list_item_two_line_small)
-            iconColor = ThemeUtils.getThemeForegroundColor(context)
         }
 
         override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -461,12 +463,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     class CustomTabsAdapter(context: Context) : SimpleDragSortCursorAdapter(context,
             R.layout.list_item_custom_tab, null, emptyArray(), intArrayOf(), 0) {
 
-        private val iconColor: Int
+        private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
         private var indices: TabCursorIndices? = null
-
-        init {
-            iconColor = ThemeUtils.getThemeForegroundColor(context)
-        }
 
         override fun bindView(view: View, context: Context?, cursor: Cursor) {
             super.bindView(view, context, cursor)

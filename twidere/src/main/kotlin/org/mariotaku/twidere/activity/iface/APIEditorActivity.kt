@@ -43,7 +43,6 @@ import kotlinx.android.synthetic.main.layout_api_editor.*
 import kotlinx.android.synthetic.main.layout_api_editor_advanced_fields.*
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
-import org.mariotaku.restfu.http.HttpResponse
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
@@ -54,9 +53,7 @@ import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
-import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
 import javax.inject.Inject
@@ -217,12 +214,13 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
                 val request = HttpRequest(GET.METHOD, DEFAULT_API_CONFIGS_URL,
                         null, null, null)
                 try {
-                    return client.newCall(request).execute().use { response ->
-                        if (response.isSuccessful) {
-                            return@use LoganSquare.parseList(response.body.stream(),
-                                    CustomAPIConfig::class.java)
+                    client.newCall(request).execute().use { response ->
+                        // Save to cache
+                        if (!response.isSuccessful) {
+                            return null
                         }
-                        return@use null
+                        // Save to cache
+                        return LoganSquare.parseList(response.body.stream(), CustomAPIConfig::class.java)
                     }
                 } catch (e: IOException) {
                     // Ignore
@@ -235,11 +233,14 @@ class APIEditorActivity : BaseActivity(), OnCheckedChangeListener, OnClickListen
             }
 
             companion object {
-                val DEFAULT_API_CONFIGS_URL = "https://raw.githubusercontent.com/TwidereProject/Twidere-Android/master/twidere/src/main/assets/data/default_api_configs.json"
+                const val DEFAULT_API_CONFIGS_URL = "https://twidere.mariotaku.org/assets/data/default_api_configs.json"
             }
         }
 
-        private inner class CustomAPIConfigArrayAdapter(context: Context, defaultItems: List<CustomAPIConfig>) : ArrayAdapter<CustomAPIConfig>(context, android.R.layout.simple_list_item_1, defaultItems) {
+        private inner class CustomAPIConfigArrayAdapter(
+                context: Context,
+                defaultItems: List<CustomAPIConfig>
+        ) : ArrayAdapter<CustomAPIConfig>(context, android.R.layout.simple_list_item_1, defaultItems) {
 
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
