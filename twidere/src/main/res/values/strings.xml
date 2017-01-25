@@ -911,7 +911,7 @@
     <string name="message_video_too_short">Video too short</string>
     <string name="message_video_too_long">Video too long</string>
     <string name="message_tab_field_is_required">Field \"<xliff:g example="Field" id="name">%s</xliff:g>\" is required</string>
-    <string name="label_account_type">Type</string>
+    <string name="label_account_type">Account type</string>
     <string name="account_type_twitter">Twitter</string>
     <string name="account_type_fanfou">Fanfou</string>
     <string name="account_type_statusnet">StatusNet</string>
