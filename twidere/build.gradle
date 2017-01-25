@@ -104,7 +104,6 @@ dependencies {
     }
     googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
     googleCompile "com.dropbox.core:dropbox-core-sdk:$dropbox_core_sdk_version"
-    googleCompile ':YouTubeAndroidPlayerApi:1.2.2@jar'
     googleCompile("com.google.apis:google-api-services-drive:$google_api_drive_version") {
         exclude group: 'org.apache.httpcomponents'
     }
