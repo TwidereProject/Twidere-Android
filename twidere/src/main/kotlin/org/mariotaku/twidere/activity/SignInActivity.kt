@@ -42,7 +42,6 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -367,9 +366,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
     }
 
     internal fun onSignInError(exception: Exception) {
-        if (BuildConfig.DEBUG) {
-            Log.w(LOGTAG, exception)
-        }
+        DebugLog.w(LOGTAG, "Sign in error", exception)
         var errorReason: String? = null
         if (exception is AuthenticityTokenException) {
             Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()

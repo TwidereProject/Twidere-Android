@@ -2,7 +2,6 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.squareup.otto.Bus
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
@@ -13,7 +12,6 @@ import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.model.RefreshTaskParam
@@ -90,9 +88,7 @@ abstract class GetDirectMessagesTask(
                 } else if (e.isCausedByNetworkIssue) {
                     errorInfoStore[ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey] = ErrorInfoStore.CODE_NETWORK_ERROR
                 }
-                if (BuildConfig.DEBUG) {
-                    Log.w(TwidereConstants.LOGTAG, e)
-                }
+                DebugLog.w(TwidereConstants.LOGTAG, tr = e)
                 result.add(TwitterWrapper.MessageListResponse(accountKey, e))
             }
 

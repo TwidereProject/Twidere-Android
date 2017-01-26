@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.support.annotation.UiThread
-import android.util.Log
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.kpreferences.KPreferences
@@ -16,7 +15,6 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.constant.loadItemLimitKey
@@ -103,9 +101,7 @@ abstract class GetActivitiesTask(
                 }
                 errorInfoStore.remove(errorInfoKey, accountKey)
             } catch (e: MicroBlogException) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOGTAG, e)
-                }
+                DebugLog.w(LOGTAG, tr = e)
                 if (e.errorCode == 220) {
                     errorInfoStore[errorInfoKey, accountKey] = ErrorInfoStore.CODE_NO_ACCESS_FOR_CREDENTIALS
                 } else if (e.isCausedByNetworkIssue) {

@@ -14,7 +14,6 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -46,27 +45,28 @@ class PremiumDashboardActivity : BaseActivity() {
         when (item.itemId) {
             R.id.consume_purchase -> {
                 if (BuildConfig.DEBUG) {
-                    val dfRef = WeakReference(ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress"))
-                    val weakThis = WeakReference(this)
-                    val recreate = AtomicBoolean()
-                    task {
-                        val activity = weakThis.get() ?: throw IllegalStateException()
-                        if (!activity.extraFeaturesService.destroyPurchase()) {
-                            throw IllegalStateException()
-                        }
-                    }.successUi {
-                        recreate.set(true)
-                    }.failUi {
-                        val activity = weakThis.get() ?: return@failUi
-                        Toast.makeText(activity, R.string.message_unable_to_consume_purchase, Toast.LENGTH_SHORT).show()
-                    }.alwaysUi {
-                        weakThis.get()?.executeAfterFragmentResumed {
-                            val fm = weakThis.get()?.supportFragmentManager
-                            val df = dfRef.get() ?: (fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment)
-                            df?.dismiss()
-                            if (recreate.get()) {
-                                weakThis.get()?.recreate()
-                            }
+                    return true
+                }
+                val dfRef = WeakReference(ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress"))
+                val weakThis = WeakReference(this)
+                val recreate = AtomicBoolean()
+                task {
+                    val activity = weakThis.get() ?: throw IllegalStateException()
+                    if (!activity.extraFeaturesService.destroyPurchase()) {
+                        throw IllegalStateException()
+                    }
+                }.successUi {
+                    recreate.set(true)
+                }.failUi {
+                    val activity = weakThis.get() ?: return@failUi
+                    Toast.makeText(activity, R.string.message_unable_to_consume_purchase, Toast.LENGTH_SHORT).show()
+                }.alwaysUi {
+                    weakThis.get()?.executeAfterFragmentResumed {
+                        val fm = weakThis.get()?.supportFragmentManager
+                        val df = dfRef.get() ?: (fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment)
+                        df?.dismiss()
+                        if (recreate.get()) {
+                            weakThis.get()?.recreate()
                         }
                     }
                 }

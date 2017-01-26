@@ -92,6 +92,7 @@ import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
 import org.mariotaku.microblog.library.twitter.model.Status;
+import org.mariotaku.pickncrop.library.PNCUtils;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
@@ -285,6 +286,14 @@ public final class Utils implements Constants {
             colors[i] = accounts[i].color;
         }
         return colors;
+    }
+
+    public static boolean deleteMedia(final Context context, final Uri uri) {
+        try {
+            return PNCUtils.deleteMedia(context, uri);
+        } catch (SecurityException e) {
+            return false;
+        }
     }
 
     public static class NoAccountException extends Exception {
@@ -1328,9 +1337,7 @@ public final class Utils implements Constants {
 
     @Nullable
     public static Location getCachedLocation(Context context) {
-        if (BuildConfig.DEBUG) {
-            Log.v(LOGTAG, "Fetching cached location", new Exception());
-        }
+        DebugLog.v(LOGTAG, "Fetching cached location", new Exception());
         Location location = null;
         final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (lm == null) return null;

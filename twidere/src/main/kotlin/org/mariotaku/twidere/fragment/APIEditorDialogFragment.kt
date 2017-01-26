@@ -15,7 +15,6 @@ import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.adapter.BaseArrayAdapter
@@ -148,9 +147,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             adapter = CustomAPIConfigArrayAdapter(context, configs)
             val builder = AlertDialog.Builder(context)
             builder.setAdapter(adapter, this)
-            if (!BuildConfig.DEBUG) {
-                loaderManager.initLoader(0, null, this)
-            }
+            loaderManager.initLoader(0, null, this)
             return builder.create()
         }
 

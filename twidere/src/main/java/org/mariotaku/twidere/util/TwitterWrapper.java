@@ -25,7 +25,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import org.mariotaku.microblog.library.MicroBlog;
@@ -45,7 +44,6 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
 import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -187,11 +185,8 @@ public class TwitterWrapper implements Constants {
             twitter.updateProfileBannerImage(fileBody);
         } finally {
             Utils.closeSilently(fileBody);
-            if (deleteImage && "file".equals(imageUri.getScheme())) {
-                final File file = new File(imageUri.getPath());
-                if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
-                }
+            if (deleteImage) {
+                Utils.deleteMedia(context, imageUri);
             }
         }
     }
@@ -208,11 +203,8 @@ public class TwitterWrapper implements Constants {
             twitter.updateProfileBackgroundImage(fileBody, tile);
         } finally {
             Utils.closeSilently(fileBody);
-            if (deleteImage && "file".equals(imageUri.getScheme())) {
-                final File file = new File(imageUri.getPath());
-                if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
-                }
+            if (deleteImage) {
+                Utils.deleteMedia(context, imageUri);
             }
         }
     }
@@ -226,11 +218,8 @@ public class TwitterWrapper implements Constants {
             return twitter.updateProfileImage(fileBody);
         } finally {
             Utils.closeSilently(fileBody);
-            if (deleteImage && "file".equals(imageUri.getScheme())) {
-                final File file = new File(imageUri.getPath());
-                if (!file.delete()) {
-                    Log.w(LOGTAG, String.format("Unable to delete %s", file));
-                }
+            if (deleteImage) {
+                Utils.deleteMedia(context, imageUri);
             }
         }
     }

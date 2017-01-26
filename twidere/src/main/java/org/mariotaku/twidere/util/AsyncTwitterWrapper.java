@@ -305,7 +305,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public int destroyStatusAsync(final UserKey accountKey, final String statusId) {
-        final DestroyStatusTask task = new DestroyStatusTask(context,accountKey, statusId);
+        final DestroyStatusTask task = new DestroyStatusTask(context, accountKey, statusId);
         return asyncTaskManager.add(task, true);
     }
 
@@ -536,9 +536,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 if (result.hasData()) {
                     handler.post(new FriendshipUpdatedEvent(accountKey, userKey, result.getData()));
                 } else if (result.hasException()) {
-                    if (BuildConfig.DEBUG) {
-                        Log.w(LOGTAG, "Unable to update friendship", result.getException());
-                    }
+                    DebugLog.w(LOGTAG, "Unable to update friendship", result.getException());
                 }
             }
         }.setCallback(bus));
@@ -561,9 +559,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     try {
                         microBlog.setActivitiesAboutMeUnread(cursor);
                     } catch (MicroBlogException e) {
-                        if (BuildConfig.DEBUG) {
-                            Log.w(LOGTAG, e);
-                        }
+                        DebugLog.w(LOGTAG, null, e);
                     }
                 }
                 return null;
@@ -685,9 +681,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 });
                 return SingleResponse.Companion.getInstance(result);
             } catch (final MicroBlogException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOGTAG, e);
-                }
+                DebugLog.w(LOGTAG, null, e);
                 return SingleResponse.Companion.getInstance(e);
             }
         }

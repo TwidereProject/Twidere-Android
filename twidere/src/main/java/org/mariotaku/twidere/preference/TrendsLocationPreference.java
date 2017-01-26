@@ -31,7 +31,6 @@ import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +41,8 @@ import android.widget.TextView;
 import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Location;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.util.DebugLog;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -279,9 +278,7 @@ public class TrendsLocationPreference extends Preference {
                 }
                 return map.pack();
             } catch (final MicroBlogException e) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOGTAG, e);
-                }
+                DebugLog.w(LOGTAG, null, e);
             }
             return null;
         }

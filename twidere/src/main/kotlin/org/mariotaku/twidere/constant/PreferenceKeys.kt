@@ -6,9 +6,7 @@ import android.text.TextUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants.KEY_DISPLAY_PROFILE_IMAGE
-import org.mariotaku.twidere.Constants.KEY_NO_CLOSE_AFTER_TWEET_SENT
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_COMPOSE_ACCOUNTS
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
@@ -59,6 +57,7 @@ val themeColorKey = KIntKey(KEY_THEME_COLOR, 0)
 val filterUnavailableQuoteStatusesKey = KBooleanKey("filter_unavailable_quote_statuses", false)
 val filterPossibilitySensitiveStatusesKey = KBooleanKey("filter_possibility_sensitive_statuses", false)
 val chromeCustomTabKey = KBooleanKey("chrome_custom_tab", true)
+val usageStatisticsKey = KBooleanKey(KEY_USAGE_STATISTICS, false)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

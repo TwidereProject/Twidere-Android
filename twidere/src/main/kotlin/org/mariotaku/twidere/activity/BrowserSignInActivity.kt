@@ -41,7 +41,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterOAuth
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthToken
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -50,6 +49,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.util.AsyncTaskUtils
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator
 import org.mariotaku.twidere.util.webkit.DefaultWebViewClient
@@ -219,9 +219,7 @@ class BrowserSignInActivity : BaseActivity() {
                 val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat, true)
                 activity.loadUrl(endpoint.construct("/oauth/authorize", arrayOf("oauth_token", token.oauthToken)))
             } else {
-                if (BuildConfig.DEBUG && result.hasException()) {
-                    Log.w(LOGTAG, "Exception while browser sign in", result.exception)
-                }
+                DebugLog.w(LOGTAG, "Error while browser sign in", result.exception)
                 if (!activity.isFinishing) {
                     Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
                     activity.finish()

@@ -11,6 +11,7 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.model.sync.GoogleDriveSyncProviderInfo
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.sync.*
 import java.io.IOException
@@ -47,9 +48,7 @@ class GoogleDriveSyncTaskRunner(context: Context, val refreshToken: String) : Sy
         }.successUi {
             callback(true)
         }.failUi {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG_SYNC, "Sync $action failed", it)
-            }
+            DebugLog.w(LOGTAG_SYNC, "Sync $action failed", it)
             callback(false)
         }
         return true

@@ -34,6 +34,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.TwidereArrayUtils
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -56,9 +57,7 @@ class StreamingService : Service() {
     override fun onCreate() {
         super.onCreate()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Stream service started.")
-        }
+        DebugLog.d(LOGTAG, "Stream service started.")
         initStreaming()
         AccountManager.get(this).addOnAccountsUpdatedListenerSafe(accountChangeObserver, updateImmediately = false)
     }
@@ -66,9 +65,7 @@ class StreamingService : Service() {
     override fun onDestroy() {
         clearTwitterInstances()
         AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountChangeObserver)
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Stream service stopped.")
-        }
+        DebugLog.d(LOGTAG, "Stream service stopped.")
         super.onDestroy()
     }
 
@@ -97,9 +94,7 @@ class StreamingService : Service() {
         val accountsList = AccountUtils.getAllAccountDetails(AccountManager.get(this), true).filter { it.credentials is OAuthCredentials }
         val accountKeys = accountsList.map { it.key }.toTypedArray()
         val activatedPreferences = AccountPreferences.getAccountPreferences(this, accountKeys)
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, "Setting up twitter stream instances")
-        }
+        DebugLog.d(LOGTAG, "Setting up twitter stream instances")
         this.accountKeys = accountKeys
         clearTwitterInstances()
         var result = false

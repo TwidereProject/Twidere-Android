@@ -30,7 +30,6 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.util.Log
 import android.view.*
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
@@ -39,8 +38,6 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
-import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.Constants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
@@ -286,9 +283,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onGapClick(holder: GapViewHolder, position: Int) {
         val activity = adapter.getActivity(position) ?: return
-        if (BuildConfig.DEBUG) {
-            Log.v(TwidereConstants.LOGTAG, "Load activity gap $activity")
-        }
+        DebugLog.v(TwidereConstants.LOGTAG, "Load activity gap $activity")
         val accountIds = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)

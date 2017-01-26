@@ -238,8 +238,8 @@ abstract class MicroBlogAPIStatusesLoader(
             }) { current, total -> true }
         } catch (e: Exception) {
             // Ignore
-            if (BuildConfig.DEBUG && e !is IOException) {
-                Log.w(LOGTAG, e)
+            if (e !is IOException) {
+                DebugLog.w(LOGTAG, "Error saving cached data", e)
             }
         }
 

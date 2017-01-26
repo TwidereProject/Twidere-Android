@@ -732,12 +732,7 @@ class UpdateStatusTask(
 
     data class UriMediaDeletionItem(val uri: Uri) : MediaDeletionItem {
         override fun delete(context: Context): Boolean {
-            try {
-                return PNCUtils.deleteMedia(context, uri)
-            } catch (e: SecurityException) {
-                // Ignore
-                return false
-            }
+            return Utils.deleteMedia(context, uri)
         }
     }
 

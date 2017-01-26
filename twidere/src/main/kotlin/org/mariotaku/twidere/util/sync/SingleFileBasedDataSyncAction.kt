@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util.sync
 
 import android.util.Log
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.util.DebugLog
 import java.io.Closeable
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -13,9 +14,7 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
     private val ATTR_KEY = "key"
 
     override final fun execute(): Boolean {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Begin syncing $whatData")
-        }
+        DebugLog.d(LOGTAG_SYNC, "Begin syncing $whatData")
 
         if (!setup()) {
             return false
@@ -36,8 +35,8 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
                         Log.d(LOGTAG_SYNC, "Downloading remote $whatData")
                     }
                     remoteData = it.loadFromRemote()
-                } else if (BuildConfig.DEBUG) {
-                    Log.d(LOGTAG_SYNC, "Remote $whatData unchanged, skip download")
+                } else {
+                    DebugLog.d(LOGTAG_SYNC, "Remote $whatData unchanged, skip download")
                 }
             }
         } catch (e: FileNotFoundException) {
@@ -85,9 +84,7 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
         val localModifiedTime = System.currentTimeMillis()
 
         if (shouldCreateRemote || localModified) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG_SYNC, "Uploading $whatData")
-            }
+            DebugLog.d(LOGTAG_SYNC, "Uploading $whatData")
             newSaveToRemoteSession().use {
                 it.setRemoteLastModified(localModifiedTime)
                 it.saveToRemote(localData)
@@ -102,9 +99,7 @@ abstract class SingleFileBasedDataSyncAction<Data, SnapshotStore, DownloadSessio
             // Ignore
         }
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG_SYNC, "Finished syncing $whatData")
-        }
+        DebugLog.d(LOGTAG_SYNC, "Finished syncing $whatData")
         return true
     }
 

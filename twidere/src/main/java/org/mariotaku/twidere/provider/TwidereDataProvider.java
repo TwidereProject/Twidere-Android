@@ -119,6 +119,7 @@ import org.mariotaku.twidere.util.ActivityTracker;
 import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreFunctionsKt;
 import org.mariotaku.twidere.util.DataStoreUtils;
+import org.mariotaku.twidere.util.DebugLog;
 import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
@@ -1117,9 +1118,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 c.addRow(new String[]{host, address.getHostAddress()});
             }
         } catch (final IOException ignore) {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, ignore);
-            }
+            DebugLog.w(LOGTAG, null, ignore);
         }
         return c;
     }

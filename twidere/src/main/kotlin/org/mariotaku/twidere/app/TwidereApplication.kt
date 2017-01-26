@@ -27,7 +27,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
-import android.util.Log
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
@@ -130,13 +129,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             defaultFeatures.loadRemoteSettings(restHttpClient)
         }.success {
             defaultFeatures.save(sharedPreferences)
-            if (BuildConfig.DEBUG) {
-                Log.d(LOGTAG, "Loaded remote features")
-            }
+            DebugLog.d(LOGTAG, "Loaded remote features")
         }.fail {
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, "Unable to load remote features", it)
-            }
+            DebugLog.w(LOGTAG, "Unable to load remote features", it)
         }.always {
             kPreferences[defaultFeatureLastUpdated] = System.currentTimeMillis()
         }

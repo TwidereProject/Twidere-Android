@@ -11,6 +11,7 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 import org.mariotaku.twidere.util.ContentValuesCreator
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 
@@ -34,9 +35,7 @@ class GetSavedSearchesTask(
                 cr.delete(SavedSearches.CONTENT_URI, where.sql, whereArgs)
                 ContentResolverUtils.bulkInsert(cr, SavedSearches.CONTENT_URI, values)
             } catch (e: MicroBlogException) {
-                if (BuildConfig.DEBUG) {
-                    Log.w(LOGTAG, e)
-                }
+                DebugLog.w(LOGTAG, tr = e)
             }
         }
         return SingleResponse.getInstance(Unit)
