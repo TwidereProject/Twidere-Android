@@ -111,8 +111,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     @Inject
     lateinit var validator: TwidereValidator
     @Inject
-    lateinit var defaultFeatures: DefaultFeatures
-    @Inject
     lateinit var locationManager: LocationManager
 
     private lateinit var itemTouchHelper: ItemTouchHelper

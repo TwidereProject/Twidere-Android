@@ -50,8 +50,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
-import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import nl.komponents.kovenant.task
+import nl.komponents.kovenant.ui.alwaysUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
@@ -64,7 +66,6 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.restfu.http.Endpoint
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthToken
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
@@ -96,7 +97,6 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.OAuthPasswordAuthenticator.*
-import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
@@ -138,19 +138,13 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                 R.color.material_light_green))
         ViewCompat.setBackgroundTintList(signIn, color)
 
-
-        val consumerKey = preferences.getString(KEY_CONSUMER_KEY, null)
-        val consumerSecret = preferences.getString(KEY_CONSUMER_SECRET, null)
-        if (BuildConfig.SHOW_CUSTOM_TOKEN_DIALOG && savedInstanceState == null &&
-                !preferences.getBoolean(KEY_CONSUMER_KEY_SECRET_SET, false) &&
-                !Utils.isCustomConsumerKeySecret(consumerKey, consumerSecret)) {
-            val df = SetConsumerKeySecretDialogFragment()
-            df.isCancelable = false
-            df.show(supportFragmentManager, "set_consumer_key_secret")
-        }
-
         updateSignInType()
         setSignInButton()
+
+        if (savedInstanceState == null) {
+            // Only start at the first time
+            updateDefaultFeatures()
+        }
     }
 
     override fun onDestroy() {
@@ -353,7 +347,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }
     }
 
-
     internal fun dismissDialogFragment(tag: String) {
         executeAfterFragmentResumed {
             val fm = supportFragmentManager
@@ -364,6 +357,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             Unit
         }
     }
+
 
     internal fun onSignInError(exception: Exception) {
         DebugLog.w(LOGTAG, "Sign in error", exception)
@@ -410,6 +404,35 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
     internal fun setUsernamePassword(username: String, password: String) {
         editUsername.setText(username)
         editPassword.setText(password)
+    }
+
+    private fun updateDefaultFeatures() {
+        val weakThis = WeakReference(this)
+        val weakDf = WeakReference(ProgressDialogFragment.show(supportFragmentManager,
+                FRAGMENT_TAG_LOADING_DEFAULT_FEATURES))
+        task {
+            val activity = weakThis.get() ?: return@task
+            if (activity.isFinishing) return@task
+            activity.defaultFeatures.loadRemoteSettings(activity.restHttpClient)
+        }.successUi {
+            val activity = weakThis.get() ?: return@successUi
+            if (activity.isFinishing) return@successUi
+            val apiConfig = activity.apiConfig
+            val defaultFeatures = activity.defaultFeatures
+            val preferences = activity.preferences
+            if (apiConfig.consumerKey == TWITTER_CONSUMER_KEY && apiConfig.consumerSecret == TWITTER_CONSUMER_SECRET) {
+                apiConfig.consumerKey = defaultFeatures.defaultTwitterConsumerKey ?: TWITTER_CONSUMER_KEY
+                apiConfig.consumerSecret = defaultFeatures.defaultTwitterConsumerSecret ?: TWITTER_CONSUMER_SECRET
+            }
+            defaultFeatures.save(preferences)
+        }.fail {
+            DebugLog.w(LOGTAG, "Unable to update default features", it)
+        }.alwaysUi {
+            val activity = weakThis.get() ?: return@alwaysUi
+            if (activity.isFinishing) return@alwaysUi
+            val df = weakDf.get() ?: supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
+            df?.dismiss()
+        }
     }
 
     private fun doBrowserLogin(intent: Intent?) {
@@ -471,7 +494,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                 signIn.isEnabled = true
             }
         }
-        signUp.visibility = if (apiConfig.signUpUrl != null) {
+        signUp.visibility = if (apiConfig.signUpUrlOrDefault != null) {
             View.VISIBLE
         } else {
             View.GONE
@@ -725,34 +748,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                 editPassword!!.addTextChangedListener(textWatcher)
             }
             return alertDialog
-        }
-    }
-
-    class SetConsumerKeySecretDialogFragment : BaseDialogFragment() {
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(activity)
-            builder.setView(R.layout.dialog_set_consumer_key_secret)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
-                val editConsumerKey = (dialog as Dialog).findViewById(R.id.editConsumerKey) as EditText
-                val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as EditText
-                val apiConfig = kPreferences[defaultAPIConfigKey]
-                apiConfig.consumerKey = editConsumerKey.text.toString()
-                apiConfig.consumerSecret = editConsumerSecret.text.toString()
-                kPreferences[defaultAPIConfigKey] = apiConfig
-            }
-            val dialog = builder.create()
-            dialog.setOnShowListener(DialogInterface.OnShowListener { dialog ->
-                val activity = activity ?: return@OnShowListener
-                val editConsumerKey = (dialog as Dialog).findViewById(R.id.editConsumerKey) as MaterialEditText
-                val editConsumerSecret = dialog.findViewById(R.id.editConsumerSecret) as MaterialEditText
-                editConsumerKey.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_key)))
-                editConsumerSecret.addValidator(ConsumerKeySecretValidator(getString(R.string.invalid_consumer_secret)))
-                val apiConfig = kPreferences[defaultAPIConfigKey]
-                editConsumerKey.setText(apiConfig.consumerKey)
-                editConsumerSecret.setText(apiConfig.consumerSecret)
-            })
-            return dialog
         }
     }
 
@@ -1035,7 +1030,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
 
     companion object {
 
-        val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
+        private val FRAGMENT_TAG_SIGN_IN_PROGRESS = "sign_in_progress"
+        private val FRAGMENT_TAG_LOADING_DEFAULT_FEATURES = "loading_default_features"
         private val EXTRA_API_LAST_CHANGE = "api_last_change"
         private val DEFAULT_TWITTER_API_URL_FORMAT = "https://[DOMAIN.]twitter.com/"
 
@@ -1086,5 +1082,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }
     }
 
+    private val CustomAPIConfig.signUpUrlOrDefault: String?
+        get() = signUpUrl ?: when (type) {
+            AccountType.TWITTER -> "https://twitter.com/signup"
+            AccountType.FANFOU -> "http://fanfou.com/register"
+            else -> null
+        }
 
 }

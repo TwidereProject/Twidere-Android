@@ -46,6 +46,7 @@ import org.mariotaku.chameleon.ChameleonActivity
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
+import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
@@ -54,6 +55,7 @@ import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
+import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -95,6 +97,10 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
     lateinit var permissionsManager: PermissionsManager
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit var defaultFeatures: DefaultFeatures
+    @Inject
+    lateinit var restHttpClient: RestHttpClient
 
     private val actionHelper = IExtendedActivity.ActionHelper(this)
 
