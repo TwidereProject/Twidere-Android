@@ -7,7 +7,7 @@
 
     <org.mariotaku.twidere.preference.NotificationAccountsListPreference
         android:key="cat_accounts"
-        android:title="@string/accounts"
+        android:title="@string/preference_title_accounts"
         app:switchDefault="true"
         app:switchKey="notification"/>
 

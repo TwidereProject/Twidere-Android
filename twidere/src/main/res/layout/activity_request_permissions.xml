@@ -101,7 +101,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/accept_permission_request"/>
+            android:text="@string/action_accept_permission_request"/>
 
         <Button
             android:id="@+id/deny"

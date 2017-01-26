@@ -64,9 +64,9 @@ class DestroyStatusTask(
         if (result.hasData()) {
             val status = result.data!!
             if (status.retweet_id != null) {
-                Utils.showInfoMessage(context, R.string.retweet_cancelled, false)
+                Utils.showInfoMessage(context, R.string.message_retweet_cancelled, false)
             } else {
-                Utils.showInfoMessage(context, R.string.status_deleted, false)
+                Utils.showInfoMessage(context, R.string.message_status_deleted, false)
             }
             bus.post(StatusDestroyedEvent(status))
         } else {

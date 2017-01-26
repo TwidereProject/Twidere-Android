@@ -195,7 +195,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             val deleteWhereArgs = arrayOf(message.account_key.toString(), message.id)
             resolver.delete(DirectMessages.Outbox.CONTENT_URI, deleteWhere, deleteWhereArgs)
             resolver.insert(DirectMessages.Outbox.CONTENT_URI, values)
-            showOkMessage(R.string.direct_message_sent, false)
+            showOkMessage(R.string.message_direct_message_sent, false)
         } else {
             val values = ContentValuesCreator.createMessageDraft(accountId, recipientId, text, imageUri)
             resolver.insert(Drafts.CONTENT_URI, values)
@@ -281,7 +281,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                         }
                     }
                     if (!failed) {
-                        Toast.makeText(context, R.string.status_updated, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, R.string.message_toast_status_updated, Toast.LENGTH_SHORT).show()
                     }
                 }
 

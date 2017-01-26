@@ -335,7 +335,7 @@ public class TrendsLocationPreference extends Preference {
             if (mProgress.isShowing()) {
                 mProgress.dismiss();
             }
-            mProgress.setMessage(getContext().getString(R.string.please_wait));
+            mProgress.setMessage(getContext().getString(R.string.message_please_wait));
             mProgress.setOnCancelListener(this);
             mProgress.show();
         }

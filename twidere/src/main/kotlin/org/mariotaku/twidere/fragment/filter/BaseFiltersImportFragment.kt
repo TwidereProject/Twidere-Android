@@ -96,7 +96,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
             }
             R.id.perform_import -> {
                 if (adapter.checkedCount == 0) {
-                    Toast.makeText(context, R.string.message_no_user_selected, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.message_toast_no_user_selected, Toast.LENGTH_SHORT).show()
                     return true
                 }
                 val df = ImportConfirmDialogFragment()

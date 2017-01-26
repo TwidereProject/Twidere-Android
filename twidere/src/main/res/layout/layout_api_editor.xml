@@ -88,7 +88,7 @@
             android:id="@+id/labelAuthType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/auth_type"
+            android:text="@string/label_auth_type"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <HorizontalScrollView
@@ -108,7 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/oauth"
+                    android:text="@string/auth_type_oauth"
                     tools:checked="true"/>
 
                 <RadioButton
@@ -116,21 +116,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/basic"/>
+                    android:text="@string/auth_type_basic"/>
 
                 <RadioButton
                     android:id="@+id/twipO"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/twip_o"/>
+                    android:text="@string/auth_type_twip_o"/>
 
                 <RadioButton
                     android:id="@+id/xauth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/xauth"/>
+                    android:text="@string/auth_type_xauth"/>
             </RadioGroup>
         </HorizontalScrollView>
 

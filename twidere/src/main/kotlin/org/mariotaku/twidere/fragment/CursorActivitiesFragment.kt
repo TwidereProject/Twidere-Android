@@ -68,7 +68,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
             }
         } else {
-            showError(R.drawable.ic_info_accounts, getString(R.string.no_account_selected))
+            showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
         }
     }
 

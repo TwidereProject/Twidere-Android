@@ -250,7 +250,7 @@
         </activity>
         <activity
             android:name=".activity.BrowserSignInActivity"
-            android:label="@string/browser_sign_in"
+            android:label="@string/title_browser_sign_in"
             android:theme="@style/Theme.Twidere"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -526,7 +526,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/nyan_sakamoto_thumbnail"
-            android:label="@string/nyan_sakamoto"
+            android:label="@string/message_toast_nyan_sakamoto"
             android:permission="android.permission.BIND_WALLPAPER"
             android:process=":wallpaper">
             <intent-filter android:priority="1">
@@ -542,7 +542,7 @@
             android:enabled="false"
             android:exported="true"
             android:icon="@drawable/nyan_sakamoto_thumbnail"
-            android:label="@string/nyan_sakamoto"
+            android:label="@string/message_toast_nyan_sakamoto"
             android:process=":daydream"
             tools:ignore="ExportedService">
             <intent-filter android:priority="1">

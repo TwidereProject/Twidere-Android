@@ -32,7 +32,7 @@ class CopyLinkActivity : Activity(), Constants {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ClipboardUtils.setText(this, intent.dataString)
-        Toast.makeText(this, R.string.link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.message_toast_link_copied_to_clipboard, Toast.LENGTH_SHORT).show()
         finish()
     }
 }

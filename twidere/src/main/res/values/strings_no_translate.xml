@@ -2,7 +2,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="theme_twidere">@string/app_name</string>
-    <string name="nyan_sakamoto" translatable="false">Nyan Sakamoto!</string>
+    <string name="message_toast_nyan_sakamoto" translatable="false">Nyan Sakamoto!</string>
     <string name="kuma_union" translatable="false">熊孩子联盟</string>
     <string name="developer_name" translatable="false">Mariotaku Lee</string>
     <string name="project_name" translatable="false">Twidere Project</string>

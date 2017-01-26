@@ -129,7 +129,7 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
             R.id.save -> {
                 val checkedIds = accountsList.checkedItemIds
                 if (checkedIds.isEmpty() && !isSelectNoneAllowed) {
-                    Toast.makeText(this, R.string.no_account_selected, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.message_toast_no_account_selected, Toast.LENGTH_SHORT).show()
                     return
                 }
                 val data = Intent()

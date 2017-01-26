@@ -187,13 +187,13 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
                 if (PermissionUtils.hasPermission(permissions, grantResults, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
                     saveToStorage()
                 } else {
-                    Toast.makeText(this, R.string.save_media_no_storage_permission_message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.message_toast_save_media_no_storage_permission, Toast.LENGTH_LONG).show()
                 }
                 return
             }
             REQUEST_PERMISSION_SHARE_MEDIA -> {
                 if (!PermissionUtils.hasPermission(permissions, grantResults, AndroidPermissions.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, R.string.share_media_no_storage_permission_message, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.message_toast_share_media_no_storage_permission, Toast.LENGTH_LONG).show()
                 }
                 shareMedia()
                 return
@@ -378,7 +378,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
 
             override fun onFileSaveFailed() {
                 val activity = context as MediaViewerActivity
-                Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
             }
         }
         AsyncTaskUtils.executeTask(task)

@@ -13,7 +13,7 @@
         android:enabled="false"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_add"
-        android:title="@string/subscribe" />
+        android:title="@string/action_subscribe" />
     <item
         android:id="@id/edit"
         android:icon="@drawable/ic_action_edit"

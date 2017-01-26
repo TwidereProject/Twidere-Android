@@ -43,7 +43,6 @@ import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.support.removeAccountSupport
 
 /**
@@ -81,7 +80,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         }
         listView.setOnCreateContextMenuListener(this)
         listView.emptyView = emptyView
-        emptyText.setText(R.string.no_account)
+        emptyText.setText(R.string.message_toast_no_account)
         emptyIcon.setImageResource(R.drawable.ic_info_error_generic)
         setListShown(false)
 

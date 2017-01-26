@@ -345,7 +345,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         setSignInButton()
         if (result.alreadyLoggedIn) {
             result.updateAccount(am)
-            Toast.makeText(this, R.string.error_already_logged_in, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])
             Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
@@ -372,19 +372,19 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }
         var errorReason: String? = null
         if (exception is AuthenticityTokenException) {
-            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
             errorReason = "wrong_api_key"
         } else if (exception is WrongUserPassException) {
-            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
             errorReason = "wrong_username_password"
         } else if (exception is SignInTask.WrongBasicCredentialException) {
-            Toast.makeText(this, R.string.wrong_username_password, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_wrong_username_password, Toast.LENGTH_SHORT).show()
             errorReason = "wrong_username_password"
         } else if (exception is SignInTask.WrongAPIURLFormatException) {
-            Toast.makeText(this, R.string.wrong_api_key, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_wrong_api_key, Toast.LENGTH_SHORT).show()
             errorReason = "wrong_api_key"
         } else if (exception is LoginVerificationException) {
-            Toast.makeText(this, R.string.login_verification_failed, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_login_verification_failed, Toast.LENGTH_SHORT).show()
             errorReason = "login_verification_failed"
         } else if (exception is AuthenticationException) {
             Utils.showErrorMessage(this, getString(R.string.action_signing_in), exception.cause, true)

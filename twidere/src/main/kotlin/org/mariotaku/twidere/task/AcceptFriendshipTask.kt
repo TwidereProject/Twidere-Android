@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
@@ -38,9 +39,8 @@ class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(contex
 
     override fun showSucceededMessage(params: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
-        val message = context.getString(R.string.accepted_users_follow_request,
-                manager.getDisplayName(user, nameFirst))
-        Utils.showOkMessage(context, message, false)
+        Toast.makeText(context, context.getString(R.string.message_toast_accepted_users_follow_request,
+                manager.getDisplayName(user, nameFirst)), Toast.LENGTH_SHORT).show()
     }
 
 }

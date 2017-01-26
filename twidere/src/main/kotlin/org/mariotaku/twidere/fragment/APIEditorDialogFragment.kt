@@ -89,7 +89,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
                     editNoVersionSuffix.isChecked = Credentials.Type.EMPTY == authType
                 }
             }
-            apiFormatHelpButton.setOnClickListener { Toast.makeText(context, R.string.api_url_format_help, Toast.LENGTH_LONG).show() }
+            apiFormatHelpButton.setOnClickListener {
+                MessageDialogFragment.show(childFragmentManager, message = getString(R.string.message_api_url_format_help),
+                        tag = "api_url_format_help")
+            }
 
             if (savedInstanceState != null) {
                 apiConfig = savedInstanceState.getParcelable(EXTRA_API_CONFIG)

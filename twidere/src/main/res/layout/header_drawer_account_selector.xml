@@ -198,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/no_account"/>
+            android:text="@string/message_toast_no_account"/>
 
     </FrameLayout>
 

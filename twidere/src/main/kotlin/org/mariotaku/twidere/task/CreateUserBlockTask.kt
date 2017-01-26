@@ -72,7 +72,7 @@ open class CreateUserBlockTask(
 
     override fun showSucceededMessage(params: Arguments, user: ParcelableUser) {
         val nameFirst = kPreferences[nameFirstKey]
-        val message = context.getString(R.string.blocked_user, manager.getDisplayName(user,
+        val message = context.getString(R.string.message_blocked_user, manager.getDisplayName(user,
                 nameFirst))
         Utils.showInfoMessage(context, message, false)
 

@@ -48,7 +48,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/drag_handle"
         android:layout_toRightOf="@+id/drag_handle"
-        android:contentDescription="@string/your_profile_image"
+        android:contentDescription="@string/label_your_profile_image"
         android:scaleType="fitCenter"
         tools:src="@drawable/ic_profile_image_twidere"/>
 

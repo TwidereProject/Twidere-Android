@@ -131,7 +131,7 @@
                 style="?buttonStyleSmall"
                 android:layout_width="@dimen/button_size_content_card"
                 android:layout_height="@dimen/button_size_content_card"
-                android:contentDescription="@string/accept"
+                android:contentDescription="@string/action_accept_friend_request"
                 android:src="@drawable/ic_action_confirm"
                 app:backgroundTint="@color/material_light_green"
                 app:iabColor="@android:color/transparent"/>

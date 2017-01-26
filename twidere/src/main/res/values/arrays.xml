@@ -47,24 +47,14 @@
         <item>@string/tab_display_option_label</item>
         <item>@string/tab_display_option_icon_and_label</item>
     </string-array>
-    <string-array name="entries_settings_export">
-        <item>@string/accounts</item>
-        <item>@string/title_drafts</item>
-        <item>@string/settings</item>
-        <item>@string/tabs</item>
-        <item>@string/title_filters</item>
-        <item>@string/title_nicknames</item>
-        <item>@string/title_user_colors</item>
-        <item>@string/custom_host_mapping</item>
-    </string-array>
     <string-array name="entries_compose_now_action">
         <item>@string/action_compose</item>
         <item>@string/action_take_photo</item>
         <item>@string/add_image</item>
     </string-array>
     <string-array name="entries_media_preview_style">
-        <item>@string/crop</item>
-        <item>@string/scale</item>
+        <item>@string/preview_style_crop</item>
+        <item>@string/preview_style_scale</item>
     </string-array>
     <string-array name="entries_image_sources">
         <item>@string/source_camera</item>

@@ -42,12 +42,12 @@ class SaveMediaToGalleryTask(
         val context = context ?: return
         MediaScannerConnection.scanFile(context, arrayOf(savedFile.path),
                 arrayOf(mimeType), null)
-        Toast.makeText(context, R.string.saved_to_gallery, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.message_toast_saved_to_gallery, Toast.LENGTH_SHORT).show()
     }
 
     override fun onFileSaveFailed() {
         val context = context ?: return
-        Toast.makeText(context, R.string.error_occurred, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

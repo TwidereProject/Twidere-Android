@@ -56,7 +56,7 @@
         android:id="@id/mute_user"
         android:checkable="true"
         android:icon="@drawable/ic_action_visibility_off"
-        android:title="@string/twitter_mute_user"/>
+        android:title="@string/action_twitter_mute_user"/>
     <item
         android:id="@id/block"
         android:icon="@drawable/ic_action_block"
@@ -68,11 +68,11 @@
     <item
         android:id="@+id/muted_users"
         android:icon="@drawable/ic_action_visibility_off"
-        android:title="@string/twitter_muted_users"/>
+        android:title="@string/action_twitter_muted_users"/>
     <item
         android:id="@+id/blocked_users"
         android:icon="@drawable/ic_action_block"
-        android:title="@string/blocked_users"/>
+        android:title="@string/title_blocked_users"/>
     <item
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"

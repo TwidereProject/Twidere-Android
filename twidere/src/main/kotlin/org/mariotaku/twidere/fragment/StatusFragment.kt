@@ -745,7 +745,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             if (result.data != null) {
                 fragment.displayTranslation(result.data)
             } else if (result.hasException()) {
-                Utils.showErrorMessage(context, R.string.translate, result.exception, false)
+                Utils.showErrorMessage(context, R.string.action_translate, result.exception, false)
             }
         }
     }
@@ -1030,11 +1030,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 val locale = Locale(lang)
                 itemView.translateContainer.visibility = View.VISIBLE
                 if (translation != null) {
-                    itemView.translateLabel.text = context.getString(R.string.translation)
+                    itemView.translateLabel.text = context.getString(R.string.label_translation)
                     itemView.translateResult.visibility = View.VISIBLE
                     itemView.translateResult.text = translation.text
                 } else {
-                    itemView.translateLabel.text = context.getString(R.string.translate_from_language,
+                    itemView.translateLabel.text = context.getString(R.string.label_translate_from_language,
                             locale.displayLanguage)
                     itemView.translateResult.visibility = View.GONE
                 }

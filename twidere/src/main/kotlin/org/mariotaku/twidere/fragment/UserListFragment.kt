@@ -189,10 +189,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             val followItem = menu.findItem(R.id.follow)
             if (isFollowing) {
                 followItem.setIcon(R.drawable.ic_action_cancel)
-                followItem.setTitle(R.string.unsubscribe)
+                followItem.setTitle(R.string.action_unsubscribe)
             } else {
                 followItem.setIcon(R.drawable.ic_action_add)
-                followItem.setTitle(R.string.subscribe)
+                followItem.setTitle(R.string.action_subscribe)
             }
             val extensionsIntent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER_LIST)
             extensionsIntent.setExtrasClassLoader(activity.classLoader)

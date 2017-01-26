@@ -775,16 +775,10 @@ public final class Utils implements Constants {
         } else if (te.getErrorCode() > 0) {
             final String msg = StatusCodeMessageUtils.getTwitterErrorMessage(context, te.getErrorCode());
             return getErrorMessage(context, action, msg != null ? msg : trimLineBreak(te.getMessage()));
-        } else if (te.getCause() instanceof SSLException) {
-            final String msg = te.getCause().getMessage();
-            if (msg != null && msg.contains("!="))
-                return getErrorMessage(context, action, context.getString(R.string.ssl_error));
-            else
-                return getErrorMessage(context, action, context.getString(R.string.message_network_error));
         } else if (te.getCause() instanceof IOException)
             return getErrorMessage(context, action, context.getString(R.string.message_network_error));
         else if (te.getCause() instanceof JSONException)
-            return getErrorMessage(context, action, context.getString(R.string.api_data_corrupted));
+            return getErrorMessage(context, action, context.getString(R.string.message_api_data_corrupted));
         else
             return getErrorMessage(context, action, trimLineBreak(te.getMessage()));
     }
@@ -1085,15 +1079,6 @@ public final class Utils implements Constants {
                 } else if (!TextUtils.isEmpty(te.getErrorMessage())) {
                     message = context.getString(R.string.error_message_with_action, action,
                             trimLineBreak(te.getErrorMessage()));
-                } else if (te.getCause() instanceof SSLException) {
-                    final String msg = te.getCause().getMessage();
-                    if (msg != null && msg.contains("!=")) {
-                        message = context.getString(R.string.error_message_with_action, action,
-                                context.getString(R.string.ssl_error));
-                    } else {
-                        message = context.getString(R.string.error_message_with_action, action,
-                                context.getString(R.string.message_network_error));
-                    }
                 } else if (te.getCause() instanceof IOException) {
                     message = context.getString(R.string.error_message_with_action, action,
                             context.getString(R.string.message_network_error));

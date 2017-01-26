@@ -438,7 +438,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
             if (editText.length() == 0 && !textChanged) {
                 val activity = activity
                 if (!navigateBackPressed) {
-                    Toast.makeText(activity, R.string.press_again_to_close, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, R.string.message_toast_press_again_to_close, Toast.LENGTH_SHORT).show()
                     editText.removeCallbacks(backTimeoutRunnable)
                     editText.postDelayed(backTimeoutRunnable, 2000)
                     navigateBackPressed = true

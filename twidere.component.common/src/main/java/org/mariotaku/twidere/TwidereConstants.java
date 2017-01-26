@@ -253,8 +253,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String METADATA_KEY_EXTENSION_VERSION_STATUS_SHORTENER = "org.mariotaku.twidere.extension.version.status_shortener";
     String METADATA_KEY_EXTENSION_VERSION_MEDIA_UPLOADER = "org.mariotaku.twidere.extension.version.media_uploader";
 
-    String METADATA_KEY_PLUS_SERVICE_SIGN_IN_LABEL = "org.mariotaku.twidere.plus_service.sign_in_label";
-
     char SEPARATOR_PERMISSION = '|';
     String SEPARATOR_PERMISSION_REGEX = "\\" + SEPARATOR_PERMISSION;
 

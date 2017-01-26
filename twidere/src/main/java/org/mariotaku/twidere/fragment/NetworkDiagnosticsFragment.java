@@ -357,7 +357,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
     }
 
     private void diagStart() {
-        mStartDiagnosticsButton.setText(R.string.please_wait);
+        mStartDiagnosticsButton.setText(R.string.message_please_wait);
         mStartDiagnosticsButton.setEnabled(false);
     }
 

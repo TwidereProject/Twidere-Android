@@ -447,7 +447,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             super.afterExecute(handler, result)
             if (result.data != null) {
                 getUserInfo()
-                Toast.makeText(activity, R.string.profile_banner_image_updated, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.message_toast_profile_banner_image_updated, Toast.LENGTH_SHORT).show()
             } else {
                 Utils.showErrorMessage(activity, R.string.action_removing_profile_banner_image,
                         result.exception, true)

@@ -32,7 +32,7 @@ class ProgressDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = ProgressDialog(activity)
-        dialog.setMessage(arguments?.getString(EXTRA_MESSAGE) ?: getString(R.string.please_wait))
+        dialog.setMessage(arguments?.getString(EXTRA_MESSAGE) ?: getString(R.string.message_please_wait))
         return dialog
     }
 

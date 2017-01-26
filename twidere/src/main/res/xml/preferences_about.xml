@@ -26,8 +26,8 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="cat_translate"
-        android:title="@string/translate">
-        <Preference android:title="@string/translate">
+        android:title="@string/preference_title_translate">
+        <Preference android:title="@string/preference_title_translate">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="http://crowdin.net/project/twidere"/>

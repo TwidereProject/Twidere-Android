@@ -12,7 +12,7 @@
     <item
         android:id="@+id/add_user_submenu"
         android:icon="@drawable/ic_action_add"
-        android:title="@string/add"
+        android:title="@string/action_add"
         app:showAsAction="always">
         <menu>
             <item

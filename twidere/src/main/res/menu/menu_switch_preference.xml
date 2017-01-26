@@ -6,6 +6,6 @@
         android:id="@id/toggle"
         app:actionLayout="@layout/action_item_switch"
         app:showAsAction="always"
-        android:title="@string/toggle"/>
+        android:title="@string/action_toggle"/>
 
 </menu>

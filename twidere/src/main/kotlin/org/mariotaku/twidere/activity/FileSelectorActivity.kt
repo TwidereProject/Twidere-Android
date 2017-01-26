@@ -98,7 +98,7 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
 
     private fun finishWithDeniedMessage() {
         if (isFinishing) return
-        Toast.makeText(this, R.string.select_file_no_storage_permission_message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.message_toast_select_file_no_storage_permission, Toast.LENGTH_SHORT).show()
         finish()
     }
 

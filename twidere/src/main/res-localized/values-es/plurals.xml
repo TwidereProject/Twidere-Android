@@ -19,8 +19,8 @@
     <item quantity="other">¿Eliminar usuarios <xliff:g id="count">%1$d</xliff:g> de la lista "<xliff:g id="list">%2$s</xliff:g>\"?</item>
   </plurals>
   <plurals name="N_new_statuses">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> tweet nuevo</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> tweets nuevos</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> tuit nuevo</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> tuits nuevos</item>
   </plurals>
   <plurals name="N_new_mentions">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> mención nueva</item>
@@ -39,16 +39,16 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> medios</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
-    <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet por día)</item>
-    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweets por día)</item>
+    <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tuit al día)</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tuits al día)</item>
   </plurals>
   <plurals name="N_others">
     <item quantity="one">otro</item>
     <item quantity="other">otros <xliff:g id="count">%d</xliff:g></item>
   </plurals>
   <plurals name="N_statuses">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> tweet</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> tweets</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> tuit</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> tuits</item>
   </plurals>
   <plurals name="N_favorites">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> favorito</item>

@@ -41,7 +41,7 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
     override fun afterExecute(handler: ResultHandler?, result: SingleResponse<ParcelableUser>?) {
         super.afterExecute(handler, result)
         if (result!!.hasData()) {
-            Utils.showOkMessage(context, R.string.profile_banner_image_updated, false)
+            Utils.showOkMessage(context, R.string.message_toast_profile_banner_image_updated, false)
             mBus.post(ProfileUpdatedEvent(result.data!!))
         } else {
             Utils.showErrorMessage(context, R.string.action_updating_profile_banner_image, result.exception,

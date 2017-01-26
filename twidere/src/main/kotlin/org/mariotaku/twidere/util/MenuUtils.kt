@@ -320,7 +320,7 @@ object MenuUtils {
             R.id.copy_url -> {
                 val uri = LinkCreator.getStatusWebLink(status)
                 ClipboardUtils.setText(context, uri.toString())
-                Utils.showOkMessage(context, R.string.link_copied_to_clipboard, false)
+                Utils.showOkMessage(context, R.string.message_toast_link_copied_to_clipboard, false)
             }
             else -> {
                 if (item.intent != null) {

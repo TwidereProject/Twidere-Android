@@ -44,7 +44,7 @@
         <item
             android:id="@id/accounts"
             android:icon="@drawable/ic_action_accounts"
-            android:title="@string/accounts"/>
+            android:title="@string/title_accounts"/>
         <item
             android:id="@id/drafts"
             android:icon="@drawable/ic_action_draft"

@@ -40,7 +40,7 @@ class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChan
     private var helper: NyanSurfaceHelper? = null
 
     override fun onLongClick(v: View): Boolean {
-        Toast.makeText(this, R.string.nyan_sakamoto, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.message_toast_nyan_sakamoto, Toast.LENGTH_SHORT).show()
         return true
     }
 
@@ -91,7 +91,7 @@ class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChan
             }
         }
         if (showToast) {
-            Toast.makeText(this, R.string.livewp_daydream_enabled_message, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.message_toast_livewp_daydream_enabled_message, Toast.LENGTH_SHORT).show()
         }
     }
 

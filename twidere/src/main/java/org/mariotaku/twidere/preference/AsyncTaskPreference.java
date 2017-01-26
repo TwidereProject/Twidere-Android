@@ -84,7 +84,7 @@ public abstract class AsyncTaskPreference extends Preference {
             if (mProgress.isShowing()) {
                 mProgress.dismiss();
             }
-            mProgress.setMessage(mContext.getString(R.string.please_wait));
+            mProgress.setMessage(mContext.getString(R.string.message_please_wait));
             mProgress.setCancelable(false);
             mProgress.show();
         }

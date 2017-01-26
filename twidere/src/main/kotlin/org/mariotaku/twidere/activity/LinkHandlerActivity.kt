@@ -318,10 +318,10 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setTitle(R.string.title_following)
             }
             LINK_ID_USER_BLOCKS -> {
-                setTitle(R.string.blocked_users)
+                setTitle(R.string.title_blocked_users)
             }
             LINK_ID_MUTES_USERS -> {
-                setTitle(R.string.twitter_muted_users)
+                setTitle(R.string.action_twitter_muted_users)
             }
             LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
                 setTitle(R.string.direct_messages)
@@ -379,7 +379,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 setSubtitle(uri.getQueryParameter(QUERY_PARAM_QUERY))
             }
             LINK_ID_ACCOUNTS -> {
-                setTitle(R.string.accounts)
+                setTitle(R.string.title_accounts)
             }
             LINK_ID_DRAFTS -> {
                 setTitle(R.string.title_drafts)

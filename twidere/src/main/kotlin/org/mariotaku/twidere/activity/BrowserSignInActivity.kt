@@ -189,13 +189,8 @@ class BrowserSignInActivity : BaseActivity() {
     }
 
     internal class GetRequestTokenTask(activity: BrowserSignInActivity) : AsyncTask<Any, Any, SingleResponse<OAuthToken>>() {
-        private val activityRef: WeakReference<BrowserSignInActivity>
-        private val apiConfig: CustomAPIConfig
-
-        init {
-            activityRef = WeakReference(activity)
-            apiConfig = activity.intent.getParcelableExtra(EXTRA_API_CONFIG)
-        }
+        private val activityRef: WeakReference<BrowserSignInActivity> = WeakReference(activity)
+        private val apiConfig: CustomAPIConfig = activity.intent.getParcelableExtra(EXTRA_API_CONFIG)
 
         override fun doInBackground(vararg params: Any): SingleResponse<OAuthToken> {
             val activity = activityRef.get() ?: return SingleResponse(exception = InterruptedException())
@@ -228,7 +223,7 @@ class BrowserSignInActivity : BaseActivity() {
                     Log.w(LOGTAG, "Exception while browser sign in", result.exception)
                 }
                 if (!activity.isFinishing) {
-                    Toast.makeText(activity, R.string.error_occurred, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
                     activity.finish()
                 }
             }
