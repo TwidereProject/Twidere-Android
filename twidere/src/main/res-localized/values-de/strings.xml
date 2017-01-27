@@ -71,6 +71,7 @@
   <string name="action_reporting_for_spam">als Spam melden</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Wiederherstellen</string>
+  <string name="action_retry">Wiederholen</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">Retweet</string>
   <string name="action_retweeting">Retweete</string>
@@ -185,7 +186,10 @@
   <string name="app_name">Twidere</string>
   <string name="app_restart_confirm">Twidere wird zum Übernehmen der Einstellungen neustarten.</string>
   <string name="appearance">Aussehen</string>
+  <string name="auth_type_basic">Basic</string>
   <string name="auth_type_oauth">OAuth</string>
+  <string name="auth_type_twip_o">twip O Mode</string>
+  <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Automatisch aktualisieren</string>
   <string name="background">Hintergrund</string>
   <string name="bandwidth_saving_mode">Bandbreiten-Spar-Modus</string>
@@ -483,6 +487,7 @@
   <string name="message_toast_already_logged_in">Du bist schon eingeloggt.</string>
   <string name="message_toast_cannot_get_location">Ort konnte nicht gefunden werden.</string>
   <string name="message_toast_compose_write_storage_no_permission">Es ist eine Berechtigung erforderlich, um die aufgenommenen Fotos/Videos zu löschen</string>
+  <string name="message_toast_error_occurred">Ein Fehler ist aufgetreten, versuche es erneut</string>
   <string name="message_toast_link_copied_to_clipboard">Link in die Zwischenablage kopiert</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ich hab ein kleines Geschenk für dich in den Systemeinstellungen versteckt :)</string>
   <string name="message_toast_login_verification_failed">Login-Verifizierung fehlgeschlagen.</string>
@@ -800,6 +805,7 @@
   <string name="title_about">Über</string>
   <string name="title_accounts">Konten</string>
   <string name="title_block_user"><xliff:g id="name">%s </xliff:g> blockieren</string>
+  <string name="title_blocked_users">Blockierte Benutzer</string>
   <string name="title_browser_sign_in">Browseranmeldung</string>
   <string name="title_compose">Neuer Tweet</string>
   <string name="title_dialog_sync_connect_to">Verbinden mit&#8230;</string>

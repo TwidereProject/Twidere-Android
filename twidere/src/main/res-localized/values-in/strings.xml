@@ -184,7 +184,9 @@
   <string name="app_restart_confirm">Twidere akan memulai ulang untuk menerapkan pengaturan.</string>
   <string name="appearance">Tampilan</string>
   <string name="auth_type_basic">Dasar</string>
+  <string name="auth_type_oauth">OAuth</string>
   <string name="auth_type_twip_o">Mode twip O</string>
+  <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">Refresh otomatis</string>
   <string name="background">Latarbelakang</string>
   <string name="bandwidth_saving_mode">Mode hemat bandwidth</string>

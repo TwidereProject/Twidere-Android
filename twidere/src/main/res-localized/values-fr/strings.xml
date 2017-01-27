@@ -6,6 +6,7 @@
   <string name="account_delete_confirm_title">Supprimer le compte</string>
   <string name="account_options">Options du compte</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <string name="action_accept_friend_request">Accepter</string>
   <string name="action_accept_permission_request">Accepter</string>
