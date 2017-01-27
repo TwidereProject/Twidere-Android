@@ -170,7 +170,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             }
             REQUEST_BROWSER_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    doBrowserLogin(data)
+                    handleBrowserLoginResult(data)
                 }
             }
         }
@@ -226,7 +226,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                     editUsername.text = null
                     editPassword.text = null
                 }
-                doLogin()
+                if (apiConfig.credentialsType == Credentials.Type.OAUTH) {
+                    doBrowserLogin()
+                } else {
+                    doLogin()
+                }
             }
             passwordSignIn -> {
                 executeAfterFragmentResumed { fragment ->
@@ -309,7 +313,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }
     }
 
-    internal fun openBrowserLogin(): Boolean {
+    internal fun doBrowserLogin(): Boolean {
         if (apiConfig.credentialsType != Credentials.Type.OAUTH || signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
             return true
         val intent = Intent(this, BrowserSignInActivity::class.java)
@@ -321,10 +325,6 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
     internal fun doLogin() {
         if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING) {
             signInTask!!.cancel(true)
-        }
-        if (apiConfig.credentialsType == Credentials.Type.OAUTH) {
-            openBrowserLogin()
-            return
         }
 
         val username = editUsername.text.toString()
@@ -435,7 +435,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }
     }
 
-    private fun doBrowserLogin(intent: Intent?) {
+    private fun handleBrowserLoginResult(intent: Intent?) {
         if (intent == null) return
         if (signInTask?.status == AsyncTask.Status.RUNNING) {
             signInTask?.cancel(true)

@@ -99,20 +99,24 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     return Endpoint(endpointUrl)
 }
 
-fun <T> Credentials.newMicroBlogInstance(context: Context,
-                                         twitterExtraQueries: Boolean = true,
-                                         extraRequestParams: Map<String, String>? = null,
-                                         cls: Class<T>): T {
+fun <T> Credentials.newMicroBlogInstance(
+        context: Context,
+        twitterExtraQueries: Boolean = true,
+        extraRequestParams: Map<String, String>? = null,
+        cls: Class<T>
+): T {
     return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(),
             twitterExtraQueries, extraRequestParams, cls)
 }
 
-fun <T> newMicroBlogInstance(context: Context,
-                             endpoint: Endpoint,
-                             auth: Authorization,
-                             twitterExtraQueries: Boolean = true,
-                             extraRequestParams: Map<String, String>? = null,
-                             cls: Class<T>): T {
+fun <T> newMicroBlogInstance(
+        context: Context,
+        endpoint: Endpoint,
+        auth: Authorization,
+        twitterExtraQueries: Boolean = true,
+        extraRequestParams: Map<String, String>? = null,
+        cls: Class<T>
+): T {
     val factory = RestAPIFactory<MicroBlogException>()
     val userAgent: String
     if (auth is OAuthAuthorization) {

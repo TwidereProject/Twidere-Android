@@ -34,10 +34,13 @@ val AccountExtras.official: Boolean
 
 
 @JvmOverloads
-fun <T> AccountDetails.newMicroBlogInstance(context: Context, includeEntities: Boolean = true, includeRetweets: Boolean = true,
-                                            extraRequestParams: Map<String, String>? =
-                                            MicroBlogAPIFactory.getExtraParams(type, includeEntities, includeRetweets),
-                                            cls: Class<T>): T {
+fun <T> AccountDetails.newMicroBlogInstance(
+        context: Context,
+        includeEntities: Boolean = true,
+        includeRetweets: Boolean = true,
+        extraRequestParams: Map<String, String>? = MicroBlogAPIFactory.getExtraParams(type, includeEntities, includeRetweets),
+        cls: Class<T>
+): T {
     return credentials.newMicroBlogInstance(context, type == AccountType.TWITTER, extraRequestParams, cls)
 }
 
