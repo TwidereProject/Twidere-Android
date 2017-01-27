@@ -13,6 +13,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Customizable Material Design
 * Night mode
 * Customizable tabs
+* Tweet with photos, videos and GIFs
 * Powerful mute filters
 * Multiple account support
 * Custom API settings
@@ -73,7 +74,7 @@ Buy me a ~~bread~~ [game](http://steamcommunity.com/id/mariotaku/wishlist) or an
 
 
     /*
-     * Copyright (C) 2012-2016 Mariotaku Lee <mariotaku.lee@gmail.com>
+     * Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
      *
      * This program is free software: you can redistribute it and/or modify
      * it under the terms of the GNU General Public License as published by
