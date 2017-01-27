@@ -18,7 +18,7 @@
   <string name="action_adding_member">アカウントの追加</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">ブロック</string>
-  <string name="action_blocking">ブロック</string>
+  <string name="action_blocking">ブロック中</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">リツイートの取り消し</string>
   <string name="action_cancelling_like">いいねを取り消す</string>
@@ -34,7 +34,7 @@
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">編集</string>
   <string name="action_favorite">お気に入り</string>
-  <string name="action_favoriting">いいねする</string>
+  <string name="action_favoriting">お気に入りへ登録</string>
   <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
   <string name="action_filter_import_from_muted_users">ミュート済みユーザーをインポートする</string>
   <string name="action_finish">終了</string>
@@ -108,7 +108,7 @@
   <string name="action_unblocking">ブロックを解除</string>
   <string name="action_undo_like">いいねを取り消し</string>
   <string name="action_unfavorite">お気に入りから削除</string>
-  <string name="action_unfavoriting">いいねから削除</string>
+  <string name="action_unfavoriting">お気に入りから削除</string>
   <string name="action_unfollow">フォローを解除</string>
   <string name="action_unfollowing">フォローの解除</string>
   <string name="action_unmute">ミュートの解除</string>
@@ -318,7 +318,7 @@
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere を支援して追加機能を取得する</string>
-  <string name="extra_features_pack_description">または、拡張機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう。</string>
+  <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう</string>
   <!-- Enhanced (paid) features title -->
   <string name="extra_features_restore_purchase_hint">追加拡張パックを購入済みの場合、「復元」から購入情報を復元してください。</string>
   <string name="fab_visible">フローティングアクションボタン</string>
@@ -495,12 +495,12 @@
   <string name="message_toast_select_file_no_storage_permission">ストレージアクセス許可は、ファイルを選択するために必要とされます。</string>
   <string name="message_toast_share_media_no_storage_permission">一部のアプリケーションでは、メディアを共有するためのストレージのアクセス許可が要求されます。</string>
   <string name="message_toast_status_deleted">ツイートを削除しました。</string>
-  <string name="message_toast_status_favorited">ツイートをいいねしました。</string>
+  <string name="message_toast_status_favorited">ツイートをお気に入りに登録しました</string>
   <string name="message_toast_status_like_removed">いいねを取り消しました</string>
   <string name="message_toast_status_liked">ツイートをいいねしました</string>
   <string name="message_toast_status_retweeted">リツイートしました。</string>
   <string name="message_toast_status_saved_to_draft">ツイートは下書きに保存されました</string>
-  <string name="message_toast_status_unfavorited">ツイートのいいねを解除しました。</string>
+  <string name="message_toast_status_unfavorited">ツイートのお気に入りを解除しました</string>
   <string name="message_toast_status_updated">ツイートを送信しました。</string>
   <string name="message_toast_user_filters_removed">フィルターリストから削除しました。</string>
   <string name="message_toast_users_filters_added">複数のユーザーをフィルターリストに追加する。</string>
