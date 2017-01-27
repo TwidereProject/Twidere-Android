@@ -413,19 +413,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> Geblokkeerd.</string>
   <string name="message_direct_message_deleted">Bericht verwijderd.</string>
   <string name="message_direct_message_sent">Bericht verzonden.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Netwerkfout</string>
   <string name="message_please_wait">Een ogenblik geduld.</string>
-  <string name="message_retweet_cancelled">Retweet geannuleerd.</string>
-  <string name="message_search_deleted">Zoekopdracht verwijderd.</string>
-  <string name="message_search_name_deleted">Zoekopdracht \"<xliff:g id="name">%s</xliff:g>\" verwijderd.</string>
-  <string name="message_search_name_saved">Zoekopdracht \"<xliff:g id="name">%s</xliff:g>\" opgeslagen.</string>
-  <string name="message_search_saved">Zoekopdracht opgeslagen.</string>
-  <string name="message_status_deleted">Tweet verwijderd.</string>
-  <string name="message_status_favorited">Tweet opgeslagen in favorieten.</string>
-  <string name="message_status_retweeted">Retweeted.</string>
-  <string name="message_status_unfavorited">Tweet verwijderd uit favorieten.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -433,9 +421,11 @@
   <string name="message_toast_accepted_users_follow_request">Volgaanvraag van <xliff:g id="user">%s</xliff:g> aanvaard.</string>
   <string name="message_toast_cannot_get_location">Kan uw locatie niet verkrijgen.</string>
   <string name="message_toast_error_occurred">Er is iets misgegaan, probeer opnieuw.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Link naar plakbord gekopieerd</string>
   <string name="message_toast_livewp_daydream_enabled_message">Hier is een klein cadeautje voor je, vind het in je systeeminstellingen :)</string>
   <string name="message_toast_login_verification_failed">Inlogcontrole is mislukt.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Geen account</string>
   <string name="message_toast_no_account_selected">Geen account geselecteerd.</string>
   <string name="message_toast_press_again_to_close">Druk opnieuw om af te sluiten</string>
@@ -447,10 +437,6 @@
   <string name="message_toast_status_saved_to_draft">Tweet opgeslagen als ontwerp.</string>
   <string name="message_toast_status_updated">Tweet verzonden.</string>
   <string name="message_toast_wrong_api_key">Onjuiste API url of consument sleutel/geheim, controleer ze nog een keer.</string>
-  <string name="message_user_muted">Gebruiker toegevoegd aan filter lijst. Je zult geen tweets van deze gebruiker in je tijdlijn/vermeldingen zien.</string>
-  <string name="message_user_unmuted">Gebeuiker verwijderd van filter lijst.</string>
-  <string name="message_users_muted">Gebruiker toegevoegd aan filter lijst. Je zult geen tweets van deze gebruiker in je tijdlijn/vermeldingen zien.</string>
-  <string name="more">Meer</string>
   <string name="multi_select">Select meerdere</string>
   <string name="mute_user">Demp <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g> dempen? Je ziet niet langer meer tweets van deze gebruiker, maar je volgt de gebruiker nog wel.</string>

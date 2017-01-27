@@ -413,19 +413,7 @@
   <string name="message_blocked_user">บล็อค <xliff:g id="user">%s</xliff:g> แล้ว</string>
   <string name="message_direct_message_deleted">ลบข้อความส่วนตัวแล้ว</string>
   <string name="message_direct_message_sent">ส่งข้อความส่วนตัวแล้ว</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">ข้อผิดพลาดของเครือข่าย</string>
   <string name="message_please_wait">กรุณารอ</string>
-  <string name="message_retweet_cancelled">ยกเลิกรีทวีตแล้ว</string>
-  <string name="message_search_deleted">ลบการค้นหาแล้ว</string>
-  <string name="message_search_name_deleted">ลบการค้นหา \"<xliff:g id="name">%s</xliff:g>\" แล้ว</string>
-  <string name="message_search_name_saved">บันทึกการค้นหา \"<xliff:g id="name">%s</xliff:g>\" แล้ว</string>
-  <string name="message_search_saved">บันทึกการค้นหาแล้ว</string>
-  <string name="message_status_deleted">ข้อความถูกลบแล้ว</string>
-  <string name="message_status_favorited">ถูกใจทวีตแล้ว</string>
-  <string name="message_status_retweeted">รีทวีตแล้ว</string>
-  <string name="message_status_unfavorited">เลิกถูกใจทวีตแล้ว</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -434,9 +422,11 @@
   <string name="message_toast_already_logged_in">คุณเข้าสู่ระบบอยู่แล้ว</string>
   <string name="message_toast_cannot_get_location">ไม่สามารถรับที่อยู่ได้</string>
   <string name="message_toast_error_occurred">มีข้อผิดพลาดเกิดขึ้น กรุณาลองอีกครั้ง</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">คัดลอกลิงค์ไปยังคลิปบอร์ดแล้ว</string>
   <string name="message_toast_livewp_daydream_enabled_message">เรามีของขวัญเล็กๆ น้อยๆ จะให้คุณ หาให้เจอในการตั้งค่าระบบ :)</string>
   <string name="message_toast_login_verification_failed">การยืนยันการล็อคอินล้มเหลว</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">ไม่มีแอคเคาท์</string>
   <string name="message_toast_no_account_selected">ไม่มีบัญชีผู้ใช้ที่เลือกไว้</string>
   <string name="message_toast_press_again_to_close">กดอีกครั้งเพื่อปิด</string>
@@ -448,10 +438,6 @@
   <string name="message_toast_status_saved_to_draft">บันทึกข้อความร่างแล้ว</string>
   <string name="message_toast_status_updated">ข้อความถูกส่งแล้ว</string>
   <string name="message_toast_wrong_api_key">API URL หรือ consumer key/secret ไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง</string>
-  <string name="message_user_muted">เพิ่มผู้ใช้นี้ลงในรายการฟิลเตอร์แล้ว คุณจะไม่เห็นทวีตใดๆจากผู้ใช้นี้ในหน้าหลักและหน้าเมนชั่น</string>
-  <string name="message_user_unmuted">ลบผู้ใช้ออกจากรายการฟิลเตอร์แล้ว</string>
-  <string name="message_users_muted">เพิ่มผู้ใช้เหล่านี้ลงในรายการฟิลเตอร์แล้ว คุณจะไม่เห็นทวีตใดๆจากผู้ใช้เหล่านี้ในหน้าหลักและหน้าเมนชั่น.</string>
-  <string name="more">เพิ่มเติม</string>
   <string name="multi_select">เลือกหลายอัน</string>
   <string name="mute_user">มิ้ว <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">มิ้ว <xliff:g id="name">%s</xliff:g> หรือไม่ คุณจะไม่ได้เห็นทวีตจากผู้ใช้รายนี้ในขณะที่คุณยังติดตามผู้ใช้รายนี้อยู่</string>

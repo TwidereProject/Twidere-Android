@@ -413,19 +413,7 @@
   <string name="message_blocked_user">Заблоковано <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_direct_message_deleted">Видалено пряме повідомлення.</string>
   <string name="message_direct_message_sent">Надіслано пряме повідомлення.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Помилка мережі.</string>
   <string name="message_please_wait">Зачекайте.</string>
-  <string name="message_retweet_cancelled">Ретвіт скасовано.</string>
-  <string name="message_search_deleted">Пошук вилучено.</string>
-  <string name="message_search_name_deleted">Пошук \"<xliff:g id="name">%s</xliff:g>\" вилучено.</string>
-  <string name="message_search_name_saved">Пошук \"<xliff:g id="name">%s</xliff:g>\" збережено.</string>
-  <string name="message_search_saved">Пошук збережено.</string>
-  <string name="message_status_deleted">Твіт видалено.</string>
-  <string name="message_status_favorited">Твіт обрано.</string>
-  <string name="message_status_retweeted">Ретвітнуто.</string>
-  <string name="message_status_unfavorited">Твіт видалено з обраних.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -434,9 +422,11 @@
   <string name="message_toast_already_logged_in">Ви вже увійшли.</string>
   <string name="message_toast_cannot_get_location">Не вдається отримати ваше розташування.</string>
   <string name="message_toast_error_occurred">Трапилася помилка, спробуйте ще раз.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Посилання скопійовано до буферу обміну</string>
   <string name="message_toast_livewp_daydream_enabled_message">Тут є маленький дарунок для вас, знайдіть його у ваших системних налаштуваннях :)</string>
   <string name="message_toast_login_verification_failed">Не вдалося підтвердити вхід.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Немає профілю</string>
   <string name="message_toast_no_account_selected">Не вибрано жодного профілю.</string>
   <string name="message_toast_press_again_to_close">Натисни ще раз, щоб закрити</string>
@@ -448,10 +438,6 @@
   <string name="message_toast_status_saved_to_draft">Твіт збережено як чернетку.</string>
   <string name="message_toast_status_updated">Твіт надіслано.</string>
   <string name="message_toast_wrong_api_key">Невірне API url або ключ користувача, перевірте їх ще раз.</string>
-  <string name="message_user_muted">Користувач доданий в фільтри. Тепер ви не побачите його твітів в стрічці/згадках.</string>
-  <string name="message_user_unmuted">Користувач виключений з фільтру.</string>
-  <string name="message_users_muted">Користувачі додані в фільтр. Тепер ви не побачите їхніх твітів в стрічці / згадках.</string>
-  <string name="more">Більше</string>
   <string name="multi_select">Множинний вибір</string>
   <string name="mute_user">Ігнорувати <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Ігнорувати <xliff:g id="name">%s</xliff:g>? Ви більше не побачите твітів користувача, але все одно будете його читачем.</string>

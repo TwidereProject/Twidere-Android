@@ -327,19 +327,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> blokiran/-a.</string>
   <string name="message_direct_message_deleted">Izravna poruka obrisana.</string>
   <string name="message_direct_message_sent">Izravna poruka poslana.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Greška mreže.</string>
   <string name="message_please_wait">Molimo pričekajte.</string>
-  <string name="message_retweet_cancelled">Retweet poništen.</string>
-  <string name="message_search_deleted">Pretraga obrisana.</string>
-  <string name="message_search_name_deleted">Pretraga \"<xliff:g id="name">%s</xliff:g>\" obrisana.</string>
-  <string name="message_search_name_saved">Pretraga \"<xliff:g id="name">%s</xliff:g>\" spremljena.</string>
-  <string name="message_search_saved">Pretraga spremljena.</string>
-  <string name="message_status_deleted">Tweet obrisan.</string>
-  <string name="message_status_favorited">Tweet označen kao favorit.</string>
-  <string name="message_status_retweeted">Retweetano.</string>
-  <string name="message_status_unfavorited">Tweet više nije favorit.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -348,7 +336,9 @@
   <string name="message_toast_already_logged_in">Već ste prijavljeni.</string>
   <string name="message_toast_cannot_get_location">Nije moguće dobiti lokaciju.</string>
   <string name="message_toast_error_occurred">Došlo je do greške, pokušajte ponovno.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_livewp_daydream_enabled_message">Evo malog poklona za vas, potražite ga u sistemskim postavkama :)</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Nema računa</string>
   <string name="message_toast_no_account_selected">Račun nije odabran.</string>
   <string name="message_toast_press_again_to_close">Pritisnite ponovno za izlaz</string>
@@ -357,10 +347,6 @@
   <string name="message_toast_status_saved_to_draft">Tweet spremljen u skicu.</string>
   <string name="message_toast_status_updated">Tweet poslan.</string>
   <string name="message_toast_wrong_api_key">Nevaljani API url ili korisnički ključ/tajna, provjerite ih opet.</string>
-  <string name="message_user_muted">Korisnik dodan na listu s filtrima. Nećete vidjeti tweetove ovog korisnika na svom polaznom timelineu/listi spominjanja.</string>
-  <string name="message_user_unmuted">Korisnik uklonjen s liste s filtrima.</string>
-  <string name="message_users_muted">Korisnici dodani na listu s filtrima. Nećete vidjeti tweetove ovih korisnika na svom polaznom timelineu/listi spominjanja.</string>
-  <string name="more">Više</string>
   <string name="multi_select">Višestruki odabir</string>
   <string name="mute_user">Utišaj <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Ušutjeti <xliff:g id="name">%s</xliff:g>? Više nećete vidjeti tweetove od ovog korisnika sve dok ga pratite.</string>

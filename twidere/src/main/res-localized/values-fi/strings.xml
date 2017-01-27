@@ -402,21 +402,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> estetty.</string>
   <string name="message_direct_message_deleted">Yksityisviesti poistettu.</string>
   <string name="message_direct_message_sent">Yksityisviesti lähetetty.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Verkkovirhe.</string>
   <string name="message_please_wait">Odota.</string>
-  <string name="message_retweet_cancelled">Uudelleentwiittaus peruttu.</string>
-  <string name="message_search_deleted">Haku poistettu.</string>
-  <string name="message_search_name_deleted">Haku \"<xliff:g id="name">%s</xliff:g>\" poistettu.</string>
-  <string name="message_search_name_saved">Haku \"<xliff:g id="name">%s</xliff:g>\" tallennettu.</string>
-  <string name="message_search_saved">Haku tallennettu.</string>
-  <string name="message_status_deleted">Twiitti poistettu.</string>
-  <string name="message_status_favorited">Twiitti lisätty suosikkeihin.</string>
-  <string name="message_status_like_removed">Tykkäys poistettu.</string>
-  <string name="message_status_liked">Tykkäsit twiitistä.</string>
-  <string name="message_status_retweeted">Uudelleentwiitattu.</string>
-  <string name="message_status_unfavorited">Twiitti poistettu suosikeista.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -424,9 +410,11 @@
   <string name="message_toast_accepted_users_follow_request">Käyttäjän <xliff:g id="user">%s</xliff:g> seurauspyyntö on hyväksytty.</string>
   <string name="message_toast_cannot_get_location">Sijaintiasi ei voida määrittää.</string>
   <string name="message_toast_error_occurred">Tapahtui virhe, yritä uudelleen.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Linkki on kopioitu leikepöydälle</string>
   <string name="message_toast_livewp_daydream_enabled_message">Sinulle on pieni yllätys. Etsi se järjestelmäasetuksista :)</string>
   <string name="message_toast_login_verification_failed">Kirjautumisen varmennuspyyntö epäonnistui.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Ei tiliä</string>
   <string name="message_toast_no_account_selected">Tiliä ei ole valittu.</string>
   <string name="message_toast_press_again_to_close">Paina uudelleen sulkeaksesi</string>
@@ -438,10 +426,6 @@
   <string name="message_toast_status_saved_to_draft">Twiitti tallennettu luonnoksiin.</string>
   <string name="message_toast_status_updated">Twiitti lähetetty.</string>
   <string name="message_toast_wrong_api_key">Virheellinen API-osoite tai kulutusavain/salaus. Tarkista vielä kyseiset kentät.</string>
-  <string name="message_user_muted">Käyttäjä lisättiin suodatusluetteloon. Et näe tämän käyttäjän twiittejä omalla aikajanallasi tai maininnoissasi.</string>
-  <string name="message_user_unmuted">Tämä käyttäjä poistettiin suodatuslistasta.</string>
-  <string name="message_users_muted">Käyttäjät lisättiin suodatusluetteloon. Et näe näiden käyttäjien twiittejä omalla aikajanallasi tai maininnoissasi.</string>
-  <string name="more">Lisää</string>
   <string name="multi_select">Monivalinta</string>
   <string name="mute_user">Hiljennä <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Hiljennetäänkö <xliff:g id="name">%s</xliff:g>? Et näe enää twiittejä tältä käyttäjältä, vaikka seuraatkin häntä.</string>

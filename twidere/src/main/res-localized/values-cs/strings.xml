@@ -193,9 +193,6 @@
   <string name="long_click_to_open_menu">Dlouhým stiskem zobrazíte menu</string>
   <string name="mark_as_sensitive">Označit jako citlivé</string>
   <string name="members">Členové</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Chyba sítě.</string>
   <string name="message_please_wait">Počkejte prosím.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -204,12 +201,13 @@
   <string name="message_toast_already_logged_in">Jste již přihlášeni.</string>
   <string name="message_toast_cannot_get_location">Nelze získat vaši polohu.</string>
   <string name="message_toast_error_occurred">Stala se chyba, zkuste to, prosím, znovu.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Odkaz zkopírován do schránky</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Žádný účet</string>
   <string name="message_toast_no_account_selected">Nevybrán žádný účet.</string>
   <string name="message_toast_saved_to_gallery">Uloženo do galerie.</string>
   <string name="message_toast_status_updated">Tweet odeslán.</string>
-  <string name="more">Více</string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweetován</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s </xliff:g> (<xliff:g id="nickname">%2$s </xliff:g>)</string>
   <string name="navigation">Navigace</string>

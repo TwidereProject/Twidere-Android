@@ -23,12 +23,12 @@
   <!-- Enhanced (paid) features title -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <!-- Next item (tweet, user etc.) -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->

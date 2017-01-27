@@ -865,7 +865,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 if (userRelationship == null) return true
                 if (userRelationship.filtering) {
                     DataStoreUtils.removeFromFilter(context, listOf(user))
-                    Utils.showInfoMessage(activity, R.string.message_user_unmuted, false)
+                    Utils.showInfoMessage(activity, R.string.message_toast_user_filters_removed, false)
                     getFriendship()
                 } else {
                     AddUserFilterDialogFragment.show(fragmentManager, user)

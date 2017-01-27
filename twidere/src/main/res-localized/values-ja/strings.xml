@@ -454,25 +454,10 @@
   <string name="message_direct_message_deleted">DMを削除しました。</string>
   <string name="message_direct_message_sent">DMを送信しました。</string>
   <string name="message_error_invalid_account">いくつかのアカウントのデータが破損しています。Twidere のクラッシュを防ぐために、これらのアカウントを削除します。</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <string name="message_extra_features_not_purchased">追加機能パックは未購入です。</string>
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">ネットワークエラー</string>
   <string name="message_permission_request_compose_location">位置情報の権限は、ツイートに位置情報を追加するために必要です。</string>
   <string name="message_permission_request_save_media">ストレージの権限は、Twidere がメディアを保存するために必要です。</string>
   <string name="message_permission_request_share_media">ストレージの権限は、Twidere がメディアを他のアプリに共有するために必要です。</string>
   <string name="message_please_wait">しばらくお待ちください…</string>
-  <string name="message_retweet_cancelled">リツイートをキャンセルしました。</string>
-  <string name="message_search_deleted">検索を削除しました。</string>
-  <string name="message_search_name_deleted">検索 \"<xliff:g id="name">%s</xliff:g>\"を削除しました。</string>
-  <string name="message_search_name_saved">検索 \"<xliff:g id="name">%s</xliff:g>\"を保存しました。</string>
-  <string name="message_search_saved">検索を保存しました。</string>
-  <string name="message_status_deleted">ツイートを削除しました。</string>
-  <string name="message_status_favorited">ツイートをいいねしました。</string>
-  <string name="message_status_like_removed">いいねを取り消しました</string>
-  <string name="message_status_liked">ツイートをいいねしました</string>
-  <string name="message_status_retweeted">リツイートしました。</string>
-  <string name="message_status_unfavorited">ツイートのいいねを解除しました。</string>
   <string name="message_sync_data_connect_hint">データを同期するために Twidere をネットワークストレージに接続する</string>
   <string name="message_sync_data_synced_with_name">Twidere が <xliff:g example="ownCloud" id="name">%s</xliff:g> と同期されました</string>
   <string name="message_sync_disconnect_from_name_confirm"><xliff:g example="ownCloud" id="name">%s</xliff:g> から切断しますか？</string>
@@ -482,34 +467,47 @@
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
-  <string name="message_toast_accepted_users_follow_request"><xliff:g id="user">%s</xliff:g>さんのフォローリクエストを許可しました</string>
+  <string name="message_toast_accepted_users_follow_request"><xliff:g id="user">%s</xliff:g>さんのフォローリクエストを許可しました。</string>
   <string name="message_toast_added_to_filter">フィルターに追加しました</string>
   <string name="message_toast_already_logged_in">あなたはすでにログインしています</string>
   <string name="message_toast_cannot_get_location">位置情報が取得できません</string>
   <string name="message_toast_compose_write_storage_no_permission">撮影した写真/動画を削除するには権限が必要です</string>
   <string name="message_toast_error_occurred">エラーが発生しました。もう一度お試しください。</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_toast_extra_features_not_purchased">追加機能パックは未購入です。</string>
   <string name="message_toast_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
   <string name="message_toast_livewp_daydream_enabled_message">システム設定のどこかにプレゼントを隠したぜ!</string>
   <string name="message_toast_login_verification_failed">ログイン認証に失敗しました</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">ネットワークエラー</string>
   <string name="message_toast_no_account">アカウント無し</string>
   <string name="message_toast_no_account_selected">アカウントが選択されていません</string>
   <string name="message_toast_no_user_selected">ユーザを選択してください</string>
   <string name="message_toast_press_again_to_close">閉じるにはもう一度押して下さい</string>
   <string name="message_toast_profile_banner_image_updated">ヘッダー画像を更新しました</string>
+  <string name="message_toast_retweet_cancelled">リツイートをキャンセルしました。</string>
   <string name="message_toast_save_media_no_storage_permission">ストレージアクセス許可は、メディアを保存するために必要とされます。</string>
   <string name="message_toast_saved_to_gallery">ギャラリーに保存しました</string>
+  <string name="message_toast_search_deleted">検索を削除しました。</string>
+  <string name="message_toast_search_name_deleted">検索 \"<xliff:g id="name">%s</xliff:g>\"を削除しました。</string>
+  <string name="message_toast_search_name_saved">検索 \"<xliff:g id="name">%s</xliff:g>\"を保存しました。</string>
+  <string name="message_toast_search_saved">検索を保存しました。</string>
   <string name="message_toast_select_file_no_storage_permission">ストレージアクセス許可は、ファイルを選択するために必要とされます。</string>
   <string name="message_toast_share_media_no_storage_permission">一部のアプリケーションでは、メディアを共有するためのストレージのアクセス許可が要求されます。</string>
+  <string name="message_toast_status_deleted">ツイートを削除しました。</string>
+  <string name="message_toast_status_favorited">ツイートをいいねしました。</string>
+  <string name="message_toast_status_like_removed">いいねを取り消しました</string>
+  <string name="message_toast_status_liked">ツイートをいいねしました</string>
+  <string name="message_toast_status_retweeted">リツイートしました。</string>
   <string name="message_toast_status_saved_to_draft">ツイートは下書きに保存されました</string>
+  <string name="message_toast_status_unfavorited">ツイートのいいねを解除しました。</string>
   <string name="message_toast_status_updated">ツイートを送信しました。</string>
+  <string name="message_toast_user_filters_removed">フィルターリストから削除しました。</string>
+  <string name="message_toast_users_filters_added">複数のユーザーをフィルターリストに追加する。</string>
   <string name="message_toast_wrong_api_key">API URL または consumer key/secret が正しくありません。もう一度確認してください。</string>
-  <string name="message_toast_wrong_username_password">間違ったユーザー名/パスワードです</string>
-  <string name="message_user_muted">このユーザーをフィルターリストに追加します。ホーム / つながり でこのユーザーのツイートを非表示にします。</string>
-  <string name="message_user_unmuted">フィルターリストから削除しました。</string>
-  <string name="message_users_muted">複数のユーザーをフィルターリストに追加する。ホーム / つながり にこのユーザーのツイートを非表示にする。</string>
+  <string name="message_toast_wrong_username_password">間違ったユーザー名/パスワードです。</string>
   <string name="message_video_too_long">動画が長すぎます</string>
   <string name="message_video_too_short">動画が短すぎます</string>
-  <string name="more">設定</string>
   <string name="multi_select">複数選択</string>
   <string name="mute_user"><xliff:g id="name">%s</xliff:g>さんをミュート</string>
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>さんをミュートしますか？フォローしたままで、このユーザーのツイートが表示されなくなります。</string>

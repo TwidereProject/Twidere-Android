@@ -399,19 +399,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> blokkolva.</string>
   <string name="message_direct_message_deleted">Privát üzenet törölve.</string>
   <string name="message_direct_message_sent">Privát üzenet elküldve.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Hálózati hiba.</string>
   <string name="message_please_wait">Kérem várjon.</string>
-  <string name="message_retweet_cancelled">Retweet megszakítva.</string>
-  <string name="message_search_deleted">Keresés törölve.</string>
-  <string name="message_search_name_deleted">A keresés, \"<xliff:g id="name">%s</xliff:g>\" törölve.</string>
-  <string name="message_search_name_saved">A  keresés, \"<xliff:g id="name">%s</xliff:g>\" elmentve.</string>
-  <string name="message_search_saved">Keresés elmentve.</string>
-  <string name="message_status_deleted">Tweet törölve.</string>
-  <string name="message_status_favorited">Tweet kedvencnek bejelölve.</string>
-  <string name="message_status_retweeted">Retweetelve.</string>
-  <string name="message_status_unfavorited">Tweet kedvencek közül eltávolítva.</string>
   <string name="message_sync_last_synced_time">Utolsó szinkronizálás: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -421,9 +409,12 @@
   <string name="message_toast_already_logged_in">Ön már be van jelentkezve.</string>
   <string name="message_toast_cannot_get_location">Helyzet meghatározása sikertelen.</string>
   <string name="message_toast_error_occurred">Hiba lépett fel, kérem próbálja újra.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Link a vágólapra másolva</string>
   <string name="message_toast_livewp_daydream_enabled_message">Íme egy kis ajándék neked, keresd a rendszer beállításokban :)</string>
   <string name="message_toast_login_verification_failed">Bejelentkezési ellenőrzés sikertelen.</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">Hálózati hiba</string>
   <string name="message_toast_no_account">Nincs fiók</string>
   <string name="message_toast_no_account_selected">Nincs fiók kiválasztva.</string>
   <string name="message_toast_press_again_to_close">Nyomd meg újra a bezáráshoz</string>
@@ -435,10 +426,6 @@
   <string name="message_toast_status_updated">Tweet elküldve.</string>
   <string name="message_toast_wrong_api_key">Érvénytelen API hivatkozás, vagy felhasználói kulcs/jelszó. Kérlek ellenőrizd őket újra.</string>
   <string name="message_toast_wrong_username_password">Nem megfelelő felhasználónév/jelszó</string>
-  <string name="message_user_muted">A felhasználó hozzá lett adva a szűrőlistához. Nem fogsz több tweetet látni ettől a felhasználótól az idővonaladon/említési listádon.</string>
-  <string name="message_user_unmuted">Ez a felhasználó el lett távolítva a szűrőlistáról.</string>
-  <string name="message_users_muted">A felhasználók hozzá lettek adva a szűrőlistához. Nem fogsz több tweetet látni ezektől a felhasználóktól az idővonaladon/említési listádon.</string>
-  <string name="more">Tovább</string>
   <string name="multi_select">Többszörös kijelölés</string>
   <string name="mute_user"><xliff:g id="name">%s</xliff:g> némítása</string>
   <string name="mute_user_confirm_message">Némítsam <xliff:g id="name">%s</xliff:g> felhasználót? Nem látod többé a tweetjeit, de továbbra is követője leszel .</string>

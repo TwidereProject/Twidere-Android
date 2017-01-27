@@ -454,25 +454,10 @@
   <string name="message_direct_message_deleted">Direktnachricht gelöscht.</string>
   <string name="message_direct_message_sent">Direktnachricht gesendet.</string>
   <string name="message_error_invalid_account">Einige Kontodaten sind beschädigt, Twidere entfernt diese Konten um einen Absturz zu verhindern.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <string name="message_extra_features_not_purchased">Erweiterte Funktionen nicht gekauft</string>
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Netzwerkfehler</string>
   <string name="message_permission_request_compose_location">Twidere benötigt die Standortberechtigung um in Tweets den Standort hinzuzufügen.</string>
   <string name="message_permission_request_save_media">Twidere benötigt die Speicherberechtigung um Medien zu speichern.</string>
   <string name="message_permission_request_share_media">Twidere benötigt die Speicherberechtigung um Medien mit anderen Apps zu teilen.</string>
   <string name="message_please_wait">Bitte warten.</string>
-  <string name="message_retweet_cancelled">Retweet abgebrochen.</string>
-  <string name="message_search_deleted">Suche gelöscht.</string>
-  <string name="message_search_name_deleted">Suche \"<xliff:g id="name">%s</xliff:g>\" gelöscht.</string>
-  <string name="message_search_name_saved">Suche \"<xliff:g id="name">%s</xliff:g>\" gespeichert.</string>
-  <string name="message_search_saved">Suche gespeichert.</string>
-  <string name="message_status_deleted">Tweet gelöscht.</string>
-  <string name="message_status_favorited">Tweet favorisiert.</string>
-  <string name="message_status_like_removed">Like entfernt.</string>
-  <string name="message_status_liked">Tweet gefällt.</string>
-  <string name="message_status_retweeted">Retweeted.</string>
-  <string name="message_status_unfavorited">Tweet nicht favorisiert.</string>
   <string name="message_sync_data_connect_hint">Twidere mit einem Netzwerkspeicher zur Datensynchronisation verbinden</string>
   <string name="message_sync_data_synced_with_name">Twidere ist jetzt mit <xliff:g example="ownCloud" id="name">%s </xliff:g> synchronisiert</string>
   <string name="message_sync_disconnect_from_name_confirm">Trennen von <xliff:g example="ownCloud" id="name">%s </xliff:g>?</string>
@@ -488,28 +473,41 @@
   <string name="message_toast_cannot_get_location">Ort konnte nicht gefunden werden.</string>
   <string name="message_toast_compose_write_storage_no_permission">Es ist eine Berechtigung erforderlich, um die aufgenommenen Fotos/Videos zu löschen</string>
   <string name="message_toast_error_occurred">Ein Fehler ist aufgetreten, versuche es erneut</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_toast_extra_features_not_purchased">Erweiterte Funktionen nicht gekauft</string>
   <string name="message_toast_link_copied_to_clipboard">Link in die Zwischenablage kopiert</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ich hab ein kleines Geschenk für dich in den Systemeinstellungen versteckt :)</string>
   <string name="message_toast_login_verification_failed">Login-Verifizierung fehlgeschlagen.</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">Netzwerkfehler</string>
   <string name="message_toast_no_account">Kein Konto</string>
   <string name="message_toast_no_account_selected">Kein Konto ausgewählt.</string>
   <string name="message_toast_no_user_selected">Kein Benutzer ausgewählt</string>
   <string name="message_toast_press_again_to_close">Drücke zum Schließen nochmal</string>
   <string name="message_toast_profile_banner_image_updated">Profilbanner aktualisiert.</string>
+  <string name="message_toast_retweet_cancelled">Retweet abgebrochen.</string>
   <string name="message_toast_save_media_no_storage_permission">Speicherberechtigung notwendig um Bilder und Videos zu speichern.</string>
   <string name="message_toast_saved_to_gallery">In der Galerie gespeichert.</string>
+  <string name="message_toast_search_deleted">Suche gelöscht.</string>
+  <string name="message_toast_search_name_deleted">Suche \"<xliff:g id="name">%s</xliff:g>\" gelöscht.</string>
+  <string name="message_toast_search_name_saved">Suche \"<xliff:g id="name">%s</xliff:g>\" gespeichert.</string>
+  <string name="message_toast_search_saved">Suche gespeichert.</string>
   <string name="message_toast_select_file_no_storage_permission">Speicherberechtigung notwendig um Dateien auszuwählen.</string>
   <string name="message_toast_share_media_no_storage_permission">Die Anwendung erfordert die Speicherberechtigung, um Medien zu teilen.</string>
+  <string name="message_toast_status_deleted">Tweet gelöscht.</string>
+  <string name="message_toast_status_favorited">Tweet favorisiert.</string>
+  <string name="message_toast_status_like_removed">Like entfernt.</string>
+  <string name="message_toast_status_liked">Tweet gefällt.</string>
+  <string name="message_toast_status_retweeted">Retweeted.</string>
   <string name="message_toast_status_saved_to_draft">Tweet als Entwurf gespeichert.</string>
+  <string name="message_toast_status_unfavorited">Tweet nicht favorisiert.</string>
   <string name="message_toast_status_updated">Tweet gesendet.</string>
+  <string name="message_toast_user_filters_removed">Der Benutzer wurde von der Filterliste entfernt.</string>
+  <string name="message_toast_users_filters_added">Benutzer wurden zur Filterliste hinzugefügt. Du wirst keine Tweets von diesen Benutzern in Deiner Timeline-/Erwähnungsliste sehen.</string>
   <string name="message_toast_wrong_api_key">Inkorrekte API URL oder Consumer Key/Secret. Bitte nochmals prüfen.</string>
   <string name="message_toast_wrong_username_password">Falscher Benutzername/Passwort</string>
-  <string name="message_user_muted">Dieser Benutzer wurde zur Filterliste hinzugefügt. Du wirst keine Tweets von diesem Benutzer in Deiner Timeline-/Erwähnungen-Liste sehen.</string>
-  <string name="message_user_unmuted">Der Benutzer wurde von der Filterliste entfernt.</string>
-  <string name="message_users_muted">Benutzer wurden zur Filterliste hinzugefügt. Du wirst keine Tweets von diesen Benutzern in Deiner Timeline-/Erwähnungsliste sehen.</string>
   <string name="message_video_too_long">Das Video ist zu lang</string>
   <string name="message_video_too_short">Das Video ist zu kurz</string>
-  <string name="more">Mehr</string>
   <string name="multi_select">Mehrfachauswahl</string>
   <string name="mute_user"><xliff:g id="name">%s</xliff:g> stummschalten</string>
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g> stummschalten? Du wirst keine weiteren Tweets von diesem Nutzer sehen, ihm aber weiter folgen.</string>

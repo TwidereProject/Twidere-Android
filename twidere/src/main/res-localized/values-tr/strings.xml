@@ -412,19 +412,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> engelledi.</string>
   <string name="message_direct_message_deleted">Doğrudan mesaj silindi.</string>
   <string name="message_direct_message_sent">Doğrudan mesaj gönderildi.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Bağlantı hatası.</string>
   <string name="message_please_wait">Lütfen bekleyin.</string>
-  <string name="message_retweet_cancelled">Retweet iptal edildi.</string>
-  <string name="message_search_deleted">Arama silindi.</string>
-  <string name="message_search_name_deleted">Arama \"<xliff:g id="name">%s</xliff:g>\" silindi.</string>
-  <string name="message_search_name_saved">Arama \"<xliff:g id="name">%s</xliff:g>\" kaydedildi.</string>
-  <string name="message_search_saved">Arama kaydedildi.</string>
-  <string name="message_status_deleted">Tweet silindi.</string>
-  <string name="message_status_favorited">Tweet favorilere eklendi.</string>
-  <string name="message_status_retweeted">Retweet\'lendi.</string>
-  <string name="message_status_unfavorited">Tweet favorilerden çıkarıldı.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -433,9 +421,11 @@
   <string name="message_toast_already_logged_in">Zaten giriş yaptınız</string>
   <string name="message_toast_cannot_get_location">Konumunuz alınamıyor.</string>
   <string name="message_toast_error_occurred">Bir hata oluştu, lütfen daha sonra deneyin.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Bağlantı panoya kopyalandı</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ayarlar\'a girerek sizin için hazırladığımız küçük hediyeyi bulabilirsiniz :)</string>
   <string name="message_toast_login_verification_failed">Giriş doğrulaması başarısız oldu.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Hesap yok</string>
   <string name="message_toast_no_account_selected">Hesap seçilmedi.</string>
   <string name="message_toast_press_again_to_close">Kapatmak için tekrar basın</string>
@@ -447,10 +437,6 @@
   <string name="message_toast_status_saved_to_draft">Tweet taslaklara kaydedildi.</string>
   <string name="message_toast_status_updated">Tweet gönderildi.</string>
   <string name="message_toast_wrong_api_key">Geçersiz API url\'si veya müşteri anahtar\'ı/gizli\'si, Lütfen onları tekrar kontrol edin.</string>
-  <string name="message_user_muted">Bu kullanıcı filtre listesine eklendi. Bu kullanıcıdan gelen tweetleri zaman akışınızda  /bahsedenler listenizde görmeyeceksiniz.</string>
-  <string name="message_user_unmuted">Bu kullanıcı filtreden çıkarılmış.</string>
-  <string name="message_users_muted">Kullanıcılar filtre listesine eklendi. Bu kullanıcılardan gelen tweetleri zaman akışınızda  /bahsedenler listenizde görmeyeceksiniz.</string>
-  <string name="more">Dahası</string>
   <string name="multi_select">Çoklu seçim</string>
   <string name="mute_user">Sustur <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>\'i sessize al? Artık zaman akışınızda bu kişinin Tweetlerini görmeyeceksiniz.</string>

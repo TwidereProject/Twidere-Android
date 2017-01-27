@@ -81,13 +81,13 @@
   <string name="label_data_provider">Πάροχος βάσης δεδομένων του Twidere</string>
   <string name="label_refresh_service">Ανανέωση υπηρεσίας</string>
   <string name="label_streaming_service">Υπηρεσία streaming</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
   <string name="message_toast_already_logged_in">Είσαι ήδη συνδεδεμένος.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">Δεν έχει επιλεγεί λογαριασμός.</string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> και κάποιος άλλος έκανε ρετουϊτ</string>
   <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> και <xliff:g id="retweet_count">%2$d</xliff:g> άλλοι έκαναν ρετουϊτ</string>

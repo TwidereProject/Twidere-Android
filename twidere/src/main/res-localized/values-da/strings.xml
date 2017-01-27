@@ -145,8 +145,6 @@
   <string name="media_uploader_default">Standard (Twitter)</string>
   <string name="mention_this_user">Nævn denne bruger</string>
   <string name="mention_user_name">Nævn <xliff:g id="name">%1$s</xliff:g></string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
   <string name="message_please_wait">Vent venligst.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -155,12 +153,10 @@
   <string name="message_toast_already_logged_in">Du har allerede logget ud.</string>
   <string name="message_toast_cannot_get_location">Kunne ikke finde din placering.</string>
   <string name="message_toast_error_occurred">En fejl opstod, prøv igen.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">Ingen konto valgt.</string>
   <string name="message_toast_saved_to_gallery">Gemte til galleri.</string>
-  <string name="message_user_muted">Tilføjede denne bruger til filterliste. Du vil ikke se tweets fra denne bruger i din hjem tidslinje/nævnelsesliste.</string>
-  <string name="message_user_unmuted">Fjernede denne bruger fra filterliste.</string>
-  <string name="message_users_muted">Tilføjede brugere til filterliste. Du vil ikke se tweets fra denne bruger i din hjem tidslinje/nævnelsesliste.</string>
-  <string name="more">Mere</string>
   <string name="name_and_another_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og en anden retweetede</string>
   <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre retweetede</string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweetede</string>

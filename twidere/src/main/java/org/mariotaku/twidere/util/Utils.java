@@ -98,7 +98,6 @@ import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.sqliteqb.library.Selectable;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -141,8 +140,6 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.SSLException;
 
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
@@ -785,7 +782,7 @@ public final class Utils implements Constants {
             final String msg = StatusCodeMessageUtils.getTwitterErrorMessage(context, te.getErrorCode());
             return getErrorMessage(context, action, msg != null ? msg : trimLineBreak(te.getMessage()));
         } else if (te.getCause() instanceof IOException)
-            return getErrorMessage(context, action, context.getString(R.string.message_network_error));
+            return getErrorMessage(context, action, context.getString(R.string.message_toast_network_error));
         else if (te.getCause() instanceof JSONException)
             return getErrorMessage(context, action, context.getString(R.string.message_api_data_corrupted));
         else
@@ -1090,7 +1087,7 @@ public final class Utils implements Constants {
                             trimLineBreak(te.getErrorMessage()));
                 } else if (te.getCause() instanceof IOException) {
                     message = context.getString(R.string.error_message_with_action, action,
-                            context.getString(R.string.message_network_error));
+                            context.getString(R.string.message_toast_network_error));
                 } else {
                     message = context.getString(R.string.error_message_with_action, action,
                             trimLineBreak(te.getMessage()));

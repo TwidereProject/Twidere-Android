@@ -90,18 +90,15 @@
   <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
   <string name="label_refresh_service">Refresh service</string>
   <string name="label_streaming_service">Streaming service</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_status_favorited">Tweet favourited.</string>
-  <string name="message_status_unfavorited">Tweet favourited.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
   <string name="message_toast_already_logged_in">You have already logged in.</string>
   <string name="message_toast_error_occurred">An error occurred, please try again.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">No account selected.</string>
-  <string name="more">More</string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> retweeted</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="notification_light_color">Light Colour</string>

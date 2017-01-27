@@ -405,19 +405,7 @@
   <string name="message_blocked_user">S\'ha bloquejat <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_direct_message_deleted">S\'ha esborrat el missatge directe.</string>
   <string name="message_direct_message_sent">S\'ha enviat el missatge directe.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Hi ha un error de connexió.</string>
   <string name="message_please_wait">Espereu, si us plau.</string>
-  <string name="message_retweet_cancelled">S\'ha canceŀlat la repiulada.</string>
-  <string name="message_search_deleted">La cerca ha estat esborrada.</string>
-  <string name="message_search_name_deleted">La cerca «<xliff:g id="name">%s</xliff:g>» ha estat esborrada.</string>
-  <string name="message_search_name_saved">La cerca «<xliff:g id="name">%s</xliff:g>» ha estat desada.</string>
-  <string name="message_search_saved">Cerca desada.</string>
-  <string name="message_status_deleted">S\'ha esborrat la piulada.</string>
-  <string name="message_status_favorited">S\'ha marcat com a preferida la piulada.</string>
-  <string name="message_status_retweeted">S\'ha repiulat.</string>
-  <string name="message_status_unfavorited">S\'ha desmarcat com a preferida la piulada.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -426,9 +414,11 @@
   <string name="message_toast_already_logged_in">Ja esteu identificat.</string>
   <string name="message_toast_cannot_get_location">No es pot obtenir la teva localització.</string>
   <string name="message_toast_error_occurred">S\'ha produit un error, proveu-ho de nou.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">S\'ha copiat l\'enllaç al porta-retalls</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí teniu un regalet. El podreu trobar en els paràmetres del vostre sistema :)</string>
   <string name="message_toast_login_verification_failed">La verificació de l\'inici de sessió ha fallat.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Sense compte</string>
   <string name="message_toast_no_account_selected">No hi ha cap compte seleccionat.</string>
   <string name="message_toast_press_again_to_close">Torna a prémer per tancar</string>
@@ -440,10 +430,6 @@
   <string name="message_toast_status_saved_to_draft">S\'ha desat la piulada com a esborrany.</string>
   <string name="message_toast_status_updated">S\'ha enviat la piulada.</string>
   <string name="message_toast_wrong_api_key">La URL de l\'API o bé el parell clau de consumidor - secret és incorrecte. Si us plau, comproveu-los.</string>
-  <string name="message_user_muted">S\'ha afegit aquest usuari a la llista de filtrat. No veureu les piulades d\'aquest usuari a la vostra cronologia ni a la llista de mencions.</string>
-  <string name="message_user_unmuted">Usuari eliminat de la llista de filtres.</string>
-  <string name="message_users_muted">S\'han afegit usuaris a la llista de filtrat. No veureu les piulades d\'aquests usuaris a la vostra cronologia ni a la llista de mencions.</string>
-  <string name="more">Més</string>
   <string name="multi_select">Selecció múltiple</string>
   <string name="mute_user">Silenciar <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Emmudeix <xliff:g id="name">%s</xliff:g>? No veureu pas més piulades d\'aquest usuari mentre continueu de seguir aquest usuari.</string>

@@ -406,19 +406,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqueado.</string>
   <string name="message_direct_message_deleted">Mensaxe directa eliminada.</string>
   <string name="message_direct_message_sent">Mensaxe directa enviada.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Erro de rede.</string>
   <string name="message_please_wait">Agarda, por favor.</string>
-  <string name="message_retweet_cancelled">Rechouchío cancelado.</string>
-  <string name="message_search_deleted">Busca eliminada.</string>
-  <string name="message_search_name_deleted">Eliminada a busca \"<xliff:g id="name">%s</xliff:g>\".</string>
-  <string name="message_search_name_saved">Gardada a busca \"<xliff:g id="name">%s</xliff:g>\".</string>
-  <string name="message_search_saved">Busca gardada.</string>
-  <string name="message_status_deleted">Chío eliminado.</string>
-  <string name="message_status_favorited">Chío marcado favorito.</string>
-  <string name="message_status_retweeted">Rechouchiado.</string>
-  <string name="message_status_unfavorited">Chío desmarcado favorito.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -427,9 +415,11 @@
   <string name="message_toast_already_logged_in">Xa tes iniciada sesión.</string>
   <string name="message_toast_cannot_get_location">Non se conseguiu acadar a túa localización.</string>
   <string name="message_toast_error_occurred">Ocorreu un erro, por favor, téntao de novo.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Ligazón copiada no portapapeis</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí hai un pequeno agasallo para ti, atópao na configuración do sistema :)</string>
   <string name="message_toast_login_verification_failed">Fallou a verificación de entrada.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Sen conta</string>
   <string name="message_toast_no_account_selected">Sen conta seleccionada.</string>
   <string name="message_toast_press_again_to_close">Preme outra vez para pechar</string>
@@ -441,10 +431,6 @@
   <string name="message_toast_status_saved_to_draft">Chío gardado en borradores.</string>
   <string name="message_toast_status_updated">Chío enviado.</string>
   <string name="message_toast_wrong_api_key">URL da API ou clave cliente incorrectas, por favor comproba de novo.</string>
-  <string name="message_user_muted">Usuario engadido á lista filtrada. Non verás os chíos deste usuario na túa liña de tempo ou mencións.</string>
-  <string name="message_user_unmuted">Usuario eliminado da lista filtrada.</string>
-  <string name="message_users_muted">Usuarios engadidos á lista filtrada. Non verás os chíos destes usuarios na túa liña de tempo ou mencións.</string>
-  <string name="more">Máis</string>
   <string name="multi_select">Selección múltiple</string>
   <string name="mute_user">Silenciar a <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Silenciar a <xliff:g id="name">%s</xliff:g>? Non verás máis chíos deste usuario pero mantés o seguimento.</string>

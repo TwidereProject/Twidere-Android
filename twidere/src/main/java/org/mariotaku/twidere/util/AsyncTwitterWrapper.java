@@ -30,7 +30,6 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.SimpleArrayMap;
-import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -53,7 +52,6 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate;
 import org.mariotaku.sqliteqb.library.Expression;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
@@ -809,7 +807,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<SavedSearch> result) {
             if (result.hasData()) {
-                final String message = context.getString(R.string.message_search_name_saved, result.getData().getQuery());
+                final String message = context.getString(R.string.message_toast_search_name_saved, result.getData().getQuery());
                 Utils.showOkMessage(context, message, false);
             } else if (result.hasException()) {
                 final Exception exception = result.getException();
@@ -1188,7 +1186,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                 tweetEvent.setAction(TweetEvent.Action.UNFAVORITE);
                 HotMobiLogger.getInstance(getContext()).log(mAccountKey, tweetEvent);
                 // END HotMobi
-                Utils.showInfoMessage(context, R.string.message_status_unfavorited, false);
+                Utils.showInfoMessage(context, R.string.message_toast_status_unfavorited, false);
             } else {
                 taskEvent.setSucceeded(false);
                 Utils.showErrorMessage(context, R.string.action_unfavoriting, result.getException(), true);
@@ -1225,7 +1223,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected void onPostExecute(final SingleResponse<SavedSearch> result) {
             if (result.hasData()) {
-                final String message = context.getString(R.string.message_search_name_deleted, result.getData().getQuery());
+                final String message = context.getString(R.string.message_toast_search_name_deleted, result.getData().getQuery());
                 Utils.showOkMessage(context, message, false);
                 getBus().post(new SavedSearchDestroyedEvent(mAccountKey, mSearchId));
             } else {

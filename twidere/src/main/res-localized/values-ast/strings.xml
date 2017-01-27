@@ -434,23 +434,10 @@
   <string name="message_direct_message_deleted">Desanicióse\'l mensaxe direutu.</string>
   <string name="message_direct_message_sent">Unvióse\'l mensaxe direutu.</string>
   <string name="message_error_invalid_account">Toyéronse dellos datos de la cuenta, agora Twidere desniciarálos pa evitar que casque.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Fallu de rede.</string>
   <string name="message_permission_request_compose_location">Twidere precisa\'l permisu d\'allugamientu p\'amestar l\'allugamientu a los tuits.</string>
   <string name="message_permission_request_save_media">Twidere precisa\'l permisu d\'almacenamientu pa guardar multimedia.</string>
   <string name="message_permission_request_share_media">Twidere precisa\'l permisu d\'almacenamientu pa compartir medios con delles aplicaciones.</string>
   <string name="message_please_wait">Espera, por favor.</string>
-  <string name="message_retweet_cancelled">Encaboxóse\'l retuit.</string>
-  <string name="message_search_deleted">Desanicióse la gueta.</string>
-  <string name="message_search_name_deleted">Desanicióse la gueta «<xliff:g id="name">%s</xliff:g>».</string>
-  <string name="message_search_name_saved">Guardóse la gueta «<xliff:g id="name">%s</xliff:g>».</string>
-  <string name="message_search_saved">Guardóse la gueta.</string>
-  <string name="message_status_deleted">Desanicióse\'l tuit.</string>
-  <string name="message_status_favorited">Marcóse\'l tuit como favoritu.</string>
-  <string name="message_status_like_removed">Desanicióse\'l préstame.</string>
-  <string name="message_status_retweeted">Retuitióse.</string>
-  <string name="message_status_unfavorited">Desmarcóse\'l tuit como favoritu.</string>
   <string name="message_sync_data_synced_with_name">Agora Twidere ta sincronizáu con <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -460,9 +447,12 @@
   <string name="message_toast_already_logged_in">Yá aniciesti sesión.</string>
   <string name="message_toast_cannot_get_location">Nun pue consiguise\'l to allugamientu.</string>
   <string name="message_toast_error_occurred">Asocedió un fallu. Téntalo de nueves, por favor.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">Copióse l\'enllaz al cartafueyu</string>
   <string name="message_toast_livewp_daydream_enabled_message">Equí hai un regalu pequeñu pa ti, alcuéntralu nos axustes del sistema :)</string>
   <string name="message_toast_login_verification_failed">Fallu na verificación del aniciu de sesión.</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">Fallu de rede</string>
   <string name="message_toast_no_account">Ensin cuentes</string>
   <string name="message_toast_no_account_selected">Nun s\'esbilló cuenta dala.</string>
   <string name="message_toast_no_user_selected">Nun s\'esbillaron usuarios</string>
@@ -476,10 +466,6 @@
   <string name="message_toast_status_updated">Unvióse\'l tuit.</string>
   <string name="message_toast_wrong_api_key">URL d\'API o clave/secretu de consumidor incorreutos. Compruébalos de nueves, por favor.</string>
   <string name="message_toast_wrong_username_password">Nome d\'usuariu/contraseña incorreutos</string>
-  <string name="message_user_muted">Amestóse esti usuariu al llistáu de peñera. Nun verás los sos tuits nel to llistáu de menciones/llinia temporal.</string>
-  <string name="message_user_unmuted">Desanicióse esti usuariu del llistáu de peñera.</string>
-  <string name="message_users_muted">Amestáronse los usuarios al llistáu de peñera. Nun verás los sos tuits nel to llistáu de menciones/llinia temporal.</string>
-  <string name="more">Más</string>
   <string name="multi_select">Esbilla múltiple</string>
   <string name="mute_user">Silenciar <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">¿Silenciar a <xliff:g id="name">%s</xliff:g>? Nun verás más los tuits d\'esti usuariu entrín teas siguiéndolu.</string>

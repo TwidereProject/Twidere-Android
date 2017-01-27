@@ -88,15 +88,14 @@
   <string name="lists">Senarai</string>
   <string name="media_uploader">Pemuat naik Media</string>
   <string name="media_uploader_default">Lalai (Twitter)</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
   <string name="message_please_wait">Sila tunggu.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">Tiada akaun dipilih.</string>
-  <string name="more">Lagi</string>
   <string name="network">Rangkaian</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="next_item">Selepas</string>

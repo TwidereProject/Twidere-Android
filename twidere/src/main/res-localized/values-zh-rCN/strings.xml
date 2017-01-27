@@ -299,7 +299,7 @@
   <string name="error_message_tweet_shorten_failed">推文缩短失败</string>
   <string name="error_message_tweet_shortener_not_found">未找到推文缩短扩展，它可能已经被删除</string>
   <string name="error_message_with_action">在 <xliff:g id="action">%1$s</xliff:g> 时发生问题：<xliff:g id="message">%2$s</xliff:g></string>
-  <string name="error_no_access_for_credentials">您的应用不能访问这个接口（启用了“强制使用不公开API”？）</string>
+  <string name="error_no_access_for_credentials">您的应用不能访问这个接口</string>
   <string name="error_no_dm_permission">没有私信权限。请检查您注册的 Twitter 应用的权限设置。</string>
   <string name="error_title_device_incompatible">不兼容的设备</string>
   <string name="error_too_many_photos_fanfou">饭否只能上传一张照片</string>
@@ -454,25 +454,10 @@
   <string name="message_direct_message_deleted">私信已删除</string>
   <string name="message_direct_message_sent">私信已发送</string>
   <string name="message_error_invalid_account">一些帐号数据已损坏，Twidere 将删除这些帐户以避免崩溃。</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <string name="message_extra_features_not_purchased">尚未购买增强功能</string>
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">网络错误</string>
   <string name="message_permission_request_compose_location">Twidere 需要权限来向推文添加位置</string>
   <string name="message_permission_request_save_media">Twidere 需要存储权限来保存媒体</string>
   <string name="message_permission_request_share_media">Twidere 需要存储权限来向一些应用分享媒体</string>
   <string name="message_please_wait">请稍等</string>
-  <string name="message_retweet_cancelled">转推已取消</string>
-  <string name="message_search_deleted">搜索已删除</string>
-  <string name="message_search_name_deleted">搜索 “<xliff:g id="name">%s</xliff:g>” 已删除</string>
-  <string name="message_search_name_saved">搜索 “<xliff:g id="name">%s</xliff:g>” 已保存</string>
-  <string name="message_search_saved">搜索已保存</string>
-  <string name="message_status_deleted">推文已删除</string>
-  <string name="message_status_favorited">推文已收藏</string>
-  <string name="message_status_like_removed">已取消喜欢了推文</string>
-  <string name="message_status_liked">已喜欢了推文</string>
-  <string name="message_status_retweeted">已转推</string>
-  <string name="message_status_unfavorited">推文已取消收藏</string>
   <string name="message_sync_data_connect_hint">将 Twidere 连接到网络存储来同步数据</string>
   <string name="message_sync_data_synced_with_name">Twidere 现在已经和 <xliff:g example="ownCloud" id="name">%s</xliff:g> 同步</string>
   <string name="message_sync_disconnect_from_name_confirm">从 <xliff:g example="ownCloud" id="name">%s</xliff:g> 断开连接？</string>
@@ -488,28 +473,41 @@
   <string name="message_toast_cannot_get_location">不能获得您的位置</string>
   <string name="message_toast_compose_write_storage_no_permission">需要权限来删除拍摄的照片或视频</string>
   <string name="message_toast_error_occurred">发生错误，请重试</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_toast_extra_features_not_purchased">尚未购买增强功能</string>
   <string name="message_toast_link_copied_to_clipboard">链接已复制到剪贴板</string>
   <string name="message_toast_livewp_daydream_enabled_message">我有一份小礼物给您，去系统设置看看吧 :)</string>
   <string name="message_toast_login_verification_failed">登录验证失败</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">网络错误</string>
   <string name="message_toast_no_account">没有帐号</string>
   <string name="message_toast_no_account_selected">没有选择帐号</string>
   <string name="message_toast_no_user_selected">没有选择用户</string>
   <string name="message_toast_press_again_to_close">再次按下以关闭</string>
   <string name="message_toast_profile_banner_image_updated">个人资料横幅图片已更新</string>
+  <string name="message_toast_retweet_cancelled">转推已取消</string>
   <string name="message_toast_save_media_no_storage_permission">需要存储访问权限来保存媒体</string>
   <string name="message_toast_saved_to_gallery">已保存到相册</string>
+  <string name="message_toast_search_deleted">搜索已删除</string>
+  <string name="message_toast_search_name_deleted">搜索 “<xliff:g id="name">%s</xliff:g>” 已删除</string>
+  <string name="message_toast_search_name_saved">搜索 “<xliff:g id="name">%s</xliff:g>” 已保存</string>
+  <string name="message_toast_search_saved">搜索已保存</string>
   <string name="message_toast_select_file_no_storage_permission">需要存储访问权限来选择文件</string>
   <string name="message_toast_share_media_no_storage_permission">一些应用程序需要存储权限分享媒体</string>
+  <string name="message_toast_status_deleted">推文已删除</string>
+  <string name="message_toast_status_favorited">推文已收藏</string>
+  <string name="message_toast_status_like_removed">已取消喜欢了推文</string>
+  <string name="message_toast_status_liked">已喜欢了推文</string>
+  <string name="message_toast_status_retweeted">已转推</string>
   <string name="message_toast_status_saved_to_draft">推文已经保存到草稿箱</string>
+  <string name="message_toast_status_unfavorited">推文已取消收藏</string>
   <string name="message_toast_status_updated">推文已发送</string>
+  <string name="message_toast_user_filters_removed">从过滤器列表中删除了这位用户</string>
+  <string name="message_toast_users_filters_added">你过滤了这些用户，你将不会在主页/提及中看到这些用户的推文</string>
   <string name="message_toast_wrong_api_key">API 设置不正确</string>
   <string name="message_toast_wrong_username_password">用户名/密码错误</string>
-  <string name="message_user_muted">您过滤了这位用户，您将不会在主页/提及中看到这位用户的推文</string>
-  <string name="message_user_unmuted">从过滤器列表中删除了这位用户</string>
-  <string name="message_users_muted">你过滤了这些用户，你将不会在主页/提及中看到这些用户的推文</string>
   <string name="message_video_too_long">视频太长</string>
   <string name="message_video_too_short">视频太短</string>
-  <string name="more">更多</string>
   <string name="multi_select">多选</string>
   <string name="mute_user">隐藏 <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">隐藏 <xliff:g id="name">%s</xliff:g> 吗？您将在保持关注这位用户的情况下，在首页看不到这位用户的推文。</string>

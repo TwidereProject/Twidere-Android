@@ -354,19 +354,7 @@
   <string name="message_blocked_user">Blokkerte <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_direct_message_deleted">Direktemelding slettet.</string>
   <string name="message_direct_message_sent">Direktemelding sendt.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Nettverksfeil.</string>
   <string name="message_please_wait">Vennligst vent.</string>
-  <string name="message_retweet_cancelled">Retweet avbrutt.</string>
-  <string name="message_search_deleted">Søk slettet.</string>
-  <string name="message_search_name_deleted">Søket «<xliff:g id="name">%s</xliff:g>» er slettet.</string>
-  <string name="message_search_name_saved">Søket «<xliff:g id="name">%s</xliff:g>» er lagret.</string>
-  <string name="message_search_saved">Søk lagret.</string>
-  <string name="message_status_deleted">Tweet slettet.</string>
-  <string name="message_status_favorited">Tweet favorittmarkert.</string>
-  <string name="message_status_retweeted">Retweetet.</string>
-  <string name="message_status_unfavorited">Fjernet tweetens favorittmarkering.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -375,7 +363,9 @@
   <string name="message_toast_already_logged_in">Du er allerede logget inn.</string>
   <string name="message_toast_cannot_get_location">Kan ikke finne din posisjon.</string>
   <string name="message_toast_error_occurred">Det oppstod en feil, prøv igjen.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_livewp_daydream_enabled_message">Her er en liten gave til deg, finn den i systeminnstillingene :)</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">Ingen konto</string>
   <string name="message_toast_no_account_selected">Ingen konto valgt.</string>
   <string name="message_toast_press_again_to_close">Trykk igjen for å lukke</string>
@@ -386,10 +376,6 @@
   <string name="message_toast_status_saved_to_draft">Tweet lagret til utkast.</string>
   <string name="message_toast_status_updated">Tweet sendt.</string>
   <string name="message_toast_wrong_api_key">Feil API-URL eller brukernøkkel/passord. Sjekk at de er riktig skrevet.</string>
-  <string name="message_user_muted">La brukeren til filtreringslisten. Du vil ikke se tweets fra denne brukeren på tidslinjen eller som omtalelser.</string>
-  <string name="message_user_unmuted">Fjernet brukeren fra filterlisten.</string>
-  <string name="message_users_muted">La brukerne til filtreringslisten. Du vil ikke se tweets fra disse brukerne på tidslinjen eller som omtalelser.</string>
-  <string name="more">Mer</string>
   <string name="multi_select">Flervalg</string>
   <string name="mute_user">Skjul <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Skjule <xliff:g id="name">%s</xliff:g>? Du vil ikke lenger se tweets fra denne brukeren men du fortsetter å følge den.</string>

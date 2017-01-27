@@ -409,19 +409,7 @@
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g>님을 차단했습니다.</string>
   <string name="message_direct_message_deleted">쪽지가 삭제되었습니다.</string>
   <string name="message_direct_message_sent">쪽지가 전송되었습니다.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">네트워크 오류입니다.</string>
   <string name="message_please_wait">기다려 주세요.</string>
-  <string name="message_retweet_cancelled">리트윗이 취소되었습니다.</string>
-  <string name="message_search_deleted">검색어가 삭제되었습니다.</string>
-  <string name="message_search_name_deleted">\"<xliff:g id="name">%s</xliff:g>\" 검색어가 삭제되었습니다.</string>
-  <string name="message_search_name_saved">\"<xliff:g id="name">%s</xliff:g>\" 검색어가 저장되었습니다.</string>
-  <string name="message_search_saved">검색어가 저장되었습니다.</string>
-  <string name="message_status_deleted">트윗이 삭제되었습니다.</string>
-  <string name="message_status_favorited">트윗이 관심글로 담겼습니다.</string>
-  <string name="message_status_retweeted">리트윗되었습니다.</string>
-  <string name="message_status_unfavorited">트윗이 관심글에서 제외되었습니다.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -431,9 +419,11 @@
   <string name="message_toast_already_logged_in">이미 로그인되어 있습니다.</string>
   <string name="message_toast_cannot_get_location">위치를 찾을 수 없습니다.</string>
   <string name="message_toast_error_occurred">오류가 발생했습니다. 다시 시도해 주십시오.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">링크가 클립보드로 복사되었습니다.</string>
   <string name="message_toast_livewp_daydream_enabled_message">작은 선물을 드립니다. 시스템 설정에서 찾아보세요 :)</string>
   <string name="message_toast_login_verification_failed">로그인 인증을 실패하였습니다.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account">계정 없음</string>
   <string name="message_toast_no_account_selected">계정이 선택되지 않았습니다.</string>
   <string name="message_toast_press_again_to_close">다시 한번 누르면 닫힙니다</string>
@@ -445,10 +435,6 @@
   <string name="message_toast_status_saved_to_draft">트윗이 보관함에 저장되었습니다.</string>
   <string name="message_toast_status_updated">트윗이 전송되었습니다.</string>
   <string name="message_toast_wrong_api_key">부정확한 APL 주소 또는 컨슈머 키/시크릿입니다. 다시 한 번 확인해 주세요.</string>
-  <string name="message_user_muted">이 사용자 필터 리스트에 추가했습니다. 당신의 홈 타임라인/멘션 리스트에서 이 유저의 트윗이 보이지 않게 됩니다.</string>
-  <string name="message_user_unmuted">이 사용자를 필터에서 제외하였습니다.</string>
-  <string name="message_users_muted">이 사용자들을 필터에 추가했습니다. 메인 타임라인과 멘션 목록에서 이 사용자의 트윗이 보이지 않게 됩니다.</string>
-  <string name="more">기타</string>
   <string name="multi_select">여러개 선택</string>
   <string name="mute_user"><xliff:g id="name">%s</xliff:g> 뮤트하기</string>
   <string name="mute_user_confirm_message"><xliff:g id="name">%s</xliff:g>를 뮤트하시겠습니까? 이 사용자를 계속 팔로우하면서 트윗은 보지 않으실 수 있습니다.</string>

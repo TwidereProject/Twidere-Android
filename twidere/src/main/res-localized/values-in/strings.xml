@@ -328,7 +328,7 @@
   <string name="filter_type_links">Tautan</string>
   <string name="filter_type_sources">Sumber</string>
   <string name="filter_type_users">Pengguna</string>
-  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"></xliff:g> pada penyaringan?</string>
+  <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"/> pada penyaringan?</string>
   <string name="follow_request_sent">Permintaan mengikuti terkirim</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
   <string name="following_only">Pengikut Anda saja</string>
@@ -447,25 +447,10 @@
   <string name="message_direct_message_deleted">Direct message dihapus.</string>
   <string name="message_direct_message_sent">Direct meesage terkirim.</string>
   <string name="message_error_invalid_account">Beberapa data akun rusak, Twidere akan menghapus akun tersebut untuk mencegah kerusakan.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <string name="message_extra_features_not_purchased">Fitur yang disempurnakan tidak dibeli</string>
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">Masalah Jaringan.</string>
   <string name="message_permission_request_compose_location">Twidere meminta ijin untuk menambahkan lokasi pada cuitan.</string>
   <string name="message_permission_request_save_media">Twidere meminta ijin untuk menyimpan media pada ruang penyimpanan.</string>
   <string name="message_permission_request_share_media">Twidere meminta ijin untuk membagikan media pada beberapa aplikasi.</string>
   <string name="message_please_wait">Tunggu sebentar.</string>
-  <string name="message_retweet_cancelled">Retweet dibatalkan.</string>
-  <string name="message_search_deleted">Pencarian terhapus.</string>
-  <string name="message_search_name_deleted">Pencarian \"<xliff:g id="name">%s</xliff:g>\" terhapus.</string>
-  <string name="message_search_name_saved">Pencarian \"<xliff:g id="name">%s</xliff:g>\" tersimpan.</string>
-  <string name="message_search_saved">Pencarian tersimpan.</string>
-  <string name="message_status_deleted">Twit dihapus.</string>
-  <string name="message_status_favorited">Twit difavoritkan.</string>
-  <string name="message_status_like_removed">Hapus tanda suka.</string>
-  <string name="message_status_liked">Cuitan disukai.</string>
-  <string name="message_status_retweeted">Di-retweet.</string>
-  <string name="message_status_unfavorited">Twit batal difavoritkan.</string>
   <string name="message_sync_data_connect_hint">Sambungkan Twidere dengan penyimpanan jaringan untuk sinkronisasi data</string>
   <string name="message_sync_data_synced_with_name">Twidere telah disinkronisasikan dengan <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
   <string name="message_sync_disconnect_from_name_confirm">Putuskan dari <xliff:g example="ownCloud" id="name">%s</xliff:g>?</string>
@@ -479,26 +464,39 @@
   <string name="message_toast_already_logged_in">Anda sudah login.</string>
   <string name="message_toast_cannot_get_location">Tidak bisa mendapatkan lokasi anda.</string>
   <string name="message_toast_error_occurred">Terjadi kesalahan, silahkan coba lagi.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <string name="message_toast_extra_features_not_purchased">Fitur yang disempurnakan tidak dibeli</string>
   <string name="message_toast_link_copied_to_clipboard">Tautan disalin ke clipboard</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ini sedikit hadiah untukmu, temukan sendiri di Pengaturan Sistem :)</string>
   <string name="message_toast_login_verification_failed">Gagal Menverifikasi Login.</string>
+  <!-- Toast message for network errors -->
+  <string name="message_toast_network_error">Masalah Jaringan.</string>
   <string name="message_toast_no_account">Tidak ada akun</string>
   <string name="message_toast_no_account_selected">Tidak ada akun yang dipilih.</string>
   <string name="message_toast_no_user_selected">Tidak ada pengguna yang dipilih</string>
   <string name="message_toast_press_again_to_close">Tekan sekali lagi untuk keluar</string>
   <string name="message_toast_profile_banner_image_updated">Gambar banner profil telah diperbarui.</string>
+  <string name="message_toast_retweet_cancelled">Retweet dibatalkan.</string>
   <string name="message_toast_save_media_no_storage_permission">Izin penyimpanan diperlukan untuk menyelesaikan media.</string>
   <string name="message_toast_saved_to_gallery">Simpan ke galeri.</string>
+  <string name="message_toast_search_deleted">Pencarian terhapus.</string>
+  <string name="message_toast_search_name_deleted">Pencarian \"<xliff:g id="name">%s</xliff:g>\" terhapus.</string>
+  <string name="message_toast_search_name_saved">Pencarian \"<xliff:g id="name">%s</xliff:g>\" tersimpan.</string>
+  <string name="message_toast_search_saved">Pencarian tersimpan.</string>
   <string name="message_toast_select_file_no_storage_permission">Izin penyimpanan diperlukan untuk memilih file.</string>
   <string name="message_toast_share_media_no_storage_permission">Beberapa aplikasi memerlukan ijin penyimpanan untuk membagikan media.</string>
+  <string name="message_toast_status_deleted">Twit dihapus.</string>
+  <string name="message_toast_status_favorited">Twit difavoritkan.</string>
+  <string name="message_toast_status_like_removed">Hapus tanda suka.</string>
+  <string name="message_toast_status_liked">Cuitan disukai.</string>
+  <string name="message_toast_status_retweeted">Di-retweet.</string>
   <string name="message_toast_status_saved_to_draft">Twit disimpan di draf.</string>
+  <string name="message_toast_status_unfavorited">Twit batal difavoritkan.</string>
   <string name="message_toast_status_updated">Twit terkirim.</string>
+  <string name="message_toast_user_filters_removed">Hapus pengguna ini dari daftar saring.</string>
+  <string name="message_toast_users_filters_added">Menambahkan para pengguna ini ke daftar filter. Anda tidak akan lagi melihat tweet dari pengguna ini di linimasa home/daftar mention anda.</string>
   <string name="message_toast_wrong_api_key">Kesalahan pada API url atau consumer key/secret, coba cek kembali.</string>
   <string name="message_toast_wrong_username_password">Nama pengguna atau kata sandi salah</string>
-  <string name="message_user_muted">Pengguna telah ditambah ke daftar saringan. Anda tidak akan melihat tweet-nya di timeline/mention.</string>
-  <string name="message_user_unmuted">Hapus pengguna ini dari daftar saring.</string>
-  <string name="message_users_muted">Menambahkan para pengguna ini ke daftar filter. Anda tidak akan lagi melihat tweet dari pengguna ini di linimasa home/daftar mention anda.</string>
-  <string name="more">Lebih</string>
   <string name="multi_select">Pilih banyak</string>
   <string name="mute_user">Senyapkan <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">Mute <xliff:g id="name">%s</xliff:g>? Anda tidak akan lagi melihat tweet dari pengguna ini selama anda mengikuti pengguna ini.</string>

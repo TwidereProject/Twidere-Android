@@ -196,32 +196,32 @@
         <xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_favorite_multi">
         <xliff:g id="user">%1$s</xliff:g> favorited <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_follow">
         <xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g>.</string>
     <string name="activity_by_friends_follow_multi">
         <xliff:g id="user">%1$s</xliff:g> is following <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>.</string>
     <string name="activity_by_friends_like">
         <xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_like_multi">
         <xliff:g id="user">%1$s</xliff:g> liked <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_list_created">
         <xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g>.</string>
     <string name="activity_by_friends_list_created_multi">
         <xliff:g id="user">%1$s</xliff:g> created list <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g>.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g>.</string>
     <string name="activity_by_friends_list_member_added">
         <xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> to list.</string>
     <string name="activity_by_friends_list_member_added_multi">
         <xliff:g id="user">%1$s</xliff:g> added <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list.</string>
     <string name="activity_by_friends_retweet">
         <xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
     <string name="activity_by_friends_retweet_multi">
         <xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g
-            id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
+        id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
     <string name="activity_joined_twitter">
         <xliff:g id="user">%s</xliff:g> joined Twitter.</string>
     <string name="activity_joined_twitter_multi">
@@ -237,7 +237,7 @@
     <string name="add_to_list">Add to list</string>
 
     <string name="added_user_to_list">Added <xliff:g
-            id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+        id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
 
     <string name="and_N_more">and <xliff:g id="count">%d</xliff:g> more</string>
 
@@ -265,7 +265,7 @@
     <string name="belongs_to">Belongs to</string>
 
     <string name="block_user_confirm_message">Block <xliff:g
-            example="Username" id="name">%s</xliff:g>? This user won\'t be able to follow you, mention you or send you direct messages.</string>
+        example="Username" id="name">%s</xliff:g>? This user won\'t be able to follow you, mention you or send you direct messages.</string>
 
     <string name="both">Both</string>
 
@@ -353,7 +353,7 @@
     </string>
     <string name="delete_user_confirm_message">Delete <xliff:g id="name">%s</xliff:g>? This can\'t be undone.</string>
     <string name="delete_user_from_list_confirm">Delete <xliff:g
-            id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
+        id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\"?</string>
     <string name="delete_user_list">Delete list <xliff:g id="name">%s</xliff:g>
     </string>
     <string name="delete_user_list_confirm_message">Delete list <xliff:g id="name">%s</xliff:g>? This can\'t be undone.</string>
@@ -361,7 +361,7 @@
 
     <string name="deleted_list">Deleted list \"<xliff:g id="list">%s</xliff:g>\".</string>
     <string name="deleted_user_from_list">Deleted <xliff:g
-            id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
+        id="user">%1$s</xliff:g> from list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
 
     <string name="denied_users_follow_request">Denied <xliff:g id="user">%s</xliff:g>\'s follow request.</string>
 
@@ -369,7 +369,7 @@
 
     <string name="destroy_saved_search">Delete saved search \"<xliff:g id="name">%s</xliff:g>\"</string>
     <string
-            name="destroy_saved_search_confirm_message">Delete saved search \"<xliff:g id="name">%s</xliff:g>\"? You can re-save this search later.</string>
+        name="destroy_saved_search_confirm_message">Delete saved search \"<xliff:g id="name">%s</xliff:g>\"? You can re-save this search later.</string>
     <string name="destroy_status">Delete tweet</string>
     <string name="destroy_status_confirm_message">Delete this tweet?</string>
 
@@ -419,19 +419,19 @@
     <string name="error_message_message_too_long">Message too long.</string>
     <string name="error_message_no_content">No content</string>
     <string
-            name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g>
+        name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g>
     </string>
     <string
-            name="error_message_rate_limit_with_action">Twitter\'s rate limit exceeded while <xliff:g
-            id="action">%1$s</xliff:g>, please retry <xliff:g id="time">%2$s</xliff:g>
+        name="error_message_rate_limit_with_action">Twitter\'s rate limit exceeded while <xliff:g
+        id="action">%1$s</xliff:g>, please retry <xliff:g id="time">%2$s</xliff:g>
     </string>
     <string name="error_message_status_too_long">Tweet too long.</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>
     <string name="error_message_with_action">Error while <xliff:g
-            id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g>
+        id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g>
     </string>
-    <string name="error_no_access_for_credentials">Your application can\'t access this resource, have you enabled \'Force using private APIs\'?</string>
+    <string name="error_no_access_for_credentials">Your application can\'t access this resource.</string>
     <string name="error_no_dm_permission">No direct message permission, check your Twitter application permission setting.</string>
     <string name="error_title_device_incompatible">Incompatible device</string>
     <string name="error_too_many_photos_fanfou">Too many photos</string>
@@ -475,7 +475,7 @@
     <string name="filter_type_sources">Sources</string>
     <string name="filter_type_users">Users</string>
     <string name="filter_user_confirm_message">Add <xliff:g
-            example="Username" id="name">%s</xliff:g> to filter?</string>
+        example="Username" id="name">%s</xliff:g> to filter?</string>
 
     <string name="follow_request_sent">Follow request sent</string>
 
@@ -495,9 +495,9 @@
     <string name="from_name">From <xliff:g id="name">%1$s</xliff:g>
     </string>
     <string name="from_name_and_N_others">From <xliff:g
-            id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
+        id="name">%1$s</xliff:g> and <xliff:g id="name">%2$d</xliff:g> others</string>
     <string name="from_name_and_name">From <xliff:g
-            id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g>
+        id="name">%1$s</xliff:g> and <xliff:g id="name">%2$s</xliff:g>
     </string>
 
     <string name="function">Function</string>
@@ -612,7 +612,7 @@
     <string name="lists">Lists</string>
     <string name="lists_following_user">Lists following this user</string>
     <string
-            name="lists_following_user_with_name">Lists following <xliff:g id="name">%s</xliff:g>
+        name="lists_following_user_with_name">Lists following <xliff:g id="name">%s</xliff:g>
     </string>
 
     <string name="load_defaults">Load defaults</string>
@@ -659,73 +659,70 @@
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
-    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-    <string name="message_extra_features_not_purchased">Enhanced features not purchased.</string>
-    <!-- Toast message for network errors -->
-    <string name="message_network_error">Network error.</string>
     <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="message_please_wait">Please wait.</string>
-    <string name="message_retweet_cancelled">Retweet cancelled.</string>
-    <string name="message_search_deleted">Search deleted.</string>
-    <string name="message_search_name_deleted">Search \"<xliff:g id="name">%s</xliff:g>\" deleted.</string>
-    <string name="message_search_name_saved">Search \"<xliff:g id="name">%s</xliff:g>\" saved.</string>
-    <string name="message_search_saved">Search saved.</string>
-    <string name="message_status_deleted">Tweet deleted.</string>
-    <string name="message_status_favorited">Tweet favorited.</string>
-    <string name="message_status_like_removed">Like removed.</string>
-    <string name="message_status_liked">Tweet liked.</string>
-    <string name="message_status_retweeted">Retweeted.</string>
-    <string name="message_status_unfavorited">Tweet unfavorited.</string>
     <string name="message_sync_data_connect_hint">Connect Twidere with network storage to sync data</string>
     <string
-            name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g
-            example="ownCloud" id="name">%s</xliff:g>
+        name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g
+        example="ownCloud" id="name">%s</xliff:g>
     </string>
     <string
-            name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g
-            example="ownCloud" id="name">%s</xliff:g>?</string>
+        name="message_sync_disconnect_from_name_confirm">Disconnect from <xliff:g
+        example="ownCloud" id="name">%s</xliff:g>?</string>
     <string name="message_sync_last_synced_time">Last synced: <xliff:g
-            example="2017/1/1 12:00" id="time">%s</xliff:g>
+        example="2017/1/1 12:00" id="time">%s</xliff:g>
     </string>
     <string name="message_tab_field_is_required">Field \"<xliff:g
-            example="Field" id="name">%s</xliff:g>\" is required</string>
+        example="Field" id="name">%s</xliff:g>\" is required</string>
     <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
     <eat-comment/>
     <string
-            name="message_toast_accepted_users_follow_request">Accepted <xliff:g id="user">%s</xliff:g>\'s follow request.</string>
+        name="message_toast_accepted_users_follow_request">Accepted <xliff:g id="user">%s</xliff:g>\'s follow request.</string>
     <string name="message_toast_added_to_filter">Added to filter</string>
     <string name="message_toast_already_logged_in">You have already logged in</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>
     <string name="message_toast_error_occurred">An error occurred, please try again</string>
+    <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+    <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
+    <!-- Toast message for network errors -->
+    <string name="message_toast_network_error">Network error</string>
     <string name="message_toast_no_account">No account</string>
     <string name="message_toast_no_account_selected">No account selected</string>
     <string name="message_toast_no_user_selected">No user selected</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
+    <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
+    <string name="message_toast_search_deleted">Search deleted</string>
+    <string name="message_toast_search_name_deleted">Search \"<xliff:g id="name">%s</xliff:g>\" deleted</string>
+    <string name="message_toast_search_name_saved">Search \"<xliff:g id="name">%s</xliff:g>\" saved</string>
+    <string name="message_toast_search_saved">Search saved</string>
     <string name="message_toast_select_file_no_storage_permission">Storage permission is needed to select file</string>
     <string name="message_toast_share_media_no_storage_permission">Some apps requires storage permission to share media</string>
+    <string name="message_toast_status_deleted">Tweet deleted</string>
+    <string name="message_toast_status_favorited">Tweet favorited</string>
+    <string name="message_toast_status_like_removed">Like removed</string>
+    <string name="message_toast_status_liked">Tweet liked</string>
+    <string name="message_toast_status_retweeted">Retweeted</string>
     <string name="message_toast_status_saved_to_draft">Tweet saved to draft</string>
+    <string name="message_toast_status_unfavorited">Tweet unfavorited</string>
     <string name="message_toast_status_updated">Tweet sent</string>
+    <string name="message_toast_user_filters_removed">Removed from filters</string>
+    <string name="message_toast_users_filters_added">Added to filters</string>
     <string name="message_toast_wrong_api_key">Incorrect API settings</string>
     <string name="message_toast_wrong_username_password">Wrong username/password</string>
-    <string name="message_user_muted">Added to filters</string>
-    <string name="message_user_unmuted">Removed from filters</string>
-    <string name="message_users_muted">Added to filters</string>
     <string name="message_video_too_long">Video too long</string>
     <string name="message_video_too_short">Video too short</string>
-
-    <string name="more">More</string>
 
     <string name="multi_select">Multi select</string>
 
@@ -785,7 +782,7 @@
         <xliff:g id="user">%1$s</xliff:g> sent you <xliff:g id="messages_count">%2$d</xliff:g> direct messages.</string>
     <string name="notification_direct_message_multiple_users">
         <xliff:g id="user">%1$s</xliff:g> and <xliff:g
-            id="users_count">%2$d</xliff:g> others sent you <xliff:g id="messages_count">%3$d</xliff:g> direct messages.</string>
+        id="users_count">%2$d</xliff:g> others sent you <xliff:g id="messages_count">%3$d</xliff:g> direct messages.</string>
     <string name="notification_light_color">Light Color</string>
     <string name="notification_mention">
         <xliff:g id="user">%s</xliff:g> mentioned you.</string>
@@ -795,7 +792,7 @@
     <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g>
     </string>
     <string name="notification_status_multiple">New Tweet by <xliff:g
-            id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
+        id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
 
     <string name="notifications">Notifications</string>
     <string name="notifications_type">Notifications type</string>
@@ -927,7 +924,7 @@
     <string name="quote_format">Quote format</string>
     <string name="quote_format_summary">\"[TEXT]\" = Tweet text\n\"[NAME]\" = Twitter username</string>
     <string name="quote_name_text">Quote <xliff:g
-            id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g>
+        id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g>
     </string>
     <string name="quote_original_status">Quote original tweet</string>
     <string name="quote_protected_status_warning_message">This tweet is protected.\n\nProtected users usually don\'t want their tweets to be shared publicly.</string>
@@ -962,7 +959,7 @@
     <string name="reply_to">Reply to <xliff:g id="user_name">%s</xliff:g>
     </string>
     <string name="reply_to_name_text">Reply to <xliff:g
-            id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g>
+        id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g>
     </string>
 
     <string name="report_for_spam">Report spam</string>
@@ -990,7 +987,7 @@
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g>
     </string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g
-            id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
+        id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
 
     <string name="retweets_of_me">Retweets of me</string>
 
@@ -1038,7 +1035,7 @@
     <string name="sensitive_content_warning">This tweet may have sensitive content, continue?</string>
 
     <string
-            name="sent_follow_request_to_user">Sent follow request to <xliff:g id="user">%s</xliff:g>.</string>
+        name="sent_follow_request_to_user">Sent follow request to <xliff:g id="user">%s</xliff:g>.</string>
 
     <string name="server_address">Server address</string>
 
@@ -1097,8 +1094,8 @@
     </string>
     <string name="status_format_time_source">
         <xliff:g example="0:00, Jan 1 2017"
-            id="time">%1$s</xliff:g> · <xliff:g
-            example="Twidere for Android" id="source">%2$s</xliff:g>
+                 id="time">%1$s</xliff:g> · <xliff:g
+        example="Twidere for Android" id="source">%2$s</xliff:g>
     </string>
     <string name="status_hint">What\'s happening?</string>
     <string name="status_is_duplicate">Your tweet is a duplicate.</string>
@@ -1108,9 +1105,9 @@
     <string name="status_not_updated">Tweet not sent.</string>
     <string name="status_not_updated_summary">Tweet not sent, and saved to drafts.</string>
     <string
-            name="status_share_subject_format_with_time">Tweet from <xliff:g
-            id="name">%1$s</xliff:g> (@<xliff:g
-            id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g>
+        name="status_share_subject_format_with_time">Tweet from <xliff:g
+        id="name">%1$s</xliff:g> (@<xliff:g
+        id="screen_name">%2$s</xliff:g>), at <xliff:g id="time">%3$s</xliff:g>
     </string>
     <string name="status_share_text_format_with_link">
         <xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g>
@@ -1263,17 +1260,17 @@
     <string name="unread_count">Unread count</string>
 
     <string
-            name="unsubscribe_from_user_list">Unsubscribe from list <xliff:g id="name">%s</xliff:g>
+        name="unsubscribe_from_user_list">Unsubscribe from list <xliff:g id="name">%s</xliff:g>
     </string>
     <string
-            name="unsubscribe_from_user_list_confirm_message">Unsubscribe from list <xliff:g id="name">%s</xliff:g>? You can re-subscribe to this list later.</string>
+        name="unsubscribe_from_user_list_confirm_message">Unsubscribe from list <xliff:g id="name">%s</xliff:g>? You can re-subscribe to this list later.</string>
 
     <string
-            name="unsubscribed_from_list">Unsubscribed from list \"<xliff:g id="list">%s</xliff:g>\".</string>
+        name="unsubscribed_from_list">Unsubscribed from list \"<xliff:g id="list">%s</xliff:g>\".</string>
 
     <string name="unsupported_activity_action_summary">Please report action above</string>
     <string
-            name="unsupported_login_verification_type_name">Unsupported login verification type <xliff:g id="name">%1$s</xliff:g>, please report to support account.</string>
+        name="unsupported_login_verification_type_name">Unsupported login verification type <xliff:g id="name">%1$s</xliff:g>, please report to support account.</string>
 
     <string name="update_status">Send tweet</string>
 

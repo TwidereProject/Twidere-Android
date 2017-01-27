@@ -339,19 +339,7 @@
   <string name="message_blocked_user">حُظِر <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_direct_message_deleted">حُذفت الرسالة الخاصة.</string>
   <string name="message_direct_message_sent">أُرسلت الرسالة الخاصة.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">خطأ في الشبكة.</string>
   <string name="message_please_wait">يرجى الإنتظار.</string>
-  <string name="message_retweet_cancelled">إعادة التغريد ملغاة.</string>
-  <string name="message_search_deleted">حُذِف البحث.</string>
-  <string name="message_search_name_deleted">حُذِف البحث \"<xliff:g id="name">%s</xliff:g>\".</string>
-  <string name="message_search_name_saved">حُفظ البحث \"<xliff:g id="name">%s</xliff:g>\".</string>
-  <string name="message_search_saved">حُفظ البحث.</string>
-  <string name="message_status_deleted">حُذفت التغريدة.</string>
-  <string name="message_status_favorited">فضّلت التغريدة.</string>
-  <string name="message_status_retweeted">أُعيدت التغريدة.</string>
-  <string name="message_status_unfavorited">لم تعد التغريدة مفضلة.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -359,19 +347,17 @@
   <string name="message_toast_accepted_users_follow_request">قَبِل <xliff:g id="user">%s</xliff:g> متابعتك.</string>
   <string name="message_toast_cannot_get_location">لا يمكن تحديد الموقع.</string>
   <string name="message_toast_error_occurred">حدث خطأ، يرجى إعادة المحاولة لاحقاً</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">تم نسخ الرابط إلى الحافظة</string>
   <string name="message_toast_livewp_daydream_enabled_message">قليلاً هنا موجودة لك، تجد في إعدادات النظام الخاص بك:)</string>
   <string name="message_toast_login_verification_failed">فشل التحقق من صحة تسجيل الدخول.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">لم تختر حسابًا.</string>
   <string name="message_toast_profile_banner_image_updated">تم تحدث الصورة العلوية للملف الشخصي.</string>
   <string name="message_toast_saved_to_gallery">حفظت في المعرض.</string>
   <string name="message_toast_status_saved_to_draft">حُفظت التغريدةُ مسودةً.</string>
   <string name="message_toast_status_updated">أُرسلت التغريدة.</string>
   <string name="message_toast_wrong_api_key">رابط API أو شيفرة consumer key/secret غير صحيحة ، تأكد منها مرة أخرى.</string>
-  <string name="message_user_muted">أضيف الحساب لقائمة الكتم لن تظهر لديك تغريدات هذا المستخدم في الخط الزمني الرئيسي / الإشارات.</string>
-  <string name="message_user_unmuted">تمت إزالة الشخص من قائمة الكتم.</string>
-  <string name="message_users_muted">أضيف الحساب لقائمة الكتم لن تظهر لديك تغريدات هذا المستخدم في الخط الزمني الرئيسي / الإشارات.</string>
-  <string name="more">المزيد</string>
   <string name="multi_select">تحديد متعدد</string>
   <string name="mute_user">كتم <xliff:g id="name">%s</xliff:g></string>
   <string name="muted_user">كُتِم <xliff:g id="name">%s</xliff:g></string>

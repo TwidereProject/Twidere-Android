@@ -90,8 +90,6 @@
   <string name="load_item_limit">लोड आइटम सीमा</string>
   <string name="load_item_limit_summary">सेट आइटम लोड प्रति सीमा|</string>
   <string name="mention_this_user">इस उपयोगकर्ता का उल्लेख करे</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
   <string name="message_please_wait">कृपया प्रतीक्षा करें |</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -99,8 +97,9 @@
     -->
   <string name="message_toast_cannot_get_location">आपके स्थान को प्राप्त नहीं कर सकते.</string>
   <string name="message_toast_error_occurred">एक एर्रोर हुई है, फिर कोशिश करें |</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">कोई खाता चयन नहीं किया गया.</string>
-  <string name="more">अधिक</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="notifications">सूचनाएँ</string>
   <string name="notifications_type">सूचना प्रकार</string>

@@ -243,30 +243,23 @@
   <string name="message_blocked_user">המשתמש <xliff:g id="user">%s</xliff:g> נחסם.</string>
   <string name="message_direct_message_deleted">ההודעה הישירה נמחקה.</string>
   <string name="message_direct_message_sent">ההודעה הישירה נשלחה.</string>
-  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <!-- Toast message for network errors -->
-  <string name="message_network_error">שגיאת רשת.</string>
   <string name="message_please_wait">המתן בבקשה.</string>
-  <string name="message_search_deleted">החיפוש נמחק.</string>
-  <string name="message_search_name_deleted">החיפוש \"<xliff:g id="name">%s</xliff:g>\" נמחק.</string>
-  <string name="message_search_name_saved">החיפוש \"<xliff:g id="name">%s</xliff:g>\" נשמר.</string>
-  <string name="message_search_saved">החיפוש נשמר.</string>
-  <string name="message_status_deleted">הציוץ נמחק.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
   <string name="message_toast_cannot_get_location">לא ניתן לאתר את מיקומך.</string>
   <string name="message_toast_error_occurred">שגיאה ארעה, נא נסה שנית.</string>
+  <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_link_copied_to_clipboard">הקישור הועתק אל הלוח</string>
   <string name="message_toast_login_verification_failed">אימות כניסה נכשל.</string>
+  <!-- Toast message for network errors -->
   <string name="message_toast_no_account_selected">לא נבחר חשבון.</string>
   <string name="message_toast_profile_banner_image_updated">תמונת הכותרת של הפרופיל עודכנה.</string>
   <string name="message_toast_saved_to_gallery">נשמר לגלריה.</string>
   <string name="message_toast_status_saved_to_draft">הציוץ נשמר לטיוטה.</string>
   <string name="message_toast_status_updated">הציוץ נשלח.</string>
   <string name="message_toast_wrong_api_key">כתובת URL שגויה לAPI או מפתח/סוד שגויים, אנא בדוק/י אותם שוב.</string>
-  <string name="more">עוד</string>
   <string name="multi_select">בחירה מרובה</string>
   <string name="name_first">הצג שם בהתחלה</string>
   <string name="name_first_summary_on">הצג שם בהתחלה</string>
