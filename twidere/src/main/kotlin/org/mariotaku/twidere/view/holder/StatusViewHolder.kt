@@ -84,8 +84,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             View.inflate(quotedMediaPreview.context, R.layout.layout_card_media_preview,
                     itemView.quotedMediaPreview)
         }
+
+        nameView.applyFontFamily(adapter.lightFont)
+        timeView.applyFontFamily(adapter.lightFont)
         textView.applyFontFamily(adapter.lightFont)
+        mediaLabelTextView.applyFontFamily(adapter.lightFont)
+
+        quotedNameView.applyFontFamily(adapter.lightFont)
         quotedTextView.applyFontFamily(adapter.lightFont)
+        quotedMediaLabelTextView.applyFontFamily(adapter.lightFont)
     }
 
 

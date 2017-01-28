@@ -1171,9 +1171,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val resources = activity.resources
             itemView.countsUsers.addItemDecoration(SpacingItemDecoration(resources.getDimensionPixelOffset(R.dimen.element_spacing_normal)))
 
-
+            // Apply font families
+            itemView.name.applyFontFamily(adapter.lightFont)
             itemView.text.applyFontFamily(adapter.lightFont)
+            itemView.quotedName.applyFontFamily(adapter.lightFont)
             itemView.quotedText.applyFontFamily(adapter.lightFont)
+            itemView.locationView.applyFontFamily(adapter.lightFont)
+            itemView.translateLabel.applyFontFamily(adapter.lightFont)
+            itemView.translateResult.applyFontFamily(adapter.lightFont)
         }
 
 

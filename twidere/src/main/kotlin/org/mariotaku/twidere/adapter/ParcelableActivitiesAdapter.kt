@@ -58,9 +58,11 @@ class ParcelableActivitiesAdapter(
         context: Context
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IActivitiesAdapter<List<ParcelableActivity>> {
 
-    private val inflater: LayoutInflater
-    override val mediaLoadingHandler: MediaLoadingHandler
-    private val statusAdapterDelegate: DummyItemAdapter
+    override val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
+
+    private val inflater = LayoutInflater.from(context)
+    private val statusAdapterDelegate = DummyItemAdapter(context,
+            TwidereLinkify(OnLinkClickHandler(context, null, preferences)), this)
     private val eventListener: EventListener
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null
@@ -79,10 +81,6 @@ class ParcelableActivitiesAdapter(
         }
 
     init {
-        statusAdapterDelegate = DummyItemAdapter(context,
-                TwidereLinkify(OnLinkClickHandler(context, null, preferences)), this)
-        inflater = LayoutInflater.from(context)
-        mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
         eventListener = EventListener(this)
         statusAdapterDelegate.updateOptions()
     }
@@ -320,6 +318,9 @@ class ParcelableActivitiesAdapter(
 
     override val mediaPreviewEnabled: Boolean
         get() = statusAdapterDelegate.mediaPreviewEnabled
+
+    override val lightFont: Boolean
+        get() = statusAdapterDelegate.lightFont
 
     override var showAccountsColor: Boolean
         get() = statusAdapterDelegate.showAccountsColor

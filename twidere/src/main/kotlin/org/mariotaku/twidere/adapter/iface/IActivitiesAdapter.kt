@@ -42,6 +42,8 @@ interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     val showAccountsColor: Boolean
 
+    val lightFont: Boolean
+
     fun getActivity(position: Int): ParcelableActivity?
 
     fun setData(data: Data?)

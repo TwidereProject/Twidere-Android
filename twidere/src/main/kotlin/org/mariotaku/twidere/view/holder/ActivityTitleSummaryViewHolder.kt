@@ -25,6 +25,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
@@ -46,43 +47,34 @@ class ActivityTitleSummaryViewHolder(
         private val adapter: ParcelableActivitiesAdapter
 ) : ViewHolder(itemView), View.OnClickListener {
 
-    private val itemContent: IColorLabelView
-    private val activityTypeView: IconActionView
-    private val titleView: TextView
-    private val summaryView: TextView
-    private val timeView: ShortTimeView
-    private val profileImagesContainer: ViewGroup
-    private val profileImageMoreNumber: BadgeView
-    private val profileImageViews: Array<ProfileImageView>
-    private val profileImageSpace: View
+    private val itemContent = itemView.findViewById(R.id.itemContent) as IColorLabelView
+    private val activityTypeView = itemView.findViewById(R.id.activity_type) as IconActionView
+    private val titleView = itemView.findViewById(R.id.title) as TextView
+    private val summaryView = itemView.findViewById(R.id.summary) as TextView
+    private val timeView = itemView.findViewById(R.id.time) as ShortTimeView
+    private val profileImagesContainer = itemView.findViewById(R.id.profile_images_container) as ViewGroup
+    private val profileImageMoreNumber = itemView.findViewById(R.id.activity_profile_image_more_number) as BadgeView
+    private val profileImageViews = arrayOf(
+            itemView.findViewById(R.id.activity_profile_image_0) as ProfileImageView,
+            itemView.findViewById(R.id.activity_profile_image_1) as ProfileImageView,
+            itemView.findViewById(R.id.activity_profile_image_2) as ProfileImageView,
+            itemView.findViewById(R.id.activity_profile_image_3) as ProfileImageView,
+            itemView.findViewById(R.id.activity_profile_image_4) as ProfileImageView
+    )
+    private val profileImageSpace: View = itemView.findViewById(R.id.profile_image_space)
 
-    private var mActivityEventListener: IActivitiesAdapter.ActivityEventListener? = null
+    private var activityEventListener: IActivitiesAdapter.ActivityEventListener? = null
 
     init {
-
-        itemContent = itemView.findViewById(R.id.itemContent) as IColorLabelView
-        activityTypeView = itemView.findViewById(R.id.activity_type) as IconActionView
-        titleView = itemView.findViewById(R.id.title) as TextView
-        summaryView = itemView.findViewById(R.id.summary) as TextView
-        timeView = itemView.findViewById(R.id.time) as ShortTimeView
-        profileImageSpace = itemView.findViewById(R.id.profile_image_space)
-
-        profileImagesContainer = itemView.findViewById(R.id.profile_images_container) as ViewGroup
-        profileImageViews = arrayOf(
-                itemView.findViewById(R.id.activity_profile_image_0) as ProfileImageView,
-                itemView.findViewById(R.id.activity_profile_image_1) as ProfileImageView,
-                itemView.findViewById(R.id.activity_profile_image_2) as ProfileImageView,
-                itemView.findViewById(R.id.activity_profile_image_3) as ProfileImageView,
-                itemView.findViewById(R.id.activity_profile_image_4) as ProfileImageView
-        )
-        profileImageMoreNumber = itemView.findViewById(R.id.activity_profile_image_more_number) as BadgeView
-
         val resources = adapter.context.resources
         val lp = titleView.layoutParams as ViewGroup.MarginLayoutParams
         val spacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small)
         lp.leftMargin = spacing
         MarginLayoutParamsCompat.setMarginStart(lp, spacing)
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
+        titleView.applyFontFamily(adapter.lightFont)
+        summaryView.applyFontFamily(adapter.lightFont)
+        timeView.applyFontFamily(adapter.lightFont)
     }
 
     fun displayActivity(activity: ParcelableActivity) {
@@ -163,18 +155,18 @@ class ActivityTitleSummaryViewHolder(
     }
 
     fun setActivityEventListener(listener: IActivitiesAdapter.ActivityEventListener) {
-        mActivityEventListener = listener
+        activityEventListener = listener
         (itemContent as View).setOnClickListener(this)
         //        ((View) itemContent).setOnLongClickListener(this);
 
     }
 
     override fun onClick(v: View) {
-        if (mActivityEventListener == null) return
+        if (activityEventListener == null) return
         val position = layoutPosition
         when (v.id) {
             R.id.itemContent -> {
-                mActivityEventListener!!.onActivityClick(this, position)
+                activityEventListener!!.onActivityClick(this, position)
             }
         }
     }
