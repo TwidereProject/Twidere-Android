@@ -419,6 +419,9 @@
                 <data
                     android:host="twidere.mariotaku.org"
                     android:pathPrefix="/external"/>
+                <data
+                    android:host="twidere.org"
+                    android:pathPrefix="/external"/>
 
                 <action android:name="android.intent.action.VIEW"/>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>

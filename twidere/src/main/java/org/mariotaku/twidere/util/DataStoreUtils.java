@@ -1089,9 +1089,9 @@ public class DataStoreUtils implements Constants {
             }
             linkValues.add(linkWithoutScheme);
         }
-        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, userKeyValues, null);
-        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, keywordValues, null);
-        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, linkValues, null);
+        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, false, userKeyValues, null);
+        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, false, keywordValues, null);
+        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, false, linkValues, null);
     }
 
     public interface UpdateActivityAction {

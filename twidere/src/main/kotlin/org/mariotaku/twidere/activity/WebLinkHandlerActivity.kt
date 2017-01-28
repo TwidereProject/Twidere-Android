@@ -2,13 +2,11 @@ package org.mariotaku.twidere.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.content.UriMatcher
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.toLong
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
@@ -32,7 +30,7 @@ class WebLinkHandlerActivity : Activity() {
         val (handledIntent, handledSuccessfully) = when (uri.host) {
             "twitter.com", "www.twitter.com", "mobile.twitter.com" -> handleTwitterLink(regulateTwitterUri(uri))
             "fanfou.com" -> handleFanfouLink(uri)
-            "twidere.mariotaku.org" -> handleTwidereExternalLink(uri)
+            "twidere.org", "twidere.mariotaku.org" -> handleTwidereExternalLink(uri)
             else -> Pair(null, false)
         }
         if (handledIntent != null) {

@@ -37,12 +37,8 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LINK_HIGHLIGHT_OPTION
-import org.mariotaku.twidere.constant.hideCardActionsKey
-import org.mariotaku.twidere.constant.iWantMyStarsBackKey
-import org.mariotaku.twidere.constant.mediaPreviewStyleKey
-import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ObjectId
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices
@@ -75,9 +71,10 @@ abstract class ParcelableStatusesAdapter(
     final override val nameFirst: Boolean = preferences[nameFirstKey]
     final override val useStarsForLikes: Boolean = preferences[iWantMyStarsBackKey]
     @TwidereLinkify.HighlightStyle
-    final override val linkHighlightingStyle: Int
-    final override val mediaPreviewEnabled: Boolean
-    final override val sensitiveContentEnabled: Boolean
+    final override val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
+    final override val lightFont: Boolean = preferences[lightFontKey]
+    final override val mediaPreviewEnabled: Boolean = Utils.isMediaPreviewEnabled(context, preferences)
+    final override val sensitiveContentEnabled: Boolean = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
     private val showCardActions: Boolean = !preferences[hideCardActionsKey]
 
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
@@ -121,9 +118,6 @@ abstract class ParcelableStatusesAdapter(
 
     init {
         mediaLoadingHandler = MediaLoadingHandler(*progressViewIds)
-        linkHighlightingStyle = Utils.getLinkHighlightingStyleInt(preferences.getString(KEY_LINK_HIGHLIGHT_OPTION, null))
-        mediaPreviewEnabled = Utils.isMediaPreviewEnabled(context, preferences)
-        sensitiveContentEnabled = preferences.getBoolean(KEY_DISPLAY_SENSITIVE_CONTENTS, false)
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
         twidereLinkify = TwidereLinkify(handler)
         handler.setAdapter(this)

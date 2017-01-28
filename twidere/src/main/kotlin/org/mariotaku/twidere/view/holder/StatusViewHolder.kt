@@ -10,6 +10,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_status.view.*
+import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
@@ -83,6 +84,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             View.inflate(quotedMediaPreview.context, R.layout.layout_card_media_preview,
                     itemView.quotedMediaPreview)
         }
+        textView.applyFontFamily(adapter.lightFont)
+        quotedTextView.applyFontFamily(adapter.lightFont)
     }
 
 
@@ -639,5 +642,5 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
     }
 
-
 }
+

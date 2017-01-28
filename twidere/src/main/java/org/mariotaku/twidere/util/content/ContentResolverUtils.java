@@ -26,8 +26,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import org.mariotaku.sqliteqb.library.ArgsArray;
-import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Expression;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 
@@ -42,15 +40,15 @@ public class ContentResolverUtils {
     }
 
     public static <T> int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                     @NonNull final String inColumn, @Nullable final Collection<T> colValues,
-                                     final String extraWhere) {
+                                     @NonNull final String matchColumn, final boolean notIn,
+                                     @Nullable final Collection<T> colValues, final String extraWhere) {
         if (colValues == null) return 0;
-        return bulkDelete(resolver, uri, inColumn, colValues.toArray(), extraWhere);
+        return bulkDelete(resolver, uri, matchColumn, notIn, colValues.toArray(), extraWhere);
     }
 
     public static int bulkDelete(@NonNull final ContentResolver resolver, @NonNull final Uri uri,
-                                 @NonNull final String inColumn, @Nullable final Object colValues,
-                                 final String extraWhere) {
+                                 @NonNull final String matchColumn, final boolean notIn,
+                                 @Nullable final Object colValues, final String extraWhere) {
         if (colValues == null) return 0;
         final int colValuesLength = Array.getLength(colValues), blocksCount = colValuesLength / MAX_BULK_COUNT + 1;
         int rowsDeleted = 0;
@@ -58,8 +56,12 @@ public class ContentResolverUtils {
             final int start = i * MAX_BULK_COUNT, end = Math.min(start + MAX_BULK_COUNT,
                     colValuesLength);
             final String[] block = TwidereArrayUtils.toStringArray(colValues, start, end);
-            final StringBuilder where = new StringBuilder(Expression.in(new Columns.Column(inColumn),
-                    new ArgsArray(block.length)).getSQL());
+            final StringBuilder where;
+            if (notIn) {
+                where = new StringBuilder(Expression.notInArgs(matchColumn, block.length).getSQL());
+            } else {
+                where = new StringBuilder(Expression.inArgs(matchColumn, block.length).getSQL());
+            }
             if (!TextUtils.isEmpty(extraWhere)) {
                 where.append(" AND ").append(extraWhere);
             }

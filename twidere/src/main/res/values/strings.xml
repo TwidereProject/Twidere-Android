@@ -865,6 +865,7 @@
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
+    <string name="preference_title_light_font">Light font</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_translate">Translate</string>
 

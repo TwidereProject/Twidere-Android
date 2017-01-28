@@ -85,7 +85,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
         adapter.addRemovedPositions(reverseSortedPositions)
         ContentResolverUtils.bulkDelete(contentResolver, SearchHistory.CONTENT_URI,
-                SearchHistory._ID, ids, null)
+                SearchHistory._ID, false, ids, null)
         supportLoaderManager.restartLoader(0, null, this)
     }
 

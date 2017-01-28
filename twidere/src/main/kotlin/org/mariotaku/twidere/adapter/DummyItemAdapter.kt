@@ -43,6 +43,7 @@ class DummyItemAdapter @JvmOverloads constructor(
     override var textSize: Float = 0f
     override var linkHighlightingStyle: Int = 0
     override var nameFirst: Boolean = false
+    override var lightFont: Boolean = false
     override var profileImageEnabled: Boolean = false
     override var sensitiveContentEnabled: Boolean = false
     override var mediaPreviewEnabled: Boolean = false
@@ -182,6 +183,7 @@ class DummyItemAdapter @JvmOverloads constructor(
         sensitiveContentEnabled = preferences[displaySensitiveContentsKey]
         showCardActions = !preferences[hideCardActionsKey]
         linkHighlightingStyle = preferences[linkHighlightOptionKey]
+        lightFont = preferences[lightFontKey]
         useStarsForLikes = preferences[iWantMyStarsBackKey]
         showAbsoluteTime = preferences[showAbsoluteTimeKey]
     }

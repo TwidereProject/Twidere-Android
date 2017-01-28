@@ -72,7 +72,7 @@ abstract class GetTrendsTask(
             }
             cr.delete(uri, null, null)
             ContentResolverUtils.bulkInsert(cr, uri, valuesArray)
-            ContentResolverUtils.bulkDelete(cr, TwidereDataStore.CachedHashtags.CONTENT_URI, TwidereDataStore.CachedHashtags.NAME, hashtags, null)
+            ContentResolverUtils.bulkDelete(cr, TwidereDataStore.CachedHashtags.CONTENT_URI, TwidereDataStore.CachedHashtags.NAME, false, hashtags, null)
             ContentResolverUtils.bulkInsert(cr, TwidereDataStore.CachedHashtags.CONTENT_URI,
                     hashtagValues.toTypedArray())
         }

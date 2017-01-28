@@ -75,6 +75,15 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
         }
     }
 
+    override fun firstAdded(): Boolean {
+        etagCache[arguments.url] = null
+        return true
+    }
+    override fun deleteLocalData(): Boolean {
+        etagCache[arguments.url] = null
+        return true
+    }
+
     override fun getUsers(): List<FiltersData.UserItem>? {
         return filters?.users
     }

@@ -15,6 +15,8 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     @TwidereLinkify.HighlightStyle
     val linkHighlightingStyle: Int
 
+    val lightFont: Boolean
+
     @CardMediaContainer.PreviewStyle
     val mediaPreviewStyle: Int
 

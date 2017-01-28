@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment.filter
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
@@ -14,21 +15,26 @@ import android.support.v4.content.Loader
 import android.support.v4.widget.SimpleCursorAdapter
 import android.support.v7.app.AlertDialog
 import android.view.*
+import android.widget.AbsListView
+import android.widget.ListView
 import android.widget.TextView
 import com.rengwuxian.materialedittext.MaterialEditText
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import okhttp3.HttpUrl
 import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.empty
-import org.mariotaku.ktextension.isEmpty
-import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.*
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
+import org.mariotaku.twidere.extension.invertSelection
 import org.mariotaku.twidere.extension.model.getComponentLabel
+import org.mariotaku.twidere.extension.model.instantiateComponent
 import org.mariotaku.twidere.extension.model.setupUrl
+import org.mariotaku.twidere.extension.selectAll
+import org.mariotaku.twidere.extension.selectNone
+import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
@@ -40,16 +46,20 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import java.lang.ref.WeakReference
 
+
 /**
  * Created by mariotaku on 2016/12/31.
  */
-class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor> {
+class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Cursor>,
+        AbsListView.MultiChoiceModeListener {
 
     private lateinit var adapter: FilterSubscriptionsAdapter
+    private var actionMode: ActionMode? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -57,6 +67,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
         adapter = FilterSubscriptionsAdapter(context)
         listView.adapter = adapter
+        listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
+        listView.setMultiChoiceModeListener(this)
 
         listContainer.visibility = View.GONE
         progressContainer.visibility = View.VISIBLE
@@ -125,12 +137,13 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
             R.id.refresh -> {
                 executeAfterFragmentResumed { fragment ->
-                    val dfRef = WeakReference(ProgressDialogFragment.show(fragment.childFragmentManager, "refresh_filters"))
+                    val dfRef = WeakReference(ProgressDialogFragment.show(fragment.childFragmentManager,
+                            FRAGMENT_TAG_RREFRESH_FILTERS))
                     val task = RefreshFiltersSubscriptionsTask(fragment.context)
                     val fragmentRef = WeakReference(fragment)
                     task.callback = {
                         fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
-                            val df = dfRef.get() ?: fragment.childFragmentManager.findFragmentByTag("refresh_filters") as? DialogFragment
+                            val df = dfRef.get() ?: fragment.childFragmentManager.findFragmentByTag(FRAGMENT_TAG_RREFRESH_FILTERS) as? DialogFragment
                             df?.dismiss()
                         }
                     }
@@ -170,6 +183,74 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         }
         listContainer.visibility = View.VISIBLE
         progressContainer.visibility = View.GONE
+    }
+
+    override fun onItemCheckedStateChanged(mode: ActionMode?, position: Int, id: Long, checked: Boolean) {
+
+    }
+
+
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+        actionMode = mode
+        mode.menuInflater.inflate(R.menu.action_multi_select_items, menu)
+        menu.setGroupAvailability(R.id.selection_group, true)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+        listView.updateSelectionItems(menu)
+        return true
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.delete -> {
+                performDeletion()
+                mode.finish()
+            }
+            R.id.select_all -> {
+                listView.selectAll()
+            }
+            R.id.select_none -> {
+                listView.selectNone()
+            }
+            R.id.invert_selection -> {
+                listView.invertSelection()
+            }
+        }
+        return true
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode) {
+        actionMode = null
+    }
+
+    @SuppressLint("Recycle")
+    private fun performDeletion() {
+        val ids = listView.checkedItemIds
+        val resolver = context.contentResolver
+        val where = Expression.inArgs(Filters.Subscriptions._ID, ids.size).sql
+        val whereArgs = ids.toStringArray()
+        resolver.query(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS, where,
+                whereArgs, null)?.useCursor { cursor ->
+            val indices = FiltersSubscriptionCursorIndices(cursor)
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val subscription = indices.newObject(cursor)
+                subscription.instantiateComponent(context)?.deleteLocalData()
+                cursor.moveToNext()
+            }
+        }
+        ContentResolverUtils.bulkDelete(resolver, Filters.Subscriptions.CONTENT_URI, Filters._ID,
+                false, ids, null)
+        ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.SOURCE,
+                false, ids, null)
+        ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.SOURCE,
+                false, ids, null)
+        ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.SOURCE,
+                false, ids, null)
+        ContentResolverUtils.bulkDelete(resolver, Filters.Links.CONTENT_URI, Filters.Links.SOURCE,
+                false, ids, null)
     }
 
     private fun showAddUrlSubscription() {
@@ -216,6 +297,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 val subscription = FiltersSubscription()
                 subscription.name = editName.text.toString()
                 subscription.setupUrl(editUrl.text.toString())
+                val component = subscription.instantiateComponent(context) ?: return@setPositiveButton
+                component.firstAdded()
                 context.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, FiltersSubscriptionValuesCreator.create(subscription))
             }
             builder.setNegativeButton(android.R.string.cancel, null)
@@ -257,6 +340,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         const val REQUEST_ADD_URL_SUBSCRIPTION_PURCHASE = 101
         const val EXTRA_ADD_SUBSCRIPTION_URL = "add_subscription.url"
         const val EXTRA_ADD_SUBSCRIPTION_NAME = "add_subscription.name"
+        private const val FRAGMENT_TAG_RREFRESH_FILTERS = "refresh_filters"
     }
 }
 
