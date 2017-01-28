@@ -1030,12 +1030,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
 
-    class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Void>> {
+    class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Boolean>> {
 
         private final String mUserId;
         private final UserKey mAccountKey;
 
-        public DestroyMessageConversationTask(final UserKey accountKey, final String userId) {
+        DestroyMessageConversationTask(final UserKey accountKey, final String userId) {
             super(context);
             mAccountKey = accountKey;
             mUserId = userId;
@@ -1061,24 +1061,24 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<Void> doInBackground(final Object... args) {
+        protected SingleResponse<Boolean> doInBackground(final Object... args) {
             final MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey);
-            if (microBlog == null) return SingleResponse.Companion.getInstance();
+            if (microBlog == null) return new SingleResponse<>(new MicroBlogException("No account"));
             try {
                 microBlog.destroyDirectMessagesConversation(mAccountKey.getId(), mUserId);
                 deleteMessages(mAccountKey, mUserId);
-                return SingleResponse.Companion.getInstance();
+                return new SingleResponse<>(true);
             } catch (final MicroBlogException e) {
                 if (isMessageNotFound(e)) {
                     deleteMessages(mAccountKey, mUserId);
                 }
-                return SingleResponse.Companion.getInstance(e);
+                return new SingleResponse<>(e);
             }
         }
 
 
         @Override
-        protected void onPostExecute(final SingleResponse<Void> result) {
+        protected void onPostExecute(final SingleResponse<Boolean> result) {
             super.onPostExecute(result);
             if (result == null) return;
             if (result.hasData() || isMessageNotFound(result.getException())) {
