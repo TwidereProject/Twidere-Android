@@ -12,8 +12,6 @@ import android.os.Parcelable
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentActivity
 import android.text.TextUtils
-import android.text.TextUtils.isEmpty
-import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.AUTHORITY_ACCOUNTS
@@ -72,11 +70,9 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_USER_KEY
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_VALUE_TWEETS
 import org.mariotaku.twidere.TwidereConstants.SCHEME_HTTP
 import org.mariotaku.twidere.TwidereConstants.SCHEME_TWIDERE
-import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -411,11 +407,13 @@ object IntentUtils {
         context.startActivity(intent)
     }
 
-    fun openStatus(context: Context, accountKey: UserKey?,
-                   statusId: String) {
+    fun status(accountKey: UserKey?, statusId: String): Intent {
         val uri = LinkCreator.getTwidereStatusLink(accountKey, statusId)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        context.startActivity(intent)
+        return Intent(Intent.ACTION_VIEW, uri)
+    }
+
+    fun openStatus(context: Context, accountKey: UserKey?, statusId: String) {
+        context.startActivity(status(accountKey, statusId))
     }
 
     fun openStatus(context: Context, status: ParcelableStatus, activityOptions: Bundle? = null) {

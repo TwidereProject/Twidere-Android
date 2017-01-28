@@ -277,6 +277,10 @@ class WebLinkHandlerActivity : Activity() {
                 handledIntent.putExtra(Intent.EXTRA_TEXT, sb.toString())
                 return Pair(handledIntent, true)
             }
+            "favorite", "retweet" -> {
+                val tweetId = uri.getQueryParameter("tweet_id") ?: return Pair(null, false)
+                return Pair(IntentUtils.status(null, tweetId), true)
+            }
         }
         return Pair(null, false)
     }
