@@ -22,7 +22,9 @@ package org.mariotaku.twidere.activity
 import android.accounts.AccountManager
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.StrictModeUtils
@@ -39,6 +41,8 @@ open class MainActivity : BaseActivity() {
         val am = AccountManager.get(this)
         if (!Utils.checkDeviceCompatible()) {
             startActivity(Intent(this, IncompatibleAlertActivity::class.java))
+        } else if (!AccountUtils.hasAccountPermission(am)) {
+            Toast.makeText(this, R.string.message_toast_no_account_permission, Toast.LENGTH_SHORT).show()
         } else if (AccountUtils.hasInvalidAccount(am)) {
             val intent = Intent(this, InvalidAccountAlertActivity::class.java)
             intent.putExtra(EXTRA_INTENT, Intent(this, HomeActivity::class.java))

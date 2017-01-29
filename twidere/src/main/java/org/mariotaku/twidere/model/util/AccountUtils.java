@@ -189,6 +189,15 @@ public class AccountUtils {
         return null;
     }
 
+    public static boolean hasAccountPermission(@NonNull AccountManager am) {
+        try {
+            getAccounts(am);
+        } catch (SecurityException e) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean hasInvalidAccount(@NonNull AccountManager am) {
         for (Account account : getAccounts(am)) {
             if (!isAccountValid(am, account)) return true;
