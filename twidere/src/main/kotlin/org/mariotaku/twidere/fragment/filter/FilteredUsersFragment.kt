@@ -24,7 +24,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
-import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
@@ -81,7 +81,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_ADD_USER_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK) return
                 val intent = Intent(INTENT_ACTION_SELECT_USER)
-                intent.setClass(context, UserListSelectorActivity::class.java)
+                intent.setClass(context, UserSelectorActivity::class.java)
                 intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivityForResult(intent, REQUEST_ADD_USER_SELECT_ACCOUNT)
             }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.UserSelectorActivity">
+
+    <LinearLayout
+        android:id="@+id/usersListContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="?android:dividerVertical"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_user"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/element_spacing_normal">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editScreenName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:maxLines="1"/>
+
+                <org.mariotaku.twidere.view.IconActionButton
+                    android:id="@+id/screenNameConfirm"
+                    android:layout_width="@dimen/minimum_element_size"
+                    android:layout_height="@dimen/minimum_element_size"
+                    android:layout_weight="0"
+                    android:background="?selectableItemBackground"
+                    android:color="?menuIconColor"
+                    android:contentDescription="@string/search"
+                    android:src="@drawable/ic_action_search"
+                    tools:tint="?menuIconColor"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/usersList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</merge>

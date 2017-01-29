@@ -49,7 +49,7 @@ import org.mariotaku.microblog.library.twitter.model.UserListUpdate
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
-import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -213,7 +213,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             R.id.add -> {
                 if (userList.user_key != userList.account_key) return false
                 val intent = Intent(INTENT_ACTION_SELECT_USER)
-                intent.setClass(activity, UserListSelectorActivity::class.java)
+                intent.setClass(activity, UserSelectorActivity::class.java)
                 intent.putExtra(EXTRA_ACCOUNT_KEY, userList.account_key)
                 startActivityForResult(intent, REQUEST_SELECT_USER)
             }
