@@ -17,25 +17,15 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view;
+package org.mariotaku.twidere.view
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
 
-public class MediaViewPager extends ExtendedViewPager {
+class MediaViewPager(context: Context, attrs: AttributeSet? = null) : ExtendedViewPager(context, attrs) {
 
-
-    public MediaViewPager(Context context) {
-        this(context, null);
-    }
-
-    public MediaViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    @Override
-    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
-        return super.canScroll(v, checkV, dx, x, y);
+    override fun canScroll(v: View, checkV: Boolean, dx: Int, x: Int, y: Int): Boolean {
+        return super.canScroll(v, checkV, dx, x, y)
     }
 }

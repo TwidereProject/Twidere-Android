@@ -53,10 +53,7 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.task.SaveMediaToGalleryTask
-import org.mariotaku.twidere.util.AsyncTaskUtils
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.MenuUtils
-import org.mariotaku.twidere.util.PermissionUtils
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
@@ -77,7 +74,6 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private var hideOffsetNotSupported = false
     private lateinit var mediaViewerHelper: IMediaViewerActivity.Helper
     private lateinit var controlBarShowHideHelper: ControlBarShowHideHelper
-    private var tempLocation = IntArray(2)
 
     private val status: ParcelableStatus?
         get() = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
@@ -100,6 +96,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         swipeContainer.backgroundAlpha = 1f
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
         activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
+        activityLayout.setWindowInsetsListener { l, t, r, b ->
+            activityLayout.setStatusBarHeight(t - ThemeUtils.getActionBarHeight(this))
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -327,7 +326,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
 
 
     override val controlBarHeight: Int
-        get() = supportActionBar?.height ?: 0
+        get() {
+            return supportActionBar?.height ?: 0
+        }
 
     override var controlBarOffset: Float
         get() {

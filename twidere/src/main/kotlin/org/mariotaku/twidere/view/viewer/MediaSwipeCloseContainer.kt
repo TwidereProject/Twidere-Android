@@ -7,6 +7,7 @@ import android.support.v4.widget.ViewDragHelper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 
 /**
@@ -43,25 +44,26 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
 
         override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
             val container = this@MediaSwipeCloseContainer
+            val minVel = ViewConfiguration.get(context).scaledMinimumFlingVelocity
             when {
-                yvel > 0 -> {
+                yvel > minVel -> {
                     // Settle downward
                     container.dragHelper.settleCapturedViewAt(0, container.height)
                 }
-                yvel < 0 -> {
+                yvel < -minVel -> {
                     // Settle upward
                     container.dragHelper.settleCapturedViewAt(0, -container.height)
 
                 }
                 else -> when {
-                    childTop < -container.height / 2 -> {
-                        container.dragHelper.settleCapturedViewAt(0, -container.height)
+                    childTop < -container.height / 4 -> {
+                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, -container.height)
                     }
-                    childTop > container.height / 2 -> {
-                        container.dragHelper.settleCapturedViewAt(0, container.height)
+                    childTop > container.height / 4 -> {
+                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, container.height)
                     }
                     else -> {
-                        container.dragHelper.settleCapturedViewAt(0, 0)
+                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, 0)
                     }
                 }
             }
