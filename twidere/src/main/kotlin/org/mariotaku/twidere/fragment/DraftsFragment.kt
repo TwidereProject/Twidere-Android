@@ -210,6 +210,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             if (TextUtils.isEmpty(item.action_type)) {
                 item.action_type = Draft.Action.UPDATE_STATUS
             }
+            notificationManager.cancel(Uri.withAppendedPath(Drafts.CONTENT_URI,
+                    item._id.toString()).toString(), NOTIFICATION_ID_DRAFTS)
             when (item.action_type) {
                 Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                     LengthyOperationsService.updateStatusesAsync(context, item.action_type,

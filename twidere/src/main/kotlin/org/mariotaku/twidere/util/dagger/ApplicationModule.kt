@@ -129,7 +129,8 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun restHttpClient(prefs: SharedPreferencesWrapper, dns: TwidereDns,
                        connectionPool: ConnectionPool): RestHttpClient {
-        return HttpClientFactory.createRestHttpClient(application, prefs, dns, connectionPool)
+        val conf = HttpClientFactory.HttpClientConfiguration(prefs)
+        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool)
     }
 
     @Provides

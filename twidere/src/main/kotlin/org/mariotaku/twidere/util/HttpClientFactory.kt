@@ -2,7 +2,6 @@ package org.mariotaku.twidere.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import okhttp3.ConnectionPool
 import okhttp3.Credentials
@@ -22,52 +21,25 @@ import java.util.concurrent.TimeUnit
  */
 object HttpClientFactory {
 
-    fun createRestHttpClient(context: Context,
-                             prefs: SharedPreferencesWrapper, dns: Dns,
+    fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns,
                              connectionPool: ConnectionPool): RestHttpClient {
         val builder = OkHttpClient.Builder()
-        initOkHttpClient(context, prefs, builder, dns, connectionPool)
+        initOkHttpClient(conf, builder, dns, connectionPool)
         return OkHttpRestClient(builder.build())
     }
 
-    fun initOkHttpClient(context: Context, prefs: SharedPreferencesWrapper,
-                         builder: OkHttpClient.Builder, dns: Dns,
-                         connectionPool: ConnectionPool) {
-        updateHttpClientConfiguration(builder, prefs, dns, connectionPool)
+    fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder,
+                         dns: Dns, connectionPool: ConnectionPool) {
+        updateHttpClientConfiguration(builder, conf, dns, connectionPool)
         DebugModeUtils.initForOkHttpClient(builder)
     }
 
     @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
-    fun updateHttpClientConfiguration(builder: OkHttpClient.Builder,
-                                      prefs: SharedPreferencesWrapper,
-                                      dns: Dns, connectionPool: ConnectionPool) {
-        val enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false)
-        builder.connectTimeout(prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong(), TimeUnit.SECONDS)
+    internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder,
+                                               conf: HttpClientConfiguration, dns: Dns,
+                                               connectionPool: ConnectionPool) {
+        conf.applyTo(builder)
         builder.connectionPool(connectionPool)
-        if (enableProxy) {
-            val proxyType = prefs.getString(KEY_PROXY_TYPE, null)
-            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)
-            val proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1)
-            if (!isEmpty(proxyHost) && TwidereMathUtils.inRange(proxyPort, 0, 65535,
-                    TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
-                val type = getProxyType(proxyType)
-                if (type != Proxy.Type.DIRECT) {
-                    builder.proxy(Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)))
-                }
-            }
-            val username = prefs.getString(KEY_PROXY_USERNAME, null)
-            val password = prefs.getString(KEY_PROXY_PASSWORD, null)
-            builder.authenticator { route, response ->
-                val b = response.request().newBuilder()
-                if (response.code() == 407) {
-                    if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-                        val credential = Credentials.basic(username, password)
-                        b.header("Proxy-Authorization", credential)
-                    }
-                }
-                b.build()
-            }
-        }
         builder.dns(dns)
     }
 
@@ -84,14 +56,61 @@ object HttpClientFactory {
         return Proxy.Type.DIRECT
     }
 
+    class HttpClientConfiguration(val prefs: SharedPreferencesWrapper) {
+
+        var readTimeoutSecs: Long = -1
+        var writeTimeoutSecs: Long = -1
+        var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
+
+        internal fun applyTo(builder: OkHttpClient.Builder) {
+            if (connectionTimeoutSecs >= 0) {
+                builder.connectTimeout(connectionTimeoutSecs, TimeUnit.SECONDS)
+            }
+            if (writeTimeoutSecs >= 0) {
+                builder.writeTimeout(writeTimeoutSecs, TimeUnit.SECONDS)
+            }
+            if (readTimeoutSecs >= 0) {
+                builder.readTimeout(readTimeoutSecs, TimeUnit.SECONDS)
+            }
+            val enableProxy = prefs.getBoolean(KEY_ENABLE_PROXY, false)
+            if (enableProxy) {
+                configProxy(builder)
+            }
+        }
+
+        private fun configProxy(builder: OkHttpClient.Builder) {
+            val proxyType = prefs.getString(KEY_PROXY_TYPE, null)
+            val proxyHost = prefs.getString(KEY_PROXY_HOST, null)
+            val proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1)
+            if (!isEmpty(proxyHost) && TwidereMathUtils.inRange(proxyPort, 0, 65535,
+                    TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
+                val type = getProxyType(proxyType)
+                if (type != Proxy.Type.DIRECT) {
+                    builder.proxy(Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)))
+                }
+            }
+            val username = prefs.getString(KEY_PROXY_USERNAME, null)
+            val password = prefs.getString(KEY_PROXY_PASSWORD, null)
+            builder.authenticator { route, response ->
+                val b = response.request().newBuilder()
+                if (response.code() == 407) {
+                    if (!isEmpty(username) && !isEmpty(password)) {
+                        val credential = Credentials.basic(username, password)
+                        b.header("Proxy-Authorization", credential)
+                    }
+                }
+                b.build()
+            }
+        }
+
+    }
+
     fun reloadConnectivitySettings(context: Context) {
         val holder = DependencyHolder.get(context)
-        val client = holder.restHttpClient
-        if (client is OkHttpRestClient) {
-            val builder = OkHttpClient.Builder()
-            initOkHttpClient(context, holder.preferences, builder,
-                    holder.dns, holder.connectionPoll)
-            client.client = builder.build()
-        }
+        val client = holder.restHttpClient as? OkHttpRestClient ?: return
+        val builder = OkHttpClient.Builder()
+        initOkHttpClient(HttpClientConfiguration(holder.preferences), builder, holder.dns,
+                holder.connectionPool)
+        client.client = builder.build()
     }
 }
