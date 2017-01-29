@@ -157,7 +157,7 @@ dependencies {
     compile 'com.bluelinelabs:logansquare:1.3.7'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
-    compile 'com.github.mariotaku:PickNCrop:0.9.15'
+    compile 'com.github.mariotaku:PickNCrop:0.9.16'
     compile "com.github.mariotaku.RestFu:library:$mariotaku_restfu_version"
     compile "com.github.mariotaku.RestFu:okhttp3:$mariotaku_restfu_version"
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
@@ -177,7 +177,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:text:$mariotaku_commons_library_version"
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:$mariotaku_commons_library_version"
     compile 'com.github.mariotaku:KPreferences:0.9.5'
-    compile 'com.github.mariotaku:Chameleon:0.9.11'
+    compile 'com.github.mariotaku:Chameleon:0.9.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'

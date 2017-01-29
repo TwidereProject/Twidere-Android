@@ -139,6 +139,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
+    override val controlBarHeight: Int
+        get() {
+            return mainTabs.height - mainTabs.stripHeight
+        }
+
     fun closeAccountsDrawer() {
         if (homeMenu == null) return
         homeMenu.closeDrawers()
@@ -175,11 +180,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    override fun setControlBarVisibleAnimate(visible: Boolean) {
-        controlBarShowHideHelper.setControlBarVisibleAnimate(visible)
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener) {
+    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener?) {
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
@@ -555,33 +556,33 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
-    override fun getControlBarOffset(): Float {
-        if (mainTabs.columns > 1) {
-            val lp = actionsButton.layoutParams
-            val total: Float
-            if (lp is MarginLayoutParams) {
-                total = (lp.bottomMargin + actionsButton.height).toFloat()
-            } else {
-                total = actionsButton.height.toFloat()
+    override var controlBarOffset: Float
+        get() {
+            if (mainTabs.columns > 1) {
+                val lp = actionsButton.layoutParams
+                val total: Float
+                if (lp is MarginLayoutParams) {
+                    total = (lp.bottomMargin + actionsButton.height).toFloat()
+                } else {
+                    total = actionsButton.height.toFloat()
+                }
+                return 1 - actionsButton.translationY / total
             }
-            return 1 - actionsButton.translationY / total
+            val totalHeight = controlBarHeight.toFloat()
+            return 1 + toolbar.translationY / totalHeight
         }
-        val totalHeight = controlBarHeight.toFloat()
-        return 1 + toolbar.translationY / totalHeight
-    }
-
-    override fun setControlBarOffset(offset: Float) {
-        val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
-        toolbar.translationY = translationY.toFloat()
-        windowOverlay.translationY = translationY.toFloat()
-        val lp = actionsButton.layoutParams
-        if (lp is MarginLayoutParams) {
-            actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
-        } else {
-            actionsButton.translationY = actionsButton.height * (1 - offset)
+        set(offset) {
+            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
+            toolbar.translationY = translationY.toFloat()
+            windowOverlay.translationY = translationY.toFloat()
+            val lp = actionsButton.layoutParams
+            if (lp is MarginLayoutParams) {
+                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+            } else {
+                actionsButton.translationY = actionsButton.height * (1 - offset)
+            }
+            notifyControlBarOffsetChanged()
         }
-        notifyControlBarOffsetChanged()
-    }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
@@ -604,10 +605,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override fun getDrawerToggleDelegate(): ActionBarDrawerToggle.Delegate? {
         return homeDrawerToggleDelegate
-    }
-
-    override fun getControlBarHeight(): Int {
-        return mainTabs.height - mainTabs.stripHeight
     }
 
     private val keyboardShortcutRecipient: Fragment?

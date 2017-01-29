@@ -19,6 +19,7 @@ package org.mariotaku.twidere.activity
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,7 +28,11 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.ViewDragHelper
+import android.support.v7.app.WindowDecorActionBar
+import android.support.v7.app.containerView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -39,6 +44,7 @@ import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -52,21 +58,26 @@ import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.PermissionUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.support.WindowSupport
+import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
 import java.io.File
 import javax.inject.Inject
 import android.Manifest.permission as AndroidPermissions
 
-class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
+class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener {
+    @Inject
+    lateinit var mediaFileCache: FileCache
 
     @Inject
-    lateinit var mFileCache: FileCache
-    @Inject
-    lateinit var mMediaDownloader: MediaDownloader
-
+    lateinit var mediaDownloader: MediaDownloader
     private var saveToStoragePosition = -1
-    private var shareMediaPosition = -1
 
+    private var shareMediaPosition = -1
+    private var wasBarShowing = 0
+    private var hideOffsetNotSupported = false
     private lateinit var mediaViewerHelper: IMediaViewerActivity.Helper
+    private lateinit var controlBarShowHideHelper: ControlBarShowHideHelper
+    private var tempLocation = IntArray(2)
 
     private val status: ParcelableStatus?
         get() = intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS)
@@ -82,19 +93,23 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
         mediaViewerHelper = IMediaViewerActivity.Helper(this)
+        controlBarShowHideHelper = ControlBarShowHideHelper(this)
         mediaViewerHelper.onCreate(savedInstanceState)
-        val actionBar = supportActionBar!!
-        actionBar.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        swipeContainer.listener = this
+        swipeContainer.backgroundAlpha = 1f
+        WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
+        activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
     }
 
-
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SHARE_MEDIA -> {
                 ShareProvider.clearTempFiles(this)
             }
         }
     }
+
 
     override fun onContentChanged() {
         super.onContentChanged()
@@ -114,6 +129,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
         val currentItem = viewPager.currentItem
         if (currentItem < 0 || currentItem >= adapter.count) return false
         val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
+        if (obj.isDetached || obj.host == null) return false
         if (obj is CacheDownloadMediaViewerFragment) {
             val running = obj.loaderManager.hasRunningLoadersSafe()
             val downloaded = obj.hasDownloadedData()
@@ -219,25 +235,19 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
     }
 
     override fun isBarShowing(): Boolean {
-        val actionBar = supportActionBar
-        return actionBar != null && actionBar.isShowing
+        return controlBarOffset >= 1
     }
 
     override fun setBarVisibility(visible: Boolean) {
-        val actionBar = supportActionBar ?: return
-        if (visible) {
-            actionBar.show()
-        } else {
-            actionBar.hide()
-        }
+        setControlBarVisibleAnimate(visible)
     }
 
     override fun getDownloader(): MediaDownloader {
-        return mMediaDownloader
+        return mediaDownloader
     }
 
     override fun getFileCache(): FileCache {
-        return mFileCache
+        return mediaFileCache
     }
 
     @SuppressLint("SwitchIntDef")
@@ -282,6 +292,71 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
         theme.colorToolbar = ContextCompat.getColor(this, R.color.ab_bg_color_media_viewer)
         theme.isToolbarColored = false
         return theme
+    }
+
+    override fun onSwipeCloseFinished() {
+        finish()
+        overridePendingTransition(0, 0)
+    }
+
+    override fun onSwipeOffsetChanged(offset: Int) {
+        val offsetFactor = 1 - (Math.abs(offset).toFloat() / swipeContainer.height)
+        swipeContainer.backgroundAlpha = offsetFactor
+        val colorToolbar = overrideTheme.colorToolbar
+        val alpha = Math.round(Color.alpha(colorToolbar) * offsetFactor)
+        activityLayout.setStatusBarColor(ColorUtils.setAlphaComponent(colorToolbar, alpha))
+    }
+
+    override fun onSwipeStateChanged(state: Int) {
+        supportActionBar?.let { bar ->
+            if (state == ViewDragHelper.STATE_IDLE) {
+                if (wasBarShowing == 1 && !isBarShowing) {
+                    setBarVisibility(true)
+                }
+                wasBarShowing = 0
+            } else {
+                if (wasBarShowing == 0) {
+                    wasBarShowing = if (isBarShowing) 1 else -1
+                }
+                if (isBarShowing) {
+                    setBarVisibility(false)
+                }
+            }
+        }
+    }
+
+
+    override val controlBarHeight: Int
+        get() = supportActionBar?.height ?: 0
+
+    override var controlBarOffset: Float
+        get() {
+            val actionBar = supportActionBar
+            if (actionBar != null) {
+                return 1 - actionBar.hideOffset / controlBarHeight.toFloat()
+            }
+            return 0f
+        }
+        set(offset) {
+            val actionBar = supportActionBar
+            if (actionBar != null && !hideOffsetNotSupported) {
+                if (actionBar is WindowDecorActionBar) {
+                    val toolbar = actionBar.containerView
+                    toolbar.alpha = offset
+                }
+                try {
+                    actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
+                } catch (e: UnsupportedOperationException) {
+                    // Some device will throw this exception
+                    hideOffsetNotSupported = true
+                }
+
+            }
+            notifyControlBarOffsetChanged()
+        }
+
+    override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
+        controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
     private fun processShareIntent(intent: Intent) {
@@ -406,3 +481,4 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity {
         private val REQUEST_PERMISSION_SHARE_MEDIA = 203
     }
 }
+

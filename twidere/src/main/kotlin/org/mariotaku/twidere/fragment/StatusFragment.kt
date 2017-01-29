@@ -317,7 +317,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position) ?: return
-        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
+        val quotedId = status.quoted_id ?: return
+        IntentUtils.openStatus(activity, status.account_key, quotedId)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

@@ -240,26 +240,6 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
         super.onPause()
     }
 
-    override fun setControlBarOffset(offset: Float) {
-
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean) {
-
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener) {
-
-    }
-
-    override fun getControlBarOffset(): Float {
-        return 0f
-    }
-
-    override fun getControlBarHeight(): Int {
-        return 0
-    }
-
     override fun notifyControlBarOffsetChanged() {
         val offset = controlBarOffset
         for (l in controlBarOffsetListeners) {

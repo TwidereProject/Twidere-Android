@@ -218,15 +218,18 @@ abstract class AbsActivitiesFragment protected constructor() :
         var lastReadId: Long = -1
         var lastReadViewTop: Int = 0
         var loadMore = false
+        var wasAtTop = false
 
         // 1. Save current read position if not first load
         if (!firstLoad) {
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            wasAtTop = firstVisibleItemPosition == 0
             val statusRange = rangeOfSize(adapter.activityStartIndex, adapter.activityCount - 1)
             val lastReadPosition = if (readFromBottom) {
                 lastVisibleItemPosition
             } else {
-                layoutManager.findFirstVisibleItemPosition()
+                firstVisibleItemPosition
             }.coerceIn(statusRange)
             lastReadId = adapter.getTimestamp(lastReadPosition)
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
@@ -251,7 +254,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             restorePosition = adapter.findPositionBySortTimestamp(lastReadId)
         }
 
-        if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || readFromBottom
+        if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || !wasAtTop ||
+                readFromBottom
                 || (rememberPosition && firstLoad))) {
             if (layoutManager.height == 0) {
                 // RecyclerView has not currently laid out, ignore padding.
@@ -292,7 +296,8 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
         val status = adapter.getActivity(position)?.getActivityStatus() ?: return
-        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
+        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+                preferences[displaySensitiveContentsKey],
                 null)
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, timelineType, adapter.mediaPreviewEnabled)

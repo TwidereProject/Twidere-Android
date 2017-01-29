@@ -183,6 +183,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 } else {
                     NavUtils.navigateUpFromSameTask(this)
                 }
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
@@ -239,58 +240,53 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         setupActionBarOption()
     }
 
-    override fun setControlBarVisibleAnimate(visible: Boolean) {
-        // Currently only search page needs this pattern, so we only enable this feature for it.
-        if (currentVisibleFragment !is HideUiOnScroll) return
-        controlBarShowHideHelper.setControlBarVisibleAnimate(visible)
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener) {
+    override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
         // Currently only search page needs this pattern, so we only enable this feature for it.
         if (currentVisibleFragment !is HideUiOnScroll) return
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
-    override fun getControlBarOffset(): Float {
-        val fragment = currentVisibleFragment
-        val actionBar = supportActionBar
-        if (fragment is IToolBarSupportFragment) {
-            return fragment.controlBarOffset
-        } else if (actionBar != null) {
-            return actionBar.hideOffset / controlBarHeight.toFloat()
-        }
-        return 0f
-    }
-
-    override fun setControlBarOffset(offset: Float) {
-        val fragment = currentVisibleFragment
-        val actionBar = supportActionBar
-        if (fragment is IToolBarSupportFragment) {
-            fragment.controlBarOffset = offset
-        } else if (actionBar != null && !hideOffsetNotSupported) {
-            try {
-                actionBar.hideOffset = (controlBarHeight * offset).toInt()
-            } catch (e: UnsupportedOperationException) {
-                // Some device will throw this exception
-                hideOffsetNotSupported = true
+    override var controlBarOffset: Float
+        get() {
+            val fragment = currentVisibleFragment
+            val actionBar = supportActionBar
+            if (fragment is IToolBarSupportFragment) {
+                return fragment.controlBarOffset
+            } else if (actionBar != null) {
+                return actionBar.hideOffset / controlBarHeight.toFloat()
             }
-
+            return 0f
         }
-        notifyControlBarOffsetChanged()
-    }
+        set(offset) {
+            val fragment = currentVisibleFragment
+            val actionBar = supportActionBar
+            if (fragment is IToolBarSupportFragment) {
+                fragment.controlBarOffset = offset
+            } else if (actionBar != null && !hideOffsetNotSupported) {
+                try {
+                    actionBar.hideOffset = (controlBarHeight * offset).toInt()
+                } catch (e: UnsupportedOperationException) {
+                    // Some device will throw this exception
+                    hideOffsetNotSupported = true
+                }
 
-    override fun getControlBarHeight(): Int {
-        val fragment = currentVisibleFragment
-        val actionBar = supportActionBar
-        if (fragment is IToolBarSupportFragment) {
-            return fragment.controlBarHeight
-        } else if (actionBar != null) {
-            return actionBar.height
+            }
+            notifyControlBarOffsetChanged()
         }
-        if (actionBarHeight != 0) return actionBarHeight
-        actionBarHeight = ThemeUtils.getActionBarHeight(this)
-        return actionBarHeight
-    }
+
+    override val controlBarHeight: Int
+        get() {
+            val fragment = currentVisibleFragment
+            val actionBar = supportActionBar
+            if (fragment is IToolBarSupportFragment) {
+                return fragment.controlBarHeight
+            } else if (actionBar != null) {
+                return actionBar.height
+            }
+            if (actionBarHeight != 0) return actionBarHeight
+            actionBarHeight = ThemeUtils.getActionBarHeight(this)
+            return actionBarHeight
+        }
 
     private fun setTitle(linkId: Int, uri: Uri): Boolean {
         setSubtitle(null)

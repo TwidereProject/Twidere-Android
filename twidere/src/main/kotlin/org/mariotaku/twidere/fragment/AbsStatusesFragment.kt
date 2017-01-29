@@ -30,7 +30,6 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
-import android.util.Log
 import android.view.*
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
@@ -39,10 +38,8 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -275,14 +272,17 @@ abstract class AbsStatusesFragment protected constructor() :
         var lastReadId: Long = -1
         var lastReadViewTop: Int = 0
         var loadMore = false
+        var wasAtTop = false
         // 1. Save current read position if not first load
         if (!firstLoad) {
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            wasAtTop = firstVisibleItemPosition == 0
             val statusRange = rangeOfSize(adapter.statusStartIndex, adapter.statusCount - 1)
             val lastReadPosition = if (readFromBottom) {
                 lastVisibleItemPosition
             } else {
-                layoutManager.findFirstVisibleItemPosition()
+                firstVisibleItemPosition
             }.coerceIn(statusRange)
             lastReadId = if (useSortIdAsReadPosition) {
                 adapter.getStatusSortId(lastReadPosition)
@@ -318,8 +318,8 @@ abstract class AbsStatusesFragment protected constructor() :
         } else {
             onHasMoreDataChanged(false)
         }
-        if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || readFromBottom
-                || (rememberPosition && firstLoad))) {
+        if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || !wasAtTop
+                || readFromBottom || (rememberPosition && firstLoad))) {
             if (layoutManager.height == 0) {
                 // RecyclerView has not currently laid out, ignore padding.
                 layoutManager.scrollToPositionWithOffset(restorePosition, lastReadViewTop)
