@@ -486,6 +486,9 @@
     <string name="following_you">Following you</string>
 
     <string name="follows">Follows</string>
+    <string name="title_user_list_subscriptions">Subscriptions</string>
+    <string name="title_user_list_memberships">Belongs to</string>
+    <string name="title_user_list_ownerships">Created</string>
 
     <string name="font">Font</string>
     <string name="font_family">Font family</string>

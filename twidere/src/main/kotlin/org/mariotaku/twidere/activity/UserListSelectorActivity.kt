@@ -24,7 +24,6 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.LoaderManager
 import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import android.util.Log
@@ -44,7 +43,6 @@ import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.CreateUserListDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
-import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
@@ -125,9 +123,6 @@ class UserListSelectorActivity : BaseActivity(), OnClickListener, OnItemClickLis
         val task = GetUserListsTask(this, accountKey, screenName)
         AsyncTaskUtils.executeTask(task)
     }
-
-    private val isSelectingUser: Boolean
-        get() = INTENT_ACTION_SELECT_USER == intent.action
 
     private fun setUserListsData(data: List<ParcelableUserList>, isMyAccount: Boolean) {
         userListsAdapter.setData(data, true)

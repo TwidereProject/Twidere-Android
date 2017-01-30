@@ -21,22 +21,20 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.CursorSupportUsersLoader
-import org.mariotaku.twidere.loader.GroupMembersLoader
+import org.mariotaku.twidere.loader.UserListSubscriptionsLoader
+import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 
-class GroupMembersFragment : CursorUsersListFragment() {
+class UserListSubscriptionsFragment : ParcelableUserListsFragment() {
 
-    override fun onCreateUsersLoader(context: Context,
-                                            args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
-        val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val groupId = args.getString(EXTRA_GROUP_ID)
-        val groupName = args.getString(EXTRA_GROUP_NAME)
-        val loader = GroupMembersLoader(context, accountId, groupId,
-                groupName, adapter.getData(), fromUser)
-        loader.cursor = nextCursor
-        loader.page = nextPage
-        return loader
+    override fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>> {
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val screenName = args.getString(EXTRA_SCREEN_NAME)
+        val cursor = args.getLong(EXTRA_NEXT_CURSOR, -1)
+        return UserListSubscriptionsLoader(activity, accountKey, userKey, screenName, cursor, data)
     }
+
 }

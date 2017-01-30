@@ -53,7 +53,7 @@ abstract class GetActivitiesTask(
         GeneralComponentHelper.build(context).inject(this)
     }
 
-    public override fun doLongOperation(param: RefreshTaskParam) {
+    override fun doLongOperation(param: RefreshTaskParam) {
         if (param.shouldAbort) return
         val accountIds = param.accountKeys
         val maxIds = param.maxIds
@@ -189,7 +189,7 @@ abstract class GetActivitiesTask(
     @Throws(MicroBlogException::class)
     protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
 
-    public override fun afterExecute(handler: ((Boolean) -> Unit)?, result: Unit) {
+    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: Unit) {
         context.contentResolver.notifyChange(contentUri, null)
         bus.post(GetActivitiesTaskEvent(contentUri, false, null))
         handler?.invoke(true)
@@ -198,7 +198,7 @@ abstract class GetActivitiesTask(
     protected abstract val contentUri: Uri
 
     @UiThread
-    public override fun beforeExecute() {
+    override fun beforeExecute() {
         bus.post(GetActivitiesTaskEvent(contentUri, true, null))
     }
 }

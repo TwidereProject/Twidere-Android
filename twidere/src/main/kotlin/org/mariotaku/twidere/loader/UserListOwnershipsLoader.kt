@@ -20,35 +20,32 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
-import android.util.Log
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
-class SavedSearchesLoader(
+class UserListOwnershipsLoader(
         context: Context,
-        private val accountId: UserKey
-) : AsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
+        accountKey: UserKey,
+        private val userKey: UserKey?,
+        private val screenName: String?,
+        data: List<ParcelableUserList>?
+) : BaseUserListsLoader(context, accountKey, 0, data) {
 
-    override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId
-        ) ?: return null
-        try {
-            return twitter.savedSearches
-        } catch (e: MicroBlogException) {
-            Log.w(LOGTAG, e)
+    @Throws(MicroBlogException::class)
+    override fun getUserLists(twitter: MicroBlog, paging: Paging): List<UserList> {
+        if (userKey != null) {
+            return twitter.getUserListOwnerships(userKey.id, paging)
+        } else if (screenName != null) {
+            return twitter.getUserListOwnershipsByScreenName(screenName, paging)
         }
-
-        return null
+        throw MicroBlogException("Invalid user")
     }
 
-    override fun onStartLoading() {
-        forceLoad()
+    override fun isFollowing(list: UserList): Boolean {
+        return true
     }
-
 }

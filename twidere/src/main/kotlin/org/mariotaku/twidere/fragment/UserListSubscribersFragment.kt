@@ -28,7 +28,7 @@ import org.mariotaku.twidere.model.UserKey
 
 class UserListSubscribersFragment : CursorUsersListFragment() {
 
-    public override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
+    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val listId = args.getString(EXTRA_LIST_ID)
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)

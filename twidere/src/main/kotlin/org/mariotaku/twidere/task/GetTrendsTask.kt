@@ -37,7 +37,7 @@ abstract class GetTrendsTask(
     @Throws(MicroBlogException::class)
     abstract fun getTrends(twitter: MicroBlog): List<Trends>
 
-    public override fun doLongOperation(param: Any?) {
+    override fun doLongOperation(param: Any?) {
         val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return
         try {
             val trends = getTrends(twitter)

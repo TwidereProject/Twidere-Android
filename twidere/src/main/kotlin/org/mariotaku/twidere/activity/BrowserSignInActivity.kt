@@ -89,7 +89,7 @@ class BrowserSignInActivity : BaseActivity() {
         getRequestToken()
     }
 
-    public override fun onDestroy() {
+    override fun onDestroy() {
         if (task?.status == AsyncTask.Status.RUNNING) {
             task?.cancel(true)
         }

@@ -60,7 +60,7 @@ class ConversationLoader(
     }
 
     @Throws(MicroBlogException::class)
-    public override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): List<Status> {
+    override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): List<Status> {
         canLoadAllReplies = false
         when (details.type) {
             AccountType.TWITTER -> {

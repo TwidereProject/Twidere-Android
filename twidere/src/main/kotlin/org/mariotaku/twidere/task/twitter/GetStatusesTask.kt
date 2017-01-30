@@ -67,7 +67,7 @@ abstract class GetStatusesTask(
 
     protected abstract val timelineType: String
 
-    public override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterWrapper.StatusListResponse>) {
+    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterWrapper.StatusListResponse>) {
         context.contentResolver.notifyChange(contentUri, null)
         bus.post(GetStatusesTaskEvent(contentUri, false, AsyncTwitterWrapper.getException(result)))
         handler?.invoke(true)
@@ -79,7 +79,7 @@ abstract class GetStatusesTask(
 
     protected abstract val errorInfoKey: String
 
-    public override fun doLongOperation(param: RefreshTaskParam): List<TwitterWrapper.StatusListResponse> {
+    override fun doLongOperation(param: RefreshTaskParam): List<TwitterWrapper.StatusListResponse> {
         if (param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys
         val maxIds = param.maxIds

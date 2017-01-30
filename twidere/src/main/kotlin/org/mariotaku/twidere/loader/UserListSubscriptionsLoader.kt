@@ -20,35 +20,32 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
-import android.util.Log
+
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.SavedSearch
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.microblog.library.twitter.model.PageableResponseList
+import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
-class SavedSearchesLoader(
+class UserListSubscriptionsLoader(
         context: Context,
-        private val accountId: UserKey
-) : AsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
+        accountKey: UserKey,
+        private val userKey: UserKey?,
+        private val screenName: String?,
+        cursor: Long,
+        data: List<ParcelableUserList>?
+) : BaseUserListsLoader(context, accountKey, cursor, data) {
 
-    override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId
-        ) ?: return null
-        try {
-            return twitter.savedSearches
-        } catch (e: MicroBlogException) {
-            Log.w(LOGTAG, e)
+    @Throws(MicroBlogException::class)
+    override fun getUserLists(twitter: MicroBlog, paging: Paging): PageableResponseList<UserList> {
+        if (userKey != null) {
+            return twitter.getUserListSubscriptions(userKey.id, paging)
+        } else if (screenName != null) {
+            return twitter.getUserListSubscriptionsByScreenName(screenName, paging)
         }
-
-        return null
-    }
-
-    override fun onStartLoading() {
-        forceLoad()
+        throw MicroBlogException("Invalid user")
     }
 
 }

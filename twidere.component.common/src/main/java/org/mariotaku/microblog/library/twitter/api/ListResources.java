@@ -148,11 +148,11 @@ public interface ListResources {
 
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptionsByScreenName(@Query("screen_name") String listOwnerScreenName, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptionsByScreenName(@Query("screen_name") String listOwnerScreenName, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") String userId, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") String userId, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/show.json")

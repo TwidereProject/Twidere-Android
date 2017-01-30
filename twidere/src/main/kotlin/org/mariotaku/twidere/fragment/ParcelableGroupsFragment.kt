@@ -44,7 +44,7 @@ import org.mariotaku.twidere.view.holder.GroupViewHolder
 abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<ParcelableGroupsAdapter>(),
         LoaderCallbacks<List<ParcelableGroup>?>, GroupAdapterListener, KeyboardShortcutCallback {
 
-    private var mNavigationHelper: RecyclerViewNavigationHelper? = null
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
     val nextCursor: Long = 0
     val prevCursor: Long = 0
 
@@ -109,15 +109,15 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         get() = adapter.getData()
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        return mNavigationHelper!!.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
+        return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return mNavigationHelper!!.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+        return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        return mNavigationHelper!!.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+        return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -125,7 +125,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         val layoutManager = layoutManager
         adapter.groupAdapterListener = this
 
-        mNavigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
+        navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)

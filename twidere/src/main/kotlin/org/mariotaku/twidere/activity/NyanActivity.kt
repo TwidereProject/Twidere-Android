@@ -37,7 +37,7 @@ import org.mariotaku.twidere.nyan.NyanWallpaperService
 
 class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChangeListener {
 
-    private var helper: NyanSurfaceHelper? = null
+    private lateinit var helper: NyanSurfaceHelper
 
     override fun onLongClick(v: View): Boolean {
         Toast.makeText(this, R.string.message_toast_nyan_sakamoto, Toast.LENGTH_SHORT).show()
@@ -63,11 +63,11 @@ class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChan
 
     override fun onStart() {
         super.onStart()
-        helper?.start()
+        helper.start()
     }
 
     override fun onStop() {
-        helper?.stop()
+        helper.stop()
         super.onStop()
     }
 
@@ -97,7 +97,7 @@ class NyanActivity : BaseActivity(), OnLongClickListener, OnSharedPreferenceChan
 
     private fun updateSurface() {
         val def = resources.getInteger(R.integer.default_live_wallpaper_scale)
-        helper!!.setScale(preferences.getInt(KEY_LIVE_WALLPAPER_SCALE, def).toFloat())
+        helper.setScale(preferences.getInt(KEY_LIVE_WALLPAPER_SCALE, def).toFloat())
     }
 
 }

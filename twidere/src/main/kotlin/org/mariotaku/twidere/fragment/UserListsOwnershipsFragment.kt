@@ -28,21 +28,21 @@ import android.view.MenuItem
 import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.loader.UserListsLoader
+import org.mariotaku.twidere.loader.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.UserListDestroyedEvent
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.Utils
 
-class UserListsFragment : ParcelableUserListsFragment() {
+class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
 
-    public override fun onCreateUserListsLoader(context: Context,
+    override fun onCreateUserListsLoader(context: Context,
                                                 args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>> {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListsLoader(activity, accountKey, userKey, screenName, true, data)
+        return UserListOwnershipsLoader(activity, accountKey, userKey, screenName, data)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
