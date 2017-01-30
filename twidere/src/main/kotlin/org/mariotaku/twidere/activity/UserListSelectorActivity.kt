@@ -24,6 +24,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.LoaderManager
 import android.text.TextUtils
 import android.text.TextUtils.isEmpty
 import android.util.Log
@@ -43,6 +44,7 @@ import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.CreateUserListDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey

@@ -18,65 +18,49 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge
+<RelativeLayout
+    android:id="@+id/usersListContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.UserSelectorActivity">
 
     <LinearLayout
-        android:id="@+id/usersListContainer"
+        android:id="@+id/searchContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/element_spacing_normal">
 
-        <LinearLayout
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/editScreenName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/search_hint_users"
+            android:maxLines="1"
+            app:backgroundTint="?colorAccent"/>
 
-            <TextView
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/title_user"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/element_spacing_normal">
-
-                <AutoCompleteTextView
-                    android:id="@+id/editScreenName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:maxLines="1"/>
-
-                <org.mariotaku.twidere.view.IconActionButton
-                    android:id="@+id/screenNameConfirm"
-                    android:layout_width="@dimen/minimum_element_size"
-                    android:layout_height="@dimen/minimum_element_size"
-                    android:layout_weight="0"
-                    android:background="?selectableItemBackground"
-                    android:color="?menuIconColor"
-                    android:contentDescription="@string/search"
-                    android:src="@drawable/ic_action_search"
-                    tools:tint="?menuIconColor"/>
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/usersList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <org.mariotaku.twidere.view.IconActionButton
+            android:id="@+id/screenNameConfirm"
+            android:layout_width="@dimen/minimum_element_size"
+            android:layout_height="@dimen/minimum_element_size"
+            android:layout_weight="0"
+            android:background="?selectableItemBackground"
+            android:color="?menuIconColor"
+            android:contentDescription="@string/search"
+            android:src="@drawable/ic_action_search"
+            tools:tint="?menuIconColor"/>
     </LinearLayout>
 
-</merge>
+    <include
+        layout="@layout/layout_list_with_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/searchContainer"/>
+</RelativeLayout>

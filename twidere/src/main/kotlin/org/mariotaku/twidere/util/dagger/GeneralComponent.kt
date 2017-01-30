@@ -28,6 +28,7 @@ import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
+import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.loader.ParcelableUserLoader
@@ -150,4 +151,6 @@ interface GeneralComponent {
     fun inject(provider: UrlFiltersSubscriptionProvider)
 
     fun inject(preference: PremiumEntryPreference)
+
+    fun inject(loader: CacheUserSearchLoader)
 }

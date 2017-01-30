@@ -21,83 +21,63 @@ package org.mariotaku.twidere.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.Loader
 import android.text.TextUtils.isEmpty
-import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import kotlinx.android.synthetic.main.activity_user_selector.*
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.Paging
+import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.isNotNullOrEmpty
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.adapter.SimpleParcelableUsersAdapter
-import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.fragment.CreateUserListDialogFragment
-import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.AsyncTaskUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.ParseUtils
-import java.util.*
+import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
-class UserSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
+class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.LoaderCallbacks<List<ParcelableUser>> {
 
     private lateinit var usersAdapter: SimpleParcelableUsersAdapter
 
-    private var screenName: String? = null
+    private var loaderInitialized: Boolean = false
+
+    private val accountKey: UserKey?
+        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = intent
-        if (!intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
+        val accountKey = this.accountKey ?: run {
             finish()
             return
         }
         setContentView(R.layout.activity_user_selector)
+
+        editScreenName.addTextChangedListener(object : SimpleTextWatcher() {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                searchUser(accountKey, s.toString(), true)
+            }
+        })
+        screenNameConfirm.setOnClickListener {
+            val screenName = ParseUtils.parseString(editScreenName.text)
+            searchUser(accountKey, screenName, false)
+        }
+
         if (savedInstanceState == null) {
-            screenName = intent.getStringExtra(EXTRA_SCREEN_NAME)
-        } else {
-            screenName = savedInstanceState.getString(EXTRA_SCREEN_NAME)
+            editScreenName.setText(intent.getStringExtra(EXTRA_SCREEN_NAME))
         }
-
-        if (!isEmpty(screenName)) {
-            searchUser(screenName!!)
-        }
-        val adapter = UserAutoCompleteAdapter(this)
-        adapter.accountKey = accountKey
-        editScreenName.setAdapter(adapter)
-        editScreenName.setText(screenName)
         usersAdapter = SimpleParcelableUsersAdapter(this)
-        usersList.adapter = usersAdapter
-        usersList.onItemClickListener = this
-        screenNameConfirm.setOnClickListener(this)
-    }
+        listView.adapter = usersAdapter
+        listView.onItemClickListener = this
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.screenNameConfirm -> {
-                val screen_name = ParseUtils.parseString(editScreenName.text)
-                if (isEmpty(screen_name)) return
-                searchUser(screen_name)
-            }
-            R.id.createList -> {
-                val f = CreateUserListDialogFragment()
-                val args = Bundle()
-                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-                f.arguments = args
-                f.show(supportFragmentManager, null)
-            }
-        }
+        showSearchHint()
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
@@ -110,93 +90,79 @@ class UserSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListene
         finish()
     }
 
-    fun setUsersData(data: List<ParcelableUser>) {
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>> {
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val query = args.getString(EXTRA_QUERY)
+        val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
+        if (!fromCache) {
+            showProgress()
+        }
+        return CacheUserSearchLoader(this, accountKey, query, fromCache, true)
+    }
+
+    override fun onLoaderReset(loader: Loader<List<ParcelableUser>>) {
+        usersAdapter.setData(null, true)
+    }
+
+    override fun onLoadFinished(loader: Loader<List<ParcelableUser>>, data: List<ParcelableUser>?) {
+        progressContainer.visibility = View.GONE
+        listContainer.visibility = View.VISIBLE
         usersAdapter.setData(data, true)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(EXTRA_SCREEN_NAME, screenName)
-    }
-
-    private val accountKey: UserKey
-        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-
-
-    private fun searchUser(name: String) {
-        val task = SearchUsersTask(this, accountKey, name)
-        AsyncTaskUtils.executeTask(task)
-    }
-
-    private fun dismissDialogFragment(tag: String) {
-        executeAfterFragmentResumed { activity ->
-            val fm = activity.supportFragmentManager
-            val f = fm.findFragmentByTag(tag)
-            if (f is DialogFragment) {
-                f.dismiss()
-            }
+        loader as CacheUserSearchLoader
+        if (data.isNotNullOrEmpty()) {
+            showList()
+        } else if (loader.query.isEmpty()) {
+            showSearchHint()
+        } else {
+            showNotFound()
         }
     }
 
-    private fun showDialogFragment(df: DialogFragment, tag: String) {
-        executeAfterFragmentResumed { activity ->
-            df.show(activity.supportFragmentManager, tag)
+    private fun searchUser(accountKey: UserKey, query: String, fromCache: Boolean) {
+        if (isEmpty(query)) {
+            showSearchHint()
+            return
+        }
+        val args = Bundle {
+            this[EXTRA_ACCOUNT_KEY] = accountKey
+            this[EXTRA_QUERY] = query
+            this[EXTRA_FROM_CACHE] = fromCache
+        }
+        if (loaderInitialized) {
+            supportLoaderManager.initLoader(0, args, this)
+            loaderInitialized = true
+        } else {
+            supportLoaderManager.restartLoader(0, args, this)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        bus.register(this)
+    private fun showProgress() {
+        progressContainer.visibility = View.VISIBLE
+        listContainer.visibility = View.GONE
     }
 
-    override fun onStop() {
-        bus.unregister(this)
-        super.onStop()
+    private fun showSearchHint() {
+        progressContainer.visibility = View.GONE
+        listContainer.visibility = View.VISIBLE
+        emptyView.visibility = View.VISIBLE
+        listView.visibility = View.GONE
+        emptyIcon.setImageResource(R.drawable.ic_info_search)
+        emptyText.text = getText(R.string.search_hint_users)
     }
 
-
-    private class SearchUsersTask(
-            private val activity: UserSelectorActivity,
-            private val accountKey: UserKey,
-            private val name: String
-    ) : AsyncTask<Any, Any, SingleResponse<List<ParcelableUser>>>() {
-
-        override fun doInBackground(vararg params: Any): SingleResponse<List<ParcelableUser>> {
-            val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey) ?: return SingleResponse.getInstance<List<ParcelableUser>>()
-            try {
-                val paging = Paging()
-                val lists = twitter.searchUsers(name, paging)
-                val data = ArrayList<ParcelableUser>()
-                for (item in lists) {
-                    data.add(ParcelableUserUtils.fromUser(item, accountKey))
-                }
-                return SingleResponse.getInstance<List<ParcelableUser>>(data)
-            } catch (e: MicroBlogException) {
-                Log.w(LOGTAG, e)
-                return SingleResponse.getInstance<List<ParcelableUser>>(e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<List<ParcelableUser>>) {
-            activity.dismissDialogFragment(FRAGMENT_TAG_SEARCH_USERS)
-            if (result.data != null) {
-                activity.setUsersData(result.data)
-            }
-        }
-
-        override fun onPreExecute() {
-            val df = ProgressDialogFragment()
-            df.isCancelable = false
-            activity.showDialogFragment(df, FRAGMENT_TAG_SEARCH_USERS)
-        }
-
-        companion object {
-
-            private const val FRAGMENT_TAG_SEARCH_USERS = "search_users"
-        }
-
+    private fun showNotFound() {
+        progressContainer.visibility = View.GONE
+        listContainer.visibility = View.VISIBLE
+        emptyView.visibility = View.VISIBLE
+        listView.visibility = View.GONE
+        emptyIcon.setImageResource(R.drawable.ic_info_search)
+        emptyText.text = getText(R.string.search_hint_users)
     }
 
-
+    private fun showList() {
+        progressContainer.visibility = View.GONE
+        listContainer.visibility = View.VISIBLE
+        listView.visibility = View.VISIBLE
+        emptyView.visibility = View.GONE
+    }
 }

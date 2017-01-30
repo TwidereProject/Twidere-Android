@@ -39,6 +39,7 @@
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:gravity="center"
             android:orientation="vertical"
             tools:visibility="visible">
@@ -63,7 +64,8 @@
     <FrameLayout
         android:id="@+id/progressContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true">
 
         <ProgressBar
             android:id="@+id/progressBar"

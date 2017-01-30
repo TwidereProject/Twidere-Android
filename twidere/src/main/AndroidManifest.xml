@@ -377,8 +377,9 @@
         </activity>
         <activity
             android:name=".activity.UserSelectorActivity"
-            android:label="@string/select_user_list"
-            android:theme="@style/Theme.Twidere.Dialog">
+            android:label="@string/select_user"
+            android:theme="@style/Theme.Twidere.Dialog"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.SELECT_USER"/>
 
@@ -387,8 +388,9 @@
         </activity>
         <activity
             android:name=".activity.UserListSelectorActivity"
-            android:label="@string/select_user"
-            android:theme="@style/Theme.Twidere.Dialog">
+            android:label="@string/select_user_list"
+            android:theme="@style/Theme.Twidere.Dialog"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.SELECT_USER_LIST"/>
 

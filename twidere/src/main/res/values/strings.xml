@@ -1014,6 +1014,7 @@
 
     <string name="search">Search</string>
     <string name="search_hint">Search tweets or users</string>
+    <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
     <string name="search_type_statuses">Tweets</string>
     <string name="search_type_users">Users</string>
