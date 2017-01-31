@@ -33,6 +33,7 @@
     <string name="action_denying_follow_request">denying follow request</string>
     <!-- [verb] Edit image/settings etc. -->
     <string name="action_edit">Edit</string>
+    <string name="action_edit_filter_rule">Edit rule</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_favoriting">favoriting</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
@@ -688,6 +689,7 @@
     <string name="message_toast_already_logged_in">You have already logged in</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>
+    <string name="message_toast_duplicate_filter_rule">Rule duplicated</string>
     <string name="message_toast_error_occurred">An error occurred, please try again</string>
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>

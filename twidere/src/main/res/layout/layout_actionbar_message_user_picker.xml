@@ -63,7 +63,6 @@
             android:contentDescription="@string/search"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_search"
-            android:tag="tint|primary_color_dependent"
             app:backgroundTintMode="src_atop"/>
     </FrameLayout>
 

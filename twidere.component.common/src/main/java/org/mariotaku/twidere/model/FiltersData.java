@@ -163,6 +163,10 @@ public class FiltersData {
         @JsonField(name = "source")
         long source = -1;
 
+        public long getId() {
+            return _id;
+        }
+
         public String getValue() {
             return value;
         }

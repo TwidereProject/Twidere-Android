@@ -33,7 +33,10 @@ import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
@@ -43,6 +46,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override val contentUri: Uri = Filters.Users.CONTENT_URI
     override val contentColumns: Array<String> = Filters.Users.COLUMNS
     override val sortOrder: String? = "${Filters.Users.SOURCE} >= 0"
+    override val supportsEdit: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -126,6 +130,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
     override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
         return FilterUsersListAdapter(context)
+    }
+
+    override fun addOrEditItem(id: Long, value: String?) {
+        // No-op
     }
 
     class FilterUsersListAdapter(

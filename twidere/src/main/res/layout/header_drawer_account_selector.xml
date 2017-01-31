@@ -168,8 +168,7 @@
                         android:id="@+id/accountDashboardMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:focusable="true"
-                        android:tag="ate_ignore"/>
+                        android:focusable="true"/>
                 </FrameLayout>
 
             </LinearLayout>

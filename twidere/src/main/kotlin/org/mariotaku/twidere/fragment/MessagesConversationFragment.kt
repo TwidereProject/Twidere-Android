@@ -217,8 +217,8 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
         addImage.setOnClickListener(this)
         sendMessage.isEnabled = false
         if (savedInstanceState != null) {
-            val account: AccountDetails = savedInstanceState.getParcelable(EXTRA_ACCOUNT)
-            val recipient: ParcelableUser = savedInstanceState.getParcelable(EXTRA_USER)
+            val account: AccountDetails? = savedInstanceState.getParcelable(EXTRA_ACCOUNT)
+            val recipient: ParcelableUser? = savedInstanceState.getParcelable(EXTRA_USER)
             showConversation(account, recipient)
             editText.setText(savedInstanceState.getString(EXTRA_TEXT))
             imageUri = savedInstanceState.getString(EXTRA_IMAGE_URI)
@@ -289,12 +289,12 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
         updateAddImageButton()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (editText != null) {
-            outState!!.putCharSequence(EXTRA_TEXT, editText.text)
+            outState.putCharSequence(EXTRA_TEXT, editText.text)
         }
-        outState!!.putParcelable(EXTRA_ACCOUNT, account)
+        outState.putParcelable(EXTRA_ACCOUNT, account)
         outState.putParcelable(EXTRA_USER, recipient)
         outState.putString(EXTRA_IMAGE_URI, imageUri)
     }

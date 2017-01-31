@@ -14,7 +14,6 @@
         android:layout_alignParentTop="true"
         android:background="?colorToolbar"
         android:elevation="@dimen/toolbar_elevation"
-        android:tag="ate_ignore"
         app:popupTheme="?actionBarPopupTheme"
         tools:elevation="0dp"/>
 

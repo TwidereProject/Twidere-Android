@@ -28,7 +28,6 @@
     android:gravity="center_vertical"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:tag="tint_background|accent_color"
     app:backgroundTint="?colorControlActivated">
 
     <View
