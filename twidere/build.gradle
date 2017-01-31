@@ -139,7 +139,6 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.7'
-    compile 'com.commonsware.cwac:merge:1.1.1'
     compile 'com.commonsware.cwac:layouts:0.4.3'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'

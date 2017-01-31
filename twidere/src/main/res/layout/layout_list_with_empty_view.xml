@@ -27,7 +27,8 @@
     <FrameLayout
         android:id="@+id/listContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:minWidth="@dimen/minimum_width_list_layout_content">
 
         <ListView
             android:id="@+id/listView"
@@ -41,6 +42,8 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
+            android:minHeight="@dimen/minimum_height_list_layout_content"
+            android:minWidth="@dimen/minimum_width_list_layout_content"
             android:orientation="vertical"
             tools:visibility="visible">
 
@@ -65,7 +68,9 @@
         android:id="@+id/progressContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true">
+        android:clickable="true"
+        android:minHeight="@dimen/minimum_height_list_layout_content"
+        android:minWidth="@dimen/minimum_width_list_layout_content">
 
         <ProgressBar
             android:id="@+id/progressBar"

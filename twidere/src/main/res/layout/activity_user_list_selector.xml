@@ -18,45 +18,16 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<merge
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/minimum_width_list_layout_content"
     tools:context=".activity.UserListSelectorActivity">
 
-    <LinearLayout
-        android:id="@+id/userListsContainer"
+    <include
+        layout="@layout/layout_list_with_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="?android:dividerVertical"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:visibility="gone">
-
-        <ListView
-            android:id="@+id/userListsList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <LinearLayout
-            android:id="@+id/createListContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/createList"
-                style="?android:borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_bar_height"
-                android:gravity="center"
-                android:text="@string/new_user_list"/>
-        </LinearLayout>
-    </LinearLayout>
-
-
-</merge>
+        android:layout_height="match_parent"/>
+</FrameLayout>

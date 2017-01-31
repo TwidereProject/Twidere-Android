@@ -21,128 +21,78 @@ package org.mariotaku.twidere.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.text.TextUtils
-import android.text.TextUtils.isEmpty
-import android.util.Log
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.Loader
 import android.view.View
-import android.view.View.OnClickListener
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.ListView
-import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.activity_user_list_selector.*
-import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.http.HttpResponseCode
+import android.widget.TextView
+import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
-import org.mariotaku.twidere.adapter.UserAutoCompleteAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.fragment.CreateUserListDialogFragment
-import org.mariotaku.twidere.fragment.ProgressDialogFragment
+import org.mariotaku.twidere.loader.UserListOwnershipsLoader
+import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.UserListCreatedEvent
-import org.mariotaku.twidere.model.util.ParcelableUserListUtils
-import org.mariotaku.twidere.util.AsyncTaskUtils
-import org.mariotaku.twidere.util.DataStoreUtils.getAccountScreenName
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
-import java.util.*
 
-class UserListSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
+class UserListSelectorActivity : BaseActivity(),
+        LoaderManager.LoaderCallbacks<List<ParcelableUserList>> {
 
-    private lateinit var userListsAdapter: SimpleParcelableUserListsAdapter
 
-    private var screenName: String? = null
+    private lateinit var adapter: SimpleParcelableUserListsAdapter
+
+    private val accountKey: UserKey?
+        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+    private val showMyLists: Boolean
+        get() = intent.getBooleanExtra(EXTRA_SHOW_MY_LISTS, false)
+
+    private var userKey: UserKey? = null
+
+    private var loaderInitialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = intent
-        if (!intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
+        val accountKey = accountKey ?: run {
             finish()
             return
         }
         setContentView(R.layout.activity_user_list_selector)
-        if (savedInstanceState == null) {
-            screenName = intent.getStringExtra(EXTRA_SCREEN_NAME)
+
+        adapter = SimpleParcelableUserListsAdapter(this)
+        listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
+                listView, false).apply {
+            (findViewById(android.R.id.text1) as TextView).setText(R.string.action_select_user)
+        }, SelectUserAction, true)
+        listView.adapter = adapter
+        listView.onItemClickListener = OnItemClickListener { view, child, position, id ->
+            val item = view.getItemAtPosition(position)
+            when (item) {
+                is ParcelableUserList -> {
+                    val data = Intent()
+                    data.putExtra(EXTRA_USER_LIST, item)
+                    setResult(Activity.RESULT_OK, data)
+                    finish()
+                }
+                is SelectUserAction -> {
+                    selectUser()
+                }
+            }
+        }
+
+        val userKey = intent.getParcelableExtra<UserKey>(EXTRA_USER_KEY) ?: if (showMyLists) {
+            accountKey
         } else {
-            screenName = savedInstanceState.getString(EXTRA_SCREEN_NAME)
+            null
         }
 
-        if (!isEmpty(screenName)) {
-            getUserLists(screenName)
-        }
-        val adapter = UserAutoCompleteAdapter(this)
-        adapter.accountKey = accountKey
-        userListsAdapter = SimpleParcelableUserListsAdapter(this)
-        userListsList.adapter = userListsAdapter
-        userListsList.onItemClickListener = this
-        createList.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.createList -> {
-                val f = CreateUserListDialogFragment()
-                val args = Bundle()
-                args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
-                f.arguments = args
-                f.show(supportFragmentManager, null)
-            }
-        }
-    }
-
-    override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
-        val list = view as ListView
-        val data = Intent()
-        data.putExtra(EXTRA_USER_LIST, userListsAdapter.getItem(position - list.headerViewsCount))
-        setResult(Activity.RESULT_OK, data)
-        finish()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(EXTRA_SCREEN_NAME, screenName)
-    }
-
-    @Subscribe
-    fun onUserListCreated(event: UserListCreatedEvent) {
-        getUserLists(screenName)
-    }
-
-    private val accountKey: UserKey
-        get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-
-    private fun getUserLists(screenName: String?) {
-        if (screenName == null) return
-        this.screenName = screenName
-        val task = GetUserListsTask(this, accountKey, screenName)
-        AsyncTaskUtils.executeTask(task)
-    }
-
-    private fun setUserListsData(data: List<ParcelableUserList>, isMyAccount: Boolean) {
-        userListsAdapter.setData(data, true)
-        userListsContainer.visibility = View.VISIBLE
-        createListContainer.visibility = if (isMyAccount) View.VISIBLE else View.GONE
-    }
-
-    private fun dismissDialogFragment(tag: String) {
-        executeAfterFragmentResumed { activity ->
-            val fm = activity.supportFragmentManager
-            val f = fm.findFragmentByTag(tag)
-            if (f is DialogFragment) {
-                f.dismiss()
-            }
-        }
-    }
-
-    private fun showDialogFragment(df: DialogFragment, tag: String) {
-        executeAfterFragmentResumed { activity ->
-            df.show(activity.supportFragmentManager, tag)
+        if (userKey != null) {
+            loadUserLists(accountKey, userKey)
+        } else if (savedInstanceState == null) {
+            selectUser()
         }
     }
 
@@ -156,61 +106,68 @@ class UserListSelectorActivity : BaseActivity(), OnClickListener, OnItemClickLis
         super.onStop()
     }
 
-    private class GetUserListsTask(
-            private val activity: UserListSelectorActivity,
-            private val accountKey: UserKey,
-            private val screenName: String
-    ) : AsyncTask<Any, Any, SingleResponse<List<ParcelableUserList>>>() {
-
-        override fun doInBackground(vararg params: Any): SingleResponse<List<ParcelableUserList>> {
-            val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey) ?: return SingleResponse.getInstance<List<ParcelableUserList>>()
-            try {
-                val lists = twitter.getUserListsByScreenName(screenName, true)
-                val data = ArrayList<ParcelableUserList>()
-                var isMyAccount = screenName.equals(getAccountScreenName(activity,
-                        accountKey), ignoreCase = true)
-                for (item in lists) {
-                    val user = item.user
-                    if (user != null && screenName.equals(user.screenName, ignoreCase = true)) {
-                        if (!isMyAccount && TextUtils.equals(user.id, accountKey.id)) {
-                            isMyAccount = true
-                        }
-                        data.add(ParcelableUserListUtils.from(item, accountKey))
-                    }
-                }
-                val result = SingleResponse.getInstance<List<ParcelableUserList>>(data)
-                result.extras.putBoolean(EXTRA_IS_MY_ACCOUNT, isMyAccount)
-                return result
-            } catch (e: MicroBlogException) {
-                Log.w(LOGTAG, e)
-                return SingleResponse.getInstance<List<ParcelableUserList>>(e)
-            }
-
-        }
-
-        override fun onPostExecute(result: SingleResponse<List<ParcelableUserList>>) {
-            activity.dismissDialogFragment(FRAGMENT_TAG_GET_USER_LISTS)
-            if (result.data != null) {
-                activity.setUserListsData(result.data, result.extras.getBoolean(EXTRA_IS_MY_ACCOUNT))
-            } else if (result.exception is MicroBlogException) {
-                if (result.exception.statusCode == HttpResponseCode.NOT_FOUND) {
-//                    activity.searchUser(screenName)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_SELECT_USER -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                    loadUserLists(accountKey!!, user.key)
                 }
             }
         }
-
-        override fun onPreExecute() {
-            val df = ProgressDialogFragment()
-            df.isCancelable = false
-            activity.showDialogFragment(df, FRAGMENT_TAG_GET_USER_LISTS)
-        }
-
-        companion object {
-
-            private const val FRAGMENT_TAG_GET_USER_LISTS = "get_user_lists"
-        }
-
     }
 
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
+        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all)
+    }
+
+    override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {
+        adapter.setData(null)
+    }
+
+    override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
+        adapter.setData(data)
+        showList()
+    }
+
+    private fun loadUserLists(accountKey: UserKey, userKey: UserKey) {
+        if (userKey != this.userKey) {
+            adapter.clear()
+            showProgress()
+            this.userKey = userKey
+        }
+        val args = Bundle {
+            this[EXTRA_ACCOUNT_KEY] = accountKey
+            this[EXTRA_USER_KEY] = userKey
+        }
+        if (!loaderInitialized) {
+            loaderInitialized = true
+            supportLoaderManager.initLoader(0, args, this)
+        } else {
+            supportLoaderManager.restartLoader(0, args, this)
+        }
+    }
+
+    private fun showProgress() {
+        progressContainer.visibility = View.VISIBLE
+        listContainer.visibility = View.GONE
+    }
+
+    private fun showList() {
+        progressContainer.visibility = View.GONE
+        listContainer.visibility = View.VISIBLE
+        listView.visibility = View.VISIBLE
+        emptyView.visibility = View.GONE
+    }
+
+    private fun selectUser() {
+        val selectUserIntent = Intent(this, UserSelectorActivity::class.java)
+        selectUserIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        startActivityForResult(selectUserIntent, REQUEST_SELECT_USER)
+    }
+
+    object SelectUserAction
 
 }

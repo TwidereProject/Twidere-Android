@@ -24,11 +24,12 @@ import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
+import org.mariotaku.twidere.util.view.display
+import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 class SimpleParcelableUserListsAdapter(
         context: Context
-) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_two_line) {
+) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list) {
 
     override fun getItemId(position: Int): Long {
         return (if (getItem(position) != null) getItem(position).hashCode() else -1).toLong()
@@ -37,38 +38,22 @@ class SimpleParcelableUserListsAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
         val tag = view.tag
-        val holder: TwoLineWithIconViewHolder
-        if (tag is TwoLineWithIconViewHolder) {
-            holder = tag
-        } else {
-            holder = TwoLineWithIconViewHolder(view)
-            view.tag = holder
+        val holder = tag as? SimpleUserListViewHolder ?: run {
+            val h = SimpleUserListViewHolder(view)
+            view.tag = h
+            return@run h
         }
-
-        // Clear images in order to prevent images in recycled view shown.
-        holder.icon.setImageDrawable(null)
-
         val userList = getItem(position)
-        val display_name = userColorNameManager.getDisplayName(userList, nameFirst)
-        holder.text1.text = userList.name
-        holder.text2.text = context.getString(R.string.created_by, display_name)
-        holder.icon.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
-        if (profileImageEnabled) {
-            mediaLoader.displayProfileImage(holder.icon, userList.user_profile_image_url)
-        } else {
-            mediaLoader.cancelDisplayTask(holder.icon)
-        }
+        holder.display(userList, mediaLoader, userColorNameManager, profileImageEnabled)
         return view
     }
 
-    fun setData(data: List<ParcelableUserList>?, clearOld: Boolean) {
-        if (clearOld) {
-            clear()
-        }
+    fun setData(data: List<ParcelableUserList>?) {
+        clear()
         if (data == null) return
         for (user in data) {
             //TODO improve compare
-            if (clearOld || findItemPosition(user.hashCode().toLong()) < 0) {
+            if (findItemPosition(user.hashCode().toLong()) < 0) {
                 add(user)
             }
         }

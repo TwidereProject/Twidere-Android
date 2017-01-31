@@ -18,20 +18,20 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<RelativeLayout
-    android:id="@+id/usersListContainer"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/minimum_width_list_layout_content"
+    android:orientation="vertical"
     tools:context=".activity.UserSelectorActivity">
 
     <LinearLayout
         android:id="@+id/searchContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/element_spacing_normal">
@@ -61,6 +61,5 @@
     <include
         layout="@layout/layout_list_with_empty_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/searchContainer"/>
-</RelativeLayout>
+        android:layout_height="match_parent"/>
+</LinearLayout>

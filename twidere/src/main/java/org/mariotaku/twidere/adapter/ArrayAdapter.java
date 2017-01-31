@@ -252,6 +252,12 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
         if (mNotifyOnChange) notifyDataSetChanged();
     }
 
+    public List<T> getAll() {
+        synchronized (mLock) {
+            return new ArrayList<>(mObjects);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -64,8 +64,8 @@
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"
         style="?profileImageStyle"
-        android:layout_width="@dimen/icon_size_card_list_item"
-        android:layout_height="@dimen/icon_size_card_list_item"
+        android:layout_width="@dimen/icon_size_list_item_small"
+        android:layout_height="@dimen/icon_size_list_item_small"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="0"

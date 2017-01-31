@@ -45,12 +45,12 @@ import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
 class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.LoaderCallbacks<List<ParcelableUser>> {
 
-    private lateinit var usersAdapter: SimpleParcelableUsersAdapter
-
-    private var loaderInitialized: Boolean = false
+    private lateinit var adapter: SimpleParcelableUsersAdapter
 
     private val accountKey: UserKey?
         get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+
+    private var loaderInitialized: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +73,8 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         if (savedInstanceState == null) {
             editScreenName.setText(intent.getStringExtra(EXTRA_SCREEN_NAME))
         }
-        usersAdapter = SimpleParcelableUsersAdapter(this)
-        listView.adapter = usersAdapter
+        adapter = SimpleParcelableUsersAdapter(this)
+        listView.adapter = adapter
         listView.onItemClickListener = this
 
         showSearchHint()
@@ -82,7 +82,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
         val list = view as ListView
-        val user = usersAdapter.getItem(position - list.headerViewsCount) ?: return
+        val user = adapter.getItem(position - list.headerViewsCount) ?: return
         val data = Intent()
         data.setExtrasClassLoader(classLoader)
         data.putExtra(EXTRA_USER, user)
@@ -101,13 +101,13 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>>) {
-        usersAdapter.setData(null, true)
+        adapter.setData(null, true)
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableUser>>, data: List<ParcelableUser>?) {
         progressContainer.visibility = View.GONE
         listContainer.visibility = View.VISIBLE
-        usersAdapter.setData(data, true)
+        adapter.setData(data, true)
         loader as CacheUserSearchLoader
         if (data.isNotNullOrEmpty()) {
             showList()

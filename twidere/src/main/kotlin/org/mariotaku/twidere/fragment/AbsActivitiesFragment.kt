@@ -36,6 +36,7 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
@@ -225,15 +226,15 @@ abstract class AbsActivitiesFragment protected constructor() :
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             wasAtTop = firstVisibleItemPosition == 0
-            val statusRange = rangeOfSize(adapter.activityStartIndex, adapter.activityCount - 1)
+            val activityRange = rangeOfSize(adapter.activityStartIndex, Math.max(0, adapter.activityCount - 1))
             val lastReadPosition = if (readFromBottom) {
                 lastVisibleItemPosition
             } else {
                 firstVisibleItemPosition
-            }.coerceIn(statusRange)
+            }.coerceInOr(activityRange, -1)
             lastReadId = adapter.getTimestamp(lastReadPosition)
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = lastVisibleItemPosition >= statusRange.endInclusive
+            loadMore = activityRange.endInclusive >= 0 && lastVisibleItemPosition >= activityRange.endInclusive
         } else if (rememberPosition && readPositionTag != null) {
             lastReadId = readStateManager.getPosition(readPositionTag)
             lastReadViewTop = 0

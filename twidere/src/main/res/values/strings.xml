@@ -82,6 +82,7 @@
     <string name="action_saving_search">saving search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
+    <string name="action_select_user">Select user</string>
     <!-- [verb] Send tweet/message -->
     <string name="action_send">Send</string>
     <string name="action_sending_direct_message">sending direct message</string>
@@ -486,9 +487,6 @@
     <string name="following_you">Following you</string>
 
     <string name="follows">Follows</string>
-    <string name="title_user_list_subscriptions">Subscriptions</string>
-    <string name="title_user_list_memberships">Belongs to</string>
-    <string name="title_user_list_ownerships">Created</string>
 
     <string name="font">Font</string>
     <string name="font_family">Font family</string>
@@ -1219,6 +1217,9 @@
     <string name="title_sync_settings">Sync settings</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
+    <string name="title_user_list_memberships">Belongs to</string>
+    <string name="title_user_list_ownerships">Created</string>
+    <string name="title_user_list_subscriptions">Subscriptions</string>
     <string name="title_users_favorited_this">Users favorited this</string>
     <string name="title_users_liked_this">Users liked this</string>
     <string name="title_users_retweeted_this">Users retweeted this</string>
