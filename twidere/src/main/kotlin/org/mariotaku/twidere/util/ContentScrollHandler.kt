@@ -29,8 +29,8 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 /**
  * Created by mariotaku on 15/3/15.
  */
-open class ContentScrollHandler(
-        private val contentListSupport: ContentScrollHandler.ContentListSupport,
+open class ContentScrollHandler<A>(
+        private val contentListSupport: ContentScrollHandler.ContentListSupport<A>,
         private val viewCallback: ContentScrollHandler.ViewCallback?
 ) {
     val touchListener: View.OnTouchListener
@@ -123,7 +123,7 @@ open class ContentScrollHandler(
         scrollDirection = 0
     }
 
-    internal class TouchListener(private val listener: ContentScrollHandler) : View.OnTouchListener {
+    internal class TouchListener<A>(private val listener: ContentScrollHandler<A>) : View.OnTouchListener {
         private var lastY: Float = 0f
 
         override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -151,9 +151,9 @@ open class ContentScrollHandler(
         fun post(runnable: Runnable)
     }
 
-    interface ContentListSupport {
+    interface ContentListSupport<A> {
 
-        val adapter: Any?
+        val adapter: A?
 
         val refreshing: Boolean
 

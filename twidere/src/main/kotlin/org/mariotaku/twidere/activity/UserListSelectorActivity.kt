@@ -23,6 +23,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
+import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
@@ -38,12 +39,14 @@ import org.mariotaku.twidere.loader.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.ContentScrollHandler
+import org.mariotaku.twidere.util.ListViewScrollHandler
 
 class UserListSelectorActivity : BaseActivity(),
+        ContentScrollHandler.ContentListSupport<SimpleParcelableUserListsAdapter>,
         LoaderManager.LoaderCallbacks<List<ParcelableUserList>> {
 
-
-    private lateinit var adapter: SimpleParcelableUserListsAdapter
+    override lateinit var adapter: SimpleParcelableUserListsAdapter
 
     private val accountKey: UserKey?
         get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
@@ -68,6 +71,7 @@ class UserListSelectorActivity : BaseActivity(),
             (findViewById(android.R.id.text1) as TextView).setText(R.string.action_select_user)
         }, SelectUserAction, true)
         listView.adapter = adapter
+        listView.setOnScrollListener(ListViewScrollHandler(this, listView))
         listView.onItemClickListener = OnItemClickListener { view, child, position, id ->
             val item = view.getItemAtPosition(position)
             when (item) {
@@ -130,6 +134,26 @@ class UserListSelectorActivity : BaseActivity(),
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
         adapter.setData(data)
         showList()
+    }
+
+    override fun setControlVisible(visible: Boolean) {
+    }
+
+    override var refreshing: Boolean
+        get() {
+            return supportLoaderManager.hasRunningLoadersSafe()
+        }
+        set(value) {
+
+        }
+
+    override val reachingStart: Boolean
+        get() = listView.firstVisiblePosition < 0
+    override val reachingEnd: Boolean
+        get() = listView.lastVisiblePosition > (listView.count + listView.headerViewsCount
+                + listView.footerViewsCount)
+
+    override fun onLoadMoreContents(position: Long) {
     }
 
     private fun loadUserLists(accountKey: UserKey, userKey: UserKey) {

@@ -1,25 +1,25 @@
 package org.mariotaku.twidere.util
 
 import android.widget.AbsListView
+import android.widget.ListView
 
 import org.mariotaku.twidere.util.support.ViewSupport
 
 /**
  * Created by mariotaku on 16/3/1.
  */
-class ListViewScrollHandler(
-        contentListSupport: ContentScrollHandler.ContentListSupport,
+class ListViewScrollHandler<A>(
+        contentListSupport: ContentScrollHandler.ContentListSupport<A>,
         viewCallback: ContentScrollHandler.ViewCallback?
-) : ContentScrollHandler(contentListSupport, viewCallback), AbsListView.OnScrollListener,
+) : ContentScrollHandler<A>(contentListSupport, viewCallback), AbsListView.OnScrollListener,
         ListScrollDistanceCalculator.ScrollDistanceListener {
-    private val calculator: ListScrollDistanceCalculator
+    private val calculator: ListScrollDistanceCalculator = ListScrollDistanceCalculator()
     var onScrollListener: AbsListView.OnScrollListener? = null
     private var dy: Int = 0
     private var oldState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE
 
-    init {
-        calculator = ListScrollDistanceCalculator()
-    }
+    constructor(contentListSupport: ContentScrollHandler.ContentListSupport<A>, listView: ListView)
+            : this(contentListSupport, ListViewCallback(listView))
 
     override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
         calculator.onScrollStateChanged(view, scrollState)
