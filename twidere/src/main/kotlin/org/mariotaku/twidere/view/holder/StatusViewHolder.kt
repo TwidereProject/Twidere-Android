@@ -252,17 +252,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedMediaLabel.visibility = View.GONE
                 }
 
-                val quoteHint = if (!quoteContentAvailable) {
+                quotedTextView.text = if (!quoteContentAvailable) {
                     // Display 'not available' label
-                    context.getString(R.string.label_status_not_available)
+                    SpannableString.valueOf(context.getString(R.string.label_status_not_available)).apply {
+                        setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                                android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
+                                length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
                 } else {
                     // Display 'original status' label
                     context.getString(R.string.label_original_status)
-                }
-                quotedTextView.text = SpannableString.valueOf(quoteHint).apply {
-                    setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                            android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
-                            length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
 
                 quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))

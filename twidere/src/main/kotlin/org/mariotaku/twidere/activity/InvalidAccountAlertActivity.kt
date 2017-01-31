@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
+import org.mariotaku.twidere.extension.model.isAccountValid
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.support.removeAccountSupport
@@ -32,7 +33,7 @@ class InvalidAccountAlertActivity : FragmentActivity() {
             builder.setMessage(R.string.message_error_invalid_account)
             builder.setPositiveButton(android.R.string.ok) { dialog, which ->
                 val am = AccountManager.get(context)
-                AccountUtils.getAccounts(am).filter { !AccountUtils.isAccountValid(am, it) }.forEach { account ->
+                AccountUtils.getAccounts(am).filter { !am.isAccountValid(it) }.forEach { account ->
                     am.removeAccountSupport(account)
                 }
                 val intent = activity.intent.getParcelableExtra<Intent>(EXTRA_INTENT)

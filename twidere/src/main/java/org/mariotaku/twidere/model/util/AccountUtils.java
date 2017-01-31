@@ -2,17 +2,9 @@ package org.mariotaku.twidere.model.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.accounts.AccountManagerCallback;
-import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Context;
-import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
@@ -23,11 +15,8 @@ import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
-import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_AUTH_TOKEN_TYPE;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_ACTIVATED;
 import static org.mariotaku.twidere.TwidereConstants.ACCOUNT_USER_DATA_COLOR;
@@ -171,23 +160,6 @@ public class AccountUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static AccountManagerFuture<Account> renameAccount(AccountManager am, Account oldAccount, String newName) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AccountManagerSupportL.renameAccount(am, oldAccount, newName, null, null);
-        }
-        final Account newAccount = new Account(newName, oldAccount.type);
-        if (am.addAccountExplicitly(newAccount, null, null)) {
-            for (String key : ACCOUNT_USER_DATA_KEYS) {
-                am.setUserData(newAccount, key, am.getUserData(oldAccount, key));
-            }
-            am.setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
-                    am.peekAuthToken(oldAccount, ACCOUNT_AUTH_TOKEN_TYPE));
-            @SuppressWarnings("deprecation")
-            final AccountManagerFuture<Boolean> booleanFuture = am.removeAccount(oldAccount, null, null);
-            return new AccountFuture(newAccount, booleanFuture);
-        }
-        return null;
-    }
 
     public static boolean hasAccountPermission(@NonNull AccountManager am) {
         try {
@@ -198,71 +170,6 @@ public class AccountUtils {
         return true;
     }
 
-    public static boolean hasInvalidAccount(@NonNull AccountManager am) {
-        for (Account account : getAccounts(am)) {
-            if (!isAccountValid(am, account)) return true;
-        }
-        return false;
-    }
 
-    public static boolean isAccountValid(@NonNull AccountManager am, Account account) {
-        if (TextUtils.isEmpty(am.peekAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE))) return false;
-        if (TextUtils.isEmpty(am.getUserData(account, ACCOUNT_USER_DATA_KEY))) return false;
-        if (TextUtils.isEmpty(am.getUserData(account, ACCOUNT_USER_DATA_USER))) return false;
-        return true;
-    }
-
-    private static class AccountFuture implements AccountManagerFuture<Account> {
-
-        private final Account account;
-        private final AccountManagerFuture<Boolean> booleanFuture;
-
-        AccountFuture(Account account, AccountManagerFuture<Boolean> booleanFuture) {
-            this.account = account;
-            this.booleanFuture = booleanFuture;
-        }
-
-        @Override
-        public boolean cancel(boolean mayInterruptIfRunning) {
-            return booleanFuture.cancel(mayInterruptIfRunning);
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return booleanFuture.isCancelled();
-        }
-
-        @Override
-        public boolean isDone() {
-            return booleanFuture.isDone();
-        }
-
-        @Override
-        public Account getResult() throws OperationCanceledException, IOException, AuthenticatorException {
-            if (booleanFuture.getResult()) {
-                return account;
-            }
-            return null;
-        }
-
-        @Override
-        public Account getResult(long timeout, TimeUnit unit) throws OperationCanceledException, IOException, AuthenticatorException {
-            if (booleanFuture.getResult(timeout, unit)) {
-                return account;
-            }
-            return null;
-        }
-    }
-
-    private static class AccountManagerSupportL {
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        static AccountManagerFuture<Account> renameAccount(AccountManager am, Account account,
-                                                           String newName,
-                                                           AccountManagerCallback<Account> callback,
-                                                           Handler handler) {
-            return am.renameAccount(account, newName, callback, handler);
-        }
-    }
 
 }

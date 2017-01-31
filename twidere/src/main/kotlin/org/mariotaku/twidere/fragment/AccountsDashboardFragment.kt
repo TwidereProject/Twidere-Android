@@ -36,11 +36,8 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
@@ -723,7 +720,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             val draftsCount: Int
     )
 
-    class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
+    class AccountsInfoLoader(context: Context) : Loader<AccountsInfo>(context) {
         private var contentObserver: ContentObserver? = null
         private var accountListener: OnAccountsUpdateListener? = null
 
@@ -733,10 +730,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             firstLoad = true
         }
 
-        override fun loadInBackground(): AccountsInfo {
+        override fun onForceLoad() {
             val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
             val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
-            return AccountsInfo(accounts, draftsCount)
+            deliverResult(AccountsInfo(accounts, draftsCount))
         }
 
         /**
