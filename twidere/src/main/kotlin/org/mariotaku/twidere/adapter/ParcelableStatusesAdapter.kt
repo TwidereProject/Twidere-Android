@@ -39,10 +39,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITE
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
-import org.mariotaku.twidere.model.ObjectId
-import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableStatusCursorIndices
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
@@ -112,7 +109,7 @@ abstract class ParcelableStatusesAdapter(
     private var showingActionCardId = RecyclerView.NO_ID
     private var lastItemFiltered: Boolean = false
 
-    override val itemCounts: IntArray = IntArray(4)
+    override val itemCounts = ItemCounts(4)
 
     protected abstract val progressViewIds: IntArray
 
@@ -263,7 +260,7 @@ abstract class ParcelableStatusesAdapter(
                 return GapViewHolder(this, view)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
-                val view = inflater.inflate(R.layout.card_item_load_indicator, parent, false)
+                val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
             ITEM_VIEW_TYPE_EMPTY -> {
@@ -344,7 +341,7 @@ abstract class ParcelableStatusesAdapter(
         itemCounts[1] = pinnedStatuses?.size ?: 0
         itemCounts[2] = statusCount
         itemCounts[3] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
-        return itemCounts.sum()
+        return itemCounts.itemCount
     }
 
 

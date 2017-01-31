@@ -5,15 +5,11 @@ import android.widget.ListView
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 
-/**
- * Created by mariotaku on 2017/1/1.
- */
-
-
 fun ListView.selectAll() {
     for (i in 0 until count) {
         setItemChecked(i, true)
     }
+
 }
 
 fun ListView.selectNone() {

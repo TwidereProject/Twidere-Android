@@ -34,8 +34,11 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_USER
 import org.mariotaku.twidere.adapter.SimpleParcelableUserListsAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.UserListOwnershipsLoader
+import org.mariotaku.twidere.loader.iface.ICursorSupportLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
@@ -54,6 +57,7 @@ class UserListSelectorActivity : BaseActivity(),
         get() = intent.getBooleanExtra(EXTRA_SHOW_MY_LISTS, false)
 
     private var userKey: UserKey? = null
+    private var nextCursor: Long = -1
 
     private var loaderInitialized: Boolean = false
 
@@ -66,12 +70,15 @@ class UserListSelectorActivity : BaseActivity(),
         setContentView(R.layout.activity_user_list_selector)
 
         adapter = SimpleParcelableUserListsAdapter(this)
+        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
                 listView, false).apply {
             (findViewById(android.R.id.text1) as TextView).setText(R.string.action_select_user)
         }, SelectUserAction, true)
         listView.adapter = adapter
-        listView.setOnScrollListener(ListViewScrollHandler(this, listView))
+        val handler = ListViewScrollHandler(this, listView)
+        listView.setOnScrollListener(handler)
+        listView.setOnTouchListener(handler.touchListener)
         listView.onItemClickListener = OnItemClickListener { view, child, position, id ->
             val item = view.getItemAtPosition(position)
             when (item) {
@@ -124,15 +131,27 @@ class UserListSelectorActivity : BaseActivity(),
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUserList>> {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        return UserListOwnershipsLoader(this, accountKey, userKey, null, adapter.all)
+        val nextCursor = args.getLong(EXTRA_NEXT_CURSOR)
+        return UserListOwnershipsLoader(this, accountKey, userKey, null, nextCursor, adapter.all)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUserList>>?) {
         adapter.setData(null)
     }
 
+
     override fun onLoadFinished(loader: Loader<List<ParcelableUserList>>?, data: List<ParcelableUserList>?) {
+        adapter.loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE
+        adapter.loadMoreSupportedPosition = if (adapter.all != data) {
+            ILoadMoreSupportAdapter.END
+        } else {
+            ILoadMoreSupportAdapter.NONE
+        }
         adapter.setData(data)
+        refreshing = false
+        if (loader is ICursorSupportLoader) {
+            nextCursor = loader.nextCursor
+        }
         showList()
     }
 
@@ -144,19 +163,25 @@ class UserListSelectorActivity : BaseActivity(),
             return supportLoaderManager.hasRunningLoadersSafe()
         }
         set(value) {
-
         }
 
     override val reachingStart: Boolean
-        get() = listView.firstVisiblePosition < 0
-    override val reachingEnd: Boolean
-        get() = listView.lastVisiblePosition > (listView.count + listView.headerViewsCount
-                + listView.footerViewsCount)
+        get() = listView.firstVisiblePosition <= 0
 
-    override fun onLoadMoreContents(position: Long) {
+    override val reachingEnd: Boolean
+        get() = listView.lastVisiblePosition >= listView.count - 1
+
+    override fun onLoadMoreContents(@IndicatorPosition position: Long) {
+        val accountKey = this.accountKey ?: return
+        val userKey = this.userKey ?: return
+        if (refreshing || position and adapter.loadMoreSupportedPosition == 0L) {
+            return
+        }
+        adapter.loadMoreIndicatorPosition = position
+        loadUserLists(accountKey, userKey, nextCursor)
     }
 
-    private fun loadUserLists(accountKey: UserKey, userKey: UserKey) {
+    private fun loadUserLists(accountKey: UserKey, userKey: UserKey, nextCursor: Long = -1) {
         if (userKey != this.userKey) {
             adapter.clear()
             showProgress()
@@ -165,6 +190,7 @@ class UserListSelectorActivity : BaseActivity(),
         val args = Bundle {
             this[EXTRA_ACCOUNT_KEY] = accountKey
             this[EXTRA_USER_KEY] = userKey
+            this[EXTRA_NEXT_CURSOR] = nextCursor
         }
         if (!loaderInitialized) {
             loaderInitialized = true

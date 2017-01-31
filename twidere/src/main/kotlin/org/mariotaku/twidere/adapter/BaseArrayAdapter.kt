@@ -23,7 +23,10 @@ import android.content.Context
 import android.support.v4.text.BidiFormatter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
+import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -32,7 +35,8 @@ open class BaseArrayAdapter<T>(
         context: Context,
         layoutRes: Int,
         collection: Collection<T>? = null
-) : ArrayAdapter<T>(context, layoutRes, collection), IContentAdapter {
+) : ArrayAdapter<T>(context, layoutRes, collection), IContentAdapter, ILoadMoreSupportAdapter,
+        IItemCountsAdapter {
     val linkify: TwidereLinkify
 
     @Inject
@@ -54,6 +58,24 @@ open class BaseArrayAdapter<T>(
     final override val showAbsoluteTime: Boolean
     val nameFirst: Boolean
 
+    override val itemCounts: ItemCounts = ItemCounts(1)
+
+    @ILoadMoreSupportAdapter.IndicatorPosition
+    override var loadMoreSupportedPosition: Long = 0
+        set(value) {
+            field = value
+            loadMoreIndicatorPosition = ILoadMoreSupportAdapter.apply(loadMoreIndicatorPosition, value)
+            notifyDataSetChanged()
+        }
+
+    @ILoadMoreSupportAdapter.IndicatorPosition
+    override var loadMoreIndicatorPosition: Long = 0
+        set(value) {
+            if (field == value) return
+            field = ILoadMoreSupportAdapter.apply(value, loadMoreSupportedPosition)
+            notifyDataSetChanged()
+        }
+
     init {
         @Suppress("UNCHECKED_CAST")
         GeneralComponentHelper.build(context).inject(this as BaseArrayAdapter<Any>)
@@ -66,6 +88,5 @@ open class BaseArrayAdapter<T>(
     }
 
     override fun getItemCount(): Int = count
-
 
 }

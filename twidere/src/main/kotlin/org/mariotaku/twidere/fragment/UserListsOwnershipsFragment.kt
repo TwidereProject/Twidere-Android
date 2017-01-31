@@ -37,12 +37,17 @@ import org.mariotaku.twidere.util.Utils
 
 class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
 
-    override fun onCreateUserListsLoader(context: Context,
-                                                args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>> {
+    private val screenName: String?
+        get() = arguments.getString(EXTRA_SCREEN_NAME)
+
+    private val userId: UserKey?
+        get() = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+
+    override fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>> {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        return UserListOwnershipsLoader(activity, accountKey, userKey, screenName, data)
+        return UserListOwnershipsLoader(activity, accountKey, userKey, screenName, nextCursor, data)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -50,12 +55,12 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_user_lists_owned, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_user_lists_owned, menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.new_user_list -> {
                 val f = CreateUserListDialogFragment()
                 val args = Bundle()
@@ -68,22 +73,19 @@ class UserListsOwnershipsFragment : ParcelableUserListsFragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
-        val item = menu!!.findItem(R.id.new_user_list)
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        val item = menu.findItem(R.id.new_user_list)
         val accountId = accountKey
         if (accountId == null || item == null) return
         if (accountId == userId) {
             MenuUtils.setItemAvailability(menu, R.id.new_user_list, true)
         } else {
-            MenuUtils.setItemAvailability(menu, R.id.new_user_list, Utils.isMyAccount(activity, screenName))
+            val screenName = this.screenName
+            MenuUtils.setItemAvailability(menu, R.id.new_user_list, screenName != null &&
+                    Utils.isMyAccount(activity, screenName))
         }
     }
 
-    private val screenName: String
-        get() = arguments.getString(EXTRA_SCREEN_NAME)
-
-    private val userId: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
 
     override fun onStart() {
         super.onStart()

@@ -32,8 +32,9 @@ class UserListOwnershipsLoader(
         accountKey: UserKey,
         private val userKey: UserKey?,
         private val screenName: String?,
+        nextCursor: Long,
         data: List<ParcelableUserList>?
-) : BaseUserListsLoader(context, accountKey, 0, data) {
+) : BaseUserListsLoader(context, accountKey, nextCursor, data) {
 
     @Throws(MicroBlogException::class)
     override fun getUserLists(twitter: MicroBlog, paging: Paging): List<UserList> {

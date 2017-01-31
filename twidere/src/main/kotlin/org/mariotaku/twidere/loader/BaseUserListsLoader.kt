@@ -22,6 +22,7 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.support.v4.content.AsyncTaskLoader
 import android.util.Log
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.CursorSupport
@@ -29,13 +30,17 @@ import org.mariotaku.microblog.library.twitter.model.PageableResponseList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.loader.iface.ICursorSupportLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
+import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.util.*
+import javax.inject.Inject
 
 
 abstract class BaseUserListsLoader(
@@ -44,6 +49,8 @@ abstract class BaseUserListsLoader(
         override val cursor: Long,
         data: List<ParcelableUserList>?
 ) : AsyncTaskLoader<List<ParcelableUserList>>(context), ICursorSupportLoader {
+    @Inject
+    lateinit var preferences: SharedPreferencesWrapper
 
     protected val data = NoDuplicatesArrayList<ParcelableUserList>()
 
@@ -51,6 +58,7 @@ abstract class BaseUserListsLoader(
     override var prevCursor: Long = 0
 
     init {
+        GeneralComponentHelper.build(context).inject(this)
         if (data != null) {
             this.data.addAll(data)
         }
@@ -64,6 +72,7 @@ abstract class BaseUserListsLoader(
         var listLoaded: List<UserList>? = null
         try {
             val paging = Paging()
+            paging.count(preferences[loadItemLimitKey].coerceIn(0, 100))
             if (cursor > 0) {
                 paging.cursor(cursor)
             }

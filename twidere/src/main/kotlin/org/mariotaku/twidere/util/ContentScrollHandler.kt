@@ -74,10 +74,10 @@ open class ContentScrollHandler<A>(
         if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
                 && adapter.loadMoreIndicatorPosition == ILoadMoreSupportAdapter.NONE) {
             var position: Long = 0
-            if (contentListSupport.reachingEnd && scrollDirection >= 0) {
+            if (contentListSupport.reachingEnd && scrollDirection > 0) {
                 position = position or ILoadMoreSupportAdapter.END
             }
-            if (contentListSupport.reachingStart && scrollDirection <= 0) {
+            if (contentListSupport.reachingStart && scrollDirection < 0) {
                 position = position or ILoadMoreSupportAdapter.START
             }
             resetScrollDirection()

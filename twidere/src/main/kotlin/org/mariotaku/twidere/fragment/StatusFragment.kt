@@ -1687,7 +1687,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     return ListParcelableStatusesAdapter.createStatusViewHolder(this, inflater, parent)
                 }
                 VIEW_TYPE_CONVERSATION_LOAD_INDICATOR, VIEW_TYPE_REPLIES_LOAD_INDICATOR -> {
-                    val view = inflater.inflate(R.layout.card_item_load_indicator, parent,
+                    val view = inflater.inflate(R.layout.list_item_load_indicator, parent,
                             false)
                     return LoadIndicatorViewHolder(view)
                 }

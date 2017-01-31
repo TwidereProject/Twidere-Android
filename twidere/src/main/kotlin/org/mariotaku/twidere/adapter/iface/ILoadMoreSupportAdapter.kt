@@ -26,8 +26,10 @@ import android.support.annotation.IntDef
  */
 interface ILoadMoreSupportAdapter {
 
+    @IndicatorPosition
     var loadMoreIndicatorPosition: Long
 
+    @IndicatorPosition
     var loadMoreSupportedPosition: Long
 
     @IntDef(flag = true, value = *longArrayOf(NONE, START, END, BOTH))
