@@ -37,17 +37,17 @@ import java.util.concurrent.TimeUnit
 class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPreparedListener,
         MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener, IControlBarActivity.ControlBarOffsetListener {
 
+    private val isLoopEnabled: Boolean get() = arguments.getBoolean(EXTRA_LOOP, false)
+    private val media: ParcelableMedia? get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+    private val accountKey: UserKey get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+
     private var playAudio: Boolean = false
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerError: Int = 0
+    private var positionBackup: Int = -1
     private var videoProgressRunnable: VideoPlayProgressRunnable? = null
     private var mediaDownloadEvent: MediaDownloadEvent? = null
 
-    private val isLoopEnabled: Boolean get() = arguments.getBoolean(EXTRA_LOOP, false)
-
-    private val media: ParcelableMedia? get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
-
-    private val accountKey: UserKey get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
     private var aspectRatioSource = object : AspectRatioSource {
         override fun getHeight(): Int {
@@ -118,6 +118,12 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
         updateVolume()
     }
 
+    override fun onPause() {
+        mediaPlayer?.let { mp ->
+            positionBackup = mp.currentPosition
+        }
+        super.onPause()
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -192,6 +198,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
             mp.setScreenOnWhilePlaying(true)
             updateVolume()
             mp.isLooping = isLoopEnabled
+            if (mp.duration > 0 && positionBackup > 0) {
+                mp.seekTo(positionBackup)
+            }
             mp.start()
             videoViewProgress.visibility = View.VISIBLE
             videoViewProgress.post(videoProgressRunnable)
