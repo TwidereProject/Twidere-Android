@@ -861,11 +861,11 @@
     <string name="preference_randomize_account_name">Randomize account name</string>
     <string name="preference_randomize_account_name_summary">Disallow other apps to get your name by reading accounts, improves privacy.</string>
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
-    <string name="preference_summary_chrome_custom_tab">Open links in Chrome custom tab</string>
+    <string name="preference_summary_chrome_custom_tab">Open links in in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
-    <string name="preference_title_chrome_custom_tab">Chrome custom tab</string>
+    <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
