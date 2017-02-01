@@ -236,6 +236,8 @@
     <string name="add_or_remove_from_list">Add or remove from list</string>
     <string name="add_tab">Add tab</string>
     <string name="add_to_filter">Add to filter</string>
+    <string name="action_status_block_users">Block users…</string>
+    <string name="action_status_mute_users">Mute users…</string>
     <string name="add_to_list">Add to list</string>
 
     <string name="added_user_to_list">Added <xliff:g
