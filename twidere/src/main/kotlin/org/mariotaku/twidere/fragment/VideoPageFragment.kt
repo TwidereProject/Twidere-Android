@@ -14,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.ProgressBar
+import android.widget.SeekBar
 import android.widget.TextView
+import com.commonsware.cwac.layouts.AspectLockedFrameLayout.AspectRatioSource
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaDownloadEvent
 import kotlinx.android.synthetic.main.layout_media_viewer_texture_video_view.*
@@ -25,6 +27,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.media.MediaExtra
@@ -32,13 +35,104 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
+        MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, View.OnClickListener, IControlBarActivity.ControlBarOffsetListener {
 
-    private var mPlayAudio: Boolean = false
-    private var mVideoProgressRunnable: VideoPlayProgressRunnable? = null
+    private var playAudio: Boolean = false
     private var mediaPlayer: MediaPlayer? = null
-    private var mMediaPlayerError: Int = 0
+    private var mediaPlayerError: Int = 0
+    private var videoProgressRunnable: VideoPlayProgressRunnable? = null
     private var mediaDownloadEvent: MediaDownloadEvent? = null
+
+    private val isLoopEnabled: Boolean get() = arguments.getBoolean(EXTRA_LOOP, false)
+
+    private val media: ParcelableMedia? get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+
+    private val accountKey: UserKey get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+
+    private var aspectRatioSource = object : AspectRatioSource {
+        override fun getHeight(): Int {
+            val height = media?.height ?: 0
+            if (height <= 0) return view!!.measuredHeight
+            return height
+        }
+
+        override fun getWidth(): Int {
+            val width = media?.width ?: 0
+            if (width <= 0) return view!!.measuredWidth
+            return width
+        }
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
+
+        var handler: Handler? = videoViewProgress.handler
+        if (handler == null) {
+            handler = Handler(activity.mainLooper)
+        }
+
+        val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        // Play audio by default if ringer mode on
+        playAudio = am.ringerMode == AudioManager.RINGER_MODE_NORMAL
+
+        videoProgressRunnable = VideoPlayProgressRunnable(handler, videoViewProgress,
+                durationLabel, positionLabel, videoView)
+
+
+        videoViewOverlay.setOnClickListener(this)
+        videoView.setOnPreparedListener(this)
+        videoView.setOnErrorListener(this)
+        videoView.setOnCompletionListener(this)
+
+        playPauseButton.setOnClickListener(this)
+        volumeButton.setOnClickListener(this)
+        videoControl.visibility = View.GONE
+        videoContainer.setAspectRatioSource(aspectRatioSource)
+        videoViewProgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            private var paused: Boolean = false
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                if (!fromUser) return
+                val mp = mediaPlayer ?: return
+                val duration = mp.duration
+                if (duration <= 0) return
+                mp.seekTo(Math.round(duration * (progress.toFloat() / seekBar.max)))
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                paused = pauseVideo()
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                if (paused) {
+                    resumeVideo()
+                }
+            }
+
+        })
+        startLoading(false)
+        setMediaViewVisible(false)
+        updateVolume()
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (context is IControlBarActivity) {
+            context.registerControlBarOffsetListener(this)
+        }
+    }
+
+    override fun onDetach() {
+        val activity = activity
+        if (activity is IControlBarActivity) {
+            activity.unregisterControlBarOffsetListener(this)
+        }
+        super.onDetach()
+    }
 
     override fun getDownloadExtra(): Any? {
         val extra = MediaExtra()
@@ -50,29 +144,24 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
         return extra
     }
 
-    val isLoopEnabled: Boolean
-        get() = arguments.getBoolean(EXTRA_LOOP, false)
-
     override fun isAbleToLoad(): Boolean {
         return downloadUri != null
     }
 
+
     override fun getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = getBestVideoUrlAndType(media,
-                SUPPORTED_VIDEO_TYPES)
+        val bestVideoUrlAndType = getBestVideoUrlAndType(media, SUPPORTED_VIDEO_TYPES)
         if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
         return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
-
     override fun displayMedia(result: CacheDownloadLoader.Result) {
         videoView.setVideoURI(result.cacheUri)
         videoControl.visibility = View.GONE
         setMediaViewVisible(true)
-        val activity = activity
-        activity?.supportInvalidateOptionsMenu()
+        activity.supportInvalidateOptionsMenu()
     }
 
     override fun recycleMedia() {
@@ -81,29 +170,31 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
 
     override fun onCompletion(mp: MediaPlayer) {
         updatePlayerState()
-        //            mVideoViewProgress.removeCallbacks(mVideoProgressRunnable);
-        //            mVideoViewProgress.setVisibility(View.GONE);
+    }
+
+    override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
+        videoControl.translationY = (1 - offset) * videoControl.height
     }
 
     override fun onError(mp: MediaPlayer, what: Int, extra: Int): Boolean {
         mediaPlayer = null
-        videoViewProgress.removeCallbacks(mVideoProgressRunnable)
+        videoViewProgress.removeCallbacks(videoProgressRunnable)
         videoViewProgress.visibility = View.GONE
         videoControl.visibility = View.GONE
-        mMediaPlayerError = what
+        mediaPlayerError = what
         return true
     }
 
     override fun onPrepared(mp: MediaPlayer) {
         if (userVisibleHint) {
             mediaPlayer = mp
-            mMediaPlayerError = 0
+            mediaPlayerError = 0
             mp.setScreenOnWhilePlaying(true)
             updateVolume()
             mp.isLooping = isLoopEnabled
             mp.start()
             videoViewProgress.visibility = View.VISIBLE
-            videoViewProgress.post(mVideoProgressRunnable)
+            videoViewProgress.post(videoProgressRunnable)
             updatePlayerState()
             videoControl.visibility = View.VISIBLE
         }
@@ -111,10 +202,10 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
 
     private fun updateVolume() {
 
-        volumeButton.setImageResource(if (mPlayAudio) R.drawable.ic_action_speaker_max else R.drawable.ic_action_speaker_muted)
+        volumeButton.setImageResource(if (playAudio) R.drawable.ic_action_speaker_max else R.drawable.ic_action_speaker_muted)
         val mp = mediaPlayer ?: return
         try {
-            if (mPlayAudio) {
+            if (playAudio) {
                 mp.setVolume(1f, 1f)
             } else {
                 mp.setVolume(0f, 0f)
@@ -136,100 +227,25 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
-
-        var handler: Handler? = videoViewProgress.handler
-        if (handler == null) {
-            handler = Handler(activity.mainLooper)
-        }
-
-        val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-        // Play audio by default if ringer mode on
-        mPlayAudio = am.ringerMode == AudioManager.RINGER_MODE_NORMAL
-
-        mVideoProgressRunnable = VideoPlayProgressRunnable(handler, videoViewProgress,
-                durationLabel, positionLabel, videoView)
-
-
-        videoViewOverlay.setOnClickListener(this)
-        videoView.setOnPreparedListener(this)
-        videoView.setOnErrorListener(this)
-        videoView.setOnCompletionListener(this)
-
-        playPauseButton.setOnClickListener(this)
-        volumeButton.setOnClickListener(this)
-        videoControl.visibility = View.GONE
-        startLoading(false)
-        setMediaViewVisible(false)
-        updateVolume()
-    }
-
-    @SuppressLint("SwitchIntDef")
-    private fun getBestVideoUrlAndType(media: ParcelableMedia?,
-                                       supportedTypes: Array<String>): Pair<String, String>? {
-        if (media == null) return null
-        when (media.type) {
-            ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF -> {
-                if (media.video_info == null) {
-                    return Pair.create<String, String>(media.media_url, null)
-                }
-                val firstMatch = media.video_info.variants.first { variant ->
-                    supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-                } ?: return null
-                return Pair.create(firstMatch.url, firstMatch.content_type)
-            }
-            ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
-                return Pair.create<String, String>(media.media_url, "video/mp4")
-            }
-            else -> {
-                return null
-            }
-        }
-    }
-
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.volumeButton -> {
-                mPlayAudio = !mPlayAudio
+                playAudio = !playAudio
                 updateVolume()
             }
             R.id.playPauseButton -> {
-                val mp = mediaPlayer
-                if (mp != null) {
-                    if (mp.isPlaying) {
-                        mp.pause()
-                    } else {
-                        mp.start()
-                    }
+                val mp = mediaPlayer ?: return
+                if (mp.isPlaying) {
+                    mp.pause()
+                } else {
+                    mp.start()
                 }
                 updatePlayerState()
             }
             R.id.videoViewOverlay -> {
                 val activity = activity as MediaViewerActivity
-                if (videoControl.visibility == View.VISIBLE) {
-                    videoControl.visibility = View.GONE
-                    activity.setBarVisibility(false)
-                } else {
-                    videoControl.visibility = View.VISIBLE
-                    activity.setBarVisibility(true)
-                }
+                activity.setBarVisibility(!activity.isBarShowing)
             }
-        }
-    }
-
-    private fun updatePlayerState() {
-        val mp = mediaPlayer
-        if (mp != null) {
-            val playing = mp.isPlaying
-            playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
-            playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
-        } else {
-            playPauseButton.contentDescription = getString(R.string.play)
-            playPauseButton.setImageResource(R.drawable.ic_action_play_arrow)
         }
     }
 
@@ -267,11 +283,62 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
         }
     }
 
-    private val media: ParcelableMedia?
-        get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
 
-    private val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+    @SuppressLint("SwitchIntDef")
+    private fun getBestVideoUrlAndType(media: ParcelableMedia?, supportedTypes: Array<String>): Pair<String, String>? {
+        if (media == null) return null
+        when (media.type) {
+            ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF -> {
+                if (media.video_info == null) {
+                    return Pair.create<String, String>(media.media_url, null)
+                }
+                val firstMatch = media.video_info.variants.first { variant ->
+                    supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
+                } ?: return null
+                return Pair.create(firstMatch.url, firstMatch.content_type)
+            }
+            ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
+                return Pair.create<String, String>(media.media_url, "video/mp4")
+            }
+            else -> {
+                return null
+            }
+        }
+    }
+
+    private fun updatePlayerState() {
+        val mp = mediaPlayer
+        if (mp != null) {
+            val playing = mp.isPlaying
+            playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
+            playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
+        } else {
+            playPauseButton.contentDescription = getString(R.string.play)
+            playPauseButton.setImageResource(R.drawable.ic_action_play_arrow)
+        }
+    }
+
+    private fun pauseVideo(): Boolean {
+        val mp = mediaPlayer ?: return false
+        var result = false
+        if (mp.isPlaying) {
+            mp.pause()
+            result = true
+        }
+        updatePlayerState()
+        return result
+    }
+
+    private fun resumeVideo(): Boolean {
+        val mp = mediaPlayer ?: return false
+        var result = false
+        if (!mp.isPlaying) {
+            mp.start()
+            result = true
+        }
+        updatePlayerState()
+        return result
+    }
 
     private class VideoPlayProgressRunnable internal constructor(
             private val handler: Handler,
@@ -302,7 +369,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
 
         const val EXTRA_LOOP = "loop"
         private val SUPPORTED_VIDEO_TYPES: Array<String>
-        private val FALLBACK_VIDEO_TYPES: Array<String>
+        private val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 
         init {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -310,7 +377,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), MediaPlayer.OnPrep
             } else {
                 SUPPORTED_VIDEO_TYPES = arrayOf("video/webm", "video/mp4")
             }
-            FALLBACK_VIDEO_TYPES = arrayOf("video/mp4")
         }
     }
 }

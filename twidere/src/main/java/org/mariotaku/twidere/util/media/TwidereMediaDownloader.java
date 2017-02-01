@@ -48,37 +48,37 @@ import java.io.InputStream;
  */
 public class TwidereMediaDownloader implements MediaDownloader, Constants {
 
-    private final Context mContext;
-    private final SharedPreferencesWrapper mPreferences;
-    private final RestHttpClient mClient;
-    private final String mUserAgent;
+    private final Context context;
+    private final SharedPreferencesWrapper preferences;
+    private final RestHttpClient client;
+    private final String userAgent;
 
-    private Thumbor mThumbor;
+    private Thumbor thumbor;
 
     public TwidereMediaDownloader(final Context context, SharedPreferencesWrapper preferences,
                                   RestHttpClient client) {
-        mContext = context;
-        mPreferences = preferences;
-        mClient = client;
-        mUserAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context);
+        this.context = context;
+        this.preferences = preferences;
+        this.client = client;
+        userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context);
         reloadConnectivitySettings();
     }
 
     public void reloadConnectivitySettings() {
-        if (mPreferences.getBoolean(KEY_THUMBOR_ENABLED)) {
-            final String address = mPreferences.getString(KEY_THUMBOR_ADDRESS, null);
-            final String securityKey = mPreferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
+        if (preferences.getBoolean(KEY_THUMBOR_ENABLED)) {
+            final String address = preferences.getString(KEY_THUMBOR_ADDRESS, null);
+            final String securityKey = preferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
             if (address != null && URLUtil.isValidUrl(address)) {
                 if (TextUtils.isEmpty(securityKey)) {
-                    mThumbor = Thumbor.create(address);
+                    thumbor = Thumbor.create(address);
                 } else {
-                    mThumbor = Thumbor.create(address, securityKey);
+                    thumbor = Thumbor.create(address, securityKey);
                 }
             } else {
-                mThumbor = null;
+                thumbor = null;
             }
         } else {
-            mThumbor = null;
+            thumbor = null;
         }
     }
 
@@ -91,7 +91,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
                 skipUrlReplacing = ((MediaExtra) extra).isSkipUrlReplacing();
             }
             if (!skipUrlReplacing) {
-                final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, mClient, extra);
+                final ParcelableMedia media = PreviewMediaExtractor.fromLink(url, client, extra);
                 if (media != null && media.media_url != null) {
                     return getInternal(media.media_url, extra);
                 }
@@ -102,7 +102,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
                 final String fallbackUrl = ((MediaExtra) extra).getFallbackUrl();
                 if (fallbackUrl != null) {
                     final ParcelableMedia media = PreviewMediaExtractor.fromLink(fallbackUrl,
-                            mClient, extra);
+                            client, extra);
                     if (media != null && media.media_url != null) {
                         return getInternal(media.media_url, extra);
                     } else {
@@ -124,7 +124,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
             useThumbor = ((MediaExtra) extra).isUseThumbor();
             UserKey accountKey = ((MediaExtra) extra).getAccountKey();
             if (accountKey != null) {
-                account = AccountUtils.getAccountDetails(AccountManager.get(mContext), accountKey, true);
+                account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true);
                 if (account != null) {
                     auth = CredentialsExtensionsKt.getAuthorization(account.credentials);
                 }
@@ -132,7 +132,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         }
         final Uri modifiedUri = getReplacedUri(uri, account != null ? account.credentials.api_url_format : null);
         final MultiValueMap<String> additionalHeaders = new MultiValueMap<>();
-        additionalHeaders.add("User-Agent", mUserAgent);
+        additionalHeaders.add("User-Agent", userAgent);
         final String method = GET.METHOD;
         final String requestUri;
         if (isAuthRequired(uri, account) && auth != null && auth.hasAuthorization()) {
@@ -152,8 +152,8 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
                     queries, null, null, null, null);
             additionalHeaders.add("Authorization", auth.getHeader(endpoint, info));
             requestUri = modifiedUri.toString();
-        } else if (mThumbor != null && useThumbor) {
-            requestUri = mThumbor.buildImage(modifiedUri.toString()).filter(ThumborUrlBuilder.quality(85)).toUrl();
+        } else if (thumbor != null && useThumbor) {
+            requestUri = thumbor.buildImage(Uri.encode(modifiedUri.toString())).filter(ThumborUrlBuilder.quality(85)).toUrl();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 additionalHeaders.add("Accept", "image/webp, */*");
             }
@@ -165,7 +165,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         builder.url(requestUri);
         builder.headers(additionalHeaders);
         builder.tag(NoIntercept.INSTANCE);
-        final HttpResponse resp = mClient.newCall(builder.build()).execute();
+        final HttpResponse resp = client.newCall(builder.build()).execute();
         if (!resp.isSuccessful()) {
             final String detailMessage = "Unable to get " + requestUri + ", response code: "
                     + resp.getStatus();

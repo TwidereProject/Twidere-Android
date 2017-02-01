@@ -338,6 +338,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         setSignInButton()
         if (result.alreadyLoggedIn) {
             result.updateAccount(am)
+            deleteAccountData(contentResolver, result.user.key)
             Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])

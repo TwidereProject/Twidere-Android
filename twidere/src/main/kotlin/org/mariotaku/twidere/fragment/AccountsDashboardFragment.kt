@@ -350,6 +350,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             val color = ContextCompat.getColor(context, R.color.material_red)
             val size = resources.getDimensionPixelSize(R.dimen.element_spacing_msmall)
             menu.setMenuItemIcon(R.id.premium_features, BadgeDrawable(icon, color, size))
+        } else {
+            menu.setMenuItemIcon(R.id.premium_features, R.drawable.ic_action_infinity)
         }
         var hasLists = false
         var hasGroups = false

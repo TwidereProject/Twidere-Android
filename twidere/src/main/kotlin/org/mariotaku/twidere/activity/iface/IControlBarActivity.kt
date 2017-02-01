@@ -29,7 +29,7 @@ interface IControlBarActivity {
     fun notifyControlBarOffsetChanged() {}
 
     interface ControlBarOffsetListener {
-        fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {}
+        fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float)
     }
 
     class ControlBarShowHideHelper(private val activity: IControlBarActivity) {

@@ -69,7 +69,7 @@ class ReadStateManager(context: Context) {
         preferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
-    @JvmOverloads fun setPosition(key: String, keyId: String, position: Long, acceptOlder: Boolean = false): Boolean {
+    fun setPosition(key: String, keyId: String, position: Long, acceptOlder: Boolean = false): Boolean {
         if (TextUtils.isEmpty(key)) return false
         val set: MutableSet<String> = preferences.getStringSet(key, null) ?: CompactHashSet<String>()
         val prefix = keyId + ":"

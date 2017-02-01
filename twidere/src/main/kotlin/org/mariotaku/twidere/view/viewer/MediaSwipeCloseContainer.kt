@@ -46,25 +46,22 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
             val container = this@MediaSwipeCloseContainer
             val minVel = ViewConfiguration.get(context).scaledMinimumFlingVelocity
             when {
-                yvel > minVel -> {
+                yvel > minVel && childTop > 0 -> {
                     // Settle downward
                     container.dragHelper.settleCapturedViewAt(0, container.height)
                 }
-                yvel < -minVel -> {
+                yvel < -minVel && childTop < 0 -> {
                     // Settle upward
                     container.dragHelper.settleCapturedViewAt(0, -container.height)
-
                 }
-                else -> when {
-                    childTop < -container.height / 4 -> {
-                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, -container.height)
-                    }
-                    childTop > container.height / 4 -> {
-                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, container.height)
-                    }
-                    else -> {
-                        container.dragHelper.smoothSlideViewTo(releasedChild, 0, 0)
-                    }
+                yvel <= 0 && childTop < -container.height / 4 -> {
+                    container.dragHelper.smoothSlideViewTo(releasedChild, 0, -container.height)
+                }
+                yvel >= 0 && childTop > container.height / 4 -> {
+                    container.dragHelper.smoothSlideViewTo(releasedChild, 0, container.height)
+                }
+                else -> {
+                    container.dragHelper.smoothSlideViewTo(releasedChild, 0, 0)
                 }
             }
             ViewCompat.postInvalidateOnAnimation(container)
