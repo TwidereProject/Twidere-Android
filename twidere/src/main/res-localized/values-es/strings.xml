@@ -33,6 +33,7 @@
   <string name="action_denying_follow_request">rechazando petición de seguimiento</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Editar</string>
+  <string name="action_edit_filter_rule">Editar regla</string>
   <string name="action_favorite">Añadir a Favoritos</string>
   <string name="action_favoriting">marcando como favorito</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
@@ -80,6 +81,7 @@
   <string name="action_saving_search">Guardando búsqueda</string>
   <string name="action_select_all">Seleccionar todo</string>
   <string name="action_select_none">Seleccionar ninguno</string>
+  <string name="action_select_user">Selecciona usuario</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Enviar</string>
   <string name="action_sending_direct_message">enviando el mensaje directo</string>
@@ -472,6 +474,7 @@
   <string name="message_toast_already_logged_in">Ya has iniciado sesión.</string>
   <string name="message_toast_cannot_get_location">No puede obtener su ubicación.</string>
   <string name="message_toast_compose_write_storage_no_permission">Se requiere este permiso para borrar fotos/vídeos realizados</string>
+  <string name="message_toast_duplicate_filter_rule">Regla duplicada</string>
   <string name="message_toast_error_occurred">A ocurrido un error, inténtelo de nuevo.</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Características extra no compradas</string>
@@ -481,6 +484,7 @@
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Error de red</string>
   <string name="message_toast_no_account">Sin cuenta</string>
+  <string name="message_toast_no_account_permission">Se requiere permiso de cuenta</string>
   <string name="message_toast_no_account_selected">No se seleccionó ninguna cuenta.</string>
   <string name="message_toast_no_user_selected">Ningún usuario seleccionado</string>
   <string name="message_toast_press_again_to_close">Presione de nuevo para cerrar</string>
@@ -605,6 +609,7 @@
   <string name="preference_title_database_item_limit">Tamaño máximo de la base de datos</string>
   <string name="preference_title_filter_manage_subscriptions">Administrar</string>
   <string name="preference_title_filter_subscriptions">Filtrar suscripciones</string>
+  <string name="preference_title_light_font">Fuente suave</string>
   <string name="preference_title_storage">Almacenamiento de información</string>
   <string name="preference_title_translate">Traducir</string>
   <string name="preload_wifi_only">Precargar solo con Wi-Fi</string>
@@ -702,6 +707,7 @@
   <string name="scrapyard">Más ajustes</string>
   <string name="search">Búsqueda</string>
   <string name="search_hint">Búsqueda de tweets o usuarios</string>
+  <string name="search_hint_users">Buscar usuarios</string>
   <string name="search_statuses">Buscar Tweets</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Usuarios</string>
@@ -839,6 +845,9 @@
   <string name="title_sync_settings">Sincronizar ajustes</string>
   <string name="title_user">Usuario</string>
   <string name="title_user_colors">Colores de usuario</string>
+  <string name="title_user_list_memberships">Pertenece a</string>
+  <string name="title_user_list_ownerships">Creado</string>
+  <string name="title_user_list_subscriptions">Suscripciones</string>
   <string name="title_users_favorited_this">Favoritos de los usuarios</string>
   <string name="title_users_liked_this">Usuarios a los que les gustó esto</string>
   <string name="title_users_retweeted_this">Usuarios retweeted esto</string>

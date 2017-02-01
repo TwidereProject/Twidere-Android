@@ -33,6 +33,7 @@
   <string name="action_denying_follow_request">フォローリクエスト拒否</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">編集</string>
+  <string name="action_edit_filter_rule">ルールの編集</string>
   <string name="action_favorite">お気に入り</string>
   <string name="action_favoriting">お気に入りへ登録</string>
   <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
@@ -80,6 +81,7 @@
   <string name="action_saving_search">検索の保存</string>
   <string name="action_select_all">すべて選択</string>
   <string name="action_select_none">選択しない</string>
+  <string name="action_select_user">ユーザーを選択</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">送信</string>
   <string name="action_sending_direct_message">DM送信</string>
@@ -472,6 +474,7 @@
   <string name="message_toast_already_logged_in">あなたはすでにログインしています</string>
   <string name="message_toast_cannot_get_location">位置情報が取得できません</string>
   <string name="message_toast_compose_write_storage_no_permission">撮影した写真/動画を削除するには権限が必要です</string>
+  <string name="message_toast_duplicate_filter_rule">ルールが重複しています</string>
   <string name="message_toast_error_occurred">エラーが発生しました。もう一度お試しください。</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">追加機能パックは未購入です。</string>
@@ -481,6 +484,7 @@
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">ネットワークエラー</string>
   <string name="message_toast_no_account">アカウント無し</string>
+  <string name="message_toast_no_account_permission">アカウントの権限が必要です</string>
   <string name="message_toast_no_account_selected">アカウントが選択されていません</string>
   <string name="message_toast_no_user_selected">ユーザを選択してください</string>
   <string name="message_toast_press_again_to_close">閉じるにはもう一度押して下さい</string>
@@ -605,6 +609,7 @@
   <string name="preference_title_database_item_limit">アイテム制限</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">フィルタの購読</string>
+  <string name="preference_title_light_font">細字フォント</string>
   <string name="preference_title_storage">ストレージ</string>
   <string name="preference_title_translate">翻訳する</string>
   <string name="preload_wifi_only">Wi-Fi接続時のみ先読み</string>
@@ -702,6 +707,7 @@
   <string name="scrapyard">ゴミ置き場</string>
   <string name="search">検索</string>
   <string name="search_hint">ツイートかユーザーの検索</string>
+  <string name="search_hint_users">ユーザー検索</string>
   <string name="search_statuses">ツイートの検索</string>
   <string name="search_type_statuses">ツイート</string>
   <string name="search_type_users">ユーザー</string>
@@ -839,6 +845,9 @@
   <string name="title_sync_settings">同期設定</string>
   <string name="title_user">ユーザー</string>
   <string name="title_user_colors">ユーザー色</string>
+  <string name="title_user_list_memberships">自分が含まれるリスト</string>
+  <string name="title_user_list_ownerships">作成者</string>
+  <string name="title_user_list_subscriptions">購読</string>
   <string name="title_users_favorited_this">お気に入りに登録したユーザーを表示</string>
   <string name="title_users_liked_this">いいねしたユーザーを表示</string>
   <string name="title_users_retweeted_this">リツイートしたユーザーを表示</string>

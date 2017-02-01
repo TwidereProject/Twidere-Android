@@ -55,6 +55,7 @@
   <string name="action_pick_color">Escoyer color</string>
   <string name="action_purchase">Mercar</string>
   <string name="action_quote">Citar</string>
+  <string name="action_record_video">Grabar videu</string>
   <string name="action_refresh">Refrescu</string>
   <string name="action_refreshing_direct_messages">refrescando mensaxes direutos</string>
   <string name="action_refreshing_home_timeline">refrescando llinia temporal d\'aniciu</string>
@@ -466,6 +467,8 @@
   <string name="message_toast_status_updated">Unvióse\'l tuit.</string>
   <string name="message_toast_wrong_api_key">URL d\'API o clave/secretu de consumidor incorreutos. Compruébalos de nueves, por favor.</string>
   <string name="message_toast_wrong_username_password">Nome d\'usuariu/contraseña incorreutos</string>
+  <string name="message_video_too_long">Videu perllargu</string>
+  <string name="message_video_too_short">Video percurtiu</string>
   <string name="multi_select">Esbilla múltiple</string>
   <string name="mute_user">Silenciar <xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">¿Silenciar a <xliff:g id="name">%s</xliff:g>? Nun verás más los tuits d\'esti usuariu entrín teas siguiéndolu.</string>
@@ -722,8 +725,10 @@
   <string name="style">Estilu</string>
   <string name="subscribed_to_list">Soscribiéstite al llistáu «<xliff:g id="list">%s</xliff:g>».</string>
   <string name="subscribers">Soscriptores</string>
+  <string name="summary_interactions_not_available">Namái disponible coles claves oficiales</string>
   <string name="swipe_down_to_refresh">Esliza haza abaxo p\'anovar</string>
   <string name="sync_provider_name_dropbox">Dropbox</string>
+  <string name="sync_provider_name_google_drive">Google Drive</string>
   <string name="system_default">Predeterminao del sistema</string>
   <string name="tab_display_option">Opciones d\'amuesa de llingüetes</string>
   <string name="tab_display_option_icon">Iconu</string>
@@ -765,6 +770,7 @@
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">Favoritos</string>
   <string name="title_filters">Peñeres</string>
+  <string name="title_filters_subscription_invalid">Soscripción non válida</string>
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">Siguidores</string>
   <string name="title_following">Siguiendo</string>
@@ -785,6 +791,7 @@
   <string name="title_sync_settings">Axustes de sincronización</string>
   <string name="title_user">Usuariu</string>
   <string name="title_user_colors">Colores d\'usuariu</string>
+  <string name="title_user_list_subscriptions">Soscripciones</string>
   <string name="title_users_favorited_this">Usuarios que marcaron esto como favoritu</string>
   <string name="title_users_liked_this">Usuarios que-yos prestó esto</string>
   <string name="title_users_retweeted_this">Usuarios que retuitiaron esto</string>

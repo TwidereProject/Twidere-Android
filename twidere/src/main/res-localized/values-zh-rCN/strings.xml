@@ -33,6 +33,7 @@
   <string name="action_denying_follow_request">拒绝关注请求</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">编辑</string>
+  <string name="action_edit_filter_rule">编辑规则</string>
   <string name="action_favorite">收藏</string>
   <string name="action_favoriting">收藏</string>
   <string name="action_filter_import_from_blocked_users">从被阻止的用户导入</string>
@@ -80,6 +81,7 @@
   <string name="action_saving_search">保存搜索</string>
   <string name="action_select_all">全选</string>
   <string name="action_select_none">全不选</string>
+  <string name="action_select_user">选择用户</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">发送</string>
   <string name="action_sending_direct_message">发送私信</string>
@@ -472,6 +474,7 @@
   <string name="message_toast_already_logged_in">您已经登录</string>
   <string name="message_toast_cannot_get_location">不能获得您的位置</string>
   <string name="message_toast_compose_write_storage_no_permission">需要权限来删除拍摄的照片或视频</string>
+  <string name="message_toast_duplicate_filter_rule">规则重复</string>
   <string name="message_toast_error_occurred">发生错误，请重试</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">尚未购买增强功能</string>
@@ -481,6 +484,7 @@
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">网络错误</string>
   <string name="message_toast_no_account">没有帐号</string>
+  <string name="message_toast_no_account_permission">需要帐号权限</string>
   <string name="message_toast_no_account_selected">没有选择帐号</string>
   <string name="message_toast_no_user_selected">没有选择用户</string>
   <string name="message_toast_press_again_to_close">再次按下以关闭</string>
@@ -597,14 +601,15 @@
   <string name="preference_randomize_account_name">随机帐号名称</string>
   <string name="preference_randomize_account_name_summary">不允许其他应用读取您的帐号名称，提高了隐私性</string>
   <string name="preference_randomize_account_rename_accounts_confirm">重命名已有的帐号吗？</string>
-  <string name="preference_summary_chrome_custom_tab">在 Chrome 自定义标签页中打开链接</string>
+  <string name="preference_summary_chrome_custom_tab">在内置浏览器中打开链接（由 Chrome 提供技术支持）</string>
   <string name="preference_summary_database_item_limit">每个帐号在数据库中保存的推文/信息条目上限，降低数值可以节省更多存储空间以及加快载入的速度</string>
   <string name="preference_title_accounts">帐号</string>
   <string name="preference_title_advanced">高级</string>
-  <string name="preference_title_chrome_custom_tab">Chrome 自定义标签页</string>
+  <string name="preference_title_chrome_custom_tab">内置浏览器</string>
   <string name="preference_title_database_item_limit">数据库条目上限</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">过滤器订阅</string>
+  <string name="preference_title_light_font">细字体</string>
   <string name="preference_title_storage">存储</string>
   <string name="preference_title_translate">翻译</string>
   <string name="preload_wifi_only">仅使用Wi-Fi预加载</string>
@@ -702,6 +707,7 @@
   <string name="scrapyard">垃圾场</string>
   <string name="search">搜索</string>
   <string name="search_hint">搜索推文或用户</string>
+  <string name="search_hint_users">搜索用户</string>
   <string name="search_statuses">搜索推文</string>
   <string name="search_type_statuses">推文</string>
   <string name="search_type_users">用户</string>
@@ -839,6 +845,9 @@
   <string name="title_sync_settings">同步设置</string>
   <string name="title_user">用户</string>
   <string name="title_user_colors">用户颜色标签</string>
+  <string name="title_user_list_memberships">属于</string>
+  <string name="title_user_list_ownerships">创建</string>
+  <string name="title_user_list_subscriptions">订阅</string>
   <string name="title_users_favorited_this">收藏这条推文的用户</string>
   <string name="title_users_liked_this">喜欢这条推文的用户</string>
   <string name="title_users_retweeted_this">转推了这条推文的用户</string>

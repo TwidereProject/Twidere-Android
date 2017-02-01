@@ -35,8 +35,8 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> nouveaux messages</item>
   </plurals>
   <plurals name="N_media">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> media</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> medias</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> média</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> médias</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
     <item quantity="one"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> tweet par jour)</item>

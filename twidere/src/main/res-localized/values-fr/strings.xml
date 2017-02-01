@@ -694,7 +694,7 @@
   <string name="ringtone">Sonnerie</string>
   <string name="round">Rond</string>
   <string name="safety">Sécurité</string>
-  <string name="same_oauth_signing_url">Utilisez la même adresse pour l\'authentification OAuth</string>
+  <string name="same_oauth_signing_url">Utiliser la même adresse pour l\'authentification OAuth</string>
   <string name="save_to_gallery">Enregistrer dans la galerie</string>
   <string name="saved_searches">Recherches sauvegardées</string>
   <string name="saved_searches_already_saved_hint">Vous avez certainement déjà enregistré cette recherche</string>
