@@ -20,6 +20,10 @@ abstract class ExtraFeaturesService {
         this.context = context
     }
 
+    open fun appStarted() {
+
+    }
+
     open fun release() {
     }
 
@@ -39,11 +43,11 @@ abstract class ExtraFeaturesService {
     data class Introduction(val icon: Int, val description: String)
 
     companion object {
-
         const val FEATURE_FEATURES_PACK = "features_pack"
         const val FEATURE_FILTERS_IMPORT = "import_filters"
         const val FEATURE_FILTERS_SUBSCRIPTION = "filters_subscriptions"
         const val FEATURE_SYNC_DATA = "sync_data"
+
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
 
         fun newInstance(context: Context): ExtraFeaturesService {
@@ -68,5 +72,6 @@ abstract class ExtraFeaturesService {
                 else -> throw UnsupportedOperationException(feature)
             }
         }
+
     }
 }

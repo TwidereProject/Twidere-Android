@@ -59,6 +59,7 @@ val filterPossibilitySensitiveStatusesKey = KBooleanKey("filter_possibility_sens
 val chromeCustomTabKey = KBooleanKey("chrome_custom_tab", true)
 val usageStatisticsKey = KBooleanKey(KEY_USAGE_STATISTICS, false)
 val lightFontKey = KBooleanKey("light_font", false)
+val extraFeaturesNoticeVersionKey = KIntKey("extra_features_notice_version", 0)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

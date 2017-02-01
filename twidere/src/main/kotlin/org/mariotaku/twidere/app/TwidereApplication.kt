@@ -52,6 +52,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
@@ -78,6 +79,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var autoRefreshController: AutoRefreshController
     @Inject
     lateinit internal var syncController: SyncController
+    @Inject
+    lateinit internal var extraFeaturesService: ExtraFeaturesService
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -112,6 +115,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
         autoRefreshController.appStarted()
         syncController.appStarted()
+        extraFeaturesService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
 
