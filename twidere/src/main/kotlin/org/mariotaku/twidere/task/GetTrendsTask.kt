@@ -4,16 +4,18 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
+import android.support.v4.util.ArraySet
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Trends
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.model.ParcelableTrend
+import org.mariotaku.twidere.model.ParcelableTrendValuesCreator
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
-import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -53,31 +55,34 @@ class GetTrendsTask(
     }
 
     private fun storeTrends(cr: ContentResolver, uri: Uri, trendsList: List<Trends>) {
-        val hashtags = ArrayList<String>()
-        val hashtagValues = ArrayList<ContentValues>()
+        val hashtags = ArraySet<String>()
         val deleteWhere = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
                 Expression.equalsArgs(CachedTrends.WOEID)).sql
         val deleteWhereArgs = arrayOf(accountKey.toString(), woeId.toString())
         cr.delete(CachedTrends.Local.CONTENT_URI, deleteWhere, deleteWhereArgs)
-        trendsList.forEach {
 
-        }
-        if (trendsList.isNotEmpty()) {
-            val valuesArray = ContentValuesCreator.createTrends(trendsList)
-            for (values in valuesArray) {
-                val hashtag = values.getAsString(CachedTrends.NAME).replaceFirst("#", "")
-                if (hashtags.contains(hashtag)) {
-                    continue
-                }
+        val allTrends = ArrayList<ParcelableTrend>()
+
+        trendsList.forEach { trends ->
+            trends.trends.forEachIndexed { idx, trend ->
+                val hashtag = trend.name.replaceFirst("#", "")
                 hashtags.add(hashtag)
-                val hashtagValue = ContentValues()
-                hashtagValue.put(CachedHashtags.NAME, hashtag)
-                hashtagValues.add(hashtagValue)
+                allTrends.add(ParcelableTrend().apply {
+                    this.account_key = accountKey
+                    this.woe_id = woeId
+                    this.name = trend.name
+                    this.timestamp = System.currentTimeMillis()
+                    this.trend_order = idx
+                })
             }
-            cr.delete(uri, null, null)
-            ContentResolverUtils.bulkInsert(cr, uri, valuesArray)
-            ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false, hashtags, null)
-            ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtagValues.toTypedArray())
         }
+        ContentResolverUtils.bulkInsert(cr, uri, allTrends.map(ParcelableTrendValuesCreator::create))
+        ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false,
+                hashtags, null)
+        ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtags.map {
+            val values = ContentValues()
+            values.put(CachedHashtags.NAME, it)
+            return@map values
+        })
     }
 }

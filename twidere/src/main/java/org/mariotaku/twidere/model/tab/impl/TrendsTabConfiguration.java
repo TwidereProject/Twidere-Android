@@ -15,7 +15,6 @@ import org.mariotaku.twidere.model.tab.conf.TrendsLocationExtraConfiguration;
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras;
 
 import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_PLACE;
-import static org.mariotaku.twidere.constant.IntentConstants.EXTRA_WOEID;
 
 /**
  * Created by mariotaku on 2016/11/27.
@@ -44,7 +43,7 @@ public class TrendsTabConfiguration extends TabConfiguration {
     @Override
     public ExtraConfiguration[] getExtraConfigurations(Context context) {
         return new ExtraConfiguration[]{
-                new TrendsLocationExtraConfiguration(EXTRA_WOEID).title(R.string.trends_location).mutable(true),
+                new TrendsLocationExtraConfiguration(EXTRA_PLACE).title(R.string.trends_location).mutable(true),
         };
     }
 
@@ -60,8 +59,7 @@ public class TrendsTabConfiguration extends TabConfiguration {
                     extras.setWoeId(place.getWoeId());
                     extras.setPlaceName(place.getName());
                 } else {
-                    extras.setWoeId(0);
-                    extras.setPlaceName(null);
+                    return false;
                 }
                 break;
             }

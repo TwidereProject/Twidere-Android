@@ -40,6 +40,10 @@ public class ParcelableTrend implements Parcelable {
     @JsonField(name = "timestamp")
     @CursorField(CachedTrends.TIMESTAMP)
     public long timestamp;
+    @ParcelableThisPlease
+    @JsonField(name = "trend_order")
+    @CursorField(CachedTrends.TREND_ORDER)
+    public int trend_order;
     @JsonField(name = "name")
     @CursorField(value = CachedTrends.NAME)
     public String name;
@@ -51,6 +55,7 @@ public class ParcelableTrend implements Parcelable {
                 ", account_key=" + account_key +
                 ", woe_id=" + woe_id +
                 ", timestamp=" + timestamp +
+                ", trend_order=" + trend_order +
                 ", name='" + name + '\'' +
                 '}';
     }
