@@ -1783,7 +1783,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-            adapter.mediaLoader.displayPreviewImage(media.uri, imageView)
+            adapter.mediaLoader.displayPreviewImage(imageView, media.uri)
             videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
                 View.VISIBLE
             } else {

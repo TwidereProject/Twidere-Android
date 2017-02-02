@@ -94,6 +94,8 @@
     <!-- [verb] Used for skip some settings -->
     <string name="action_skip">Skip</string>
     <string name="action_start">Start</string>
+    <string name="action_status_block_users">Block users…</string>
+    <string name="action_status_mute_users">Mute users…</string>
     <string name="action_subscribe">Subscribe</string>
     <string name="action_subscribing_to_list">subscribing to list</string>
     <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -236,8 +238,6 @@
     <string name="add_or_remove_from_list">Add or remove from list</string>
     <string name="add_tab">Add tab</string>
     <string name="add_to_filter">Add to filter</string>
-    <string name="action_status_block_users">Block users…</string>
-    <string name="action_status_mute_users">Mute users…</string>
     <string name="add_to_list">Add to list</string>
 
     <string name="added_user_to_list">Added <xliff:g
@@ -865,6 +865,7 @@
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
     <string name="preference_summary_chrome_custom_tab">Open links in in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
+    <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_chrome_custom_tab">In-app browser</string>
@@ -872,6 +873,7 @@
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
     <string name="preference_title_light_font">Light font</string>
+    <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_translate">Translate</string>
 

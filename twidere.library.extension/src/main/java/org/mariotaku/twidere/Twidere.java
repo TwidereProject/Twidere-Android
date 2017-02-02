@@ -46,7 +46,8 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
 import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 import org.mariotaku.twidere.util.model.AccountDetailsUtils;
@@ -78,7 +79,7 @@ public final class Twidere implements TwidereConstants {
     public static ParcelFileDescriptor getCachedImageFd(final Context context, final String url) {
         if (context == null || url == null) return null;
         final ContentResolver resolver = context.getContentResolver();
-        final Uri.Builder builder = TwidereDataStore.CachedImages.CONTENT_URI.buildUpon();
+        final Uri.Builder builder = CachedImages.CONTENT_URI.buildUpon();
         builder.appendQueryParameter(QUERY_PARAM_URL, url);
         try {
             return resolver.openFileDescriptor(builder.build(), "r");
@@ -87,27 +88,10 @@ public final class Twidere implements TwidereConstants {
         }
     }
 
-    public static String getCachedImagePath(final Context context, final String url) {
-        if (context == null || url == null) return null;
-        final ContentResolver resolver = context.getContentResolver();
-        final Uri.Builder builder = TwidereDataStore.CachedImages.CONTENT_URI.buildUpon();
-        builder.appendQueryParameter(QUERY_PARAM_URL, url);
-        final Cursor cur = resolver.query(builder.build(), TwidereDataStore.CachedImages.MATRIX_COLUMNS, null, null, null);
-        if (cur == null) return null;
-        try {
-            if (cur.getCount() == 0) return null;
-            final int path_idx = cur.getColumnIndex(TwidereDataStore.CachedImages.PATH);
-            cur.moveToFirst();
-            return cur.getString(path_idx);
-        } finally {
-            cur.close();
-        }
-    }
-
     public static ParcelFileDescriptor getCacheFileFd(final Context context, final String name) {
         if (context == null || name == null) return null;
         final ContentResolver resolver = context.getContentResolver();
-        final Uri.Builder builder = TwidereDataStore.CacheFiles.CONTENT_URI.buildUpon();
+        final Uri.Builder builder = CacheFiles.CONTENT_URI.buildUpon();
         builder.appendQueryParameter(QUERY_PARAM_NAME, name);
         try {
             return resolver.openFileDescriptor(builder.build(), "r");

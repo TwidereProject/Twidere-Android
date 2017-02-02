@@ -110,6 +110,7 @@ fun deleteAccountData(resolver: ContentResolver, accountKey: UserKey) {
     // deleted.
     resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
     resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
+    resolver.delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
     resolver.delete(DirectMessages.Inbox.CONTENT_URI, where, whereArgs)
     resolver.delete(DirectMessages.Outbox.CONTENT_URI, where, whereArgs)
 }

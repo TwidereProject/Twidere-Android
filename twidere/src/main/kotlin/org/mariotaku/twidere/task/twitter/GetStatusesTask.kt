@@ -45,6 +45,7 @@ import javax.inject.Inject
 abstract class GetStatusesTask(
         protected val context: Context
 ) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, (Boolean) -> Unit>() {
+    private var initialized: Boolean = false
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
@@ -55,9 +56,12 @@ abstract class GetStatusesTask(
     lateinit var manager: UserColorNameManager
     @Inject
     lateinit var wrapper: AsyncTwitterWrapper
+    @Inject
+    lateinit var mediaLoader: MediaLoaderWrapper
 
     init {
         GeneralComponentHelper.build(context).inject(this)
+        initialized = true
     }
 
     @Throws(MicroBlogException::class)
@@ -67,20 +71,10 @@ abstract class GetStatusesTask(
 
     protected abstract val timelineType: String
 
-    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterWrapper.StatusListResponse>) {
-        context.contentResolver.notifyChange(contentUri, null)
-        bus.post(GetStatusesTaskEvent(contentUri, false, AsyncTwitterWrapper.getException(result)))
-        handler?.invoke(true)
-    }
-
-    override fun beforeExecute() {
-        bus.post(GetStatusesTaskEvent(contentUri, true, null))
-    }
-
     protected abstract val errorInfoKey: String
 
     override fun doLongOperation(param: RefreshTaskParam): List<TwitterWrapper.StatusListResponse> {
-        if (param.shouldAbort) return emptyList()
+        if (!initialized || param.shouldAbort) return emptyList()
         val accountKeys = param.accountKeys
         val maxIds = param.maxIds
         val sinceIds = param.sinceIds
@@ -149,6 +143,18 @@ abstract class GetStatusesTask(
         return result
     }
 
+    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterWrapper.StatusListResponse>) {
+        if (!initialized) return
+        context.contentResolver.notifyChange(contentUri, null)
+        bus.post(GetStatusesTaskEvent(contentUri, false, AsyncTwitterWrapper.getException(result)))
+        handler?.invoke(true)
+    }
+
+    override fun beforeExecute() {
+        if (!initialized) return
+        bus.post(GetStatusesTaskEvent(contentUri, true, null))
+    }
+
     private fun storeStatus(accountKey: UserKey, details: AccountDetails,
                             statuses: List<Status>,
                             sinceId: String?, maxId: String?,
@@ -177,6 +183,7 @@ abstract class GetStatusesTask(
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 status.inserted_date = System.currentTimeMillis()
+                mediaLoader.preloadStatus(status)
                 values[i] = ParcelableStatusValuesCreator.create(status)
                 if (minIdx == -1 || item < statuses[minIdx]) {
                     minIdx = i

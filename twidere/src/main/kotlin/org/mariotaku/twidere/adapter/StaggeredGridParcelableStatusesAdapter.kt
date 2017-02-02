@@ -59,7 +59,7 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
 
         private val mediaImageContainer: AspectLockedFrameLayout
         private val mediaImageView: MediaPreviewImageView
-        override val profileImageView: ImageView?
+        override val profileImageView: ImageView
         private val mediaTextView: TextView
         private var listener: IStatusViewHolder.StatusClickListener? = null
 

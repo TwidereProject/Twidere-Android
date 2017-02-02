@@ -85,14 +85,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
 
-        nameView.applyFontFamily(adapter.lightFont)
-        timeView.applyFontFamily(adapter.lightFont)
-        textView.applyFontFamily(adapter.lightFont)
-        mediaLabelTextView.applyFontFamily(adapter.lightFont)
-
-        quotedNameView.applyFontFamily(adapter.lightFont)
-        quotedTextView.applyFontFamily(adapter.lightFont)
-        quotedMediaLabelTextView.applyFontFamily(adapter.lightFont)
     }
 
 
@@ -524,6 +516,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
         favoriteIcon.activatedColor = favColor
+
+        nameView.applyFontFamily(adapter.lightFont)
+        timeView.applyFontFamily(adapter.lightFont)
+        textView.applyFontFamily(adapter.lightFont)
+        mediaLabelTextView.applyFontFamily(adapter.lightFont)
+
+        quotedNameView.applyFontFamily(adapter.lightFont)
+        quotedTextView.applyFontFamily(adapter.lightFont)
+        quotedMediaLabelTextView.applyFontFamily(adapter.lightFont)
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {
