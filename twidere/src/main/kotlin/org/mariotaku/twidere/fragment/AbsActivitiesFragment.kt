@@ -227,7 +227,7 @@ abstract class AbsActivitiesFragment protected constructor() :
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             wasAtTop = firstVisibleItemPosition == 0
             val activityRange = rangeOfSize(adapter.activityStartIndex, Math.max(0, adapter.activityCount - 1))
-            val lastReadPosition = if (readFromBottom) {
+            val lastReadPosition = if (loadMore || readFromBottom) {
                 lastVisibleItemPosition
             } else {
                 firstVisibleItemPosition
@@ -255,6 +255,10 @@ abstract class AbsActivitiesFragment protected constructor() :
             restorePosition = adapter.findPositionBySortTimestamp(lastReadId)
         }
 
+        if (loadMore) {
+            restorePosition += 1
+            restorePosition.coerceInOr(0 until layoutManager.itemCount, -1)
+        }
         if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || !wasAtTop ||
                 readFromBottom
                 || (rememberPosition && firstLoad))) {

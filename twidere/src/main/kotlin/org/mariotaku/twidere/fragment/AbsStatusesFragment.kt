@@ -280,7 +280,7 @@ abstract class AbsStatusesFragment protected constructor() :
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             wasAtTop = firstVisibleItemPosition == 0
             val statusRange = rangeOfSize(adapter.statusStartIndex, adapter.statusCount - 1)
-            val lastReadPosition = if (readFromBottom) {
+            val lastReadPosition = if (loadMore || readFromBottom) {
                 lastVisibleItemPosition
             } else {
                 firstVisibleItemPosition
@@ -318,6 +318,10 @@ abstract class AbsStatusesFragment protected constructor() :
             }
         } else {
             onHasMoreDataChanged(false)
+        }
+        if (loadMore) {
+            restorePosition += 1
+            restorePosition.coerceInOr(0 until layoutManager.itemCount, -1)
         }
         if (restorePosition != -1 && adapter.isStatus(restorePosition) && (loadMore || !wasAtTop
                 || readFromBottom || (rememberPosition && firstLoad))) {
