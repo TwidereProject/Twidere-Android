@@ -210,4 +210,7 @@ public interface IntentConstants {
     String EXTRA_REQUEST_CODE = "request_code";
     String EXTRA_FROM_CACHE = "from_cache";
     String EXTRA_SHOW_MY_LISTS = "show_my_lists";
+    String EXTRA_WOEID = "woeid";
+    String EXTRA_PLACE = "place";
+    String EXTRA_PLACE_NAME = "place_name";
 }

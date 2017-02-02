@@ -21,6 +21,7 @@ import org.mariotaku.twidere.model.tab.argument.UserListArguments;
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
+import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras;
 import org.mariotaku.twidere.model.util.TabArgumentsFieldConverter;
 import org.mariotaku.twidere.model.util.TabExtrasFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
@@ -260,15 +261,19 @@ public class Tab implements Parcelable {
         @JsonField(name = "home")
         @ParcelableThisPlease
         HomeTabExtras home;
+        @JsonField(name = "trends")
+        @ParcelableThisPlease
+        TrendsTabExtras trends;
 
         public static InternalExtras from(TabExtras extras) {
             if (extras == null) return null;
             InternalExtras result = new InternalExtras();
             if (extras instanceof InteractionsTabExtras) {
                 result.interactions = (InteractionsTabExtras) extras;
-            }
-            if (extras instanceof HomeTabExtras) {
+            } else if (extras instanceof HomeTabExtras) {
                 result.home = (HomeTabExtras) extras;
+            } else if (extras instanceof TrendsTabExtras) {
+                result.trends = (TrendsTabExtras) extras;
             } else {
                 result.base = extras;
             }
@@ -280,6 +285,8 @@ public class Tab implements Parcelable {
                 return interactions;
             } else if (home != null) {
                 return home;
+            } else if (trends != null) {
+                return trends;
             } else {
                 return base;
             }

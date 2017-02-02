@@ -32,7 +32,7 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.twidere.adapter.TrendsAdapter
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LOCAL_TRENDS_WOEID
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_WOEID
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
@@ -97,7 +97,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
     override fun onRefresh() {
         if (refreshing) return
-        twitterWrapper.getLocalTrendsAsync(accountId, preferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1))
+        twitterWrapper.getLocalTrendsAsync(accountId, arguments.getInt(EXTRA_WOEID, 1))
     }
 
     override var refreshing: Boolean

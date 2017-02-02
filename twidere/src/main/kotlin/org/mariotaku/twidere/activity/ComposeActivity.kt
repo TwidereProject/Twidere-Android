@@ -65,6 +65,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
+import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.pickncrop.library.MediaPickerActivity
@@ -558,7 +559,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
-            val selected = savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
+            val selected = savedInstanceState.getTypedArray(EXTRA_ACCOUNT_KEYS, UserKey.CREATOR)
             accountsAdapter.setSelectedAccountIds(*selected)
             possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
