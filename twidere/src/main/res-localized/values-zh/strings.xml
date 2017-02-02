@@ -513,8 +513,8 @@
   <string name="message_toast_users_filters_added">您過濾了這些用戶，你將不會在主頁/提及中看到這些用戶的推文</string>
   <string name="message_toast_wrong_api_key">API地址或者consumer key/secret不正確，請檢查</string>
   <string name="message_toast_wrong_username_password">帳號或密碼錯誤</string>
-  <string name="message_video_too_long">影片太長啦！</string>
-  <string name="message_video_too_short">影片太短啦！</string>
+  <string name="message_video_too_long">影片太長</string>
+  <string name="message_video_too_short">影片太短</string>
   <string name="multi_select">多選</string>
   <string name="mute_user">靜音<xliff:g id="name">%s</xliff:g></string>
   <string name="mute_user_confirm_message">靜音 <xliff:g id="name">%s</xliff:g> 嗎？您將在保持關注這位使用者的情況下，在首頁看不到這位使用者的推文。</string>
