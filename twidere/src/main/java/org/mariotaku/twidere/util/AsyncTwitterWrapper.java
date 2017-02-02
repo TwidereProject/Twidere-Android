@@ -103,10 +103,10 @@ import org.mariotaku.twidere.task.DestroyUserBlockTask;
 import org.mariotaku.twidere.task.DestroyUserMuteTask;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
-import org.mariotaku.twidere.task.GetLocalTrendsTask;
 import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask;
 import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.GetSentDirectMessagesTask;
+import org.mariotaku.twidere.task.GetTrendsTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
@@ -329,7 +329,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public void getLocalTrendsAsync(final UserKey accountId, final int woeId) {
-        final GetLocalTrendsTask task = new GetLocalTrendsTask(context, accountId, woeId);
+        final GetTrendsTask task = new GetTrendsTask(context, accountId, woeId);
         TaskStarter.execute(task);
     }
 
@@ -1063,7 +1063,8 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         @Override
         protected SingleResponse<Boolean> doInBackground(final Object... args) {
             final MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey);
-            if (microBlog == null) return new SingleResponse<>(new MicroBlogException("No account"));
+            if (microBlog == null)
+                return new SingleResponse<>(new MicroBlogException("No account"));
             try {
                 microBlog.destroyDirectMessagesConversation(mAccountKey.getId(), mUserId);
                 deleteMessages(mAccountKey, mUserId);

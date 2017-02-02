@@ -186,12 +186,13 @@ public interface TwidereDataStore {
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
     }
 
-    interface CachedTrends extends CachedValues {
+    interface CachedTrends extends CachedValues, AccountSupportColumns {
 
         String TIMESTAMP = "timestamp";
+        String WOEID = "woeid";
 
-        String[] COLUMNS = {_ID, NAME, TIMESTAMP};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_INT};
+        String[] COLUMNS = {_ID, ACCOUNT_KEY, WOEID, NAME, TIMESTAMP};
+        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_INT, TYPE_TEXT, TYPE_INT};
 
         interface Local extends CachedTrends {
             String TABLE_NAME = "local_trends";

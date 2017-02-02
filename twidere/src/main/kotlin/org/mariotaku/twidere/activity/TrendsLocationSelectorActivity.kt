@@ -1,8 +1,10 @@
 package org.mariotaku.twidere.activity
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
@@ -24,8 +26,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Location
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_DATA
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.UserKey
@@ -42,7 +43,6 @@ class TrendsLocationSelectorActivity : BaseActivity() {
 
     private val accountKey: UserKey?
         get() = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +100,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                 listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { parent, v, groupPosition, id ->
                     val group = adapter.getGroup(groupPosition)
                     if (group.woeid.toLong() == WORLDWIDE) {
+                        setActivityResult(group)
                         dismiss()
                         return@OnGroupClickListener true
                     }
@@ -107,12 +108,17 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                 })
                 listView.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
                     val child = adapter.getChild(groupPosition, childPosition)
+                    setActivityResult(child)
                     dismiss()
                     return@setOnChildClickListener true
                 }
             }
             dialog.show()
             return dialog
+        }
+
+        private fun setActivityResult(location: Location) {
+            activity?.setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_LOCATION, location))
         }
 
         override fun onDismiss(dialog: DialogInterface?) {
