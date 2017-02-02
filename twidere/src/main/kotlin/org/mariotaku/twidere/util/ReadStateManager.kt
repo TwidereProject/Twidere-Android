@@ -31,7 +31,7 @@ import org.mariotaku.twidere.util.collection.CompactHashSet
 
 class ReadStateManager(context: Context) {
 
-    private val preferences: SharedPreferencesWrapper = SharedPreferencesWrapper.getInstance(context,
+    private val preferences = SharedPreferencesWrapper.getInstance(context,
             TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     fun getPosition(key: String): Long {
