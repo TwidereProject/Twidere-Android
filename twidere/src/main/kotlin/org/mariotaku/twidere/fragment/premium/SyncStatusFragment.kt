@@ -19,7 +19,6 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
-import org.mariotaku.twidere.model.sync.SyncProviderEntry
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
