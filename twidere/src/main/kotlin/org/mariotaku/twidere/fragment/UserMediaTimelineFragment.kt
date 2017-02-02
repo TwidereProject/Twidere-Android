@@ -8,19 +8,15 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.TextUtils
-import android.view.View
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.MediaTimelineLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
-import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.HeaderDrawerLayout.DrawerCallback
-import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 /**
@@ -42,13 +38,21 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
     override val reachingEnd: Boolean
         get() {
             val lm = layoutManager
-            return ArrayUtils.contains(lm.findLastCompletelyVisibleItemPositions(null), lm.itemCount - 1)
+            var visiblePos = lm.findLastCompletelyVisibleItemPositions(null)
+            if (visiblePos.all { it == RecyclerView.NO_POSITION }) {
+                visiblePos = lm.findLastVisibleItemPositions(null)
+            }
+            return visiblePos.contains(lm.itemCount - 1)
         }
 
     override val reachingStart: Boolean
         get() {
             val lm = layoutManager
-            return ArrayUtils.contains(lm.findFirstCompletelyVisibleItemPositions(null), 0)
+            var visiblePos = lm.findFirstCompletelyVisibleItemPositions(null)
+            if (visiblePos.all { it == RecyclerView.NO_POSITION }) {
+                visiblePos = lm.findFirstVisibleItemPositions(null)
+            }
+            return visiblePos.contains(0)
         }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

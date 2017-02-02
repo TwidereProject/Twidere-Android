@@ -20,6 +20,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -35,6 +36,7 @@ import android.support.v7.app.WindowDecorActionBar
 import android.support.v7.app.containerView
 import android.view.Menu
 import android.view.MenuItem
+import android.view.WindowManager
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.chameleon.Chameleon
@@ -47,6 +49,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.provider.CacheProvider
@@ -86,18 +89,24 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+        }
         super.onCreate(savedInstanceState)
         GeneralComponentHelper.build(this).inject(this)
         mediaViewerHelper = IMediaViewerActivity.Helper(this)
         controlBarShowHideHelper = ControlBarShowHideHelper(this)
         mediaViewerHelper.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.elevation = 0f
         swipeContainer.listener = this
         swipeContainer.backgroundAlpha = 1f
         WindowSupport.setStatusBarColor(window, Color.TRANSPARENT)
         activityLayout.setStatusBarColor(overrideTheme.colorToolbar)
         activityLayout.setWindowInsetsListener { l, t, r, b ->
-            activityLayout.setStatusBarHeight(t - ThemeUtils.getActionBarHeight(this))
+            val statusBarHeight = t - ThemeUtils.getActionBarHeight(this)
+            activityLayout.setStatusBarHeight(statusBarHeight)
+            onFitSystemWindows(Rect(l, t, r, b))
         }
     }
 
@@ -238,6 +247,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     }
 
     override fun setBarVisibility(visible: Boolean) {
+        if (isBarShowing == visible) return
         setControlBarVisibleAnimate(visible)
     }
 
@@ -269,6 +279,8 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             }
             ParcelableMedia.Type.ANIMATED_GIF, ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
                 args.putBoolean(VideoPageFragment.EXTRA_LOOP, true)
+                args.putBoolean(VideoPageFragment.EXTRA_DISABLE_CONTROL, true)
+                args.putBoolean(VideoPageFragment.EXTRA_DEFAULT_MUTE, true)
                 return Fragment.instantiate(this, VideoPageFragment::class.java.name, args) as MediaViewerFragment
             }
             ParcelableMedia.Type.VIDEO -> {
@@ -351,13 +363,22 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                     // Some device will throw this exception
                     hideOffsetNotSupported = true
                 }
-
             }
             notifyControlBarOffsetChanged()
         }
 
     override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
+    }
+
+
+    override fun onFitSystemWindows(insets: Rect) {
+        super.onFitSystemWindows(insets)
+        val adapter = viewPager.adapter
+        val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
+        if (fragment is IBaseFragment<*>) {
+            fragment.requestFitSystemWindows()
+        }
     }
 
     private fun processShareIntent(intent: Intent) {

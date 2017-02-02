@@ -47,10 +47,10 @@
 
         <RelativeLayout
             android:id="@+id/videoControl"
-            style="?actionBarSplitStyle"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:layout_gravity="bottom"
+            android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
@@ -102,7 +102,6 @@
                 android:textSize="@dimen/text_size_extra_small"
                 tools:text="--:--"/>
 
-
             <ImageButton
                 android:id="@+id/volumeButton"
                 android:layout_width="wrap_content"
@@ -114,7 +113,6 @@
                 android:contentDescription="@string/action_mute"
                 android:minWidth="@dimen/element_size_normal"
                 android:src="@drawable/ic_action_speaker_max"/>
-
 
         </RelativeLayout>
     </FrameLayout>

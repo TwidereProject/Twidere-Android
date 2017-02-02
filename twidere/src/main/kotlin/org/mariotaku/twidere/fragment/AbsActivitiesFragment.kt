@@ -395,10 +395,13 @@ abstract class AbsActivitiesFragment protected constructor() :
     override val reachingEnd: Boolean
         get() {
             val lm = layoutManager
-            val lastPosition = lm.findLastCompletelyVisibleItemPosition()
+            var lastPosition = lm.findLastCompletelyVisibleItemPosition()
+            if (lastPosition == RecyclerView.NO_POSITION) {
+                lastPosition = lm.findLastVisibleItemPosition()
+            }
             val itemCount = adapter.itemCount
             var finalPos = itemCount - 1
-            for (i in lastPosition + 1..itemCount - 1) {
+            for (i in lastPosition + 1 until itemCount) {
                 if (adapter.getItemViewType(i) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
                     finalPos = i - 1
                     break
@@ -406,9 +409,6 @@ abstract class AbsActivitiesFragment protected constructor() :
             }
             return finalPos >= itemCount - 1
         }
-
-    override val reachingStart: Boolean
-        get() = super.reachingStart
 
     protected open fun createMessageBusCallback(): Any {
         return StatusesBusCallback()

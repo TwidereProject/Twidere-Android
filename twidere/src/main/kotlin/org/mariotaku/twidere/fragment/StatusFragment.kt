@@ -520,10 +520,26 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override val reachingEnd: Boolean
-        get() = layoutManager.findLastCompletelyVisibleItemPosition() >= adapter.itemCount - 1
+        get() {
+            val lm = layoutManager
+            var itemPos = lm.findLastCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findLastVisibleItemPosition()
+            }
+            return itemPos >= lm.itemCount - 1
+        }
 
     override val reachingStart: Boolean
-        get() = layoutManager.findFirstCompletelyVisibleItemPosition() <= 1
+        get() {
+            val lm = layoutManager
+            var itemPos = lm.findFirstCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findFirstVisibleItemPosition()
+            }
+            return itemPos <= 1
+        }
 
     private val status: ParcelableStatus?
         get() = adapter.status
