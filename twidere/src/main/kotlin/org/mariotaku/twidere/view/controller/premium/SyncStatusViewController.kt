@@ -63,6 +63,12 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
             messageView.text = context.getString(R.string.message_sync_data_connect_hint)
             button1.visibility = View.VISIBLE
             button2.visibility = View.GONE
+
+            if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SYNC_DATA)) {
+                button1.setText(R.string.action_sync_connect_to_storage)
+            } else {
+                button1.setText(R.string.action_purchase)
+            }
         } else {
             val providerEntry = SyncProviderInfoFactory.getProviderEntry(context, providerInfo.type)!!
             messageView.text = context.getString(R.string.message_sync_data_synced_with_name, providerEntry.name)
