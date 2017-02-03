@@ -22,6 +22,7 @@
             android:id="@+id/featureIcon"
             android:layout_width="@dimen/element_size_small"
             android:layout_height="@dimen/element_size_small"
+            android:layout_weight="0"
             app:iabColor="?android:textColorSecondary"
             tools:src="@drawable/ic_action_refresh"/>
 
@@ -29,6 +30,7 @@
             android:id="@+id/featureDescription"
             android:layout_marginLeft="@dimen/element_spacing_normal"
             android:layout_marginStart="@dimen/element_spacing_normal"
+            android:layout_weight="1"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_small"
             android:textSize="15sp"

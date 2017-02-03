@@ -21,6 +21,7 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity.HideUiOnScroll
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INITIAL_TAB
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
@@ -37,7 +38,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         SupportFragmentCallback, IBaseFragment.SystemWindowsInsetsCallback, ControlBarOffsetListener,
         HideUiOnScroll, OnPageChangeListener, IToolBarSupportFragment, KeyboardShortcutCallback {
 
-    private var pagerAdapter: SupportTabsAdapter? = null
+    private lateinit var pagerAdapter: SupportTabsAdapter
     override val toolbar: Toolbar
         get() = toolbarContainer.toolbar
     private var mControlBarHeight: Int = 0
@@ -53,16 +54,28 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         toolbarTabs.setTabDisplayOption(TabPagerIndicator.DisplayOption.LABEL)
 
 
-        addTabs(pagerAdapter!!)
+        addTabs(pagerAdapter)
         toolbarContainer.setOnSizeChangedListener { view, w, h, oldw, oldh ->
             val pageLimit = viewPager.offscreenPageLimit
             val currentItem = viewPager.currentItem
-            val count = pagerAdapter!!.count
+            val count = pagerAdapter.count
             for (i in 0 until count) {
                 if (i > currentItem - pageLimit - 1 || i < currentItem + pageLimit) {
-                    val obj = pagerAdapter!!.instantiateItem(viewPager, i)
+                    val obj = pagerAdapter.instantiateItem(viewPager, i)
                     if (obj is IBaseFragment<*>) {
                         obj.requestFitSystemWindows()
+                    }
+                }
+            }
+        }
+
+        if (savedInstanceState == null) {
+            val initialTab = arguments?.getString(EXTRA_INITIAL_TAB)
+            if (initialTab != null) {
+                for (i in 0 until pagerAdapter.count) {
+                    if (initialTab == pagerAdapter.getTab(i).tag) {
+                        viewPager.currentItem = i
+                        break
                     }
                 }
             }
@@ -100,7 +113,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val o = pagerAdapter!!.instantiateItem(viewPager, viewPager.currentItem)
+        val o = pagerAdapter.instantiateItem(viewPager, viewPager.currentItem)
         if (o is Fragment) {
             o.onActivityResult(requestCode, resultCode, data)
         }
@@ -119,8 +132,8 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     override val currentVisibleFragment: Fragment?
         get() {
             val currentItem = viewPager.currentItem
-            if (currentItem < 0 || currentItem >= pagerAdapter!!.count) return null
-            return pagerAdapter!!.instantiateItem(viewPager, currentItem) as Fragment
+            if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
+            return pagerAdapter.instantiateItem(viewPager, currentItem)
         }
 
     override fun triggerRefresh(position: Int): Boolean {
@@ -181,14 +194,14 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
             when (action) {
                 ACTION_NAVIGATION_PREVIOUS_TAB -> {
                     val previous = viewPager.currentItem - 1
-                    if (previous >= 0 && previous < pagerAdapter!!.count) {
+                    if (previous >= 0 && previous < pagerAdapter.count) {
                         viewPager.setCurrentItem(previous, true)
                     }
                     return true
                 }
                 ACTION_NAVIGATION_NEXT_TAB -> {
                     val next = viewPager.currentItem + 1
-                    if (next >= 0 && next < pagerAdapter!!.count) {
+                    if (next >= 0 && next < pagerAdapter.count) {
                         viewPager.setCurrentItem(next, true)
                     }
                     return true

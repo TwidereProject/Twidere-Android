@@ -5,9 +5,11 @@ import android.content.Intent
 import com.anjlab.android.iab.v3.BillingProcessor
 import nl.komponents.kovenant.task
 import org.mariotaku.twidere.Constants.GOOGLE_PLAY_LICENCING_PUBKEY
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.GooglePlayInAppPurchaseActivity
 import org.mariotaku.twidere.activity.premium.AbsExtraFeaturePurchaseActivity
+import org.mariotaku.twidere.view.controller.premium.GoogleFiltersImportViewController
+import org.mariotaku.twidere.view.controller.premium.GoogleFiltersSubscriptionsViewController
+import org.mariotaku.twidere.view.controller.premium.SyncStatusViewController
 
 /**
  * Created by mariotaku on 2016/12/25.
@@ -17,7 +19,11 @@ class GooglePlayExtraFeaturesService : ExtraFeaturesService() {
 
     private lateinit var bp: BillingProcessor
 
-    override fun getDashboardLayouts() = intArrayOf(R.layout.card_item_extra_features_sync_status)
+    override fun getDashboardControllers() = listOf(
+            SyncStatusViewController::class.java,
+            GoogleFiltersImportViewController::class.java,
+            GoogleFiltersSubscriptionsViewController::class.java
+    )
 
     override fun init(context: Context) {
         super.init(context)

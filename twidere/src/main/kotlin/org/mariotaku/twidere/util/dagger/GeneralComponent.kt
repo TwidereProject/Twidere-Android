@@ -24,6 +24,7 @@ import dagger.Component
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
@@ -152,4 +153,6 @@ interface GeneralComponent {
     fun inject(loader: CacheUserSearchLoader)
 
     fun inject(loader: BaseUserListsLoader)
+
+    fun inject(controller: PremiumDashboardActivity.ExtraFeatureViewController)
 }

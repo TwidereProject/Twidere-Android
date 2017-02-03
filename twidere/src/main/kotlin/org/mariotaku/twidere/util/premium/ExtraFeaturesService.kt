@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.annotation.CallSuper
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.view.ContainerView
 import java.util.*
 
 /**
@@ -13,7 +14,7 @@ import java.util.*
 abstract class ExtraFeaturesService {
     protected lateinit var context: Context
 
-    abstract fun getDashboardLayouts(): IntArray
+    abstract fun getDashboardControllers(): List<Class<out ContainerView.ViewController>>
 
     @CallSuper
     protected open fun init(context: Context) {

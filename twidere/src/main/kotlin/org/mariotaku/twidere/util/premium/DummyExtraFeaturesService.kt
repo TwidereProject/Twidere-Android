@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util.premium
 
 import android.content.Context
 import android.content.Intent
+import org.mariotaku.twidere.view.ContainerView
 
 /**
  * Created by mariotaku on 2016/12/25.
@@ -9,7 +10,7 @@ import android.content.Intent
 
 class DummyExtraFeaturesService : ExtraFeaturesService() {
 
-    override fun getDashboardLayouts() = intArrayOf()
+    override fun getDashboardControllers() = emptyList<Class<ContainerView.ViewController>>()
 
     override fun isSupported(): Boolean = false
 

@@ -38,6 +38,7 @@
     <string name="action_favoriting">favoriting</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
+    <string name="action_filter_subscriptions_card_manage">Manage subscriptions</string>
     <string name="action_finish">Finish</string>
     <string name="action_follow">Follow</string>
     <string name="action_following">following</string>
@@ -457,9 +458,11 @@
 
     <string name="extra_configurations">Extra configurations</string>
     <string name="extra_feature_description_filters_import">Import filter list from blocks/mutes</string>
-    <string name="extra_feature_description_filters_subscription">Filters list subscription</string>
+    <string name="extra_feature_description_filters_subscription">Subscribe to mute filters and sync automatically</string>
     <string name="extra_feature_description_schedule_status">Schedule tweet (send later)</string>
     <string name="extra_feature_description_sync_data">Sync data with Dropbox, Google Drive etc</string>
+    <string name="extra_feature_title_filters_import">Filters import</string>
+    <string name="extra_feature_title_filters_subscription">Filters subscription</string>
     <!-- Enhanced (paid) features description -->
     <string name="extra_features_description">Support Twidere and get enhanced features</string>
     <string name="extra_features_pack_description">Or buy features pack to get all features (including features in future releases)</string>
@@ -695,6 +698,7 @@
     <string name="message_toast_error_occurred">An error occurred, please try again</string>
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
+    <string name="message_toast_filters_import_hint">Press \"+\" to import</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
