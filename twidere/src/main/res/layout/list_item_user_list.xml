@@ -78,7 +78,7 @@
             tools:text="Created by user"/>
     </LinearLayout>
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
         android:orientation="horizontal"
         android:paddingTop="@dimen/element_spacing_small">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/membersCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="255"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/subscribersCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/log_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

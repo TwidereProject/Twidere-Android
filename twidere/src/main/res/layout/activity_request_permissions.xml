@@ -58,7 +58,7 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/nameView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/descriptionView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
+            <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/messageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

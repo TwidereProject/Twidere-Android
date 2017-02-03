@@ -71,8 +71,8 @@ class MessageEntryViewHolder(private val adapter: MessageEntriesAdapter, itemVie
         val name = cursor.getString(ConversationEntries.IDX_NAME)
         val screenName = cursor.getString(ConversationEntries.IDX_SCREEN_NAME)
 
-        nameView.setName(manager.getUserNickname(conversationId, name))
-        nameView.setScreenName("@" + screenName)
+        nameView.name = manager.getUserNickname(conversationId, name)
+        nameView.screenName = "@$screenName"
         nameView.updateText(adapter.bidiFormatter)
         textView.text = toPlainText(cursor.getString(ConversationEntries.IDX_TEXT_UNESCAPED))
         timeView.time = timestamp

@@ -15,7 +15,7 @@ import android.view.ViewGroup
  */
 class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : ViewGroup(context, attrs) {
 
-    private val dragHelper: ViewDragHelper = ViewDragHelper.create(this, object : ViewDragHelper.Callback() {
+    private val dragHelper: ViewDragHelper = ViewDragHelper.create(this, 0.5f, object : ViewDragHelper.Callback() {
         override fun onViewPositionChanged(changedView: View?, left: Int, top: Int, dx: Int, dy: Int) {
             val container = this@MediaSwipeCloseContainer
             container.childTop = top
@@ -45,7 +45,9 @@ class MediaSwipeCloseContainer(context: Context, attrs: AttributeSet? = null) : 
         override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
             val container = this@MediaSwipeCloseContainer
             val minVel = ViewConfiguration.get(context).scaledMinimumFlingVelocity
-            when {
+            if (Math.abs(yvel) < Math.abs(xvel)) {
+                container.dragHelper.smoothSlideViewTo(releasedChild, 0, 0)
+            } else when {
                 yvel > minVel && childTop > 0 -> {
                     // Settle downward
                     container.dragHelper.settleCapturedViewAt(0, container.height)

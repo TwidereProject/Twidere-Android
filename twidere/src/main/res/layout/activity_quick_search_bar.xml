@@ -56,7 +56,7 @@
                     android:layout_weight="0"
                     tools:listitem="@layout/spinner_item_account_icon"/>
 
-                <EditText
+                <org.mariotaku.twidere.view.FixedEditText
                     android:id="@+id/searchQuery"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -67,7 +67,7 @@
                     android:inputType="text|textMultiLine">
 
                     <requestFocus/>
-                </EditText>
+                </org.mariotaku.twidere.view.FixedEditText>
 
                 <org.mariotaku.twidere.view.IconActionButton
                     android:id="@+id/searchSubmit"

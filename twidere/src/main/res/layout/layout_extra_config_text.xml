@@ -6,10 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatEditText
+    <org.mariotaku.twidere.view.FixedEditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
         app:backgroundTint="?colorAccent"/>
+
 </LinearLayout>

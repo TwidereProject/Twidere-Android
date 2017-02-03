@@ -48,6 +48,7 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.EditText
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
@@ -433,7 +434,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
         val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
         if (ACTION_NAVIGATION_BACK == action) {
             val showingConversation = isShowingConversation
-            val editText = if (showingConversation) editText else actionBarCustomView.editUserQuery
+            val editText: EditText = if (showingConversation) editText else actionBarCustomView.editUserQuery
             val textChanged = if (showingConversation) textChanged else queryTextChanged
             if (editText.length() == 0 && !textChanged) {
                 val activity = activity

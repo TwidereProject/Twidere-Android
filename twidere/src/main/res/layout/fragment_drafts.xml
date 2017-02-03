@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/emptyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -96,6 +96,8 @@ import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
+import org.mariotaku.twidere.model.ParcelableActivityCursorIndices
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.analyzer.StatusView
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent
@@ -832,9 +834,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     itemView.quotedName.visibility = View.VISIBLE
                     itemView.quotedText.visibility = View.VISIBLE
 
-                    itemView.quotedName.setName(colorNameManager.getUserNickname(status.quoted_user_key!!,
-                            status.quoted_user_name))
-                    itemView.quotedName.setScreenName(String.format("@%s", status.quoted_user_screen_name))
+                    itemView.quotedName.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
+                            status.quoted_user_name)
+                    itemView.quotedName.screenName = "@${status.quoted_user_screen_name}"
                     itemView.quotedName.updateText(formatter)
 
 
@@ -911,8 +913,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 timestamp = status.timestamp
             }
 
-            itemView.name.setName(colorNameManager.getUserNickname(status.user_key, status.user_name))
-            itemView.name.setScreenName(String.format("@%s", status.user_screen_name))
+            itemView.name.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
+            itemView.name.screenName = String.format("@%s", status.user_screen_name)
             itemView.name.updateText(formatter)
 
             loader.displayProfileImage(itemView.profileImage, status)
@@ -1171,8 +1173,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.countsUsersHeightHolder.count.textSize = textSize * 1.25f
             itemView.countsUsersHeightHolder.label.textSize = textSize * 0.85f
 
-            itemView.name.setNameFirst(adapter.nameFirst)
-            itemView.quotedName.setNameFirst(adapter.nameFirst)
+            itemView.name.nameFirst = adapter.nameFirst
+            itemView.quotedName.nameFirst = adapter.nameFirst
 
             itemView.mediaPreview.setStyle(adapter.mediaPreviewStyle)
             itemView.quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)

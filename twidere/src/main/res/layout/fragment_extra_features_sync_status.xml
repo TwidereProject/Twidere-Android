@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="@dimen/element_spacing_normal">
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_normal"
@@ -16,7 +16,7 @@
         android:textColor="?android:textColorPrimary"
         android:textStyle="bold"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/statusText"

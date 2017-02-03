@@ -50,7 +50,7 @@
             android:color="?android:textColorSecondary"
             android:src="@drawable/ic_info_error_generic"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/errorText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

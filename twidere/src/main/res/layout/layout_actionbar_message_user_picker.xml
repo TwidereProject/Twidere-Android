@@ -41,7 +41,7 @@
         android:layout_toEndOf="@+id/accountSpinner"
         android:layout_toRightOf="@+id/accountSpinner">
 
-        <EditText
+        <org.mariotaku.twidere.view.FixedEditText
             android:id="@+id/editUserQuery"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -52,7 +52,7 @@
             android:inputType="textPersonName|textMultiLine">
 
             <requestFocus/>
-        </EditText>
+        </org.mariotaku.twidere.view.FixedEditText>
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/queryButton"

@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.EmojiSupportUtils
 import org.mariotaku.twidere.util.widget.StatusTextTokenizer
 
-class ComposeEditText @JvmOverloads constructor(
+class ComposeEditText(
         context: Context,
         attrs: AttributeSet? = null
 ) : ChameleonMultiAutoCompleteTextView(context, attrs) {
@@ -63,7 +63,7 @@ class ComposeEditText @JvmOverloads constructor(
         if (!isInEditMode && adapter == null) {
             adapter = ComposeAutoCompleteAdapter(context)
         }
-        setAdapter<ComposeAutoCompleteAdapter>(adapter)
+        setAdapter(adapter)
         updateAccountKey()
     }
 
@@ -71,6 +71,15 @@ class ComposeEditText @JvmOverloads constructor(
         super.onDetachedFromWindow()
         adapter?.closeCursor()
         adapter = null
+    }
+
+    override fun onTextContextMenuItem(id: Int): Boolean {
+        try {
+            return super.onTextContextMenuItem(id)
+        } catch (e: AbstractMethodError) {
+            // http://crashes.to/s/69acd0ea0de
+            return true
+        }
     }
 
     private fun updateAccountKey() {

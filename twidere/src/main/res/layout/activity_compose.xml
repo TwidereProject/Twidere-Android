@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <org.mariotaku.twidere.view.FixedTextView
                     android:id="@+id/replyLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                         app:iabColor="?android:textColorSecondary"
                         tools:activated="true"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/locationText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
