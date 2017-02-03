@@ -310,7 +310,6 @@
   <string name="external_user_host_format">Pengguna eksternal di <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Pengaturan Ekstra</string>
   <string name="extra_feature_description_filters_import">Mengimpor daftar penyaringan dari blok/didiamkan</string>
-  <string name="extra_feature_description_filters_subscription">Menyaring daftar langganan</string>
   <string name="extra_feature_description_schedule_status">Jadwalkan tweer (kirim nanti)</string>
   <string name="extra_feature_description_sync_data">Sinkronisasi data dengan Dropbox, Google Drive, dll</string>
   <!-- Enhanced (paid) features description -->

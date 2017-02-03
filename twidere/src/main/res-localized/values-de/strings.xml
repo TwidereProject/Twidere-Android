@@ -313,7 +313,6 @@
   <string name="external_user_host_format">Externer Benutzer bei <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Erweiterte Einstellungen</string>
   <string name="extra_feature_description_filters_import">Importiere Filterliste von blockierten/stummgeschalteten</string>
-  <string name="extra_feature_description_filters_subscription">Abonnements filtern</string>
   <string name="extra_feature_description_schedule_status">Tweet planen (später senden)</string>
   <string name="extra_feature_description_sync_data">Synchronisieren von Daten mit Dropbox, Google Drive etc.</string>
   <!-- Enhanced (paid) features description -->

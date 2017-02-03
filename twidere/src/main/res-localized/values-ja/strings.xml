@@ -315,7 +315,6 @@
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
   <string name="extra_feature_description_filters_import">ブロック/ミュートからフィルタリストをインポートする</string>
-  <string name="extra_feature_description_filters_subscription">フィルタリストの購読</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
   <!-- Enhanced (paid) features description -->

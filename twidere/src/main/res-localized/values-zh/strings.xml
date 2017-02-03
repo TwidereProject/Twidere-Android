@@ -92,6 +92,8 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">跳過</string>
   <string name="action_start">開始</string>
+  <string name="action_status_block_users">封鎖使用者&#8230;</string>
+  <string name="action_status_mute_users">靜音使用者&#8230;</string>
   <string name="action_subscribe">訂閲</string>
   <string name="action_subscribing_to_list">訂閲列表</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -316,7 +318,6 @@
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部使用者</string>
   <string name="extra_configurations">額外設定</string>
   <string name="extra_feature_description_filters_import">從被封鎖/靜音的使用者導入過濾列表</string>
-  <string name="extra_feature_description_filters_subscription">過濾器訂閱</string>
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
   <!-- Enhanced (paid) features description -->
