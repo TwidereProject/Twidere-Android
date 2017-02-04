@@ -156,11 +156,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         get() {
             val currentItem = mainPager.currentItem
             if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(mainPager, currentItem) as Fragment
+            return pagerAdapter.instantiateItem(mainPager, currentItem)
         }
 
     override fun triggerRefresh(position: Int): Boolean {
-        val f = pagerAdapter.instantiateItem(mainPager, position) as Fragment
+        val f = pagerAdapter.instantiateItem(mainPager, position)
         if (f.activity == null || f.isDetached) return false
         if (f !is RefreshScrollTopInterface) return false
         return f.triggerRefresh()
@@ -390,8 +390,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
         }
 
-        val initialTabPosition = handleIntent(intent, savedInstanceState == null,
-                savedInstanceState != null)
+        val initialTabPosition = handleIntent(intent, savedInstanceState == null)
         setTabPosition(initialTabPosition)
 
         if (Utils.isStreamingEnabled()) {
@@ -523,7 +522,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         get() = pagerAdapter.tabs
 
     override fun onNewIntent(intent: Intent) {
-        val tabPosition = handleIntent(intent, false, false)
+        val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
             mainPager.currentItem = TwidereMathUtils.clamp(tabPosition, pagerAdapter.count, 0)
         }
@@ -650,8 +649,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return false
     }
 
-    private fun handleIntent(intent: Intent, handleExtraIntent: Boolean,
-                             restoreInstanceState: Boolean): Int {
+    private fun handleIntent(intent: Intent, handleExtraIntent: Boolean): Int {
         // use package's class loader to prevent BadParcelException
         intent.setExtrasClassLoader(classLoader)
         // reset intent

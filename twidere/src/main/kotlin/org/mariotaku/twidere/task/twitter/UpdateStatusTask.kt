@@ -28,7 +28,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.*
-import org.mariotaku.pickncrop.library.PNCUtils
 import org.mariotaku.restfu.http.ContentType
 import org.mariotaku.restfu.http.mime.Body
 import org.mariotaku.restfu.http.mime.FileBody
@@ -658,17 +657,13 @@ class UpdateStatusTask(
 
     class UploadException : UpdateStatusException {
 
-        constructor() : super() {
-        }
+        constructor() : super()
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(throwable: Throwable) : super(throwable) {
-        }
+        constructor(throwable: Throwable) : super(throwable)
 
-        constructor(message: String) : super(message) {
-        }
+        constructor(message: String) : super(message)
     }
 
     class ExtensionVersionMismatchException : AbsServiceInterface.CheckServiceException()
@@ -677,17 +672,13 @@ class UpdateStatusTask(
 
     class ShortenException : UpdateStatusException {
 
-        constructor() : super() {
-        }
+        constructor() : super()
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(throwable: Throwable) : super(throwable) {
-        }
+        constructor(throwable: Throwable) : super(throwable)
 
-        constructor(message: String) : super(message) {
-        }
+        constructor(message: String) : super(message)
     }
 
     interface StateCallback {

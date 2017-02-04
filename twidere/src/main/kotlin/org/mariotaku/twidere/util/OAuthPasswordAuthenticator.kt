@@ -341,47 +341,35 @@ class OAuthPasswordAuthenticator(
 
     open class AuthenticationException : Exception {
 
-        constructor() {
-        }
+        constructor()
 
-        constructor(cause: Exception) : super(cause) {
-        }
+        constructor(cause: Exception) : super(cause)
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(message: String) : super(message) {
-        }
+        constructor(message: String) : super(message)
     }
 
     class AuthenticityTokenException(e: Exception) : AuthenticationException(e)
 
     class WrongUserPassException : AuthenticationException {
-        internal constructor() : super() {
-        }
+        internal constructor() : super()
 
-        internal constructor(cause: Exception) : super(cause) {
-        }
+        internal constructor(cause: Exception) : super(cause)
 
-        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        internal constructor(message: String) : super(message) {
-        }
+        internal constructor(message: String) : super(message)
     }
 
     class LoginVerificationException : AuthenticationException {
-        internal constructor(message: String) : super(message) {
-        }
+        internal constructor(message: String) : super(message)
 
-        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable) {
-        }
+        internal constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        internal constructor(cause: Exception) : super(cause) {
-        }
+        internal constructor(cause: Exception) : super(cause)
 
-        internal constructor() : super() {
-        }
+        internal constructor() : super()
     }
 
     internal class AuthorizeResponseData {

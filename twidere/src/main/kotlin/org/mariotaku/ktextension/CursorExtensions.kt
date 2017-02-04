@@ -40,7 +40,7 @@ inline fun <R> Cursor.useCursor(block: (Cursor) -> R): R {
     } catch (e: Exception) {
         closed = true
         try {
-            this?.close()
+            this.close()
         } catch (closeException: Exception) {
             // eat the closeException as we are already throwing the original cause
             // and we don't want to mask the real exception
@@ -53,7 +53,7 @@ inline fun <R> Cursor.useCursor(block: (Cursor) -> R): R {
         throw e
     } finally {
         if (!closed) {
-            this?.close()
+            this.close()
         }
     }
 }

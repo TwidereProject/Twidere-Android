@@ -538,7 +538,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         get() {
             val currentItem = viewPager.currentItem
             if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(viewPager, currentItem) as Fragment
+            return pagerAdapter.instantiateItem(viewPager, currentItem)
         }
 
     override fun triggerRefresh(position: Int): Boolean {

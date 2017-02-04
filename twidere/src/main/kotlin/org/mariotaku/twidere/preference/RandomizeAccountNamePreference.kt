@@ -50,7 +50,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
     }
 
     override fun onClick() {
-        persistBoolean(!getPersistedBoolean(false));
+        persistBoolean(!getPersistedBoolean(false))
         notifyChanged()
         super.onClick()
     }

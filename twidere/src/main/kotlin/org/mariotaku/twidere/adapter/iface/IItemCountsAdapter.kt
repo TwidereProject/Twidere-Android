@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.adapter.iface;
+package org.mariotaku.twidere.adapter.iface
 
 import org.mariotaku.twidere.model.ItemCounts
 

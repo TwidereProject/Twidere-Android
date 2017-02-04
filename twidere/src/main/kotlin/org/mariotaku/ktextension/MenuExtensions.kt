@@ -43,7 +43,7 @@ fun Menu.setMenuItemIcon(id: Int, icon: Int) {
 }
 
 fun Menu.setMenuItemIcon(id: Int, icon: Drawable) {
-    findItem(id)?.setIcon(icon)
+    findItem(id)?.icon = icon
 }
 
 fun Menu.setMenuItemTitle(id: Int, title: Int) {

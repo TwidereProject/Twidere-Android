@@ -113,9 +113,6 @@ class RequestPermissionsActivity : BaseActivity(), OnClickListener {
                 if (PermissionsManager.hasPermissions(permissions, PERMISSION_PREFERENCES)) {
                     appendPermission(builder, getString(R.string.permission_description_preferences), true)
                 }
-                if (PermissionsManager.hasPermissions(permissions, PERMISSION_ACCOUNTS)) {
-                    appendPermission(builder, getString(R.string.permission_description_accounts), true)
-                }
                 if (PermissionsManager.hasPermissions(permissions, PERMISSION_DIRECT_MESSAGES)) {
                     appendPermission(builder, getString(R.string.permission_description_direct_messages), true)
                 }

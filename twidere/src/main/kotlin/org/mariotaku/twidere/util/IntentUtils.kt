@@ -121,7 +121,7 @@ object IntentUtils {
                         userKey: UserKey?, screenName: String?,
                         newDocument: Boolean, @Referral referral: String? = null,
                         activityOptions: Bundle? = null) {
-        val intent = userProfile(accountKey, userKey, screenName, referral, null) ?: return
+        val intent = userProfile(accountKey, userKey, screenName, referral, null)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
