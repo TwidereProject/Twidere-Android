@@ -47,6 +47,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache
@@ -310,7 +311,7 @@ class ApplicationModule(private val application: Application) {
         val cacheDir = Utils.getExternalCacheDir(application, dirName)
         val fallbackCacheDir = Utils.getInternalCacheDir(application, dirName)
         val fileNameGenerator = URLFileNameGenerator()
-        val cacheSize = TwidereMathUtils.clamp(preferences.getInt(SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT, 300), 100, 500)
+        val cacheSize = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
         try {
             val cacheMaxSizeBytes = cacheSize * 1024 * 1024
             if (cacheDir != null)

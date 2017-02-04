@@ -37,6 +37,7 @@ public class DefaultWebViewClient extends WebViewClient {
     }
 
     @Override
+    @Deprecated
     public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
         try {
             mActivity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));

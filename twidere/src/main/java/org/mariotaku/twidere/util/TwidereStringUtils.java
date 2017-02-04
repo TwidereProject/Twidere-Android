@@ -52,7 +52,6 @@ public class TwidereStringUtils {
 
     /**
      * Fix to https://github.com/TwidereProject/Twidere-Android/issues/449
-     * @param string
      */
     public static void fixSHY(Spannable string) {
         for (int i = 0, j = string.length(); i < j; i++) {

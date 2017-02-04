@@ -77,8 +77,8 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
             .build()
 
 
-    fun displayPreviewImage(view: ImageView, uri: String?) {
-        imageLoader.displayImage(uri, view, previewDisplayOptions)
+    fun displayPreviewImage(view: ImageView, url: String?) {
+        imageLoader.displayImage(url, view, previewDisplayOptions)
     }
 
     fun displayPreviewImage(view: ImageView, url: String?, loadingHandler: MediaLoadingHandler?) {
@@ -150,12 +150,12 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         }
     }
 
-    fun displayProfileImage(view: ImageView, url: String) {
+    fun displayProfileImage(view: ImageView, url: String?) {
         imageLoader.displayImage(url, view, profileImageDisplayOptions)
     }
 
-    fun loadImageSync(uri: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap? {
-        return imageLoader.loadImageSync(uri, targetImageSize, options)
+    fun loadImageSync(url: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap? {
+        return imageLoader.loadImageSync(url, targetImageSize, options)
     }
 
     fun displayDashboardProfileImage(view: ImageView, account: AccountDetails, drawableOnLoading: Drawable?) {
@@ -168,11 +168,11 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
     }
 
 
-    fun displayImage(view: ImageView, url: String) {
+    fun displayImage(view: ImageView, url: String?) {
         imageLoader.displayImage(url, view)
     }
 
-    fun displayProfileImage(view: ImageView, url: String, listener: ImageLoadingListener) {
+    fun displayProfileImage(view: ImageView, url: String?, listener: ImageLoadingListener) {
         imageLoader.displayImage(url, view, profileImageDisplayOptions, listener)
     }
 
@@ -206,7 +206,7 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         preloadOnWifiOnly = preferences[mediaPreloadOnWifiOnlyKey]
     }
 
-    private fun displayDashboardProfileImage(view: ImageView, url: String, drawableOnLoading: Drawable?) {
+    private fun displayDashboardProfileImage(view: ImageView, url: String?, drawableOnLoading: Drawable?) {
         if (drawableOnLoading != null) {
             val builder = Builder()
             builder.cloneFrom(dashboardProfileImageDisplayOptions)

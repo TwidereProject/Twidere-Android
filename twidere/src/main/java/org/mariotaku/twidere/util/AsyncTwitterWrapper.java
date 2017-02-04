@@ -513,6 +513,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             public SingleResponse<Relationship> doLongOperation(Object param) {
                 final MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, accountKey);
                 try {
+                    if (microBlog == null) {
+                        throw new MicroBlogException("No account");
+                    }
                     final Relationship relationship = microBlog.updateFriendship(userKey.getId(), update);
                     if (!relationship.isSourceWantRetweetsFromTarget()) {
                         // TODO remove cached retweets
@@ -555,6 +558,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, accountId);
                     if (!Utils.isOfficialCredentials(context, accountId)) continue;
                     try {
+                        if (microBlog == null) {
+                            throw new MicroBlogException("No account");
+                        }
                         microBlog.setActivitiesAboutMeUnread(cursor);
                     } catch (MicroBlogException e) {
                         DebugLog.w(LOGTAG, null, e);
@@ -733,11 +739,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private void deleteCaches(final List<String> list) {
-            for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
-                // TODO delete caches
-                // ContentResolverUtils.bulkDelete(mResolver, uri, Statuses.USER_ID, list,
-                // Statuses.ACCOUNT_ID + " = " + mAccountKey, false);
-            }
             // I bet you don't want to see these users in your auto complete list.
             //TODO insert to blocked users data
             final ContentValues values = new ContentValues();

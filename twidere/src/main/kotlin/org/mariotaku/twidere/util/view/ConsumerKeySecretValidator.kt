@@ -17,10 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.view.iface;
+package org.mariotaku.twidere.util.view
+
+import com.rengwuxian.materialedittext.validation.METValidator
+
+import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
 /**
- * Created by mariotaku on 15/5/18.
+ * Created by mariotaku on 15/9/3.
  */
-public interface ICustomTypefaceTextView {
+class ConsumerKeySecretValidator(errorMessage: String) : METValidator(errorMessage) {
+
+    override fun isValid(text: CharSequence, isEmpty: Boolean): Boolean {
+        return MicroBlogAPIFactory.isValidConsumerKeySecret(text)
+    }
+
 }

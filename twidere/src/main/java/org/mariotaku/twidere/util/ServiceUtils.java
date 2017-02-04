@@ -37,10 +37,6 @@ public final class ServiceUtils {
     private ServiceUtils() {
     }
 
-    public static ServiceToken bindToService(final Context context, final Intent intent) {
-        return bindToService(context, intent, null);
-    }
-
     public static ServiceToken bindToService(final Context context, final Intent intent,
                                              final ServiceConnection callback) {
 

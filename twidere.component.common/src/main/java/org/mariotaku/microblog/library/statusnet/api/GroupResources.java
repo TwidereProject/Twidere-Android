@@ -13,6 +13,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 /**
  * Created by mariotaku on 16/3/4.
  */
+@SuppressWarnings("RedundantThrows")
 public interface GroupResources {
 
     @GET("/statusnet/groups/timeline/{group_id}.json")

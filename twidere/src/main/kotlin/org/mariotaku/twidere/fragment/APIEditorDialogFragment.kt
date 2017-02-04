@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.bluelinelabs.logansquare.LoganSquare
+import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.RestHttpClient
@@ -26,6 +27,7 @@ import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
 import java.io.IOException
 import javax.inject.Inject
 
@@ -35,8 +37,8 @@ class APIEditorDialogFragment : BaseDialogFragment() {
     private val editAPIUrlFormat by lazy { dialog.findViewById(R.id.editApiUrlFormat) as EditText }
     private val editSameOAuthSigningUrl by lazy { dialog.findViewById(R.id.editSameOAuthSigningUrl) as CheckBox }
     private val editNoVersionSuffix by lazy { dialog.findViewById(R.id.editNoVersionSuffix) as CheckBox }
-    private val editConsumerKey by lazy { dialog.findViewById(R.id.editConsumerKey) as EditText }
-    private val editConsumerSecret by lazy { dialog.findViewById(R.id.editConsumerSecret) as EditText }
+    private val editConsumerKey by lazy { dialog.findViewById(R.id.editConsumerKey) as MaterialEditText }
+    private val editConsumerSecret by lazy { dialog.findViewById(R.id.editConsumerSecret) as MaterialEditText }
     private val editAuthType by lazy { dialog.findViewById(R.id.editAuthType) as RadioGroup }
     private val apiFormatHelpButton by lazy { dialog.findViewById(R.id.apiUrlFormatHelp) }
     private val accountTypeSpinner by lazy { dialog.findViewById(R.id.accountTypeSpinner) as Spinner }
@@ -46,7 +48,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
-        builder.setView(R.layout.layout_api_editor)
+        builder.setView(R.layout.dialog_api_editor)
         builder.setPositiveButton(R.string.action_save) { dialog, which ->
             val targetFragment = this.targetFragment
             val parentFragment = this.parentFragment
@@ -77,6 +79,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             }
 
             accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(context)
+
+            editConsumerKey.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_key)))
+            editConsumerSecret.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_secret)))
+
             editNoVersionSuffix.setOnCheckedChangeListener { buttonView, isChecked -> editNoVersionSuffixChanged = true }
             editAuthType.setOnCheckedChangeListener { group, checkedId ->
                 val authType = getCheckedAuthType(checkedId)

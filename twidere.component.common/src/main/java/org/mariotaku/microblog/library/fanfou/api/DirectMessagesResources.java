@@ -8,6 +8,7 @@ import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 /**
  * Created by mariotaku on 16/3/31.
  */
+@SuppressWarnings("RedundantThrows")
 public interface DirectMessagesResources {
 
     @POST("/direct_messages/new.json")

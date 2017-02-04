@@ -14,6 +14,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.RestHttpClient;
+import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
 
@@ -70,7 +71,7 @@ public class DefaultFeatures {
                 jsonParser.skipChildren();
             }
         } finally {
-            response.close();
+            Utils.closeSilently(response);
         }
         return true;
     }

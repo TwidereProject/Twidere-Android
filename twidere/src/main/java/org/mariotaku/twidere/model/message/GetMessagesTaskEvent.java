@@ -30,7 +30,7 @@ public class GetMessagesTaskEvent {
     @NonNull
     public final Uri uri;
     public final boolean running;
-    private final Exception exception;
+    public final Exception exception;
 
     public GetMessagesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
         this.uri = uri;

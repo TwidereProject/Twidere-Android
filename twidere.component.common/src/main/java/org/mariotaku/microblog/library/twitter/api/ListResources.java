@@ -35,6 +35,7 @@ import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 
+@SuppressWarnings("RedundantThrows")
 public interface ListResources {
     @POST("/lists/members/create.json")
     UserList addUserListMember(@Query("list_id") String listId, @Query("user_id") String userId) throws MicroBlogException;

@@ -98,11 +98,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static android.text.TextUtils.isEmpty;
 
 /**
  * Created by mariotaku on 15/11/28.
@@ -115,8 +111,6 @@ public class DataStoreUtils implements Constants {
     public static final Uri[] ACTIVITIES_URIS = new Uri[]{Activities.AboutMe.CONTENT_URI};
 
     private static final UriMatcher CONTENT_PROVIDER_URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-    private static Map<UserKey, String> sAccountScreenNames = new HashMap<>();
-    private static Map<UserKey, String> sAccountNames = new HashMap<>();
 
     static {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Statuses.CONTENT_PATH,
@@ -338,9 +332,6 @@ public class DataStoreUtils implements Constants {
     }
 
     public static String getAccountName(@NonNull final Context context, final UserKey accountKey) {
-        final String cached = sAccountNames.get(accountKey);
-        if (!isEmpty(cached)) return cached;
-
         AccountManager am = AccountManager.get(context);
         Account account = AccountUtils.findByAccountKey(am, accountKey);
         if (account == null) return null;
@@ -350,13 +341,9 @@ public class DataStoreUtils implements Constants {
 
     public static String getAccountScreenName(final Context context, final UserKey accountKey) {
         if (context == null) return null;
-        final String cached = sAccountScreenNames.get(accountKey);
-        if (!isEmpty(cached)) return cached;
-
         AccountManager am = AccountManager.get(context);
         Account account = AccountUtils.findByAccountKey(am, accountKey);
         if (account == null) return null;
-
         return AccountExtensionsKt.getAccountUser(account, am).screen_name;
     }
 
@@ -731,10 +718,6 @@ public class DataStoreUtils implements Constants {
             final Expression where = Expression.notIn(new Column(BaseColumns._ID), qb.build());
             resolver.delete(uri, where.getSQL(), null);
         }
-    }
-
-    public static void clearAccountName() {
-        sAccountScreenNames.clear();
     }
 
     public static boolean isFilteringUser(Context context, UserKey userKey) {

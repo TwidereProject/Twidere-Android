@@ -1480,7 +1480,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var recyclerView: RecyclerView? = null
         private var statusViewHolder: DetailStatusViewHolder? = null
 
-        private val itemCounts: IntArray
+        private val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
         override val nameFirst: Boolean
         private val cardBackgroundColor: Int
@@ -1525,7 +1525,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         init {
             setHasStableIds(true)
             val context = fragment.activity
-            itemCounts = IntArray(ITEM_TYPES_SUM)
             // There's always a space at the end of the list
             itemCounts[ITEM_IDX_SPACE] = 1
             itemCounts[ITEM_IDX_STATUS] = 1
@@ -1570,7 +1569,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         fun getIndexStart(index: Int): Int {
             if (index == 0) return 0
-            return TwidereMathUtils.sum(itemCounts, 0, index - 1)
+            return itemCounts.getItemStartPosition(index)
         }
 
         override fun getStatusId(position: Int): String? {
@@ -1827,7 +1826,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun getItemCount(): Int {
             if (status == null) return 0
-            return TwidereMathUtils.sum(itemCounts)
+            return itemCounts.itemCount
         }
 
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {

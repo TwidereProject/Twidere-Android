@@ -8,6 +8,7 @@ import org.mariotaku.microblog.library.twitter.model.Status;
 /**
  * Created by mariotaku on 16/3/11.
  */
+@SuppressWarnings("RedundantThrows")
 public interface FavoritesResources {
 
     @POST("/favorites/create/{id}.json")

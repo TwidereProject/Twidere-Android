@@ -39,8 +39,4 @@ public class ViewListHolder {
         return view.getContext();
     }
 
-    protected String getString(final int resId, final Object... formatArgs) {
-        return getContext().getString(resId, formatArgs);
-    }
-
 }

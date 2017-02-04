@@ -7,15 +7,11 @@ import android.text.TextUtils;
 
 import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.twidere.model.ParcelableMedia;
-import org.mariotaku.twidere.util.HtmlLinkExtractor;
 import org.mariotaku.twidere.util.media.preview.provider.InstagramProvider;
 import org.mariotaku.twidere.util.media.preview.provider.Provider;
 import org.mariotaku.twidere.util.media.preview.provider.TwitterMediaProvider;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by mariotaku on 16/1/1.
@@ -59,19 +55,6 @@ public class PreviewMediaExtractor {
 
     public static boolean isSupported(@Nullable String link) {
         return providerFor(link) != null;
-    }
-
-    public static List<String> getSupportedLinksInStatus(final String statusString) {
-        if (statusString == null) return Collections.emptyList();
-        final List<String> links = new ArrayList<>();
-        final HtmlLinkExtractor extractor = new HtmlLinkExtractor();
-        for (final HtmlLinkExtractor.HtmlLink link : extractor.grabLinks(statusString)) {
-            final String linkString = link.getLink();
-            if (isSupported(linkString)) {
-                links.add(linkString);
-            }
-        }
-        return links;
     }
 
 }

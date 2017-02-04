@@ -48,10 +48,8 @@ public class UserColorNameManager {
     private final SharedPreferences colorPreferences, nicknamePreferences;
     private final LruCache<String, Integer> colorCache;
     private final LruCache<String, String> nicknameCache;
-    private final Context context;
 
     public UserColorNameManager(Context context) {
-        this.context = context;
         colorPreferences = context.getSharedPreferences(USER_COLOR_PREFERENCES_NAME, Context.MODE_PRIVATE);
         nicknamePreferences = context.getSharedPreferences(USER_NICKNAME_PREFERENCES_NAME, Context.MODE_PRIVATE);
         colorCache = new LruCache<>(512);

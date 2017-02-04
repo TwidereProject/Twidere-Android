@@ -19,14 +19,17 @@
 
 package org.mariotaku.twidere.model.message;
 
+import org.mariotaku.twidere.model.UserKey;
+
 /**
+ * Called when account changed
  * Created by mariotaku on 15/4/24.
  */
 public class AccountChangedEvent {
-    public final long[] account_ids, activated_ids;
+    public final UserKey[] account_keys, activated_keys;
 
-    public AccountChangedEvent(long[] account_ids, long[] activated_ids) {
-        this.account_ids = account_ids;
-        this.activated_ids = activated_ids;
+    public AccountChangedEvent(UserKey[] account_keys, UserKey[] activated_keys) {
+        this.account_keys = account_keys;
+        this.activated_keys = activated_keys;
     }
 }

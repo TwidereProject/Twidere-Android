@@ -24,7 +24,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -165,10 +164,6 @@ public class ThemeUtils implements Constants {
         return TwidereColorUtils.YIQToColor(Color.alpha(accentColor), yiq);
     }
 
-    public static Resources getResources(final Context context) {
-        return context.getResources();
-    }
-
     public static Drawable getSelectableItemBackgroundDrawable(final Context context) {
         return getDrawableFromThemeAttribute(context, android.R.attr.selectableItemBackground);
     }
@@ -302,15 +297,6 @@ public class ThemeUtils implements Constants {
         final int delta = ThemeBackgroundPreference.MAX_ALPHA - normalizedAlpha;
         return TwidereMathUtils.clamp(ThemeBackgroundPreference.MAX_ALPHA - delta / 2,
                 ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
-    }
-
-    public static Typeface getUserTypeface(final Context context, final String fontFamily, final Typeface defTypeface) {
-        if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-            return Typeface.DEFAULT;
-        final int fontStyle = defTypeface != null ? defTypeface.getStyle() : Typeface.NORMAL;
-        final Typeface tf = Typeface.create(fontFamily, fontStyle);
-        if (tf != null) return tf;
-        return Typeface.create(Typeface.DEFAULT, fontStyle);
     }
 
     public static Drawable getWindowBackground(final Context context) {

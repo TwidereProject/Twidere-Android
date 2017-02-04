@@ -29,10 +29,6 @@ public final class ParseUtils implements TwidereConstants {
     private ParseUtils() {
     }
 
-    public static String parseString(final String object) {
-        return object;
-    }
-
     public static String parseString(final Object object) {
         return parseString(object, null);
     }

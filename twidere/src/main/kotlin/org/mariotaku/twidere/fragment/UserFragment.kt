@@ -1398,7 +1398,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private fun updateScrollOffset(offset: Int) {
         val spaceHeight = profileBannerSpace.height
-        val factor = TwidereMathUtils.clamp(if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat(), 0f, 1f)
+        val factor = (if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat()).coerceIn(0f, 1f)
         profileBannerContainer.translationY = (-offset).toFloat()
         profileBanner.translationY = (offset / 2).toFloat()
         profileBirthdayBanner.translationY = (offset / 2).toFloat()
@@ -1417,7 +1417,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
         val tabOutlineAlphaFactor: Float
         if (offset - spaceHeight > 0) {
-            tabOutlineAlphaFactor = 1f - TwidereMathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0f, 1f)
+            tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
         } else {
             tabOutlineAlphaFactor = 1f
         }
@@ -1467,7 +1467,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val location = IntArray(2)
         profileNameContainer.name.getLocationInWindow(location)
         val nameShowingRatio = (userProfileDrawer.paddingTop - location[1]) / profileNameContainer.name.height.toFloat()
-        val textAlpha = TwidereMathUtils.clamp(nameShowingRatio, 0f, 1f)
+        val textAlpha = nameShowingRatio.coerceIn(0f, 1f)
         val titleView = ViewSupport.findViewByText(toolbar, toolbar.title)
         if (titleView != null) {
             titleView.alpha = textAlpha
@@ -1545,10 +1545,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         private fun updateValue() {
-            val shadowAlpha = Math.round(alpha * TwidereMathUtils.clamp(1 - factor, 0f, 1f))
+            val shadowAlpha = Math.round(alpha * (1 - factor).coerceIn(0f, 1f))
             shadowDrawable.alpha = shadowAlpha
             val hasColor = color != 0
-            val colorAlpha = if (hasColor) Math.round(alpha * TwidereMathUtils.clamp(factor, 0f, 1f)) else 0
+            val colorAlpha = if (hasColor) Math.round(alpha * factor.coerceIn(0f, 1f)) else 0
             colorDrawable.alpha = colorAlpha
             invalidateSelf()
         }

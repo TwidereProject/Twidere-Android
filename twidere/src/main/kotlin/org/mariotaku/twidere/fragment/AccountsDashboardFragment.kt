@@ -128,9 +128,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                     hasPrevAccountIndicator.alpha = 0f
                     hasNextAccountIndicator.alpha = 0f
                 } else {
-                    hasPrevAccountIndicator.alpha = TwidereMathUtils.clamp(pagePosition, 0f, 1f)
-                    hasNextAccountIndicator.alpha = TwidereMathUtils.clamp(pageCount - (pagePosition
-                            + visiblePages), 0f, 1f)
+                    hasPrevAccountIndicator.alpha = pagePosition.coerceIn(0f, 1f)
+                    hasNextAccountIndicator.alpha = (pageCount - (pagePosition + visiblePages))
+                            .coerceIn(0f, 1f)
                 }
             }
         })

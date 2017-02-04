@@ -82,8 +82,7 @@ object HttpClientFactory {
             val proxyType = prefs.getString(KEY_PROXY_TYPE, null)
             val proxyHost = prefs.getString(KEY_PROXY_HOST, null)
             val proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1)
-            if (!isEmpty(proxyHost) && TwidereMathUtils.inRange(proxyPort, 0, 65535,
-                    TwidereMathUtils.RANGE_INCLUSIVE_INCLUSIVE)) {
+            if (!isEmpty(proxyHost) && proxyPort in (0..65535)) {
                 val type = getProxyType(proxyType)
                 if (type != Proxy.Type.DIRECT) {
                     builder.proxy(Proxy(type, InetSocketAddress.createUnresolved(proxyHost, proxyPort)))

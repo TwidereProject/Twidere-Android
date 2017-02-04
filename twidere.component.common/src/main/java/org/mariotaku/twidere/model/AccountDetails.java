@@ -27,9 +27,9 @@ import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 import java.io.IOException;
 
 /**
+ * Object holding account info and credentials
  * Created by mariotaku on 2016/12/3.
  */
-
 @ParcelablePlease
 @JsonObject
 public class AccountDetails implements Parcelable, Comparable<AccountDetails> {

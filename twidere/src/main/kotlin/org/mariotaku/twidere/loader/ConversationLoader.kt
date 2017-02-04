@@ -35,7 +35,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.Nullables
 import java.util.*
 
 class ConversationLoader(
@@ -55,7 +54,7 @@ class ConversationLoader(
     private var canLoadAllReplies: Boolean = false
 
     init {
-        this.status = Nullables.assertNonNull(ParcelUtils.clone(status))
+        this.status = ParcelUtils.clone(status)
         ParcelableStatusUtils.makeOriginalStatus(this.status)
     }
 

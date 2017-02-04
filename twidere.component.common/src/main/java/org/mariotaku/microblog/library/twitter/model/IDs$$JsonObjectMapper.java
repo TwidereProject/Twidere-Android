@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Mapper for IDs object
  * Created by mariotaku on 15/10/21.
  */
+@SuppressWarnings("unused")
 public class IDs$$JsonObjectMapper extends JsonMapper<IDs> {
 
     @SuppressWarnings("TryWithIdenticalCatches")
