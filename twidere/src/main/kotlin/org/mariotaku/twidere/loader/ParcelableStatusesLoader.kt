@@ -36,10 +36,9 @@ abstract class ParcelableStatusesLoader(
 ) : AsyncTaskLoader<List<ParcelableStatus>>(context), Constants, IExtendedLoader {
 
     protected val data = NoDuplicatesArrayList<ParcelableStatus>()
-    protected val isFirstLoad: Boolean
+    protected val isFirstLoad: Boolean = adapterData == null
 
     init {
-        isFirstLoad = adapterData == null
         if (adapterData != null) {
             data.addAll(adapterData)
         }
