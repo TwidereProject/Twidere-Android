@@ -48,6 +48,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.activity.iface.IExtendedActivity
+import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -428,9 +429,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val destination = ShareProvider.getFilesDir(this) ?: return
         val type: String
         when (f) {
-            is VideoPageFragment -> type = CacheProvider.Type.VIDEO
-            is ImagePageFragment -> type = CacheProvider.Type.IMAGE
-            is GifPageFragment -> type = CacheProvider.Type.IMAGE
+            is VideoPageFragment -> type = CacheFileType.VIDEO
+            is ImagePageFragment -> type = CacheFileType.IMAGE
+            is GifPageFragment -> type = CacheFileType.IMAGE
             else -> throw UnsupportedOperationException("Unsupported fragment $f")
         }
         val task = object : SaveFileTask(this@MediaViewerActivity, cacheUri, destination,
@@ -488,9 +489,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         val f = adapter.instantiateItem(viewPager, saveToStoragePosition) as? CacheDownloadMediaViewerFragment ?: return
         val cacheUri = f.downloadResult?.cacheUri ?: return
         val task: SaveFileTask = when (f) {
-            is ImagePageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
-            is VideoPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.VIDEO)
-            is GifPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheProvider.Type.IMAGE)
+            is ImagePageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.IMAGE)
+            is VideoPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.VIDEO)
+            is GifPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.IMAGE)
             else -> throw UnsupportedOperationException()
         }
         AsyncTaskUtils.executeTask(task)

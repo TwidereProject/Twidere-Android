@@ -293,6 +293,15 @@ public final class Utils implements Constants {
         }
     }
 
+    public static String sanitizeMimeType(@Nullable final String contentType) {
+        if (contentType == null) return null;
+        switch (contentType) {
+            case "image/jpg":
+                return "image/jpeg";
+        }
+        return contentType;
+    }
+
     public static class NoAccountException extends Exception {
         String accountHost;
 

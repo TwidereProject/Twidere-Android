@@ -42,9 +42,6 @@ class NameView(context: Context, attrs: AttributeSet? = null) : AppCompatTextVie
 
     var nameFirst: Boolean = false
     var twoLine: Boolean = false
-        get() {
-            return maxLines >= 2
-        }
         set(value) {
             field = value
             if (value) {

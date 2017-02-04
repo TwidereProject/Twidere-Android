@@ -45,19 +45,19 @@ public class UILFileCache implements FileCache {
             }
         });
         if (extra != null) {
-            cache.save(CacheProvider.getExtraKey(key), new ByteArrayInputStream(extra), null);
+            cache.save(CacheProvider.Companion.getExtraKey(key), new ByteArrayInputStream(extra), null);
         }
     }
 
     @NonNull
     @Override
     public Uri toUri(@NonNull final String key) {
-        return CacheProvider.getCacheUri(key, null);
+        return CacheProvider.Companion.getCacheUri(key, null);
     }
 
     @NonNull
     @Override
     public String fromUri(@NonNull final Uri uri) {
-        return CacheProvider.getCacheKey(uri);
+        return CacheProvider.Companion.getCacheKey(uri);
     }
 }

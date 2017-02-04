@@ -93,16 +93,15 @@ class WebLinkHandlerActivity : Activity() {
                     return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                 }
                 else -> {
-                    if (!ArrayUtils.contains(FANFOU_RESERVED_PATHS, pathSegments[0])) {
-                        if (pathSegments.size == 1) {
-                            val builder = Uri.Builder()
-                            builder.scheme(SCHEME_TWIDERE)
-                            builder.authority(AUTHORITY_USER)
-                            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_FANFOU_COM)
-                            val userKey = UserKey(pathSegments[0], USER_TYPE_FANFOU_COM)
-                            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
-                            return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
-                        }
+                    if (FANFOU_RESERVED_PATHS.contains(pathSegments[0])) return Pair(null, false)
+                    if (pathSegments.size == 1) {
+                        val builder = Uri.Builder()
+                        builder.scheme(SCHEME_TWIDERE)
+                        builder.authority(AUTHORITY_USER)
+                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_FANFOU_COM)
+                        val userKey = UserKey(pathSegments[0], USER_TYPE_FANFOU_COM)
+                        builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
+                        return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                     }
                     return Pair(null, false)
                 }

@@ -36,6 +36,7 @@ import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserAgentUtils;
+import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.net.NoIntercept;
 
@@ -176,7 +177,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
         }
         final Body body = resp.getBody();
         final CacheMetadata metadata = new CacheMetadata();
-        metadata.setContentType(body.contentType().getContentType());
+        metadata.setContentType(Utils.sanitizeMimeType(body.contentType().getContentType()));
         return new TwidereDownloadResult(body, metadata);
     }
 
