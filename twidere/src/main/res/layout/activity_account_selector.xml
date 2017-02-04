@@ -36,19 +36,19 @@
 
     <LinearLayout
         android:id="@+id/selectAccountButtons"
-        style="?android:buttonBarStyle"
+        style="?attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/element_spacing_normal"
         android:layout_weight="0"
+        android:gravity="center_vertical|end"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/confirmSelection"
-            style="?android:borderlessButtonStyle"
-            android:layout_width="match_parent"
+            style="?attr/buttonBarPositiveButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="onClick"
             android:text="@android:string/ok"/>
     </LinearLayout>
 

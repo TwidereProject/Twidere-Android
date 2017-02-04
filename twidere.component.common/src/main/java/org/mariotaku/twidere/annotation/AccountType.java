@@ -2,8 +2,6 @@ package org.mariotaku.twidere.annotation;
 
 import android.support.annotation.StringDef;
 
-import org.mariotaku.twidere.model.ParcelableAccount;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

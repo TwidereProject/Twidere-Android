@@ -28,7 +28,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import org.mariotaku.microblog.library.twitter.model.User;
-import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;

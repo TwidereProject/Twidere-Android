@@ -24,7 +24,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.View.OnClickListener
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
@@ -41,7 +40,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 
-class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickListener {
+class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
 
     private lateinit var adapter: AccountDetailsAdapter
 
@@ -70,7 +69,7 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
 
     private val isSingleSelection: Boolean
         get() {
-            return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, false)
+            return intent.getBooleanExtra(EXTRA_SINGLE_SELECTION, true)
         }
 
     /**
@@ -122,21 +121,16 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         if (adapter.count == 1 && isSelectOnlyItemAutomatically) {
             selectSingleAccount(0)
         }
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.save -> {
-                val checkedIds = accountsList.checkedItemIds
-                if (checkedIds.isEmpty() && !isSelectNoneAllowed) {
-                    Toast.makeText(this, R.string.message_toast_no_account_selected, Toast.LENGTH_SHORT).show()
-                    return
-                }
-                val data = Intent()
-                data.putExtra(EXTRA_IDS, checkedIds)
-                setResult(Activity.RESULT_OK, data)
-                finish()
+        confirmSelection.setOnClickListener {
+            val checkedIds = accountsList.checkedItemIds
+            if (checkedIds.isEmpty() && !isSelectNoneAllowed) {
+                Toast.makeText(this, R.string.message_toast_no_account_selected, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            val data = Intent()
+            data.putExtra(EXTRA_IDS, checkedIds)
+            setResult(Activity.RESULT_OK, data)
+            finish()
         }
     }
 
@@ -144,7 +138,7 @@ class AccountSelectorActivity : BaseActivity(), OnClickListener, OnItemClickList
         selectSingleAccount(position)
     }
 
-    fun selectSingleAccount(position: Int) {
+    private fun selectSingleAccount(position: Int) {
         val account = adapter.getItem(position)
         val data = Intent()
         data.putExtra(EXTRA_ID, account.key.id)
