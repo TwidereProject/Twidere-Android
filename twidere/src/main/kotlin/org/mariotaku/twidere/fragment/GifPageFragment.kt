@@ -45,8 +45,9 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {
         val context = context ?: return
-        if (result.cacheUri != null) {
-            gifView.setInputSource(InputSource.UriSource(context.contentResolver, result.cacheUri!!))
+        val cacheUri = result.cacheUri
+        if (cacheUri != null) {
+            gifView.setInputSource(InputSource.UriSource(context.contentResolver, cacheUri))
         } else {
             gifView.setInputSource(null)
         }
