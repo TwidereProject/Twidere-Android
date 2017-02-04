@@ -24,7 +24,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.fasterxml.jackson.core.TreeNode;
 
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.MicroBlogException;
@@ -152,10 +151,6 @@ public abstract class UserStreamCallback implements RawCallback {
         }
     }
 
-
-    private static <T> T parse(final Class<T> cls, final TreeNode json) throws IOException {
-        return LoganSquareMapperFinder.mapperFor(cls).parse(json.traverse());
-    }
 
     @Override
     public final void error(final Exception cause) {

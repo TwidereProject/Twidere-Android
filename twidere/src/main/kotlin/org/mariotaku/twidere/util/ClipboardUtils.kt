@@ -17,26 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.preference;
+package org.mariotaku.twidere.util
 
-import android.content.Context;
-import android.util.AttributeSet;
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 
-public class AutoInvalidateListPreference extends AutoFixListPreference {
+object ClipboardUtils {
 
-	public AutoInvalidateListPreference(final Context context) {
-		super(context);
-	}
-
-	public AutoInvalidateListPreference(final Context context, final AttributeSet attrs) {
-		super(context, attrs);
-	}
-
-	@Override
-	protected boolean shouldPersist() {
-		if (!super.shouldPersist()) return false;
-		notifyChanged();
-		return true;
-	}
+    fun setText(context: Context, text: CharSequence): Boolean {
+        val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboardManager.primaryClip = ClipData.newPlainText(text, text)
+        return true
+    }
 
 }
