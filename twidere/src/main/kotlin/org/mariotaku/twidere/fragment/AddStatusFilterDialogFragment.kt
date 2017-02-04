@@ -94,7 +94,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     val keyword = ParseUtils.parseString(value)
                     keywords.add(keyword)
                     val values = ContentValues()
-                    values.put(Filters.Keywords.VALUE, "#" + keyword)
+                    values.put(Filters.Keywords.VALUE, "#$keyword")
                     keywordValues.add(values)
                 } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
                     val source = ParseUtils.parseString(value)
