@@ -237,7 +237,7 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_GAP -> {
                 val activity = getActivity(position)!!
-                val loading = gapLoadingIds.find { it.accountKey == activity.account_key && it.id == activity.id } != null
+                val loading = gapLoadingIds.any { it.accountKey == activity.account_key && it.id == activity.id }
                 (holder as GapViewHolder).display(loading)
             }
         }

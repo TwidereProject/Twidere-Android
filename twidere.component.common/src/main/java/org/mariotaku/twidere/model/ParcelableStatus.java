@@ -72,7 +72,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         }
     };
     @CursorField(value = Statuses._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
-    long _id;
+    public long _id;
 
     @SuppressWarnings("NullableProblems")
     @ParcelableThisPlease

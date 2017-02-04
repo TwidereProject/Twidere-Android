@@ -27,6 +27,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.util.*
@@ -37,7 +38,7 @@ import javax.inject.Inject
  */
 abstract class GetActivitiesTask(
         protected val context: Context
-) : AbstractTask<RefreshTaskParam, Unit, (Boolean) -> Unit>() {
+) : AbstractTask<RefreshTaskParam, List<TwitterListResponse<Activity>>, (Boolean) -> Unit>() {
     private var initialized: Boolean = false
     @Inject
     lateinit var preferences: KPreferences
@@ -61,13 +62,14 @@ abstract class GetActivitiesTask(
         initialized = true
     }
 
-    override fun doLongOperation(param: RefreshTaskParam) {
-        if (!initialized || param.shouldAbort) return
+    override fun doLongOperation(param: RefreshTaskParam): List<TwitterListResponse<Activity>> {
+        if (!initialized || param.shouldAbort) return emptyList()
         val accountIds = param.accountKeys
         val maxIds = param.maxIds
         val maxSortIds = param.maxSortIds
         val sinceIds = param.sinceIds
         val cr = context.contentResolver
+        val result = ArrayList<TwitterListResponse<Activity>>()
         val loadItemLimit = preferences[loadItemLimitKey]
         var saveReadPosition = false
         for (i in accountIds.indices) {
@@ -102,12 +104,15 @@ abstract class GetActivitiesTask(
             // We should delete old activities has intersection with new items
             try {
                 val activities = getActivities(microBlog, credentials, paging)
-                storeActivities(cr, loadItemLimit, credentials, noItemsBefore, activities, sinceId,
+                val storeResult = storeActivities(cr, loadItemLimit, credentials, noItemsBefore, activities, sinceId,
                         maxId, false)
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, credentials, microBlog)
                 }
                 errorInfoStore.remove(errorInfoKey, accountKey)
+                if (storeResult != 0) {
+                    throw GetStatusesTask.GetTimelineException(storeResult)
+                }
             } catch (e: MicroBlogException) {
                 DebugLog.w(LOGTAG, tr = e)
                 if (e.errorCode == 220) {
@@ -115,21 +120,24 @@ abstract class GetActivitiesTask(
                 } else if (e.isCausedByNetworkIssue) {
                     errorInfoStore[errorInfoKey, accountKey] = ErrorInfoStore.CODE_NETWORK_ERROR
                 }
+            } catch (e: GetStatusesTask.GetTimelineException) {
+                result.add(TwitterListResponse(accountKey, e))
             }
-
         }
+        return result
     }
 
-    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: Unit) {
+    override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterListResponse<Activity>>) {
         if (!initialized) return
         context.contentResolver.notifyChange(contentUri, null)
-        bus.post(GetActivitiesTaskEvent(contentUri, false, null))
+        val exception = AsyncTwitterWrapper.getException(result)
+        bus.post(GetActivitiesTaskEvent(contentUri, false, exception))
         handler?.invoke(true)
     }
 
     private fun storeActivities(cr: ContentResolver, loadItemLimit: Int, details: AccountDetails,
                                 noItemsBefore: Boolean, activities: ResponseList<Activity>,
-                                sinceId: String?, maxId: String?, notify: Boolean) {
+                                sinceId: String?, maxId: String?, notify: Boolean): Int {
         val deleteBound = LongArray(2) { -1 }
         val valuesList = ArrayList<ContentValues>()
         var minIdx = -1
@@ -185,17 +193,25 @@ abstract class GetActivitiesTask(
                 valuesList[valuesList.size - 1].put(Activities.IS_GAP, true)
             }
         }
+        // Insert previously fetched items.
         ContentResolverUtils.bulkInsert(cr, writeUri, valuesList)
 
+        // Remove gap flag
         if (maxId != null && sinceId == null) {
-            val noGapValues = ContentValues()
-            noGapValues.put(Activities.IS_GAP, false)
-            val noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                    Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
-                    Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).sql
-            val noGapWhereArgs = arrayOf(details.key.toString(), maxId, maxId)
-            cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
+            if (activities.isNotEmpty()) {
+                // Only remove when actual result returned, otherwise it seems that gap is too old to load
+                val noGapValues = ContentValues()
+                noGapValues.put(Activities.IS_GAP, false)
+                val noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
+                        Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
+                        Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).sql
+                val noGapWhereArgs = arrayOf(details.key.toString(), maxId, maxId)
+                cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
+            } else {
+                return GetStatusesTask.ERROR_LOAD_GAP
+            }
         }
+        return 0
     }
 
     @UiThread

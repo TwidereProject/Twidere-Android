@@ -727,6 +727,7 @@
     <string name="message_toast_status_saved_to_draft">Tweet saved to draft</string>
     <string name="message_toast_status_unfavorited">Tweet unfavorited</string>
     <string name="message_toast_status_updated">Tweet sent</string>
+    <string name="message_toast_unable_to_load_more_statuses">Unable to load more tweets</string>
     <string name="message_toast_user_filters_removed">Removed from filters</string>
     <string name="message_toast_users_filters_added">Added to filters</string>
     <string name="message_toast_wrong_api_key">Incorrect API settings</string>

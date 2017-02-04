@@ -283,7 +283,7 @@ abstract class ParcelableStatusesAdapter(
                         (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
                     }
                     ITEM_VIEW_TYPE_GAP -> {
-                        val loading = gapLoadingIds.find { it.accountKey == status.account_key && it.id == status.id } != null
+                        val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                         (holder as GapViewHolder).display(loading)
                     }
                 }

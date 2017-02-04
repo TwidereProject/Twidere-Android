@@ -498,6 +498,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return asyncTaskManager.add(task, true);
     }
 
+    @Nullable
     public static <T extends Response<?>> Exception getException(List<T> responses) {
         for (T response : responses) {
             if (response.hasException()) return response.getException();
