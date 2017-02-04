@@ -154,7 +154,7 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         imageLoader.displayImage(url, view, profileImageDisplayOptions)
     }
 
-    fun loadImageSync(uri: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap {
+    fun loadImageSync(uri: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap? {
         return imageLoader.loadImageSync(uri, targetImageSize, options)
     }
 
