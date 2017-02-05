@@ -181,7 +181,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     override fun onStart() {
         super.onStart()
-        loadAccounts(!loaderInitialized)
+        loadAccounts()
     }
 
     override fun onResume() {
@@ -246,8 +246,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity, args.getBoolean(EXTRA_SYNC_LOAD))
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
+        return AccountsInfoLoader(activity, accountsAdapter.accounts == null)
     }
 
 
@@ -269,15 +269,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         updateSystemWindowsInsets()
     }
 
-    fun loadAccounts(sync: Boolean) {
-        val args = Bundle {
-            this[EXTRA_SYNC_LOAD] = sync
-        }
+    fun loadAccounts() {
         if (!loaderInitialized) {
             loaderInitialized = true
-            loaderManager.initLoader(0, args, this)
+            loaderManager.initLoader(0, null, this)
         } else {
-            loaderManager.restartLoader(0, args, this)
+            loaderManager.restartLoader(0, null, this)
         }
     }
 
