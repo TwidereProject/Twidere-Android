@@ -30,6 +30,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.SearchQuery
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
@@ -62,7 +63,7 @@ class ConversationLoader(
         canLoadAllReplies = false
         when (details.type) {
             AccountType.TWITTER -> {
-                val isOfficial = false
+                val isOfficial = details.isOfficial(context)
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
                     return microBlog.showConversation(status.id, paging)
