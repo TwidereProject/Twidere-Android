@@ -177,9 +177,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
 
-    private val isTopSettings: Boolean
-        get() = java.lang.Boolean.parseBoolean("true")
-
+    private val isTopSettings: Boolean = true
 
     private fun initEntries() {
         entriesAdapter.addHeader(getString(R.string.appearance))

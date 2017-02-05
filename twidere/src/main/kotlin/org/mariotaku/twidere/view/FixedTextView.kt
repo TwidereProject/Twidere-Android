@@ -8,7 +8,7 @@ import org.mariotaku.chameleon.view.ChameleonTextView
  * Created by mariotaku on 2017/2/3.
  */
 
-class FixedTextView(context: Context, attrs: AttributeSet? = null) : ChameleonTextView(context, attrs) {
+open class FixedTextView(context: Context, attrs: AttributeSet? = null) : ChameleonTextView(context, attrs) {
 
     override fun onTextContextMenuItem(id: Int): Boolean {
         try {
