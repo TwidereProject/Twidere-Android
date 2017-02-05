@@ -77,6 +77,7 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -960,7 +961,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             builder.setNegativeButton(R.string.no_thanks) { dialog, which ->
                 kPreferences[defaultAutoRefreshKey] = false
             }
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onDismiss(dialog: DialogInterface?) {

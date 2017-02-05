@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_INTENT
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.isAccountValid
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -44,7 +45,12 @@ class InvalidAccountAlertActivity : FragmentActivity() {
             builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
 
             }
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onDismiss(dialog: DialogInterface?) {

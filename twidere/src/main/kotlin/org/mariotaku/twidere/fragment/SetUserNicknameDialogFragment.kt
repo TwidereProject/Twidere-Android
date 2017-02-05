@@ -31,6 +31,7 @@ import org.mariotaku.ktextension.empty
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_NAME
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_KEY
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.UserKey
 
 class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
@@ -66,7 +67,12 @@ class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.setView(R.layout.dialog_edit_user_nickname)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     companion object {

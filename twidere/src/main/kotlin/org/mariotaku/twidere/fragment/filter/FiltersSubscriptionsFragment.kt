@@ -28,13 +28,10 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACTION
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
-import org.mariotaku.twidere.extension.invertSelection
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.extension.model.getComponentLabel
 import org.mariotaku.twidere.extension.model.instantiateComponent
 import org.mariotaku.twidere.extension.model.setupUrl
-import org.mariotaku.twidere.extension.selectAll
-import org.mariotaku.twidere.extension.selectNone
-import org.mariotaku.twidere.extension.updateSelectionItems
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
@@ -303,11 +300,12 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
-            dialog.setOnShowListener { dialog ->
-                dialog as AlertDialog
-                val editName = dialog.findViewById(R.id.name) as MaterialEditText
-                val editUrl = dialog.findViewById(R.id.url) as MaterialEditText
-                val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+                val editName = it.findViewById(R.id.name) as MaterialEditText
+                val editUrl = it.findViewById(R.id.url) as MaterialEditText
+                val positiveButton = it.getButton(DialogInterface.BUTTON_POSITIVE)
 
                 fun updateEnableState() {
                     val nameValid = !editName.empty

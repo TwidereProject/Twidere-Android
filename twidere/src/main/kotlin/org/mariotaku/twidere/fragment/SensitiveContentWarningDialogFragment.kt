@@ -26,6 +26,7 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -59,7 +60,12 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
         builder.setMessage(R.string.sensitive_content_warning)
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
 }

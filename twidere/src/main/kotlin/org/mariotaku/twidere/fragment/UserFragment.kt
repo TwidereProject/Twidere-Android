@@ -103,6 +103,7 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.lightFontKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -1630,7 +1631,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
             builder.setMultiChoiceItems(entries, states, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
+            dialog.setOnShowListener { dialog ->
+                dialog as AlertDialog
+                dialog.applyTheme()
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = dialog.listView.checkedItemPositions
                     val weakActivity = WeakReference(activity)

@@ -51,10 +51,7 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_URI
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.adapter.ComposeAutoCompleteAdapter
 import org.mariotaku.twidere.adapter.SourceAutoCompleteAdapter
-import org.mariotaku.twidere.extension.invertSelection
-import org.mariotaku.twidere.extension.selectAll
-import org.mariotaku.twidere.extension.selectNone
-import org.mariotaku.twidere.extension.updateSelectionItems
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.FiltersData
@@ -289,8 +286,9 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, this)
             val dialog = builder.create()
-            dialog.setOnShowListener { dialog ->
-                val alertDialog = dialog as AlertDialog
+            dialog.setOnShowListener {
+                val alertDialog = it as AlertDialog
+                it.applyTheme()
                 val editText = (alertDialog.findViewById(R.id.edit_text) as AutoCompleteTextView?)!!
                 if (savedInstanceState == null) {
                     editText.setText(arguments.getString(EXTRA_VALUE))

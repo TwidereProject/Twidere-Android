@@ -25,19 +25,20 @@ import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.model.ParcelableUserList
+import org.mariotaku.twidere.model.UserKey
 
-class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
+class DestroySavedSearchDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val userList = userList
+                val accountKey = accountKey
+                val searchId = searchId
                 val twitter = twitterWrapper
-                if (userList == null) return
-                twitter.destroyUserListSubscriptionAsync(userList.account_key, userList.id)
+                if (searchId <= 0) return
+                twitter.destroySavedSearchAsync(accountKey, searchId)
             }
             else -> {
             }
@@ -47,11 +48,9 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = activity
         val builder = AlertDialog.Builder(context)
-        val userList = userList
-        if (userList != null) {
-            builder.setTitle(getString(R.string.unsubscribe_from_user_list, userList.name))
-            builder.setMessage(getString(R.string.unsubscribe_from_user_list_confirm_message, userList.name))
-        }
+        val name = searchName
+        builder.setTitle(getString(R.string.destroy_saved_search, name))
+        builder.setMessage(getString(R.string.destroy_saved_search_confirm_message, name))
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
@@ -62,22 +61,25 @@ class DestroyUserListSubscriptionDialogFragment : BaseDialogFragment(), DialogIn
         return dialog
     }
 
-    private val userList: ParcelableUserList?
-        get() {
-            val args = arguments
-            if (!args.containsKey(EXTRA_USER_LIST)) return null
-            return args.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
-        }
+    private val accountKey: UserKey
+        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+
+    private val searchId: Long
+        get() = arguments.getLong(EXTRA_SEARCH_ID, -1)
+
+    private val searchName: String
+        get() = arguments.getString(EXTRA_NAME)
 
     companion object {
 
-        val FRAGMENT_TAG = "destroy_user_list"
+        private const val FRAGMENT_TAG = "destroy_saved_search"
 
-        fun show(fm: FragmentManager,
-                 userList: ParcelableUserList): DestroyUserListSubscriptionDialogFragment {
+        fun show(fm: FragmentManager, accountKey: UserKey, searchId: Long, name: String): DestroySavedSearchDialogFragment {
             val args = Bundle()
-            args.putParcelable(EXTRA_USER_LIST, userList)
-            val f = DestroyUserListSubscriptionDialogFragment()
+            args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey)
+            args.putLong(EXTRA_SEARCH_ID, searchId)
+            args.putString(EXTRA_NAME, name)
+            val f = DestroySavedSearchDialogFragment()
             f.arguments = args
             f.show(fm, FRAGMENT_TAG)
             return f

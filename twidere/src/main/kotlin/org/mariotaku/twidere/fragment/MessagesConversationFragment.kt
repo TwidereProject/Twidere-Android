@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -36,6 +35,7 @@ import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.ViewCompat
 import android.support.v7.app.ActionBar
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -67,6 +67,7 @@ import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableDirectMessage
@@ -713,7 +714,12 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
             builder.setMessage(R.string.delete_conversation_confirm_message)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
 
@@ -738,7 +744,12 @@ class MessagesConversationFragment : BaseFragment(), LoaderCallbacks<Cursor?>, O
             builder.setMessage(R.string.delete_message_confirm_message)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
 

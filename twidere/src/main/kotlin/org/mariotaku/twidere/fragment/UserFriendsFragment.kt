@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 class UserFriendsFragment : CursorUsersListFragment() {
 
     override fun onCreateUsersLoader(context: Context,
-                                            args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
+                                     args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)

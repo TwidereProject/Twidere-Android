@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableStatus
 
 class DestroyStatusDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -48,7 +49,12 @@ class DestroyStatusDialogFragment : BaseDialogFragment(), DialogInterface.OnClic
         builder.setMessage(R.string.destroy_status_confirm_message)
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     private val status: ParcelableStatus?

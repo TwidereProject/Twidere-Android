@@ -29,6 +29,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USERS
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 
@@ -66,7 +67,12 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         }
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     private val userList: ParcelableUserList?

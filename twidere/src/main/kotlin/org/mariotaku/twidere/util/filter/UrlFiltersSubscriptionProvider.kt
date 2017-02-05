@@ -79,6 +79,7 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
         etagCache[arguments.url] = null
         return true
     }
+
     override fun deleteLocalData(): Boolean {
         etagCache[arguments.url] = null
         return true

@@ -22,6 +22,7 @@ import org.mariotaku.twidere.adapter.BaseArrayAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.setSelectedItem
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -66,8 +67,9 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(android.R.string.cancel, null)
 
         val dialog = builder.create()
-        dialog.setOnShowListener { dialog ->
-
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
             if (arguments?.getBoolean(EXTRA_SHOW_LOAD_DEFAULTS) ?: false) {
                 loadDefaults.visibility = View.VISIBLE
             } else {
@@ -154,7 +156,12 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setAdapter(adapter, this)
             loaderManager.initLoader(0, null, this)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {

@@ -90,6 +90,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.loader.ConversationLoader
@@ -725,7 +726,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             builder.setMessage(R.string.sensitive_content_warning)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
     }
 

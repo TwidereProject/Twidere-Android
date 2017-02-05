@@ -28,6 +28,7 @@ import android.support.v7.app.AlertDialog
 import me.uucky.colorpicker.ColorPickerDialog
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.iface.IDialogFragmentCallback
 
 class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -75,7 +76,8 @@ class ColorPickerDialogFragment : BaseDialogFragment(), DialogInterface.OnClickL
         builder.setNegativeButton(android.R.string.cancel, this)
         val dialog = builder.create()
         dialog.setOnShowListener {
-            it as Dialog
+            it as AlertDialog
+            it.applyTheme()
             mController = ColorPickerDialog.Controller(it.context, it.window.decorView)
 
             val showAlphaSlider = args.getBoolean(EXTRA_ALPHA_SLIDER, true)

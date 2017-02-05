@@ -44,6 +44,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
@@ -366,7 +367,12 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             builder.setMessage(R.string.app_restart_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(R.string.dont_restart, this)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {

@@ -34,6 +34,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.AttributeSet;
 
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
 import org.mariotaku.twidere.preference.iface.IDialogPreference;
 
 abstract class MultiSelectListPreference extends DialogPreference implements IDialogPreference {
@@ -98,7 +99,14 @@ abstract class MultiSelectListPreference extends DialogPreference implements IDi
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, null);
             builder.setMultiChoiceItems(mNames, mValues, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    AlertDialogExtensionsKt.applyTheme((AlertDialog) dialog);
+                }
+            });
+            return dialog;
         }
 
         @Override

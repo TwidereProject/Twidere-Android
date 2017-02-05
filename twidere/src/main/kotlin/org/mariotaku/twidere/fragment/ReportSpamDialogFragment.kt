@@ -27,6 +27,7 @@ import android.support.v7.app.AlertDialog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
 
 class ReportSpamDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -53,7 +54,12 @@ class ReportSpamDialogFragment : BaseDialogFragment(), DialogInterface.OnClickLi
         }
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     private val user: ParcelableUser?

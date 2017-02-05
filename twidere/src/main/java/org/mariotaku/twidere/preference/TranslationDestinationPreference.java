@@ -42,6 +42,7 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Language;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.twidere.R;
+import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
 
 import java.text.Collator;
@@ -189,10 +190,17 @@ public class TranslationDestinationPreference extends Preference implements OnCl
                     TranslationDestinationPreference.this);
             selectorBuilder.setNegativeButton(android.R.string.cancel, null);
             mDialog = selectorBuilder.create();
-            final ListView lv = mDialog.getListView();
-            if (lv != null) {
-                lv.setFastScrollEnabled(true);
-            }
+            mDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    final AlertDialog alertDialog = (AlertDialog) dialog;
+                    AlertDialogExtensionsKt.applyTheme(alertDialog);
+                    final ListView lv = alertDialog.getListView();
+                    if (lv != null) {
+                        lv.setFastScrollEnabled(true);
+                    }
+                }
+            });
             mDialog.show();
         }
 

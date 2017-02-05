@@ -53,8 +53,8 @@ open class TweetSearchLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                                    details: AccountDetails,
-                                    paging: Paging): List<Status> {
+                             details: AccountDetails,
+                             paging: Paging): List<Status> {
         if (query == null) throw MicroBlogException("Empty query")
         val queryText = processQuery(details, query)
         when (details.type) {

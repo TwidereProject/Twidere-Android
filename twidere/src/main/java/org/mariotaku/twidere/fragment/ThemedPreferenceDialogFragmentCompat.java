@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 
 import org.mariotaku.kpreferences.KPreferences;
+import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
@@ -51,7 +52,13 @@ public abstract class ThemedPreferenceDialogFragmentCompat extends PreferenceDia
         }
         onPrepareDialogBuilder(builder);
         // Create the dialog
-        final Dialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                AlertDialogExtensionsKt.applyTheme((AlertDialog) dialog);
+            }
+        });
         if (needInputMethod()) {
             supportRequestInputMethod(dialog);
         }

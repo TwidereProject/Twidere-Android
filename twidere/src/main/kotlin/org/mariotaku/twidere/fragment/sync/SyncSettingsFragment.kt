@@ -10,6 +10,7 @@ import com.squareup.otto.Subscribe
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SYNC_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.dataSyncProviderInfoKey
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BasePreferenceFragment
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
@@ -89,7 +90,12 @@ class SyncSettingsFragment : BasePreferenceFragment() {
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()
             }
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
     }

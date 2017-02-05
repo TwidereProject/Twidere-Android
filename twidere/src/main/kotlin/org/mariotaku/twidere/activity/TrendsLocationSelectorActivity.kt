@@ -27,6 +27,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.UserKey
@@ -91,9 +92,10 @@ class TrendsLocationSelectorActivity : BaseActivity() {
             selectorBuilder.setView(R.layout.dialog_trends_location_selector)
             selectorBuilder.setNegativeButton(android.R.string.cancel, null)
             val dialog = selectorBuilder.create()
-            dialog.setOnShowListener { dialogInterface ->
-                dialogInterface as Dialog
-                val listView = dialogInterface.findViewById(R.id.expandable_list) as ExpandableListView
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+                val listView = it.findViewById(R.id.expandable_list) as ExpandableListView
                 val adapter = ExpandableTrendLocationsListAdapter(context)
                 adapter.data = list
                 listView.setAdapter(adapter)

@@ -14,6 +14,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_REQUEST_CODE
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.analyzer.PurchaseConfirm
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.analyzer.PurchaseIntroduction
@@ -49,8 +50,9 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         }
         val dialog = builder.create()
         dialog.setOnShowListener {
-            it as Dialog
-            it.findViewById(R.id.restorePurchaseHint).visibility = if (restorePurchaseIntent != null) {
+            it as AlertDialog
+            it.applyTheme()
+            it.findViewById(R.id.restorePurchaseHint)?.visibility = if (restorePurchaseIntent != null) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -60,7 +62,7 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
             val featureDescription = it.findViewById(R.id.featureDescription) as TextView
             featureIcon.setImageResource(description.icon)
             featureDescription.text = description.description
-            it.findViewById(R.id.buyFeaturesPack).setOnClickListener {
+            it.findViewById(R.id.buyFeaturesPack)?.setOnClickListener {
                 startPurchase(ExtraFeaturesService.FEATURE_FEATURES_PACK)
                 dismiss()
             }
