@@ -33,10 +33,12 @@
   <string name="action_denying_follow_request">Lehne Follower-Anfrage ab</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Bearbeiten</string>
+  <string name="action_edit_filter_rule">Regel bearbeiten</string>
   <string name="action_favorite">Favorisieren</string>
   <string name="action_favoriting">favorisiere</string>
   <string name="action_filter_import_from_blocked_users">Importieren von blockierten Benutzern</string>
   <string name="action_filter_import_from_muted_users">Importieren von stummgeschalteten Benutzern</string>
+  <string name="action_filter_subscriptions_card_manage">Abonnements verwalten</string>
   <string name="action_finish">Fertig</string>
   <string name="action_follow">Folgen</string>
   <string name="action_following">folgen</string>
@@ -60,7 +62,7 @@
   <string name="action_purchase">Kauf</string>
   <string name="action_purchase_features_pack">Zusätzliche Funktionen kaufen</string>
   <string name="action_quote">Zitat</string>
-  <string name="action_record_video">Ein Video aufzeichnen</string>
+  <string name="action_record_video">Video aufzeichnen</string>
   <string name="action_refresh">Aktualisieren</string>
   <string name="action_refreshing_direct_messages">Aktualisiere Direktnachrichten</string>
   <string name="action_refreshing_home_timeline">Aktualisiere meine Zeitleiste</string>
@@ -80,6 +82,7 @@
   <string name="action_saving_search">speichere Suche</string>
   <string name="action_select_all">Alle auswählen</string>
   <string name="action_select_none">Nichts auswählen</string>
+  <string name="action_select_user">Benutzer auswählen</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Senden</string>
   <string name="action_sending_direct_message">Direktnachricht senden</string>
@@ -90,6 +93,8 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Überspringen</string>
   <string name="action_start">Start</string>
+  <string name="action_status_block_users">Blockiere Benutzer&#8230;</string>
+  <string name="action_status_mute_users">Benutzer stummschalten&#8230;</string>
   <string name="action_subscribe">Abonnieren</string>
   <string name="action_subscribing_to_list">Abonniere Liste</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -98,7 +103,7 @@
   <string name="action_sync_disconnect">Trennen</string>
   <string name="action_sync_settings">Einstellungen</string>
   <string name="action_sync_sync_now">Jetzt synchronisieren</string>
-  <string name="action_take_photo">Ein Foto aufnehmen</string>
+  <string name="action_take_photo">Foto aufnehmen</string>
   <string name="action_toggle">An/Aus</string>
   <string name="action_translate">Übersetzen</string>
   <string name="action_twitter_mute_user">Benutzer stummschalten</string>
@@ -205,7 +210,7 @@
   <string name="cant_load_all_replies_message">Kann nicht alle Antworten laden. &lt;a href=\"#dialog\";&gt;Warum?&lt;/a&gt;</string>
   <string name="cards">Karten</string>
   <string name="clear_cache">Cache löschen</string>
-  <string name="clear_cache_summary">Lösche Profilbild-Cache.</string>
+  <string name="clear_cache_summary">Gespeicherten Medien-Cache löschen.</string>
   <string name="clear_databases">Lösche Datenbank</string>
   <string name="clear_databases_summary">Alle Tweets, Profile und Nachrichten löschen. Deine Zugangsdaten werden nicht gelöscht.</string>
   <string name="clear_search_history">Suchbegriffe löschen</string>
@@ -299,7 +304,7 @@
   <string name="error_message_tweet_shorten_failed">Tweet-Verkürzung schlug fehl.</string>
   <string name="error_message_tweet_shortener_not_found">Tweet-Verkürzungsdienst nicht gefunden. Vielleicht wurde er deinstalliert.</string>
   <string name="error_message_with_action">Fehler bei <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
-  <string name="error_no_access_for_credentials">Deine Anwendung kann auf diese Ressource nicht zugreifen, hast du \'Erzwinge die Benutzung von privaten APIs\' aktiviert?</string>
+  <string name="error_no_access_for_credentials">Deine Anwendung kann auf diese Ressource nicht zugreifen.</string>
   <string name="error_no_dm_permission">Keine Berechtigung für Direktnachrichten, überprüfe die Berechtigungseinstellungen deiner Twitter App.</string>
   <string name="error_title_device_incompatible">Inkompatibles Gerät</string>
   <string name="error_too_many_photos_fanfou">Zu viele Fotos</string>
@@ -313,9 +318,11 @@
   <string name="external_user_host_format">Externer Benutzer bei <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Erweiterte Einstellungen</string>
   <string name="extra_feature_description_filters_import">Importiere Filterliste von blockierten/stummgeschalteten</string>
-  <string name="extra_feature_description_filters_subscription">Abonnements filtern</string>
+  <string name="extra_feature_description_filters_subscription">Abonniere Stummschaltfilter und Synchronisation automatisch</string>
   <string name="extra_feature_description_schedule_status">Tweet planen (später senden)</string>
   <string name="extra_feature_description_sync_data">Synchronisieren von Daten mit Dropbox, Google Drive etc.</string>
+  <string name="extra_feature_title_filters_import">Filterimport</string>
+  <string name="extra_feature_title_filters_subscription">Filterabonnement</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Unterstütze Twidere und erhalte erweiterte Funktionen</string>
   <string name="extra_features_pack_description">Oder kaufe das Featurepack, um alle Funktionen zu bekommen (auch in zukünftigen Versionen)</string>
@@ -462,7 +469,7 @@
   <string name="message_sync_data_synced_with_name">Twidere ist jetzt mit <xliff:g example="ownCloud" id="name">%s </xliff:g> synchronisiert</string>
   <string name="message_sync_disconnect_from_name_confirm">Trennen von <xliff:g example="ownCloud" id="name">%s </xliff:g>?</string>
   <string name="message_sync_last_synced_time">Zuletzt synchronisiert: <xliff:g example="2017/1/1 12:00" id="time">%s </xliff:g></string>
-  <string name="message_tab_field_is_required">Das Feld <xliff:g example="Field" id="name">%s</xliff:g> ist notwendig</string>
+  <string name="message_tab_field_is_required">Das Feld <xliff:g example="Field" id="name">%s</xliff:g> ist erforderlich</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
@@ -470,17 +477,20 @@
   <string name="message_toast_accepted_users_follow_request">Follower-Anfrage von <xliff:g id="user">%s</xliff:g> wurde akzeptiert.</string>
   <string name="message_toast_added_to_filter">Zum Filter hinzugefügt.</string>
   <string name="message_toast_already_logged_in">Du bist schon eingeloggt.</string>
-  <string name="message_toast_cannot_get_location">Ort konnte nicht gefunden werden.</string>
+  <string name="message_toast_cannot_get_location">Ort konnte nicht gefunden werden</string>
   <string name="message_toast_compose_write_storage_no_permission">Es ist eine Berechtigung erforderlich, um die aufgenommenen Fotos/Videos zu löschen</string>
+  <string name="message_toast_duplicate_filter_rule">Regel dupliziert</string>
   <string name="message_toast_error_occurred">Ein Fehler ist aufgetreten, versuche es erneut</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Erweiterte Funktionen nicht gekauft</string>
+  <string name="message_toast_filters_import_hint">Drücke \"+\" zum importieren</string>
   <string name="message_toast_link_copied_to_clipboard">Link in die Zwischenablage kopiert</string>
   <string name="message_toast_livewp_daydream_enabled_message">Ich hab ein kleines Geschenk für dich in den Systemeinstellungen versteckt :)</string>
   <string name="message_toast_login_verification_failed">Login-Verifizierung fehlgeschlagen.</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Netzwerkfehler</string>
   <string name="message_toast_no_account">Kein Konto</string>
+  <string name="message_toast_no_account_permission">Kontoberechtigung ist erforderlich</string>
   <string name="message_toast_no_account_selected">Kein Konto ausgewählt.</string>
   <string name="message_toast_no_user_selected">Kein Benutzer ausgewählt</string>
   <string name="message_toast_press_again_to_close">Drücke zum Schließen nochmal</string>
@@ -497,11 +507,12 @@
   <string name="message_toast_status_deleted">Tweet gelöscht.</string>
   <string name="message_toast_status_favorited">Tweet favorisiert.</string>
   <string name="message_toast_status_like_removed">Like entfernt.</string>
-  <string name="message_toast_status_liked">Tweet gefällt.</string>
-  <string name="message_toast_status_retweeted">Retweeted.</string>
+  <string name="message_toast_status_liked">Tweet gefällt</string>
+  <string name="message_toast_status_retweeted">Retweeted</string>
   <string name="message_toast_status_saved_to_draft">Tweet als Entwurf gespeichert.</string>
   <string name="message_toast_status_unfavorited">Tweet nicht favorisiert.</string>
   <string name="message_toast_status_updated">Tweet gesendet.</string>
+  <string name="message_toast_unable_to_load_more_statuses">Frühere Tweets konnten nicht geladen werden</string>
   <string name="message_toast_user_filters_removed">Der Benutzer wurde von der Filterliste entfernt.</string>
   <string name="message_toast_users_filters_added">Benutzer wurden zur Filterliste hinzugefügt. Du wirst keine Tweets von diesen Benutzern in Deiner Timeline-/Erwähnungsliste sehen.</string>
   <string name="message_toast_wrong_api_key">Inkorrekte API URL oder Consumer Key/Secret. Bitte nochmals prüfen.</string>
@@ -599,12 +610,15 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Bestehende Konten umbenennen?</string>
   <string name="preference_summary_chrome_custom_tab">Links in Chrome Custom Tabs öffnen</string>
   <string name="preference_summary_database_item_limit">Anzahl der Objekte, die maximal pro Konto gespeichert werden. Ein niedrigerer Wert spart Speicherplatz und erhöht die Ladegeschwindigkeit.</string>
+  <string name="preference_summary_media_preload_non_metered_network">Medien nur in freien Netwerken wie Wi-Fi vorladen</string>
   <string name="preference_title_accounts">Konten</string>
   <string name="preference_title_advanced">Erweiterte</string>
   <string name="preference_title_chrome_custom_tab">Chrome Custom Tab</string>
   <string name="preference_title_database_item_limit">Maximale Größe der Datenbank</string>
   <string name="preference_title_filter_manage_subscriptions">Verwalten</string>
   <string name="preference_title_filter_subscriptions">Filterabonnements</string>
+  <string name="preference_title_light_font">Helle Schrift</string>
+  <string name="preference_title_media_preload_non_metered_network">In freien Netwerk vorladen</string>
   <string name="preference_title_storage">Speicher</string>
   <string name="preference_title_translate">Übersetzen</string>
   <string name="preload_wifi_only">Vorausladen nur mit WLAN</string>
@@ -702,6 +716,7 @@
   <string name="scrapyard">Schrottplatz</string>
   <string name="search">Suchen</string>
   <string name="search_hint">Tweets oder Benutzer suchen</string>
+  <string name="search_hint_users">Benutzer suchen</string>
   <string name="search_statuses">Tweets suchen</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Benutzer</string>
@@ -839,6 +854,9 @@
   <string name="title_sync_settings">Synchronisierungseinstellungen</string>
   <string name="title_user">Benutzer</string>
   <string name="title_user_colors">benutzerdefinierte Farben</string>
+  <string name="title_user_list_memberships">Gehört zu</string>
+  <string name="title_user_list_ownerships">Erstellt</string>
+  <string name="title_user_list_subscriptions">Abonnements</string>
   <string name="title_users_favorited_this">Benutzer haben dies favorisiert</string>
   <string name="title_users_liked_this">Benutzern gefällt dies</string>
   <string name="title_users_retweeted_this">Benutzer retweeteten dies</string>

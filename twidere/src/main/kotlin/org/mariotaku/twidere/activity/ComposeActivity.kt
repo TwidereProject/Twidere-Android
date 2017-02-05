@@ -65,6 +65,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.commons.io.StreamUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
+import org.mariotaku.ktextension.getTypedArray
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.pickncrop.library.MediaPickerActivity
@@ -74,6 +75,7 @@ import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -143,7 +145,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     // Listeners
     private var locationListener: LocationListener? = null
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         when (requestCode) {
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && intent != null) {
@@ -213,7 +215,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return textChanged || hasMedia() || isEditingDraft
     }
 
-    public override fun onSaveInstanceState(outState: Bundle) {
+    override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter.selectedAccountKeys)
         outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList<Parcelable>(mediaList))
         outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, possiblySensitive)
@@ -558,7 +560,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
-            val selected = savedInstanceState.getParcelableArray(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
+            val selected = savedInstanceState.getTypedArray(EXTRA_ACCOUNT_KEYS, UserKey.CREATOR)
             accountsAdapter.setSelectedAccountIds(*selected)
             possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
@@ -1783,7 +1785,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-            adapter.mediaLoader.displayPreviewImage(media.uri, imageView)
+            adapter.mediaLoader.displayPreviewImage(imageView, media.uri)
             videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
                 View.VISIBLE
             } else {
@@ -1826,9 +1828,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 (activity as ComposeActivity).setMediaAltText(arguments.getInt(EXTRA_POSITION), null)
             }
             val dialog = builder.create()
-            dialog.setOnShowListener { dialog ->
-                val materialDialog = dialog as Dialog
-                val editText = materialDialog.findViewById(R.id.edit_text) as EditText
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+                val editText = it.findViewById(R.id.edit_text) as EditText
                 editText.setText(arguments.getString(EXTRA_TEXT))
             }
             return dialog
@@ -1859,7 +1862,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             builder.setMessage(R.string.quote_protected_status_warning_message)
             builder.setPositiveButton(R.string.send_anyway, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
     }
 

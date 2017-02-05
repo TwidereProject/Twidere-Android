@@ -42,11 +42,6 @@ public class HtmlEscapeHelper {
         return ESCAPE_HTML.translate(text);
     }
 
-    public static String toHtml(final String string) {
-        if (string == null) return null;
-        return escape(string).replace("\n", "<br/>");
-    }
-
     public static String toPlainText(final String string) {
         if (string == null) return null;
         return unescape(string.replace("<br/>", "\n").replaceAll("<!--.*?-->|<[^>]+>", ""));

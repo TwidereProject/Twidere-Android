@@ -1,7 +1,6 @@
 package org.mariotaku.microblog.library.statusnet.api;
 
 import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.statusnet.model.StatusNetConfig;

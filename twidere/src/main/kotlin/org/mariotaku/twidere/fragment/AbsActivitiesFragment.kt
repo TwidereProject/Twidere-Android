@@ -36,6 +36,7 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
@@ -218,19 +219,22 @@ abstract class AbsActivitiesFragment protected constructor() :
         var lastReadId: Long = -1
         var lastReadViewTop: Int = 0
         var loadMore = false
+        var wasAtTop = false
 
         // 1. Save current read position if not first load
         if (!firstLoad) {
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-            val statusRange = rangeOfSize(adapter.activityStartIndex, adapter.activityCount - 1)
-            val lastReadPosition = if (readFromBottom) {
+            wasAtTop = firstVisibleItemPosition == 0
+            val activityRange = rangeOfSize(adapter.activityStartIndex, Math.max(0, adapter.activityCount - 1))
+            val lastReadPosition = if (loadMore || readFromBottom) {
                 lastVisibleItemPosition
             } else {
-                layoutManager.findFirstVisibleItemPosition()
-            }.coerceIn(statusRange)
+                firstVisibleItemPosition
+            }.coerceInOr(activityRange, -1)
             lastReadId = adapter.getTimestamp(lastReadPosition)
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = lastVisibleItemPosition >= statusRange.endInclusive
+            loadMore = activityRange.endInclusive >= 0 && lastVisibleItemPosition >= activityRange.endInclusive
         } else if (rememberPosition && readPositionTag != null) {
             lastReadId = readStateManager.getPosition(readPositionTag)
             lastReadViewTop = 0
@@ -251,7 +255,12 @@ abstract class AbsActivitiesFragment protected constructor() :
             restorePosition = adapter.findPositionBySortTimestamp(lastReadId)
         }
 
-        if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || readFromBottom
+        if (loadMore) {
+            restorePosition += 1
+            restorePosition.coerceInOr(0 until layoutManager.itemCount, -1)
+        }
+        if (restorePosition != -1 && adapter.isActivity(restorePosition) && (loadMore || !wasAtTop ||
+                readFromBottom
                 || (rememberPosition && firstLoad))) {
             if (layoutManager.height == 0) {
                 // RecyclerView has not currently laid out, ignore padding.
@@ -265,7 +274,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         if (loader is IExtendedLoader) {
             loader.fromUser = false
         }
-        onLoadingFinished()
+        onContentLoaded(loader, data)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableActivity>>) {
@@ -292,7 +301,8 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
         val status = adapter.getActivity(position)?.getActivityStatus() ?: return
-        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
+        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+                preferences[displaySensitiveContentsKey],
                 null)
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, timelineType, adapter.mediaPreviewEnabled)
@@ -389,10 +399,13 @@ abstract class AbsActivitiesFragment protected constructor() :
     override val reachingEnd: Boolean
         get() {
             val lm = layoutManager
-            val lastPosition = lm.findLastCompletelyVisibleItemPosition()
+            var lastPosition = lm.findLastCompletelyVisibleItemPosition()
+            if (lastPosition == RecyclerView.NO_POSITION) {
+                lastPosition = lm.findLastVisibleItemPosition()
+            }
             val itemCount = adapter.itemCount
             var finalPos = itemCount - 1
-            for (i in lastPosition + 1..itemCount - 1) {
+            for (i in lastPosition + 1 until itemCount) {
                 if (adapter.getItemViewType(i) != ParcelableActivitiesAdapter.ITEM_VIEW_TYPE_EMPTY) {
                     finalPos = i - 1
                     break
@@ -400,9 +413,6 @@ abstract class AbsActivitiesFragment protected constructor() :
             }
             return finalPos >= itemCount - 1
         }
-
-    override val reachingStart: Boolean
-        get() = super.reachingStart
 
     protected open fun createMessageBusCallback(): Any {
         return StatusesBusCallback()
@@ -424,7 +434,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     protected abstract fun onCreateActivitiesLoader(context: Context, args: Bundle,
                                                     fromUser: Boolean): Loader<List<ParcelableActivity>>
 
-    protected abstract fun onLoadingFinished()
+    protected abstract fun onContentLoaded(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>?)
 
     protected fun saveReadPosition(position: Int) {
         if (host == null) return

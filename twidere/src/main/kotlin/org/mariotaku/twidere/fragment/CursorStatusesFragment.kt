@@ -27,6 +27,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
+import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
@@ -44,6 +45,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.message.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.Utils
@@ -263,6 +265,10 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
                 refreshEnabled = true
                 showContentOrError()
+
+                if (event.exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
+                    Toast.makeText(context, event.exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

@@ -24,13 +24,12 @@ import dagger.Component
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.MediaViewerActivity
+import org.mariotaku.twidere.activity.PremiumDashboardActivity
 import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
-import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
-import org.mariotaku.twidere.loader.ParcelableStatusLoader
-import org.mariotaku.twidere.loader.ParcelableUserLoader
+import org.mariotaku.twidere.loader.*
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
 import org.mariotaku.twidere.preference.PremiumEntryPreference
@@ -150,4 +149,10 @@ interface GeneralComponent {
     fun inject(provider: UrlFiltersSubscriptionProvider)
 
     fun inject(preference: PremiumEntryPreference)
+
+    fun inject(loader: CacheUserSearchLoader)
+
+    fun inject(loader: BaseUserListsLoader)
+
+    fun inject(controller: PremiumDashboardActivity.ExtraFeatureViewController)
 }

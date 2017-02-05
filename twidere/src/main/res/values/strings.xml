@@ -33,10 +33,12 @@
     <string name="action_denying_follow_request">denying follow request</string>
     <!-- [verb] Edit image/settings etc. -->
     <string name="action_edit">Edit</string>
+    <string name="action_edit_filter_rule">Edit rule</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_favoriting">favoriting</string>
     <string name="action_filter_import_from_blocked_users">Import from blocked users</string>
     <string name="action_filter_import_from_muted_users">Import from muted users</string>
+    <string name="action_filter_subscriptions_card_manage">Manage subscriptions</string>
     <string name="action_finish">Finish</string>
     <string name="action_follow">Follow</string>
     <string name="action_following">following</string>
@@ -82,6 +84,7 @@
     <string name="action_saving_search">saving search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
+    <string name="action_select_user">Select user</string>
     <!-- [verb] Send tweet/message -->
     <string name="action_send">Send</string>
     <string name="action_sending_direct_message">sending direct message</string>
@@ -92,6 +95,8 @@
     <!-- [verb] Used for skip some settings -->
     <string name="action_skip">Skip</string>
     <string name="action_start">Start</string>
+    <string name="action_status_block_users">Block users…</string>
+    <string name="action_status_mute_users">Mute users…</string>
     <string name="action_subscribe">Subscribe</string>
     <string name="action_subscribing_to_list">subscribing to list</string>
     <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -282,7 +287,7 @@
     <string name="cards">Cards</string>
 
     <string name="clear_cache">Clear cache</string>
-    <string name="clear_cache_summary">Clear stored profile image cache.</string>
+    <string name="clear_cache_summary">Clear stored media cache.</string>
     <string name="clear_databases">Clear databases</string>
     <string name="clear_databases_summary">Clear all tweets, profiles, messages. Your account credentials won\'t be lost.</string>
     <string name="clear_search_history">Clear search history</string>
@@ -453,9 +458,11 @@
 
     <string name="extra_configurations">Extra configurations</string>
     <string name="extra_feature_description_filters_import">Import filter list from blocks/mutes</string>
-    <string name="extra_feature_description_filters_subscription">Filters list subscription</string>
+    <string name="extra_feature_description_filters_subscription">Subscribe to mute filters and sync automatically</string>
     <string name="extra_feature_description_schedule_status">Schedule tweet (send later)</string>
     <string name="extra_feature_description_sync_data">Sync data with Dropbox, Google Drive etc</string>
+    <string name="extra_feature_title_filters_import">Filters import</string>
+    <string name="extra_feature_title_filters_subscription">Filters subscription</string>
     <!-- Enhanced (paid) features description -->
     <string name="extra_features_description">Support Twidere and get enhanced features</string>
     <string name="extra_features_pack_description">Or buy features pack to get all features (including features in future releases)</string>
@@ -687,15 +694,18 @@
     <string name="message_toast_already_logged_in">You have already logged in</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>
+    <string name="message_toast_duplicate_filter_rule">Rule duplicated</string>
     <string name="message_toast_error_occurred">An error occurred, please try again</string>
     <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
     <string name="message_toast_extra_features_not_purchased">Enhanced features not purchased</string>
+    <string name="message_toast_filters_import_hint">Press \"+\" to import</string>
     <string name="message_toast_link_copied_to_clipboard">Link copied to clipboard</string>
     <string name="message_toast_livewp_daydream_enabled_message">Here\'s a little present for you, find it in your system settings :)</string>
     <string name="message_toast_login_verification_failed">Login verification failed</string>
     <!-- Toast message for network errors -->
     <string name="message_toast_network_error">Network error</string>
     <string name="message_toast_no_account">No account</string>
+    <string name="message_toast_no_account_permission">Account permission is required</string>
     <string name="message_toast_no_account_selected">No account selected</string>
     <string name="message_toast_no_user_selected">No user selected</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
@@ -717,6 +727,7 @@
     <string name="message_toast_status_saved_to_draft">Tweet saved to draft</string>
     <string name="message_toast_status_unfavorited">Tweet unfavorited</string>
     <string name="message_toast_status_updated">Tweet sent</string>
+    <string name="message_toast_unable_to_load_more_statuses">Unable to load earlier tweets</string>
     <string name="message_toast_user_filters_removed">Removed from filters</string>
     <string name="message_toast_users_filters_added">Added to filters</string>
     <string name="message_toast_wrong_api_key">Incorrect API settings</string>
@@ -857,16 +868,22 @@
     <string name="preference_randomize_account_name">Randomize account name</string>
     <string name="preference_randomize_account_name_summary">Disallow other apps to get your name by reading accounts, improves privacy.</string>
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
-    <string name="preference_summary_chrome_custom_tab">Open links in Chrome custom tab</string>
+    <string name="preference_summary_chrome_custom_tab">Open links in in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
+    <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
-    <string name="preference_title_chrome_custom_tab">Chrome custom tab</string>
+    <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
     <string name="preference_title_light_font">Light font</string>
+    <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
+    <string name="preference_title_multi_column_tabs">Multi column tabs</string>
+    <string name="preference_title_portrait">Portrait</string>
+    <string name="preference_title_landscape">Landscape</string>
     <string name="preference_title_storage">Storage</string>
+    <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_translate">Translate</string>
 
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
@@ -1013,6 +1030,7 @@
 
     <string name="search">Search</string>
     <string name="search_hint">Search tweets or users</string>
+    <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
     <string name="search_type_statuses">Tweets</string>
     <string name="search_type_users">Users</string>
@@ -1214,6 +1232,9 @@
     <string name="title_sync_settings">Sync settings</string>
     <string name="title_user">User</string>
     <string name="title_user_colors">User colors</string>
+    <string name="title_user_list_memberships">Belongs to</string>
+    <string name="title_user_list_ownerships">Created</string>
+    <string name="title_user_list_subscriptions">Subscriptions</string>
     <string name="title_users_favorited_this">Users favorited this</string>
     <string name="title_users_liked_this">Users liked this</string>
     <string name="title_users_retweeted_this">Users retweeted this</string>

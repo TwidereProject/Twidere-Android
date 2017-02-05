@@ -44,9 +44,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.Utils
 import java.util.*
 
 class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartFragmentCallback {
@@ -177,9 +179,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
 
-    private val isTopSettings: Boolean
-        get() = java.lang.Boolean.parseBoolean("true")
-
+    private val isTopSettings: Boolean = true
 
     private fun initEntries() {
         entriesAdapter.addHeader(getString(R.string.appearance))
@@ -187,6 +187,10 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 R.xml.preferences_theme)
         entriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
                 R.xml.preferences_cards)
+        if (Utils.isDeviceTablet(this)) {
+            entriesAdapter.addPreference("tablet_mode", R.drawable.ic_action_tablet, getString(R.string.preference_title_tablet_mode),
+                    R.xml.preferences_tablet_mode)
+        }
 
         entriesAdapter.addHeader(getString(R.string.function))
         entriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
@@ -363,7 +367,12 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             builder.setMessage(R.string.app_restart_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(R.string.dont_restart, this)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onClick(dialog: DialogInterface, which: Int) {

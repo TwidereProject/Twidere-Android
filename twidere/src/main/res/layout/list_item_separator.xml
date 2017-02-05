@@ -18,7 +18,7 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<TextView
+<org.mariotaku.twidere.view.FixedTextView
     android:id="@android:id/text1"
     style="?android:listSeparatorTextViewStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"

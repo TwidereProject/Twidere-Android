@@ -59,6 +59,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Zapisz</string>
   <string name="action_saving_search">zapisywanie wyszukiwania</string>
+  <string name="action_select_user">Wybierz użytkownika</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Wyślij</string>
   <string name="action_sending_direct_message">wysyłanie wiadomości</string>
@@ -130,7 +131,6 @@
   <string name="both">Oba</string>
   <string name="cards">Tweety</string>
   <string name="clear_cache">Wyczyść zapis podręczny</string>
-  <string name="clear_cache_summary">Wyczyść zapisane obrazki profilów.</string>
   <string name="clear_databases">Wyczyść bazy danych</string>
   <string name="clear_databases_summary">Wyczyść wszystkie tweety, profile, wiadomości. Dane logowania twojego konta zostaną zachowane.</string>
   <string name="clear_search_history">Wyczyść historię wyszukiwania</string>
@@ -369,6 +369,8 @@
   <string name="preference_title_accounts">Konta</string>
   <string name="preference_title_advanced">Zaawansowane</string>
   <string name="preference_title_database_item_limit">Limit rozmiaru bazy danych</string>
+  <string name="preference_title_portrait">Układ pionowy</string>
+  <string name="preference_title_landscape">Układ poziomy</string>
   <string name="preference_title_storage">Przechowywanie</string>
   <string name="preference_title_translate">Przetłumacz</string>
   <string name="preload_wifi_only">Wczytuj tylko gdy działa Wi-Fi</string>
@@ -533,6 +535,7 @@
   <string name="title_subscription_url">Adres URL</string>
   <string name="title_user">Użytkownik</string>
   <string name="title_user_colors">Kolory użytkownika</string>
+  <string name="title_user_list_memberships">Należy do</string>
   <string name="title_users_favorited_this">Użytkownicy polubili to</string>
   <string name="title_users_retweeted_this">Użytkownicy którzy to przesłali dalej</string>
   <string name="translation_destination">Docelowe tłumaczenie</string>

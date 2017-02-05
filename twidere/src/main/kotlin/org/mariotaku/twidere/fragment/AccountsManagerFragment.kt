@@ -3,7 +3,6 @@ package org.mariotaku.twidere.fragment
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -13,6 +12,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import android.support.v7.app.AlertDialog
 import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.extension.model.setColor
@@ -38,11 +39,11 @@ import org.mariotaku.twidere.extension.model.setPosition
 import org.mariotaku.twidere.loader.AccountDetailsLoader
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.deleteAccountData
 import org.mariotaku.twidere.util.support.removeAccountSupport
 
 /**
@@ -206,6 +207,9 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         }
     }
 
+    /**
+     * DELETE YOUR ACCOUNT
+     */
     class AccountDeletionDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
         override fun onClick(dialog: DialogInterface, which: Int) {
@@ -215,18 +219,12 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
+                    deleteAccountData(resolver, accountKey)
                     am.removeAccountSupport(account)
-                    val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
-                    val whereArgs = arrayOf(accountKey.toString())
-                    // Also delete tweets related to the account we previously
-                    // deleted.
-                    resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
-                    resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
-                    resolver.delete(Inbox.CONTENT_URI, where, whereArgs)
-                    resolver.delete(Outbox.CONTENT_URI, where, whereArgs)
                 }
             }
         }
+
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val context = context
@@ -235,7 +233,12 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setTitle(R.string.account_delete_confirm_title)
             builder.setMessage(R.string.account_delete_confirm_message)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
     }

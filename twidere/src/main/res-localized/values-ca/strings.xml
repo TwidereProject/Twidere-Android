@@ -62,6 +62,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Desa</string>
   <string name="action_saving_search">s\'està desant la cerca</string>
+  <string name="action_select_user">Escull usuari</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Envia</string>
   <string name="action_sending_direct_message">S\'està enviant el missatge directe</string>
@@ -182,7 +183,6 @@
   <string name="cant_load_all_replies_message">No s\'han pogut carregar totes les respostes. &lt;a href=\"#dialog\";&gt;Per què?&lt;/a&gt;</string>
   <string name="cards">Targetes</string>
   <string name="clear_cache">Buida la memòria cau</string>
-  <string name="clear_cache_summary">Buida la memòria cau d\'imatges de perfil.</string>
   <string name="clear_databases">Buida les bases de dades</string>
   <string name="clear_databases_summary">Buida totes les piulades, perfils i missatges. Les dades credencials del teu compte no es perdran.</string>
   <string name="clear_search_history">Neteja l\'historial de cerques</string>
@@ -515,6 +515,8 @@
   <string name="preference_title_accounts">Comptes</string>
   <string name="preference_title_advanced">Avançades</string>
   <string name="preference_title_database_item_limit">Mida límit de la base de dades</string>
+  <string name="preference_title_portrait">Vertical</string>
+  <string name="preference_title_landscape">Horitzontal</string>
   <string name="preference_title_storage">Emmagatzematge</string>
   <string name="preference_title_translate">Ajudeu a traduir el Twidere</string>
   <string name="preload_wifi_only">Precarrega només a través de Wi-Fi</string>
@@ -736,6 +738,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Usuari</string>
   <string name="title_user_colors">Colors de l\'usuari</string>
+  <string name="title_user_list_memberships">Pertany a</string>
   <string name="title_users_favorited_this">Usuaris que ho han marcat com a preferit</string>
   <string name="title_users_liked_this">Als usuaris els ha agradat això</string>
   <string name="title_users_retweeted_this">Usuaris que han repiulat</string>

@@ -27,7 +27,8 @@
     <FrameLayout
         android:id="@+id/listContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:minWidth="@dimen/minimum_width_list_layout_content">
 
         <ListView
             android:id="@+id/listView"
@@ -39,7 +40,10 @@
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:gravity="center"
+            android:minHeight="@dimen/minimum_height_list_layout_content"
+            android:minWidth="@dimen/minimum_width_list_layout_content"
             android:orientation="vertical"
             tools:visibility="visible">
 
@@ -49,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:color="?android:textColorSecondary"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/emptyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +67,10 @@
     <FrameLayout
         android:id="@+id/progressContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:minHeight="@dimen/minimum_height_list_layout_content"
+        android:minWidth="@dimen/minimum_width_list_layout_content">
 
         <ProgressBar
             android:id="@+id/progressBar"

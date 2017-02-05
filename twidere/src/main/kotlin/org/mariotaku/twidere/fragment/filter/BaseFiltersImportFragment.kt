@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
-import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
@@ -25,8 +24,9 @@ import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_COUNT
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.MessageDialogFragment
@@ -41,6 +41,7 @@ import org.mariotaku.twidere.util.support.ViewSupport
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
+import kotlin.collections.set
 
 /**
  * Created by mariotaku on 2016/12/26.
@@ -223,6 +224,8 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()
             dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
                 val confirmMessageView = dialog.findViewById(R.id.confirmMessage) as TextView
                 val filterEverywhereHelp = dialog.findViewById(R.id.filterEverywhereHelp)!!
                 filterEverywhereHelp.setOnClickListener {
@@ -336,7 +339,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
                     return holder
                 }
                 ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
-                    val view = inflater.inflate(R.layout.card_item_load_indicator, parent, false)
+                    val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                     return LoadIndicatorViewHolder(view)
                 }
             }

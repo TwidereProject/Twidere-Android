@@ -130,10 +130,14 @@ class FabricAnalyzer : Analyzer(), Constants {
         Crashlytics.setString("build.model", Build.MODEL)
         Crashlytics.setString("build.product", Build.PRODUCT)
         val am = AccountManager.get(application)
-        am.addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener { accounts ->
-            Crashlytics.setString("twidere.accounts", accounts.filter { it.type == ACCOUNT_TYPE }
-                    .joinToString(transform = Account::name))
-        }, updateImmediately = true)
+        try {
+            am.addOnAccountsUpdatedListenerSafe(OnAccountsUpdateListener { accounts ->
+                Crashlytics.setString("twidere.accounts", accounts.filter { it.type == ACCOUNT_TYPE }
+                        .joinToString(transform = Account::name))
+            }, updateImmediately = true)
+        } catch (e: SecurityException) {
+            // Permission managers (like some Xposed plugins) may block Twidere from getting accounts
+        }
     }
 
     private fun AnswersEvent<*>.putAttributes(event: Analyzer.Event) {

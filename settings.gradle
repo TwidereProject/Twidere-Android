@@ -1,7 +1,5 @@
 include ':twidere'
 include ':twidere.component.common'
+include ':twidere.component.nyan'
 include ':twidere.library.extension'
 include ':twidere.wear'
-include ':twidere.donate.nyanwp'
-include ':twidere.donate.nyanwp.wear'
-include ':twidere.component.nyan'

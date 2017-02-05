@@ -103,10 +103,10 @@ import org.mariotaku.twidere.task.DestroyUserBlockTask;
 import org.mariotaku.twidere.task.DestroyUserMuteTask;
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask;
 import org.mariotaku.twidere.task.GetHomeTimelineTask;
-import org.mariotaku.twidere.task.GetLocalTrendsTask;
 import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask;
 import org.mariotaku.twidere.task.GetSavedSearchesTask;
 import org.mariotaku.twidere.task.GetSentDirectMessagesTask;
+import org.mariotaku.twidere.task.GetTrendsTask;
 import org.mariotaku.twidere.task.ManagedAsyncTask;
 import org.mariotaku.twidere.task.ReportSpamAndBlockTask;
 import org.mariotaku.twidere.task.twitter.GetActivitiesTask;
@@ -329,7 +329,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
     public void getLocalTrendsAsync(final UserKey accountId, final int woeId) {
-        final GetLocalTrendsTask task = new GetLocalTrendsTask(context, accountId, woeId);
+        final GetTrendsTask task = new GetTrendsTask(context, accountId, woeId);
         TaskStarter.execute(task);
     }
 
@@ -498,6 +498,7 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         return asyncTaskManager.add(task, true);
     }
 
+    @Nullable
     public static <T extends Response<?>> Exception getException(List<T> responses) {
         for (T response : responses) {
             if (response.hasException()) return response.getException();
@@ -513,6 +514,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
             public SingleResponse<Relationship> doLongOperation(Object param) {
                 final MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, accountKey);
                 try {
+                    if (microBlog == null) {
+                        throw new MicroBlogException("No account");
+                    }
                     final Relationship relationship = microBlog.updateFriendship(userKey.getId(), update);
                     if (!relationship.isSourceWantRetweetsFromTarget()) {
                         // TODO remove cached retweets
@@ -555,6 +559,9 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
                     MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, accountId);
                     if (!Utils.isOfficialCredentials(context, accountId)) continue;
                     try {
+                        if (microBlog == null) {
+                            throw new MicroBlogException("No account");
+                        }
                         microBlog.setActivitiesAboutMeUnread(cursor);
                     } catch (MicroBlogException e) {
                         DebugLog.w(LOGTAG, null, e);
@@ -733,11 +740,6 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         private void deleteCaches(final List<String> list) {
-            for (final Uri uri : DataStoreUtils.STATUSES_URIS) {
-                // TODO delete caches
-                // ContentResolverUtils.bulkDelete(mResolver, uri, Statuses.USER_ID, list,
-                // Statuses.ACCOUNT_ID + " = " + mAccountKey, false);
-            }
             // I bet you don't want to see these users in your auto complete list.
             //TODO insert to blocked users data
             final ContentValues values = new ContentValues();
@@ -1030,12 +1032,12 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
     }
 
 
-    class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Void>> {
+    class DestroyMessageConversationTask extends ManagedAsyncTask<Object, Object, SingleResponse<Boolean>> {
 
         private final String mUserId;
         private final UserKey mAccountKey;
 
-        public DestroyMessageConversationTask(final UserKey accountKey, final String userId) {
+        DestroyMessageConversationTask(final UserKey accountKey, final String userId) {
             super(context);
             mAccountKey = accountKey;
             mUserId = userId;
@@ -1061,24 +1063,25 @@ public class AsyncTwitterWrapper extends TwitterWrapper {
         }
 
         @Override
-        protected SingleResponse<Void> doInBackground(final Object... args) {
+        protected SingleResponse<Boolean> doInBackground(final Object... args) {
             final MicroBlog microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey);
-            if (microBlog == null) return SingleResponse.Companion.getInstance();
+            if (microBlog == null)
+                return new SingleResponse<>(new MicroBlogException("No account"));
             try {
                 microBlog.destroyDirectMessagesConversation(mAccountKey.getId(), mUserId);
                 deleteMessages(mAccountKey, mUserId);
-                return SingleResponse.Companion.getInstance();
+                return new SingleResponse<>(true);
             } catch (final MicroBlogException e) {
                 if (isMessageNotFound(e)) {
                     deleteMessages(mAccountKey, mUserId);
                 }
-                return SingleResponse.Companion.getInstance(e);
+                return new SingleResponse<>(e);
             }
         }
 
 
         @Override
-        protected void onPostExecute(final SingleResponse<Void> result) {
+        protected void onPostExecute(final SingleResponse<Boolean> result) {
             super.onPostExecute(result);
             if (result == null) return;
             if (result.hasData() || isMessageNotFound(result.getException())) {

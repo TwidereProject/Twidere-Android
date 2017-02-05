@@ -36,11 +36,10 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
@@ -54,10 +53,9 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.convert
-import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.*
+import org.mariotaku.twidere.Constants.EXTRA_FEATURES_NOTICE_VERSION
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.*
@@ -66,9 +64,11 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
+import org.mariotaku.twidere.graphic.BadgeDrawable
 import org.mariotaku.twidere.menu.AccountToggleProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
@@ -85,6 +85,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         OnSharedPreferenceChangeListener, OnClickListener, KeyboardShortcutCallback,
         NavigationView.OnNavigationItemSelectedListener {
 
+    private val EXTRA_SYNC_LOAD = "sync_load"
     private val systemWindowsInsets = Rect()
 
     private lateinit var accountsAdapter: AccountSelectorAdapter
@@ -127,9 +128,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                     hasPrevAccountIndicator.alpha = 0f
                     hasNextAccountIndicator.alpha = 0f
                 } else {
-                    hasPrevAccountIndicator.alpha = TwidereMathUtils.clamp(pagePosition, 0f, 1f)
-                    hasNextAccountIndicator.alpha = TwidereMathUtils.clamp(pageCount - (pagePosition
-                            + visiblePages), 0f, 1f)
+                    hasPrevAccountIndicator.alpha = pagePosition.coerceIn(0f, 1f)
+                    hasNextAccountIndicator.alpha = (pageCount - (pagePosition + visiblePages))
+                            .coerceIn(0f, 1f)
                 }
             }
         })
@@ -175,14 +176,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         navigationView.setNavigationItemSelectedListener(this)
         preferences.registerOnSharedPreferenceChangeListener(this)
 
-        loadAccounts()
-
         updateSystemWindowsInsets()
     }
 
     override fun onStart() {
         super.onStart()
-        loaderManager.restartLoader(0, null, this)
+        loadAccounts()
     }
 
     override fun onResume() {
@@ -248,12 +247,35 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<AccountsInfo> {
-        return AccountsInfoLoader(activity)
+        return AccountsInfoLoader(activity, accountsAdapter.accounts == null)
     }
 
 
     override fun onLoadFinished(loader: Loader<AccountsInfo>, data: AccountsInfo) {
         updateAccountProviderData(data)
+    }
+
+    override fun onLoaderReset(loader: Loader<AccountsInfo>) {
+    }
+
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
+        if (KEY_DEFAULT_ACCOUNT_KEY == key) {
+            updateDefaultAccountState()
+        }
+    }
+
+    override fun fitSystemWindows(insets: Rect) {
+        systemWindowsInsets.set(insets)
+        updateSystemWindowsInsets()
+    }
+
+    fun loadAccounts() {
+        if (!loaderInitialized) {
+            loaderInitialized = true
+            loaderManager.initLoader(0, null, this)
+        } else {
+            loaderManager.restartLoader(0, null, this)
+        }
     }
 
     private fun updateAccountProviderData(data: AccountsInfo) {
@@ -293,30 +315,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
     }
 
-    override fun onLoaderReset(loader: Loader<AccountsInfo>) {
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        if (KEY_DEFAULT_ACCOUNT_KEY == key) {
-            updateDefaultAccountState()
-        }
-    }
-
-    override fun fitSystemWindows(insets: Rect) {
-        systemWindowsInsets.set(insets)
-        updateSystemWindowsInsets()
-    }
-
     private fun updateSystemWindowsInsets() {
-    }
-
-    fun loadAccounts() {
-        if (!loaderInitialized) {
-            loaderInitialized = true
-            loaderManager.initLoader(0, null, this)
-        } else {
-            loaderManager.restartLoader(0, null, this)
-        }
     }
 
     internal fun updateAccountActions() {
@@ -346,6 +345,14 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         menu.setItemAvailability(R.id.favorites, useStarsForLikes)
         menu.setItemAvailability(R.id.likes, !useStarsForLikes)
         menu.setItemAvailability(R.id.premium_features, extraFeaturesService.isSupported())
+        if (preferences[extraFeaturesNoticeVersionKey] < EXTRA_FEATURES_NOTICE_VERSION) {
+            val icon = ContextCompat.getDrawable(context, R.drawable.ic_action_infinity)
+            val color = ContextCompat.getColor(context, R.color.material_red)
+            val size = resources.getDimensionPixelSize(R.dimen.element_spacing_msmall)
+            menu.setMenuItemIcon(R.id.premium_features, BadgeDrawable(icon, color, size))
+        } else {
+            menu.setMenuItemIcon(R.id.premium_features, R.drawable.ic_action_infinity)
+        }
         var hasLists = false
         var hasGroups = false
         var hasPublicTimeline = false
@@ -556,6 +563,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             R.id.premium_features -> {
                 val intent = Intent(activity, PremiumDashboardActivity::class.java)
                 startActivity(intent)
+                preferences[extraFeaturesNoticeVersionKey] = EXTRA_FEATURES_NOTICE_VERSION
                 closeAccountsDrawer()
             }
             R.id.settings -> {
@@ -723,7 +731,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             val draftsCount: Int
     )
 
-    class AccountsInfoLoader(context: Context) : AsyncTaskLoader<AccountsInfo>(context) {
+    class AccountsInfoLoader(context: Context, val firsSyncLoad: Boolean) : AsyncTaskLoader<AccountsInfo>(context) {
         private var contentObserver: ContentObserver? = null
         private var accountListener: OnAccountsUpdateListener? = null
 
@@ -734,9 +742,15 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
 
         override fun loadInBackground(): AccountsInfo {
-            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
-            val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
-            return AccountsInfo(accounts, draftsCount)
+            return loadAccountsInfo()
+        }
+
+        override fun onForceLoad() {
+            if (firsSyncLoad && firstLoad) {
+                deliverResult(loadAccountsInfo())
+                return
+            }
+            super.onForceLoad()
         }
 
         /**
@@ -785,10 +799,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             }
 
             if (takeContentChanged() || firstLoad) {
-                firstLoad = false
                 // If the data has changed since the last time it was loaded
                 // or is not currently available, start a load.
                 forceLoad()
+                firstLoad = false
             }
         }
 
@@ -800,6 +814,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             cancelLoad()
         }
 
+        private fun loadAccountsInfo(): AccountsInfo {
+            val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
+            val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
+            return AccountsInfo(accounts, draftsCount)
+        }
     }
 
     object AccountsSelectorTransformer : ViewPager.PageTransformer {

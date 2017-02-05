@@ -29,9 +29,9 @@ import org.mariotaku.twidere.model.UserKey
 
 class StatusRetweetersListFragment : CursorUsersListFragment() {
 
-    public override fun onCreateUsersLoader(context: Context,
-                                            args: Bundle,
-                                            fromUser: Boolean): CursorSupportUsersLoader {
+    override fun onCreateUsersLoader(context: Context,
+                                     args: Bundle,
+                                     fromUser: Boolean): CursorSupportUsersLoader {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val statusId = args.getString(EXTRA_STATUS_ID)
         val loader = StatusRetweetersLoader(context, accountKey, statusId,

@@ -90,7 +90,6 @@ import org.mariotaku.twidere.model.ParcelableActivityCursorIndices;
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices;
 import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
 import org.mariotaku.twidere.model.ParcelableUser;
-import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.model.UserKey;
@@ -98,7 +97,6 @@ import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
@@ -120,9 +118,7 @@ import org.mariotaku.twidere.util.AsyncTwitterWrapper;
 import org.mariotaku.twidere.util.DataStoreFunctionsKt;
 import org.mariotaku.twidere.util.DataStoreUtils;
 import org.mariotaku.twidere.util.DebugLog;
-import org.mariotaku.twidere.util.ImagePreloader;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
-import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.NotificationManagerWrapper;
 import org.mariotaku.twidere.util.ParseUtils;
 import org.mariotaku.twidere.util.PermissionsManager;
@@ -137,7 +133,6 @@ import org.mariotaku.twidere.util.UserColorNameManager;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.collection.CompactHashSet;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
-import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
 import org.mariotaku.twidere.util.net.TwidereDns;
 import org.oshkimaadziig.george.androidutils.SpanFormatter;
 
@@ -163,35 +158,45 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
     private static final Pattern PATTERN_SCREEN_NAME = Pattern.compile("(?i)[@\uFF20]?([a-z0-9_]{1,20})");
     @Inject
-    ReadStateManager mReadStateManager;
+    @NonNull
+    ReadStateManager readStateManager;
     @Inject
-    AsyncTwitterWrapper mTwitterWrapper;
+    @NonNull
+    AsyncTwitterWrapper twitterWrapper;
     @Inject
-    ImageLoader mMediaLoader;
+    @NonNull
+    ImageLoader mediaLoader;
     @Inject
-    NotificationManagerWrapper mNotificationManager;
+    @NonNull
+    NotificationManagerWrapper notificationManager;
     @Inject
-    SharedPreferencesWrapper mPreferences;
+    @NonNull
+    SharedPreferencesWrapper preferences;
     @Inject
-    TwidereDns mDns;
+    @NonNull
+    TwidereDns dns;
     @Inject
-    Bus mBus;
+    @NonNull
+    Bus bus;
     @Inject
-    UserColorNameManager mUserColorNameManager;
+    @NonNull
+    UserColorNameManager userColorNameManager;
     @Inject
-    BidiFormatter mBidiFormatter;
+    @NonNull
+    BidiFormatter bidiFormatter;
     @Inject
-    ActivityTracker mActivityTracker;
+    @NonNull
+    ActivityTracker activityTracker;
     @Inject
-    PermissionsManager mPermissionsManager;
+    @NonNull
+    PermissionsManager permissionsManager;
 
     private Handler mHandler;
     private ContentResolver mContentResolver;
-    private SQLiteDatabaseWrapper mDatabaseWrapper;
-    private ImagePreloader mImagePreloader;
+    private SQLiteDatabaseWrapper databaseWrapper;
     private Executor mBackgroundExecutor;
-    private boolean mNameFirst;
-    private boolean mUseStarForLikes;
+    private boolean nameFirst;
+    private boolean useStarForLikes;
 
     private static PendingIntent getMarkReadDeleteIntent(Context context, @NotificationType String type,
                                                          @Nullable UserKey accountKey, long position,
@@ -322,10 +327,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         try {
             if (e instanceof SQLiteFullException) {
                 // Drop cached databases
-                mDatabaseWrapper.delete(CachedUsers.TABLE_NAME, null, null);
-                mDatabaseWrapper.delete(CachedStatuses.TABLE_NAME, null, null);
-                mDatabaseWrapper.delete(CachedHashtags.TABLE_NAME, null, null);
-                mDatabaseWrapper.execSQL("VACUUM");
+                databaseWrapper.delete(CachedUsers.TABLE_NAME, null, null);
+                databaseWrapper.delete(CachedStatuses.TABLE_NAME, null, null);
+                databaseWrapper.delete(CachedHashtags.TABLE_NAME, null, null);
+                databaseWrapper.execSQL("VACUUM");
                 return true;
             }
         } catch (SQLException ee) {
@@ -347,13 +352,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         int result = 0;
         final long[] newIds = new long[valuesArray.length];
         if (table != null && valuesArray.length > 0) {
-            mDatabaseWrapper.beginTransaction();
+            databaseWrapper.beginTransaction();
             if (tableId == TABLE_ID_CACHED_USERS) {
                 for (final ContentValues values : valuesArray) {
                     final Expression where = Expression.equalsArgs(CachedUsers.USER_KEY);
-                    mDatabaseWrapper.update(table, values, where.getSQL(), new String[]{
+                    databaseWrapper.update(table, values, where.getSQL(), new String[]{
                             values.getAsString(CachedUsers.USER_KEY)});
-                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                    newIds[result++] = databaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_REPLACE);
                 }
             } else if (tableId == TABLE_ID_SEARCH_HISTORY) {
@@ -361,25 +366,25 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
                     final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
                     final String[] args = {values.getAsString(SearchHistory.QUERY)};
-                    mDatabaseWrapper.update(table, values, where.getSQL(), args);
-                    newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                    databaseWrapper.update(table, values, where.getSQL(), args);
+                    newIds[result++] = databaseWrapper.insertWithOnConflict(table, null,
                             values, SQLiteDatabase.CONFLICT_IGNORE);
                 }
             } else {
                 final int conflictAlgorithm = getConflictAlgorithm(tableId);
                 if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
                     for (final ContentValues values : valuesArray) {
-                        newIds[result++] = mDatabaseWrapper.insertWithOnConflict(table, null,
+                        newIds[result++] = databaseWrapper.insertWithOnConflict(table, null,
                                 values, conflictAlgorithm);
                     }
                 } else {
                     for (final ContentValues values : valuesArray) {
-                        newIds[result++] = mDatabaseWrapper.insert(table, null, values);
+                        newIds[result++] = databaseWrapper.insert(table, null, values);
                     }
                 }
             }
-            mDatabaseWrapper.setTransactionSuccessful();
-            mDatabaseWrapper.endTransaction();
+            databaseWrapper.setTransactionSuccessful();
+            databaseWrapper.endTransaction();
         }
         if (result > 0) {
             onDatabaseUpdated(tableId, uri);
@@ -432,7 +437,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
         }
         if (table == null) return 0;
-        final int result = mDatabaseWrapper.delete(table, selection, selectionArgs);
+        final int result = databaseWrapper.delete(table, selection, selectionArgs);
         if (result > 0) {
             onDatabaseUpdated(tableId, uri);
         }
@@ -475,8 +480,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_CACHED_USERS: {
                 final Expression where = Expression.equalsArgs(CachedUsers.USER_KEY);
                 final String[] whereArgs = {values.getAsString(CachedUsers.USER_KEY)};
-                mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs);
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                databaseWrapper.update(table, values, where.getSQL(), whereArgs);
+                rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE);
                 break;
             }
@@ -484,8 +489,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 values.put(SearchHistory.RECENT_QUERY, System.currentTimeMillis());
                 final Expression where = Expression.equalsArgs(SearchHistory.QUERY);
                 final String[] args = {values.getAsString(SearchHistory.QUERY)};
-                mDatabaseWrapper.update(table, values, where.getSQL(), args);
-                rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                databaseWrapper.update(table, values, where.getSQL(), args);
+                rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                         SQLiteDatabase.CONFLICT_IGNORE);
                 break;
             }
@@ -497,9 +502,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         Expression.equalsArgs(CachedRelationships.USER_KEY)
                 );
                 final String[] whereArgs = {accountKey, userId};
-                if (mDatabaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
+                if (databaseWrapper.update(table, values, where.getSQL(), whereArgs) > 0) {
                     final String[] projection = {CachedRelationships._ID};
-                    final Cursor c = mDatabaseWrapper.query(table, projection, where.getSQL(), null,
+                    final Cursor c = databaseWrapper.query(table, projection, where.getSQL(), null,
                             null, null, null);
                     if (c.moveToFirst()) {
                         rowId = c.getLong(0);
@@ -508,7 +513,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     }
                     c.close();
                 } else {
-                    rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                    rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                             SQLiteDatabase.CONFLICT_IGNORE);
                 }
                 break;
@@ -520,10 +525,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             default: {
                 final int conflictAlgorithm = getConflictAlgorithm(tableId);
                 if (conflictAlgorithm != SQLiteDatabase.CONFLICT_NONE) {
-                    rowId = mDatabaseWrapper.insertWithOnConflict(table, null, values,
+                    rowId = databaseWrapper.insertWithOnConflict(table, null, values,
                             conflictAlgorithm);
                 } else if (table != null) {
-                    rowId = mDatabaseWrapper.insert(table, null, values);
+                    rowId = databaseWrapper.insert(table, null, values);
                 } else {
                     return null;
                 }
@@ -582,7 +587,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-        mNotificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS,
+        notificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS,
                 nb.build());
         return draftId;
     }
@@ -593,11 +598,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         assert context != null;
         GeneralComponentHelper.build(context).inject(this);
         mHandler = new Handler(Looper.getMainLooper());
-        mDatabaseWrapper = new SQLiteDatabaseWrapper(this);
-        mPreferences.registerOnSharedPreferenceChangeListener(this);
+        databaseWrapper = new SQLiteDatabaseWrapper(this);
+        preferences.registerOnSharedPreferenceChangeListener(this);
         mBackgroundExecutor = Executors.newSingleThreadExecutor();
         updatePreferences();
-        mImagePreloader = new ImagePreloader(context, mMediaLoader);
         // final GetWritableDatabaseTask task = new
         // GetWritableDatabaseTask(context, helper, mDatabaseWrapper);
         // task.executeTask();
@@ -660,7 +664,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             checkReadPermission(tableId, table, projection);
             switch (tableId) {
                 case VIRTUAL_TABLE_ID_DATABASE_PREPARE: {
-                    mDatabaseWrapper.prepare();
+                    databaseWrapper.prepare();
                     return new MatrixCursor(projection != null ? projection : new String[0]);
                 }
                 case VIRTUAL_TABLE_ID_PERMISSIONS: {
@@ -669,12 +673,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final MatrixCursor c = new MatrixCursor(Permissions.MATRIX_COLUMNS);
                     final PackageManager pm = context.getPackageManager();
                     if (Binder.getCallingUid() == Process.myUid()) {
-                        final Map<String, String> map = mPermissionsManager.getAll();
+                        final Map<String, String> map = permissionsManager.getAll();
                         for (final Map.Entry<String, String> item : map.entrySet()) {
                             c.addRow(new Object[]{item.getKey(), item.getValue()});
                         }
                     } else {
-                        final Map<String, String> map = mPermissionsManager.getAll();
+                        final Map<String, String> map = permissionsManager.getAll();
                         final String[] callingPackages = pm.getPackagesForUid(Binder.getCallingUid());
                         for (final Map.Entry<String, String> item : map.entrySet()) {
                             final String key = item.getKey();
@@ -686,16 +690,13 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     return c;
                 }
                 case VIRTUAL_TABLE_ID_ALL_PREFERENCES: {
-                    return getPreferencesCursor(mPreferences, null);
+                    return getPreferencesCursor(preferences, null);
                 }
                 case VIRTUAL_TABLE_ID_PREFERENCES: {
-                    return getPreferencesCursor(mPreferences, uri.getLastPathSegment());
+                    return getPreferencesCursor(preferences, uri.getLastPathSegment());
                 }
                 case VIRTUAL_TABLE_ID_DNS: {
                     return getDNSCursor(uri.getLastPathSegment());
-                }
-                case VIRTUAL_TABLE_ID_CACHED_IMAGES: {
-                    return getCachedImageCursor(uri.getQueryParameter(QUERY_PARAM_URL));
                 }
                 case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
                     final List<String> segments = uri.getPathSegments();
@@ -726,7 +727,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final Pair<SQLSelectQuery, String[]> query = ConversationQueryBuilder
                             .buildByConversationId(projection, accountId, conversationId, selection,
                                     sortOrder);
-                    final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
+                    final Cursor c = databaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, DirectMessages.CONTENT_URI);
                     return c;
                 }
@@ -737,7 +738,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final String screenName = segments.get(3);
                     final Pair<SQLSelectQuery, String[]> query = ConversationQueryBuilder.byScreenName(
                             projection, accountKey, screenName, selection, sortOrder);
-                    final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
+                    final Cursor c = databaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, DirectMessages.CONTENT_URI);
                     return c;
                 }
@@ -745,7 +746,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final UserKey accountKey = UserKey.valueOf(uri.getLastPathSegment());
                     final Pair<SQLSelectQuery, String[]> query = CachedUsersQueryBuilder.withRelationship(projection,
                             selection, selectionArgs, sortOrder, accountKey);
-                    final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
+                    final Cursor c = databaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
                     return c;
                 }
@@ -753,12 +754,12 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     final UserKey accountKey = UserKey.valueOf(uri.getLastPathSegment());
                     final Pair<SQLSelectQuery, String[]> query = CachedUsersQueryBuilder.withScore(projection,
                             selection, selectionArgs, sortOrder, accountKey, 0);
-                    final Cursor c = mDatabaseWrapper.rawQuery(query.first.getSQL(), query.second);
+                    final Cursor c = databaseWrapper.rawQuery(query.first.getSQL(), query.second);
                     setNotificationUri(c, CachedUsers.CONTENT_URI);
                     return c;
                 }
                 case VIRTUAL_TABLE_ID_DRAFTS_UNSENT: {
-                    final AsyncTwitterWrapper twitter = mTwitterWrapper;
+                    final AsyncTwitterWrapper twitter = twitterWrapper;
                     final RawItemArray sendingIds = new RawItemArray(twitter.getSendingDraftIds());
                     final Expression where;
                     if (selection != null) {
@@ -767,7 +768,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     } else {
                         where = Expression.and(Expression.notIn(new Column(Drafts._ID), sendingIds));
                     }
-                    final Cursor c = mDatabaseWrapper.query(Drafts.TABLE_NAME, projection,
+                    final Cursor c = databaseWrapper.query(Drafts.TABLE_NAME, projection,
                             where.getSQL(), selectionArgs, null, null, sortOrder);
                     setNotificationUri(c, Utils.getNotificationUri(tableId, uri));
                     return c;
@@ -788,11 +789,11 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     if (projection != null || selection != null || sortOrder != null) {
                         throw new IllegalArgumentException();
                     }
-                    return mDatabaseWrapper.rawQuery(uri.getLastPathSegment(), selectionArgs);
+                    return databaseWrapper.rawQuery(uri.getLastPathSegment(), selectionArgs);
                 }
             }
             if (table == null) return null;
-            final Cursor c = mDatabaseWrapper.query(table, projection, selection, selectionArgs,
+            final Cursor c = databaseWrapper.query(table, projection, selection, selectionArgs,
                     null, null, sortOrder);
             setNotificationUri(c, Utils.getNotificationUri(tableId, uri));
             return c;
@@ -820,7 +821,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 new Column(SearchHistory.QUERY, Suggestions.Search.VALUE).getSQL(),
         };
         final Expression historySelection = Expression.likeRaw(new Column(SearchHistory.QUERY), "?||'%'", "^");
-        @SuppressLint("Recycle") final Cursor historyCursor = mDatabaseWrapper.query(true,
+        @SuppressLint("Recycle") final Cursor historyCursor = databaseWrapper.query(true,
                 SearchHistory.TABLE_NAME, historyProjection, historySelection.getSQL(),
                 new String[]{queryEscaped}, null, null, SearchHistory.DEFAULT_SORT_ORDER,
                 TextUtils.isEmpty(query) ? "3" : "2");
@@ -837,7 +838,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             };
             final Expression savedSearchesWhere = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY);
             final String[] whereArgs = {accountKey.toString()};
-            @SuppressLint("Recycle") final Cursor savedSearchesCursor = mDatabaseWrapper.query(true,
+            @SuppressLint("Recycle") final Cursor savedSearchesCursor = databaseWrapper.query(true,
                     SavedSearches.TABLE_NAME, savedSearchesProjection, savedSearchesWhere.getSQL(),
                     whereArgs, null, null, SavedSearches.DEFAULT_SORT_ORDER, null);
             cursors = new Cursor[2];
@@ -854,7 +855,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     new Column(CachedUsers.SCREEN_NAME, Suggestions.Search.VALUE).getSQL(),
             };
             String queryTrimmed = queryEscaped.startsWith("@") ? queryEscaped.substring(1) : queryEscaped;
-            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
+            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, userColorNameManager);
             final Expression usersSelection = Expression.or(
                     Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
@@ -869,9 +870,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
             final Pair<SQLSelectQuery, String[]> usersQuery = CachedUsersQueryBuilder.withScore(usersProjection,
                     usersSelection.getSQL(), selectionArgs, orderBy.getSQL(), accountKey, 0);
-            @SuppressLint("Recycle") final Cursor usersCursor = mDatabaseWrapper.rawQuery(usersQuery.first.getSQL(), usersQuery.second);
+            @SuppressLint("Recycle") final Cursor usersCursor = databaseWrapper.rawQuery(usersQuery.first.getSQL(), usersQuery.second);
             final Expression exactUserSelection = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?", "^"));
-            final Cursor exactUserCursor = mDatabaseWrapper.query(CachedUsers.TABLE_NAME,
+            final Cursor exactUserCursor = databaseWrapper.query(CachedUsers.TABLE_NAME,
                     new String[]{SQLFunctions.COUNT()}, exactUserSelection.getSQL(),
                     new String[]{queryTrimmed}, null, null, null, "1");
             final boolean hasName = exactUserCursor.moveToPosition(0) && exactUserCursor.getInt(0) > 0;
@@ -900,7 +901,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         if (query == null || type == null) return null;
         final String queryEscaped = query.replace("_", "^_");
         if (Suggestions.AutoComplete.TYPE_USERS.equals(type)) {
-            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, mUserColorNameManager);
+            final String[] nicknameKeys = Utils.getMatchedNicknameKeys(query, userColorNameManager);
             final Expression where = Expression.or(Expression.likeRaw(new Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
                     Expression.likeRaw(new Column(CachedUsers.NAME), "?||'%'", "^"),
                     Expression.inArgs(new Column(CachedUsers.USER_KEY), nicknameKeys.length));
@@ -967,7 +968,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 case TABLE_ID_DIRECT_MESSAGES_CONVERSATIONS_ENTRIES:
                     return 0;
             }
-            result = mDatabaseWrapper.update(table, values, selection, selectionArgs);
+            result = databaseWrapper.update(table, values, selection, selectionArgs);
         }
         if (result > 0) {
             onDatabaseUpdated(tableId, uri);
@@ -976,7 +977,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private boolean checkPermission(final String... permissions) {
-        return mPermissionsManager.checkCallingPermission(permissions);
+        return permissionsManager.checkCallingPermission(permissions);
     }
 
     private void checkReadPermission(final int id, final String table, final String[] projection) {
@@ -1019,7 +1020,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             default: {
-                if (!mPermissionsManager.checkSignature(Binder.getCallingUid())) {
+                if (!permissionsManager.checkSignature(Binder.getCallingUid())) {
                     throw new SecurityException("Internal database " + id + " is not allowed for third-party applications");
                 }
             }
@@ -1057,7 +1058,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 break;
             }
             default: {
-                if (!mPermissionsManager.checkSignature(Binder.getCallingUid())) {
+                if (!permissionsManager.checkSignature(Binder.getCallingUid())) {
                     throw new SecurityException("Internal database is not allowed for third-party applications");
                 }
             }
@@ -1065,30 +1066,18 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void clearNotification() {
-        mNotificationManager.cancelAll();
+        notificationManager.cancelAll();
     }
 
     private void clearNotification(final int notificationType, final UserKey accountId) {
-        mNotificationManager.cancelById(Utils.getNotificationId(notificationType, accountId));
-    }
-
-    private Cursor getCachedImageCursor(final String url) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOGTAG, String.format("getCachedImageCursor(%s)", url));
-        }
-        final MatrixCursor c = new MatrixCursor(CachedImages.MATRIX_COLUMNS);
-        final File file = mImagePreloader.getCachedImageFile(url);
-        if (url != null && file != null) {
-            c.addRow(new String[]{url, file.getPath()});
-        }
-        return c;
+        notificationManager.cancelById(Utils.getNotificationId(notificationType, accountId));
     }
 
     private ParcelFileDescriptor getCachedImageFd(final String url) throws FileNotFoundException {
         if (BuildConfig.DEBUG) {
             Log.d(LOGTAG, String.format("getCachedImageFd(%s)", url));
         }
-        final File file = mImagePreloader.getCachedImageFile(url);
+        final File file = mediaLoader.getDiskCache().get(url);
         if (file == null) return null;
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
     }
@@ -1113,7 +1102,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private Cursor getDNSCursor(final String host) {
         final MatrixCursor c = new MatrixCursor(DNS.MATRIX_COLUMNS);
         try {
-            final List<InetAddress> addresses = mDns.lookup(host);
+            final List<InetAddress> addresses = dns.lookup(host);
             for (InetAddress address : addresses) {
                 c.addRow(new String[]{host, address.getHostAddress()});
             }
@@ -1150,7 +1139,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private boolean isNotificationAudible() {
-        return !mActivityTracker.isHomeActivityStarted();
+        return !activityTracker.isHomeActivityStarted();
     }
 
     private void notifyContentObserver(@NonNull final Uri uri) {
@@ -1169,7 +1158,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                mBus.post(new UnreadCountUpdatedEvent(position));
+                bus.post(new UnreadCountUpdatedEvent(position));
             }
         });
         notifyContentObserver(UnreadCounts.CONTENT_URI);
@@ -1188,7 +1177,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Context context = getContext();
         if (uri == null || valuesArray == null || valuesArray.length == 0 || context == null)
             return;
-        preloadMedia(valuesArray);
         switch (tableId) {
             case TABLE_ID_STATUSES: {
                 mBackgroundExecutor.execute(new Runnable() {
@@ -1199,7 +1187,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isHomeTimelineNotificationEnabled()) continue;
                             final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountKey());
-                            showTimelineNotification(mPreferences, pref, positionTag);
+                            showTimelineNotification(preferences, pref, positionTag);
                         }
                         notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE);
                     }
@@ -1212,7 +1200,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     public void run() {
                         final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                                 DataStoreUtils.getAccountKeys(context));
-                        final boolean combined = mPreferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
+                        final boolean combined = preferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isInteractionsNotificationEnabled()) continue;
                             showInteractionsNotification(pref, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
@@ -1228,7 +1216,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         DataStoreUtils.getAccountKeys(context));
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isDirectMessagesNotificationEnabled()) continue;
-                    final StringLongPair[] pairs = mReadStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES);
+                    final StringLongPair[] pairs = readStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES);
                     showMessagesNotification(pref, pairs, valuesArray);
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES);
@@ -1241,10 +1229,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private long getPositionTag(String tag, UserKey accountKey) {
-        final long position = mReadStateManager.getPosition(Utils.getReadPositionTagWithAccount(tag,
+        final long position = readStateManager.getPosition(Utils.getReadPositionTagWithAccount(tag,
                 accountKey));
         if (position != -1) return position;
-        return mReadStateManager.getPosition(tag);
+        return readStateManager.getPosition(tag);
     }
 
     private void showTimelineNotification(SharedPreferences preferences, AccountPreferences pref, long position) {
@@ -1252,7 +1240,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Context context = getContext();
         if (context == null) return;
         final Resources resources = context.getResources();
-        final NotificationManagerWrapper nm = mNotificationManager;
+        final NotificationManagerWrapper nm = notificationManager;
         final Expression selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.greaterThan(Statuses.POSITION_KEY, position));
         final String filteredSelection = DataStoreFunctionsKt.buildStatusFilterWhereClause(preferences,
@@ -1260,9 +1248,9 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String[] selectionArgs = {accountKey.toString()};
         final String[] userProjection = {Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME};
         final String[] statusProjection = {Statuses.POSITION_KEY};
-        final Cursor statusCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
+        final Cursor statusCursor = databaseWrapper.query(Statuses.TABLE_NAME, statusProjection,
                 filteredSelection, selectionArgs, null, null, Statuses.DEFAULT_SORT_ORDER);
-        final Cursor userCursor = mDatabaseWrapper.query(Statuses.TABLE_NAME, userProjection,
+        final Cursor userCursor = databaseWrapper.query(Statuses.TABLE_NAME, userProjection,
                 filteredSelection, selectionArgs, Statuses.USER_KEY, null, Statuses.DEFAULT_SORT_ORDER);
         //noinspection TryFinallyCanBeTryWithResources
         try {
@@ -1276,16 +1264,16 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     statusesCount, statusesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = mUserColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+            final String displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
                     userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
-                    mNameFirst);
+                    nameFirst);
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName);
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1);
-                final String othersName = mUserColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+                final String othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
                         userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
-                        mNameFirst);
+                        nameFirst);
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName);
             } else {
                 notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1);
@@ -1321,7 +1309,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     private void showInteractionsNotification(AccountPreferences pref, long position, boolean combined) {
         final Context context = getContext();
         if (context == null) return;
-        final SQLiteDatabase db = mDatabaseWrapper.getSQLiteDatabase();
+        final SQLiteDatabase db = databaseWrapper.getSQLiteDatabase();
         final UserKey accountKey = pref.getAccountKey();
         final String where = Expression.and(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
@@ -1341,7 +1329,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
 
             final Resources resources = context.getResources();
-            final String accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, mNameFirst);
+            final String accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, nameFirst);
             builder.setContentText(accountName);
             final InboxStyle style = new InboxStyle();
             builder.setStyle(style);
@@ -1380,8 +1368,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final ParcelableUser[] sources = ParcelableActivityUtils.INSTANCE.getAfterFilteredSources(activity);
                 if (ArrayUtils.isEmpty(sources)) continue;
                 final ActivityTitleSummaryMessage message = ActivityTitleSummaryMessage.get(context,
-                        mUserColorNameManager, activity, sources,
-                        0, mUseStarForLikes, mNameFirst);
+                        userColorNameManager, activity, sources,
+                        0, useStarForLikes, nameFirst);
                 if (message != null) {
                     final CharSequence summary = message.getSummary();
                     if (TextUtils.isEmpty(summary)) {
@@ -1419,7 +1407,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
         final int notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE,
                 accountKey);
-        mNotificationManager.notify("interactions", notificationId, builder.build());
+        notificationManager.notify("interactions", notificationId, builder.build());
 
         Utils.sendPebbleNotification(context, context.getResources().getString(R.string.interactions), pebbleNotificationStringBuilder.toString());
 
@@ -1472,7 +1460,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final Context context = getContext();
         assert context != null;
         final UserKey accountKey = pref.getAccountKey();
-        final long prevOldestId = mReadStateManager.getPosition(TAG_OLDEST_MESSAGES,
+        final long prevOldestId = readStateManager.getPosition(TAG_OLDEST_MESSAGES,
                 String.valueOf(accountKey));
         long oldestId = -1;
         for (final ContentValues contentValues : valuesArray) {
@@ -1480,10 +1468,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             oldestId = oldestId < 0 ? messageId : Math.min(oldestId, messageId);
             if (messageId <= prevOldestId) return;
         }
-        mReadStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountKey), oldestId,
+        readStateManager.setPosition(TAG_OLDEST_MESSAGES, String.valueOf(accountKey), oldestId,
                 false);
         final Resources resources = context.getResources();
-        final NotificationManagerWrapper nm = mNotificationManager;
+        final NotificationManagerWrapper nm = notificationManager;
         final ArrayList<Expression> orExpressions = new ArrayList<>();
         final String prefix = accountKey + "-";
         final int prefixLength = prefix.length();
@@ -1519,10 +1507,10 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String[] messageProjection = {DirectMessages.MESSAGE_ID, DirectMessages.SENDER_ID,
                 DirectMessages.SENDER_NAME, DirectMessages.SENDER_SCREEN_NAME, DirectMessages.TEXT_UNESCAPED,
                 DirectMessages.MESSAGE_TIMESTAMP};
-        final Cursor messageCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
+        final Cursor messageCursor = databaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
                 messageProjection, filteredSelection, selectionArgs, null, null,
                 DirectMessages.DEFAULT_SORT_ORDER);
-        final Cursor userCursor = mDatabaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
+        final Cursor userCursor = databaseWrapper.query(DirectMessages.Inbox.TABLE_NAME,
                 userProjection, filteredSelection, selectionArgs, DirectMessages.SENDER_ID, null,
                 DirectMessages.DEFAULT_SORT_ORDER);
 
@@ -1544,8 +1532,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     messagesCount, messagesCount);
             final String notificationContent;
             userCursor.moveToFirst();
-            final String displayName = mUserColorNameManager.getUserNickname(userCursor.getString(idxUserId),
-                    mNameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
+            final String displayName = userColorNameManager.getUserNickname(userCursor.getString(idxUserId),
+                    nameFirst ? userCursor.getString(idxUserName) : userCursor.getString(idxUserScreenName));
             if (usersCount == 1) {
                 if (messagesCount == 1) {
                     notificationContent = context.getString(R.string.notification_direct_message, displayName);
@@ -1568,15 +1556,15 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 }
                 if (i < 5) {
                     final SpannableStringBuilder sb = new SpannableStringBuilder();
-                    sb.append(mUserColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
-                            mNameFirst ? messageCursor.getString(messageIndices.sender_name) :
+                    sb.append(userColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
+                            nameFirst ? messageCursor.getString(messageIndices.sender_name) :
                                     messageCursor.getString(messageIndices.sender_screen_name)));
                     sb.setSpan(new StyleSpan(Typeface.BOLD), 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     sb.append(' ');
                     sb.append(messageCursor.getString(messageIndices.text_unescaped));
                     style.addLine(sb);
-                    pebbleNotificationBuilder.append(mUserColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
-                            mNameFirst ? messageCursor.getString(messageIndices.sender_name) :
+                    pebbleNotificationBuilder.append(userColorNameManager.getUserNickname(messageCursor.getString(idxUserId),
+                            nameFirst ? messageCursor.getString(messageIndices.sender_name) :
                                     messageCursor.getString(messageIndices.sender_screen_name)));
                     pebbleNotificationBuilder.append(": ");
                     pebbleNotificationBuilder.append(messageCursor.getString(messageIndices.text_unescaped));
@@ -1586,7 +1574,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                 final long messageId = messageCursor.getLong(messageIndices.id);
                 idsMap.put(userId, Math.max(idsMap.get(userId, -1L), messageId));
             }
-            if (mNameFirst) {
+            if (nameFirst) {
                 style.setSummaryText(accountName);
             } else {
                 style.setSummaryText("@" + accountScreenName);
@@ -1627,33 +1615,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         }
     }
 
-    private void preloadMedia(final ContentValues... values) {
-        if (values == null) return;
-        final boolean preloadProfileImages = mPreferences.getBoolean(KEY_PRELOAD_PROFILE_IMAGES, false);
-        final boolean preloadPreviewMedia = mPreferences.getBoolean(KEY_PRELOAD_PREVIEW_IMAGES, false);
-        for (final ContentValues v : values) {
-            if (preloadProfileImages) {
-                mImagePreloader.preloadImage(v.getAsString(Statuses.USER_PROFILE_IMAGE_URL));
-                mImagePreloader.preloadImage(v.getAsString(DirectMessages.SENDER_PROFILE_IMAGE_URL));
-                mImagePreloader.preloadImage(v.getAsString(DirectMessages.RECIPIENT_PROFILE_IMAGE_URL));
-            }
-            if (preloadPreviewMedia) {
-                preloadSpans(JsonSerializer.parseList(v.getAsString(Statuses.SPANS), SpanItem.class));
-                preloadSpans(JsonSerializer.parseList(v.getAsString(Statuses.QUOTED_SPANS), SpanItem.class));
-            }
-        }
-    }
-
-    private void preloadSpans(List<SpanItem> spans) {
-        if (spans == null) return;
-        for (SpanItem span : spans) {
-            if (span.link == null) continue;
-            if (PreviewMediaExtractor.isSupported(span.link)) {
-                mImagePreloader.preloadImage(span.link);
-            }
-        }
-    }
-
     private void setNotificationUri(final Cursor c, final Uri uri) {
         final ContentResolver cr = getContentResolver();
         if (cr == null || c == null || uri == null) return;
@@ -1661,8 +1622,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private void updatePreferences() {
-        mNameFirst = mPreferences.getBoolean(KEY_NAME_FIRST);
-        mUseStarForLikes = mPreferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
+        nameFirst = preferences.getBoolean(KEY_NAME_FIRST);
+        useStarForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK);
     }
 
 }

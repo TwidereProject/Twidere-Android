@@ -36,7 +36,7 @@
         android:summary="@string/custom_host_mapping_summary"
         android:title="@string/custom_host_mapping"/>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_proxy"
         android:title="@string/proxy">
         <SwitchPreferenceCompat
@@ -76,9 +76,9 @@
             android:key="proxy_password"
             android:singleLine="true"
             android:title="@string/proxy_password"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_tumbor"
         android:title="@string/thumbor_integration">
 
@@ -98,6 +98,6 @@
             android:inputType="textVisiblePassword"
             android:key="thumbor_security_key"
             android:title="@string/security_key"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

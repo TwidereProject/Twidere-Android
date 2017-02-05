@@ -27,6 +27,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
 
 abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -52,8 +53,10 @@ abstract class AbsUserMuteBlockDialogFragment : BaseDialogFragment(), DialogInte
         builder.setNegativeButton(android.R.string.cancel, null)
         val dialog = builder.create()
         dialog.setOnShowListener {
-            val confirmMessageView = dialog.findViewById(R.id.confirmMessage) as TextView
-            val filterEverywhereHelp = dialog.findViewById(R.id.filterEverywhereHelp)!!
+            it as AlertDialog
+            it.applyTheme()
+            val confirmMessageView = it.findViewById(R.id.confirmMessage) as TextView
+            val filterEverywhereHelp = it.findViewById(R.id.filterEverywhereHelp)!!
             filterEverywhereHelp.setOnClickListener {
                 MessageDialogFragment.show(childFragmentManager, title = getString(R.string.filter_everywhere),
                         message = getString(R.string.filter_everywhere_description), tag = "filter_everywhere_help")

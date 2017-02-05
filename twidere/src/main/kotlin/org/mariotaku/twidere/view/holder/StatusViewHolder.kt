@@ -12,6 +12,7 @@ import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
@@ -85,14 +86,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
 
-        nameView.applyFontFamily(adapter.lightFont)
-        timeView.applyFontFamily(adapter.lightFont)
-        textView.applyFontFamily(adapter.lightFont)
-        mediaLabelTextView.applyFontFamily(adapter.lightFont)
-
-        quotedNameView.applyFontFamily(adapter.lightFont)
-        quotedTextView.applyFontFamily(adapter.lightFont)
-        quotedMediaLabelTextView.applyFontFamily(adapter.lightFont)
     }
 
 
@@ -102,14 +95,14 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         statusContentUpperSpace.visibility = View.VISIBLE
 
         profileImageView.setImageResource(R.drawable.ic_profile_image_twidere)
-        nameView.setName(Constants.TWIDERE_PREVIEW_NAME)
-        nameView.setScreenName("@" + Constants.TWIDERE_PREVIEW_SCREEN_NAME)
+        nameView.name = TWIDERE_PREVIEW_NAME
+        nameView.screenName = "@" + TWIDERE_PREVIEW_SCREEN_NAME
         nameView.updateText(adapter.bidiFormatter)
         if (adapter.linkHighlightingStyle == VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
-            textView.text = toPlainText(Constants.TWIDERE_PREVIEW_TEXT_HTML)
+            textView.text = toPlainText(TWIDERE_PREVIEW_TEXT_HTML)
         } else {
             val linkify = adapter.twidereLinkify
-            val text = HtmlSpanBuilder.fromHtml(Constants.TWIDERE_PREVIEW_TEXT_HTML)
+            val text = HtmlSpanBuilder.fromHtml(TWIDERE_PREVIEW_TEXT_HTML)
             linkify.applyAllLinks(text, null, -1, false, adapter.linkHighlightingStyle, true)
             textView.text = text
         }
@@ -202,9 +195,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedTextView.visibility = View.VISIBLE
 
                 val quoted_user_key = status.quoted_user_key!!
-                quotedNameView.setName(colorNameManager.getUserNickname(quoted_user_key,
-                        status.quoted_user_name))
-                quotedNameView.setScreenName("@${status.quoted_user_screen_name}")
+                quotedNameView.name = colorNameManager.getUserNickname(quoted_user_key,
+                        status.quoted_user_name)
+                quotedNameView.screenName = "@${status.quoted_user_screen_name}"
 
                 var quotedDisplayEnd = -1
                 if (status.extras.quoted_display_text_range != null) {
@@ -252,17 +245,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedMediaLabel.visibility = View.GONE
                 }
 
-                val quoteHint = if (!quoteContentAvailable) {
+                quotedTextView.text = if (!quoteContentAvailable) {
                     // Display 'not available' label
-                    context.getString(R.string.label_status_not_available)
+                    SpannableString.valueOf(context.getString(R.string.label_status_not_available)).apply {
+                        setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
+                                android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
+                                length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
                 } else {
                     // Display 'original status' label
                     context.getString(R.string.label_original_status)
-                }
-                quotedTextView.text = SpannableString.valueOf(quoteHint).apply {
-                    setSpan(ForegroundColorSpan(ThemeUtils.getColorFromAttribute(context,
-                            android.R.attr.textColorTertiary, textView.currentTextColor)), 0,
-                            length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
 
                 quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
@@ -294,8 +286,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             status.timestamp
         }
 
-        nameView.setName(colorNameManager.getUserNickname(status.user_key, status.user_name))
-        nameView.setScreenName("@${status.user_screen_name}")
+        nameView.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
+        nameView.screenName = "@${status.user_screen_name}"
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
@@ -501,8 +493,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         //        profileImageView.setStyle(adapter.getProfileImageStyle());
 
         val nameFirst = adapter.nameFirst
-        nameView.setNameFirst(nameFirst)
-        quotedNameView.setNameFirst(nameFirst)
+        nameView.nameFirst = nameFirst
+        quotedNameView.nameFirst = nameFirst
 
         val favIcon: Int
         val favStyle: Int
@@ -525,6 +517,15 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         timeView.showAbsoluteTime = adapter.showAbsoluteTime
 
         favoriteIcon.activatedColor = favColor
+
+        nameView.applyFontFamily(adapter.lightFont)
+        timeView.applyFontFamily(adapter.lightFont)
+        textView.applyFontFamily(adapter.lightFont)
+        mediaLabelTextView.applyFontFamily(adapter.lightFont)
+
+        quotedNameView.applyFontFamily(adapter.lightFont)
+        quotedTextView.applyFontFamily(adapter.lightFont)
+        quotedMediaLabelTextView.applyFontFamily(adapter.lightFont)
     }
 
     override fun playLikeAnimation(listener: LikeAnimationDrawable.OnLikedListener) {

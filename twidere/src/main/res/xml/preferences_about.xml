@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/title_about">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_about"
         android:title="@string/title_about">
         <org.mariotaku.twidere.preference.AppVersionPreference/>
@@ -23,8 +23,8 @@
                 android:action="android.intent.action.VIEW"
                 android:data="twidere://user?user_key=57610574@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
-    </PreferenceCategory>
-    <PreferenceCategory
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_translate"
         android:title="@string/preference_title_translate">
         <Preference android:title="@string/preference_title_translate">
@@ -39,8 +39,8 @@
                 android:action="android.intent.action.VIEW"
                 android:data="twidere://user_list_members?list_id=99024901&amp;user_key=583328497@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/special_thanks_to">
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory android:title="@string/special_thanks_to">
         <Preference
             android:summary="Icon designer for 0.0.6 version"
             android:title="Rieya">
@@ -104,8 +104,8 @@
                 android:action="android.intent.action.VIEW"
                 android:data="twidere://user?user_key=7758552@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/sponsored_by">
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory android:title="@string/sponsored_by">
         <Preference
             android:icon="@mipmap/ic_launcher_hondajojo"
             android:title="@string/kuma_union">
@@ -113,6 +113,6 @@
                 android:action="android.intent.action.VIEW"
                 android:data="twidere://user?user_key=514378421@twitter.com&amp;account_host=twitter.com&amp;finish_only=true"/>
         </Preference>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

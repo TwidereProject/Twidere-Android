@@ -29,6 +29,7 @@
   <string name="action_retry">Cuba semula</string>
   <!-- [verb] Action for performing retweet -->
   <!-- [verb] Save settings/files etc. -->
+  <string name="action_select_user">Pilih pengguna</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Hantar</string>
   <string name="action_sending_direct_message">menghantar mesej langsung</string>

@@ -29,7 +29,7 @@ interface IExtendedActivity<out A : FragmentActivity> {
 
     fun executeAfterFragmentResumed(action: (A) -> Unit)
 
-    class ActionHelper<out A: FragmentActivity>(private val activity: A) {
+    class ActionHelper<out A : FragmentActivity>(private val activity: A) {
 
         private var fragmentResumed: Boolean = false
         private val actionQueue = LinkedList<(A) -> Unit>()

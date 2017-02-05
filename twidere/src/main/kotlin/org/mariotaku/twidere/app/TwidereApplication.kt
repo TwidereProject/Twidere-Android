@@ -52,6 +52,7 @@ import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
@@ -78,6 +79,10 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var autoRefreshController: AutoRefreshController
     @Inject
     lateinit internal var syncController: SyncController
+    @Inject
+    lateinit internal var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit internal var mediaLoader: MediaLoaderWrapper
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -112,6 +117,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
 
         autoRefreshController.appStarted()
         syncController.appStarted()
+        extraFeaturesService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
 
@@ -212,6 +218,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     }
 
     override fun onLowMemory() {
+        mediaLoader.clearMemoryCache()
         super.onLowMemory()
     }
 
@@ -237,6 +244,9 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
                 (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()
             }
+            KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
+                mediaLoader.reloadOptions(preferences)
+            }
         }
     }
 
@@ -248,7 +258,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     private fun reloadDnsSettings() {
         dns.reloadDnsSettings()
     }
-
 
     private fun initializeAsyncTask() {
         // AsyncTask class needs to be loaded in UI thread.

@@ -169,7 +169,7 @@
                 android:color="?android:textColorSecondary"
                 android:src="@drawable/ic_info_search"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/usersSearchEmptyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

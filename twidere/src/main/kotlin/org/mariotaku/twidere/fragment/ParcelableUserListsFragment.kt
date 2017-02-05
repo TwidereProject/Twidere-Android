@@ -44,7 +44,7 @@ import org.mariotaku.twidere.view.holder.UserListViewHolder
 
 abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<ParcelableUserListsAdapter>(), LoaderCallbacks<List<ParcelableUserList>>, UserListClickListener, KeyboardShortcutCallback {
 
-    private var navigationHelper: RecyclerViewNavigationHelper? = null
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
     var nextCursor: Long = 0
         private set
     var prevCursor: Long = 0
@@ -115,15 +115,15 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         get() = adapter.getData()
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
+        return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+        return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+        return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

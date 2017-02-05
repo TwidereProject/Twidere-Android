@@ -23,52 +23,71 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
+import org.mariotaku.twidere.util.view.display
+import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 class SimpleParcelableUserListsAdapter(
         context: Context
-) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_two_line) {
+) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list) {
+
+    override val itemCounts: ItemCounts = ItemCounts(2)
 
     override fun getItemId(position: Int): Long {
-        return (if (getItem(position) != null) getItem(position).hashCode() else -1).toLong()
+        when (itemCounts.getItemCountIndex(position)) {
+            0 -> {
+                return getItem(position - itemCounts.getItemStartPosition(0)).hashCode().toLong()
+            }
+            1 -> {
+                return Integer.MAX_VALUE + 1L
+            }
+        }
+        throw UnsupportedOperationException()
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = super.getView(position, convertView, parent)
-        val tag = view.tag
-        val holder: TwoLineWithIconViewHolder
-        if (tag is TwoLineWithIconViewHolder) {
-            holder = tag
-        } else {
-            holder = TwoLineWithIconViewHolder(view)
-            view.tag = holder
+        when (getItemViewType(position)) {
+            0 -> {
+                val view = super.getView(position, convertView, parent)
+                val holder = view.tag as? SimpleUserListViewHolder ?: run {
+                    val h = SimpleUserListViewHolder(view)
+                    view.tag = h
+                    return@run h
+                }
+                val userList = getItem(position)
+                holder.display(userList, mediaLoader, userColorNameManager, profileImageEnabled)
+                return view
+            }
+            1 -> {
+                val view = createViewFromResource(position, convertView, parent, R.layout.list_item_load_indicator)
+                return view
+            }
         }
-
-        // Clear images in order to prevent images in recycled view shown.
-        holder.icon.setImageDrawable(null)
-
-        val userList = getItem(position)
-        val display_name = userColorNameManager.getDisplayName(userList, nameFirst)
-        holder.text1.text = userList.name
-        holder.text2.text = context.getString(R.string.created_by, display_name)
-        holder.icon.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
-        if (profileImageEnabled) {
-            mediaLoader.displayProfileImage(holder.icon, userList.user_profile_image_url)
-        } else {
-            mediaLoader.cancelDisplayTask(holder.icon)
-        }
-        return view
+        throw UnsupportedOperationException()
     }
 
-    fun setData(data: List<ParcelableUserList>?, clearOld: Boolean) {
-        if (clearOld) {
-            clear()
-        }
+    override fun getItemViewType(position: Int): Int {
+        return itemCounts.getItemCountIndex(position)
+    }
+
+    override fun getViewTypeCount(): Int {
+        return itemCounts.size
+    }
+
+    override fun getCount(): Int {
+        itemCounts[0] = super.getCount()
+        itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        return itemCounts.itemCount
+    }
+
+    fun setData(data: List<ParcelableUserList>?) {
+        clear()
         if (data == null) return
         for (user in data) {
             //TODO improve compare
-            if (clearOld || findItemPosition(user.hashCode().toLong()) < 0) {
+            if (findItemPosition(user.hashCode().toLong()) < 0) {
                 add(user)
             }
         }

@@ -10,6 +10,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 /**
  * Created by mariotaku on 16/3/11.
  */
+@SuppressWarnings("RedundantThrows")
 public interface BlocksResources {
 
     @POST("/blocks/create.json")

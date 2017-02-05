@@ -57,6 +57,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spara</string>
   <string name="action_saving_search">Sparar sök</string>
+  <string name="action_select_user">Välj användare</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Skicka</string>
   <string name="action_sending_direct_message">sending direct message</string>
@@ -155,7 +156,6 @@
   <string name="block_user_confirm_message">Blockera <xliff:g example="Username" id="name">%s</xliff:g>? Den här användaren kommer inte att kunna följa dig, omnämna dig eller att kunna skicka direktmeddelanden till dig.</string>
   <string name="both">Both</string>
   <string name="clear_cache">Rensa cache</string>
-  <string name="clear_cache_summary">Rensa lagrad profilbildscache.</string>
   <string name="clear_databases">Rensa databaser</string>
   <string name="clear_databases_summary">Rensa alla tweets, profiler, meddelanden. Din kontouppgifter kommer inte att försvinna.</string>
   <string name="clear_search_history">Töm sökhistorik</string>

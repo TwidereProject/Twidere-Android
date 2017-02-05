@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +34,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +45,7 @@ import android.widget.TextView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.adapter.ArrayAdapter;
+import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
 import org.mariotaku.twidere.fragment.iface.ISupportDialogFragmentCallback;
 import org.mariotaku.twidere.util.ThemeUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
@@ -117,8 +118,15 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
             builder.setPositiveButton(android.R.string.ok, this);
         }
         final AlertDialog dialog = builder.create();
-        final ListView listView = dialog.getListView();
-        listView.setOnItemClickListener(this);
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                final AlertDialog alertDialog = (AlertDialog) dialog;
+                AlertDialogExtensionsKt.applyTheme(alertDialog);
+                final ListView listView = alertDialog.getListView();
+                listView.setOnItemClickListener(FileSelectorDialogFragment.this);
+            }
+        });
         return dialog;
     }
 

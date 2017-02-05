@@ -35,6 +35,7 @@ import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 
+@SuppressWarnings("RedundantThrows")
 public interface ListResources {
     @POST("/lists/members/create.json")
     UserList addUserListMember(@Query("list_id") String listId, @Query("user_id") String userId) throws MicroBlogException;
@@ -148,11 +149,11 @@ public interface ListResources {
 
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptionsByScreenName(@Query("screen_name") String listOwnerScreenName, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptionsByScreenName(@Query("screen_name") String listOwnerScreenName, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/subscriptions.json")
-    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") String userId, long cursor)
+    PageableResponseList<UserList> getUserListSubscriptions(@Query("user_id") String userId, @Query Paging paging)
             throws MicroBlogException;
 
     @GET("/lists/show.json")

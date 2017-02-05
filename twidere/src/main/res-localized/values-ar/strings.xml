@@ -62,6 +62,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">حفظ</string>
   <string name="action_saving_search">يحفظ البحث</string>
+  <string name="action_select_user">إختر المستخدم</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">إرسال</string>
   <string name="action_sending_direct_message">جارِ إرسال رسالة مباشرة</string>
@@ -171,7 +172,6 @@
   <string name="bug_reports">تقارير الأخطاء</string>
   <string name="cards">بطاقات</string>
   <string name="clear_cache">حذف الكاش</string>
-  <string name="clear_cache_summary">إزالة صور الملفات الشخصية المخزنة مؤقتاً في الذاكرة.</string>
   <string name="clear_databases">حذف قاعدة البيانات</string>
   <string name="clear_databases_summary">إزالة جميع التغريدات والحسابات والرسائل، لن تفقد بيانات حسابك.</string>
   <string name="clear_search_history">محو سجل البحث</string>
@@ -418,6 +418,8 @@
   <string name="preference_title_accounts">الحسابات</string>
   <string name="preference_title_advanced">متقدم</string>
   <string name="preference_title_database_item_limit">حد حجم قاعدة البيانات</string>
+  <string name="preference_title_portrait">الوضع المعتدل</string>
+  <string name="preference_title_landscape">الوضع المائل</string>
   <string name="preference_title_storage">المساحة</string>
   <string name="preference_title_translate">ترجم</string>
   <string name="preload_wifi_only">التحميل المسبق عند إستعمال الواي فاي</string>
@@ -596,6 +598,7 @@
   <string name="title_subscription_url">الموقع</string>
   <string name="title_user">مستخدم</string>
   <string name="title_user_colors">ألوان المستخدم</string>
+  <string name="title_user_list_memberships">ينتمي إلى</string>
   <string name="title_users_favorited_this">المستخدمون الذين فضلوا التغريدة</string>
   <string name="title_users_liked_this">اعجب المستخدمون</string>
   <string name="title_users_retweeted_this">المستخدمين الذين قاموا بإعادة التغريد</string>

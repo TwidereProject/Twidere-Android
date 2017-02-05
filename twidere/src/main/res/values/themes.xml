@@ -39,7 +39,8 @@
     <style name="Theme.Twidere.Viewer" parent="Theme.Twidere.Dark">
 
         <!-- Window attributes -->
-        <item name="android:windowBackground">@color/background_color_window_viewer</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
 
         <item name="windowActionBarOverlay">true</item>
         <item name="actionBarStyle">@style/Widget.Twidere.Viewer.ActionBar</item>

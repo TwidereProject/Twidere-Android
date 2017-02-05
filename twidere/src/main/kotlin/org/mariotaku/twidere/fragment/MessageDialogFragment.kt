@@ -19,14 +19,15 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
+import android.support.v7.app.AlertDialog
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_MESSAGE
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TITLE
+import org.mariotaku.twidere.extension.applyTheme
 
 /**
  * Created by mariotaku on 14-6-24.
@@ -40,7 +41,12 @@ class MessageDialogFragment : BaseDialogFragment() {
         builder.setTitle(args.getString(EXTRA_TITLE))
         builder.setMessage(args.getString(EXTRA_MESSAGE))
         builder.setPositiveButton(android.R.string.ok, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     companion object {

@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<TextView
+<org.mariotaku.twidere.view.FixedTextView
     android:id="@android:id/text1"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"

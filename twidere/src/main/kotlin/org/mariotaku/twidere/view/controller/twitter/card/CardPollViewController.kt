@@ -147,12 +147,12 @@ class CardPollViewController : ContainerView.ViewController() {
                         cardData.putString("selected_choice", (i + 1).toString())
                         val task = object : AbstractTask<CardDataMap, ParcelableCardEntity, CardPollViewController>() {
 
-                            public override fun afterExecute(handler: CardPollViewController?, result: ParcelableCardEntity?) {
+                            override fun afterExecute(handler: CardPollViewController?, result: ParcelableCardEntity?) {
                                 result ?: return
                                 handler?.displayAndReloadPoll(result, status)
                             }
 
-                            public override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {
+                            override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {
                                 val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                                         card.account_key, true) ?: return null
                                 val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)

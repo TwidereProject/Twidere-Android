@@ -67,6 +67,7 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.Constants.*
@@ -76,6 +77,7 @@ import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -139,6 +141,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
+    override val controlBarHeight: Int
+        get() {
+            return mainTabs.height - mainTabs.stripHeight
+        }
+
     fun closeAccountsDrawer() {
         if (homeMenu == null) return
         homeMenu.closeDrawers()
@@ -151,11 +158,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         get() {
             val currentItem = mainPager.currentItem
             if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(mainPager, currentItem) as Fragment
+            return pagerAdapter.instantiateItem(mainPager, currentItem)
         }
 
     override fun triggerRefresh(position: Int): Boolean {
-        val f = pagerAdapter.instantiateItem(mainPager, position) as Fragment
+        val f = pagerAdapter.instantiateItem(mainPager, position)
         if (f.activity == null || f.isDetached) return false
         if (f !is RefreshScrollTopInterface) return false
         return f.triggerRefresh()
@@ -175,11 +182,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    override fun setControlBarVisibleAnimate(visible: Boolean) {
-        controlBarShowHideHelper.setControlBarVisibleAnimate(visible)
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener) {
+    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener?) {
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
     }
 
@@ -389,8 +392,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             }
         }
 
-        val initialTabPosition = handleIntent(intent, savedInstanceState == null,
-                savedInstanceState != null)
+        val initialTabPosition = handleIntent(intent, savedInstanceState == null)
         setTabPosition(initialTabPosition)
 
         if (Utils.isStreamingEnabled()) {
@@ -522,9 +524,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         get() = pagerAdapter.tabs
 
     override fun onNewIntent(intent: Intent) {
-        val tabPosition = handleIntent(intent, false, false)
+        val tabPosition = handleIntent(intent, false)
         if (tabPosition >= 0) {
-            mainPager.currentItem = TwidereMathUtils.clamp(tabPosition, pagerAdapter.count, 0)
+            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
         }
     }
 
@@ -555,33 +557,33 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         drawerToggle.onConfigurationChanged(newConfig)
     }
 
-    override fun getControlBarOffset(): Float {
-        if (mainTabs.columns > 1) {
-            val lp = actionsButton.layoutParams
-            val total: Float
-            if (lp is MarginLayoutParams) {
-                total = (lp.bottomMargin + actionsButton.height).toFloat()
-            } else {
-                total = actionsButton.height.toFloat()
+    override var controlBarOffset: Float
+        get() {
+            if (mainTabs.columns > 1) {
+                val lp = actionsButton.layoutParams
+                val total: Float
+                if (lp is MarginLayoutParams) {
+                    total = (lp.bottomMargin + actionsButton.height).toFloat()
+                } else {
+                    total = actionsButton.height.toFloat()
+                }
+                return 1 - actionsButton.translationY / total
             }
-            return 1 - actionsButton.translationY / total
+            val totalHeight = controlBarHeight.toFloat()
+            return 1 + toolbar.translationY / totalHeight
         }
-        val totalHeight = controlBarHeight.toFloat()
-        return 1 + toolbar.translationY / totalHeight
-    }
-
-    override fun setControlBarOffset(offset: Float) {
-        val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
-        toolbar.translationY = translationY.toFloat()
-        windowOverlay.translationY = translationY.toFloat()
-        val lp = actionsButton.layoutParams
-        if (lp is MarginLayoutParams) {
-            actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
-        } else {
-            actionsButton.translationY = actionsButton.height * (1 - offset)
+        set(offset) {
+            val translationY = if (mainTabs.columns > 1) 0 else (controlBarHeight * (offset - 1)).toInt()
+            toolbar.translationY = translationY.toFloat()
+            windowOverlay.translationY = translationY.toFloat()
+            val lp = actionsButton.layoutParams
+            if (lp is MarginLayoutParams) {
+                actionsButton.translationY = (lp.bottomMargin + actionsButton.height) * (1 - offset)
+            } else {
+                actionsButton.translationY = actionsButton.height * (1 - offset)
+            }
+            notifyControlBarOffsetChanged()
         }
-        notifyControlBarOffsetChanged()
-    }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
@@ -597,17 +599,13 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     override fun onDrawerStateChanged(newState: Int) {
         val fragment = leftDrawerFragment
-        if (fragment is AccountsDashboardFragment) {
+        if (newState == DrawerLayout.STATE_DRAGGING && fragment is AccountsDashboardFragment) {
             fragment.loadAccounts()
         }
     }
 
     override fun getDrawerToggleDelegate(): ActionBarDrawerToggle.Delegate? {
         return homeDrawerToggleDelegate
-    }
-
-    override fun getControlBarHeight(): Int {
-        return mainTabs.height - mainTabs.stripHeight
     }
 
     private val keyboardShortcutRecipient: Fragment?
@@ -653,8 +651,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return false
     }
 
-    private fun handleIntent(intent: Intent, handleExtraIntent: Boolean,
-                             restoreInstanceState: Boolean): Int {
+    private fun handleIntent(intent: Intent, handleExtraIntent: Boolean): Int {
         // use package's class loader to prevent BadParcelException
         intent.setExtrasClassLoader(classLoader)
         // reset intent
@@ -770,10 +767,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setTabPosition(initialTab: Int) {
         val rememberPosition = preferences.getBoolean(SharedPreferenceConstants.KEY_REMEMBER_POSITION, true)
         if (initialTab >= 0) {
-            mainPager.currentItem = TwidereMathUtils.clamp(initialTab, pagerAdapter.count, 0)
+            mainPager.currentItem = initialTab.coerceInOr(0 until pagerAdapter.count, 0)
         } else if (rememberPosition) {
             val position = preferences.getInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, 0)
-            mainPager.currentItem = TwidereMathUtils.clamp(position, pagerAdapter.count, 0)
+            mainPager.currentItem = position.coerceInOr(0 until pagerAdapter.count, 0)
         }
     }
 
@@ -790,7 +787,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        if (pagerAdapter.count > 1 && resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
+        if (pagerAdapter.count > 1 && hasMultiColumns()) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
             pagerAdapter.hasMultipleColumns = true
@@ -870,6 +867,16 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         actionsButton.setImageResource(icon)
         actionsButton.contentDescription = getString(title)
     }
+
+
+    fun hasMultiColumns(): Boolean {
+        if (!Utils.isScreenTablet(this)) return false
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return preferences.getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
+        }
+        return preferences.getBoolean("multi_column_tabs_portrait", resources.getBoolean(R.bool.default_multi_column_tabs_port))
+    }
+
 
     private class AccountUpdatedListener(private val activity: HomeActivity) : OnAccountsUpdateListener {
 
@@ -954,7 +961,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             builder.setNegativeButton(R.string.no_thanks) { dialog, which ->
                 kPreferences[defaultAutoRefreshKey] = false
             }
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
         override fun onDismiss(dialog: DialogInterface?) {

@@ -41,7 +41,6 @@ import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 
-import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -73,7 +72,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         }
     };
     @CursorField(value = Statuses._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
-    long _id;
+    public long _id;
 
     @SuppressWarnings("NullableProblems")
     @ParcelableThisPlease
@@ -445,11 +444,11 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     }
 
     @OnJsonParseComplete
-    void onParseComplete() throws IOException {
+    void onParseComplete() {
         fixSortId();
     }
 
-    void fixSortId() {
+    private void fixSortId() {
         if (sort_id <= 0) {
             try {
                 sort_id = Long.parseLong(id);

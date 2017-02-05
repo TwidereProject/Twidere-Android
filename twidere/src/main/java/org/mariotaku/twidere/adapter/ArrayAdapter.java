@@ -252,6 +252,12 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
         if (mNotifyOnChange) notifyDataSetChanged();
     }
 
+    public List<T> getAll() {
+        synchronized (mLock) {
+            return new ArrayList<>(mObjects);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -342,7 +348,7 @@ public class ArrayAdapter<T> extends BaseAdapter implements Filterable {
         return createViewFromResource(position, convertView, parent, mResource);
     }
 
-    private View createViewFromResource(int position, View convertView, ViewGroup parent,
+    protected View createViewFromResource(int position, View convertView, ViewGroup parent,
                                         int resource) {
         View view;
         TextView text;

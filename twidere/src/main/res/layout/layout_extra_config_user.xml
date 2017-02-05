@@ -10,7 +10,7 @@
 
     <include layout="@layout/list_item_simple_user"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/selectUserHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -31,12 +31,8 @@ import org.mariotaku.twidere.util.collection.CompactHashSet
 
 class ReadStateManager(context: Context) {
 
-    private val preferences: SharedPreferencesWrapper
-
-    init {
-        preferences = SharedPreferencesWrapper.getInstance(context,
-                TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE)
-    }
+    private val preferences = SharedPreferencesWrapper.getInstance(context,
+            TIMELINE_POSITIONS_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     fun getPosition(key: String): Long {
         if (TextUtils.isEmpty(key)) return -1
@@ -69,7 +65,7 @@ class ReadStateManager(context: Context) {
         preferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
-    @JvmOverloads fun setPosition(key: String, keyId: String, position: Long, acceptOlder: Boolean = false): Boolean {
+    fun setPosition(key: String, keyId: String, position: Long, acceptOlder: Boolean = false): Boolean {
         if (TextUtils.isEmpty(key)) return false
         val set: MutableSet<String> = preferences.getStringSet(key, null) ?: CompactHashSet<String>()
         val prefix = keyId + ":"

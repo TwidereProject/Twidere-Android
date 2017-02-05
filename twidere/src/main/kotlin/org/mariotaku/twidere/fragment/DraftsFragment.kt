@@ -19,7 +19,6 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.app.NotificationManager
 import android.content.Context
@@ -35,6 +34,7 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
+import android.support.v7.app.AlertDialog
 import android.text.TextUtils
 import android.view.*
 import android.widget.AbsListView.MultiChoiceModeListener
@@ -52,10 +52,7 @@ import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.textSizeKey
-import org.mariotaku.twidere.extension.invertSelection
-import org.mariotaku.twidere.extension.selectAll
-import org.mariotaku.twidere.extension.selectNone
-import org.mariotaku.twidere.extension.updateSelectionItems
+import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
@@ -210,6 +207,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             if (TextUtils.isEmpty(item.action_type)) {
                 item.action_type = Draft.Action.UPDATE_STATUS
             }
+            notificationManager.cancel(Uri.withAppendedPath(Drafts.CONTENT_URI,
+                    item._id.toString()).toString(), NOTIFICATION_ID_DRAFTS)
             when (item.action_type) {
                 Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                     LengthyOperationsService.updateStatusesAsync(context, item.action_type,
@@ -255,7 +254,12 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             builder.setMessage(R.string.delete_drafts_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
 
     }

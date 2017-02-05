@@ -39,7 +39,7 @@ open class UserSearchLoader(
 ) : MicroBlogAPIUsersLoader(context, accountKey, data, fromUser) {
 
     @Throws(MicroBlogException::class)
-    public override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {
+    override fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User> {
         val paging = Paging()
         paging.page(page)
         when (details.type) {

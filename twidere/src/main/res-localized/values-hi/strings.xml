@@ -53,7 +53,6 @@
   <string name="auth_type_twip_o">twip O मोड</string>
   <string name="auto_refresh">ऑटो ताज़ा करें</string>
   <string name="clear_cache">कैश खाली किजीये</string>
-  <string name="clear_cache_summary">संग्रहीत प्रोफाइल छवि को मिटाए|</string>
   <string name="clear_databases">डेटाबेस साफ़ करे</string>
   <string name="consumer_key">उपभोक्ता कुंजी</string>
   <string name="consumer_secret">उपभोक्ता रहस्य</string>

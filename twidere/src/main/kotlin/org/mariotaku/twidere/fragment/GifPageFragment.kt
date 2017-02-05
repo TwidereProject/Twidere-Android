@@ -23,6 +23,12 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
 
     private var mediaDownloadEvent: MediaDownloadEvent? = null
 
+    private val media: ParcelableMedia
+        get() = arguments.getParcelable(EXTRA_MEDIA)
+
+    private val accountKey: UserKey
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         gifView.setOnClickListener { (activity as MediaViewerActivity).toggleBar() }
@@ -30,7 +36,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
     }
 
     override fun getDownloadUri(): Uri? {
-        return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
+        return arguments.getParcelable(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
     override fun getDownloadExtra(): Any? {
@@ -39,8 +45,9 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
 
     override fun displayMedia(result: CacheDownloadLoader.Result) {
         val context = context ?: return
-        if (result.cacheUri != null) {
-            gifView.setInputSource(InputSource.UriSource(context.contentResolver, result.cacheUri!!))
+        val cacheUri = result.cacheUri
+        if (cacheUri != null) {
+            gifView.setInputSource(InputSource.UriSource(context.contentResolver, cacheUri))
         } else {
             gifView.setInputSource(null)
         }
@@ -58,12 +65,6 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
         gifView?.setInputSource(null)
     }
 
-    private val media: ParcelableMedia
-        get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
-
-    private val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-
     override fun onDownloadRequested(nonce: Long) {
         super.onDownloadRequested(nonce)
         val context = context
@@ -76,17 +77,19 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
 
     override fun onDownloadStart(total: Long, nonce: Long) {
         super.onDownloadStart(total, nonce)
-        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
-            mediaDownloadEvent!!.setOpenedTime(System.currentTimeMillis())
-            mediaDownloadEvent!!.setSize(total)
+        val event = mediaDownloadEvent
+        if (event != null && event.nonce == nonce) {
+            event.setOpenedTime(System.currentTimeMillis())
+            event.setSize(total)
         }
     }
 
     override fun onDownloadFinished(nonce: Long) {
         super.onDownloadFinished(nonce)
-        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
-            mediaDownloadEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log(accountKey, mediaDownloadEvent!!)
+        val event = mediaDownloadEvent
+        if (event != null && event.nonce == nonce) {
+            event.markEnd()
+            HotMobiLogger.getInstance(context).log(accountKey, event)
             mediaDownloadEvent = null
         }
     }

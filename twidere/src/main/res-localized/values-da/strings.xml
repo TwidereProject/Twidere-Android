@@ -86,7 +86,6 @@
   <string name="auto_refresh">Autoopdater</string>
   <string name="both">Begge</string>
   <string name="clear_cache">Ryd cache</string>
-  <string name="clear_cache_summary">Ryd profile billedes cache.</string>
   <string name="clear_databases">Ryd database</string>
   <string name="clear_databases_summary">Slet alle tweets, profiler, beskeder. Dine kontooplysninger vil ikke gå tabt.</string>
   <string name="consumer_key">Forbruger nøgle</string>

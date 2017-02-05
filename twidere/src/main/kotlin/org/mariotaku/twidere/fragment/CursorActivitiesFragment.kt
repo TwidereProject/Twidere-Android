@@ -28,6 +28,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
+import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
@@ -44,6 +45,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.message.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -55,31 +57,25 @@ import org.mariotaku.twidere.util.Utils
  */
 abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
-    override fun onLoadingFinished() {
-        val accountKeys = accountKeys
-        if (adapter.itemCount > 0) {
-            showContent()
-        } else if (accountKeys.isNotEmpty()) {
-            val errorInfo = ErrorInfoStore.getErrorInfo(context,
-                    errorInfoStore[errorInfoKey, accountKeys[0]])
-            if (errorInfo != null) {
-                showEmpty(errorInfo.icon, errorInfo.message)
-            } else {
-                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
-            }
-        } else {
-            showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
-        }
-    }
-
-    protected abstract val errorInfoKey: String
-
     private var contentObserver: ContentObserver? = null
+
     private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener { accounts ->
         reloadActivities()
     }
 
+    override val accountKeys: Array<UserKey>
+        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
+
+    protected abstract val errorInfoKey: String
+
+    private val sortOrder: String
+        get() = Activities.DEFAULT_SORT_ORDER
+
     abstract val contentUri: Uri
+
+    override fun onContentLoaded(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>?) {
+        showContentOrError()
+    }
 
     override fun onCreateActivitiesLoader(context: Context,
                                           args: Bundle,
@@ -113,9 +109,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         return CursorActivitiesBusCallback()
     }
 
-    override val accountKeys: Array<UserKey>
-        get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
-
     override fun onStart() {
         super.onStart()
         if (contentObserver == null) {
@@ -138,17 +131,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         }
         AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener)
         super.onStop()
-    }
-
-    protected fun reloadActivities() {
-        if (activity == null || isDetached) return
-        val args = Bundle()
-        val fragmentArgs = arguments
-        if (fragmentArgs != null) {
-            args.putAll(fragmentArgs)
-            args.putBoolean(EXTRA_FROM_USER, true)
-        }
-        loaderManager.restartLoader(0, args, this)
     }
 
     override fun hasMoreData(data: List<ParcelableActivity>?): Boolean {
@@ -249,8 +231,34 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected abstract fun updateRefreshState()
 
-    private val sortOrder: String
-        get() = Activities.DEFAULT_SORT_ORDER
+
+    protected fun reloadActivities() {
+        if (activity == null || isDetached) return
+        val args = Bundle()
+        val fragmentArgs = arguments
+        if (fragmentArgs != null) {
+            args.putAll(fragmentArgs)
+            args.putBoolean(EXTRA_FROM_USER, true)
+        }
+        loaderManager.restartLoader(0, args, this)
+    }
+
+    private fun showContentOrError() {
+        val accountKeys = accountKeys
+        if (adapter.itemCount > 0) {
+            showContent()
+        } else if (accountKeys.isNotEmpty()) {
+            val errorInfo = ErrorInfoStore.getErrorInfo(context,
+                    errorInfoStore[errorInfoKey, accountKeys[0]])
+            if (errorInfo != null) {
+                showEmpty(errorInfo.icon, errorInfo.message)
+            } else {
+                showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
+            }
+        } else {
+            showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
+        }
+    }
 
 
     private fun updateFavoritedStatus(status: ParcelableStatus) {
@@ -296,7 +304,11 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             if (!event.running) {
                 setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
                 refreshEnabled = true
-                onLoadingFinished()
+                showContentOrError()
+
+                if (event.exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
+                    Toast.makeText(context, event.exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

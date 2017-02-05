@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/preference_title_tablet_mode">
+
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
+        android:title="@string/preference_title_multi_column_tabs">
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/default_multi_column_tabs_port"
+            android:key="multi_column_tabs_portrait"
+            android:title="@string/preference_title_portrait">
+            <extra
+                android:name="should_recreate"
+                android:value="true"/>
+        </SwitchPreferenceCompat>
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/default_multi_column_tabs_land"
+            android:key="multi_column_tabs_landscape"
+            android:title="@string/preference_title_landscape">
+            <extra
+                android:name="should_recreate"
+                android:value="true"/>
+        </SwitchPreferenceCompat>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+</PreferenceScreen>

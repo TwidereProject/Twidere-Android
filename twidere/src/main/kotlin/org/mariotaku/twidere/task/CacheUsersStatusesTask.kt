@@ -35,7 +35,7 @@ class CacheUsersStatusesTask(
         private val context: Context
 ) : AbstractTask<TwitterListResponse<Status>, Unit, Unit>() {
 
-    public override fun doLongOperation(params: TwitterListResponse<Status>) {
+    override fun doLongOperation(params: TwitterListResponse<Status>) {
         val resolver = context.contentResolver
         val extractor = Extractor()
         val list = params.data ?: return

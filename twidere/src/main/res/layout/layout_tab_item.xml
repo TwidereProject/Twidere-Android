@@ -42,7 +42,7 @@
             android:scaleType="centerInside"
             tools:src="@drawable/ic_action_home" />
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/tab_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

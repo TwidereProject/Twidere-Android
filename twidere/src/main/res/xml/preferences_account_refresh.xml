@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/auto_refresh">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_refresh_content"
         android:title="@string/content_to_refresh">
         <SwitchPreferenceCompat
@@ -23,9 +23,9 @@
             android:defaultValue="false"
             android:key="auto_refresh_trends"
             android:title="@string/trends"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <!--<PreferenceCategory-->
+    <!--<org.mariotaku.twidere.preference.TintedPreferenceCategory-->
     <!--android:enabled="false"-->
     <!--android:key="cat_streaming"-->
     <!--android:title="@string/streaming">-->
@@ -34,6 +34,6 @@
     <!--android:key="enable_streaming"-->
     <!--android:title="@string/enable_streaming"/>-->
 
-    <!--</PreferenceCategory>-->
+    <!--</org.mariotaku.twidere.preference.TintedPreferenceCategory>-->
 
 </PreferenceScreen>

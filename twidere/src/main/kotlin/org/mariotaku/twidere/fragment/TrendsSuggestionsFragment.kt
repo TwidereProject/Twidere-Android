@@ -31,22 +31,30 @@ import android.widget.ListView
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.sqliteqb.library.*
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.TrendsAdapter
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_LOCAL_TRENDS_WOEID
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
+import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.util.DataStoreUtils.getTableNameByUri
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
-import org.mariotaku.twidere.util.Utils.getDefaultAccountKey
+import org.mariotaku.twidere.util.Utils
 
 class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
-    private var accountId: UserKey? = null
+    private val accountKey: UserKey? get() = Utils.getAccountKeys(context, arguments)?.firstOrNull()
+            ?: Utils.getDefaultAccountKey(context)
+    private val tabExtras: TrendsTabExtras? get() = arguments.getParcelable(EXTRA_EXTRAS)
+
+    private val woeId: Int get() {
+        val id = tabExtras?.woeId ?: return 1
+        return if (id > 0) id else 1
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        accountId = getDefaultAccountKey(activity)
         listView.onItemClickListener = this
         loaderManager.initLoader(0, null, this)
         showProgress()
@@ -58,19 +66,17 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri = CachedTrends.Local.CONTENT_URI
-        val table = getTableNameByUri(uri)
-        val where: String?
-        if (table != null) {
-            val sqlSelectQuery = SQLQueryBuilder.select(Columns.Column(CachedTrends.TIMESTAMP))
-                    .from(Table(table))
-                    .orderBy(OrderBy(CachedTrends.TIMESTAMP, false))
-                    .limit(1)
-                    .build()
-            where = Expression.equals(Columns.Column(CachedTrends.TIMESTAMP), sqlSelectQuery).sql
-        } else {
-            where = null
-        }
-        return CursorLoader(activity, uri, CachedTrends.COLUMNS, where, null, null)
+        val table = getTableNameByUri(uri)!!
+        val timestampQuery = SQLQueryBuilder.select(Columns.Column(CachedTrends.TIMESTAMP))
+                .from(Table(table))
+                .orderBy(OrderBy(CachedTrends.TIMESTAMP, false))
+                .limit(1)
+                .build()
+        val where = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
+                Expression.equalsArgs(CachedTrends.WOEID),
+                Expression.equals(Columns.Column(CachedTrends.TIMESTAMP), timestampQuery)).sql
+        val whereArgs = arrayOf(accountKey?.toString() ?: "", woeId.toString())
+        return CursorLoader(activity, uri, CachedTrends.COLUMNS, where, whereArgs, CachedTrends.TREND_ORDER)
     }
 
     override fun onItemClick(view: AdapterView<*>, child: View, position: Int, id: Long) {
@@ -83,7 +89,7 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
         }
         if (trend == null) return
-        openTweetSearch(activity, accountId, trend)
+        openTweetSearch(activity, accountKey, trend)
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
@@ -92,12 +98,17 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
         adapter.swapCursor(cursor)
-        showContent()
+        if (adapter.isEmpty) {
+            showEmpty(R.drawable.ic_info_refresh, getString(R.string.swipe_down_to_refresh))
+        } else {
+            showContent()
+        }
     }
 
     override fun onRefresh() {
         if (refreshing) return
-        twitterWrapper.getLocalTrendsAsync(accountId, preferences.getInt(KEY_LOCAL_TRENDS_WOEID, 1))
+        val accountKey = this.accountKey ?: return
+        twitterWrapper.getLocalTrendsAsync(accountKey, woeId)
     }
 
     override var refreshing: Boolean

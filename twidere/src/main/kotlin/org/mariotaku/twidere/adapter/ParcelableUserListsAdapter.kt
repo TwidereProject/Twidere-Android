@@ -93,7 +93,7 @@ class ParcelableUserListsAdapter(
                 return createUserListViewHolder(this, inflater, parent)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
-                val view = inflater.inflate(R.layout.card_item_load_indicator, parent, false)
+                val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
         }

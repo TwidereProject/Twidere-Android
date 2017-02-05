@@ -62,13 +62,23 @@ abstract class AbsContentListRecyclerViewFragment<A : LoadMoreSupportAdapter<Rec
     override val reachingEnd: Boolean
         get() {
             val lm = layoutManager
-            return lm.findLastCompletelyVisibleItemPosition() >= lm.itemCount - 1
+            var itemPos = lm.findLastCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findLastVisibleItemPosition()
+            }
+            return itemPos >= lm.itemCount - 1
         }
 
     override val reachingStart: Boolean
         get() {
             val lm = layoutManager
-            return lm.findFirstCompletelyVisibleItemPosition() <= 0
+            var itemPos = lm.findFirstCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findFirstVisibleItemPosition()
+            }
+            return itemPos == 0
         }
 
 }

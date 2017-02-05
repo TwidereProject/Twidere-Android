@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/element_spacing_large">
 
-    <TextView
+    <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/confirmMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

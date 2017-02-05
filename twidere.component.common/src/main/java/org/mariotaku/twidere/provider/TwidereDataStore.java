@@ -30,6 +30,7 @@ import org.mariotaku.twidere.model.FiltersSubscriptionTableInfo;
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
 import org.mariotaku.twidere.model.ParcelableDirectMessageTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
+import org.mariotaku.twidere.model.ParcelableTrendTableInfo;
 import org.mariotaku.twidere.model.ParcelableUserTableInfo;
 
 @SuppressWarnings("unused")
@@ -186,12 +187,14 @@ public interface TwidereDataStore {
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
     }
 
-    interface CachedTrends extends CachedValues {
+    interface CachedTrends extends CachedValues, AccountSupportColumns {
 
         String TIMESTAMP = "timestamp";
+        String WOEID = "woeid";
+        String TREND_ORDER = "trend_order";
 
-        String[] COLUMNS = {_ID, NAME, TIMESTAMP};
-        String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_TEXT, TYPE_INT};
+        String[] COLUMNS = ParcelableTrendTableInfo.COLUMNS;
+        String[] TYPES = ParcelableTrendTableInfo.TYPES;
 
         interface Local extends CachedTrends {
             String TABLE_NAME = "local_trends";

@@ -62,6 +62,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">저장</string>
   <string name="action_saving_search">검색어를 저장하는 중</string>
+  <string name="action_select_user">사용자 선택</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">보내기</string>
   <string name="action_sending_direct_message">쪽지를 보내는 중</string>
@@ -182,7 +183,6 @@
   <string name="cant_load_all_replies_message">모든 답글을 불러올 수 없습니다. &lt;a href=\"#dialog\";&gt;왜죠?&lt;/a&gt;</string>
   <string name="cards">카드</string>
   <string name="clear_cache">캐시 지우기</string>
-  <string name="clear_cache_summary">저장된 프로필 이미지 캐시를 지웁니다.</string>
   <string name="clear_databases">데이터베이스 지우기</string>
   <string name="clear_databases_summary">모든 트윗, 프로필, 쪽지를 삭제합니다. 당신의 계정 상태는 유지됩니다.</string>
   <string name="clear_search_history">검색 기록 지우기</string>
@@ -521,6 +521,8 @@
   <string name="preference_title_accounts">계정</string>
   <string name="preference_title_advanced">고급</string>
   <string name="preference_title_database_item_limit">데이터베이스 크기 제한</string>
+  <string name="preference_title_portrait">세로</string>
+  <string name="preference_title_landscape">가로</string>
   <string name="preference_title_storage">저장소</string>
   <string name="preference_title_translate">번역하기</string>
   <string name="preload_wifi_only">와이파이에서만 미리 불러오기</string>
@@ -740,6 +742,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">사용자</string>
   <string name="title_user_colors">사용자 색상</string>
+  <string name="title_user_list_memberships">다음에 속함:</string>
   <string name="title_users_favorited_this">이 트윗을 마음에 들어하는 사용자</string>
   <string name="title_users_liked_this">이 트윗을 마음에 들어하는 사용자들</string>
   <string name="title_users_retweeted_this">리트윗한 사용자</string>

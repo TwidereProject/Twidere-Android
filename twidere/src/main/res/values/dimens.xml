@@ -1,104 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-
-    <dimen name="element_size_xsmall">16dp</dimen>
-    <dimen name="element_size_small">24dp</dimen>
-    <dimen name="element_size_msmall">36dp</dimen>
-    <dimen name="element_size_normal">48dp</dimen>
-    <dimen name="element_size_mlarge">64dp</dimen>
-
-
-    <dimen name="button_size_content_card">42dp</dimen>
-    <dimen name="button_size_content_card_action">36dp</dimen>
-
-    <!-- Element spacings (padding, margin) -->
-    <dimen name="element_spacing_xsmall">2dp</dimen>
-    <dimen name="element_spacing_small">4dp</dimen>
-    <dimen name="element_spacing_msmall">6dp</dimen>
-    <dimen name="element_spacing_normal">8dp</dimen>
-    <dimen name="element_spacing_mlarge">12dp</dimen>
-    <dimen name="element_spacing_large">16dp</dimen>
-    <dimen name="element_spacing_xlarge">24dp</dimen>
-    <dimen name="element_spacing_minus_xsmall">-2dp</dimen>
-    <dimen name="element_spacing_minus_small">-4dp</dimen>
-    <dimen name="element_spacing_minus_msmall">-6dp</dimen>
-    <dimen name="element_spacing_minus_normal">-8dp</dimen>
-    <dimen name="element_spacing_minus_mlarge">-12dp</dimen>
-    <dimen name="element_spacing_minus_large">-16dp</dimen>
-    <dimen name="element_spacing_minus_xlarge">-24dp</dimen>
-
-    <!-- Preferred size -->
-    <dimen name="preferred_tab_column_width">420dp</dimen>
-
-    <dimen name="icon_size_list_item">56dp</dimen>
-    <dimen name="icon_size_list_item_small">42dp</dimen>
-    <dimen name="icon_size_card_list_item">48dp</dimen>
-    <dimen name="icon_size_card_details">@dimen/element_size_mlarge</dimen>
-    <dimen name="icon_size_user_profile">84dp</dimen>
-    <dimen name="profile_image_size_activity_small">32dp</dimen>
-    <dimen name="default_sliding_menu_shadow_width">8dp</dimen>
-    <dimen name="default_sliding_menu_margin_threshold">16dp</dimen>
-    <dimen name="button_bar_height">52dp</dimen>
-    <dimen name="minimum_element_size">48dp</dimen>
-    <dimen name="drawer_width_home">288dp</dimen>
-    <dimen name="drawer_offset_home">72dp</dimen>
-    <dimen name="float_action_button_size">56dp</dimen>
-    <dimen name="float_action_button_icon_size">24dp</dimen>
-    <dimen name="action_button_size">56dp</dimen>
-    <dimen name="text_size_extra_small">12sp</dimen>
-
-    <!-- Size of icons in the top-level of settings -->
-    <dimen name="header_icon_width">28dp</dimen>
-
-    <!-- Dimensions for color picker -->
-    <dimen name="color_button_width">48dp</dimen>
-    <dimen name="color_button_height">48dp</dimen>
-
-    <!-- Dimensions for compose dialog -->
-    <dimen name="compose_min_width">400dp</dimen>
-
-    <!-- Dimensions for alert dialog -->
-    <dimen name="icon_size_alert_dialog">32dp</dimen>
-
-    <!-- Dimensions for quick menu -->
-    <dimen name="header_height_quick_menu">@dimen/element_size_normal</dimen>
-
-    <!-- Dimensions for buttons -->
-    <dimen name="button_width_content_min">72dp</dimen>
-    <dimen name="action_icon_size">32dp</dimen>
-    <dimen name="unread_indicator_size">16dp</dimen>
     <dimen name="account_selector_popup_width">180dp</dimen>
-    <dimen name="icon_size_status_profile_image">48dp</dimen>
 
-    <dimen name="icon_size_profile_type">16dp</dimen>
-    <dimen name="icon_size_profile_type_detail">22dp</dimen>
-    <dimen name="icon_size_profile_type_user_profile">26dp</dimen>
-    <dimen name="icon_size_activity_type">16dp</dimen>
+    <dimen name="action_button_size">56dp</dimen>
+    <dimen name="action_icon_size">32dp</dimen>
 
-    <!-- Elevation values -->
-    <dimen name="elevation_card">2dp</dimen>
-    <dimen name="corner_radius_card">2dp</dimen>
-
-
-    <dimen name="padding_profile_image_detail_page">@dimen/element_spacing_small</dimen>
-    <dimen name="padding_profile_image_list_item">@dimen/element_spacing_small</dimen>
-    <dimen name="icon_size_profile_image_dashboard_current">72dp</dimen>
-    <dimen name="elevation_settings_item">0dp</dimen>
-    <dimen name="popup_width_account_selector">160dp</dimen>
-
-    <dimen name="line_width_compose_account_profile_image">2dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="height_player_control_panel">40dp</dimen>
-    <dimen name="toolbar_elevation">8dp</dimen>
+    <dimen name="button_bar_height">52dp</dimen>
+    <dimen name="button_size_content_card">42dp</dimen>
+    <dimen name="button_size_content_card_action">36dp</dimen>
+    <!-- Dimensions for buttons -->
+    <dimen name="button_width_content_min">72dp</dimen>
 
+    <dimen name="color_button_height">48dp</dimen>
+    <!-- Dimensions for color picker -->
+    <dimen name="color_button_width">48dp</dimen>
+
+    <!-- Dimensions for compose dialog -->
+    <dimen name="compose_min_width">400dp</dimen>
+
+    <dimen name="corner_radius_card">2dp</dimen>
+
+    <dimen name="default_sliding_menu_margin_threshold">16dp</dimen>
+    <dimen name="default_sliding_menu_shadow_width">8dp</dimen>
+
+    <dimen name="drawer_offset_home">72dp</dimen>
+    <dimen name="drawer_width_home">288dp</dimen>
+
+    <dimen name="element_size_mlarge">64dp</dimen>
+    <dimen name="element_size_msmall">36dp</dimen>
+    <dimen name="element_size_normal">48dp</dimen>
     <dimen name="element_size_quick_search_bar_item_icon">40dp</dimen>
+    <dimen name="element_size_small">24dp</dimen>
+    <dimen name="element_size_xsmall">16dp</dimen>
+    <dimen name="element_spacing_large">16dp</dimen>
+    <dimen name="element_spacing_minus_large">-16dp</dimen>
+    <dimen name="element_spacing_minus_mlarge">-12dp</dimen>
+    <dimen name="element_spacing_minus_msmall">-6dp</dimen>
+    <dimen name="element_spacing_minus_normal">-8dp</dimen>
+    <dimen name="element_spacing_minus_small">-4dp</dimen>
+    <dimen name="element_spacing_minus_xlarge">-24dp</dimen>
+    <dimen name="element_spacing_minus_xsmall">-2dp</dimen>
+    <dimen name="element_spacing_mlarge">12dp</dimen>
+    <dimen name="element_spacing_msmall">6dp</dimen>
+    <dimen name="element_spacing_normal">8dp</dimen>
+    <dimen name="element_spacing_small">4dp</dimen>
+    <dimen name="element_spacing_xlarge">24dp</dimen>
+    <!-- Element spacings (padding, margin) -->
+    <dimen name="element_spacing_xsmall">2dp</dimen>
+
+    <!-- Elevation values -->
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="elevation_settings_item">0dp</dimen>
+
+    <dimen name="float_action_button_icon_size">24dp</dimen>
+    <dimen name="float_action_button_size">56dp</dimen>
+
+    <!-- Dimensions for quick menu -->
+    <dimen name="header_height_quick_menu">@dimen/element_size_normal</dimen>
+    <!-- Size of icons in the top-level of settings -->
+    <dimen name="header_icon_width">28dp</dimen>
+
+    <dimen name="height_player_control_panel">40dp</dimen>
 
     <dimen name="home_page_margin">1dp</dimen>
 
-    <dimen name="settings_panel_width_entries">240dp</dimen>
-    <dimen name="settings_panel_margin_start_details">@dimen/element_size_normal</dimen>
+    <dimen name="icon_size_activity_type">16dp</dimen>
+    <!-- Dimensions for alert dialog -->
+    <dimen name="icon_size_alert_dialog">32dp</dimen>
+    <dimen name="icon_size_card_details">@dimen/element_size_mlarge</dimen>
+    <dimen name="icon_size_card_list_item">48dp</dimen>
+    <dimen name="icon_size_list_item">56dp</dimen>
+    <dimen name="icon_size_list_item_small">42dp</dimen>
+    <dimen name="icon_size_profile_image_dashboard_current">72dp</dimen>
+    <dimen name="icon_size_profile_type">16dp</dimen>
+    <dimen name="icon_size_profile_type_detail">22dp</dimen>
+    <dimen name="icon_size_profile_type_user_profile">26dp</dimen>
+    <dimen name="icon_size_status_profile_image">48dp</dimen>
+    <dimen name="icon_size_user_profile">84dp</dimen>
 
+    <dimen name="line_width_compose_account_profile_image">2dp</dimen>
+
+    <dimen name="minimum_element_size">48dp</dimen>
+    <dimen name="minimum_height_list_layout_content">300dp</dimen>
+    <dimen name="minimum_width_list_layout_content">300dp</dimen>
+
+    <dimen name="padding_profile_image_detail_page">@dimen/element_spacing_small</dimen>
+    <dimen name="padding_profile_image_list_item">@dimen/element_spacing_small</dimen>
+
+    <dimen name="popup_width_account_selector">160dp</dimen>
+
+    <!-- Preferred size -->
+    <dimen name="preferred_tab_column_width">420dp</dimen>
+
+    <dimen name="profile_image_size_activity_small">32dp</dimen>
+
+    <dimen name="settings_panel_margin_start_details">@dimen/element_size_normal</dimen>
+    <dimen name="settings_panel_width_entries">240dp</dimen>
+
+    <dimen name="text_size_extra_small">12sp</dimen>
+
+    <dimen name="toolbar_elevation">8dp</dimen>
+
+    <dimen name="unread_indicator_size">16dp</dimen>
 </resources>

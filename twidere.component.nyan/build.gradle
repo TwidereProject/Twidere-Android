@@ -35,5 +35,6 @@ android {
 }
 
 dependencies {
+    compile "com.android.support:support-compat:$android_support_lib_version"
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

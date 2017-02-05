@@ -27,3 +27,8 @@ fun String?.toDouble(def: Double): Double {
         return def
     }
 }
+
+fun Int.coerceInOr(range: ClosedRange<Int>, or: Int): Int {
+    if (range.isEmpty()) return or
+    return coerceIn(range)
+}

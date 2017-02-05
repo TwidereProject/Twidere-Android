@@ -69,7 +69,7 @@
                 android:layout_width="@dimen/element_size_small"
                 android:layout_height="@dimen/element_size_small"/>
 
-            <TextView
+            <org.mariotaku.twidere.view.FixedTextView
                 android:id="@+id/media_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

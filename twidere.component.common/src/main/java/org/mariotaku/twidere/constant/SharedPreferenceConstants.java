@@ -210,8 +210,7 @@ public interface SharedPreferenceConstants {
     String KEY_PHISHING_LINK_WARNING = "phishing_link_warning";
     @Preference(type = STRING, hasDefault = true, defaultString = VALUE_LINK_HIGHLIGHT_OPTION_NONE)
     String KEY_LINK_HIGHLIGHT_OPTION = "link_highlight_option";
-    String KEY_PRELOAD_PROFILE_IMAGES = "preload_profile_images";
-    String KEY_PRELOAD_PREVIEW_IMAGES = "preload_preview_images";
+    String KEY_MEDIA_PRELOAD = "media_preload";
     @Preference(type = BOOLEAN, hasDefault = true, defaultBoolean = true)
     String KEY_PRELOAD_WIFI_ONLY = "preload_wifi_only";
     @Preference(type = BOOLEAN)

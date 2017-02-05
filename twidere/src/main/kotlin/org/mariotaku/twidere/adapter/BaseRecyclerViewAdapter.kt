@@ -59,7 +59,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     override final val showAbsoluteTime: Boolean
 
     init {
-        //noinspection unchecked
+        @Suppress("UNCHECKED_CAST")
         GeneralComponentHelper.build(context).inject(this as BaseRecyclerViewAdapter<RecyclerView.ViewHolder>)
         profileImageStyle = preferences[profileImageStyleKey]
         textSize = preferences[textSizeKey].toFloat()

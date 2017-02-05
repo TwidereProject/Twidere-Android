@@ -64,6 +64,7 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
     }
 
     @Override
+    @Deprecated
     protected boolean fitSystemWindows(@NonNull Rect insets) {
         if (mOnFitSystemWindowsListener != null) {
             mOnFitSystemWindowsListener.onFitSystemWindows(insets);

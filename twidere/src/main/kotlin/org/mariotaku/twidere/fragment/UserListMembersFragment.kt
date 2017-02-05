@@ -44,8 +44,8 @@ import java.util.*
 
 class UserListMembersFragment : CursorUsersListFragment() {
 
-    public override fun onCreateUsersLoader(context: Context,
-                                            args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
+    override fun onCreateUsersLoader(context: Context,
+                                     args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val listId = args.getString(EXTRA_LIST_ID)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)

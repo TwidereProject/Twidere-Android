@@ -64,6 +64,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Kaydet</string>
   <string name="action_saving_search">arama kaydediliyor</string>
+  <string name="action_select_user">Kullanıcı seç</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gönder</string>
   <string name="action_sending_direct_message">Direkt mesaj gönderirken</string>
@@ -185,7 +186,6 @@
   <string name="cant_load_all_replies_message">Tüm cevaplar yüklenemedi. &lt;a href=\"#dialog\";&gt;Neden?&lt;/a&gt;</string>
   <string name="cards">Kartlar</string>
   <string name="clear_cache">Önbelleği temizle</string>
-  <string name="clear_cache_summary">Depolanan profil resmi önbelleğini temizle.</string>
   <string name="clear_databases">Veritabanlarını temizle</string>
   <string name="clear_databases_summary">Tüm tweetleri, profilleri, mesajları sil. Hesabınızdaki veriler silinmez.</string>
   <string name="clear_search_history">Arama geçmişini temizle</string>
@@ -524,6 +524,8 @@
   <string name="preference_title_accounts">Hesaplar</string>
   <string name="preference_title_advanced">Gelişmiş</string>
   <string name="preference_title_database_item_limit">Veritabanı boyutu limiti</string>
+  <string name="preference_title_portrait">Dikey</string>
+  <string name="preference_title_landscape">Yatay</string>
   <string name="preference_title_storage">Depolama</string>
   <string name="preference_title_translate">Çevir</string>
   <string name="preload_wifi_only">Yalnız Wi-Fi kullanarak önyükleme yap</string>
@@ -745,6 +747,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Kullanıcı</string>
   <string name="title_user_colors">Kullanıcı renkleri</string>
+  <string name="title_user_list_memberships">Ait olduğu</string>
   <string name="title_users_favorited_this">Kullanıcılar bunu beğendi</string>
   <string name="title_users_liked_this">Kullanıcılar bunu beğendi</string>
   <string name="title_users_retweeted_this">Kullanıcılar bunu retweetledi</string>

@@ -56,6 +56,7 @@ public final class CRLFLineReader extends BufferedReader
         StringBuilder sb = new StringBuilder();
         int intch;
         boolean prevWasCR = false;
+        //noinspection SynchronizeOnNonFinalField
         synchronized(lock) { // make thread-safe (hopefully!)
             while((intch = read()) != -1)
             {

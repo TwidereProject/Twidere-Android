@@ -45,6 +45,4 @@ public interface TrendsResources {
     @GET("/trends/place.json")
     ResponseList<Trends> getLocationTrends(@Query("id") int woeid) throws MicroBlogException;
 
-    @GET("/trends/place.json")
-    Trends getPlaceTrends(@Query("id") int woeid) throws MicroBlogException;
 }

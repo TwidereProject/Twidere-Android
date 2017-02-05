@@ -39,6 +39,7 @@ import android.view.MenuItem;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.KeyboardShortcutPreferenceCompatActivity;
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants;
+import org.mariotaku.twidere.extension.AlertDialogExtensionsKt;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler;
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutSpec;
 
@@ -146,7 +147,14 @@ public class KeyboardShortcutsFragment extends BasePreferenceFragment implements
             builder.setMessage(R.string.reset_keyboard_shortcuts_confirm);
             builder.setPositiveButton(android.R.string.ok, this);
             builder.setNegativeButton(android.R.string.cancel, this);
-            return builder.create();
+            final AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    AlertDialogExtensionsKt.applyTheme((AlertDialog) dialog);
+                }
+            });
+            return dialog;
         }
     }
 }

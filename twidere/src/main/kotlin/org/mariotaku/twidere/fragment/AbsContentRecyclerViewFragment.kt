@@ -46,7 +46,7 @@ import org.mariotaku.twidere.view.iface.IExtendedView
 abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<RecyclerView.ViewHolder>,
         L : RecyclerView.LayoutManager> : BaseFragment(), SwipeRefreshLayout.OnRefreshListener,
         HeaderDrawerLayout.DrawerCallback, RefreshScrollTopInterface, IControlBarActivity.ControlBarOffsetListener,
-        ContentScrollHandler.ContentListSupport, ControlBarShowHideHelper.ControlBarAnimationListener {
+        ContentScrollHandler.ContentListSupport<A>, ControlBarShowHideHelper.ControlBarAnimationListener {
 
     lateinit var layoutManager: L
         protected set
@@ -57,7 +57,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
 
     // Callbacks and listeners
     private lateinit var drawerCallback: SimpleDrawerCallback
-    lateinit var scrollListener: RecyclerViewScrollHandler
+    lateinit var scrollListener: RecyclerViewScrollHandler<A>
     // Data fields
     private val systemWindowsInsets = Rect()
 

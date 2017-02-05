@@ -33,5 +33,8 @@ Micro-blogging service:
 App settings:
 
 - [ ] Custom API
+- [ ] Custom consumer key/secrets
+- [ ] Official keys
+- [ ] Using [Thumbor](https://github.com/thumbor/thumbor)
 - [ ] Connected through proxy
 - [ ] Media preview enabled

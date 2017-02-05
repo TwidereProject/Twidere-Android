@@ -6,6 +6,7 @@
   <string name="account_delete_confirm_title">Fiók törlése</string>
   <string name="account_options">Fiók beállítások</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <string name="action_accept_friend_request">Elfogadás</string>
   <string name="action_accept_permission_request">Elfogadás</string>
@@ -13,6 +14,7 @@
   <string name="action_add">Jozzáadás</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Szabály hozzáadása</string>
+  <string name="action_add_filters_subscription">Feliratkozás hozzáadása</string>
   <string name="action_adding_member">Tag hozzáadás</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blokkol</string>
@@ -30,18 +32,27 @@
   <string name="action_denying_follow_request">követési kérés visszautasítása</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Szerkesztés</string>
+  <string name="action_edit_filter_rule">Szabály szerkesztése</string>
   <string name="action_favorite">Kedvencnek jelöl</string>
   <string name="action_favoriting">kedvencként való megjelölés</string>
+  <string name="action_filter_import_from_blocked_users">Importálás a letiltott felhasználóktól</string>
+  <string name="action_filter_import_from_muted_users">Importálás a lenémított felhasználóktól</string>
+  <string name="action_filter_subscriptions_card_manage">Feliratkozások kezelése</string>
   <string name="action_finish">Befejezés</string>
   <string name="action_follow">Követés</string>
   <string name="action_following">Követve</string>
   <string name="action_getting_status">tweet fogadása</string>
+  <string name="action_getting_user_lists">felhasználó lista betöltése</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">Import</string>
   <string name="action_import_from">Importálás&#8230;</string>
+  <string name="action_invert_selection">Kijelölés megfordítása</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">Később</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Tetszik</string>
+  <string name="action_liking">kedveli</string>
+  <string name="action_modifying_lists">listák módosítása</string>
   <string name="action_mute">Elnémít</string>
   <string name="action_muting">némítás</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, elmentve: <xliff:g id="time">%2$s</xliff:g></string>
@@ -66,6 +77,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Ment</string>
   <string name="action_saving_search">keresés mentése</string>
+  <string name="action_select_user">Felhasználó kiválasztása</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Elküld</string>
   <string name="action_sending_direct_message">privát üzenet elküldése</string>
@@ -183,7 +195,6 @@
   <string name="cant_load_all_replies_message">Nem lehet betölteni az összes választ. &lt;a href=\"#dialog\";&gt;Miért?&lt;/a&gt;</string>
   <string name="cards">Kártyák</string>
   <string name="clear_cache">Gyorsítótár ürítése</string>
-  <string name="clear_cache_summary">Profilkép cache ürítése.</string>
   <string name="clear_databases">Adatbázisok ürítése</string>
   <string name="clear_databases_summary">Minden tweet, profil és üzenet törlése. A profil adataid nem vesznek el.</string>
   <string name="clear_search_history">Keresési történet törlése</string>
@@ -507,6 +518,8 @@
   <string name="preference_title_accounts">Fiókok</string>
   <string name="preference_title_advanced">Fejlett</string>
   <string name="preference_title_database_item_limit">Adatbázis méretkorlát</string>
+  <string name="preference_title_portrait">Álló</string>
+  <string name="preference_title_landscape">Fekvő</string>
   <string name="preference_title_storage">Tárhely</string>
   <string name="preference_title_translate">Fordítás</string>
   <string name="preload_wifi_only">Előtöltés csak Wi-Fi használata esetén</string>
@@ -725,6 +738,7 @@
   <string name="title_sync_settings">Szinkronizálási beállítások</string>
   <string name="title_user">Felhasználó</string>
   <string name="title_user_colors">Felhasználói színek</string>
+  <string name="title_user_list_memberships">Tagja vagy</string>
   <string name="title_users_favorited_this">Kedvencnek jelölő felhasználók</string>
   <string name="title_users_liked_this">Felhasználó kedveli</string>
   <string name="title_users_retweeted_this">Következő felhasználók által retweetelve</string>

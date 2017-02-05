@@ -63,7 +63,6 @@
   <string name="auth_type_twip_o">twip O Mode</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="clear_cache">Clear cache</string>
-  <string name="clear_cache_summary">Clear stored profile image cache.</string>
   <string name="clear_databases">Clear databases</string>
   <string name="color">Colour</string>
   <string name="consumer_key">Consumer key</string>

@@ -7,9 +7,8 @@ import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
+import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_COMPOSE_ACCOUNTS
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.UserKey
@@ -59,6 +58,9 @@ val filterPossibilitySensitiveStatusesKey = KBooleanKey("filter_possibility_sens
 val chromeCustomTabKey = KBooleanKey("chrome_custom_tab", true)
 val usageStatisticsKey = KBooleanKey(KEY_USAGE_STATISTICS, false)
 val lightFontKey = KBooleanKey("light_font", false)
+val extraFeaturesNoticeVersionKey = KIntKey("extra_features_notice_version", 0)
+val mediaPreloadKey = KBooleanKey(KEY_MEDIA_PRELOAD, false)
+val mediaPreloadOnWifiOnlyKey = KBooleanKey(KEY_PRELOAD_WIFI_ONLY, true)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

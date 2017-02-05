@@ -67,6 +67,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Tallenna</string>
   <string name="action_saving_search">tallennetaan haku</string>
+  <string name="action_select_user">Valitse käyttäjä</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Lähetä</string>
   <string name="action_sending_direct_message">Lähetetään yksityisviestiä</string>
@@ -186,7 +187,6 @@
   <string name="cant_load_all_replies_message">Kaikkia vastauksia ei voida ladata. &lt;a href=\"#dialog\";&gt;Miksikö?&lt;/a&gt;</string>
   <string name="cards">Kortit</string>
   <string name="clear_cache">Tyhjennä välimuisti</string>
-  <string name="clear_cache_summary">Tyhjennä profiilikuvien säilytetty välimuisti.</string>
   <string name="clear_databases">Tyhjennä tietokannat</string>
   <string name="clear_databases_summary">Tyhjennä kaikki twiitit, profiilit ja viestit. Tilisi valtuutukset eivät häviä.</string>
   <string name="clear_search_history">Tyhjennä hakuhistoria</string>
@@ -510,6 +510,8 @@
   <string name="preference_title_accounts">Tilit</string>
   <string name="preference_title_advanced">Lisäasetukset</string>
   <string name="preference_title_database_item_limit">Tietokannan kokorajoitus</string>
+  <string name="preference_title_portrait">Pystykuva</string>
+  <string name="preference_title_landscape">Vaakakuva</string>
   <string name="preference_title_storage">Säilytys</string>
   <string name="preference_title_translate">Käännä</string>
   <string name="preload_wifi_only">Lataa etukäteen vain Wi-Fi-yhteydellä</string>
@@ -723,6 +725,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Käyttäjä</string>
   <string name="title_user_colors">Käyttäjän värit</string>
+  <string name="title_user_list_memberships">Kuuluu käyttäjälle</string>
   <string name="title_users_favorited_this">Käyttäjä lisäsi tämän suosikkeihinsa</string>
   <string name="title_users_liked_this">Käyttäjät tykkäsivät tästä</string>
   <string name="title_users_retweeted_this">Uudelleentwiitanneet käyttäjät</string>

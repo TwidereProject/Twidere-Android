@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@id/share"
@@ -18,9 +19,28 @@
         android:icon="@drawable/ic_action_speaker_muted"
         android:title="@string/add_to_filter"/>
     <item
+        android:id="@+id/mute_users"
+        android:enabled="@bool/debug"
+        android:icon="@drawable/ic_action_mic_muted"
+        android:title="@string/action_status_mute_users"
+        android:visible="@bool/debug"/>
+    <item
+        android:id="@+id/block_users"
+        android:enabled="@bool/debug"
+        android:icon="@drawable/ic_action_block"
+        android:title="@string/action_status_block_users"
+        android:visible="@bool/debug"/>
+    <item
         android:id="@id/delete"
         android:icon="@drawable/ic_action_delete"
         android:title="@string/action_delete"
         android:visible="false"/>
+    <item
+        android:id="@+id/make_gap"
+        android:enabled="@bool/debug"
+        android:title="Make gap"
+        android:visible="@bool/debug"
+        tools:ignore="HardcodedText"/>
+
 
 </menu>

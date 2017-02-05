@@ -33,8 +33,12 @@ import java.io.File
 import java.io.IOException
 import java.lang.ref.WeakReference
 
-abstract class SaveFileTask(context: Context, private val source: Uri,
-                            private val destination: File, private val getMimeType: SaveFileTask.FileInfoCallback) : AsyncTask<Any, Any, SaveFileTask.SaveFileResult>() {
+abstract class SaveFileTask(
+        context: Context,
+        private val source: Uri,
+        private val destination: File,
+        private val getMimeType: SaveFileTask.FileInfoCallback
+) : AsyncTask<Any, Any, SaveFileTask.SaveFileResult>() {
 
     private val contextRef: WeakReference<Context>
 
@@ -44,7 +48,7 @@ abstract class SaveFileTask(context: Context, private val source: Uri,
 
     override fun doInBackground(vararg args: Any): SaveFileResult? {
         val context = contextRef.get() ?: return null
-        return saveFile(context, source, getMimeType, destination)
+        return saveFile(context, source, getMimeType, destination, requiresValidExtension)
     }
 
     override fun onCancelled() {
@@ -72,6 +76,7 @@ abstract class SaveFileTask(context: Context, private val source: Uri,
 
     protected abstract fun dismissProgress()
 
+    open val requiresValidExtension: Boolean = false
 
     protected val context: Context?
         get() = contextRef.get()
@@ -102,7 +107,7 @@ abstract class SaveFileTask(context: Context, private val source: Uri,
 
         fun saveFile(context: Context, source: Uri,
                      fileInfoCallback: FileInfoCallback,
-                     destinationDir: File): SaveFileResult? {
+                     destinationDir: File, requiresValidExtension: Boolean): SaveFileResult? {
             val cr = context.contentResolver
             var ioSrc: Source? = null
             var sink: BufferedSink? = null
@@ -114,6 +119,9 @@ abstract class SaveFileTask(context: Context, private val source: Uri,
                 }
                 val mimeType = fileInfoCallback.getMimeType(source) ?: return null
                 val extension = fileInfoCallback.getExtension(mimeType)
+                if (requiresValidExtension && extension == null) {
+                    return null
+                }
                 if (!destinationDir.isDirectory && !destinationDir.mkdirs()) return null
                 var nameToSave = getFileNameWithExtension(name, extension,
                         fileInfoCallback.specialCharacter, null)

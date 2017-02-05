@@ -64,8 +64,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         val loader = adapter.mediaLoader
         val formatter = adapter.bidiFormatter
 
-        nameView.setName(group.fullname)
-        nameView.setScreenName("!" + group.nickname)
+        nameView.name = group.fullname
+        nameView.screenName = "!${group.nickname}"
 
         nameView.updateText(formatter)
         val groupHost = UserKeyUtils.getUserHost(group.url, group.account_key.host)

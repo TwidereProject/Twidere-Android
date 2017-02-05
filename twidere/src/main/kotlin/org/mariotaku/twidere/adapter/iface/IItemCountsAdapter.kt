@@ -1,25 +1,20 @@
-package org.mariotaku.twidere.adapter.iface;
+package org.mariotaku.twidere.adapter.iface
+
+import org.mariotaku.twidere.model.ItemCounts
 
 /**
  * Created by mariotaku on 16/8/19.
  */
 interface IItemCountsAdapter {
 
-    val itemCounts: IntArray
+    val itemCounts: ItemCounts
 
     fun getItemCountIndex(position: Int): Int {
-        var sum: Int = 0
-        itemCounts.forEachIndexed { idx, count ->
-            sum += count
-            if (position < sum) {
-                return idx
-            }
-        }
-        return -1
+        return itemCounts.getItemCountIndex(position)
     }
 
     fun getItemStartPosition(index: Int): Int {
-        return itemCounts.slice(0 until index).sum()
+        return itemCounts.getItemStartPosition(index)
     }
 
 }

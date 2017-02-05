@@ -46,6 +46,7 @@
   <string name="action_retweet">Retweetovat</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Uložit</string>
+  <string name="action_select_user">Vybrat uživatele</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Poslat</string>
   <string name="action_set_color">Nastavit barvu</string>
@@ -93,7 +94,6 @@
   <string name="cache_size_limit">Maximální velikost mezipaměti</string>
   <string name="cards">Karty</string>
   <string name="clear_cache">Vymazat mezipaměť</string>
-  <string name="clear_cache_summary">Vyčistit mezipaměť uložených profilových obrázků.</string>
   <string name="clear_databases">Vymazat databázi</string>
   <string name="clear_search_history">Vymazat historii vyhledávání</string>
   <string name="compose_now">Vytvořit hned</string>
@@ -237,6 +237,8 @@
   <string name="preference_title_accounts">Účty</string>
   <string name="preference_title_advanced">Pokročilé</string>
   <string name="preference_title_database_item_limit">Limit velikosti databáze</string>
+  <string name="preference_title_portrait">Svisle</string>
+  <string name="preference_title_landscape">Vodorovně</string>
   <string name="preference_title_storage">Úložiště</string>
   <string name="preference_title_translate">Překlad</string>
   <string name="preview">Náhled</string>
@@ -375,6 +377,7 @@
   <string name="title_subscription_url">URL</string>
   <string name="title_user">Uživatel</string>
   <string name="title_user_colors">Uživatelské barvy</string>
+  <string name="title_user_list_memberships">Patří do</string>
   <string name="title_users_retweeted_this">Uživatelů retweetovalo</string>
   <string name="translators">Překladatelé</string>
   <string name="trends">Trendy</string>

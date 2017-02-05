@@ -60,6 +60,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spremi</string>
   <string name="action_saving_search">spremam pretragu</string>
+  <string name="action_select_user">Odaberite korisnika</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Pošalji</string>
   <string name="action_sending_direct_message">šaljem izravnu poruku</string>
@@ -145,7 +146,6 @@
   <string name="cache_size_limit">Ograničenje veličine predmemorije</string>
   <string name="cards">Kartice</string>
   <string name="clear_cache">Očisti predmemoriju</string>
-  <string name="clear_cache_summary">Očisti predmemoriju za spremljene slike profila.</string>
   <string name="clear_databases">Očisti baze podataka</string>
   <string name="clear_databases_summary">Očisti sve tweetove, profile, poruke. Podaci o vašem računu neće biti izgubljeni.</string>
   <string name="clear_search_history">Očisti povijest pretraživanja</string>
@@ -613,6 +613,7 @@
   <string name="title_subscription_url">URL</string>
   <string name="title_user">Korisnik</string>
   <string name="title_user_colors">Korisničke boje</string>
+  <string name="title_user_list_memberships">Pripada</string>
   <string name="title_users_favorited_this">Korisnici su ovo stavili u favorite</string>
   <string name="title_users_retweeted_this">Korisnici su retweetali ovo</string>
   <string name="translation_destination">Odredište prijevoda</string>

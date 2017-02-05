@@ -65,6 +65,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Зберегти</string>
   <string name="action_saving_search">збереження пошуку</string>
+  <string name="action_select_user">Вибрати користувача</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Надіслати</string>
   <string name="action_sending_direct_message">Надсилаємо приватне повідомлення</string>
@@ -186,7 +187,6 @@
   <string name="cant_load_all_replies_message">Неможливо завантажити всі відповіді. &lt;a href=\"#dialog\";&gt;Чому?&lt;/a&gt;</string>
   <string name="cards">Картки</string>
   <string name="clear_cache">Очистити кеш</string>
-  <string name="clear_cache_summary">Очистити кеш зображень профілю.</string>
   <string name="clear_databases">Очистити бази даних</string>
   <string name="clear_databases_summary">Очистити всі твіти, профілі, повідомлення. Ваші облікові дані не будуть втрачені.</string>
   <string name="clear_search_history">Очистити історію пошуку</string>
@@ -525,6 +525,8 @@
   <string name="preference_title_accounts">Профілі</string>
   <string name="preference_title_advanced">Додатково</string>
   <string name="preference_title_database_item_limit">Обмеження розміру бази даних</string>
+  <string name="preference_title_portrait">Портретний</string>
+  <string name="preference_title_landscape">Ландшафтний</string>
   <string name="preference_title_storage">Пам\'ять</string>
   <string name="preference_title_translate">Перекласти</string>
   <string name="preload_wifi_only">Попереднє завантаження лише через wi-fi</string>
@@ -746,6 +748,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Користувач</string>
   <string name="title_user_colors">Кольори користувача</string>
+  <string name="title_user_list_memberships">Списки зі мною</string>
   <string name="title_users_favorited_this">Додали до обраного</string>
   <string name="title_users_liked_this">Вподобали</string>
   <string name="title_users_retweeted_this">Користувачі, які ретвітнули це</string>

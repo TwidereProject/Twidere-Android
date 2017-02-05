@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.util
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
@@ -11,6 +12,7 @@ import org.mariotaku.twidere.constant.filterPossibilitySensitiveStatusesKey
 import org.mariotaku.twidere.constant.filterUnavailableQuoteStatusesKey
 import org.mariotaku.twidere.model.DraftCursorIndices
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 
 /**
@@ -99,4 +101,16 @@ fun deleteDrafts(context: Context, draftIds: LongArray): Int {
         }
     }
     return context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
+}
+
+fun deleteAccountData(resolver: ContentResolver, accountKey: UserKey) {
+    val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
+    val whereArgs = arrayOf(accountKey.toString())
+    // Also delete tweets related to the account we previously
+    // deleted.
+    resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
+    resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
+    resolver.delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
+    resolver.delete(DirectMessages.Inbox.CONTENT_URI, where, whereArgs)
+    resolver.delete(DirectMessages.Outbox.CONTENT_URI, where, whereArgs)
 }

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/apiEditorContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/loadDefaults"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/load_defaults"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.mariotaku.twidere.view.FixedTextView
+                android:id="@+id/labelApiUrlFormat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:text="@string/api_url_format"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/apiUrlFormatHelp"
+                android:layout_width="@dimen/element_size_small"
+                android:layout_height="@dimen/element_size_small"
+                android:layout_weight="0"
+                android:background="?selectableItemBackground"
+                android:src="@drawable/ic_action_info"/>
+        </LinearLayout>
+
+        <org.mariotaku.twidere.view.FixedEditText
+            android:id="@+id/editApiUrlFormat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textUri"
+            android:maxLines="1"
+            tools:text="https://api.twitter.com/"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/labelAccountType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_account_type"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <Spinner
+            android:id="@+id/accountTypeSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            tools:listitem="@layout/support_simple_spinner_dropdown_item"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/labelAuthType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_auth_type"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <HorizontalScrollView
+            android:id="@+id/authTypeScroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal">
+
+            <RadioGroup
+                android:id="@+id/editAuthType"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/oauth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/auth_type_oauth"
+                    tools:checked="true"/>
+
+                <RadioButton
+                    android:id="@+id/basic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/auth_type_basic"/>
+
+                <RadioButton
+                    android:id="@+id/twipO"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/auth_type_twip_o"/>
+
+                <RadioButton
+                    android:id="@+id/xauth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/auth_type_xauth"/>
+            </RadioGroup>
+        </HorizontalScrollView>
+
+        <include
+            layout="@layout/layout_api_editor_advanced_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"/>
+    </LinearLayout>
+</ScrollView>

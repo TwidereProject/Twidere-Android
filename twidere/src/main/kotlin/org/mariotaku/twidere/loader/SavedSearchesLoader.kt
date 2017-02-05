@@ -47,7 +47,7 @@ class SavedSearchesLoader(
         return null
     }
 
-    public override fun onStartLoading() {
+    override fun onStartLoading() {
         forceLoad()
     }
 

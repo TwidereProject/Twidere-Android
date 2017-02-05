@@ -62,7 +62,7 @@
                         android:scaleType="centerCrop"
                         tools:src="@drawable/ic_profile_image_twidere"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -95,7 +95,7 @@
                         android:scaleType="centerCrop"
                         tools:src="@drawable/nyan_stars_background_tile"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -126,7 +126,7 @@
                         android:scaleType="centerCrop"
                         tools:src="@drawable/nyan_stars_background_tile"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -231,7 +231,7 @@
                         android:layout_weight="0"
                         tools:color="@color/branding_color"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_normal"
@@ -261,7 +261,7 @@
                         android:layout_weight="0"
                         tools:color="@color/branding_color"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/element_spacing_normal"

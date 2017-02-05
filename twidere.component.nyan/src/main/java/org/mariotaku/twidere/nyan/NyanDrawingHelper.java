@@ -33,6 +33,7 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,9 +78,9 @@ public class NyanDrawingHelper {
         } else {
             sakamotoRes = R.drawable.nyan_sakamoto;
         }
-        mSakamotoHelper = new DrawableDrawingHelper(mResources.getDrawable(sakamotoRes));
+        mSakamotoHelper = new DrawableDrawingHelper(ContextCompat.getDrawable(context, sakamotoRes));
         mDrawingHelpers = new IDrawingHelper[]{mStarsHelper, mRainbowHelper, mSakamotoHelper};
-        mBackgroundColor = mResources.getColor(R.color.nyan_background);
+        mBackgroundColor = ContextCompat.getColor(context, R.color.nyan_background);
     }
 
     public final void dispatchDraw(final Canvas canvas) {

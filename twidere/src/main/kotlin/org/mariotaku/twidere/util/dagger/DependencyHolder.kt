@@ -58,7 +58,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var preferences: SharedPreferencesWrapper
         internal set
     @Inject
-    lateinit var connectionPoll: ConnectionPool
+    lateinit var connectionPool: ConnectionPool
         internal set
     @Inject
     lateinit var defaultFeatures: DefaultFeatures

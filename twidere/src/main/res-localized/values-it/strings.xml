@@ -63,6 +63,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salva</string>
   <string name="action_saving_search">salva ricerca</string>
+  <string name="action_select_user">Seleziona utente</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Invia</string>
   <string name="action_sending_direct_message">invio messaggio diretto in corso</string>
@@ -182,7 +183,6 @@
   <string name="cant_load_all_replies_message">Non è possibile caricare tutte le risposte. &lt;a href=\"#dialog\";&gt;Perché?&lt;/a&gt;</string>
   <string name="cards">Schede</string>
   <string name="clear_cache">Cancella cache</string>
-  <string name="clear_cache_summary">Cancella cache delle immagini profilo memorizzate.</string>
   <string name="clear_databases">Cancella i database</string>
   <string name="clear_databases_summary">Cancella tutti i tweet, profili, messaggi. Le credenziali degli account non saranno perse.</string>
   <string name="clear_search_history">Cancella cronologia ricerche</string>
@@ -510,6 +510,8 @@
   <string name="preference_title_accounts">Accounts</string>
   <string name="preference_title_advanced">Avanzate</string>
   <string name="preference_title_database_item_limit">Limite dimensione database</string>
+  <string name="preference_title_portrait">Portrait</string>
+  <string name="preference_title_landscape">Landscape</string>
   <string name="preference_title_storage">Archivio</string>
   <string name="preference_title_translate">Traduce</string>
   <string name="preload_wifi_only">Precarica solo se in Wi-Fi</string>
@@ -719,6 +721,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Utenti</string>
   <string name="title_user_colors">Colori personalizzati</string>
+  <string name="title_user_list_memberships">Appartiene a</string>
   <string name="title_users_favorited_this">Users che hanno inserito tra i preferiti</string>
   <string name="title_users_liked_this">Utenti a cui piace</string>
   <string name="title_users_retweeted_this">Utenti che hanno retwittato questo</string>

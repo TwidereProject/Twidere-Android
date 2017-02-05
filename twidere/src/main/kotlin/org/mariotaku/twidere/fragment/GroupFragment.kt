@@ -123,7 +123,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
 
         }
 
-        public override fun onStartLoading() {
+        override fun onStartLoading() {
             forceLoad()
         }
 

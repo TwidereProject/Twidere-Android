@@ -22,8 +22,10 @@ package org.mariotaku.twidere.util.dagger
 import android.app.Application
 import android.content.Context
 import android.location.LocationManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Looper
+import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.text.BidiFormatter
 import com.nostra13.universalimageloader.cache.disc.DiskCache
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache
@@ -45,6 +47,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache
@@ -129,7 +132,8 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun restHttpClient(prefs: SharedPreferencesWrapper, dns: TwidereDns,
                        connectionPool: ConnectionPool): RestHttpClient {
-        return HttpClientFactory.createRestHttpClient(application, prefs, dns, connectionPool)
+        val conf = HttpClientFactory.HttpClientConfiguration(prefs)
+        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool)
     }
 
     @Provides
@@ -187,8 +191,12 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun mediaLoaderWrapper(loader: ImageLoader): MediaLoaderWrapper {
-        return MediaLoaderWrapper(loader)
+    fun mediaLoaderWrapper(loader: ImageLoader, preferences: SharedPreferencesWrapper): MediaLoaderWrapper {
+        val wrapper = MediaLoaderWrapper(loader)
+        wrapper.reloadOptions(preferences)
+        val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        wrapper.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
+        return wrapper
     }
 
     @Provides
@@ -303,7 +311,7 @@ class ApplicationModule(private val application: Application) {
         val cacheDir = Utils.getExternalCacheDir(application, dirName)
         val fallbackCacheDir = Utils.getInternalCacheDir(application, dirName)
         val fileNameGenerator = URLFileNameGenerator()
-        val cacheSize = TwidereMathUtils.clamp(preferences.getInt(SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT, 300), 100, 500)
+        val cacheSize = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
         try {
             val cacheMaxSizeBytes = cacheSize * 1024 * 1024
             if (cacheDir != null)

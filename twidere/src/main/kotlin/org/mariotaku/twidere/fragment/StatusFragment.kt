@@ -90,12 +90,15 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
+import org.mariotaku.twidere.model.ParcelableActivityCursorIndices
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.analyzer.StatusView
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent
@@ -121,14 +124,15 @@ import java.util.*
  * Created by mariotaku on 14/12/5.
  */
 class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<ParcelableStatus>>,
-        OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback, ContentListSupport {
+        OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback,
+        ContentListSupport<StatusFragment.StatusAdapter> {
     private var mItemDecoration: DividerItemDecoration? = null
 
     override lateinit var adapter: StatusAdapter
 
     private lateinit var layoutManager: LinearLayoutManager
     private lateinit var navigationHelper: RecyclerViewNavigationHelper
-    private lateinit var scrollListener: RecyclerViewScrollHandler
+    private lateinit var scrollListener: RecyclerViewScrollHandler<StatusFragment.StatusAdapter>
 
     private var loadTranslationTask: LoadTranslationTask? = null
     // Data fields
@@ -317,7 +321,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position) ?: return
-        IntentUtils.openStatus(activity, status.account_key, status.quoted_id)
+        val quotedId = status.quoted_id ?: return
+        IntentUtils.openStatus(activity, status.account_key, quotedId)
     }
 
     override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {
@@ -518,10 +523,26 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override val reachingEnd: Boolean
-        get() = layoutManager.findLastCompletelyVisibleItemPosition() >= adapter.itemCount - 1
+        get() {
+            val lm = layoutManager
+            var itemPos = lm.findLastCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findLastVisibleItemPosition()
+            }
+            return itemPos >= lm.itemCount - 1
+        }
 
     override val reachingStart: Boolean
-        get() = layoutManager.findFirstCompletelyVisibleItemPosition() <= 1
+        get() {
+            val lm = layoutManager
+            var itemPos = lm.findFirstCompletelyVisibleItemPosition()
+            if (itemPos == RecyclerView.NO_POSITION) {
+                // No completely visible item, find visible item instead
+                itemPos = lm.findFirstVisibleItemPosition()
+            }
+            return itemPos <= 1
+        }
 
     private val status: ParcelableStatus?
         get() = adapter.status
@@ -705,7 +726,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             builder.setMessage(R.string.sensitive_content_warning)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)
-            return builder.create()
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
         }
     }
 
@@ -814,9 +840,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     itemView.quotedName.visibility = View.VISIBLE
                     itemView.quotedText.visibility = View.VISIBLE
 
-                    itemView.quotedName.setName(colorNameManager.getUserNickname(status.quoted_user_key!!,
-                            status.quoted_user_name))
-                    itemView.quotedName.setScreenName(String.format("@%s", status.quoted_user_screen_name))
+                    itemView.quotedName.name = colorNameManager.getUserNickname(status.quoted_user_key!!,
+                            status.quoted_user_name)
+                    itemView.quotedName.screenName = "@${status.quoted_user_screen_name}"
                     itemView.quotedName.updateText(formatter)
 
 
@@ -893,8 +919,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 timestamp = status.timestamp
             }
 
-            itemView.name.setName(colorNameManager.getUserNickname(status.user_key, status.user_name))
-            itemView.name.setScreenName(String.format("@%s", status.user_screen_name))
+            itemView.name.name = colorNameManager.getUserNickname(status.user_key, status.user_name)
+            itemView.name.screenName = String.format("@%s", status.user_screen_name)
             itemView.name.updateText(formatter)
 
             loader.displayProfileImage(itemView.profileImage, status)
@@ -1153,8 +1179,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.countsUsersHeightHolder.count.textSize = textSize * 1.25f
             itemView.countsUsersHeightHolder.label.textSize = textSize * 0.85f
 
-            itemView.name.setNameFirst(adapter.nameFirst)
-            itemView.quotedName.setNameFirst(adapter.nameFirst)
+            itemView.name.nameFirst = adapter.nameFirst
+            itemView.quotedName.nameFirst = adapter.nameFirst
 
             itemView.mediaPreview.setStyle(adapter.mediaPreviewStyle)
             itemView.quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
@@ -1460,7 +1486,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var recyclerView: RecyclerView? = null
         private var statusViewHolder: DetailStatusViewHolder? = null
 
-        private val itemCounts: IntArray
+        private val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
         override val nameFirst: Boolean
         private val cardBackgroundColor: Int
@@ -1505,7 +1531,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         init {
             setHasStableIds(true)
             val context = fragment.activity
-            itemCounts = IntArray(ITEM_TYPES_SUM)
             // There's always a space at the end of the list
             itemCounts[ITEM_IDX_SPACE] = 1
             itemCounts[ITEM_IDX_STATUS] = 1
@@ -1550,7 +1575,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         fun getIndexStart(index: Int): Int {
             if (index == 0) return 0
-            return TwidereMathUtils.sum(itemCounts, 0, index - 1)
+            return itemCounts.getItemStartPosition(index)
         }
 
         override fun getStatusId(position: Int): String? {
@@ -1685,7 +1710,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     return ListParcelableStatusesAdapter.createStatusViewHolder(this, inflater, parent)
                 }
                 VIEW_TYPE_CONVERSATION_LOAD_INDICATOR, VIEW_TYPE_REPLIES_LOAD_INDICATOR -> {
-                    val view = inflater.inflate(R.layout.card_item_load_indicator, parent,
+                    val view = inflater.inflate(R.layout.list_item_load_indicator, parent,
                             false)
                     return LoadIndicatorViewHolder(view)
                 }
@@ -1807,7 +1832,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun getItemCount(): Int {
             if (status == null) return 0
-            return TwidereMathUtils.sum(itemCounts)
+            return itemCounts.itemCount
         }
 
         override fun onAttachedToRecyclerView(recyclerView: RecyclerView?) {

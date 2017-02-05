@@ -33,6 +33,9 @@ public abstract class TabExtras implements Parcelable {
             case CustomTabType.HOME_TIMELINE: {
                 return LoganSquare.parse(json, HomeTabExtras.class);
             }
+            case CustomTabType.TRENDS_SUGGESTIONS: {
+                return LoganSquare.parse(json, TrendsTabExtras.class);
+            }
         }
         return null;
     }

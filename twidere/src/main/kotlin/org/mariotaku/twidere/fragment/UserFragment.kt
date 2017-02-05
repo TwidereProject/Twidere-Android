@@ -83,9 +83,11 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -101,6 +103,7 @@ import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.lightFontKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -536,7 +539,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         get() {
             val currentItem = viewPager.currentItem
             if (currentItem < 0 || currentItem >= pagerAdapter.count) return null
-            return pagerAdapter.instantiateItem(viewPager, currentItem) as Fragment
+            return pagerAdapter.instantiateItem(viewPager, currentItem)
         }
 
     override fun triggerRefresh(position: Int): Boolean {
@@ -915,21 +918,38 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         ProgressDialogFragment.show(fragmentManager, "get_list_progress")
                     }
                 }.then {
+                    fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
+                        val result = ArrayList<UserList>()
+                        var nextCursor: Long
+                        val paging = Paging()
+                        paging.count(100)
+                        do {
+                            val resp = getUserListMemberships(user.key.id, paging, true)
+                            result.addAll(resp)
+                            nextCursor = resp.nextCursor
+                            paging.cursor(nextCursor)
+                        } while (nextCursor > 0)
+
+                        return result
+                    }
+
                     val microBlog = MicroBlogAPIFactory.getInstance(context, user.account_key)
+                    val ownedLists = ArrayList<ParcelableUserList>()
+                    val listMemberships = microBlog.getUserListOwnerMemberships(user.key.id)
                     val paging = Paging()
-                    val ownedLists = microBlog.getUserListOwnerships(paging)
-                    var nextCursor = ownedLists.nextCursor
-                    while (nextCursor != 0L) {
-                        val list = microBlog.getUserListOwnerships(paging)
-                        ownedLists.addAll(list)
-                        nextCursor = list.nextCursor
-                    }
-                    val userListMemberships = microBlog.getUserListMemberships(user.key.id, null, true)
-                    return@then Array<ParcelableUserList>(ownedLists.size) { idx ->
-                        val list = ParcelableUserListUtils.from(ownedLists[idx], user.account_key)
-                        list.is_user_inside = userListMemberships.firstOrNull { it.id == ownedLists[idx].id } != null
-                        return@Array list
-                    }
+                    paging.count(100)
+                    var nextCursor: Long
+                    do {
+                        val resp = microBlog.getUserListOwnerships(paging)
+                        resp.mapTo(ownedLists) { item ->
+                            val userList = ParcelableUserListUtils.from(item, user.account_key)
+                            userList.is_user_inside = listMemberships.any { it.id == item.id }
+                            return@mapTo userList
+                        }
+                        nextCursor = resp.nextCursor
+                        paging.cursor(nextCursor)
+                    } while (nextCursor > 0)
+                    return@then ownedLists.toTypedArray()
                 }.alwaysUi {
                     executeAfterFragmentResumed {
                         val df = fragmentManager.findFragmentByTag("get_list_progress") as? DialogFragment
@@ -1379,7 +1399,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private fun updateScrollOffset(offset: Int) {
         val spaceHeight = profileBannerSpace.height
-        val factor = TwidereMathUtils.clamp(if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat(), 0f, 1f)
+        val factor = (if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat()).coerceIn(0f, 1f)
         profileBannerContainer.translationY = (-offset).toFloat()
         profileBanner.translationY = (offset / 2).toFloat()
         profileBirthdayBanner.translationY = (offset / 2).toFloat()
@@ -1398,7 +1418,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val profileContentHeight = (profileNameContainer!!.height + profileDetailsContainer.height).toFloat()
         val tabOutlineAlphaFactor: Float
         if (offset - spaceHeight > 0) {
-            tabOutlineAlphaFactor = 1f - TwidereMathUtils.clamp((offset - spaceHeight) / profileContentHeight, 0f, 1f)
+            tabOutlineAlphaFactor = 1f - ((offset - spaceHeight) / profileContentHeight).coerceIn(0f, 1f)
         } else {
             tabOutlineAlphaFactor = 1f
         }
@@ -1448,7 +1468,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val location = IntArray(2)
         profileNameContainer.name.getLocationInWindow(location)
         val nameShowingRatio = (userProfileDrawer.paddingTop - location[1]) / profileNameContainer.name.height.toFloat()
-        val textAlpha = TwidereMathUtils.clamp(nameShowingRatio, 0f, 1f)
+        val textAlpha = nameShowingRatio.coerceIn(0f, 1f)
         val titleView = ViewSupport.findViewByText(toolbar, toolbar.title)
         if (titleView != null) {
             titleView.alpha = textAlpha
@@ -1526,10 +1546,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         private fun updateValue() {
-            val shadowAlpha = Math.round(alpha * TwidereMathUtils.clamp(1 - factor, 0f, 1f))
+            val shadowAlpha = Math.round(alpha * (1 - factor).coerceIn(0f, 1f))
             shadowDrawable.alpha = shadowAlpha
             val hasColor = color != 0
-            val colorAlpha = if (hasColor) Math.round(alpha * TwidereMathUtils.clamp(factor, 0f, 1f)) else 0
+            val colorAlpha = if (hasColor) Math.round(alpha * factor.coerceIn(0f, 1f)) else 0
             colorDrawable.alpha = colorAlpha
             invalidateSelf()
         }
@@ -1611,7 +1631,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
             builder.setMultiChoiceItems(entries, states, null)
             val dialog = builder.create()
-            dialog.setOnShowListener {
+            dialog.setOnShowListener { dialog ->
+                dialog as AlertDialog
+                dialog.applyTheme()
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = dialog.listView.checkedItemPositions
                     val weakActivity = WeakReference(activity)

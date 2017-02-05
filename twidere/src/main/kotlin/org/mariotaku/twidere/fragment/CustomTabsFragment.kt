@@ -54,6 +54,7 @@ import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.adapter.AccountsSpinnerAdapter
 import org.mariotaku.twidere.adapter.ArrayAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
@@ -231,6 +232,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
         override fun onShow(dialog: DialogInterface) {
             dialog as AlertDialog
+            dialog.applyTheme()
             @CustomTabType
             val tabType: String
             val tab: Tab

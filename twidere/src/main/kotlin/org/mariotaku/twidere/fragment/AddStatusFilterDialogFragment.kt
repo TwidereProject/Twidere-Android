@@ -28,6 +28,7 @@ import com.twitter.Extractor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.model.UserKey
@@ -94,7 +95,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                     val keyword = ParseUtils.parseString(value)
                     keywords.add(keyword)
                     val values = ContentValues()
-                    values.put(Filters.Keywords.VALUE, "#" + keyword)
+                    values.put(Filters.Keywords.VALUE, "#$keyword")
                     keywordValues.add(values)
                 } else if (info.type == FilterItemInfo.FILTER_TYPE_SOURCE) {
                     val source = ParseUtils.parseString(value)
@@ -113,7 +114,12 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
             ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)
         }
         builder.setNegativeButton(android.R.string.cancel, null)
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     private val filterItemsInfo: Array<FilterItemInfo>

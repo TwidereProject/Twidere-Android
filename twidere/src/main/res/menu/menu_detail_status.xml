@@ -34,6 +34,18 @@
         android:icon="@drawable/ic_action_speaker_muted"
         android:title="@string/add_to_filter"/>
     <item
+        android:id="@+id/mute_users"
+        android:enabled="@bool/debug"
+        android:icon="@drawable/ic_action_mic_muted"
+        android:title="@string/action_status_mute_users"
+        android:visible="@bool/debug"/>
+    <item
+        android:id="@+id/block_users"
+        android:enabled="@bool/debug"
+        android:icon="@drawable/ic_action_block"
+        android:title="@string/action_status_block_users"
+        android:visible="@bool/debug"/>
+    <item
         android:id="@id/set_color"
         android:icon="@drawable/ic_action_color_palette"
         android:title="@string/action_set_color"/>

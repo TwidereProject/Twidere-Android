@@ -50,7 +50,7 @@ class UserFavoritesLoader(
         tabPosition, fromUser, loadingMore) {
 
     @Throws(MicroBlogException::class)
-    public override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Status> {
+    override fun getStatuses(microBlog: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Status> {
         if (userKey != null) {
             return microBlog.getFavorites(userKey.id, paging)
         } else if (screenName != null) {

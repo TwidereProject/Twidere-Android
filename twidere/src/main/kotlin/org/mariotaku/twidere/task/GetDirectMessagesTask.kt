@@ -47,7 +47,7 @@ abstract class GetDirectMessagesTask(
 
     protected abstract val isOutgoing: Boolean
 
-    public override fun doLongOperation(param: RefreshTaskParam): List<TwitterWrapper.MessageListResponse> {
+    override fun doLongOperation(param: RefreshTaskParam): List<TwitterWrapper.MessageListResponse> {
         val accountKeys = param.accountKeys
         val sinceIds = param.sinceIds
         val maxIds = param.maxIds

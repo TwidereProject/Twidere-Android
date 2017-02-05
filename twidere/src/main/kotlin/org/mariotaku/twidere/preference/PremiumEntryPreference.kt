@@ -31,8 +31,9 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
             if (!extraFeaturesService.isEnabled(requiredFeature)) {
                 val activity = ChameleonUtils.getActivity(context)
                 if (activity is FragmentActivity) {
-                    ExtraFeaturesIntroductionDialogFragment.show(activity.supportFragmentManager,
-                            requiredFeature, REQUEST_PURCHASE_EXTRA_FEATURES)
+                    ExtraFeaturesIntroductionDialogFragment.show(fm = activity.supportFragmentManager,
+                            feature = requiredFeature, source = "preference:${key}",
+                            requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
                 }
                 return@setOnPreferenceClickListener true
             }

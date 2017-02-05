@@ -1,9 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-
-    <string name="default_tab_display_option">icon</string>
-    <string name="profile_image_size">normal</string>
+    <bool name="default_multi_column_tabs_land">false</bool>
+    <bool name="default_multi_column_tabs_port">false</bool>
     <string name="default_profile_image_style">round</string>
+    <string name="default_tab_display_option">icon</string>
+
     <integer name="min_database_item_limit">50</integer>
 
+    <string name="profile_image_size">normal</string>
 </resources>

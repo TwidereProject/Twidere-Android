@@ -22,7 +22,7 @@ class GetSavedSearchesTask(
         private val context: Context
 ) : AbstractTask<Array<UserKey>, SingleResponse<Unit>, Any?>() {
 
-    public override fun doLongOperation(params: Array<UserKey>): SingleResponse<Unit> {
+    override fun doLongOperation(params: Array<UserKey>): SingleResponse<Unit> {
         val cr = context.contentResolver
         for (accountKey in params) {
             val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue

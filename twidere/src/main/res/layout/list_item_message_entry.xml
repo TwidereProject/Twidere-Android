@@ -90,7 +90,7 @@
             android:textColor="?android:attr/textColorSecondary"
             tools:text="12:00"/>
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

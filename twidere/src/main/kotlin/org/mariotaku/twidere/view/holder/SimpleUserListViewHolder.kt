@@ -12,13 +12,8 @@ import kotlinx.android.synthetic.main.list_item_simple_user_list.view.*
 
 class SimpleUserListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val createdByView: TextView
-    val nameView: TextView
-    val profileImageView: ImageView
+    val createdByView: TextView = itemView.createdBy
+    val nameView: TextView = itemView.name
+    val profileImageView: ImageView = itemView.profileImage
 
-    init {
-        nameView = itemView.name
-        createdByView = itemView.createdBy
-        profileImageView = itemView.profileImage
-    }
 }

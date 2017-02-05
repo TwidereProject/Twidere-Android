@@ -208,7 +208,7 @@ class ParcelableActivitiesAdapter(
                 return GapViewHolder(this, view)
             }
             ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
-                val view = inflater.inflate(R.layout.card_item_load_indicator, parent, false)
+                val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
             ITEM_VIEW_TYPE_STUB -> {
@@ -237,7 +237,7 @@ class ParcelableActivitiesAdapter(
             }
             ITEM_VIEW_TYPE_GAP -> {
                 val activity = getActivity(position)!!
-                val loading = gapLoadingIds.find { it.accountKey == activity.account_key && it.id == activity.id } != null
+                val loading = gapLoadingIds.any { it.accountKey == activity.account_key && it.id == activity.id }
                 (holder as GapViewHolder).display(loading)
             }
         }

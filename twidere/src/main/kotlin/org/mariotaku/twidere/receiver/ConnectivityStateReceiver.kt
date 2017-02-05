@@ -34,6 +34,7 @@ import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.usageStatisticsKey
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.dagger.DependencyHolder
 
 class ConnectivityStateReceiver : BroadcastReceiver() {
 
@@ -42,6 +43,7 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
         if (ConnectivityManager.CONNECTIVITY_ACTION != intent.action) return
         val application = TwidereApplication.getInstance(context)
         //        application.reloadConnectivitySettings();
+
         val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
                 Context.MODE_PRIVATE)
         if (prefs[usageStatisticsKey]) {
@@ -54,6 +56,7 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
         val appContext = context.applicationContext
         val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
+        DependencyHolder.get(context).mediaLoader.isNetworkMetered = isNetworkMetered
         val isCharging = Utils.isCharging(appContext)
         if (!isNetworkMetered && isCharging) {
             val currentTime = System.currentTimeMillis()

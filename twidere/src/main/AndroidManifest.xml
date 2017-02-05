@@ -376,16 +376,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.UserListSelectorActivity"
-            android:label="@string/select_user_list"
-            android:theme="@style/Theme.Twidere.Dialog">
+            android:name=".activity.UserSelectorActivity"
+            android:label="@string/select_user"
+            android:theme="@style/Theme.Twidere.Dialog"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="org.mariotaku.twidere.SELECT_USER"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.UserListSelectorActivity"
+            android:label="@string/select_user_list"
+            android:theme="@style/Theme.Twidere.Dialog"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
                 <action android:name="org.mariotaku.twidere.SELECT_USER_LIST"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.TrendsLocationSelectorActivity"
+            android:label="@string/trends_location"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
         <activity
             android:name=".activity.DataExportActivity"
             android:label="@string/export_settings"

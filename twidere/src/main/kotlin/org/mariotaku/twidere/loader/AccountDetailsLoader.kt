@@ -16,13 +16,9 @@ class AccountDetailsLoader(
         context: Context,
         val filter: (AccountDetails.() -> Boolean)? = null
 ) : AsyncTaskLoader<List<AccountDetails>>(context) {
-    private val am: AccountManager
+    private val am: AccountManager = AccountManager.get(context)
     private val accountUpdateListener = OnAccountsUpdateListener {
         onContentChanged()
-    }
-
-    init {
-        am = AccountManager.get(context)
     }
 
     override fun loadInBackground(): List<AccountDetails> {

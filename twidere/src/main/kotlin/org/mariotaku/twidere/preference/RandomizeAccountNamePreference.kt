@@ -15,6 +15,7 @@ import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.getAccountUser
+import org.mariotaku.twidere.extension.model.renameTwidereAccount
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.preference.iface.IDialogPreference
 import org.mariotaku.twidere.util.generateAccountName
@@ -49,7 +50,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
     }
 
     override fun onClick() {
-        persistBoolean(!getPersistedBoolean(false));
+        persistBoolean(!getPersistedBoolean(false))
         notifyChanged()
         super.onClick()
     }
@@ -72,7 +73,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
                     do {
                         newName = UUID.randomUUID().toString()
                     } while (usedNames.contains(newName))
-                    AccountUtils.renameAccount(am, oldAccount, newName)
+                    am.renameTwidereAccount(oldAccount, newName)
                     usedNames.add(newName)
                 }
             } else {
@@ -80,7 +81,7 @@ class RandomizeAccountNamePreference @JvmOverloads constructor(
                     val accountKey = oldAccount.getAccountKey(am)
                     val accountUser = oldAccount.getAccountUser(am)
                     val newName = generateAccountName(accountUser.screen_name, accountKey.host)
-                    AccountUtils.renameAccount(am, oldAccount, newName)
+                    am.renameTwidereAccount(oldAccount, newName)
                 }
             }
         }

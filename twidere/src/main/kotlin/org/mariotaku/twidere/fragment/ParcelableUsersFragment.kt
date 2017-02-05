@@ -40,7 +40,6 @@ import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SIMPLE_LAYOUT
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
@@ -56,9 +55,9 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         LoaderCallbacks<List<ParcelableUser>?>, UserClickListener, KeyboardShortcutCallback,
         IUsersAdapter.FriendshipClickListener {
 
-    private val usersBusCallback: Any
+    private lateinit var navigationHelper: RecyclerViewNavigationHelper
 
-    private var navigationHelper: RecyclerViewNavigationHelper? = null
+    private val usersBusCallback: Any
 
     init {
         usersBusCallback = createMessageBusCallback()
@@ -118,17 +117,17 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
                                               event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
+        return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
                                               repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+        return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
                                            event: KeyEvent, metaState: Int): Boolean {
-        return navigationHelper!!.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+        return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableUser>?> {

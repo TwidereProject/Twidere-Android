@@ -42,7 +42,7 @@
         app:iabColor="?android:colorForeground"
         tools:src="@drawable/ic_action_settings"/>
 
-    <TextView
+    <org.mariotaku.twidere.view.PreferencesItemTextView
         android:id="@android:id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

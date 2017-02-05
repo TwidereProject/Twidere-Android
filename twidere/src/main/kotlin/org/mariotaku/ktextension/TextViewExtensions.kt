@@ -8,6 +8,6 @@ val TextView.empty: Boolean
 
 fun TextView.applyFontFamily(lightFont: Boolean) {
     if (lightFont) {
-        typeface = Typeface.create("sans-serif-light", typeface?.style ?: 0)
+        typeface = Typeface.create("sans-serif-light", typeface?.style ?: Typeface.NORMAL)
     }
 }

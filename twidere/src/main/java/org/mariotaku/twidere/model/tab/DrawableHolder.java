@@ -172,6 +172,12 @@ public abstract class DrawableHolder {
                 return "favorite";
             }
 
+            @Nullable
+            @Override
+            public String getName() {
+                return "Favorite/Like";
+            }
+
             @NonNull
             @Override
             public Drawable createDrawable(Context context) {

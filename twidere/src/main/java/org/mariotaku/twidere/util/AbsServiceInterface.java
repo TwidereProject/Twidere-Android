@@ -106,6 +106,7 @@ public abstract class AbsServiceInterface<I extends IInterface> implements IInte
     }
 
     public interface CheckServiceAction {
+        @SuppressWarnings("RedundantThrows")
         void check(@Nullable Bundle metaData) throws CheckServiceException;
     }
 

@@ -3,7 +3,7 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/keyboard_shortcuts">
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
@@ -15,18 +15,18 @@
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="message"
             android:title="@string/direct_messages"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_home"
         android:title="@string/title_home">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="home.accounts_dashboard"
             android:tag="home"
             android:title="@string/open_accounts_dashboard"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_navigation"
         android:title="@string/navigation">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
@@ -65,9 +65,9 @@
             android:action="navigation.top"
             android:tag="navigation"
             android:title="@string/jump_to_top"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_statuses"
         android:title="@string/title_statuses">
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
@@ -82,5 +82,5 @@
             android:action="status.favorite"
             android:tag="status"
             android:title="@string/action_favorite"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 </PreferenceScreen>

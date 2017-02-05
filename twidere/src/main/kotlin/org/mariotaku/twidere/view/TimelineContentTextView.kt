@@ -76,6 +76,15 @@ class TimelineContentTextView @JvmOverloads constructor(
         super.setLongClickable(longClickable && isTextSelectable)
     }
 
+    override fun onTextContextMenuItem(id: Int): Boolean {
+        try {
+            return super.onTextContextMenuItem(id)
+        } catch (e: AbstractMethodError) {
+            // http://crashes.to/s/69acd0ea0de
+            return true
+        }
+    }
+
     internal class InternalMovementMethod : MovementMethod {
         private var targetSpan: ClickableSpan? = null
 

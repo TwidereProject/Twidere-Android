@@ -29,7 +29,7 @@
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="0dp"
     android:paddingStart="@dimen/element_spacing_normal"
-    tools:showIn="@layout/layout_api_editor">
+    tools:showIn="@layout/dialog_api_editor">
 
     <CheckBox
         android:id="@+id/editSameOAuthSigningUrl"

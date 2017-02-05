@@ -62,7 +62,7 @@ class UserAutoCompleteAdapter(val context: Context) : SimpleCursorAdapter(contex
 
     private var indices: ParcelableUserCursorIndices? = null
 
-    private var accountKey: UserKey? = null
+    var accountKey: UserKey? = null
 
     init {
         GeneralComponentHelper.build(context).inject(this)
@@ -123,11 +123,6 @@ class UserAutoCompleteAdapter(val context: Context) : SimpleCursorAdapter(contex
         val cursor = context.contentResolver.query(uri, CachedUsers.COLUMNS, usersSelection.sql,
                 selectionArgs, orderBy.sql)
         return cursor
-    }
-
-
-    fun setAccountKey(accountKey: UserKey) {
-        this.accountKey = accountKey
     }
 
     override fun swapCursor(cursor: Cursor?): Cursor? {

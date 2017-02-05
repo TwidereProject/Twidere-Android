@@ -132,7 +132,7 @@
                     android:focusable="false"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                         android:textStyle="bold"
                         tools:text="Name"/>
 
-                    <TextView
+                    <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/screenName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -168,8 +168,7 @@
                         android:id="@+id/accountDashboardMenu"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:focusable="true"
-                        android:tag="ate_ignore"/>
+                        android:focusable="true"/>
                 </FrameLayout>
 
             </LinearLayout>
@@ -194,7 +193,7 @@
         android:clickable="true"
         tools:visibility="gone">
 
-        <TextView
+        <org.mariotaku.twidere.view.FixedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

@@ -19,12 +19,11 @@ import android.view.View
 import android.widget.TextView
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.setItemAvailability
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
-import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
@@ -35,7 +34,7 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.util.ContentValuesCreator
+import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -47,6 +46,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override val contentUri: Uri = Filters.Users.CONTENT_URI
     override val contentColumns: Array<String> = Filters.Users.COLUMNS
     override val sortOrder: String? = "${Filters.Users.SOURCE} >= 0"
+    override val supportsEdit: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -55,35 +55,30 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_SELECT_USER -> {
-                if (resultCode != FragmentActivity.RESULT_OK) return
-                val user = data!!.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                val values = ContentValuesCreator.createFilteredUser(user)
-                val resolver = context.contentResolver
-                val where = Expression.equalsArgs(Filters.Users.USER_KEY).sql
-                val whereArgs = arrayOf(user.key.toString())
-                resolver.delete(Filters.Users.CONTENT_URI, where, whereArgs)
-                resolver.insert(Filters.Users.CONTENT_URI, values)
+                if (resultCode != FragmentActivity.RESULT_OK || data == null) return
+                val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                DataStoreUtils.addToFilter(context, listOf(user), false)
             }
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
-                if (resultCode != FragmentActivity.RESULT_OK) return
+                if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
                 intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_BLOCKS).build()
-                intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
+                intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }
             REQUEST_IMPORT_MUTES_SELECT_ACCOUNT -> {
-                if (resultCode != FragmentActivity.RESULT_OK) return
+                if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(context, LinkHandlerActivity::class.java)
                 intent.data = Uri.Builder().scheme(SCHEME_TWIDERE).authority(AUTHORITY_FILTERS).path(PATH_FILTERS_IMPORT_MUTES).build()
-                intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
+                intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
                 startActivity(intent)
             }
             REQUEST_ADD_USER_SELECT_ACCOUNT -> {
-                if (resultCode != FragmentActivity.RESULT_OK) return
+                if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val intent = Intent(INTENT_ACTION_SELECT_USER)
-                intent.setClass(context, UserListSelectorActivity::class.java)
-                intent.putExtra(EXTRA_ACCOUNT_KEY, data!!.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
-                startActivityForResult(intent, REQUEST_ADD_USER_SELECT_ACCOUNT)
+                intent.setClass(context, UserSelectorActivity::class.java)
+                intent.putExtra(EXTRA_ACCOUNT_KEY, data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY))
+                startActivityForResult(intent, REQUEST_SELECT_USER)
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
                 if (resultCode == Activity.RESULT_OK) {
@@ -135,6 +130,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
     override fun onCreateAdapter(context: Context): SimpleCursorAdapter {
         return FilterUsersListAdapter(context)
+    }
+
+    override fun addOrEditItem(id: Long, value: String?) {
+        // No-op
     }
 
     class FilterUsersListAdapter(

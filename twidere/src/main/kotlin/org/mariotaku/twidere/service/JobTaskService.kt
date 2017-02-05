@@ -27,6 +27,7 @@ import android.os.Build
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.support.JobServiceSupport
 import javax.inject.Inject
 
 /**
@@ -52,6 +53,13 @@ class JobTaskService : JobService() {
     }
 
     override fun onStopJob(params: JobParameters): Boolean {
+        try {
+            if (JobServiceSupport.handleStopJob(params, false)) {
+                JobServiceSupport.removeCallback(params)
+            }
+        } catch (e: Exception) {
+            // Swallow any possible exceptions
+        }
         return false
     }
 

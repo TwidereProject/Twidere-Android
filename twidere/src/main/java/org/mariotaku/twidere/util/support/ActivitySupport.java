@@ -18,14 +18,26 @@ public class ActivitySupport {
     private ActivitySupport() {
     }
 
+    public static void setImmersive(Activity activity, boolean immersive) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) return;
+        ActivitySupportJBMR2.setImmersive(activity, immersive);
+    }
+
     public static void setTaskDescription(Activity activity, TaskDescriptionCompat taskDescription) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
-        ActivityAccessorL.setTaskDescription(activity, taskDescription);
+        ActivitySupportL.setTaskDescription(activity, taskDescription);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private static class ActivitySupportJBMR2 {
+        static void setImmersive(Activity activity, boolean immersive) {
+            activity.setImmersive(immersive);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    static class ActivityAccessorL {
-        private ActivityAccessorL() {
+    private static class ActivitySupportL {
+        private ActivitySupportL() {
         }
 
         public static void setTaskDescription(Activity activity, TaskDescriptionCompat taskDescription) {

@@ -28,6 +28,7 @@ import android.widget.CheckBox
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
+import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 import org.mariotaku.twidere.util.ParseUtils
@@ -60,9 +61,10 @@ class CreateUserListDialogFragment : BaseDialogFragment(), DialogInterface.OnCli
         builder.setPositiveButton(android.R.string.ok, this)
         builder.setNegativeButton(android.R.string.cancel, this)
         val dialog = builder.create()
-        dialog.setOnShowListener { dialog ->
-            val alertDialog = dialog as AlertDialog
-            val editName = alertDialog.findViewById(R.id.name) as MaterialEditText
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+            val editName = it.findViewById(R.id.name) as MaterialEditText
             editName.addValidator(UserListNameValidator(getString(R.string.invalid_list_name)))
         }
         return dialog

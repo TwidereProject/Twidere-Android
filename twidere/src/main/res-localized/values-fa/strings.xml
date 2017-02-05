@@ -68,6 +68,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">ذخیره</string>
   <string name="action_saving_search">ذخیرهٔ جست‌وجو</string>
+  <string name="action_select_user">گزینش کاربر</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ارسال</string>
   <string name="action_sending_direct_message">ارسال پیام مستقیم</string>
@@ -190,7 +191,6 @@
   <string name="cant_load_all_replies_message">نمی‌توان تمام پاسخ‌ها را بار کرد. &lt;a href=\"#dialog\";&gt;چرا؟&lt;/a&gt;</string>
   <string name="cards">کارت‌ها</string>
   <string name="clear_cache">پاک‌سازی انباره</string>
-  <string name="clear_cache_summary">پاک‌سازی انبارهٔ تصویر نمایهٔ ذخیره‌شده.</string>
   <string name="clear_databases">پاک‌سازی پایگاه‌داده‌ها</string>
   <string name="clear_databases_summary">پاک‌سازی تمام توییت‌ها، نمایه‌ها و پیام‌ها. اجازه‌نامهٔ حسابتان از بین نخواهد رفت.</string>
   <string name="clear_search_history">پاک‌سازی تاریخچهٔ جست‌وجو</string>
@@ -759,6 +759,7 @@
   <string name="title_summary_line_format">‫<xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">کاربر</string>
   <string name="title_user_colors">رنگ‌های کاربر</string>
+  <string name="title_user_list_memberships">متعلّق است به</string>
   <string name="title_users_favorited_this">کاربرانی که این را برگزیدند</string>
   <string name="title_users_liked_this">کاربرانی که این را پسندیدند</string>
   <string name="title_users_retweeted_this">کاربرانی که این را بازتوییت کردند</string>

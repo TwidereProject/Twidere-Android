@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.layout_extra_config_user.view.*
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
@@ -45,7 +45,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
             val account = fragment.account ?: return@setOnClickListener
             val intent = Intent(INTENT_ACTION_SELECT_USER)
             intent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
-            intent.setClass(context, UserListSelectorActivity::class.java)
+            intent.setClass(context, UserSelectorActivity::class.java)
             fragment.startExtraConfigurationActivityForResult(this@UserExtraConfiguration, intent, 1)
         }
         hintView = view.selectUserHint

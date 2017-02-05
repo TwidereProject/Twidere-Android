@@ -37,7 +37,7 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <EditText
+            <org.mariotaku.twidere.view.FixedEditText
                 android:id="@+id/editUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:maxLines="1"
                 android:typeface="normal" />
 
-            <EditText
+            <org.mariotaku.twidere.view.FixedEditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

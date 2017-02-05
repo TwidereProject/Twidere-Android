@@ -45,6 +45,7 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
             val account = fragment.account ?: return@setOnClickListener
             val intent = Intent(INTENT_ACTION_SELECT_USER_LIST)
             intent.putExtra(EXTRA_ACCOUNT_KEY, account.key)
+            intent.putExtra(EXTRA_SHOW_MY_LISTS, true)
             intent.setClass(context, UserListSelectorActivity::class.java)
             fragment.startExtraConfigurationActivityForResult(this@UserListExtraConfiguration, intent, 1)
         }

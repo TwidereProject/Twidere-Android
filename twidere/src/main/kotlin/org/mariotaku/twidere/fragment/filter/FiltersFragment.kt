@@ -32,11 +32,11 @@ class FiltersFragment : AbsToolbarTabPagesFragment() {
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        adapter.addTab(cls = FilteredUsersFragment::class.java, name = getString(R.string.filter_type_users))
-        adapter.addTab(cls = FilteredKeywordsFragment::class.java, name = getString(R.string.filter_type_keywords))
-        adapter.addTab(cls = FilteredSourcesFragment::class.java, name = getString(R.string.filter_type_sources))
-        adapter.addTab(cls = FilteredLinksFragment::class.java, name = getString(R.string.filter_type_links))
-        adapter.addTab(cls = FilterSettingsFragment::class.java, name = getString(R.string.settings))
+        adapter.addTab(cls = FilteredUsersFragment::class.java, name = getString(R.string.filter_type_users), tag = "users")
+        adapter.addTab(cls = FilteredKeywordsFragment::class.java, name = getString(R.string.filter_type_keywords), tag = "keywords")
+        adapter.addTab(cls = FilteredSourcesFragment::class.java, name = getString(R.string.filter_type_sources), tag = "sources")
+        adapter.addTab(cls = FilteredLinksFragment::class.java, name = getString(R.string.filter_type_links), tag = "links")
+        adapter.addTab(cls = FilterSettingsFragment::class.java, name = getString(R.string.settings), tag = "settings")
     }
 
 }

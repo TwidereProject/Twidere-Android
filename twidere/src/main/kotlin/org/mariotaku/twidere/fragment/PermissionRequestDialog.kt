@@ -9,6 +9,7 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.applyTheme
 
 /**
  * Created by mariotaku on 2016/12/13.
@@ -27,7 +28,12 @@ class PermissionRequestDialog : BaseDialogFragment() {
                     PermissionRequestCancelCallback ?: return@setNegativeButton
             callback.onPermissionRequestCancelled(requestCode)
         }
-        return builder.create()
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            it as AlertDialog
+            it.applyTheme()
+        }
+        return dialog
     }
 
     interface PermissionRequestCancelCallback {
