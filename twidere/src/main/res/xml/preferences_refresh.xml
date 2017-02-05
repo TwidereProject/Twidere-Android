@@ -11,7 +11,7 @@
         app:switchDefault="true"
         app:switchKey="auto_refresh"/>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
         <org.mariotaku.twidere.preference.EntrySummaryListPreference
@@ -40,6 +40,6 @@
             android:key="refresh_after_tweet"
             android:summary="@string/refresh_after_status_updated_summary"
             android:title="@string/refresh_after_status_updated"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

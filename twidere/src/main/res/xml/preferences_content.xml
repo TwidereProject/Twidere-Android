@@ -6,7 +6,7 @@
     android:key="settings_content"
     android:title="@string/content_and_storage">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_content"
         android:title="@string/content">
 
@@ -72,9 +72,9 @@
             android:summary="@string/preference_summary_chrome_custom_tab"
             android:title="@string/preference_title_chrome_custom_tab"/>
 
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_safety"
         android:title="@string/safety">
         <SwitchPreferenceCompat
@@ -92,6 +92,6 @@
             android:key="randomize_account_name"
             android:summary="@string/preference_randomize_account_name_summary"
             android:title="@string/preference_randomize_account_name"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

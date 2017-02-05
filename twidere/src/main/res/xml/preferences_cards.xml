@@ -5,13 +5,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/cards">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_card_preview"
         android:order="11"
         android:title="@string/preview">
         <org.mariotaku.twidere.preference.CardPreviewPreference
             android:key="card_preview"/>
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
         android:defaultValue="@integer/default_text_size"

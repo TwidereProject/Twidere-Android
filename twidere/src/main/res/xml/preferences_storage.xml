@@ -6,7 +6,7 @@
     android:key="settings_storage"
     android:title="@string/preference_title_storage">
 
-    <PreferenceCategory
+    <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="category_storage"
         android:title="@string/preference_title_storage">
 
@@ -42,6 +42,6 @@
             android:summary="@string/clear_databases_summary"
             android:title="@string/clear_databases"/>
 
-    </PreferenceCategory>
+    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

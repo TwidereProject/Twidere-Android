@@ -62,6 +62,7 @@ import android.support.v7.view.menu.MenuBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -70,6 +71,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
@@ -1211,6 +1213,14 @@ public final class Utils implements Constants {
             return false;
         }
         return true;
+    }
+
+    public static boolean isDeviceTablet(@NonNull Context context) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        final float mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density);
+        return mw >= 600;
     }
 
 }

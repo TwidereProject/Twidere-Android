@@ -47,6 +47,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVI
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.Utils
 import java.util.*
 
 class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartFragmentCallback {
@@ -185,6 +186,10 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 R.xml.preferences_theme)
         entriesAdapter.addPreference("cards", R.drawable.ic_action_card, getString(R.string.cards),
                 R.xml.preferences_cards)
+        if (Utils.isDeviceTablet(this)) {
+            entriesAdapter.addPreference("tablet_mode", R.drawable.ic_action_tablet, getString(R.string.preference_title_tablet_mode),
+                    R.xml.preferences_tablet_mode)
+        }
 
         entriesAdapter.addHeader(getString(R.string.function))
         entriesAdapter.addPreference("tabs", R.drawable.ic_action_tab, getString(R.string.tabs),
