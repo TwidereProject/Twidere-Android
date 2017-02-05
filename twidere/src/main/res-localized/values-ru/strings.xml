@@ -79,6 +79,7 @@
   <string name="action_saving_search">сохранение поиска</string>
   <string name="action_select_all">Выбрать все</string>
   <string name="action_select_none">Ничего не выбирать</string>
+  <string name="action_select_user">Выбрать пользователя</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Отправить</string>
   <string name="action_sending_direct_message">отправляем личное сообщение</string>
@@ -204,7 +205,6 @@
   <string name="cant_load_all_replies_message">Невозможно загрузить все ответы. &lt;a href=\"#dialog\";&gt;Почему?&lt;/a&gt;</string>
   <string name="cards">Карточки</string>
   <string name="clear_cache">Очистить кэш</string>
-  <string name="clear_cache_summary">Очистит хранящийся кэш изображений профиля.</string>
   <string name="clear_databases">Очистить базы данных</string>
   <string name="clear_databases_summary">Очистить все твиты, профили, сообщения. Данные вашего аккаунта не будут потеряны.</string>
   <string name="clear_search_history">Очистить историю поиска</string>
@@ -594,6 +594,8 @@
   <string name="preference_title_database_item_limit">Ограничение размера базы данных</string>
   <string name="preference_title_filter_manage_subscriptions">Управление</string>
   <string name="preference_title_filter_subscriptions">Фильтровать подписки</string>
+  <string name="preference_title_portrait">Портретный</string>
+  <string name="preference_title_landscape">Ландшафтный</string>
   <string name="preference_title_storage">Хранилище</string>
   <string name="preference_title_translate">Перевести</string>
   <string name="preload_wifi_only">Предзагружать только по Wi-Fi</string>
@@ -825,6 +827,7 @@
   <string name="title_sync_settings">Настройки синхронизации</string>
   <string name="title_user">Пользователь</string>
   <string name="title_user_colors">Пользовательские цвета</string>
+  <string name="title_user_list_memberships">Списки со мной</string>
   <string name="title_users_favorited_this">Пользователи добавившие в избранное</string>
   <string name="title_users_liked_this">Пользователям понравилось это</string>
   <string name="title_users_retweeted_this">Пользователей ретвитнули это</string>

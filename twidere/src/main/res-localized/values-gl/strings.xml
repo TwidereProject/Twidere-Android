@@ -63,6 +63,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Gardar</string>
   <string name="action_saving_search">gardando busca</string>
+  <string name="action_select_user">Escoller usuario</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Chiar</string>
   <string name="action_sending_direct_message">enviando mensaxe directa</string>
@@ -183,7 +184,6 @@
   <string name="cant_load_all_replies_message">Non se poden cargar todas as respostas. &lt;a href=\"#dialog\";&gt; Por que?&lt;/a&gt;</string>
   <string name="cards">Cartóns</string>
   <string name="clear_cache">Borrar caché</string>
-  <string name="clear_cache_summary">Limpar a caché de imaxes de perfil.</string>
   <string name="clear_databases">Baleirar bases de datos</string>
   <string name="clear_databases_summary">Limpar todos os chíos, perfís e mensaxes. As credenciais da túa conta non se perden.</string>
   <string name="clear_search_history">Borrar historial de buscas</string>
@@ -736,6 +736,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Usuario</string>
   <string name="title_user_colors">Cores do usuario</string>
+  <string name="title_user_list_memberships">Pertence a</string>
   <string name="title_users_favorited_this">Usuarios marcaron isto favorito</string>
   <string name="title_users_liked_this">Usuarios gustaron disto</string>
   <string name="title_users_retweeted_this">Usuarios que rechouchiaron isto</string>

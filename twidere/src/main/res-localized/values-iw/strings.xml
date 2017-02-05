@@ -51,6 +51,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">שמור</string>
   <string name="action_saving_search">שמירת חיפוש</string>
+  <string name="action_select_user">בחר משתמש</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">שלח</string>
   <string name="action_sending_direct_message">שליחת הודעה ישירה</string>
@@ -124,7 +125,6 @@
   <string name="both">שניהם</string>
   <string name="cards">קלפים</string>
   <string name="clear_cache">נקה Cache</string>
-  <string name="clear_cache_summary">נקה מטמון של תמונות פרופיל.</string>
   <string name="clear_databases">נקה מסדי נתונים</string>
   <string name="clear_databases_summary">מוחק את כל הציוצים, פדופילים והודעות. אישורי החשבון לא יאבדו.</string>
   <string name="clear_search_history">נקה היסטוריית חיפוש</string>
@@ -433,6 +433,7 @@
   <string name="title_subscription_name">שם</string>
   <string name="title_subscription_url">כתובת URL</string>
   <string name="title_user">משתמש</string>
+  <string name="title_user_list_memberships">שייך ל</string>
   <string name="title_users_favorited_this">משתמשים סיימנו את זה כמועדף</string>
   <string name="title_users_liked_this">משתמשים אהבו את זה</string>
   <string name="title_users_retweeted_this">משתמשים ריטווטו את זה</string>

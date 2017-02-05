@@ -63,6 +63,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Bewaar</string>
   <string name="action_saving_search">Bezig met opslaan van zoekopdracht</string>
+  <string name="action_select_user">Selecteer gebruiker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Verzenden</string>
   <string name="action_sending_direct_message">Bericht aan het verzenden</string>
@@ -182,7 +183,6 @@
   <string name="cant_load_all_replies_message">Kan niet alle antwoorden laden. &lt;a href=\"#dialog\";&gt;Waarom?&lt;/a&gt;</string>
   <string name="cards">Kaarten</string>
   <string name="clear_cache">Cache leegmaken</string>
-  <string name="clear_cache_summary">Wis cache opgeslagen profielfoto.</string>
   <string name="clear_databases">Leeg databases</string>
   <string name="clear_databases_summary">Wis alle tweets, profielen, berichten. Uw accountgegevens zullen niet verloren gaan.</string>
   <string name="clear_search_history">Wis zoekgeschiedenis</string>
@@ -523,6 +523,8 @@
   <string name="preference_summary_database_item_limit">Limiet van de items die zijn opgeslagen in databases voor elke account, stel in op een lagere waarde om ruimte te besparen en de laad snelheid te verhogen.</string>
   <string name="preference_title_advanced">Geavanceerd</string>
   <string name="preference_title_database_item_limit">Maximale database-grootte</string>
+  <string name="preference_title_portrait">Portret</string>
+  <string name="preference_title_landscape">Landschap</string>
   <string name="preference_title_storage">Opslag</string>
   <string name="preference_title_translate">Vertalen</string>
   <string name="preload_wifi_only">Preload alleen via Wi-Fi</string>
@@ -740,6 +742,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Gebruiker</string>
   <string name="title_user_colors">Gebruikerskleuren</string>
+  <string name="title_user_list_memberships">Behoort tot</string>
   <string name="title_users_favorited_this">Gebruikers hebben dit toegevoegd als favoriet</string>
   <string name="title_users_liked_this">Gebruikers vonden dit leuk</string>
   <string name="title_users_retweeted_this">Gebruikers retweet dit</string>

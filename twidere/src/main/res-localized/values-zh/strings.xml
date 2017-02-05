@@ -8,8 +8,8 @@
   <string name="account_type_fanfou">飯否</string>
   <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
-  <string name="action_accept_friend_request">同意</string>
-  <string name="action_accept_permission_request">同意並授權</string>
+  <string name="action_accept_friend_request">同意並授權</string>
+  <string name="action_accept_permission_request">接受</string>
   <string name="action_accepting_follow_request">同意關注請求</string>
   <string name="action_add">新增</string>
   <!-- [verb] Add mute filter rule -->
@@ -38,6 +38,7 @@
   <string name="action_favoriting">收藏</string>
   <string name="action_filter_import_from_blocked_users">從被封鎖的使用者匯入</string>
   <string name="action_filter_import_from_muted_users">從被靜音的使用者匯入</string>
+  <string name="action_filter_subscriptions_card_manage">管理訂閱</string>
   <string name="action_finish">完成</string>
   <string name="action_follow">關注</string>
   <string name="action_following">關注</string>
@@ -209,7 +210,6 @@
   <string name="cant_load_all_replies_message">無法讀取所有回覆&lt;a href=\"#dialog\";&gt;為什麼?&lt;/a&gt;</string>
   <string name="cards">卡片</string>
   <string name="clear_cache">清除緩存</string>
-  <string name="clear_cache_summary">清除儲存的個人資料圖片緩存</string>
   <string name="clear_databases">清除資料庫</string>
   <string name="clear_databases_summary">清除資料庫中的推文、私信等。不必擔心，您的帳號訊息不會遺失</string>
   <string name="clear_search_history">清除搜尋歷史</string>
@@ -318,6 +318,7 @@
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g> 的外部使用者</string>
   <string name="extra_configurations">額外設定</string>
   <string name="extra_feature_description_filters_import">從被封鎖/靜音的使用者導入過濾列表</string>
+  <string name="extra_feature_description_filters_subscription">訂閱到過濾器列表，並且自動同步</string>
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
   <!-- Enhanced (paid) features description -->
@@ -482,6 +483,7 @@
   <string name="message_toast_error_occurred">發生錯誤，請重試</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">未曾購買過強化功能</string>
+  <string name="message_toast_filters_import_hint">按 “+” 來導入</string>
   <string name="message_toast_link_copied_to_clipboard">連結已複製到剪貼簿</string>
   <string name="message_toast_livewp_daydream_enabled_message">我有一份小禮物給您，去系統設定裡看看吧 :)</string>
   <string name="message_toast_login_verification_failed">登入驗證失敗</string>
@@ -614,7 +616,10 @@
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">過濾器訂閱</string>
   <string name="preference_title_light_font">輕量級字體</string>
+  <string name="preference_title_portrait">縱向模式</string>
+  <string name="preference_title_landscape">橫向模式</string>
   <string name="preference_title_storage">儲存</string>
+  <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_translate">翻譯</string>
   <string name="preload_wifi_only">僅使用 Wi-Fi 預加載</string>
   <string name="preview">預覽</string>

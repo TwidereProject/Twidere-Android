@@ -38,6 +38,7 @@
   <string name="action_favoriting">お気に入りへ登録</string>
   <string name="action_filter_import_from_blocked_users">ブロック済みユーザーをインポートする</string>
   <string name="action_filter_import_from_muted_users">ミュート済みユーザーをインポートする</string>
+  <string name="action_filter_subscriptions_card_manage">購読の管理</string>
   <string name="action_finish">終了</string>
   <string name="action_follow">フォロー</string>
   <string name="action_following">フォロー</string>
@@ -81,7 +82,7 @@
   <string name="action_saving_search">検索の保存</string>
   <string name="action_select_all">すべて選択</string>
   <string name="action_select_none">選択しない</string>
-  <string name="action_select_user">ユーザーを選択</string>
+  <string name="action_select_user">ユーザーの選択</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">送信</string>
   <string name="action_sending_direct_message">DM送信</string>
@@ -92,6 +93,8 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">スキップ</string>
   <string name="action_start">開始</string>
+  <string name="action_status_block_users">ユーザーをブロック&#8230;</string>
+  <string name="action_status_mute_users">ユーザーをミュート</string>
   <string name="action_subscribe">保存</string>
   <string name="action_subscribing_to_list">リストの保存</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -196,7 +199,7 @@
   <string name="background">背景</string>
   <string name="bandwidth_saving_mode">データ使用量の節約モード</string>
   <string name="bandwidth_saving_mode_summary">従量制課金接続においてメディアのプレビューを無効にします。</string>
-  <string name="belongs_to">保存されている</string>
+  <string name="belongs_to">自分が含まれるリスト</string>
   <string name="block_user_confirm_message"><xliff:g id="name">%s</xliff:g> さんをブロックしますか？このユーザーは、あなたをフォローしたり返信やDMを送信したりできなくなります。</string>
   <string name="both">両方</string>
   <string name="bug_reports">バグレポート</string>
@@ -207,7 +210,7 @@
   <string name="cant_load_all_replies_message">すべての返信を表示できないことがあります。&lt;a href=\"#dialog\";&gt;理由を表示&lt;/a&gt;</string>
   <string name="cards">カード</string>
   <string name="clear_cache">キャッシュを消去</string>
-  <string name="clear_cache_summary">プロフィール画像のキャッシュを消去します。</string>
+  <string name="clear_cache_summary">保存されていたメディアのキャッシュをクリアしました。</string>
   <string name="clear_databases">データベースを消去</string>
   <string name="clear_databases_summary">ツイート、プロフィール、メッセージを含め、データはすべて消去されます。\nご心配なく、アカウント情報は失われません。</string>
   <string name="clear_search_history">検索履歴を消去</string>
@@ -315,8 +318,11 @@
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
   <string name="extra_feature_description_filters_import">ブロック/ミュートからフィルタリストをインポートする</string>
+  <string name="extra_feature_description_filters_subscription">ミュートフィルターを購読し、自動的に同期する</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
+  <string name="extra_feature_title_filters_import">フィルタのインポート</string>
+  <string name="extra_feature_title_filters_subscription">フィルタの購読</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere を支援して追加機能を取得する</string>
   <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう</string>
@@ -477,6 +483,7 @@
   <string name="message_toast_error_occurred">エラーが発生しました。もう一度お試しください。</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">追加機能パックは未購入です。</string>
+  <string name="message_toast_filters_import_hint">インポートするには \"+\" をタップしてください</string>
   <string name="message_toast_link_copied_to_clipboard">リンクがクリップボードにコピーされました</string>
   <string name="message_toast_livewp_daydream_enabled_message">システム設定のどこかにプレゼントを隠したぜ!</string>
   <string name="message_toast_login_verification_failed">ログイン認証に失敗しました</string>
@@ -505,6 +512,7 @@
   <string name="message_toast_status_saved_to_draft">ツイートは下書きに保存されました</string>
   <string name="message_toast_status_unfavorited">ツイートのお気に入りを解除しました</string>
   <string name="message_toast_status_updated">ツイートを送信しました。</string>
+  <string name="message_toast_unable_to_load_more_statuses">以前のツイートを読み込むことができません</string>
   <string name="message_toast_user_filters_removed">フィルターリストから削除しました。</string>
   <string name="message_toast_users_filters_added">複数のユーザーをフィルターリストに追加する。</string>
   <string name="message_toast_wrong_api_key">API URL または consumer key/secret が正しくありません。もう一度確認してください。</string>
@@ -602,6 +610,7 @@
   <string name="preference_randomize_account_rename_accounts_confirm">既存のアカウント名を変更しますか？</string>
   <string name="preference_summary_chrome_custom_tab">Chrome カスタムタブでリンクを開く</string>
   <string name="preference_summary_database_item_limit">各アカウントのデータベースに格納するアイテムの上限数です。\n小さな値に設定すると読み込み速度を速くできます。</string>
+  <string name="preference_summary_media_preload_non_metered_network">Wi-Fi などの無料のネットワーク上でのみメディアをプリロードします</string>
   <string name="preference_title_accounts">アカウント</string>
   <string name="preference_title_advanced">詳細設定</string>
   <string name="preference_title_chrome_custom_tab">Chrome カスタムタブ</string>
@@ -609,6 +618,9 @@
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">フィルタの購読</string>
   <string name="preference_title_light_font">細字フォント</string>
+  <string name="preference_title_media_preload_non_metered_network">無料のネットワークでプリロードする</string>
+  <string name="preference_title_portrait">ポートレイト</string>
+  <string name="preference_title_landscape">ランドスケープ</string>
   <string name="preference_title_storage">ストレージ</string>
   <string name="preference_title_translate">翻訳する</string>
   <string name="preload_wifi_only">Wi-Fi接続時のみ先読み</string>
@@ -844,7 +856,7 @@
   <string name="title_sync_settings">同期設定</string>
   <string name="title_user">ユーザー</string>
   <string name="title_user_colors">ユーザー色</string>
-  <string name="title_user_list_memberships">自分が含まれるリスト</string>
+  <string name="title_user_list_memberships">保存されている</string>
   <string name="title_user_list_ownerships">作成者</string>
   <string name="title_user_list_subscriptions">購読</string>
   <string name="title_users_favorited_this">お気に入りに登録したユーザーを表示</string>

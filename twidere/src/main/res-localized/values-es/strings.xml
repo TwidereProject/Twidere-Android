@@ -207,7 +207,6 @@
   <string name="cant_load_all_replies_message">No se pueden cargar todas las menciones. &lt;a href=\"#dialog\";&gt;¿Por qué?&lt;/a&gt;</string>
   <string name="cards">Tarjetas</string>
   <string name="clear_cache">Borrar caché</string>
-  <string name="clear_cache_summary">Limpiar caché de imagen de perfil almacenado.</string>
   <string name="clear_databases">Limpiar bases de datos</string>
   <string name="clear_databases_summary">Borra todos los tweets, perfiles y mensajes. Las credenciales de su cuenta no se perderán.</string>
   <string name="clear_search_history">Limpiar historial de búsqueda</string>
@@ -609,6 +608,8 @@
   <string name="preference_title_filter_manage_subscriptions">Administrar</string>
   <string name="preference_title_filter_subscriptions">Filtrar suscripciones</string>
   <string name="preference_title_light_font">Fuente suave</string>
+  <string name="preference_title_portrait">Vertical</string>
+  <string name="preference_title_landscape">Horizontal</string>
   <string name="preference_title_storage">Almacenamiento de información</string>
   <string name="preference_title_translate">Traducir</string>
   <string name="preload_wifi_only">Precargar solo con Wi-Fi</string>

@@ -210,7 +210,7 @@
   <string name="cant_load_all_replies_message">不能加载所有的回复。&lt;a href=\"#dialog\";&gt;为什么？&lt;/a&gt;</string>
   <string name="cards">卡片</string>
   <string name="clear_cache">清除缓存</string>
-  <string name="clear_cache_summary">清除储存的个人资料图片缓存</string>
+  <string name="clear_cache_summary">清空储存的媒体缓存</string>
   <string name="clear_databases">清除数据库</string>
   <string name="clear_databases_summary">清除数据库中的推文、私信等。不必担心，您的帐号信息不会丢失</string>
   <string name="clear_search_history">清除搜索历史</string>
@@ -512,6 +512,7 @@
   <string name="message_toast_status_saved_to_draft">推文已经保存到草稿箱</string>
   <string name="message_toast_status_unfavorited">推文已取消收藏</string>
   <string name="message_toast_status_updated">推文已发送</string>
+  <string name="message_toast_unable_to_load_more_statuses">无法加载更早的推文</string>
   <string name="message_toast_user_filters_removed">从过滤器列表中删除了这位用户</string>
   <string name="message_toast_users_filters_added">你过滤了这些用户，你将不会在主页/提及中看到这些用户的推文</string>
   <string name="message_toast_wrong_api_key">API 设置不正确</string>
@@ -618,7 +619,11 @@
   <string name="preference_title_filter_subscriptions">过滤器订阅</string>
   <string name="preference_title_light_font">细字体</string>
   <string name="preference_title_media_preload_non_metered_network">在免费网络下预加载</string>
+  <string name="preference_title_multi_column_tabs">多栏标签页</string>
+  <string name="preference_title_portrait">纵向模式</string>
+  <string name="preference_title_landscape">横向模式</string>
   <string name="preference_title_storage">存储</string>
+  <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_translate">翻译</string>
   <string name="preload_wifi_only">仅使用Wi-Fi预加载</string>
   <string name="preview">预览</string>

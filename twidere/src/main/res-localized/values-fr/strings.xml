@@ -33,10 +33,12 @@
   <string name="action_denying_follow_request">refuser la demande de suivi</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Modifier</string>
+  <string name="action_edit_filter_rule">Modifier la règle</string>
   <string name="action_favorite">Ajouter aux favoris</string>
   <string name="action_favoriting">ajout aux favoris</string>
   <string name="action_filter_import_from_blocked_users">Importer depuis les utilisateurs bloqués</string>
   <string name="action_filter_import_from_muted_users">Importer depuis les utilisateurs muets</string>
+  <string name="action_filter_subscriptions_card_manage">Gérer les abonnements</string>
   <string name="action_finish">Terminer</string>
   <string name="action_follow">Suivre</string>
   <string name="action_following">abonnement</string>
@@ -58,7 +60,7 @@
   <string name="action_open_in_browser">Ouvrir dans un navigateur</string>
   <string name="action_pick_color">Choisir une couleur</string>
   <string name="action_purchase">Acheter</string>
-  <string name="action_purchase_features_pack">Acheter le «feature pack»</string>
+  <string name="action_purchase_features_pack">Acheter le « feature pack »</string>
   <string name="action_quote">Citer</string>
   <string name="action_record_video">Enregistrer une vidéo</string>
   <string name="action_refresh">Rafraîchir</string>
@@ -80,6 +82,7 @@
   <string name="action_saving_search">sauvegarde de la recherche</string>
   <string name="action_select_all">Tout sélectionner</string>
   <string name="action_select_none">Tout désélectionner</string>
+  <string name="action_select_user">Sélectionner l\'utilisateur</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Envoyer</string>
   <string name="action_sending_direct_message">envoyer le message privé</string>
@@ -90,6 +93,8 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Passer</string>
   <string name="action_start">Débuter</string>
+  <string name="action_status_block_users">Bloquer les utilisateurs&#8230;</string>
+  <string name="action_status_mute_users">Mettre les utilisateurs en sourdine&#8230;</string>
   <string name="action_subscribe">S\'abonner</string>
   <string name="action_subscribing_to_list">abonnement à la liste</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -205,7 +210,7 @@
   <string name="cant_load_all_replies_message">Impossible de charger toutes les réponses. &lt;a href=\"#dialog\";&gt;Pourquoi ?&lt;/a&gt;</string>
   <string name="cards">Cartes</string>
   <string name="clear_cache">Vider le cache</string>
-  <string name="clear_cache_summary">Supprimer les images en cache.</string>
+  <string name="clear_cache_summary">Vider le cache média.</string>
   <string name="clear_databases">Vider les bases de données</string>
   <string name="clear_databases_summary">Supprimer tous les tweets, profils et messages. Les informations de connexions seront conservées.</string>
   <string name="clear_search_history">Supprimer l\'historique de recherche</string>
@@ -315,12 +320,14 @@
   <string name="extra_feature_description_filters_import">Importer la liste de filtres depuis les blocages et \"mutes\"</string>
   <string name="extra_feature_description_schedule_status">Tweet programmé (envoyé plus tard)</string>
   <string name="extra_feature_description_sync_data">Synchronisation des données avec Dropbox, Google Drive, etc</string>
+  <string name="extra_feature_title_filters_import">Importer des filtres</string>
+  <string name="extra_feature_title_filters_subscription">Abonnement à des filtres</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Soutenez Twidere et accédez à des fonctionnalités avancées</string>
   <string name="extra_features_pack_description">Ou achetez le «feature pack» pour bénéficier de toutes les fonctionnalités (y compris les fonctionnalités prévues dans les future versions)</string>
   <!-- Enhanced (paid) features title -->
-  <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser \'Restaurer\' pour importer vos achats.</string>
-  <string name="fab_visible">Bouton d\'action flottant</string>
+  <string name="extra_features_restore_purchase_hint">Si vous avez déjà acheté des fonctionnalités avancées, vous pouvez utiliser « Restaurer » pour importer vos achats.</string>
+  <string name="fab_visible">Bouton d’action flottant</string>
   <string name="fab_visible_summary">Voir le bouton d\'action flottant</string>
   <string name="fast_image_loading">Chargement de l\'image rapide</string>
   <string name="fast_image_loading_summary">Activer pour permettre aux images de se charger plus rapidement, désactiver si des images ne s\'affichent pas.</string>
@@ -471,9 +478,11 @@
   <string name="message_toast_already_logged_in">Vous êtes déjà connecté.</string>
   <string name="message_toast_cannot_get_location">Impossible d\'acquérir votre position.</string>
   <string name="message_toast_compose_write_storage_no_permission">Une permission est requise pour supprimer une photo/vidéo prise</string>
+  <string name="message_toast_duplicate_filter_rule">Règle dupliquée</string>
   <string name="message_toast_error_occurred">Une erreur s\'est produite, veuillez réessayer.</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
   <string name="message_toast_extra_features_not_purchased">Fonctionnalité avancée, non disponible sans achat</string>
+  <string name="message_toast_filters_import_hint">Appuyez sur « + » pour importer</string>
   <string name="message_toast_link_copied_to_clipboard">Lien copié dans le presse-papier</string>
   <string name="message_toast_livewp_daydream_enabled_message">Voici un petit cadeau pour vous, trouvez le dans vos paramètres du système :)</string>
   <string name="message_toast_login_verification_failed">Échec lors de la vérification de la connexion.</string>
@@ -501,6 +510,7 @@
   <string name="message_toast_status_saved_to_draft">Tweet sauvegardé dans les brouillons.</string>
   <string name="message_toast_status_unfavorited">Tweet supprimé des favoris</string>
   <string name="message_toast_status_updated">Tweet envoyé.</string>
+  <string name="message_toast_unable_to_load_more_statuses">Impossible de charger les tweets antérieurs</string>
   <string name="message_toast_user_filters_removed">Utilisateur supprimé de la liste de filtres</string>
   <string name="message_toast_users_filters_added">Ajouté au filtres</string>
   <string name="message_toast_wrong_api_key">L\'URL de l\'API ou la clé utilisateur est incorrecte, merci de vérifier à nouveau.</string>
@@ -598,12 +608,17 @@
   <string name="preference_randomize_account_rename_accounts_confirm">Renommer les comptes existants ?</string>
   <string name="preference_summary_chrome_custom_tab">Ouvrir le lien dans un onglet Chrome</string>
   <string name="preference_summary_database_item_limit">Limite supérieure des articles stockés dans des bases de données pour chaque compte, mettre une petite valeur vous fera gagner de la place et augmentera la vitesse de chargement.</string>
+  <string name="preference_summary_media_preload_non_metered_network">Précharger les médias uniquement sur des réseaux sans surcoût comme une connexion Wi-Fi</string>
   <string name="preference_title_accounts">Comptes</string>
   <string name="preference_title_advanced">Avancé</string>
   <string name="preference_title_chrome_custom_tab">Onglet Chrome personnalisé</string>
   <string name="preference_title_database_item_limit">Limite de la taille de la base de données</string>
   <string name="preference_title_filter_manage_subscriptions">Gérer</string>
   <string name="preference_title_filter_subscriptions">Filtrer les abonnements</string>
+  <string name="preference_title_light_font">Police fine</string>
+  <string name="preference_title_media_preload_non_metered_network">Précharger sur les réseaux sans surcoût</string>
+  <string name="preference_title_portrait">Potrait</string>
+  <string name="preference_title_landscape">Paysage</string>
   <string name="preference_title_storage">Stockage</string>
   <string name="preference_title_translate">Traduire</string>
   <string name="preload_wifi_only">Précharger seulement en Wi-Fi</string>
@@ -701,6 +716,7 @@
   <string name="scrapyard">Divers</string>
   <string name="search">Rechercher</string>
   <string name="search_hint">Rechercher des tweets ou des utilisateurs</string>
+  <string name="search_hint_users">Rechercher des utilisateurs</string>
   <string name="search_statuses">Rechercher des tweets</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Utilisateurs</string>
@@ -838,6 +854,9 @@
   <string name="title_sync_settings">Paramètres de synchronisation</string>
   <string name="title_user">Utilisateur</string>
   <string name="title_user_colors">Couleurs utilisateur</string>
+  <string name="title_user_list_memberships">Appartient à</string>
+  <string name="title_user_list_ownerships">Créé</string>
+  <string name="title_user_list_subscriptions">Abonnements</string>
   <string name="title_users_favorited_this">Utilisateurs ayant ajouté ceci à leur favoris</string>
   <string name="title_users_liked_this">Des utilisateurs ont aimé ça</string>
   <string name="title_users_retweeted_this">Utilisateurs ont retweeté ceci</string>

@@ -65,6 +65,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">บันทึก</string>
   <string name="action_saving_search">กำลังบันทึกการค้นหา</string>
+  <string name="action_select_user">เลือกผู้ใช้</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ส่ง</string>
   <string name="action_sending_direct_message">กำลังส่งข้อความด่วน</string>
@@ -186,7 +187,6 @@
   <string name="cant_load_all_replies_message">ไม่สามารถโหลดการตอบกลับได้ทุกอัน &lt;a href=\"#dialog\";&gt;เหตุผล&lt;/a&gt;</string>
   <string name="cards">การ์ดแสดงผล</string>
   <string name="clear_cache">ล้างไฟล์ชั่วคราว</string>
-  <string name="clear_cache_summary">ล้างรูปภาพโปรไฟล์ที่บันทึกไว้</string>
   <string name="clear_databases">ล้างฐานข้อมูล</string>
   <string name="clear_databases_summary">ล้างทวีต, ข้อมูลส่วนตัว, และข้อความทั้งหมด แต่บัญชีของคุณจะยังคงอยู่</string>
   <string name="clear_search_history">ล้างประวัติการค้นหา</string>
@@ -525,6 +525,8 @@
   <string name="preference_title_accounts">บัญชีผู้ใช้</string>
   <string name="preference_title_advanced">ขั้นสูง</string>
   <string name="preference_title_database_item_limit">จำกัดขนาดฐานข้อมูล</string>
+  <string name="preference_title_portrait">แนวตั้ง</string>
+  <string name="preference_title_landscape">แนวนอน</string>
   <string name="preference_title_storage">พื้นที่จัดเก็บ</string>
   <string name="preference_title_translate">ช่วยแปลภาษา</string>
   <string name="preload_wifi_only">โหลดล่วงหน้าเมื่อใช้ Wi-Fi เท่านั้น</string>
@@ -746,6 +748,7 @@
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">ผู้ใช้</string>
   <string name="title_user_colors">สีของผู้ใช้</string>
+  <string name="title_user_list_memberships">เป็นของ</string>
   <string name="title_users_favorited_this">ผู้ใช้ถูกใจสิ่งนี้</string>
   <string name="title_users_liked_this">ผู้ใช้ถูกใจสิ่งนี้</string>
   <string name="title_users_retweeted_this">ผู้ใช้ที่รีทวีตข้อความนี้</string>

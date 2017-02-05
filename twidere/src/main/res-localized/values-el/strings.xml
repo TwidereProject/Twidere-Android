@@ -51,7 +51,6 @@
   <string name="auth_type_twip_o">Λειτουργία twip O</string>
   <string name="auth_type_xauth">xAuth</string>
   <string name="clear_cache">Καθαρισμός κρυφής μνήμης</string>
-  <string name="clear_cache_summary">Καθαρισμός αποθηκευμένων εικόνων προφίλ στην κρυφή μνήμη.</string>
   <string name="clear_databases">Καθαρισμός βάσεων δεδομένων</string>
   <string name="clear_databases_summary">Καθαρισμός των tweets, προφίλ, μηνυμάτων. Τα στοιχεία του λογαρισμού σας δεν θα χαθούν.</string>
   <string name="consumer_key">Κλειδί καταναλωτή</string>

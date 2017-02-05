@@ -61,6 +61,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Lagre</string>
   <string name="action_saving_search">lagrer søk</string>
+  <string name="action_select_user">Velg bruker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
   <string name="action_sending_direct_message">sender direktemelding</string>
@@ -165,7 +166,6 @@
   <string name="cant_load_all_replies_message">Kan ikke laste inn alle svar. &lt;a href=\"#dialog\";&gt;Hvorfor?&lt;/a&gt;</string>
   <string name="cards">Kort</string>
   <string name="clear_cache">Tøm hurtiglager</string>
-  <string name="clear_cache_summary">Tøm hurtiglageret for profilbilder.</string>
   <string name="clear_databases">Tøm databaser</string>
   <string name="clear_databases_summary">Fjern alle tweets, profiler og meldinger. Innloggingsdetaljer tas vare på.</string>
   <string name="clear_search_history">Tøm søkehistorikken</string>
@@ -455,6 +455,8 @@
   <string name="preference_title_accounts">Kontoer</string>
   <string name="preference_title_advanced">Avansert</string>
   <string name="preference_title_database_item_limit">Database størrelsesgrense</string>
+  <string name="preference_title_portrait">Portrett</string>
+  <string name="preference_title_landscape">Landskap</string>
   <string name="preference_title_storage">Lagring</string>
   <string name="preference_title_translate">Oversett</string>
   <string name="preload_wifi_only">Forhåndslast bare med Wi-Fi</string>
@@ -646,6 +648,7 @@
   <string name="title_subscription_url">Nettadresse</string>
   <string name="title_user">Bruker</string>
   <string name="title_user_colors">Brukerfarger</string>
+  <string name="title_user_list_memberships">Hører til</string>
   <string name="title_users_favorited_this">Brukere favorittmarkerte dette</string>
   <string name="title_users_liked_this">Brukere likte dette</string>
   <string name="title_users_retweeted_this">Brukere retweetet dette</string>

@@ -81,7 +81,7 @@
   <string name="action_saving_search">guardando gueta</string>
   <string name="action_select_all">Esbillar too</string>
   <string name="action_select_none">Nun esbillar dengún</string>
-  <string name="action_select_user">Esbillar usuariu</string>
+  <string name="action_select_user">Esbilla d\'usuariu</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Univar</string>
   <string name="action_sending_direct_message">unviando\'l mensaxe direutu</string>
@@ -208,7 +208,6 @@
   <string name="cant_load_all_replies_message">Nun puen cargase toles rempuestes. &lt;a href=\"#dialog\";&gt;¿Por qué?&lt;/a&gt;</string>
   <string name="cards">Tarxetes</string>
   <string name="clear_cache">Llimpiar caché</string>
-  <string name="clear_cache_summary">Llimpia la caché atroxada d\'imáxenes de perfiles.</string>
   <string name="clear_databases">Llimpiar bases de datos</string>
   <string name="clear_databases_summary">Llimpia tolos tuits, perfiles, mensaxes. Nun se perderán les to credenciales de cuenta.</string>
   <string name="clear_search_history">Llimpiar historia de guetes</string>
@@ -694,7 +693,7 @@
   <string name="select_account">Esbilla de cuentes</string>
   <string name="select_accounts">Esbillar cuentes</string>
   <string name="select_accounts_for_compose">Esbilla les cuentes pa componer</string>
-  <string name="select_user">Esbilla d\'usuariu</string>
+  <string name="select_user">Esbillar usuariu</string>
   <string name="select_user_list">Esbillar llistáu d\'usuariu</string>
   <string name="send_anyway">Unviar de toes toes</string>
   <string name="send_crash_report">Unviu d\'informe de fallu de Twidere</string>
@@ -821,6 +820,7 @@
   <string name="title_sync_settings">Axustes de sincronización</string>
   <string name="title_user">Usuariu</string>
   <string name="title_user_colors">Colores d\'usuariu</string>
+  <string name="title_user_list_memberships">Perteneces a</string>
   <string name="title_user_list_subscriptions">Soscripciones</string>
   <string name="title_users_favorited_this">Usuarios que marcaron esto como favoritu</string>
   <string name="title_users_liked_this">Usuarios que-yos prestó esto</string>
