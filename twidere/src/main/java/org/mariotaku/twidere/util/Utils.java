@@ -65,6 +65,7 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -1215,10 +1216,27 @@ public final class Utils implements Constants {
         return true;
     }
 
+    /**
+     * Detect whether screen minimum width is not smaller than 600dp, regardless split screen mode
+     */
     public static boolean isDeviceTablet(@NonNull Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
+        final Display defaultDisplay = wm.getDefaultDisplay();
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            defaultDisplay.getMetrics(metrics);
+        } else {
+            defaultDisplay.getRealMetrics(metrics);
+        }
+        final float mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density);
+        return mw >= 600;
+    }
+
+    /*
+     * May return false on tablets when using split window
+     */
+    public static boolean isScreenTablet(@NonNull Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         final float mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density);
         return mw >= 600;
     }

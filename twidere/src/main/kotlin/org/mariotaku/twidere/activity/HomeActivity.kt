@@ -786,7 +786,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE
-        if (pagerAdapter.count > 1 && resources.getBoolean(R.bool.home_tab_has_multiple_columns)) {
+        if (pagerAdapter.count > 1 && hasMultiColumns()) {
             mainPager.pageMargin = resources.getDimensionPixelOffset(R.dimen.home_page_margin)
             mainPager.setPageMarginDrawable(ThemeUtils.getDrawableFromThemeAttribute(this, R.attr.dividerVertical))
             pagerAdapter.hasMultipleColumns = true
@@ -866,6 +866,16 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         actionsButton.setImageResource(icon)
         actionsButton.contentDescription = getString(title)
     }
+
+
+    fun hasMultiColumns(): Boolean {
+        if (!Utils.isScreenTablet(this)) return false
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return preferences.getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
+        }
+        return preferences.getBoolean("multi_column_tabs_portrait", resources.getBoolean(R.bool.default_multi_column_tabs_port))
+    }
+
 
     private class AccountUpdatedListener(private val activity: HomeActivity) : OnAccountsUpdateListener {
 
