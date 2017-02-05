@@ -59,7 +59,8 @@ public class TrendsTabConfiguration extends TabConfiguration {
                     extras.setWoeId(place.getWoeId());
                     extras.setPlaceName(place.getName());
                 } else {
-                    return false;
+                    extras.setWoeId(0);
+                    extras.setPlaceName(null);
                 }
                 break;
             }

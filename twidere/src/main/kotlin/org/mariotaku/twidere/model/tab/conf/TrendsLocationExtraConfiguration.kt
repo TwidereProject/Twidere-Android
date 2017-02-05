@@ -10,9 +10,11 @@ import android.widget.TextView
 import org.mariotaku.microblog.library.twitter.model.Location
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.TrendsLocationSelectorActivity
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCATION
 import org.mariotaku.twidere.fragment.CustomTabsFragment
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.TabConfiguration
 
 /**
@@ -34,6 +36,7 @@ open class TrendsLocationExtraConfiguration(
         }
 
     private lateinit var summaryView: TextView
+
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_checkbox, parent, false)
     }
@@ -61,6 +64,19 @@ open class TrendsLocationExtraConfiguration(
                     value = Place(location.woeid, location.name)
                 }
             }
+        }
+    }
+
+    override fun onAccountSelectionChanged(account: AccountDetails?) {
+        super.onAccountSelectionChanged(account)
+        val titleView = view.findViewById(android.R.id.title) as TextView
+        val summaryView = view.findViewById(android.R.id.summary) as TextView
+        val canSelectLocation = account?.type == AccountType.TWITTER
+        view.isEnabled = canSelectLocation
+        titleView.isEnabled = canSelectLocation
+        summaryView.isEnabled = canSelectLocation
+        if (!canSelectLocation) {
+            value = null
         }
     }
 

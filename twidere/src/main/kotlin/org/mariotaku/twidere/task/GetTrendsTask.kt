@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.task
 
+import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -7,16 +8,21 @@ import android.net.Uri
 import android.support.v4.util.ArraySet
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Trends
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableTrend
 import org.mariotaku.twidere.model.ParcelableTrendValuesCreator
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.util.*
@@ -39,15 +45,17 @@ class GetTrendsTask(
     }
 
     override fun doLongOperation(param: Any?) {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return
+        val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
+        val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         try {
-            val trends = twitter.getLocationTrends(woeId)
+            val trends = when {
+                details.type == AccountType.FANFOU -> listOf(twitter.fanfouTrends)
+                else -> twitter.getLocationTrends(woeId)
+            }
             storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends)
-            return
         } catch (e: MicroBlogException) {
-            return
+            DebugLog.w(LOGTAG, tr = e)
         }
-
     }
 
     override fun afterExecute(handler: Any?, result: Unit) {
