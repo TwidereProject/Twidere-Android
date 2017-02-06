@@ -877,11 +877,11 @@
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
+    <string name="preference_title_landscape">Landscape</string>
     <string name="preference_title_light_font">Light font</string>
     <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_portrait">Portrait</string>
-    <string name="preference_title_landscape">Landscape</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_translate">Translate</string>
@@ -891,8 +891,8 @@
     <string name="preview">Preview</string>
     <string name="preview_images">Preview images</string>
     <string name="preview_style_crop">Crop</string>
-    <string name="preview_style_scale">Scale</string>
     <string name="preview_style_real_size">Real size</string>
+    <string name="preview_style_scale">Scale</string>
 
     <!-- Previous item (tweet, user etc.) -->
     <string name="previous_item">Previous</string>
