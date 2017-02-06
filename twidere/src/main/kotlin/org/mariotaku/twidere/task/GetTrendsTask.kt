@@ -49,9 +49,9 @@ class GetTrendsTask(
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         try {
             val trends = when {
-                details.type == AccountType.FANFOU -> listOf(twitter.fanfouTrends)
-                else -> twitter.getLocationTrends(woeId)
-            }
+                details.type == AccountType.FANFOU -> twitter.fanfouTrends
+                else -> twitter.getLocationTrends(woeId).firstOrNull()
+            } ?: return
             storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends)
         } catch (e: MicroBlogException) {
             DebugLog.w(LOGTAG, tr = e)
@@ -62,7 +62,7 @@ class GetTrendsTask(
         bus.post(TrendsRefreshedEvent())
     }
 
-    private fun storeTrends(cr: ContentResolver, uri: Uri, trendsList: List<Trends>) {
+    private fun storeTrends(cr: ContentResolver, uri: Uri, trends: Trends) {
         val hashtags = ArraySet<String>()
         val deleteWhere = Expression.and(Expression.equalsArgs(CachedTrends.ACCOUNT_KEY),
                 Expression.equalsArgs(CachedTrends.WOEID)).sql
@@ -71,18 +71,16 @@ class GetTrendsTask(
 
         val allTrends = ArrayList<ParcelableTrend>()
 
-        trendsList.forEach { trends ->
-            trends.trends.forEachIndexed { idx, trend ->
-                val hashtag = trend.name.replaceFirst("#", "")
-                hashtags.add(hashtag)
-                allTrends.add(ParcelableTrend().apply {
-                    this.account_key = accountKey
-                    this.woe_id = woeId
-                    this.name = trend.name
-                    this.timestamp = System.currentTimeMillis()
-                    this.trend_order = idx
-                })
-            }
+        trends.trends.forEachIndexed { idx, trend ->
+            val hashtag = trend.name.replaceFirst("#", "")
+            hashtags.add(hashtag)
+            allTrends.add(ParcelableTrend().apply {
+                this.account_key = accountKey
+                this.woe_id = woeId
+                this.name = trend.name
+                this.timestamp = System.currentTimeMillis()
+                this.trend_order = idx
+            })
         }
         ContentResolverUtils.bulkInsert(cr, uri, allTrends.map(ParcelableTrendValuesCreator::create))
         ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false,
