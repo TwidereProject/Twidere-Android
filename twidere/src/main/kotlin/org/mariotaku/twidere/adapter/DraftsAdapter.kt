@@ -26,8 +26,9 @@ import android.support.v4.widget.SimpleCursorAdapter
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE
+import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.DraftCursorIndices
@@ -56,7 +57,7 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
     init {
         GeneralComponentHelper.build(context).inject(this)
         mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
-        mediaPreviewStyle = Utils.getMediaPreviewStyle(preferences.getString(KEY_MEDIA_PREVIEW_STYLE, null))
+        mediaPreviewStyle = preferences[mediaPreviewStyleKey]
     }
 
     override fun bindView(view: View, context: Context, cursor: Cursor) {
@@ -68,14 +69,14 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         val timestamp = draft.timestamp
         val actionType: String = draft.action_type ?: Draft.Action.UPDATE_STATUS
         val actionName = draft.getActionName(context)
-        holder.media_preview_container.setStyle(mediaPreviewStyle)
+        holder.media_preview_container.style = mediaPreviewStyle
         when (actionType) {
             Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(mediaUpdates)
                 holder.media_preview_container.visibility = View.VISIBLE
-                holder.media_preview_container.displayMedia(media, imageLoader, null, -1, null,
-                        mediaLoadingHandler)
+                holder.media_preview_container.displayMedia(loader = imageLoader, media = media,
+                        loadingHandler = mediaLoadingHandler)
             }
             else -> {
                 holder.media_preview_container.visibility = View.GONE

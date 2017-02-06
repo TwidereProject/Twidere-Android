@@ -59,6 +59,18 @@
             android:value="true"/>
     </SwitchPreferenceCompat>
 
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:defaultValue="crop"
+        android:entries="@array/entries_media_preview_style"
+        android:entryValues="@array/values_media_preview_style"
+        android:key="media_preview_style"
+        android:order="26"
+        android:title="@string/media_preview_style">
+        <extra
+            android:name="should_recreate"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
+
     <org.mariotaku.twidere.preference.LinkHighlightPreference
         android:defaultValue="none"
         android:key="link_highlight_option"

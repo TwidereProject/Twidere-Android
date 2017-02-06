@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.adapter.iface
 
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.model.ParcelableDirectMessage
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.view.CardMediaContainer
@@ -35,7 +36,7 @@ interface IDirectMessagesAdapter {
     @ShapedImageView.ShapeStyle
     val profileImageStyle: Int
 
-    @CardMediaContainer.PreviewStyle
+    @PreviewStyle
     val mediaPreviewStyle: Int
 
     fun findItem(id: Long): ParcelableDirectMessage?

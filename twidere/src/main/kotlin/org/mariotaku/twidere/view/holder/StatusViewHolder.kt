@@ -324,8 +324,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 mediaLabel.visibility = View.GONE
                 mediaPreview.visibility = View.VISIBLE
 
-                mediaPreview.displayMedia(status.media, loader, status.account_key, -1, this,
-                        adapter.mediaLoadingHandler)
+                mediaPreview.displayMedia(loader = loader, media = status.media,
+                        accountId = status.account_key, mediaClickListener = this,
+                        loadingHandler = adapter.mediaLoadingHandler)
             }
         } else {
             // No media, hide all related views
@@ -431,8 +432,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedMediaPreview.visibility = View.VISIBLE
                 quotedMediaLabel.visibility = View.GONE
 
-                quotedMediaPreview.displayMedia(status.quoted_media, loader, status.account_key, -1,
-                        null, null)
+                quotedMediaPreview.displayMedia(loader = loader, media = status.quoted_media,
+                        accountId = status.account_key)
             }
         } else {
             // No media, hide all related views
@@ -441,10 +442,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
     }
 
-    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey, extraId: Long) {
+    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
         statusClickListener?.onMediaClick(this, view, media, layoutPosition)
     }
-
 
     fun setOnClickListeners() {
         setStatusClickListener(adapter.statusClickListener)
@@ -488,8 +488,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         setTextSize(adapter.textSize)
         profileImageView.style = adapter.profileImageStyle
 
-        mediaPreview.setStyle(adapter.mediaPreviewStyle)
-        quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
+        mediaPreview.style = adapter.mediaPreviewStyle
+        quotedMediaPreview.style = adapter.mediaPreviewStyle
         //        profileImageView.setStyle(adapter.getProfileImageStyle());
 
         val nameFirst = adapter.nameFirst

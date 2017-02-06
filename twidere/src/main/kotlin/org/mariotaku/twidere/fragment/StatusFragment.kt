@@ -342,7 +342,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 null)
     }
 
-    override fun onMediaClick(view: View, media: ParcelableMedia?, accountKey: UserKey, extraId: Long) {
+    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
         val status = adapter.status
         if (status == null || media == null) return
         IntentUtils.openMediaDirectly(activity, accountKey, status, media, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
@@ -883,8 +883,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     } else if (adapter.isDetailMediaExpanded) {
                         itemView.quotedMediaLabel.visibility = View.GONE
                         itemView.quotedMediaPreview.visibility = View.VISIBLE
-                        itemView.quotedMediaPreview.displayMedia(quotedMedia, loader, status.account_key, -1,
-                                adapter.fragment, null)
+                        itemView.quotedMediaPreview.displayMedia(loader = loader, media = quotedMedia,
+                                accountId = status.account_key, mediaClickListener = adapter.fragment)
                     } else {
                         itemView.quotedMediaLabel.visibility = View.VISIBLE
                         itemView.quotedMediaPreview.visibility = View.GONE
@@ -1014,8 +1014,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.mediaPreviewContainer.visibility = View.VISIBLE
                 itemView.mediaPreview.visibility = View.VISIBLE
                 itemView.mediaPreviewLoad.visibility = View.GONE
-                itemView.mediaPreview.displayMedia(media, loader, status.account_key, -1,
-                        adapter.fragment, adapter.mediaLoadingHandler)
+                itemView.mediaPreview.displayMedia(loader = loader, media = media,
+                        accountId = status.account_key, mediaClickListener = adapter.fragment,
+                        loadingHandler = adapter.mediaLoadingHandler)
             } else {
                 itemView.mediaPreviewContainer.visibility = View.VISIBLE
                 itemView.mediaPreview.visibility = View.GONE
@@ -1182,8 +1183,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.name.nameFirst = adapter.nameFirst
             itemView.quotedName.nameFirst = adapter.nameFirst
 
-            itemView.mediaPreview.setStyle(adapter.mediaPreviewStyle)
-            itemView.quotedMediaPreview.setStyle(adapter.mediaPreviewStyle)
+            itemView.mediaPreview.style = adapter.mediaPreviewStyle
+            itemView.quotedMediaPreview.style = adapter.mediaPreviewStyle
 
             itemView.text.customSelectionActionModeCallback = StatusActionModeCallback(itemView.text, activity)
             itemView.profileImage.style = adapter.profileImageStyle

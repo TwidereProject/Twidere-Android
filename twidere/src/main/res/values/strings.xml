@@ -892,6 +892,7 @@
     <string name="preview_images">Preview images</string>
     <string name="preview_style_crop">Crop</string>
     <string name="preview_style_scale">Scale</string>
+    <string name="preview_style_real_size">Real size</string>
 
     <!-- Previous item (tweet, user etc.) -->
     <string name="previous_item">Previous</string>

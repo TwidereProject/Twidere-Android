@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.adapter.iface
 
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.MediaLoadingHandler
@@ -17,7 +18,7 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     val lightFont: Boolean
 
-    @CardMediaContainer.PreviewStyle
+    @PreviewStyle
     val mediaPreviewStyle: Int
 
     val statusCount: Int

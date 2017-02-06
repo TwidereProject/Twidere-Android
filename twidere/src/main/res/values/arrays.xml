@@ -55,6 +55,7 @@
     <string-array name="entries_media_preview_style">
         <item>@string/preview_style_crop</item>
         <item>@string/preview_style_scale</item>
+        <item>@string/preview_style_real_size</item>
     </string-array>
     <string-array name="entries_image_sources">
         <item>@string/source_camera</item>

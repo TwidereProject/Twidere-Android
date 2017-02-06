@@ -9,6 +9,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.UserKey
@@ -16,6 +17,7 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.view.ProfileImageView
 
 /**
@@ -88,14 +90,21 @@ object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ProfileIm
 
 }
 
-object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP) {
+object mediaPreviewStyleKey : KSimpleKey<Int>(KEY_MEDIA_PREVIEW_STYLE, PreviewStyle.CROP) {
     override fun read(preferences: SharedPreferences): Int {
-        if (preferences.getString(key, null) == VALUE_MEDIA_PREVIEW_STYLE_SCALE) return VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE
-        return VALUE_MEDIA_PREVIEW_STYLE_CODE_CROP
+        when (preferences.getString(key, null)) {
+            VALUE_MEDIA_PREVIEW_STYLE_SCALE -> return PreviewStyle.SCALE
+            VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE -> return PreviewStyle.REAL_SIZE
+            else -> return PreviewStyle.CROP
+        }
     }
 
     override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
-        editor.putString(key, if (value == VALUE_MEDIA_PREVIEW_STYLE_CODE_SCALE) VALUE_MEDIA_PREVIEW_STYLE_SCALE else VALUE_MEDIA_PREVIEW_STYLE_CROP)
+        editor.putString(key, when (value) {
+            PreviewStyle.SCALE -> VALUE_MEDIA_PREVIEW_STYLE_SCALE
+            PreviewStyle.REAL_SIZE -> VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE
+            else -> VALUE_MEDIA_PREVIEW_STYLE_CROP
+        })
         return true
     }
 

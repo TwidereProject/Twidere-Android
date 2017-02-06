@@ -29,21 +29,17 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IDirectMessagesAdapter
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.mediaPreviewStyleKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.model.ParcelableDirectMessage
 import org.mariotaku.twidere.model.ParcelableDirectMessageCursorIndices
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
-import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.MediaLoadingHandler
-import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.TwidereLinkify
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.view.CardMediaContainer
 import org.mariotaku.twidere.view.holder.IncomingMessageViewHolder
 import org.mariotaku.twidere.view.holder.MessageViewHolder
-
 import java.lang.ref.WeakReference
 
 class MessageConversationAdapter(context: Context) : BaseRecyclerViewAdapter<ViewHolder>(context), Constants, IDirectMessagesAdapter {
@@ -51,7 +47,7 @@ class MessageConversationAdapter(context: Context) : BaseRecyclerViewAdapter<Vie
             ThemeUtils.getThemeBackgroundOption(context), ThemeUtils.getUserThemeBackgroundAlpha(context))
     private val incomingMessageColor: Int = ThemeUtils.getUserAccentColor(context)
 
-    override val mediaPreviewStyle: Int = Utils.getMediaPreviewStyle(preferences.getString(SharedPreferenceConstants.KEY_MEDIA_PREVIEW_STYLE, null))
+    override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     val mediaLoadingHandler: MediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
@@ -151,9 +147,9 @@ class MessageConversationAdapter(context: Context) : BaseRecyclerViewAdapter<Vie
             this.adapterRef = WeakReference(adapter)
         }
 
-        override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey, extraId: Long) {
+        override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
             val adapter = adapterRef.get()
-            IntentUtils.openMedia(adapter.context, adapter.getDirectMessage(extraId.toInt())!!, media,
+            IntentUtils.openMedia(adapter.context, adapter.getDirectMessage(id.toInt())!!, media,
                     adapter.preferences[newDocumentApiKey], adapter.preferences[displaySensitiveContentsKey])
         }
 

@@ -107,7 +107,7 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
             return false
         }
 
-        override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey, extraId: Long) {
+        override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
         }
 
         override fun setStatusClickListener(listener: IStatusViewHolder.StatusClickListener?) {

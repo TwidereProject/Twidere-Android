@@ -37,6 +37,7 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
 import org.mariotaku.twidere.model.*
@@ -63,7 +64,7 @@ abstract class ParcelableStatusesAdapter(
 
     override final val mediaLoadingHandler: MediaLoadingHandler
     final override val twidereLinkify: TwidereLinkify
-    @CardMediaContainer.PreviewStyle
+    @PreviewStyle
     final override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
     final override val nameFirst: Boolean = preferences[nameFirstKey]
     final override val useStarsForLikes: Boolean = preferences[iWantMyStarsBackKey]

@@ -73,7 +73,7 @@ open class MessageViewHolder(
         textView = itemView.findViewById(R.id.text) as TextView
         time = itemView.findViewById(R.id.time) as TextView
         mediaContainer = itemView.findViewById(R.id.media_preview_container) as CardMediaContainer
-        mediaContainer.setStyle(adapter.mediaPreviewStyle)
+        mediaContainer.style = adapter.mediaPreviewStyle
     }
 
     open fun displayMessage(cursor: Cursor, indices: ParcelableDirectMessageCursorIndices) {
@@ -94,8 +94,10 @@ open class MessageViewHolder(
         textView.text = text
         time.text = Utils.formatToLongTimeString(context, timestamp)
         mediaContainer.visibility = if (media != null && media.isNotEmpty()) View.VISIBLE else View.GONE
-        mediaContainer.displayMedia(loader, media, accountKey, adapter.onMediaClickListener, adapter.mediaLoadingHandler, layoutPosition.toLong(), true
-        )
+        mediaContainer.displayMedia(loader = loader, media = media, accountId = accountKey,
+                extraId = layoutPosition.toLong(), withCredentials = true,
+                mediaClickListener = adapter.onMediaClickListener,
+                loadingHandler = adapter.mediaLoadingHandler)
     }
 
     fun setMessageColor(color: Int) {
