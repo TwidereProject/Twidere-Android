@@ -870,7 +870,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
 
     fun hasMultiColumns(): Boolean {
-        if (!Utils.isScreenTablet(this)) return false
+        if (!Utils.isDeviceTablet(this) || !Utils.isScreenTablet(this)) return false
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return preferences.getBoolean("multi_column_tabs_landscape", resources.getBoolean(R.bool.default_multi_column_tabs_land))
         }

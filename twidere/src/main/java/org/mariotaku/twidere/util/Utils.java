@@ -1228,8 +1228,7 @@ public final class Utils implements Constants {
      */
     public static boolean isScreenTablet(@NonNull Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        final float mw = Math.min(metrics.widthPixels / metrics.density, metrics.heightPixels / metrics.density);
-        return mw >= 600;
+        return metrics.widthPixels / metrics.density >= 600;
     }
 
 }
