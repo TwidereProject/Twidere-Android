@@ -41,7 +41,7 @@ class LegacyAutoRefreshController(
 
     override fun rescheduleAll() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            removeAllJobs(context)
+            removeAllJobs(context, JOB_IDS_REFRESH)
         }
         super.rescheduleAll()
     }
@@ -69,12 +69,12 @@ class LegacyAutoRefreshController(
                 PendingIntent.getService(context, 0, intent, 0))
     }
 
-    private companion object {
+    companion object {
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        fun removeAllJobs(context: Context) {
+        fun removeAllJobs(context: Context, jobIds: IntArray) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
             val jobService = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
-            JOB_IDS_REFRESH.forEach { id ->
+            jobIds.forEach { id ->
                 jobService.cancel(id)
             }
         }

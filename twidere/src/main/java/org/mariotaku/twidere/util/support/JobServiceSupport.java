@@ -30,8 +30,6 @@ import android.annotation.TargetApi;
 import android.app.job.JobParameters;
 import android.os.Build;
 
-import org.mariotaku.twidere.util.Analyzer;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,15 +50,15 @@ public class JobServiceSupport {
             getCallbackMethod.setAccessible(true);
             final Object callback = getCallbackMethod.invoke(params);
             if (callback == null) return false;
-            final Class<?> callbackCls = callback.getClass();
-            final Method acknowledgeStopMessageMethod = callbackCls.getDeclaredMethod("acknowledgeStopMessage",
+            final Class<?> callbackCls = Class.forName("android.app.job.IJobCallback");
+            final Method acknowledgeStopMessageMethod = callbackCls.getMethod("acknowledgeStopMessage",
                     int.class, boolean.class);
             acknowledgeStopMessageMethod.setAccessible(true);
             // Once method returned true successfully, remove it's callback.
             // Due to Android's Binder implementation, IJobCallback.Stub.asInterface(null) will
             // return null rather than crash
             try {
-                acknowledgeStopMessageMethod.invoke(callbackCls, params.getJobId(), reschedule);
+                acknowledgeStopMessageMethod.invoke(callback, params.getJobId(), reschedule);
                 return true;
             } catch (NullPointerException npe) {
                 // Treat as handled
@@ -69,13 +67,14 @@ public class JobServiceSupport {
         } catch (NoSuchMethodException e) {
             // Framework version mismatch, skip
             return false;
+        } catch (ClassNotFoundException e) {
+            // Framework version mismatch, skip
+            return false;
         } catch (IllegalAccessException e) {
             // This shouldn't happen, skip
-            Analyzer.Companion.logException(e);
             return false;
         } catch (InvocationTargetException e) {
             // Internal error, skip
-            Analyzer.Companion.logException(e);
             return false;
         }
     }
@@ -89,11 +88,9 @@ public class JobServiceSupport {
             return true;
         } catch (NoSuchFieldException e) {
             // Framework version mismatch, skip
-            Analyzer.Companion.logException(e);
             return false;
         } catch (IllegalAccessException e) {
             // This shouldn't happen, skip
-            Analyzer.Companion.logException(e);
             return false;
         }
     }

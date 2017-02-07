@@ -28,7 +28,6 @@ class JobSchedulerSyncController(context: Context) : SyncController(context) {
 
     fun scheduleJob(jobId: Int, persisted: Boolean = true) {
         val builder = JobInfo.Builder(jobId, ComponentName(context, JobTaskService::class.java))
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
         builder.setPeriodic(TimeUnit.HOURS.toMillis(4))
         builder.setPersisted(persisted)
         try {

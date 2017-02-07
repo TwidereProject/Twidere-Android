@@ -52,7 +52,6 @@ class JobSchedulerAutoRefreshController(
 
     fun scheduleJob(jobId: Int, periodMillis: Long = TimeUnit.MINUTES.toMillis(kPreferences[refreshIntervalKey]), persisted: Boolean = true) {
         val builder = JobInfo.Builder(jobId, ComponentName(context, JobTaskService::class.java))
-        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
         builder.setPeriodic(periodMillis)
         builder.setPersisted(persisted)
         try {
