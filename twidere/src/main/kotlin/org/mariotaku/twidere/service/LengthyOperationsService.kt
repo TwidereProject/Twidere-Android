@@ -42,6 +42,7 @@ import edu.tsinghua.hotmobi.model.TimelineType
 import edu.tsinghua.hotmobi.model.TweetEvent
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
+import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
@@ -64,11 +65,12 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.NotificationManagerWrapper
@@ -146,19 +148,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 sendMessage(accountKey, recipientId, draft.text, imageUri)
             }
             Draft.Action.FAVORITE -> {
-                performStatusAction(draft) { microBlog, account, status ->
-                    if (account.type == AccountType.FANFOU) {
-                        microBlog.createFanfouFavorite(status.id)
-                    } else {
-                        microBlog.createFavorite(status.id)
-                    }
-                    return@performStatusAction true
+                performStatusAction(draft) { accountKey, status ->
+                    CreateFavoriteTask(this, accountKey, status)
                 }
             }
             Draft.Action.RETWEET -> {
-                performStatusAction(draft) { microBlog, account, status ->
-                    microBlog.retweetStatus(status.id)
-                    return@performStatusAction true
+                performStatusAction(draft) { accountKey, status ->
+                    RetweetStatusTask(this, accountKey, status)
                 }
             }
         }
@@ -307,10 +303,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             })
             task.callback = this
             task.params = Pair(actionType, item)
-            handler.post { ManualTaskStarter.invokeBeforeExecute(task) }
+            invokeBeforeExecute(task)
 
             val result = ManualTaskStarter.invokeExecute(task)
-            handler.post { ManualTaskStarter.invokeAfterExecute(task, result) }
+            invokeAfterExecute(task, result)
 
             if (!result.succeed) {
                 contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, configure(ContentValues()) {
@@ -442,16 +438,22 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
     }
 
-    private fun performStatusAction(draft: Draft, action: (MicroBlog, AccountDetails, ParcelableStatus) -> Boolean): Boolean {
+    private fun <T> performStatusAction(draft: Draft, action: (accountKey: UserKey, status: ParcelableStatus) -> AbstractTask<*, T, *>): Boolean {
         val accountKey = draft.account_keys?.firstOrNull() ?: return false
-        val extras = draft.action_extras as? StatusObjectExtras ?: return false
-        val account = getAccountDetails(AccountManager.get(this), accountKey, true) ?: return false
-        val microBlog = account.newMicroBlogInstance(this, cls = MicroBlog::class.java)
-        try {
-            return action(microBlog, account, extras.status)
-        } catch (e: MicroBlogException) {
-            return false
-        }
+        val status = (draft.action_extras as? StatusObjectExtras)?.status ?: return false
+        val task = action(accountKey, status)
+        invokeBeforeExecute(task)
+        val result = ManualTaskStarter.invokeExecute(task)
+        invokeAfterExecute(task, result)
+        return true
+    }
+
+    private fun invokeBeforeExecute(task: AbstractTask<*, *, *>) {
+        handler.post { ManualTaskStarter.invokeBeforeExecute(task) }
+    }
+
+    private fun <T> invokeAfterExecute(task: AbstractTask<*, T, *>, result: T) {
+        handler.post { ManualTaskStarter.invokeAfterExecute(task, result) }
     }
 
     internal class MessageMediaUploadListener(private val context: Context, private val manager: NotificationManagerWrapper,

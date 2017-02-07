@@ -24,6 +24,9 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
@@ -375,7 +378,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             retweetIcon.isActivated = false
             retweetCount = Math.max(0, status.retweet_count - 1)
         } else {
-            val creatingRetweet = twitter.isCreatingRetweet(status.account_key, status.id)
+            val creatingRetweet = RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)
             retweetIcon.isActivated = creatingRetweet || status.retweeted ||
                     Utils.isMyRetweet(status.account_key, status.retweeted_by_user_key,
                             status.my_retweet_id)
@@ -389,11 +392,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             retweetCountView.text = null
             retweetCountView.visibility = View.GONE
         }
-        if (twitter.isDestroyingFavorite(status.account_key, status.id)) {
+        if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
             favoriteIcon.isActivated = false
             favoriteCount = Math.max(0, status.favorite_count - 1)
         } else {
-            val creatingFavorite = twitter.isCreatingFavorite(status.account_key, status.id)
+            val creatingFavorite = CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)
             favoriteIcon.isActivated = creatingFavorite || status.is_favorite
             favoriteCount = status.favorite_count + if (creatingFavorite) 1 else 0
         }

@@ -60,6 +60,9 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.CreateFavoriteTask
+import org.mariotaku.twidere.task.DestroyFavoriteTask
+import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 
 /**
@@ -143,7 +146,7 @@ object MenuUtils {
         val favoriteHighlight = ContextCompat.getColor(context, R.color.highlight_favorite)
         val likeHighlight = ContextCompat.getColor(context, R.color.highlight_like)
         val isMyRetweet: Boolean
-        if (twitter.isCreatingRetweet(status.account_key, status.id)) {
+        if (RetweetStatusTask.isCreatingRetweet(status.account_key, status.id)) {
             isMyRetweet = true
         } else if (twitter.isDestroyingStatus(status.account_key, status.id)) {
             isMyRetweet = false
@@ -162,9 +165,9 @@ object MenuUtils {
         val favorite = menu.findItem(R.id.favorite)
         if (favorite != null) {
             val isFavorite: Boolean
-            if (twitter.isCreatingFavorite(status.account_key, status.id)) {
+            if (CreateFavoriteTask.isCreatingFavorite(status.account_key, status.id)) {
                 isFavorite = true
-            } else if (twitter.isDestroyingFavorite(status.account_key, status.id)) {
+            } else if (DestroyFavoriteTask.isDestroyingFavorite(status.account_key, status.id)) {
                 isFavorite = false
             } else {
                 isFavorite = status.is_favorite
@@ -236,11 +239,9 @@ object MenuUtils {
             }
             R.id.retweet -> {
                 if (Utils.isMyRetweet(status)) {
-                    twitter.cancelRetweetAsync(status.account_key,
-                            status.id, status.my_retweet_id)
+                    twitter.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id)
                 } else {
-                    twitter.retweetStatusAsync(status.account_key,
-                            status.id)
+                    twitter.retweetStatusAsync(status.account_key, status)
                 }
             }
             R.id.quote -> {
@@ -262,7 +263,7 @@ object MenuUtils {
                         provider.invokeItem(item,
                                 AbsStatusesFragment.DefaultOnLikedListener(twitter, status))
                     } else {
-                        twitter.createFavoriteAsync(status.account_key, status.id)
+                        twitter.createFavoriteAsync(status.account_key, status)
                     }
                 }
             }

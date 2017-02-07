@@ -105,7 +105,8 @@ fun Draft.readMimeMessageFrom(context: Context, st: InputStream): Boolean {
 fun Draft.getActionName(context: Context): String? {
     if (TextUtils.isEmpty(action_type)) return context.getString(R.string.update_status)
     when (action_type) {
-        Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2 -> {
+        Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
+        Draft.Action.UPDATE_STATUS_COMPAT_2 -> {
             return context.getString(R.string.update_status)
         }
         Draft.Action.REPLY -> {
@@ -113,6 +114,12 @@ fun Draft.getActionName(context: Context): String? {
         }
         Draft.Action.QUOTE -> {
             return context.getString(R.string.action_quote)
+        }
+        Draft.Action.FAVORITE -> {
+            return context.getString(R.string.action_favorite)
+        }
+        Draft.Action.RETWEET -> {
+            return context.getString(R.string.action_retweet)
         }
         Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT -> {
             return context.getString(R.string.send_direct_message)

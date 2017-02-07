@@ -252,7 +252,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             update.is_possibly_sensitive = status.is_possibly_sensitive
             LengthyOperationsService.updateStatusesAsync(context, Draft.Action.QUOTE, update)
         } else {
-            twitter.retweetStatusAsync(status.account_key, status.id)
+            twitter.retweetStatusAsync(status.account_key, status)
         }
         return true
     }

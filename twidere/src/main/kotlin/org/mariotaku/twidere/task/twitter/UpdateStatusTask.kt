@@ -21,7 +21,6 @@ import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
-import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -47,8 +46,8 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
+import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
 import java.io.Closeable
 import java.io.File
@@ -56,30 +55,18 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/5/22.
  */
 class UpdateStatusTask(
-        internal val context: Context,
+        context: Context,
         internal val stateCallback: UpdateStatusTask.StateCallback
-) : AbstractTask<Pair<String, ParcelableStatusUpdate>, UpdateStatusTask.UpdateStatusResult, Any?>() {
-
-    @Inject
-    lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
-    lateinit var preferences: SharedPreferencesWrapper
-    @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-
-    init {
-        GeneralComponentHelper.build(context).inject(this)
-    }
+) : BaseAbstractTask<Pair<String, ParcelableStatusUpdate>, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
 
     override fun doLongOperation(params: Pair<String, ParcelableStatusUpdate>): UpdateStatusResult {
         val draftId = saveDraft(params.first, params.second)
-        twitterWrapper.addSendingDraftId(draftId)
+        microBlogWrapper.addSendingDraftId(draftId)
         try {
             val result = doUpdateStatus(params.second, draftId)
             deleteOrUpdateDraft(params.second, result, draftId)
@@ -87,7 +74,7 @@ class UpdateStatusTask(
         } catch (e: UpdateStatusException) {
             return UpdateStatusResult(e, draftId)
         } finally {
-            twitterWrapper.removeSendingDraftId(draftId)
+            microBlogWrapper.removeSendingDraftId(draftId)
         }
     }
 
@@ -567,24 +554,22 @@ class UpdateStatusTask(
     }
 
     private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
-        val draft = Draft()
-        draft.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
-        draft.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
-        draft.action_type = draftAction ?: Draft.Action.UPDATE_STATUS
-        draft.text = statusUpdate.text
-        draft.location = statusUpdate.location
-        draft.media = statusUpdate.media
-        draft.timestamp = System.currentTimeMillis()
-        draft.action_extras = UpdateStatusActionExtras().apply {
-            inReplyToStatus = statusUpdate.in_reply_to_status
-            isPossiblySensitive = statusUpdate.is_possibly_sensitive
-            isRepostStatusId = statusUpdate.repost_status_id
-            displayCoordinates = statusUpdate.display_coordinates
-            attachmentUrl = statusUpdate.attachment_url
+        return saveDraft(context, draftAction) {
+            this.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
+            this.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
+            this.action_type = draftAction ?: Draft.Action.UPDATE_STATUS
+            this.text = statusUpdate.text
+            this.location = statusUpdate.location
+            this.media = statusUpdate.media
+            this.timestamp = System.currentTimeMillis()
+            this.action_extras = UpdateStatusActionExtras().apply {
+                inReplyToStatus = statusUpdate.in_reply_to_status
+                isPossiblySensitive = statusUpdate.is_possibly_sensitive
+                isRepostStatusId = statusUpdate.repost_status_id
+                displayCoordinates = statusUpdate.display_coordinates
+                attachmentUrl = statusUpdate.attachment_url
+            }
         }
-        val resolver = context.contentResolver
-        val draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft)) ?: return -1
-        return NumberUtils.toLong(draftUri.lastPathSegment, -1)
     }
 
     internal class PendingStatusUpdate(val length: Int, defaultText: String) {
@@ -934,6 +919,21 @@ class UpdateStatusTask(
                 val deleteAlways: List<MediaDeletionItem>?
         )
 
+        fun saveDraft(context: Context, @Draft.Action action: String?, config: Draft.() -> Unit): Long {
+            val draft = Draft()
+            draft.action_type = action
+            draft.timestamp = System.currentTimeMillis()
+            config(draft)
+            val resolver = context.contentResolver
+            val draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft)) ?: return -1
+            return NumberUtils.toLong(draftUri.lastPathSegment, -1)
+        }
+
+        fun deleteDraft(context: Context, id: Long) {
+            val where = Expression.equalsArgs(Drafts._ID).sql
+            val whereArgs = arrayOf(id.toString())
+            context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
+        }
 
     }
 

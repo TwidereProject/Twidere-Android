@@ -513,7 +513,7 @@ abstract class AbsStatusesFragment protected constructor() :
 
         override fun onLiked(): Boolean {
             if (status.is_favorite) return false
-            twitter.createFavoriteAsync(status.account_key, status.id)
+            twitter.createFavoriteAsync(status.account_key, status)
             return true
         }
     }

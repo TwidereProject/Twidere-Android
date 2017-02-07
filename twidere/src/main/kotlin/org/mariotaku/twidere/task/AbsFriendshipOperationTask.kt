@@ -2,9 +2,6 @@ package org.mariotaku.twidere.task
 
 import android.accounts.AccountManager
 import android.content.Context
-import com.squareup.otto.Bus
-import org.mariotaku.abstask.library.AbstractTask
-import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
@@ -16,38 +13,17 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.FriendshipTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/3/11.
  */
 abstract class AbsFriendshipOperationTask(
-        protected val context: Context,
+        context: Context,
         @FriendshipTaskEvent.Action protected val action: Int
-) : AbstractTask<AbsFriendshipOperationTask.Arguments, SingleResponse<ParcelableUser>, Any?>() {
-
-    @Inject
-    lateinit var bus: Bus
-    @Inject
-    lateinit var twitter: AsyncTwitterWrapper
-    @Inject
-    lateinit var preferences: SharedPreferencesWrapper
-    @Inject
-    lateinit var kPreferences: KPreferences
-    @Inject
-    lateinit var manager: UserColorNameManager
-
-    init {
-        GeneralComponentHelper.build(context).inject(this)
-    }
-
+) : BaseAbstractTask<AbsFriendshipOperationTask.Arguments, SingleResponse<ParcelableUser>, Any?>(context) {
 
     override fun beforeExecute() {
-        twitter.addUpdatingRelationshipId(params.accountKey, params.userKey)
+        microBlogWrapper.addUpdatingRelationshipId(params.accountKey, params.userKey)
         val event = FriendshipTaskEvent(action, params.accountKey,
                 params.userKey)
         event.isFinished = false
@@ -55,7 +31,7 @@ abstract class AbsFriendshipOperationTask(
     }
 
     override fun afterExecute(handler: Any?, result: SingleResponse<ParcelableUser>?) {
-        twitter.removeUpdatingRelationshipId(params.accountKey, params.userKey)
+        microBlogWrapper.removeUpdatingRelationshipId(params.accountKey, params.userKey)
         val event = FriendshipTaskEvent(action, params.accountKey,
                 params.userKey)
         event.isFinished = true

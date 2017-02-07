@@ -715,8 +715,8 @@
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
     <string name="message_toast_search_deleted">Search deleted</string>
-    <string name="message_toast_search_name_deleted">Search \"<xliff:g id="name">%s</xliff:g>\" deleted</string>
-    <string name="message_toast_search_name_saved">Search \"<xliff:g id="name">%s</xliff:g>\" saved</string>
+    <string name="message_toast_search_name_deleted">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" deleted</string>
+    <string name="message_toast_search_name_saved">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" saved</string>
     <string name="message_toast_search_saved">Search saved</string>
     <string name="message_toast_select_file_no_storage_permission">Storage permission is needed to select file</string>
     <string name="message_toast_share_media_no_storage_permission">Some apps requires storage permission to share media</string>

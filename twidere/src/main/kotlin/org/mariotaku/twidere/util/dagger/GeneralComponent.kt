@@ -116,7 +116,7 @@ interface GeneralComponent {
 
     fun inject(task: GetDirectMessagesTask)
 
-    fun inject(task: AbsFriendshipOperationTask)
+    fun inject(task: BaseAbstractTask<Any, Any, Any>)
 
     fun inject(preference: KeyboardShortcutPreference)
 

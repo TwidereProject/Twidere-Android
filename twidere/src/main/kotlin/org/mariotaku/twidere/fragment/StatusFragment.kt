@@ -384,7 +384,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_key, status.id)
                 } else {
-                    twitter.createFavoriteAsync(status.account_key, status.id)
+                    twitter.createFavoriteAsync(status.account_key, status)
                 }
                 return true
             }
