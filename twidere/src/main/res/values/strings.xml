@@ -252,6 +252,7 @@
     <!-- App name, normally you don't need to translate this. -->
     <string name="app_name">Twidere</string>
     <string name="app_restart_confirm">Twidere will restart to apply settings.</string>
+    <string name="app_terminate_confirm">Twidere will quit to apply settings.</string>
 
     <string name="appearance">Appearance</string>
 
@@ -391,7 +392,8 @@
     <string name="dns_server">DNS Server</string>
     <string name="dns_server_summary">Set DNS Server for network requests.</string>
 
-    <string name="dont_restart">Don\'t restart</string>
+    <string name="action_dont_restart">Don\'t restart</string>
+    <string name="action_dont_terminate">Don\'t quit</string>
 
     <string name="draft_saved">Draft saved</string>
 
@@ -868,11 +870,15 @@
     <string name="preference_randomize_account_name">Randomize account name</string>
     <string name="preference_randomize_account_name_summary">Disallow other apps to get your name by reading accounts, improves privacy.</string>
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
+    <string name="preference_summary_auto_refresh_compatibility_mode">Enable if auto refresh not working properly, may increase power usage on Android 5.0+</string>
+    <string name="preference_summary_auto_refresh_power_saving">Stop auto refresh when battery is low</string>
     <string name="preference_summary_chrome_custom_tab">Open links in in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
+    <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
+    <string name="preference_title_auto_refresh_power_saving">Power saving mode</string>
     <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
@@ -1136,8 +1142,6 @@
     <string name="status_shortener_default">None (Abort sending)</string>
     <!-- [noun] Accessibility label for retweet icon -->
     <string name="status_type_retweet">Retweet</string>
-
-    <string name="stop_auto_refresh_when_battery_low">Stop auto refresh when battery is low</string>
 
     <string name="streaming">Streaming</string>
 

@@ -226,7 +226,7 @@
   <string name="display_sensitive_contents">Vis sensitivt innhold</string>
   <string name="display_sensitive_contents_summary">Vis sensitivt innhold i tidslinjen uten forvarsel</string>
   <string name="dns_server">DNS-server</string>
-  <string name="dont_restart">Ikke start på nytt</string>
+  <string name="action_dont_restart">Ikke start på nytt</string>
   <string name="draft_saved">Utkast lagret</string>
   <string name="drafts_hint_messages">Dine usendte tweets lagres her</string>
   <string name="edit_api">Endre API</string>

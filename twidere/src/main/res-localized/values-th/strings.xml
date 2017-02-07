@@ -252,7 +252,7 @@
   <string name="display_sensitive_contents_summary">แสดงเนื้อหาล่อแหลมโดยไม่ต้องแจ้งเตือนบนไทม์ไลน์</string>
   <string name="dns_server">เซิร์ฟเวอร์ DNS</string>
   <string name="dns_server_summary">ตั้งค่าเซิร์ฟเวอร์ DNS สำหรับการร้องขอเครือข่าย</string>
-  <string name="dont_restart">อย่าเพิ่งสิ</string>
+  <string name="action_dont_restart">อย่าเพิ่งสิ</string>
   <string name="draft_saved">บันทึกข้อความร่างแล้ว</string>
   <string name="drafts_hint_messages">ข้อความร่างของคุณถูกบันทึกไว้ที่นี่</string>
   <string name="drawer_toggle">สลับลิ้นชัก</string>

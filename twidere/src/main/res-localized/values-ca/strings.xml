@@ -248,7 +248,7 @@
   <string name="display_sensitive_contents_summary">Mostra continguts sensibles a la cronologia sense previ avís</string>
   <string name="dns_server">Servidor DNS</string>
   <string name="dns_server_summary">Estableix el servidor DNS per a convertir les URL a adreces IP.</string>
-  <string name="dont_restart">No reiniciïs</string>
+  <string name="action_dont_restart">No reiniciïs</string>
   <string name="draft_saved">S\'ha desat l\'esborrany</string>
   <string name="drafts_hint_messages">Els esborranys de piulada es desaran aquí</string>
   <string name="drawer_toggle">Barra lateral</string>

@@ -21,8 +21,11 @@ package org.mariotaku.twidere.service
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
+import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIRECT_MESSAGES
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_HOME_TIMELINE
@@ -34,6 +37,8 @@ class LegacyTaskService : Service() {
 
     @Inject
     internal lateinit var taskServiceRunner: TaskServiceRunner
+    @Inject
+    internal lateinit var kPreferences: KPreferences
 
     override fun onBind(intent: Intent): IBinder? = null
 
@@ -43,6 +48,8 @@ class LegacyTaskService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                !kPreferences[autoRefreshCompatibilityModeKey]) return START_NOT_STICKY
         val action = intent?.action ?: return START_NOT_STICKY
         taskServiceRunner.runTask(action) {
             stopSelfResult(startId)

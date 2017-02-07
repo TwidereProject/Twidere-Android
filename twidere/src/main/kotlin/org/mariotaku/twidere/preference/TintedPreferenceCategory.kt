@@ -12,7 +12,7 @@ import org.mariotaku.chameleon.ChameleonUtils
  * Created by mariotaku on 2017/2/5.
  */
 
-class TintedPreferenceCategory(context: Context, attrs: AttributeSet? = null) : PreferenceCategory(context, attrs) {
+open class TintedPreferenceCategory(context: Context, attrs: AttributeSet? = null) : PreferenceCategory(context, attrs) {
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)
         val theme = Chameleon.getOverrideTheme(context, ChameleonUtils.getActivity(context))

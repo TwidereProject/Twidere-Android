@@ -182,7 +182,7 @@
   <string name="display_sensitive_contents_summary">Wyświetlaj wrażliwą zawartość bez powiadomienia w strumieniu</string>
   <string name="dns_server">DNS Server</string>
   <string name="dns_server_summary">Ręcznie ustaw adres serwera DNS.</string>
-  <string name="dont_restart">Nie uruchamiaj ponownie</string>
+  <string name="action_dont_restart">Nie uruchamiaj ponownie</string>
   <string name="edit_api">Edytuj API</string>
   <string name="edit_draft">Edytuj szkic</string>
   <string name="edit_tab">Edytuj zakładkę</string>

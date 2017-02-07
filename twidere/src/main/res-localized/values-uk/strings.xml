@@ -252,7 +252,7 @@
   <string name="display_sensitive_contents_summary">Відображати делікатний вміст без попередження у стрічці</string>
   <string name="dns_server">DNS сервер</string>
   <string name="dns_server_summary">Встановлення DNS серверу для мережевих запитів.</string>
-  <string name="dont_restart">Не перезаванатажувати</string>
+  <string name="action_dont_restart">Не перезаванатажувати</string>
   <string name="draft_saved">Чернетку збережено</string>
   <string name="drafts_hint_messages">Тут зберігаються невідправлені твіти</string>
   <string name="drawer_toggle">Перемикач бічної панелі</string>

@@ -276,7 +276,7 @@
   <string name="display_sensitive_contents_summary">显示色情等敏感内容而不发出提示</string>
   <string name="dns_server">DNS 服务器</string>
   <string name="dns_server_summary">设置网络请求所用的 DNS 服务器</string>
-  <string name="dont_restart">不重启</string>
+  <string name="action_dont_restart">不重启</string>
   <string name="draft_saved">草稿已保存</string>
   <string name="drafts_hint_messages">您未发送的推文会被保存在这里</string>
   <string name="drawer_toggle">抽屉按钮</string>

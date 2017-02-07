@@ -270,7 +270,7 @@
   <string name="display_sensitive_contents_summary">Показывать особый контент в ленте без предупреждения</string>
   <string name="dns_server">DNS-сервер</string>
   <string name="dns_server_summary">Укажите DNS-сервер для сетевых запросов.</string>
-  <string name="dont_restart">Не перезапускать</string>
+  <string name="action_dont_restart">Не перезапускать</string>
   <string name="draft_saved">Черновик сохранен</string>
   <string name="drafts_hint_messages">Здесь сохраняются ваши неотправленные твиты</string>
   <string name="drawer_toggle">Отобразить шторку</string>

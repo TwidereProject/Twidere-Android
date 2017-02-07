@@ -249,7 +249,7 @@
   <string name="display_sensitive_contents_summary">Amosa contidos sensibles na liña de tempo sen advertencia</string>
   <string name="dns_server">Servidor DNS</string>
   <string name="dns_server_summary">Introduce o Servidor DNS para peticións de rede.</string>
-  <string name="dont_restart">Non reiniciar</string>
+  <string name="action_dont_restart">Non reiniciar</string>
   <string name="draft_saved">Borrador gardado</string>
   <string name="drafts_hint_messages">Aquí gárdanse os teus chíos non enviados</string>
   <string name="drawer_toggle">Conmutar caixón</string>

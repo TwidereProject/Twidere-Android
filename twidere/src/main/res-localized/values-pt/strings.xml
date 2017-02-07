@@ -254,7 +254,7 @@
   <string name="display_sensitive_contents_summary">Exibir conteúdo sensível sem avisar</string>
   <string name="dns_server">Servidor DNS</string>
   <string name="dns_server_summary">Definir o Servidor de DNS para solicitações de rede.</string>
-  <string name="dont_restart">Não reiniciar</string>
+  <string name="action_dont_restart">Não reiniciar</string>
   <string name="draft_saved">Rascunho salvo</string>
   <string name="drafts_hint_messages">Os teus tweets não enviados vão ser guardados aqui</string>
   <string name="drawer_toggle">Alternador de gaveta</string>

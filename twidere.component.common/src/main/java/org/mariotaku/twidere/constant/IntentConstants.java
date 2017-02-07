@@ -186,6 +186,7 @@ public interface IntentConstants {
     String EXTRA_RECREATE_ACTIVITY = "recreate_activity";
     String EXTRA_SHOULD_RECREATE = "should_recreate";
     String EXTRA_SHOULD_RESTART = "should_restart";
+    String EXTRA_SHOULD_TERMINATE = "should_terminate";
     String EXTRA_FROM_USER = "from_user";
     String EXTRA_SHOW_MEDIA_PREVIEW = "show_media_preview";
     String EXTRA_SHOW_EXTRA_TYPE = "show_extra_type";

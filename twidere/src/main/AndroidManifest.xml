@@ -511,11 +511,12 @@
 
         <service
             android:name=".service.LegacyTaskService"
-            android:enabled="@bool/use_legacy_refresh_service"
+            android:enabled="true"
+            android:exported="false"
             android:label="@string/label_refresh_and_sync_service"/>
         <service
             android:name=".service.JobTaskService"
-            android:enabled="@bool/use_job_refresh_service"
+            android:enabled="true"
             android:exported="true"
             android:label="@string/label_refresh_and_sync_service"
             android:permission="android.permission.BIND_JOB_SERVICE"/>

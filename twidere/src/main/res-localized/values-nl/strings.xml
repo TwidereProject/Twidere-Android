@@ -248,7 +248,7 @@
   <string name="display_sensitive_contents_summary">Toon gevoelige inhoud zonder kennisgeving in tijdlijn</string>
   <string name="dns_server">DNS-server</string>
   <string name="dns_server_summary">Stel DNS-server in voor netwerkverkeer.</string>
-  <string name="dont_restart">Niet herstarten</string>
+  <string name="action_dont_restart">Niet herstarten</string>
   <string name="draft_saved">Concept opgeslagen</string>
   <string name="drafts_hint_messages">Je niet-verzonden tweets worden hier opgeslagen</string>
   <string name="drawer_toggle">Knop voor navigatiemenu</string>

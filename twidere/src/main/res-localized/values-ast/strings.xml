@@ -272,7 +272,7 @@
   <string name="display_sensitive_contents_summary">Amuesa na llinia temporal conteníos sensibles ensin avisar</string>
   <string name="dns_server">Sirvidor DNS</string>
   <string name="dns_server_summary">Afita\'l sirvidor DNS pa solicitúes de rede.</string>
-  <string name="dont_restart">Nun reaniciar</string>
+  <string name="action_dont_restart">Nun reaniciar</string>
   <string name="draft_saved">Guardóse\'l borrador</string>
   <string name="drafts_hint_messages">Equí guardaránse los tos tuits ensin unviar</string>
   <string name="drawer_toggle">Alternancia de caxones</string>

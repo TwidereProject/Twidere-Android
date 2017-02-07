@@ -22,7 +22,6 @@ package org.mariotaku.twidere.loader
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-import android.text.TextUtils
 import org.mariotaku.commons.parcel.ParcelUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -117,11 +116,7 @@ class ConversationLoader(
                 }
                 query.sinceId(sinceId ?: status.id)
                 try {
-                    for (item in twitter.search(query)) {
-                        if (TextUtils.equals(item.inReplyToStatusId, status.id)) {
-                            statuses.add(item)
-                        }
-                    }
+                    twitter.search(query).filterTo(statuses) { it.inReplyToStatusId == status.id }
                 } catch (e: MicroBlogException) {
                     // Ignore for now
                 }

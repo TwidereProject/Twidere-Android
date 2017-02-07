@@ -276,7 +276,7 @@
   <string name="display_sensitive_contents_summary">Zeige heiklen Inhalt ohne Warnung in der Zeitleiste</string>
   <string name="dns_server">DNS-Server</string>
   <string name="dns_server_summary">DNS-Server für Netzwerkanfragen einstellen.</string>
-  <string name="dont_restart">Nicht neustarten</string>
+  <string name="action_dont_restart">Nicht neustarten</string>
   <string name="draft_saved">Entwurf gespeichert</string>
   <string name="drafts_hint_messages">Nicht gesendete Tweets werden hier gespeichert</string>
   <string name="drawer_toggle">Drawer-Schalter</string>

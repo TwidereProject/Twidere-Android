@@ -28,16 +28,8 @@ import org.mariotaku.twidere.model.AccountDetails;
 
 public class NotificationAccountsListPreference extends AccountsListPreference {
 
-    public NotificationAccountsListPreference(final Context context) {
-        super(context);
-    }
-
     public NotificationAccountsListPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public NotificationAccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
     }
 
     @Override

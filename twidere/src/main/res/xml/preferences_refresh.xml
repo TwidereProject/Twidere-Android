@@ -24,7 +24,19 @@
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="stop_auto_refresh_when_battery_low"
-            android:title="@string/stop_auto_refresh_when_battery_low"/>
+            android:summary="@string/preference_summary_auto_refresh_power_saving"
+            android:title="@string/preference_title_auto_refresh_power_saving"/>
+
+        <SwitchPreferenceCompat
+            android:defaultValue="@bool/use_legacy_refresh_service"
+            android:enabled="@bool/use_job_refresh_service"
+            android:key="auto_refresh_compatibility_mode"
+            android:summary="@string/preference_summary_auto_refresh_compatibility_mode"
+            android:title="@string/preference_title_auto_refresh_compatibility_mode">
+            <extra
+                android:name="should_terminate"
+                android:value="true"/>
+        </SwitchPreferenceCompat>
 
         <org.mariotaku.twidere.preference.HomeRefreshContentPreference
             android:key="home_refresh"

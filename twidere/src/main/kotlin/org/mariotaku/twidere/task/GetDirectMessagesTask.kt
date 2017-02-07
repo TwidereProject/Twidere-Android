@@ -12,7 +12,8 @@ import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
@@ -88,7 +89,7 @@ abstract class GetDirectMessagesTask(
                 } else if (e.isCausedByNetworkIssue) {
                     errorInfoStore[ErrorInfoStore.KEY_DIRECT_MESSAGES, accountKey] = ErrorInfoStore.CODE_NETWORK_ERROR
                 }
-                DebugLog.w(TwidereConstants.LOGTAG, tr = e)
+                DebugLog.w(LOGTAG, tr = e)
                 result.add(TwitterWrapper.MessageListResponse(accountKey, e))
             }
 
@@ -111,7 +112,7 @@ abstract class GetDirectMessagesTask(
 
 
         // Insert previously fetched items.
-        val insertUri = UriUtils.appendQueryParameters(uri, TwidereConstants.QUERY_PARAM_NOTIFY, notify)
+        val insertUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY, notify)
         ContentResolverUtils.bulkInsert(context.contentResolver, insertUri, valuesArray)
         return false
     }

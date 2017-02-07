@@ -40,6 +40,8 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import kotlinx.android.synthetic.main.activity_settings.*
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
@@ -55,16 +57,23 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
     var shouldRecreate: Boolean = false
     var shouldRestart: Boolean = false
+    var shouldTerminate: Boolean = false
     private lateinit var entriesAdapter: EntriesAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        entriesAdapter = EntriesAdapter(this)
 
         if (savedInstanceState != null) {
             shouldRecreate = savedInstanceState.getBoolean(EXTRA_SHOULD_RECREATE, shouldRecreate)
             shouldRestart = savedInstanceState.getBoolean(EXTRA_SHOULD_RESTART, shouldRestart)
+            shouldTerminate = savedInstanceState.getBoolean(EXTRA_SHOULD_TERMINATE, shouldTerminate)
+        } else if (intent.getBooleanExtra(EXTRA_SHOULD_TERMINATE, false)) {
+            finishNoRestart()
+            System.exit(0)
+            return
         }
 
         val backgroundAlpha = currentThemeBackgroundAlpha
@@ -74,7 +83,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         slidingPane.setShadowResourceLeft(R.drawable.sliding_pane_shadow_left)
         slidingPane.setShadowResourceRight(R.drawable.sliding_pane_shadow_right)
         slidingPane.sliderFadeColor = 0
-        entriesAdapter = EntriesAdapter(this)
+
         initEntries()
         entriesList.adapter = entriesAdapter
         entriesList.choiceMode = AbsListView.CHOICE_MODE_SINGLE
@@ -110,6 +119,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         if (resultCode == RESULT_SETTINGS_CHANGED && data != null) {
             shouldRecreate = data.getBooleanExtra(EXTRA_SHOULD_RECREATE, false)
             shouldRestart = data.getBooleanExtra(EXTRA_SHOULD_RESTART, false)
+            shouldTerminate = data.getBooleanExtra(EXTRA_SHOULD_TERMINATE, false)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -243,12 +253,13 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
     private fun notifyUnsavedChange(): Boolean {
-        if (isTopSettings && (shouldRecreate || shouldRestart)) {
+        if (isTopSettings && (shouldRecreate || shouldRestart || shouldTerminate)) {
             val df = RestartConfirmDialogFragment()
-            val args = Bundle()
-            args.putBoolean(EXTRA_SHOULD_RECREATE, shouldRecreate)
-            args.putBoolean(EXTRA_SHOULD_RESTART, shouldRestart)
-            df.arguments = args
+            df.arguments = Bundle {
+                this[EXTRA_SHOULD_RECREATE] = shouldRecreate
+                this[EXTRA_SHOULD_RESTART] = shouldRestart
+                this[EXTRA_SHOULD_TERMINATE] = shouldTerminate
+            }
             df.show(supportFragmentManager, "restart_confirm")
             return true
         }
@@ -364,9 +375,14 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     class RestartConfirmDialogFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(activity)
-            builder.setMessage(R.string.app_restart_confirm)
+            if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+                builder.setMessage(R.string.app_terminate_confirm)
+                builder.setNegativeButton(R.string.action_dont_terminate, this)
+            } else {
+                builder.setMessage(R.string.app_restart_confirm)
+                builder.setNegativeButton(R.string.action_dont_restart, this)
+            }
             builder.setPositiveButton(android.R.string.ok, this)
-            builder.setNegativeButton(R.string.dont_restart, this)
             val dialog = builder.create()
             dialog.setOnShowListener {
                 it as AlertDialog
@@ -379,7 +395,14 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
             val activity = activity as SettingsActivity
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
-                    activity.finish()
+                    if (arguments.getBoolean(EXTRA_SHOULD_TERMINATE)) {
+                        val intent = Intent(context, SettingsActivity::class.java)
+                        intent.putExtra(EXTRA_SHOULD_TERMINATE, true)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        activity.startActivity(intent)
+                    } else {
+                        activity.finish()
+                    }
                 }
                 DialogInterface.BUTTON_NEGATIVE -> {
                     activity.finishNoRestart()
@@ -402,6 +425,11 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         fun setShouldRestart(activity: Activity) {
             if (activity !is SettingsActivity) return
             activity.shouldRestart = true
+        }
+
+        fun setShouldTerminate(activity: Activity) {
+            if (activity !is SettingsActivity) return
+            activity.shouldTerminate = true
         }
     }
 

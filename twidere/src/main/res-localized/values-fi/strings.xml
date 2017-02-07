@@ -252,7 +252,7 @@
   <string name="display_sensitive_contents_summary">Näytä arkaluontoinen sisältö ilman aikajanan varoituksia</string>
   <string name="dns_server">DNS-palvelin</string>
   <string name="dns_server_summary">Aseta verkkopyynnöille DNS-palvelin.</string>
-  <string name="dont_restart">Älä käynnistä uudelleen</string>
+  <string name="action_dont_restart">Älä käynnistä uudelleen</string>
   <string name="draft_saved">Luonnos tallennettu</string>
   <string name="drafts_hint_messages">Twiittiluonnoksesi tallennetaan tänne</string>
   <string name="edit_api">Muokkaa API:a</string>

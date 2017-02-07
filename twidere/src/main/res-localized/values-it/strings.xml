@@ -248,7 +248,7 @@
   <string name="display_sensitive_contents_summary">Mostra contenuti sensibili senza preavviso in timeline</string>
   <string name="dns_server">DNS Server</string>
   <string name="dns_server_summary">Imposta il server DNS per le richieste di rete.</string>
-  <string name="dont_restart">Non riavviare</string>
+  <string name="action_dont_restart">Non riavviare</string>
   <string name="draft_saved">Progetto salvato</string>
   <string name="drafts_hint_messages">I tuoi tweet non inviati saranno salvati qui</string>
   <string name="edit_api">Edit API</string>

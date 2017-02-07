@@ -256,7 +256,7 @@
   <string name="display_sensitive_contents_summary">نمایش بدون هشدار محتوای حسّاسیت‌برانگیر در خط زمانی</string>
   <string name="dns_server">کارگزار DNS</string>
   <string name="dns_server_summary">تنظیم کارساز نام دامنه برای درخواست‌های شبکه.</string>
-  <string name="dont_restart">عدم شروع مجدّد</string>
+  <string name="action_dont_restart">عدم شروع مجدّد</string>
   <string name="draft_saved">چرک‌نویس ذخیره شد</string>
   <string name="drafts_hint_messages">توییت‌های فرستاده نشده‌تان این‌حا ذخیره می‌شوند</string>
   <string name="drawer_toggle">تغییر وضعیت کشو</string>

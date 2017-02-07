@@ -19,12 +19,12 @@ abstract class AutoRefreshController(
 
     abstract fun unschedule(@AutoRefreshType type: String)
 
-    fun reschedule(@AutoRefreshType type: String) {
+    open fun reschedule(@AutoRefreshType type: String) {
         unschedule(type)
         schedule(type)
     }
 
-    fun rescheduleAll() {
+    open fun rescheduleAll() {
         AutoRefreshType.ALL.forEach { reschedule(it) }
     }
 

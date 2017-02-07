@@ -248,7 +248,7 @@
   <string name="display_sensitive_contents_summary">타임라인에서 경고 없이 민감한 콘텐츠 표시</string>
   <string name="dns_server">DNS 서버</string>
   <string name="dns_server_summary">네트워크 요청을 위해 DNS 서버를 설정.</string>
-  <string name="dont_restart">재시작하지 않기</string>
+  <string name="action_dont_restart">재시작하지 않기</string>
   <string name="draft_saved">임시 저장됨</string>
   <string name="drafts_hint_messages">전송되지 않은 트윗은 여기에 보관됩니다</string>
   <string name="drawer_toggle">대시보드 아이콘 보이기</string>

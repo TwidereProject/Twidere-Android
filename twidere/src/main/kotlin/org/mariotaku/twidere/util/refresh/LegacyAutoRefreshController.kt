@@ -1,14 +1,18 @@
 package org.mariotaku.twidere.util.refresh
 
+import android.annotation.TargetApi
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.job.JobScheduler
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.SystemClock
 import android.support.v4.util.ArrayMap
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.refreshIntervalKey
+import org.mariotaku.twidere.service.JobTaskService.Companion.JOB_IDS_REFRESH
 import org.mariotaku.twidere.service.LegacyTaskService
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_FILTERS_SUBSCRIPTIONS
 import java.util.concurrent.TimeUnit
@@ -35,6 +39,13 @@ class LegacyAutoRefreshController(
         rescheduleFiltersSubscriptionsRefresh()
     }
 
+    override fun rescheduleAll() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            removeAllJobs(context)
+        }
+        super.rescheduleAll()
+    }
+
     override fun unschedule(type: String) {
         val pendingIntent = pendingIntents[type] ?: return
         alarmManager.cancel(pendingIntent)
@@ -56,6 +67,17 @@ class LegacyAutoRefreshController(
         intent.action = ACTION_REFRESH_FILTERS_SUBSCRIPTIONS
         alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, interval,
                 PendingIntent.getService(context, 0, intent, 0))
+    }
+
+    private companion object {
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        fun removeAllJobs(context: Context) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return
+            val jobService = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            JOB_IDS_REFRESH.forEach { id ->
+                jobService.cancel(id)
+            }
+        }
     }
 
 }

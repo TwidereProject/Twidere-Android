@@ -28,16 +28,8 @@ import org.mariotaku.twidere.model.AccountDetails;
 
 public class AutoRefreshAccountsListPreference extends AccountsListPreference {
 
-    public AutoRefreshAccountsListPreference(final Context context) {
-        super(context);
-    }
-
     public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public AutoRefreshAccountsListPreference(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
     }
 
     @Override

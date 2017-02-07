@@ -276,7 +276,7 @@
   <string name="display_sensitive_contents_summary">Afficher le contenu qui peut être sensible sans avertissement dans votre fil d\'actualité</string>
   <string name="dns_server">Serveur DNS</string>
   <string name="dns_server_summary">Définir le serveur DNS pour les résolutions.</string>
-  <string name="dont_restart">Ne pas redémarrer</string>
+  <string name="action_dont_restart">Ne pas redémarrer</string>
   <string name="draft_saved">Brouillon sauvegardé</string>
   <string name="drafts_hint_messages">Vos tweets non-envoyés sont sauvés ici</string>
   <string name="drawer_toggle">Afficher le bouton du menu latéral</string>

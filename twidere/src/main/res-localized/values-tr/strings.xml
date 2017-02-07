@@ -251,7 +251,7 @@
   <string name="display_sensitive_contents_summary">Hassas içeriği uyarmadan zaman akışında görüntüle</string>
   <string name="dns_server">DNS Sunucusu</string>
   <string name="dns_server_summary">Ağ istekleri için DNS sunucusu ayarlayın.</string>
-  <string name="dont_restart">Yeniden başlatma</string>
+  <string name="action_dont_restart">Yeniden başlatma</string>
   <string name="draft_saved">Taslak kaydedildi</string>
   <string name="drafts_hint_messages">Gönderilmemiş tweetleri buradan kurtarabilirsiniz</string>
   <string name="drawer_toggle">Çekmeceyi aç/kapat</string>

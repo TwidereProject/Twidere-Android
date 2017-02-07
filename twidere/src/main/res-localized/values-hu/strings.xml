@@ -258,7 +258,7 @@
   <string name="display_sensitive_contents_summary">Érzékeny információk megjelenítése a kezdőlapon figyelmeztetés nélkül</string>
   <string name="dns_server">DNS kiszolgáló</string>
   <string name="dns_server_summary">DNS szerver kijelölése a hálózati lekérésekhez.</string>
-  <string name="dont_restart">Ne induljon újra</string>
+  <string name="action_dont_restart">Ne induljon újra</string>
   <string name="draft_saved">Piszkozat elmentve</string>
   <string name="drafts_hint_messages">Ide lesznek mentve az el nem küldött tweetjeid</string>
   <string name="edit_api">API szerkesztése</string>

@@ -9,6 +9,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_MEDIA_PREVIEW_STYLE_REAL_SIZE
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
@@ -17,7 +18,6 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
-import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.view.ProfileImageView
 
 /**
@@ -63,6 +63,7 @@ val lightFontKey = KBooleanKey("light_font", false)
 val extraFeaturesNoticeVersionKey = KIntKey("extra_features_notice_version", 0)
 val mediaPreloadKey = KBooleanKey(KEY_MEDIA_PRELOAD, false)
 val mediaPreloadOnWifiOnlyKey = KBooleanKey(KEY_PRELOAD_WIFI_ONLY, true)
+val autoRefreshCompatibilityModeKey = KBooleanKey("auto_refresh_compatibility_mode", Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

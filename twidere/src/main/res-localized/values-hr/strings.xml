@@ -201,7 +201,7 @@
   <string name="display_sensitive_contents">Prikaži osvjetljive sadržaje</string>
   <string name="display_sensitive_contents_summary">Prikaži osjetljive sadržaje bez obavijesti u timelineu</string>
   <string name="dns_server">DNS Server</string>
-  <string name="dont_restart">Nemoj ponovno pokrenuti</string>
+  <string name="action_dont_restart">Nemoj ponovno pokrenuti</string>
   <string name="draft_saved">Skica spremljena</string>
   <string name="drafts_hint_messages">Vaši neposlani tweetevi bit će spremljeni ovdje</string>
   <string name="edit_api">Uredi API</string>

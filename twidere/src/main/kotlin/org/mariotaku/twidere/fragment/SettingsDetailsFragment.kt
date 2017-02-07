@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.support.v7.preference.PreferenceScreen
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.activity.SettingsActivity
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SHOULD_TERMINATE
 import org.mariotaku.twidere.util.Utils
 
 class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChangeListener {
@@ -74,6 +75,8 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
                 SettingsActivity.setShouldRestart(activity)
             } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
                 SettingsActivity.setShouldRecreate(activity)
+            }else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
+                SettingsActivity.setShouldTerminate(activity)
             }
             if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {
                 activity.recreate()

@@ -272,7 +272,7 @@
   <string name="display_sensitive_contents_summary">Mostrar contenidos sensibles en la cronología sin aviso</string>
   <string name="dns_server">Servidor DNS</string>
   <string name="dns_server_summary">Configure el servidor DNS para peticiones de red.</string>
-  <string name="dont_restart">No reinicie</string>
+  <string name="action_dont_restart">No reinicie</string>
   <string name="draft_saved">Borrador guardado</string>
   <string name="drafts_hint_messages">Tus tweets sin enviar se guardarán aquí</string>
   <string name="drawer_toggle">Barra lateral</string>

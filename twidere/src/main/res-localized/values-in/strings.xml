@@ -268,7 +268,7 @@
   <string name="display_sensitive_contents_summary">Tampilkan konten yang sensitif di timeline tanpa pemberitahuan.</string>
   <string name="dns_server">Server DNS</string>
   <string name="dns_server_summary">Atur DNS Server untuk permintaan jaringan.</string>
-  <string name="dont_restart">Jangan memulai ulang</string>
+  <string name="action_dont_restart">Jangan memulai ulang</string>
   <string name="draft_saved">Draft tersimpan</string>
   <string name="drafts_hint_messages">Tweet Anda yang belum terkirim akan tersimpan disini</string>
   <string name="drawer_toggle">Tombol laci</string>

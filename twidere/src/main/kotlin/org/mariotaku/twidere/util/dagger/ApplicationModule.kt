@@ -48,6 +48,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
+import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache
@@ -249,7 +250,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun autoRefreshController(kPreferences: KPreferences): AutoRefreshController {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !kPreferences[autoRefreshCompatibilityModeKey]) {
             return JobSchedulerAutoRefreshController(application, kPreferences)
         }
         return LegacyAutoRefreshController(application, kPreferences)
