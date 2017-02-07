@@ -22,6 +22,7 @@ package org.mariotaku.twidere.activity
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Rect
 import android.net.Uri
 import android.os.BadParcelableException
@@ -33,6 +34,7 @@ import android.support.v7.widget.Toolbar
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import kotlinx.android.synthetic.main.activity_link_handler.*
 import org.mariotaku.kpreferences.get
@@ -60,6 +62,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.Utils.LINK_ID_FILTERS_IMPORT_BLOCKS
 import org.mariotaku.twidere.util.linkhandler.TwidereLinkMatcher
+import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
 class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IControlBarActivity,
         SupportFragmentCallback {
@@ -116,7 +119,14 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         } else {
             setContentView(R.layout.activity_link_handler)
             toolbar?.let { toolbar ->
-                setSupportActionBar(toolbar)
+                if (supportActionBar != null) {
+                    toolbar.visibility = View.GONE
+                    windowOverlay?.visibility = View.GONE
+                } else {
+                    toolbar.visibility = View.VISIBLE
+                    windowOverlay?.visibility = View.VISIBLE
+                    setSupportActionBar(toolbar)
+                }
             }
             contentFragmentId = R.id.contentFragment
         }
@@ -127,7 +137,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         ft.replace(contentFragmentId, fragment, "content_fragment")
         ft.commit()
         setTitle(linkId, uri)
-        finishOnly = java.lang.Boolean.parseBoolean(uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY))
+        finishOnly = uri.getQueryParameter(QUERY_PARAM_FINISH_ONLY)?.toBoolean() ?: false
 
         if (fragment is IToolBarSupportFragment) {
             ThemeUtils.setCompatContentViewOverlay(window, EmptyDrawable())
@@ -287,6 +297,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             actionBarHeight = ThemeUtils.getActionBarHeight(this)
             return actionBarHeight
         }
+
+    override fun getThemeResource(preferences: SharedPreferences, theme: String, themeColor: Int): Int {
+        if (preferences[floatingDetailedContentsKey]) {
+            return super.getThemeResource(preferences, theme, themeColor)
+        }
+        return getCurrentThemeResource(this, theme, R.style.Theme_Twidere)
+    }
 
     private fun setTitle(linkId: Int, uri: Uri): Boolean {
         setSubtitle(null)

@@ -24,6 +24,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Rect
 import android.nfc.NfcAdapter
@@ -188,7 +189,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
             StrictModeUtils.detectAllThreadPolicy()
         }
         val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        val themeResource = getThemeResource(prefs[themeKey], prefs[themeColorKey])
+        val themeResource = getThemeResource(prefs, prefs[themeKey], prefs[themeColorKey])
         if (themeResource != 0) {
             setTheme(themeResource)
         }
@@ -373,7 +374,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
     }
 
     @StyleRes
-    protected open fun getThemeResource(theme: String, themeColor: Int): Int {
+    protected open fun getThemeResource(preferences: SharedPreferences, theme: String, themeColor: Int): Int {
         return getCurrentThemeResource(this, theme)
     }
 

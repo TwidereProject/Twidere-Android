@@ -64,6 +64,7 @@ val extraFeaturesNoticeVersionKey = KIntKey("extra_features_notice_version", 0)
 val mediaPreloadKey = KBooleanKey(KEY_MEDIA_PRELOAD, false)
 val mediaPreloadOnWifiOnlyKey = KBooleanKey(KEY_PRELOAD_WIFI_ONLY, true)
 val autoRefreshCompatibilityModeKey = KBooleanKey("auto_refresh_compatibility_mode", Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+val floatingDetailedContentsKey = KBooleanKey("floating_detailed_contents", true)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

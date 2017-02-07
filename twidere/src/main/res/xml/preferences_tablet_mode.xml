@@ -23,4 +23,8 @@
                 android:value="true"/>
         </SwitchPreferenceCompat>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="floating_detailed_contents"
+        android:title="@string/preference_title_floating_detailed_view"/>
 </PreferenceScreen>
