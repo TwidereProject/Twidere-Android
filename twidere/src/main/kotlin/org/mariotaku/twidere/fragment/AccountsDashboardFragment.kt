@@ -40,6 +40,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v4.view.ViewPager
@@ -731,7 +732,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             val draftsCount: Int
     )
 
-    class AccountsInfoLoader(context: Context, val firsSyncLoad: Boolean) : AsyncTaskLoader<AccountsInfo>(context) {
+    class AccountsInfoLoader(
+            context: Context,
+            val firsSyncLoad: Boolean
+    ) : FixedAsyncTaskLoader<AccountsInfo>(context) {
         private var contentObserver: ContentObserver? = null
         private var accountListener: OnAccountsUpdateListener? = null
 
