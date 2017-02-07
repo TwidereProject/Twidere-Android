@@ -18,9 +18,9 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="300dp"
@@ -44,7 +44,8 @@
                 android:hint="@string/username"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:typeface="normal" />
+                android:typeface="normal"
+                app:backgroundTint="?colorAccent"/>
 
             <org.mariotaku.twidere.view.FixedEditText
                 android:id="@+id/editPassword"
@@ -54,7 +55,8 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:typeface="normal" />
+                android:typeface="normal"
+                app:backgroundTint="?colorAccent"/>
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -64,7 +66,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@dimen/element_size_normal"
             android:text="@string/sign_in"
-            app:backgroundTint="@color/material_light_green" />
+            app:backgroundTint="@color/material_light_green"/>
 
 
         <Button
@@ -75,7 +77,7 @@
             android:gravity="start|center_vertical"
             android:minHeight="@dimen/element_size_xsmall"
             android:text="@string/register"
-            android:textAppearance="?android:textAppearanceSmall" />
+            android:textAppearance="?android:textAppearanceSmall"/>
 
         <Button
             android:id="@+id/passwordSignIn"
@@ -85,7 +87,7 @@
             android:gravity="start|center_vertical"
             android:minHeight="@dimen/element_size_xsmall"
             android:text="@string/label_password_sign_in"
-            android:textAppearance="?android:textAppearanceSmall" />
+            android:textAppearance="?android:textAppearanceSmall"/>
 
     </LinearLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:inputType="text|textPersonName"
         android:maxLines="1"
-        android:textColor="?colorAccent"
-        tools:text="Nickname" />
+        app:backgroundTint="?colorAccent"
+        tools:text="Nickname"/>
 
 </FrameLayout>

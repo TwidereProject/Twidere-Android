@@ -19,6 +19,7 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -68,6 +69,7 @@
             android:ems="10"
             android:inputType="textUri"
             android:maxLines="1"
+            app:backgroundTint="?colorAccent"
             tools:text="https://api.twitter.com/"/>
 
         <org.mariotaku.twidere.view.FixedTextView

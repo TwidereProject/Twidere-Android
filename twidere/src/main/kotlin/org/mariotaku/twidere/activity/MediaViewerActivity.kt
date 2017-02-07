@@ -376,6 +376,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     override fun onFitSystemWindows(insets: Rect) {
         super.onFitSystemWindows(insets)
         val adapter = viewPager.adapter
+        if (adapter.count == 0) return
         val fragment = adapter.instantiateItem(viewPager, viewPager.currentItem)
         if (fragment is IBaseFragment<*>) {
             fragment.requestFitSystemWindows()
