@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.statusnet.model.Group
@@ -42,7 +42,7 @@ abstract class BaseGroupsLoader(
         protected val accountKey: UserKey,
         override val cursor: Long,
         data: List<ParcelableGroup>?
-) : AsyncTaskLoader<List<ParcelableGroup>>(context), ICursorSupportLoader {
+) : FixedAsyncTaskLoader<List<ParcelableGroup>>(context), ICursorSupportLoader {
 
     protected val data = NoDuplicatesArrayList<ParcelableGroup>()
 

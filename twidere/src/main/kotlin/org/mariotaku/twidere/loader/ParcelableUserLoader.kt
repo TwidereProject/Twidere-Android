@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.text.TextUtils
 import android.util.Log
 import org.mariotaku.abstask.library.TaskStarter
@@ -56,7 +56,7 @@ class ParcelableUserLoader(
         private val extras: Bundle?,
         private val omitIntentExtra: Boolean,
         private val loadFromCache: Boolean
-) : AsyncTaskLoader<SingleResponse<ParcelableUser>>(context), Constants {
+) : FixedAsyncTaskLoader<SingleResponse<ParcelableUser>>(context), Constants {
 
     @Inject
     lateinit var userColorNameManager: UserColorNameManager

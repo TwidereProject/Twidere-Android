@@ -31,6 +31,7 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.text.TextUtils
@@ -409,7 +410,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCa
             private val listName: String?,
             private val userKey: UserKey?,
             private val screenName: String?
-    ) : AsyncTaskLoader<SingleResponse<ParcelableUserList>>(context) {
+    ) : FixedAsyncTaskLoader<SingleResponse<ParcelableUserList>>(context) {
 
         override fun loadInBackground(): SingleResponse<ParcelableUserList> {
             if (!omitIntentExtra && extras != null) {

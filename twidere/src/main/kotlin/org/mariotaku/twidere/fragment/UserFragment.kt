@@ -46,6 +46,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.graphics.ColorUtils
@@ -1560,7 +1561,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             context: Context,
             private val accountKey: UserKey?,
             private val user: ParcelableUser?
-    ) : AsyncTaskLoader<SingleResponse<ParcelableRelationship>>(context) {
+    ) : FixedAsyncTaskLoader<SingleResponse<ParcelableRelationship>>(context) {
 
         override fun loadInBackground(): SingleResponse<ParcelableRelationship> {
             if (accountKey == null || user == null) {

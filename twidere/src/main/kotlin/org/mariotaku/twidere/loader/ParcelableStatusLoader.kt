@@ -22,7 +22,7 @@ package org.mariotaku.twidere.loader
 import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.ktextension.set
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo
@@ -49,7 +49,7 @@ class ParcelableStatusLoader(
         private val extras: Bundle?,
         private val accountKey: UserKey?,
         private val statusId: String?
-) : AsyncTaskLoader<SingleResponse<ParcelableStatus>>(context) {
+) : FixedAsyncTaskLoader<SingleResponse<ParcelableStatus>>(context) {
 
     @Inject
     internal lateinit var userColorNameManager: UserColorNameManager

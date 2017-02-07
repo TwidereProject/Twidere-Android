@@ -6,7 +6,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.statusnet.model.Group
@@ -97,7 +97,7 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
             private val accountKey: UserKey,
             private val groupId: String?,
             private val groupName: String?
-    ) : AsyncTaskLoader<SingleResponse<ParcelableGroup>>(context) {
+    ) : FixedAsyncTaskLoader<SingleResponse<ParcelableGroup>>(context) {
 
         override fun loadInBackground(): SingleResponse<ParcelableGroup> {
             if (!omitIntentExtra && extras != null) {

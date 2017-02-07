@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
 import android.view.ContextMenu
@@ -155,7 +155,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         return false
     }
 
-    class ItemsLoader(context: Context, private val arguments: Bundle) : AsyncTaskLoader<List<*>>(context) {
+    class ItemsLoader(context: Context, private val arguments: Bundle) : FixedAsyncTaskLoader<List<*>>(context) {
 
         override fun loadInBackground(): List<*> {
             return arguments.getParcelableArrayList<Parcelable>(EXTRA_ITEMS)

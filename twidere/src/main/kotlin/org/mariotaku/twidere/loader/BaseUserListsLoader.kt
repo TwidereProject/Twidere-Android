@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
@@ -48,7 +48,7 @@ abstract class BaseUserListsLoader(
         protected val accountId: UserKey,
         override val cursor: Long,
         data: List<ParcelableUserList>?
-) : AsyncTaskLoader<List<ParcelableUserList>>(context), ICursorSupportLoader {
+) : FixedAsyncTaskLoader<List<ParcelableUserList>>(context), ICursorSupportLoader {
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
 

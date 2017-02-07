@@ -31,7 +31,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.FixedAsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
@@ -262,7 +262,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
 
     }
 
-    private static class FilesLoader extends AsyncTaskLoader<List<File>> {
+    private static class FilesLoader extends FixedAsyncTaskLoader<List<File>> {
 
         private final File path;
         private final String[] extensions;

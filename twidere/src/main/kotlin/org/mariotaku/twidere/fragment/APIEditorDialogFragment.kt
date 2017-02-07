@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.view.View
@@ -186,7 +186,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
 
         }
 
-        class DefaultAPIConfigLoader(context: Context) : AsyncTaskLoader<List<CustomAPIConfig>?>(context) {
+        class DefaultAPIConfigLoader(context: Context) : FixedAsyncTaskLoader<List<CustomAPIConfig>?>(context) {
             @Inject
             lateinit var client: RestHttpClient
 

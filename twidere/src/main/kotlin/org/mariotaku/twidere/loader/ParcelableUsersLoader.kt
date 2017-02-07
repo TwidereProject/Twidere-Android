@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.text.TextUtils
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
@@ -31,7 +31,7 @@ abstract class ParcelableUsersLoader(
         context: Context,
         data: List<ParcelableUser>?,
         override var fromUser: Boolean
-) : AsyncTaskLoader<List<ParcelableUser>>(context), IExtendedLoader {
+) : FixedAsyncTaskLoader<List<ParcelableUser>>(context), IExtendedLoader {
 
     protected val data: MutableList<ParcelableUser> = Collections.synchronizedList(NoDuplicatesArrayList<ParcelableUser>())
 

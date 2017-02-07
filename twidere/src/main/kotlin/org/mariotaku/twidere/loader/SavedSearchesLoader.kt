@@ -20,7 +20,7 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
-import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ResponseList
@@ -33,11 +33,10 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 class SavedSearchesLoader(
         context: Context,
         private val accountId: UserKey
-) : AsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
+) : FixedAsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
 
     override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId
-        ) ?: return null
+        val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return null
         try {
             return twitter.savedSearches
         } catch (e: MicroBlogException) {
