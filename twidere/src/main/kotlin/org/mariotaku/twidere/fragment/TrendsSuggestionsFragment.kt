@@ -30,10 +30,12 @@ import android.widget.AdapterView
 import android.widget.ListView
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_listview.*
+import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
+import org.mariotaku.twidere.constant.localTrendsWoeIdKey
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
@@ -43,13 +45,16 @@ import org.mariotaku.twidere.util.Utils
 
 class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
 
-    private val accountKey: UserKey? get() = Utils.getAccountKeys(context, arguments)?.firstOrNull()
-            ?: Utils.getDefaultAccountKey(context)
     private val tabExtras: TrendsTabExtras? get() = arguments.getParcelable(EXTRA_EXTRAS)
 
+    private val accountKey: UserKey? get() {
+        return Utils.getAccountKeys(context, arguments)?.firstOrNull()
+                ?: Utils.getDefaultAccountKey(context)
+    }
+
     private val woeId: Int get() {
-        val id = tabExtras?.woeId ?: return 1
-        return if (id > 0) id else 1
+        val id = tabExtras?.woeId ?: 0
+        return if (id > 0) id else preferences[localTrendsWoeIdKey]
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
