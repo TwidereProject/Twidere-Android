@@ -14,6 +14,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
+import java.util.*
 
 class WebLinkHandlerActivity : Activity() {
 
@@ -27,7 +28,7 @@ class WebLinkHandlerActivity : Activity() {
             return
         }
 
-        val (handledIntent, handledSuccessfully) = when (uri.host) {
+        val (handledIntent, handledSuccessfully) = when (uri.host.toLowerCase(Locale.US)) {
             "twitter.com", "www.twitter.com", "mobile.twitter.com" -> handleTwitterLink(regulateTwitterUri(uri))
             "fanfou.com" -> handleFanfouLink(uri)
             "twidere.org", "twidere.mariotaku.org" -> handleTwidereExternalLink(uri)
