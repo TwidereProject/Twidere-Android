@@ -62,7 +62,9 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
+import org.mariotaku.twidere.model.draft.StatusObjectExtras
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableDirectMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages
@@ -122,28 +124,42 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         if (draftId == -1L) return
         val where = Expression.equals(Drafts._ID, draftId)
         @SuppressLint("Recycle")
-        val item: Draft = contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null)?.useCursor {
+        val draft: Draft = contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null)?.useCursor {
             val i = DraftCursorIndices(it)
             if (!it.moveToFirst()) return@useCursor null
             return@useCursor i.newObject(it)
         } ?: return
 
         contentResolver.delete(Drafts.CONTENT_URI, where.sql, null)
-        if (TextUtils.isEmpty(item.action_type)) {
-            item.action_type = Draft.Action.UPDATE_STATUS
+        if (TextUtils.isEmpty(draft.action_type)) {
+            draft.action_type = Draft.Action.UPDATE_STATUS
         }
-        when (item.action_type) {
-            Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                updateStatuses(item.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, item))
+        when (draft.action_type) {
+            Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2,
+            Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
+                updateStatuses(draft.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, draft))
             }
             Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {
-                val recipientId = (item.action_extras as? SendDirectMessageActionExtras)?.recipientId ?: return
-                if (item.account_keys?.isEmpty() ?: true) {
-                    return
+                val recipientId = (draft.action_extras as? SendDirectMessageActionExtras)?.recipientId ?: return
+                val accountKey = draft.account_keys?.firstOrNull() ?: return
+                val imageUri = draft.media.firstOrNull()?.uri
+                sendMessage(accountKey, recipientId, draft.text, imageUri)
+            }
+            Draft.Action.FAVORITE -> {
+                performStatusAction(draft) { microBlog, account, status ->
+                    if (account.type == AccountType.FANFOU) {
+                        microBlog.createFanfouFavorite(status.id)
+                    } else {
+                        microBlog.createFavorite(status.id)
+                    }
+                    return@performStatusAction true
                 }
-                val accountKey = item.account_keys!!.first()
-                val imageUri = item.media.firstOrNull()?.uri
-                sendMessage(accountKey, recipientId, item.text, imageUri)
+            }
+            Draft.Action.RETWEET -> {
+                performStatusAction(draft) { microBlog, account, status ->
+                    microBlog.retweetStatus(status.id)
+                    return@performStatusAction true
+                }
             }
         }
     }
@@ -423,6 +439,18 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         when (info.state) {
             ProcessingInfo.State.PENDING, ProcessingInfo.State.IN_PROGRESS -> return true
             else -> return false
+        }
+    }
+
+    private fun performStatusAction(draft: Draft, action: (MicroBlog, AccountDetails, ParcelableStatus) -> Boolean): Boolean {
+        val accountKey = draft.account_keys?.firstOrNull() ?: return false
+        val extras = draft.action_extras as? StatusObjectExtras ?: return false
+        val account = getAccountDetails(AccountManager.get(this), accountKey, true) ?: return false
+        val microBlog = account.newMicroBlogInstance(this, cls = MicroBlog::class.java)
+        try {
+            return action(microBlog, account, extras.status)
+        } catch (e: MicroBlogException) {
+            return false
         }
     }
 
