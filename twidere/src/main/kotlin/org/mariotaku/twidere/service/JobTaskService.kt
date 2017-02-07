@@ -27,6 +27,7 @@ import android.os.Build
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
+import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.TaskServiceRunner
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.support.JobServiceSupport
@@ -64,6 +65,7 @@ class JobTaskService : JobService() {
             }
         } catch (e: Exception) {
             // Swallow any possible exceptions
+            Analyzer.logException(e)
         }
         return false
     }
