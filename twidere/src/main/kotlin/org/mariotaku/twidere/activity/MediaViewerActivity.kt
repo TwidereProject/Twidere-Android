@@ -67,10 +67,10 @@ import android.Manifest.permission as AndroidPermissions
 
 class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeCloseContainer.Listener {
     @Inject
-    lateinit var mediaFileCache: FileCache
-
+    internal lateinit var mediaFileCache: FileCache
     @Inject
-    lateinit var mediaDownloader: MediaDownloader
+    internal lateinit var mediaDownloader: MediaDownloader
+
     private var saveToStoragePosition = -1
 
     private var shareMediaPosition = -1
@@ -88,6 +88,38 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
     private val media: Array<ParcelableMedia> by lazy {
         intent.getParcelableArrayExtra(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
     }
+
+    override val shouldApplyWindowBackground: Boolean = false
+
+    override val controlBarHeight: Int
+        get() {
+            return supportActionBar?.height ?: 0
+        }
+
+    override var controlBarOffset: Float
+        get() {
+            val actionBar = supportActionBar
+            if (actionBar != null) {
+                return 1 - actionBar.hideOffset / controlBarHeight.toFloat()
+            }
+            return 0f
+        }
+        set(offset) {
+            val actionBar = supportActionBar
+            if (actionBar != null && !hideOffsetNotSupported) {
+                if (actionBar is WindowDecorActionBar) {
+                    val toolbar = actionBar.containerView
+                    toolbar.alpha = offset
+                }
+                try {
+                    actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
+                } catch (e: UnsupportedOperationException) {
+                    // Some device will throw this exception
+                    hideOffsetNotSupported = true
+                }
+            }
+            notifyControlBarOffsetChanged()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -336,37 +368,6 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             }
         }
     }
-
-
-    override val controlBarHeight: Int
-        get() {
-            return supportActionBar?.height ?: 0
-        }
-
-    override var controlBarOffset: Float
-        get() {
-            val actionBar = supportActionBar
-            if (actionBar != null) {
-                return 1 - actionBar.hideOffset / controlBarHeight.toFloat()
-            }
-            return 0f
-        }
-        set(offset) {
-            val actionBar = supportActionBar
-            if (actionBar != null && !hideOffsetNotSupported) {
-                if (actionBar is WindowDecorActionBar) {
-                    val toolbar = actionBar.containerView
-                    toolbar.alpha = offset
-                }
-                try {
-                    actionBar.hideOffset = Math.round(controlBarHeight * (1f - offset))
-                } catch (e: UnsupportedOperationException) {
-                    // Some device will throw this exception
-                    hideOffsetNotSupported = true
-                }
-            }
-            notifyControlBarOffsetChanged()
-        }
 
     override fun setControlBarVisibleAnimate(visible: Boolean, listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
         controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
