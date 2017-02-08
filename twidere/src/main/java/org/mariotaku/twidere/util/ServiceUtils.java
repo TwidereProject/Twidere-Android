@@ -49,7 +49,7 @@ public final class ServiceUtils {
                 return new ServiceToken(cw);
             }
         }
-        Log.e(LOGTAG, "Failed to bind to service");
+        DebugLog.w(LOGTAG, "Failed to bind to service", null);
         return null;
     }
 

@@ -33,7 +33,6 @@ import android.os.Bundle
 import android.support.annotation.UiThread
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.app.hasRunningLoadersSafe
-import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
@@ -98,8 +97,6 @@ import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
-import org.mariotaku.twidere.model.ParcelableActivityCursorIndices
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.analyzer.StatusView
 import org.mariotaku.twidere.model.message.FavoriteTaskEvent
@@ -259,6 +256,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     IntentUtils.openStatus(activity, accountKey, status.id)
                 }
             }
+            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            }
         }
     }
 
@@ -310,9 +311,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
-        val status = adapter.getStatus(position)
-        AbsStatusesFragment.handleStatusActionClick(context, fragmentManager, twitterWrapper,
+        val status = adapter.getStatus(position) ?: return
+        AbsStatusesFragment.handleActionClick(context, fragmentManager, twitterWrapper,
                 holder as StatusViewHolder, status, id)
+    }
+
+
+    override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+        val status = adapter.getStatus(position) ?: return false
+        return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
@@ -339,15 +346,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)!!
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                status.user_screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.TIMELINE_STATUS,
+                status.user_screen_name, preferences[newDocumentApiKey], Referral.TIMELINE_STATUS,
                 null)
     }
 
     override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
-        val status = adapter.status
-        if (status == null || media == null) return
-        IntentUtils.openMediaDirectly(activity, accountKey, status, media, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                null)
+        val status = adapter.status ?: return
+        IntentUtils.openMediaDirectly(activity, accountKey, status, media,
+                preferences[newDocumentApiKey], null)
         // BEGIN HotMobi
         val event = MediaEvent.create(activity, status, media, TimelineType.OTHER,
                 adapter.mediaPreviewEnabled)

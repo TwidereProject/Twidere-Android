@@ -28,5 +28,7 @@ import android.view.View
 interface ContentCardClickListener {
     fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {}
 
+    fun onItemActionLongClick(holder: ViewHolder, id: Int, position: Int): Boolean = false
+
     fun onItemMenuClick(holder: ViewHolder, menuView: View, position: Int) {}
 }

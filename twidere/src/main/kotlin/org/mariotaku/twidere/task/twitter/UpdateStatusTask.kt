@@ -94,7 +94,7 @@ class UpdateStatusTask(
         val hasLocation = statusUpdate.location != null
         val preciseLocation = statusUpdate.display_coordinates
         Analyzer.log(UpdateStatus(result.accountTypes.firstOrNull(), actionType, mediaType,
-                hasLocation, preciseLocation, result.succeed))
+                hasLocation, preciseLocation, result.succeed, result.exceptions.firstOrNull() ?: result.exception))
     }
 
     @Throws(UpdateStatusException::class)
@@ -110,11 +110,7 @@ class UpdateStatusTask(
             uploadMedia(uploader, update, pendingUpdate)
             shortenStatus(shortener, update, pendingUpdate)
 
-            try {
-                result = requestUpdateStatus(update, pendingUpdate, draftId)
-            } catch (e: IOException) {
-                return UpdateStatusResult(UpdateStatusException(e), draftId)
-            }
+            result = requestUpdateStatus(update, pendingUpdate, draftId)
 
             mediaUploadCallback(uploader, pendingUpdate, result)
             statusShortenCallback(shortener, pendingUpdate, result)
@@ -240,10 +236,12 @@ class UpdateStatusTask(
         }
     }
 
-    @Throws(IOException::class)
-    private fun requestUpdateStatus(statusUpdate: ParcelableStatusUpdate,
-                                    pendingUpdate: PendingStatusUpdate,
-                                    draftId: Long): UpdateStatusResult {
+    @Throws(UpdateStatusException::class)
+    private fun requestUpdateStatus(
+            statusUpdate: ParcelableStatusUpdate,
+            pendingUpdate: PendingStatusUpdate,
+            draftId: Long
+    ): UpdateStatusResult {
 
         stateCallback.onUpdatingStatus()
 
@@ -253,53 +251,52 @@ class UpdateStatusTask(
             val account = statusUpdate.accounts[i]
             result.accountTypes[i] = account.type
             val microBlog = MicroBlogAPIFactory.getInstance(context, account.key)
-            var mediaBody: MediaStreamBody? = null
             try {
-                when (account.type) {
+                val requestResult = when (account.type) {
                     AccountType.FANFOU -> {
                         // Call uploadPhoto if media present
-                        if (!ArrayUtils.isEmpty(statusUpdate.media)) {
+                        if (statusUpdate.media.isNotNullOrEmpty()) {
                             // Fanfou only allow one photo
-                            if (statusUpdate.media.size > 1) {
-                                result.exceptions[i] = MicroBlogException(
-                                        context.getString(R.string.error_too_many_photos_fanfou))
-                            } else {
-                                val sizeLimit = account.size_limit
-                                val firstMedia = statusUpdate.media.first()
-                                mediaBody = getBodyFromMedia(context, mediaLoader, Uri.parse(firstMedia.uri),
-                                        sizeLimit, firstMedia.type, false, ContentLengthInputStream.ReadListener { length, position ->
-                                    stateCallback.onUploadingProgressChanged(-1, position, length)
-                                })
-                                val photoUpdate = PhotoStatusUpdate(mediaBody.body,
-                                        pendingUpdate.overrideTexts[i])
-                                val requestResult = microBlog.uploadPhoto(photoUpdate)
-
-                                result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
-                                        account.key, false)
-                            }
+                            fanfouUpdateStatusWithPhoto(microBlog, statusUpdate, pendingUpdate,
+                                    pendingUpdate.overrideTexts[i], account.size_limit, i)
                         } else {
-                            val requestResult = twitterUpdateStatus(microBlog, statusUpdate,
-                                    pendingUpdate, pendingUpdate.overrideTexts[i], i)
-
-                            result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
-                                    account.key, false)
+                            twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate,
+                                    pendingUpdate.overrideTexts[i], i)
                         }
                     }
                     else -> {
-                        val requestResult = twitterUpdateStatus(microBlog, statusUpdate,
-                                pendingUpdate, pendingUpdate.overrideTexts[i], i)
-
-                        result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
-                                account.key, false)
+                        twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate,
+                                pendingUpdate.overrideTexts[i], i)
                     }
                 }
+                result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
+                        account.key, false)
             } catch (e: MicroBlogException) {
                 result.exceptions[i] = e
-            } finally {
-                Utils.closeSilently(mediaBody)
             }
         }
         return result
+    }
+
+    @Throws(MicroBlogException::class, UploadException::class)
+    private fun fanfouUpdateStatusWithPhoto(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
+                                            pendingUpdate: PendingStatusUpdate, overrideText: String,
+                                            sizeLimit: SizeLimit, updateIndex: Int): Status {
+        if (statusUpdate.media.size > 1) {
+            throw MicroBlogException(context.getString(R.string.error_too_many_photos_fanfou))
+        }
+        val media = statusUpdate.media.first()
+        try {
+            return getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit, media.type,
+                    false, ContentLengthInputStream.ReadListener { length, position ->
+                stateCallback.onUploadingProgressChanged(-1, position, length)
+            }).use { mediaBody ->
+                val photoUpdate = PhotoStatusUpdate(mediaBody.body, pendingUpdate.overrideTexts[updateIndex])
+                return@use microBlog.uploadPhoto(photoUpdate)
+            }
+        } catch (e: IOException) {
+            throw UploadException(e)
+        }
     }
 
     /**
@@ -439,7 +436,7 @@ class UpdateStatusTask(
             }
         } catch (e: AbsServiceInterface.CheckServiceException) {
             if (e is ExtensionVersionMismatchException) {
-                throw UploadException(context.getString(R.string.uploader_version_incompatible))
+                throw UploadException(context.getString(R.string.uploader_version_incompatible), e)
             }
             throw UploadException(e)
         }
@@ -622,25 +619,16 @@ class UpdateStatusTask(
 
 
     open class UpdateStatusException : Exception {
-        constructor() : super()
+        protected constructor() : super()
 
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
+        protected constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
 
-        constructor(throwable: Throwable) : super(throwable)
+        protected constructor(throwable: Throwable) : super(throwable)
 
-        constructor(message: String) : super(message)
+        protected constructor(message: String) : super(message)
     }
 
-    class UploaderNotFoundException : UpdateStatusException {
-
-        constructor() : super()
-
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
-
-        constructor(throwable: Throwable) : super(throwable)
-
-        constructor(message: String) : super(message)
-    }
+    class UploaderNotFoundException(message: String) : UpdateStatusException(message)
 
     class UploadException : UpdateStatusException {
 

@@ -129,6 +129,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             }
             val data = Intent()
             data.putExtra(EXTRA_IDS, checkedIds)
+            data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
             setResult(Activity.RESULT_OK, data)
             finish()
         }
@@ -143,6 +144,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
         val data = Intent()
         data.putExtra(EXTRA_ID, account.key.id)
         data.putExtra(EXTRA_ACCOUNT_KEY, account.key)
+        data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
 
         val startIntent = startIntent
         if (startIntent != null) {

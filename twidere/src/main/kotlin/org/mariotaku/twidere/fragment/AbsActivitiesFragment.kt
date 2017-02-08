@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -49,8 +50,12 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.constant.*
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
+import org.mariotaku.twidere.constant.displaySensitiveContentsKey
+import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.readFromBottomKey
+import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -101,9 +106,18 @@ abstract class AbsActivitiesFragment protected constructor() :
         pauseOnScrollListener = PauseRecyclerViewOnScrollListener(adapter.mediaLoader.imageLoader, false, true)
 
         val loaderArgs = Bundle(arguments)
-        loaderArgs.putBoolean(IntentConstants.EXTRA_FROM_USER, true)
+        loaderArgs.putBoolean(EXTRA_FROM_USER, true)
         loaderManager.initLoader(0, loaderArgs, this)
         showProgress()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            }
+        }
     }
 
     abstract fun getActivities(param: RefreshTaskParam): Boolean
@@ -133,8 +147,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             if (action == null) return false
             when (action) {
                 ACTION_STATUS_REPLY -> {
-                    val intent = Intent(IntentConstants.INTENT_ACTION_REPLY)
-                    intent.putExtra(IntentConstants.EXTRA_STATUS, status)
+                    val intent = Intent(INTENT_ACTION_REPLY)
+                    intent.putExtra(EXTRA_STATUS, status)
                     startActivity(intent)
                     return true
                 }
@@ -185,8 +199,8 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableActivity>> {
-        val fromUser = args.getBoolean(IntentConstants.EXTRA_FROM_USER)
-        args.remove(IntentConstants.EXTRA_FROM_USER)
+        val fromUser = args.getBoolean(EXTRA_FROM_USER)
+        args.remove(EXTRA_FROM_USER)
         return onCreateActivitiesLoader(activity, args, fromUser)
     }
 
@@ -317,9 +331,9 @@ abstract class AbsActivitiesFragment protected constructor() :
         val activity = activity
         when (id) {
             R.id.reply -> {
-                val intent = Intent(IntentConstants.INTENT_ACTION_REPLY)
+                val intent = Intent(INTENT_ACTION_REPLY)
                 intent.`package` = activity.packageName
-                intent.putExtra(IntentConstants.EXTRA_STATUS, status)
+                intent.putExtra(EXTRA_STATUS, status)
                 activity.startActivity(intent)
             }
             R.id.retweet -> {
@@ -333,6 +347,11 @@ abstract class AbsActivitiesFragment protected constructor() :
                 }
             }
         }
+    }
+
+    override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
+        val status = getActivityStatus(position) ?: return false
+        return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {

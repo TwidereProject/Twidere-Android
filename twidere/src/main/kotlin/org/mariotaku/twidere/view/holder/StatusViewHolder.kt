@@ -11,7 +11,6 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
@@ -40,7 +39,7 @@ import java.lang.ref.WeakReference
  *
  * Created by mariotaku on 14/11/19.
  */
-class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : ViewHolder(itemView), Constants, IStatusViewHolder {
+class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
     override val profileImageView: ProfileImageView by lazy { itemView.profileImage }
     override val profileTypeView: ImageView by lazy { itemView.profileType }
@@ -463,6 +462,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         replyButton.setOnClickListener(eventListener)
         retweetButton.setOnClickListener(eventListener)
         favoriteButton.setOnClickListener(eventListener)
+        retweetButton.setOnLongClickListener(eventListener)
+        favoriteButton.setOnLongClickListener(eventListener)
 
         mediaLabel.setOnClickListener(eventListener)
 
@@ -647,6 +648,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                         return true
                     }
                     return listener.onStatusLongClick(holder, position)
+                }
+                holder.favoriteButton -> {
+                    return listener.onItemActionLongClick(holder, R.id.favorite, position)
+                }
+                holder.retweetButton -> {
+                    return listener.onItemActionLongClick(holder, R.id.retweet, position)
                 }
             }
             return false

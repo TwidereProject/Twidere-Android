@@ -62,8 +62,14 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position) ?: return
-                AbsStatusesFragment.handleStatusActionClick(context, fragmentManager,
+                AbsStatusesFragment.handleActionClick(context, fragmentManager,
                         twitterWrapper, holder as StatusViewHolder, status, id)
+            }
+
+            override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+                val status = dummyItemAdapter.getStatus(position) ?: return false
+                return AbsStatusesFragment.handleActionLongClick(this@ItemsListFragment, status,
+                        adapter.getItemId(position), id)
             }
 
             override fun onItemMenuClick(holder: RecyclerView.ViewHolder, menuView: View, position: Int) {
@@ -99,6 +105,15 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
             }
         }
         return adapter
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT,
+            AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
+                AbsStatusesFragment.handleActionActivityResult(this, requestCode, resultCode, data)
+            }
+        }
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<*>?> {

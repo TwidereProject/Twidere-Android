@@ -356,6 +356,8 @@ class ParcelableActivitiesAdapter(
 
         fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int)
 
+        fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean
+
         fun onStatusMenuClick(holder: IStatusViewHolder, menuView: View, position: Int)
 
         fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int)
@@ -398,8 +400,13 @@ class ParcelableActivitiesAdapter(
         }
 
         override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-            val adapter = adapterRef.get() ?: return
-            adapter.activityAdapterListener?.onStatusActionClick(holder as IStatusViewHolder, id, position)
+            val listener = adapterRef.get()?.activityAdapterListener ?: return
+            listener.onStatusActionClick(holder as IStatusViewHolder, id, position)
+        }
+
+        override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
+            val listener = adapterRef.get()?.activityAdapterListener ?: return false
+            return listener.onStatusActionLongClick(holder as IStatusViewHolder, id, position)
         }
 
         override fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean {

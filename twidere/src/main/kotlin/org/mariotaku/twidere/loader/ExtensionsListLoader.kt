@@ -105,7 +105,7 @@ class ExtensionsListLoader(
         val label: String
         val description: String
         val pname: String
-        val settings: String
+        val settings: String?
         val icon: Drawable
 
         init {

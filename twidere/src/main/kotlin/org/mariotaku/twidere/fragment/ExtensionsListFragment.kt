@@ -97,7 +97,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         inflater.inflate(R.menu.action_extension, menu)
         val adapterMenuInfo = menuInfo as AdapterContextMenuInfo
         val extensionInfo = adapter.getItem(adapterMenuInfo.position)
-        if (extensionInfo.pname != null && extensionInfo.settings != null) {
+        if (extensionInfo.settings != null) {
             val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
             intent.setClassName(extensionInfo.pname, extensionInfo.settings)
             menu.setItemAvailability(R.id.settings, packageManager!!.queryIntentActivities(intent, 0).size == 1)

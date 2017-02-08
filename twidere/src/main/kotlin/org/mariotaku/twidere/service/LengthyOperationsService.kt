@@ -378,11 +378,11 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             Utils.setLastSeen(this, UserKey(recipientId, accountKey.host),
                     System.currentTimeMillis())
 
-            return SingleResponse.getInstance(directMessage)
+            return SingleResponse(directMessage)
         } catch (e: IOException) {
-            return SingleResponse.getInstance<ParcelableDirectMessage>(e)
+            return SingleResponse(e)
         } catch (e: MicroBlogException) {
-            return SingleResponse.getInstance<ParcelableDirectMessage>(e)
+            return SingleResponse(e)
         }
 
     }
