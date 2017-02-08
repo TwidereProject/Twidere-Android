@@ -29,6 +29,7 @@ import org.mariotaku.twidere.model.FiltersData$UserItemTableInfo;
 import org.mariotaku.twidere.model.FiltersSubscriptionTableInfo;
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
 import org.mariotaku.twidere.model.ParcelableDirectMessageTableInfo;
+import org.mariotaku.twidere.model.ParcelableMessageConversationTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
 import org.mariotaku.twidere.model.ParcelableTrendTableInfo;
 import org.mariotaku.twidere.model.ParcelableUserTableInfo;
@@ -363,6 +364,9 @@ public interface TwidereDataStore {
             String SENDER_KEY = "sender_key";
             String RECIPIENT_KEY = "recipient_key";
             String REQUEST_CURSOR = "request_cursor";
+
+            String[] COLUMNS = ParcelableMessageConversationTableInfo.COLUMNS;
+            String[] TYPES = ParcelableMessageConversationTableInfo.TYPES;
         }
     }
 
