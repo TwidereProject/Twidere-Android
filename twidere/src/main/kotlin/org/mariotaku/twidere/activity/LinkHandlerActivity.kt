@@ -626,7 +626,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 }
             }
             LINK_ID_DIRECT_MESSAGES -> {
-                fragment = DirectMessagesFragment()
+                fragment = MessagesEntriesFragment()
             }
             LINK_ID_INTERACTIONS -> {
                 fragment = InteractionsTimelineFragment()

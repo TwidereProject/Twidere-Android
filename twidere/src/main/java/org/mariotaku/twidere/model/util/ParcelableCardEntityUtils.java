@@ -38,7 +38,7 @@ public class ParcelableCardEntityUtils implements TwidereConstants {
         final ParcelableCardEntity obj = new ParcelableCardEntity();
         obj.name = card.getName();
         obj.url = card.getUrl();
-        obj.users = ParcelableUserUtils.fromUsers(card.getUsers(), accountKey);
+        obj.users = ParcelableUserUtils.INSTANCE.fromUsers(card.getUsers(), accountKey);
         obj.account_key = accountKey;
         obj.values = from(card.getBindingValues());
         return obj;

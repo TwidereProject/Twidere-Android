@@ -834,14 +834,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
         val tab = pagerAdapter.getTab(position)
-        if (DirectMessagesFragment::class.java == tab.cls) {
-            IntentUtils.openMessageConversation(this, null, null)
-        } else if (MessagesEntriesFragment::class.java == tab.cls) {
-            IntentUtils.openMessageConversation(this, null, null)
-        } else if (TrendsSuggestionsFragment::class.java == tab.cls) {
-            openSearchView(null)
-        } else {
-            startActivity(Intent(INTENT_ACTION_COMPOSE))
+        when (tab.cls) {
+            MessagesEntriesFragment::class.java -> IntentUtils.openMessageConversation(this, null, null)
+            TrendsSuggestionsFragment::class.java -> openSearchView(null)
+            else -> startActivity(Intent(INTENT_ACTION_COMPOSE))
         }
     }
 
@@ -851,10 +847,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
         val tab = pagerAdapter.getTab(position)
-        if (DirectMessagesFragment::class.java == tab.cls) {
-            icon = R.drawable.ic_action_add
-            title = R.string.new_direct_message
-        } else if (MessagesEntriesFragment::class.java == tab.cls) {
+        if (MessagesEntriesFragment::class.java == tab.cls) {
             icon = R.drawable.ic_action_add
             title = R.string.new_direct_message
         } else if (TrendsSuggestionsFragment::class.java == tab.cls) {

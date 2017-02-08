@@ -77,44 +77,6 @@ public class ParcelableAccount {
 
     public boolean is_dummy;
 
-    ParcelableAccount() {
-    }
-
-    @Override
-    public String toString() {
-        return "ParcelableAccount{" +
-                "id=" + id +
-                ", account_key=" + account_key +
-                ", screen_name='" + screen_name + '\'' +
-                ", name='" + name + '\'' +
-                ", account_type='" + account_type + '\'' +
-                ", profile_image_url='" + profile_image_url + '\'' +
-                ", profile_banner_url='" + profile_banner_url + '\'' +
-                ", color=" + color +
-                ", is_activated=" + is_activated +
-                ", account_user=" + account_user +
-                ", is_dummy=" + is_dummy +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ParcelableAccount account = (ParcelableAccount) o;
-
-        return account_key.equals(account.account_key);
-
-    }
-
-    @Override
-    public int hashCode() {
-        // Dummy account
-        if (account_key == null) return 0;
-        return account_key.hashCode();
-    }
-
     @AfterCursorObjectCreated
     void afterObjectCreated() {
         if (account_user != null) {

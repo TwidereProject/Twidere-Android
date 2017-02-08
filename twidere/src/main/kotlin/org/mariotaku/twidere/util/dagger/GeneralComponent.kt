@@ -39,10 +39,8 @@ import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.BaseIntentService
 import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.LegacyTaskService
-import org.mariotaku.twidere.task.*
-import org.mariotaku.twidere.task.twitter.GetActivitiesTask
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.BaseAbstractTask
+import org.mariotaku.twidere.task.ManagedAsyncTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
 import org.mariotaku.twidere.text.util.EmojiSpannableFactory
 import org.mariotaku.twidere.util.MultiSelectEventHandler
@@ -98,8 +96,6 @@ interface GeneralComponent {
 
     fun inject(obj: AccountsListPreference.AccountItemPreference)
 
-    fun inject(obj: MessagesConversationFragment.SetReadStateTask)
-
     fun inject(obj: DependencyHolder)
 
     fun inject(provider: CacheProvider)
@@ -108,13 +104,7 @@ interface GeneralComponent {
 
     fun inject(activity: MediaViewerActivity)
 
-    fun inject(task: GetStatusesTask)
-
     fun inject(service: JobTaskService)
-
-    fun inject(task: GetActivitiesTask)
-
-    fun inject(task: GetDirectMessagesTask)
 
     fun inject(task: BaseAbstractTask<Any, Any, Any>)
 
@@ -124,17 +114,7 @@ interface GeneralComponent {
 
     fun inject(loader: ParcelableStatusLoader)
 
-    fun inject(task: GetTrendsTask)
-
-    fun inject(task: UpdateProfileBackgroundImageTask<Any>)
-
-    fun inject(task: UpdateProfileBannerImageTask<Any>)
-
-    fun inject(task: UpdateProfileImageTask<Any>)
-
     fun inject(loader: APIEditorDialogFragment.LoadDefaultsChooserDialogFragment.DefaultAPIConfigLoader)
-
-    fun inject(task: UpdateStatusTask)
 
     fun inject(application: TwidereApplication)
 

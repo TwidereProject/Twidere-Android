@@ -80,26 +80,4 @@ public class ParcelableCredentials extends ParcelableAccount {
     @CursorField(Accounts.SORT_POSITION)
     public String sort_position;
 
-    ParcelableCredentials() {
-    }
-
-    @Override
-    public String toString() {
-        return "ParcelableCredentials{" +
-                "account_extras='" + account_extras + '\'' +
-                ", auth_type=" + auth_type +
-                ", consumer_key='" + consumer_key + '\'' +
-                ", consumer_secret='" + consumer_secret + '\'' +
-                ", basic_auth_username='" + basic_auth_username + '\'' +
-                ", basic_auth_password='" + basic_auth_password + '\'' +
-                ", oauth_token='" + oauth_token + '\'' +
-                ", oauth_token_secret='" + oauth_token_secret + '\'' +
-                ", api_url_format='" + api_url_format + '\'' +
-                ", same_oauth_signing_url=" + same_oauth_signing_url +
-                ", no_version_suffix=" + no_version_suffix +
-                ", sort_position='" + sort_position + '\'' +
-                "} " + super.toString();
-    }
-
-
 }

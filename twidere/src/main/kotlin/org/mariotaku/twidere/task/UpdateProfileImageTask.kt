@@ -3,8 +3,6 @@ package org.mariotaku.twidere.task
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import com.squareup.otto.Bus
-import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
@@ -16,27 +14,17 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 2016/12/9.
  */
 open class UpdateProfileImageTask<ResultHandler>(
-        private val context: Context,
+        context: Context,
         private val accountKey: UserKey,
         private val imageUri: Uri,
         private val deleteImage: Boolean
-) : AbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>() {
-
-    @Inject
-    lateinit var bus: Bus
-
-    init {
-        @Suppress("UNCHECKED_CAST")
-        GeneralComponentHelper.build(context).inject(this as UpdateProfileImageTask<Any>)
-    }
+) : BaseAbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>(context) {
 
     override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
         try {

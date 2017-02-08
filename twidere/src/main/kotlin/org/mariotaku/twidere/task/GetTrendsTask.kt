@@ -6,8 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.support.v4.util.ArraySet
-import com.squareup.otto.Bus
-import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Trends
@@ -24,25 +22,16 @@ import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/2/24.
  */
 class GetTrendsTask(
-        private val context: Context,
+        context: Context,
         private val accountKey: UserKey,
         private val woeId: Int
-) : AbstractTask<Any?, Unit, Any?>() {
-
-    @Inject
-    lateinit var bus: Bus
-
-    init {
-        GeneralComponentHelper.build(context).inject(this)
-    }
+) : BaseAbstractTask<Any?, Unit, Any?>(context) {
 
     override fun doLongOperation(param: Any?) {
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return

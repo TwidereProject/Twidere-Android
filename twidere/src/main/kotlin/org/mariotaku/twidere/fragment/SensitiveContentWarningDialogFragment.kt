@@ -46,8 +46,8 @@ class SensitiveContentWarningDialogFragment : BaseDialogFragment(), DialogInterf
                 val option = args.getBundle(EXTRA_ACTIVITY_OPTIONS)
                 val newDocument = args.getBoolean(EXTRA_NEW_DOCUMENT)
                 val media = args.getParcelableArray(EXTRA_MEDIA).toTypedArray(ParcelableMedia.CREATOR)
-                IntentUtils.openMediaDirectly(context, accountKey, status, null, current, media,
-                        option, newDocument)
+                IntentUtils.openMediaDirectly(context, accountKey, media, current, option, newDocument,
+                        status)
             }
         }
 

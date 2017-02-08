@@ -15,7 +15,7 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.GetHomeTimelineTask
-import org.mariotaku.twidere.task.GetReceivedDirectMessagesTask
+import org.mariotaku.twidere.task.GetMessagesTask
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 
 /**
@@ -66,7 +66,7 @@ class TaskServiceRunner(
                 return task
             }
             ACTION_REFRESH_DIRECT_MESSAGES -> {
-                val task = GetReceivedDirectMessagesTask(context)
+                val task = GetMessagesTask(context)
                 task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
                     DataStoreUtils.getNewestMessageIds(context, DirectMessages.Inbox.CONTENT_URI, accountKeys)
                 }

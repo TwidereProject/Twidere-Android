@@ -4,7 +4,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
@@ -26,6 +25,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import kotlin.Pair;
 
 /**
  * Created by mariotaku on 16/2/24.
@@ -241,13 +242,13 @@ public class InternalTwitterContentUtils {
         parseEntities(builder, status);
         StatusTextWithIndices textWithIndices = new StatusTextWithIndices();
         final Pair<String, SpanItem[]> pair = builder.buildWithIndices();
-        textWithIndices.text = pair.first;
-        textWithIndices.spans = pair.second;
+        textWithIndices.text = pair.getFirst();
+        textWithIndices.spans = pair.getSecond();
         if (range != null && range.length == 2) {
             textWithIndices.range = new int[2];
-            textWithIndices.range[0] = getResultRangeLength(source, pair.second, 0, range[0]);
-            textWithIndices.range[1] = pair.first.length() - getResultRangeLength(source,
-                    pair.second, range[1], source.length());
+            textWithIndices.range[0] = getResultRangeLength(source, pair.getSecond(), 0, range[0]);
+            textWithIndices.range[1] = pair.getFirst().length() - getResultRangeLength(source,
+                    pair.getSecond(), range[1], source.length());
         }
         return textWithIndices;
     }

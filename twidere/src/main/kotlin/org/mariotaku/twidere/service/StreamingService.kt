@@ -11,7 +11,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.support.v4.util.SimpleArrayMap
-import android.text.TextUtils
 import android.util.Log
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
@@ -23,7 +22,6 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -192,24 +190,7 @@ class StreamingService : Service() {
             for (uri in MESSAGES_URIS) {
                 resolver.delete(uri, where, whereArgs)
             }
-            val sender = directMessage.sender
-            val recipient = directMessage.recipient
-            if (TextUtils.equals(sender.id, account.key.id)) {
-                val values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.key, true)
-                if (values != null) {
-                    resolver.insert(DirectMessages.Outbox.CONTENT_URI, values)
-                }
-            }
-            if (TextUtils.equals(recipient.id, account.key.id)) {
-                val values = ContentValuesCreator.createDirectMessage(directMessage,
-                        account.key, false)
-                val builder = DirectMessages.Inbox.CONTENT_URI.buildUpon()
-                builder.appendQueryParameter(QUERY_PARAM_NOTIFY, "true")
-                if (values != null) {
-                    resolver.insert(builder.build(), values)
-                }
-            }
+
 
         }
 

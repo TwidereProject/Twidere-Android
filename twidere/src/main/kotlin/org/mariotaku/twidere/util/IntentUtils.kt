@@ -46,7 +46,6 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_ACTIVITY_OPTIONS
 import org.mariotaku.twidere.TwidereConstants.EXTRA_CURRENT_MEDIA
 import org.mariotaku.twidere.TwidereConstants.EXTRA_GROUP
 import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
-import org.mariotaku.twidere.TwidereConstants.EXTRA_MESSAGE
 import org.mariotaku.twidere.TwidereConstants.EXTRA_NEW_DOCUMENT
 import org.mariotaku.twidere.TwidereConstants.EXTRA_QUERY
 import org.mariotaku.twidere.TwidereConstants.EXTRA_STATUS
@@ -164,30 +163,23 @@ object IntentUtils {
         context.startActivity(intent)
     }
 
-    fun openMedia(context: Context, message: ParcelableDirectMessage,
-                  current: ParcelableMedia? = null, newDocument: Boolean,
-                  displaySensitiveContents: Boolean, options: Bundle? = null) {
-        openMedia(context, message.account_key, false, null, message, current, message.media,
-                newDocument, displaySensitiveContents, options)
-    }
-
     fun openMedia(context: Context, status: ParcelableStatus,
                   current: ParcelableMedia? = null, newDocument: Boolean,
                   displaySensitiveContents: Boolean, options: Bundle? = null) {
         val media = ParcelableMediaUtils.getPrimaryMedia(status) ?: return
-        openMedia(context, status.account_key, status.is_possibly_sensitive, status, null, current,
+        openMedia(context, status.account_key, status.is_possibly_sensitive, status, current,
                 media, newDocument, displaySensitiveContents, options)
     }
 
     fun openMedia(context: Context, accountKey: UserKey?, media: Array<ParcelableMedia>,
                   current: ParcelableMedia? = null, isPossiblySensitive: Boolean,
                   newDocument: Boolean, displaySensitiveContents: Boolean, options: Bundle? = null) {
-        openMedia(context, accountKey, isPossiblySensitive, null, null, current, media, newDocument,
+        openMedia(context, accountKey, isPossiblySensitive, null, current, media, newDocument,
                 displaySensitiveContents, options)
     }
 
     fun openMedia(context: Context, accountKey: UserKey?, isPossiblySensitive: Boolean,
-                  status: ParcelableStatus?, message: ParcelableDirectMessage?,
+                  status: ParcelableStatus?,
                   current: ParcelableMedia? = null, media: Array<ParcelableMedia>,
                   newDocument: Boolean, displaySensitiveContents: Boolean,
                   options: Bundle? = null) {
@@ -200,9 +192,6 @@ object IntentUtils {
             if (status != null) {
                 args.putParcelable(EXTRA_STATUS, status)
             }
-            if (message != null) {
-                args.putParcelable(EXTRA_MESSAGE, message)
-            }
             args.putParcelableArray(EXTRA_MEDIA, media)
             args.putBundle(EXTRA_ACTIVITY_OPTIONS, options)
             args.putBundle(EXTRA_ACTIVITY_OPTIONS, options)
@@ -210,15 +199,14 @@ object IntentUtils {
             fragment.arguments = args
             fragment.show(fm, "sensitive_content_warning")
         } else {
-            openMediaDirectly(context, accountKey, status, message, current, media, options,
-                    newDocument)
+            openMediaDirectly(context, accountKey, media, current, options, newDocument, status)
         }
     }
 
     fun openMediaDirectly(context: Context, accountKey: UserKey?, status: ParcelableStatus,
                           current: ParcelableMedia, newDocument: Boolean, options: Bundle? = null) {
         val media = ParcelableMediaUtils.getPrimaryMedia(status) ?: return
-        openMediaDirectly(context, accountKey, status, null, current, media, options, newDocument)
+        openMediaDirectly(context, accountKey, media, current, options, newDocument, status)
     }
 
     fun getDefaultBrowserPackage(context: Context, uri: Uri, checkHandled: Boolean): String? {
@@ -260,18 +248,10 @@ object IntentUtils {
         return resolveInfo?.filter
     }
 
-    fun openMediaDirectly(context: Context,
-                          accountKey: UserKey?,
-                          message: ParcelableDirectMessage, current: ParcelableMedia,
-                          media: Array<ParcelableMedia>, options: Bundle? = null,
-                          newDocument: Boolean) {
-        openMediaDirectly(context, accountKey, null, message, current, media, options, newDocument)
-    }
-
     fun openMediaDirectly(context: Context, accountKey: UserKey?,
-                          status: ParcelableStatus?, message: ParcelableDirectMessage?,
-                          current: ParcelableMedia? = null, media: Array<ParcelableMedia>,
-                          options: Bundle? = null, newDocument: Boolean) {
+                          media: Array<ParcelableMedia>, current: ParcelableMedia? = null,
+                          options: Bundle? = null, newDocument: Boolean,
+                          status: ParcelableStatus?) {
         val intent = Intent(context, MediaViewerActivity::class.java)
         intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
         intent.putExtra(EXTRA_CURRENT_MEDIA, current)
@@ -279,10 +259,6 @@ object IntentUtils {
         if (status != null) {
             intent.putExtra(EXTRA_STATUS, status)
             intent.data = getMediaViewerUri("status", status.id, accountKey)
-        }
-        if (message != null) {
-            intent.putExtra(EXTRA_MESSAGE, message)
-            intent.data = getMediaViewerUri("message", message.id.toString(), accountKey)
         }
         if (newDocument && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)

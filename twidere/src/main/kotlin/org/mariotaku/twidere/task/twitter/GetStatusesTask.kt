@@ -4,12 +4,10 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import com.squareup.otto.Bus
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.RefreshEvent
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
-import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
@@ -33,37 +31,18 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.task.CacheUsersStatusesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.ContentResolverUtils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.util.*
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/1/2.
  */
 abstract class GetStatusesTask(
-        protected val context: Context
-) : AbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, (Boolean) -> Unit>() {
-    private var initialized: Boolean = false
-    @Inject
-    lateinit var preferences: SharedPreferencesWrapper
-    @Inject
-    lateinit var bus: Bus
-    @Inject
-    lateinit var errorInfoStore: ErrorInfoStore
-    @Inject
-    lateinit var manager: UserColorNameManager
-    @Inject
-    lateinit var wrapper: AsyncTwitterWrapper
-    @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-
-    init {
-        GeneralComponentHelper.build(context).inject(this)
-        initialized = true
-    }
+        context: Context
+) : BaseAbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, (Boolean) -> Unit>(context) {
 
     @Throws(MicroBlogException::class)
     abstract fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status>

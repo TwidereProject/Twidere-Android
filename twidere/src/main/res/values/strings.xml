@@ -715,8 +715,10 @@
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
     <string name="message_toast_search_deleted">Search deleted</string>
-    <string name="message_toast_search_name_deleted">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" deleted</string>
-    <string name="message_toast_search_name_saved">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" saved</string>
+    <string name="message_toast_search_name_deleted">Search \"<xliff:g
+        example="SearchQuery" id="name">%1$s</xliff:g>\" deleted</string>
+    <string name="message_toast_search_name_saved">Search \"<xliff:g
+        example="SearchQuery" id="name">%1$s</xliff:g>\" saved</string>
     <string name="message_toast_search_saved">Search saved</string>
     <string name="message_toast_select_file_no_storage_permission">Storage permission is needed to select file</string>
     <string name="message_toast_share_media_no_storage_permission">Some apps requires storage permission to share media</string>
@@ -874,6 +876,7 @@
     <string name="preference_summary_chrome_custom_tab">Open links in in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
+    <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
@@ -891,6 +894,7 @@
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_translate">Translate</string>
+    <string name="preference_title_trends_location">Trends location</string>
 
     <string name="preload_wifi_only">Preload using Wi-Fi only</string>
 

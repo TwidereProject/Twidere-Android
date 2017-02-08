@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.DirectMessagesFragment;
+import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
@@ -35,6 +35,6 @@ public class MessagesTabConfiguration extends TabConfiguration {
     @NonNull
     @Override
     public Class<? extends Fragment> getFragmentClass() {
-        return DirectMessagesFragment.class;
+        return MessagesEntriesFragment.class;
     }
 }
