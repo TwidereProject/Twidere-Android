@@ -7,7 +7,6 @@ import android.os.Looper
 import android.support.annotation.RequiresApi
 import android.text.TextUtils
 import com.bluelinelabs.logansquare.LoganSquare
-import nl.komponents.kovenant.deferred
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.ktextension.toInt
@@ -26,6 +25,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.ACCOUNT_USER_DATA_KEYS
 import org.mariotaku.twidere.util.ParseUtils
 import java.io.IOException
+import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 
 
@@ -163,25 +163,23 @@ internal object AccountDataQueue {
     val handler = Handler(Looper.getMainLooper())
 
     fun getUserData(manager: AccountManager, account: Account, key: String): String? {
+        val future = FutureTask<String?> { manager.getUserData(account, key) }
         if (Thread.currentThread() == Looper.getMainLooper().thread) {
-            return manager.getUserData(account, key)
+            future.run()
+        } else handler.post {
+            future.run()
         }
-        val deferred = deferred<String?, Exception>()
-        handler.post {
-            deferred.resolve(manager.getUserData(account, key))
-        }
-        return deferred.promise.get()
+        return future.get()
     }
 
     fun peekAuthToken(manager: AccountManager, account: Account, authTokenType: String): String? {
+        val future = FutureTask<String?> { manager.peekAuthToken(account, authTokenType) }
         if (Thread.currentThread() == Looper.getMainLooper().thread) {
-            return manager.peekAuthToken(account, authTokenType)
+            future.run()
+        } else handler.post {
+            future.run()
         }
-        val deferred = deferred<String?, Exception>()
-        handler.post {
-            deferred.resolve(manager.peekAuthToken(account, authTokenType))
-        }
-        return deferred.promise.get()
+        return future.get()
     }
 }
 

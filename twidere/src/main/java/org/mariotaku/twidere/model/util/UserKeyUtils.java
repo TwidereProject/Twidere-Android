@@ -56,7 +56,8 @@ public class UserKeyUtils {
         return authority.replaceAll("[^\\w\\d\\.]", "-");
     }
 
-    public static boolean isSameHost(UserKey accountKey, UserKey userKey) {
+    public static boolean isSameHost(@Nullable UserKey accountKey, @Nullable UserKey userKey) {
+        if (accountKey == null || userKey == null) return false;
         return isSameHost(accountKey.getHost(), userKey.getHost());
     }
 
