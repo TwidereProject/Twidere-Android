@@ -4,16 +4,17 @@ import android.accounts.AccountManager
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Paging
+import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableMessage
-import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.model.RefreshTaskParam
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
+import org.mariotaku.twidere.model.util.ParcelableUserUtils
+import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.DebugLog
 
 /**
@@ -66,18 +67,48 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     }
 
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails): GetMessagesData {
+        fun ParcelableMessageConversation.addParticipant(accountKey: UserKey, user: User) {
+            val userKey = UserKeyUtils.fromUser(user)
+            val participants = this.participants
+            if (participants == null) {
+                this.participants = arrayOf(ParcelableUserUtils.fromUser(user, accountKey))
+            } else {
+                val index = participants.indexOfFirst { it.key == userKey }
+                if (index >= 0) {
+                    participants[index] = ParcelableUserUtils.fromUser(user, accountKey)
+                } else {
+                    this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
+                }
+            }
+        }
+
+        fun MutableMap<String, ParcelableMessageConversation>.addConversation(accountKey: UserKey,
+                                                                              message: ParcelableMessage,
+                                                                              dm: DirectMessage) {
+            val conversation = this[message.conversation_id] ?: run {
+                val obj = ParcelableMessageConversation()
+                this[message.conversation_id] = obj
+                return@run obj
+            }
+            conversation.addParticipant(accountKey, dm.recipient)
+            conversation.addParticipant(accountKey, dm.sender)
+        }
+
         val accountKey = details.key
         val paging = Paging()
         val insertMessages = arrayListOf<ParcelableMessage>()
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
         microBlog.getDirectMessages(paging).forEach { dm ->
             val message = ParcelableMessageUtils.incomingMessage(accountKey, dm)
             insertMessages.add(message)
+            conversations.addConversation(accountKey, message, dm)
         }
         microBlog.getSentDirectMessages(paging).forEach { dm ->
             val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm)
             insertMessages.add(message)
+            conversations.addConversation(accountKey, message, dm)
         }
-        return GetMessagesData(emptyList(), emptyList(), insertMessages)
+        return GetMessagesData(conversations.values, emptyList(), insertMessages)
     }
 
     private fun storeMessages(data: GetMessagesData) {
@@ -85,8 +116,8 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     }
 
     data class GetMessagesData(
-            val insertConversations: List<ParcelableMessageConversation>,
-            val updateConversations: List<ParcelableMessageConversation>,
-            val insertMessages: List<ParcelableMessage>
+            val insertConversations: Collection<ParcelableMessageConversation>,
+            val updateConversations: Collection<ParcelableMessageConversation>,
+            val insertMessages: Collection<ParcelableMessage>
     )
 }
