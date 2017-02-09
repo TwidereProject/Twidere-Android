@@ -45,7 +45,6 @@ import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.view.CardMediaContainer
 import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -390,13 +389,25 @@ abstract class ParcelableStatusesAdapter(
     fun findPositionByPositionKey(positionKey: Long): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
-        return rangeOfSize(statusStartIndex, statusCount - 1).indexOfFirst { positionKey > 0 && getStatusPositionKey(it) <= positionKey }
+        if (positionKey <= 0) return RecyclerView.NO_POSITION
+        val range = rangeOfSize(statusStartIndex, statusCount - 1)
+        if (range.isEmpty()) return RecyclerView.NO_POSITION
+        if (positionKey < getStatusPositionKey(range.last)) {
+            return range.last
+        }
+        return range.indexOfFirst { positionKey >= getStatusPositionKey(it) }
     }
 
     fun findPositionBySortId(sortId: Long): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
-        return rangeOfSize(statusStartIndex, statusCount - 1).indexOfFirst { sortId > 0 && getStatusSortId(it) <= sortId }
+        if (sortId <= 0) return RecyclerView.NO_POSITION
+        val range = rangeOfSize(statusStartIndex, statusCount - 1)
+        if (range.isEmpty()) return RecyclerView.NO_POSITION
+        if (sortId < getStatusSortId(range.last)) {
+            return range.last
+        }
+        return range.indexOfFirst { sortId >= getStatusSortId(it) }
     }
 
 

@@ -29,12 +29,10 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import java.io.IOException
 import java.util.*
 
 object ContentValuesCreator {
 
-    @Throws(IOException::class)
     fun createCachedUser(user: User): ContentValues {
         val values = ContentValues()
         ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, null), values)
@@ -96,16 +94,12 @@ object ContentValuesCreator {
         return savedSearches.map { createSavedSearch(it, accountKey) }.toTypedArray()
     }
 
-    @Throws(IOException::class)
     fun createStatus(orig: Status, accountKey: UserKey): ContentValues {
         return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
                 accountKey, false))
     }
 
-    @Throws(IOException::class)
-    fun createActivity(activity: ParcelableActivity,
-                       details: AccountDetails,
-                       manager: UserColorNameManager): ContentValues {
+    fun createActivity(activity: ParcelableActivity, details: AccountDetails): ContentValues {
         val values = ContentValues()
         val status = activity.getActivityStatus()
 

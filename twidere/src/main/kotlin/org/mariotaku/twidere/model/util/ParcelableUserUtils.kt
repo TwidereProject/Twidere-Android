@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.model.util
 
 import android.text.TextUtils
+import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.AccountDetails
@@ -44,7 +45,7 @@ object ParcelableUserUtils {
             obj.profile_background_url = user.profileBackgroundImageUrl
         }
         obj.url = user.url
-        if (obj.url != null && urlEntities != null && urlEntities.size > 0) {
+        if (obj.url != null && urlEntities.isNotNullOrEmpty()) {
             obj.url_expanded = urlEntities[0].expandedUrl
         }
         obj.is_follow_request_sent = user.isFollowRequestSent

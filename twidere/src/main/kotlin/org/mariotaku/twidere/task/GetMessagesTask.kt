@@ -8,6 +8,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.setFrom
 import org.mariotaku.twidere.extension.model.timestamp
@@ -50,9 +51,9 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             }
             AccountType.TWITTER -> {
                 // Use official DM api
-//                if (details.isOfficial(context)) {
-//                    return getTwitterOfficialMessages(microBlog)
-//                }
+                if (details.isOfficial(context)) {
+                    return getTwitterOfficialMessages(microBlog, details)
+                }
             }
         }
         // Use default method
@@ -63,8 +64,8 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         return GetMessagesData(emptyList(), emptyList(), emptyList())
     }
 
-    private fun getTwitterOfficialMessages(microBlog: MicroBlog): GetMessagesData {
-        return GetMessagesData(emptyList(), emptyList(), emptyList())
+    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails): GetMessagesData {
+        return getDefaultMessages(microBlog, details)
     }
 
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails): GetMessagesData {

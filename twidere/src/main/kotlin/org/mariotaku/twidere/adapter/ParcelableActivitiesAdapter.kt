@@ -344,9 +344,14 @@ class ParcelableActivitiesAdapter(
             return start
         }
 
-
     fun findPositionBySortTimestamp(timestamp: Long): Int {
-        return rangeOfSize(activityStartIndex, activityCount - 1).indexOfFirst { timestamp > 0 && getTimestamp(it) <= timestamp }
+        if (timestamp <= 0) return RecyclerView.NO_POSITION
+        val range = rangeOfSize(activityStartIndex, activityCount - 1)
+        if (range.isEmpty()) return RecyclerView.NO_POSITION
+        if (timestamp < getTimestamp(range.last)) {
+            return range.last
+        }
+        return range.indexOfFirst { timestamp >= getTimestamp(it) }
     }
 
     interface ActivityAdapterListener {
@@ -370,12 +375,10 @@ class ParcelableActivitiesAdapter(
 
     internal class StubViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val text1: TextView
-        val text2: TextView
+        internal val text1 = itemView.findViewById(android.R.id.text1) as TextView
+        internal val text2 = itemView.findViewById(android.R.id.text2) as TextView
 
         init {
-            text1 = itemView.findViewById(android.R.id.text1) as TextView
-            text2 = itemView.findViewById(android.R.id.text2) as TextView
 
             text2.setSingleLine(false)
         }
