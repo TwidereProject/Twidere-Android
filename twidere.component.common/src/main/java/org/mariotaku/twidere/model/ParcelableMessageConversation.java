@@ -29,12 +29,18 @@ public class ParcelableMessageConversation {
     @CursorField(value = Conversations.MESSAGE_TIMESTAMP)
     public long message_timestamp;
 
+    @CursorField(value = Conversations.LOCAL_TIMESTAMP)
+    public long local_timestamp;
+
     @CursorField(Conversations.TEXT_UNESCAPED)
     public String text_unescaped;
     @CursorField(value = Conversations.MEDIA, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMedia[] media;
     @CursorField(value = Conversations.SPANS, converter = LoganSquareCursorFieldConverter.class)
     public SpanItem[] spans;
+
+    @CursorField(value = Conversations.EXTRAS)
+    public String extras;
 
     @CursorField(value = Conversations.PARTICIPANTS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUser[] participants;

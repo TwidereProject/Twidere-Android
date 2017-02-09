@@ -4,12 +4,13 @@ import android.accounts.AccountManager
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.setFrom
+import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
@@ -67,33 +68,6 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     }
 
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails): GetMessagesData {
-        fun ParcelableMessageConversation.addParticipant(accountKey: UserKey, user: User) {
-            val userKey = UserKeyUtils.fromUser(user)
-            val participants = this.participants
-            if (participants == null) {
-                this.participants = arrayOf(ParcelableUserUtils.fromUser(user, accountKey))
-            } else {
-                val index = participants.indexOfFirst { it.key == userKey }
-                if (index >= 0) {
-                    participants[index] = ParcelableUserUtils.fromUser(user, accountKey)
-                } else {
-                    this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
-                }
-            }
-        }
-
-        fun MutableMap<String, ParcelableMessageConversation>.addConversation(accountKey: UserKey,
-                                                                              message: ParcelableMessage,
-                                                                              dm: DirectMessage) {
-            val conversation = this[message.conversation_id] ?: run {
-                val obj = ParcelableMessageConversation()
-                this[message.conversation_id] = obj
-                return@run obj
-            }
-            conversation.addParticipant(accountKey, dm.recipient)
-            conversation.addParticipant(accountKey, dm.sender)
-        }
-
         val accountKey = details.key
         val paging = Paging()
         val insertMessages = arrayListOf<ParcelableMessage>()
@@ -101,12 +75,12 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         microBlog.getDirectMessages(paging).forEach { dm ->
             val message = ParcelableMessageUtils.incomingMessage(accountKey, dm)
             insertMessages.add(message)
-            conversations.addConversation(accountKey, message, dm)
+            conversations.addConversation(accountKey, message, dm.sender, dm.recipient)
         }
         microBlog.getSentDirectMessages(paging).forEach { dm ->
             val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm)
             insertMessages.add(message)
-            conversations.addConversation(accountKey, message, dm)
+            conversations.addConversation(accountKey, message, dm.sender, dm.recipient)
         }
         return GetMessagesData(conversations.values, emptyList(), insertMessages)
     }
@@ -115,9 +89,48 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         DebugLog.d(LOGTAG, data.toString())
     }
 
+    private fun ParcelableMessageConversation.addParticipant(
+            accountKey: UserKey,
+            user: User
+    ) {
+        val userKey = UserKeyUtils.fromUser(user)
+        val participants = this.participants
+        if (participants == null) {
+            this.participants = arrayOf(ParcelableUserUtils.fromUser(user, accountKey))
+        } else {
+            val index = participants.indexOfFirst { it.key == userKey }
+            if (index >= 0) {
+                participants[index] = ParcelableUserUtils.fromUser(user, accountKey)
+            } else {
+                this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
+            }
+        }
+    }
+
+    private fun MutableMap<String, ParcelableMessageConversation>.addConversation(
+            accountKey: UserKey,
+            message: ParcelableMessage,
+            vararg users: User
+    ) {
+        val conversation = this[message.conversation_id] ?: run {
+            val obj = ParcelableMessageConversation()
+            this[message.conversation_id] = obj
+            obj.setFrom(message)
+            return@run obj
+        }
+        if (message.timestamp > conversation.timestamp) {
+            conversation.setFrom(message)
+        }
+        users.forEach { user ->
+            conversation.addParticipant(accountKey, user)
+        }
+    }
+
+
     data class GetMessagesData(
             val insertConversations: Collection<ParcelableMessageConversation>,
             val updateConversations: Collection<ParcelableMessageConversation>,
             val insertMessages: Collection<ParcelableMessage>
     )
 }
+

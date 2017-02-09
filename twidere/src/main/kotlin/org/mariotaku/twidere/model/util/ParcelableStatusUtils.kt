@@ -4,13 +4,11 @@ import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.TwitterContentUtils
-import org.mariotaku.twidere.util.UserColorNameManager
 import java.util.*
 
 /**
@@ -102,7 +100,7 @@ object ParcelableStatusUtils {
 
             result.quoted_timestamp = quoted.createdAt.time
             result.quoted_source = quoted.source
-            result.quoted_media = ParcelableMediaUtils.fromStatus(quoted)
+            result.quoted_media = ParcelableMediaUtils.fromStatus(quoted, accountKey)
 
             result.quoted_user_key = UserKeyUtils.fromUser(quotedUser)
             result.quoted_user_name = quotedUser.name
@@ -156,7 +154,7 @@ object ParcelableStatusUtils {
             result.extras.display_text_range = textWithIndices.range
         }
 
-        result.media = ParcelableMediaUtils.fromStatus(status)
+        result.media = ParcelableMediaUtils.fromStatus(status, accountKey)
         result.source = status.source
         result.location = getLocation(status)
         result.is_favorite = status.isFavorited

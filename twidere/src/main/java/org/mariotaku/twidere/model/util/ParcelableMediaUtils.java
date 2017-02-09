@@ -17,6 +17,7 @@ import org.mariotaku.microblog.library.twitter.model.UrlEntity;
 import org.mariotaku.twidere.model.ParcelableMedia;
 import org.mariotaku.twidere.model.ParcelableMediaUpdate;
 import org.mariotaku.twidere.model.ParcelableStatus;
+import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.util.InternalTwitterContentUtils;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
@@ -97,11 +98,11 @@ public class ParcelableMediaUtils {
     }
 
     @Nullable
-    public static ParcelableMedia[] fromStatus(@NonNull final Status status) {
+    public static ParcelableMedia[] fromStatus(@NonNull final Status status, UserKey accountKey) {
         final ParcelableMedia[] fromEntities = fromEntities(status);
         final ParcelableMedia[] fromAttachments = fromAttachments(status);
         final ParcelableMedia[] fromCard = fromCard(status.getCard(), status.getUrlEntities(),
-                status.getMediaEntities(), status.getExtendedMediaEntities());
+                status.getMediaEntities(), status.getExtendedMediaEntities(), accountKey);
         final ParcelableMedia[] fromPhoto = fromPhoto(status);
         final ParcelableMedia[] merged = new ParcelableMedia[fromCard.length +
                 fromAttachments.length + fromEntities.length + fromPhoto.length];
@@ -150,13 +151,14 @@ public class ParcelableMediaUtils {
     private static ParcelableMedia[] fromCard(@Nullable CardEntity card,
                                               @Nullable UrlEntity[] urlEntities,
                                               @Nullable MediaEntity[] mediaEntities,
-                                              @Nullable MediaEntity[] extendedMediaEntities) {
+                                              @Nullable MediaEntity[] extendedMediaEntities,
+                                              UserKey accountKey) {
         if (card == null) return new ParcelableMedia[0];
         final String name = card.getName();
         if ("animated_gif".equals(name) || "player".equals(name)) {
             final ParcelableMedia media = new ParcelableMedia();
             final CardEntity.BindingValue playerStreamUrl = card.getBindingValue("player_stream_url");
-            media.card = ParcelableCardEntityUtils.fromCardEntity(card, null);
+            media.card = ParcelableCardEntityUtils.INSTANCE.fromCardEntity(card, accountKey);
             CardEntity.StringValue appUrlResolved = (CardEntity.StringValue) card.getBindingValue("app_url_resolved");
             media.url = checkUrl(appUrlResolved) ? appUrlResolved.getValue() : card.getUrl();
             if ("animated_gif".equals(name)) {
@@ -193,7 +195,7 @@ public class ParcelableMediaUtils {
 
             final ParcelableMedia media = new ParcelableMedia();
             media.url = card.getUrl();
-            media.card = ParcelableCardEntityUtils.fromCardEntity(card, null);
+            media.card = ParcelableCardEntityUtils.INSTANCE.fromCardEntity(card, accountKey);
             media.type = ParcelableMedia.Type.IMAGE;
             media.media_url = ((CardEntity.ImageValue) photoImageFullSize).getUrl();
             media.width = ((CardEntity.ImageValue) photoImageFullSize).getWidth();

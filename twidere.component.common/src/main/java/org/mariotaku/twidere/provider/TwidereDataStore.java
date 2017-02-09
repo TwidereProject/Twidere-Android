@@ -378,6 +378,7 @@ public interface TwidereDataStore {
             String CONVERSATION_ID = "conversation_id";
             String MESSAGE_TYPE = "message_type";
             String MESSAGE_TIMESTAMP = "message_timestamp";
+            String LOCAL_TIMESTAMP = "local_timestamp";
             String TEXT_UNESCAPED = "text_unescaped";
             String MEDIA = "media";
             String SPANS = "spans";
