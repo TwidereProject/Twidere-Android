@@ -835,7 +835,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         if (pagerAdapter.count == 0) return
         val tab = pagerAdapter.getTab(position)
         when (tab.cls) {
-            MessagesEntriesFragment::class.java -> IntentUtils.openMessageConversation(this, null, null)
+            MessagesEntriesFragment::class.java -> {
+                //TODO: open message creator
+            }
             TrendsSuggestionsFragment::class.java -> openSearchView(null)
             else -> startActivity(Intent(INTENT_ACTION_COMPOSE))
         }

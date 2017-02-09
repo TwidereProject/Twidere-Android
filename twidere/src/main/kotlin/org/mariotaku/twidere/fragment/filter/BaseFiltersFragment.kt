@@ -256,10 +256,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     val id = arguments.getLong(EXTRA_ID, -1)
                     val resolver = context.contentResolver
                     if (id >= 0) {
-                        val where = Expression.equalsArgs(Filters._ID).sql
-                        val whereArgs = arrayOf(id.toString())
-                        if (DataStoreUtils.queryCount(context, uri, where, whereArgs) == 0) {
-                            resolver.update(uri, values, where, whereArgs)
+                        val valueWhere = Expression.equalsArgs(Filters.VALUE).sql
+                        val valueWhereArgs = arrayOf(text)
+                        val idWhere = Expression.equalsArgs(Filters._ID).sql
+                        val idWhereArgs = arrayOf(id.toString())
+                        if (DataStoreUtils.queryCount(context, uri, valueWhere, valueWhereArgs) == 0) {
+                            resolver.update(uri, values, idWhere, idWhereArgs)
                         } else {
                             Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,
                                     Toast.LENGTH_SHORT).show()

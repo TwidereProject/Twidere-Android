@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.view.holder.MessageConversationViewHolder
+import org.mariotaku.twidere.view.holder.message.MessageConversationViewHolder
 
 /**
  * Created by mariotaku on 2017/2/9.

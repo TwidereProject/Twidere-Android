@@ -25,7 +25,7 @@
     android:focusable="true">
 
     <ProgressBar
-        android:id="@+id/load_progress"
+        android:id="@+id/loadProgress"
         style="?android:progressBarStyleLarge"
         android:layout_width="@dimen/element_size_normal"
         android:layout_height="@dimen/element_size_normal"

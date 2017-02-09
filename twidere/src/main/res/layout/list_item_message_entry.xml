@@ -98,6 +98,7 @@
             android:layout_alignStart="@+id/name"
             android:layout_below="@+id/name"
             android:layout_marginTop="@dimen/element_spacing_xsmall"
+            android:ellipsize="end"
             android:maxLines="1"
             android:textColor="?android:attr/textColorSecondary"
             tools:text="@string/sample_status_text"/>
