@@ -24,7 +24,7 @@ import android.os.AsyncTask
 
 import com.squareup.otto.Bus
 
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent
+import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.util.AsyncTaskManager
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.SharedPreferencesWrapper

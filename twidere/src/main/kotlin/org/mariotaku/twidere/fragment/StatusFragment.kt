@@ -99,8 +99,8 @@ import org.mariotaku.twidere.menu.FavoriteItemProvider
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.analyzer.StatusView
-import org.mariotaku.twidere.model.message.FavoriteTaskEvent
-import org.mariotaku.twidere.model.message.StatusListChangedEvent
+import org.mariotaku.twidere.model.event.FavoriteTaskEvent
+import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.*

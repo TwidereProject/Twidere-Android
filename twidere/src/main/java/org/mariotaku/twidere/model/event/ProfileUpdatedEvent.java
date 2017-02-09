@@ -17,18 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
 
-import org.mariotaku.twidere.model.ParcelableStatus;
+import android.support.annotation.NonNull;
+
+import org.mariotaku.twidere.model.ParcelableUser;
 
 /**
- * Created by mariotaku on 14/12/10.
+ * Created by mariotaku on 14/12/7.
  */
-public class StatusRetweetedEvent {
+public class ProfileUpdatedEvent {
 
-    public final ParcelableStatus status;
+    @NonNull
+    public final ParcelableUser user;
 
-    public StatusRetweetedEvent(ParcelableStatus status) {
-        this.status = status;
+    public ProfileUpdatedEvent(@NonNull ParcelableUser user) {
+        this.user = user;
     }
 }

@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
 
 import org.mariotaku.twidere.model.UserKey;
 

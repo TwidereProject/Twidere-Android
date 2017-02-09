@@ -10,7 +10,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.message.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.Utils
 

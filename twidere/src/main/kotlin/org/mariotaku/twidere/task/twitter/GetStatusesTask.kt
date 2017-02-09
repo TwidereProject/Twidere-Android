@@ -26,7 +26,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.GetStatusesTaskEvent
+import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns

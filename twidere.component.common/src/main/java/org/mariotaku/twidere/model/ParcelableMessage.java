@@ -2,9 +2,18 @@ package org.mariotaku.twidere.model;
 
 import android.support.annotation.StringDef;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
+
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
+import org.mariotaku.twidere.model.message.MessageExtras;
+import org.mariotaku.twidere.model.message.StickerExtras;
+import org.mariotaku.twidere.model.util.MessageExtrasConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages;
@@ -14,47 +23,69 @@ import java.util.Arrays;
 /**
  * Created by mariotaku on 16/6/6.
  */
+@JsonObject
 @CursorObject(tableInfo = true, valuesCreator = true)
 public class ParcelableMessage {
+
     @CursorField(value = Messages._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
     public long _id;
 
+    @JsonField(name = "account_key")
     @CursorField(value = Messages.ACCOUNT_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey account_key;
 
+    @JsonField(name = "id")
     @CursorField(Messages.MESSAGE_ID)
     public String id;
 
+    @JsonField(name = "conversation_id")
     @CursorField(Messages.CONVERSATION_ID)
     public String conversation_id;
 
+    @JsonField(name = "type")
     @CursorField(Messages.MESSAGE_TYPE)
     @Type
     public String message_type;
 
+    @JsonField(name = "timestamp")
     @CursorField(Messages.MESSAGE_TIMESTAMP)
     public long message_timestamp;
 
+    @JsonField(name = "local_timestamp")
     @CursorField(Messages.LOCAL_TIMESTAMP)
     public long local_timestamp;
 
+    @JsonField(name = "text_unescaped")
     @CursorField(Messages.TEXT_UNESCAPED)
     public String text_unescaped;
+
+    @JsonField(name = "media")
     @CursorField(value = Messages.MEDIA, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableMedia[] media;
+
+    @JsonField(name = "spans")
     @CursorField(value = Messages.SPANS, converter = LoganSquareCursorFieldConverter.class)
     public SpanItem[] spans;
-    @CursorField(value = Messages.EXTRAS)
-    public String extras;
+    @CursorField(value = Messages.EXTRAS, converter = MessageExtrasConverter.class)
+    public MessageExtras extras;
 
+    @JsonField(name = "extras")
+    @ParcelableNoThanks
+    InternalExtras internalExtras;
+
+    @JsonField(name = "sender_key")
     @CursorField(value = Messages.SENDER_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey sender_key;
+
+    @JsonField(name = "recipient_key")
     @CursorField(value = Messages.RECIPIENT_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey recipient_key;
 
+    @JsonField(name = "is_outgoing")
     @CursorField(Messages.IS_OUTGOING)
     public boolean is_outgoing;
 
+    @JsonField(name = "request_cursor")
     @CursorField(value = Messages.REQUEST_CURSOR)
     public String request_cursor;
 
@@ -77,9 +108,48 @@ public class ParcelableMessage {
                 '}';
     }
 
+
+    @OnPreJsonSerialize
+    void beforeJsonSerialize() {
+        internalExtras = InternalExtras.from(extras);
+    }
+
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() {
+        if (internalExtras != null) {
+            extras = internalExtras.getExtras();
+        }
+    }
+
+
     @StringDef({Type.TEXT, Type.STICKER})
     public @interface Type {
         String TEXT = "text";
         String STICKER = "sticker";
+    }
+
+    @JsonObject
+    static class InternalExtras {
+        @JsonField(name = "sticker")
+        StickerExtras sticker;
+
+        public static InternalExtras from(final MessageExtras extras) {
+            if (extras == null) return null;
+            InternalExtras result = new InternalExtras();
+            if (extras instanceof StickerExtras) {
+                result.sticker = (StickerExtras) extras;
+            } else {
+                return null;
+            }
+            return result;
+        }
+
+        public MessageExtras getExtras() {
+            if (sticker != null) {
+                return sticker;
+            }
+            return null;
+        }
     }
 }

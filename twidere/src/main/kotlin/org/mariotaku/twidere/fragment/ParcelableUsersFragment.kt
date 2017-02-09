@@ -44,7 +44,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback

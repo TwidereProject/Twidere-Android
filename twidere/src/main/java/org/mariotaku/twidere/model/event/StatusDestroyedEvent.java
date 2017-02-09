@@ -17,10 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
+
+import org.mariotaku.twidere.model.ParcelableStatus;
 
 /**
- * Created by mariotaku on 14/12/7.
+ * Created by mariotaku on 14/12/10.
  */
-public class TaskStateChangedEvent {
+public class StatusDestroyedEvent {
+
+    public final ParcelableStatus status;
+
+    public StatusDestroyedEvent(ParcelableStatus status) {
+        this.status = status;
+    }
 }

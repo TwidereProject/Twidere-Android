@@ -1,7 +1,7 @@
 /*
  * Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,19 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
 
-import org.mariotaku.twidere.model.UserKey;
+import android.support.annotation.NonNull;
+
+import org.mariotaku.twidere.model.ParcelableUserList;
 
 /**
- * Called when account changed
- * Created by mariotaku on 15/4/24.
+ * Created by mariotaku on 14/12/10.
  */
-public class AccountChangedEvent {
-    public final UserKey[] account_keys, activated_keys;
+public class UserListCreatedEvent {
 
-    public AccountChangedEvent(UserKey[] account_keys, UserKey[] activated_keys) {
-        this.account_keys = account_keys;
-        this.activated_keys = activated_keys;
+    @NonNull
+    public final ParcelableUserList userList;
+
+    public UserListCreatedEvent(@NonNull ParcelableUserList userList) {
+        this.userList = userList;
     }
 }

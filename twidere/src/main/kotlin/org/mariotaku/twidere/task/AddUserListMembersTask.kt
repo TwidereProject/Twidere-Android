@@ -8,7 +8,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.UserListMembersChangedEvent
+import org.mariotaku.twidere.model.event.UserListMembersChangedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.Utils

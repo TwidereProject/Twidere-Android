@@ -25,7 +25,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.UserFriendsLoader
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
 class UserFriendsFragment : CursorUsersListFragment() {
 

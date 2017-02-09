@@ -8,6 +8,7 @@ import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
@@ -74,7 +75,7 @@ public class Tab implements Parcelable {
 
     @Nullable
     @JsonField(name = "extras")
-    @ParcelableThisPlease
+    @ParcelableNoThanks
     InternalExtras internalExtras;
 
     public long getId() {
@@ -249,20 +250,16 @@ public class Tab implements Parcelable {
         };
     }
 
-    @ParcelablePlease(allFields = false)
     @JsonObject
-    static class InternalExtras implements Parcelable {
+    static class InternalExtras  {
 
         @JsonField(name = "base")
         TabExtras base;
         @JsonField(name = "interactions")
-        @ParcelableThisPlease
         InteractionsTabExtras interactions;
         @JsonField(name = "home")
-        @ParcelableThisPlease
         HomeTabExtras home;
         @JsonField(name = "trends")
-        @ParcelableThisPlease
         TrendsTabExtras trends;
 
         public static InternalExtras from(TabExtras extras) {
@@ -291,28 +288,6 @@ public class Tab implements Parcelable {
                 return base;
             }
         }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            Tab$InternalExtrasParcelablePlease.writeToParcel(this, dest, flags);
-        }
-
-        public static final Creator<InternalExtras> CREATOR = new Creator<InternalExtras>() {
-            public InternalExtras createFromParcel(Parcel source) {
-                InternalExtras target = new InternalExtras();
-                Tab$InternalExtrasParcelablePlease.readFromParcel(target, source);
-                return target;
-            }
-
-            public InternalExtras[] newArray(int size) {
-                return new InternalExtras[size];
-            }
-        };
     }
 
     @Override

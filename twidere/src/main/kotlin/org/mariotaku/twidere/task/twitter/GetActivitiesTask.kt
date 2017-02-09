@@ -20,7 +20,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.GetActivitiesTaskEvent
+import org.mariotaku.twidere.model.event.GetActivitiesTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities

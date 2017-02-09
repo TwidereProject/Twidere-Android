@@ -18,8 +18,8 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
-import org.mariotaku.twidere.model.message.StatusListChangedEvent
-import org.mariotaku.twidere.model.message.StatusRetweetedEvent
+import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore

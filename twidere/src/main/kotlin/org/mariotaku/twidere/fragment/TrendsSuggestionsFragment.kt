@@ -37,7 +37,7 @@ import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
+import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch

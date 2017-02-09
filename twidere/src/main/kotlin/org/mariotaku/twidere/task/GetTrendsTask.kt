@@ -16,7 +16,7 @@ import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableTrend
 import org.mariotaku.twidere.model.ParcelableTrendValuesCreator
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.TrendsRefreshedEvent
+import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends

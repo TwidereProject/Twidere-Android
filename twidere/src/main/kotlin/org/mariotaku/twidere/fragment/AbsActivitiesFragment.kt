@@ -61,7 +61,7 @@ import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
-import org.mariotaku.twidere.model.message.StatusListChangedEvent
+import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus

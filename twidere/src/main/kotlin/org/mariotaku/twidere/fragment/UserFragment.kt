@@ -115,10 +115,10 @@ import org.mariotaku.twidere.graphic.ActionBarColorDrawable
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.message.FriendshipTaskEvent
-import org.mariotaku.twidere.model.message.FriendshipUpdatedEvent
-import org.mariotaku.twidere.model.message.ProfileUpdatedEvent
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipUpdatedEvent
+import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
+import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships

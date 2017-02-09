@@ -6,7 +6,7 @@ import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -17,7 +17,9 @@ import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
-import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 /**
  * Created by mariotaku on 2017/2/8.
@@ -35,7 +37,7 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
             }
-            storeMessages(messages)
+            storeMessages(messages, details)
         }
     }
 
@@ -86,8 +88,17 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         return GetMessagesData(conversations.values, emptyList(), insertMessages)
     }
 
-    private fun storeMessages(data: GetMessagesData) {
-        DebugLog.d(LOGTAG, data.toString())
+    private fun storeMessages(data: GetMessagesData, details: AccountDetails) {
+        val resolver = context.contentResolver
+        val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
+        val whereArgs = arrayOf(details.key.toString())
+        resolver.delete(Messages.CONTENT_URI, where, whereArgs)
+        resolver.delete(Messages.Conversations.CONTENT_URI, where, whereArgs)
+        val conversationsValues = data.insertConversations.map(ParcelableMessageConversationValuesCreator::create)
+        val messagesValues = data.insertMessages.map(ParcelableMessageValuesCreator::create)
+
+        ContentResolverUtils.bulkInsert(resolver, Messages.Conversations.CONTENT_URI, conversationsValues)
+        ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
     }
 
     private fun ParcelableMessageConversation.addParticipant(

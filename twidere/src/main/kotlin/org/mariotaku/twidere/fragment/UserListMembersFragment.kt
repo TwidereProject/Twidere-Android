@@ -36,7 +36,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.UserListMembersLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.UserListMembersChangedEvent
+import org.mariotaku.twidere.model.event.UserListMembersChangedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.UserViewHolder

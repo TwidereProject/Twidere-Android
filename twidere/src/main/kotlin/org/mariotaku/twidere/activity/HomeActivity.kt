@@ -86,8 +86,8 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.TaskStateChangedEvent
-import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent
+import org.mariotaku.twidere.model.event.TaskStateChangedEvent
+import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.service.StreamingService

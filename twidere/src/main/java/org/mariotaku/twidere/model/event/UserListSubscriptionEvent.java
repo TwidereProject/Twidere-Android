@@ -1,4 +1,4 @@
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;

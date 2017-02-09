@@ -31,7 +31,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.UserListOwnershipsLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.UserListDestroyedEvent
+import org.mariotaku.twidere.model.event.UserListDestroyedEvent
 import org.mariotaku.twidere.util.MenuUtils
 import org.mariotaku.twidere.util.Utils
 

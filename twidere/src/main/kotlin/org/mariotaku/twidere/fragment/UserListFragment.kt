@@ -59,8 +59,8 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.UserListSubscriptionEvent
-import org.mariotaku.twidere.model.message.UserListUpdatedEvent
+import org.mariotaku.twidere.model.event.UserListSubscriptionEvent
+import org.mariotaku.twidere.model.event.UserListUpdatedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 import org.mariotaku.twidere.util.*

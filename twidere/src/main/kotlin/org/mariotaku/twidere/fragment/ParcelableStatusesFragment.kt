@@ -34,10 +34,10 @@ import org.mariotaku.twidere.model.BaseRefreshTaskParam
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.FavoriteTaskEvent
-import org.mariotaku.twidere.model.message.StatusDestroyedEvent
-import org.mariotaku.twidere.model.message.StatusListChangedEvent
-import org.mariotaku.twidere.model.message.StatusRetweetedEvent
+import org.mariotaku.twidere.model.event.FavoriteTaskEvent
+import org.mariotaku.twidere.model.event.StatusDestroyedEvent
+import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.model.event.StatusRetweetedEvent
 import org.mariotaku.twidere.util.Utils
 import java.util.*
 

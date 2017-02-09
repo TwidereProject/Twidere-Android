@@ -55,7 +55,7 @@ import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
-import org.mariotaku.twidere.model.message.StatusListChangedEvent
+import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback

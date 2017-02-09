@@ -3,6 +3,8 @@ package org.mariotaku.twidere.model.util
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.message.MessageExtras
+import org.mariotaku.twidere.model.message.StickerExtras
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 /**
@@ -32,10 +34,23 @@ object ParcelableMessageUtils {
         result.message_timestamp = message.createdAt.time
         result.local_timestamp = result.message_timestamp
 
+        val (type, extras) = typeAndExtras(accountKey, message)
         val (text, spans) = InternalTwitterContentUtils.formatDirectMessageText(message)
+        result.message_type = type
+        result.extras = extras
         result.text_unescaped = text
         result.spans = spans
         result.media = ParcelableMediaUtils.fromEntities(message)
         return result
+    }
+
+    private fun typeAndExtras(accountKey: UserKey, message: DirectMessage): Pair<String, MessageExtras?> {
+        val singleUrl = message.urlEntities?.singleOrNull()
+        if (singleUrl != null) {
+            if (singleUrl.expandedUrl.startsWith("https://twitter.com/i/stickers/image/")) {
+                return Pair(ParcelableMessage.Type.STICKER, StickerExtras(singleUrl.expandedUrl))
+            }
+        }
+        return Pair(ParcelableMessage.Type.TEXT, null)
     }
 }

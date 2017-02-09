@@ -11,7 +11,7 @@ import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.ProfileUpdatedEvent
+import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterWrapper

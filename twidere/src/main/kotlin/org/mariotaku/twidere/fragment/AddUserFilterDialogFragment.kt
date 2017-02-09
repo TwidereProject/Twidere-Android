@@ -26,7 +26,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.message.FriendshipTaskEvent
+import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.util.DataStoreUtils
 
 class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {

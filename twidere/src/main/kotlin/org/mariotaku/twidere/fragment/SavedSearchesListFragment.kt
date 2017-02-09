@@ -34,7 +34,7 @@ import org.mariotaku.twidere.adapter.SavedSearchesAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.loader.SavedSearchesLoader
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.message.SavedSearchDestroyedEvent
+import org.mariotaku.twidere.model.event.SavedSearchDestroyedEvent
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import java.util.*
 

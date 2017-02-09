@@ -17,24 +17,19 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.event;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
+import org.mariotaku.twidere.model.UserKey;
 
 /**
- * Created by mariotaku on 14/12/10.
+ * Called when account changed
+ * Created by mariotaku on 15/4/24.
  */
-public class GetMessagesTaskEvent {
+public class AccountChangedEvent {
+    public final UserKey[] account_keys, activated_keys;
 
-    @NonNull
-    public final Uri uri;
-    public final boolean running;
-    public final Exception exception;
-
-    public GetMessagesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
-        this.uri = uri;
-        this.running = running;
-        this.exception = exception;
+    public AccountChangedEvent(UserKey[] account_keys, UserKey[] activated_keys) {
+        this.account_keys = account_keys;
+        this.activated_keys = activated_keys;
     }
 }

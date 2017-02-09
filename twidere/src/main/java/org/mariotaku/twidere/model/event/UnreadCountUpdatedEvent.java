@@ -17,21 +17,16 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.model.message;
-
-import android.support.annotation.NonNull;
-
-import org.mariotaku.twidere.model.ParcelableUserList;
+package org.mariotaku.twidere.model.event;
 
 /**
- * Created by mariotaku on 14/12/10.
+ * Created by mariotaku on 14/12/7.
  */
-public class UserListDestroyedEvent {
+public class UnreadCountUpdatedEvent {
 
-    @NonNull
-    public final ParcelableUserList userList;
+    public final int position;
 
-    public UserListDestroyedEvent(@NonNull ParcelableUserList userList) {
-        this.userList = userList;
+    public UnreadCountUpdatedEvent(int position) {
+        this.position = position;
     }
 }

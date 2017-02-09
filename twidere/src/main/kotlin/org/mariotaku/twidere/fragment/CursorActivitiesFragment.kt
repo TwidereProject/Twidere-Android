@@ -42,7 +42,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.message.*
+import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.twitter.GetStatusesTask

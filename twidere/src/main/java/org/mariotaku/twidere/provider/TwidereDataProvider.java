@@ -86,7 +86,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.StringLongPair;
 import org.mariotaku.twidere.model.UnreadItem;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.model.message.UnreadCountUpdatedEvent;
+import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent;
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags;
@@ -331,11 +331,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final int tableId = DataStoreUtils.getTableId(uri);
         final String table = DataStoreUtils.getTableNameById(tableId);
         checkWritePermission(tableId, table);
-        switch (tableId) {
-            case TABLE_ID_MESSAGES_CONVERSATIONS:
-            case TABLE_ID_MESSAGES:
-                return 0;
-        }
         int result = 0;
         final long[] newIds = new long[valuesArray.length];
         if (table != null && valuesArray.length > 0) {
@@ -401,9 +396,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final String table = DataStoreUtils.getTableNameById(tableId);
         checkWritePermission(tableId, table);
         switch (tableId) {
-            case TABLE_ID_MESSAGES_CONVERSATIONS:
-            case TABLE_ID_MESSAGES:
-                return 0;
             case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
                 final List<String> segments = uri.getPathSegments();
                 if (segments.size() == 1) {
@@ -455,11 +447,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         final int tableId = DataStoreUtils.getTableId(uri);
         final String table = DataStoreUtils.getTableNameById(tableId);
         checkWritePermission(tableId, table);
-        switch (tableId) {
-            case TABLE_ID_MESSAGES_CONVERSATIONS:
-            case TABLE_ID_MESSAGES:
-                return null;
-        }
         final long rowId;
         switch (tableId) {
             case TABLE_ID_CACHED_USERS: {
@@ -924,11 +911,6 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
         checkWritePermission(tableId, table);
         int result = 0;
         if (table != null) {
-            switch (tableId) {
-                case TABLE_ID_MESSAGES_CONVERSATIONS:
-                case TABLE_ID_MESSAGES:
-                    return 0;
-            }
             result = databaseWrapper.update(table, values, selection, selectionArgs);
         }
         if (result > 0) {
