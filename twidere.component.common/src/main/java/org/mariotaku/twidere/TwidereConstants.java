@@ -150,7 +150,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_NAME = "name";
     String QUERY_PARAM_FINISH_ONLY = "finish_only";
     String QUERY_PARAM_NEW_ITEMS_COUNT = "new_items_count";
-    String QUERY_PARAM_RECIPIENT_ID = "recipient_id";
+    String QUERY_PARAM_CONVERSATION_ID = "conversation_id";
     String QUERY_PARAM_READ_POSITION = "param_read_position";
     String QUERY_PARAM_READ_POSITIONS = "param_read_positions";
     String QUERY_PARAM_LIMIT = "limit";

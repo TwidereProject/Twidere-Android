@@ -54,6 +54,7 @@ import org.mariotaku.twidere.TwidereConstants.EXTRA_USER
 import org.mariotaku.twidere.TwidereConstants.EXTRA_USER_LIST
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_ACCOUNT_KEY
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_CONVERSATION_ID
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_GROUP_ID
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_GROUP_NAME
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LAT
@@ -61,7 +62,6 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIST_ID
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIST_NAME
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LNG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_QUERY
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_RECIPIENT_ID
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SCREEN_NAME
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_STATUS_ID
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
@@ -279,16 +279,14 @@ object IntentUtils {
         return builder.build()
     }
 
-    fun openMessageConversation(context: Context,
-                                accountKey: UserKey?,
-                                recipientId: String?) {
+    fun openMessageConversation(context: Context, accountKey: UserKey?, conversationId: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-            if (recipientId != null) {
-                builder.appendQueryParameter(QUERY_PARAM_RECIPIENT_ID, recipientId)
+            if (conversationId != null) {
+                builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
             }
         }
         val intent = Intent(Intent.ACTION_VIEW, builder.build())

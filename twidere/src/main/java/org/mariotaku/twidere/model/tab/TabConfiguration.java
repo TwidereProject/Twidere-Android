@@ -15,7 +15,6 @@ import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.Tab;
-import org.mariotaku.twidere.model.tab.impl.DMTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.FavoriteTimelineTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.HomeTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.InteractionsTabConfiguration;
@@ -112,8 +111,6 @@ public abstract class TabConfiguration {
                 return new InteractionsTabConfiguration();
             case CustomTabType.DIRECT_MESSAGES:
                 return new MessagesTabConfiguration();
-            case CustomTabType.DIRECT_MESSAGES_NEXT:
-                return new DMTabConfiguration();
             case CustomTabType.LIST_TIMELINE:
                 return new UserListTimelineTabConfiguration();
             case CustomTabType.FAVORITES:

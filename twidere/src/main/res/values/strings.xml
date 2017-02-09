@@ -671,6 +671,7 @@
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="message_please_wait">Please wait.</string>
+    <string name="message_summary_type_sticker">[Sticker]</string>
     <string name="message_sync_data_connect_hint">Connect Twidere with network storage to sync data</string>
     <string
         name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g

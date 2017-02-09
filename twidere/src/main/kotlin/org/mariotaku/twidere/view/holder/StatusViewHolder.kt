@@ -660,5 +660,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
     }
 
+    companion object {
+        const val layoutResource = R.layout.list_item_status
+    }
 }
 

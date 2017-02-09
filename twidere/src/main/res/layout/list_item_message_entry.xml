@@ -31,7 +31,7 @@
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
     app:ignorePadding="true"
-    tools:context=".adapter.MessageEntriesAdapter">
+    tools:context=".adapter.MessagesConversationsAdapter">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"

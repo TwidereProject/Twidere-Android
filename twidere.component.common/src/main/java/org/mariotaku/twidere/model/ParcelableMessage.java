@@ -44,7 +44,7 @@ public class ParcelableMessage {
 
     @JsonField(name = "type")
     @CursorField(Messages.MESSAGE_TYPE)
-    @Type
+    @MessageType
     public String message_type;
 
     @JsonField(name = "timestamp")
@@ -123,8 +123,8 @@ public class ParcelableMessage {
     }
 
 
-    @StringDef({Type.TEXT, Type.STICKER})
-    public @interface Type {
+    @StringDef({MessageType.TEXT, MessageType.STICKER})
+    public @interface MessageType {
         String TEXT = "text";
         String STICKER = "sticker";
     }

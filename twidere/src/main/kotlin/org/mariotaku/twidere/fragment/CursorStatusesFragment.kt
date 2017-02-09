@@ -105,7 +105,6 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         return CursorStatusesBusCallback()
     }
 
-
     private fun showContentOrError() {
         val accountKeys = this.accountKeys
         if (adapter.itemCount > 0) {

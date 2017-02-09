@@ -377,7 +377,9 @@ public interface TwidereDataStore {
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
 
         interface Conversations extends BaseColumns, AccountSupportColumns {
+            String ACCOUNT_COLOR = "account_color";
             String CONVERSATION_ID = "conversation_id";
+            String CONVERSATION_TYPE = "conversation_type";
             String MESSAGE_TYPE = "message_type";
             String MESSAGE_TIMESTAMP = "message_timestamp";
             String LOCAL_TIMESTAMP = "local_timestamp";

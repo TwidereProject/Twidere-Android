@@ -617,7 +617,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
                 fragment = MessagesConversationFragment()
                 isAccountIdRequired = false
-                val paramRecipientId = uri.getQueryParameter(QUERY_PARAM_RECIPIENT_ID)
+                val paramRecipientId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID)
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
                 if (paramRecipientId != null) {
                     args.putString(EXTRA_RECIPIENT_ID, paramRecipientId)

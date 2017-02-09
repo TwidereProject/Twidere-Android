@@ -24,7 +24,7 @@ class ListParcelableStatusesAdapter(context: Context) : ParcelableStatusesAdapte
 
         fun createStatusViewHolder(adapter: IStatusesAdapter<*>,
                                    inflater: LayoutInflater, parent: ViewGroup): StatusViewHolder {
-            val view = inflater.inflate(R.layout.list_item_status, parent, false)
+            val view = inflater.inflate(StatusViewHolder.layoutResource, parent, false)
             val holder = StatusViewHolder(adapter, view)
             holder.setOnClickListeners()
             holder.setupViewOptions()

@@ -48,9 +48,9 @@ object ParcelableMessageUtils {
         val singleUrl = message.urlEntities?.singleOrNull()
         if (singleUrl != null) {
             if (singleUrl.expandedUrl.startsWith("https://twitter.com/i/stickers/image/")) {
-                return Pair(ParcelableMessage.Type.STICKER, StickerExtras(singleUrl.expandedUrl))
+                return Pair(ParcelableMessage.MessageType.STICKER, StickerExtras(singleUrl.expandedUrl))
             }
         }
-        return Pair(ParcelableMessage.Type.TEXT, null)
+        return Pair(ParcelableMessage.MessageType.TEXT, null)
     }
 }
