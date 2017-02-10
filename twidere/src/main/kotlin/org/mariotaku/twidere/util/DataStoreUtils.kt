@@ -165,13 +165,8 @@ object DataStoreUtils {
                 OrderBy(SQLFunctions.MAX(Statuses.STATUS_TIMESTAMP)), null, null)
     }
 
-    fun getMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
-        val having: Expression
-        if (outgoing) {
-            having = Expression.equals(Messages.IS_OUTGOING, 1)
-        } else {
-            having = Expression.notEquals(Messages.IS_OUTGOING, 1)
-        }
+    fun getNewestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
+        val having: Expression = Expression.equals(Messages.IS_OUTGOING, if (outgoing) 1 else 0)
         return getStringFieldArray(context, uri, accountKeys, Messages.ACCOUNT_KEY, Messages.MESSAGE_ID,
                 OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), having, null)
     }
@@ -439,27 +434,27 @@ object DataStoreUtils {
                 .from(Tables(table, Filters.Sources.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'"),
+                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'"),
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_SOURCE),
-                                "'%>'||" + Filters.Sources.TABLE_NAME + "." + Filters.Sources.VALUE + "||'</a>%'")
+                                "'%>'||${Filters.Sources.TABLE_NAME}.${Filters.Sources.VALUE}||'</a>%'")
                 ))
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Keywords.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'"),
+                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'"),
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_TEXT_PLAIN),
-                                "'%'||" + Filters.Keywords.TABLE_NAME + "." + Filters.Keywords.VALUE + "||'%'")
+                                "'%'||${Filters.Keywords.TABLE_NAME}.${Filters.Keywords.VALUE}||'%'")
                 ))
                 .union()
                 .select(Columns(Column(Table(table), Activities._ID)))
                 .from(Tables(table, Filters.Links.TABLE_NAME))
                 .where(Expression.or(
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'"),
+                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'"),
                         Expression.likeRaw(Column(Table(table), Activities.STATUS_QUOTE_SPANS),
-                                "'%'||" + Filters.Links.TABLE_NAME + "." + Filters.Links.VALUE + "||'%'")
+                                "'%'||${Filters.Links.TABLE_NAME}.${Filters.Links.VALUE}||'%'")
                 ))
         val filterExpression = Expression.or(
                 Expression.notIn(Column(Table(table), Activities._ID), filteredIdsQueryBuilder.build()),
@@ -626,36 +621,36 @@ object DataStoreUtils {
     }
 
     @SuppressLint("Recycle")
-    private fun <T> getFieldArray(context: Context, uri: Uri,
-                                  keys: Array<UserKey?>, keyField: String,
-                                  valueField: String, sortExpression: OrderBy?,
-                                  extraHaving: Expression?, extraHavingArgs: Array<String>?,
-                                  creator: FieldArrayCreator<T>): T {
+    private fun <T> getFieldArray(
+            context: Context, uri: Uri,
+            keys: Array<UserKey?>, keyField: String,
+            valueField: String, sortExpression: OrderBy?,
+            extraWhere: Expression?, extraWhereArgs: Array<String>?,
+            creator: FieldArrayCreator<T>
+    ): T {
         val resolver = context.contentResolver
         val resultArray = creator.newArray(keys.size)
         val nonNullKeys = keys.mapNotNull { it?.toString() }.toTypedArray()
         val tableName = getTableNameByUri(uri) ?: throw NullPointerException()
-        val having: Expression
-        if (extraHaving != null) {
-            having = Expression.and(extraHaving, Expression.inArgs(keyField, nonNullKeys.size))
+        val having = Expression.inArgs(keyField, nonNullKeys.size)
+        val bindingArgs: Array<String>
+        if (extraWhereArgs != null) {
+            bindingArgs = extraWhereArgs + nonNullKeys
         } else {
-            having = Expression.inArgs(keyField, nonNullKeys.size)
-        }
-        val havingArgs: Array<String>
-        if (extraHavingArgs != null) {
-            havingArgs = extraHavingArgs + nonNullKeys
-        } else {
-            havingArgs = nonNullKeys
+            bindingArgs = nonNullKeys
         }
         val builder = SQLQueryBuilder.select(Columns(keyField, valueField))
-                .from(Table(tableName))
-                .groupBy(Column(keyField))
-                .having(having)
+        builder.from(Table(tableName))
+        if (extraWhere != null) {
+            builder.where(extraWhere)
+        }
+        builder.groupBy(Column(keyField))
+        builder.having(having)
         if (sortExpression != null) {
             builder.orderBy(sortExpression)
         }
         val rawUri = Uri.withAppendedPath(TwidereDataStore.CONTENT_URI_RAW_QUERY, builder.buildSQL())
-        resolver.query(rawUri, null, null, havingArgs, null)?.useCursor { cur ->
+        resolver.query(rawUri, null, null, bindingArgs, null)?.useCursor { cur ->
             cur.moveToFirst()
             while (!cur.isAfterLast) {
                 val string = cur.getString(0)

@@ -432,8 +432,11 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         }.alwaysUi {
             val activity = weakThis.get() ?: return@alwaysUi
             if (activity.isFinishing) return@alwaysUi
-            val df = weakDf.get() ?: supportFragmentManager.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
-            df?.dismiss()
+            activity.executeAfterFragmentResumed { activity ->
+                val fm = activity.supportFragmentManager
+                val df = weakDf.get() ?: fm.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
+                df?.dismiss()
+            }
         }
     }
 

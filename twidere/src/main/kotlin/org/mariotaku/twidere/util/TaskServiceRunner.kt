@@ -70,8 +70,10 @@ class TaskServiceRunner(
             }
             ACTION_REFRESH_DIRECT_MESSAGES -> {
                 val task = GetMessagesTask(context)
-                task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshDirectMessagesEnabled) { accountKeys ->
-                    arrayOfNulls(accountKeys.size)
+                task.params = GetMessagesTask.RefreshNewTaskParam(context) {
+                    AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context)).filter {
+                        it.isAutoRefreshEnabled && it.isAutoRefreshDirectMessagesEnabled
+                    }.map(AccountPreferences::getAccountKey).toTypedArray()
                 }
                 return task
             }

@@ -16,12 +16,15 @@ import org.mariotaku.twidere.extension.model.setFrom
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 /**
@@ -46,6 +49,7 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
+        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, false, null))
     }
 
     private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshTaskParam, index: Int): GetMessagesData {
@@ -86,7 +90,7 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             if (maxId != null) {
                 maxId(maxId)
             }
-            if (sinceIds != null) {
+            if (sinceId != null) {
                 sinceId(sinceId)
             }
         })
@@ -111,8 +115,8 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         received.forEach {
             conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
         }
-        received.forEach {
-            conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
+        sent.forEach {
+            conversationIds.add(ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId))
         }
 
         conversations.addLocalConversations(accountKey, conversationIds)
@@ -215,5 +219,38 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             val conversations: Collection<ParcelableMessageConversation>,
             val messages: Collection<ParcelableMessage>
     )
+
+    class RefreshNewTaskParam(
+            val context: Context,
+            val getAccountKeys: () -> Array<UserKey>
+    ) : SimpleRefreshTaskParam() {
+
+        private val accounts by lazy {
+            AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
+        }
+
+        override val accountKeys: Array<UserKey>
+            get() = getAccountKeys()
+
+        override val sinceIds: Array<String?>?
+            get() {
+                val keys = accounts.map { account ->
+                    when (account?.type) {
+                        AccountType.FANFOU -> {
+                            return@map null
+                        }
+                    }
+                    return@map account?.key
+                }.toTypedArray()
+                val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                        keys, false)
+                val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                        keys, true)
+                return incomingIds + outgoingIds
+            }
+
+        override val hasSinceIds: Boolean = true
+        override val hasMaxIds: Boolean = false
+    }
 }
 
