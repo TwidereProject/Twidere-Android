@@ -326,6 +326,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
             lp.bottomMargin = insets.bottom
+            lp.leftMargin = insets.left
+            lp.rightMargin = insets.right
         }
     }
 

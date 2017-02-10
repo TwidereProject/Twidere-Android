@@ -29,7 +29,8 @@
     <org.mariotaku.twidere.view.ProfileBannerSpace
         android:id="@+id/profileBannerSpace"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"/>
 
     <View
         android:id="@+id/profileNameBackground"

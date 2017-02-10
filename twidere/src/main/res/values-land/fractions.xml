@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twidere - Twitter client for Android
+  ~             Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="#e0e0e0" android:state_pressed="true"/>
-    <item android:color="#f0f0f0"/>
-</selector>
+<resources>
+
+    <fraction name="aspect_ratio_profile_banner">400%p</fraction>
+
+</resources>

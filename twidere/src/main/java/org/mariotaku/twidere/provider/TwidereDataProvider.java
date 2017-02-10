@@ -285,6 +285,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             case TABLE_ID_CACHED_USERS:
             case TABLE_ID_CACHED_RELATIONSHIPS:
             case TABLE_ID_SEARCH_HISTORY:
+            case TABLE_ID_MESSAGES:
+            case TABLE_ID_MESSAGES_CONVERSATIONS:
                 return SQLiteDatabase.CONFLICT_REPLACE;
             case TABLE_ID_FILTERED_USERS:
             case TABLE_ID_FILTERED_KEYWORDS:

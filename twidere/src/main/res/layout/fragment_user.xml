@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
+            app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
             tools:src="@drawable/nyan_stars_background"/>
 
         <FrameLayout

@@ -20,31 +20,27 @@
 package org.mariotaku.twidere.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import org.mariotaku.twidere.Constants;
+import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.iface.IExtendedView;
 
-public class ProfileBannerImageView extends ForegroundImageView implements IExtendedView, Constants {
+public class ProfileBannerImageView extends ForegroundImageView implements IExtendedView {
 
     private OnSizeChangedListener mOnSizeChangedListener;
     private TouchInterceptor mTouchInterceptor;
     private OnFitSystemWindowsListener mOnFitSystemWindowsListener;
-
-    public ProfileBannerImageView(final Context context) {
-        this(context, null);
-    }
+    private float mBannerAspectRatio;
 
     public ProfileBannerImageView(final Context context, final AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public ProfileBannerImageView(final Context context, final AttributeSet attrs, final int defStyle) {
-        super(context, attrs, defStyle);
-        if (isInEditMode()) return;
+        super(context, attrs);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ProfileBannerImageView);
+        setBannerAspectRatio(a.getFraction(R.styleable.ProfileBannerImageView_bannerAspectRatio, 1, 1, 2f));
+        a.recycle();
         setScaleType(ScaleType.CENTER_CROP);
     }
 
@@ -92,7 +88,8 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        final int width = MeasureSpec.getSize(widthMeasureSpec), height = width / 2;
+        final int width = MeasureSpec.getSize(widthMeasureSpec),
+                height = Math.round(width / mBannerAspectRatio);
         setMeasuredDimension(width, height);
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
     }
@@ -105,4 +102,11 @@ public class ProfileBannerImageView extends ForegroundImageView implements IExte
         }
     }
 
+    public void setBannerAspectRatio(final float bannerAspectRatio) {
+        mBannerAspectRatio = bannerAspectRatio;
+    }
+
+    public float getBannerAspectRatio() {
+        return mBannerAspectRatio;
+    }
 }

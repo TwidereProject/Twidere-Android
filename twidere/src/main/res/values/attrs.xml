@@ -141,6 +141,9 @@
     <declare-styleable name="PremiumEntryPreference">
         <attr name="requiredFeature" format="string"/>
     </declare-styleable>
+    <declare-styleable name="ProfileBannerImageView">
+        <attr name="bannerAspectRatio" format="fraction"/>
+    </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

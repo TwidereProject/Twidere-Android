@@ -1,7 +1,9 @@
 package org.mariotaku.twidere.task
 
 import android.accounts.AccountManager
+import android.annotation.SuppressLint
 import android.content.Context
+import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -20,6 +22,7 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 /**
@@ -64,7 +67,7 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     }
 
     private fun getFanfouMessages(microBlog: MicroBlog): GetMessagesData {
-        return GetMessagesData(emptyList(), emptyList(), emptyList())
+        return GetMessagesData(emptyList(), emptyList())
     }
 
     private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails): GetMessagesData {
@@ -76,17 +79,58 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         val paging = Paging()
         val insertMessages = arrayListOf<ParcelableMessage>()
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
-        microBlog.getDirectMessages(paging).forEach { dm ->
+
+
+        val received = microBlog.getDirectMessages(paging)
+        val sent = microBlog.getSentDirectMessages(paging)
+
+        val conversationIds = hashSetOf<String>()
+        received.forEach {
+            conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
+        }
+        received.forEach {
+            conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
+        }
+
+        conversations.addLocalConversations(accountKey, conversationIds)
+
+        received.forEach { dm ->
             val message = ParcelableMessageUtils.incomingMessage(accountKey, dm)
             insertMessages.add(message)
             conversations.addConversation(details, message, dm.sender, dm.recipient)
         }
-        microBlog.getSentDirectMessages(paging).forEach { dm ->
+        sent.forEach { dm ->
             val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm)
             insertMessages.add(message)
             conversations.addConversation(details, message, dm.sender, dm.recipient)
         }
-        return GetMessagesData(conversations.values, emptyList(), insertMessages)
+        return GetMessagesData(conversations.values, insertMessages)
+    }
+
+    @SuppressLint("Recycle")
+    private fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(accountKey: UserKey, conversationIds: Set<String>) {
+        val where = Expression.and(Expression.inArgs(Conversations.CONVERSATION_ID, conversationIds.size),
+                Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
+        val whereArgs = conversationIds.toTypedArray() + accountKey.toString()
+        return context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
+                where, whereArgs, null).useCursor { cur ->
+            val indices = ParcelableMessageConversationCursorIndices(cur)
+            cur.moveToFirst()
+            while (!cur.isAfterLast) {
+                val conversationId = cur.getString(indices.id)
+                val timestamp = cur.getLong(indices.local_timestamp)
+                val conversation = this[conversationId] ?: run {
+                    val obj = indices.newObject(cur)
+                    this[conversationId] = obj
+                    return@run obj
+                }
+                if (timestamp > conversation.local_timestamp) {
+                    this[conversationId] = indices.newObject(cur)
+                }
+                indices.newObject(cur)
+                cur.moveToNext()
+            }
+        }
     }
 
     private fun storeMessages(data: GetMessagesData, details: AccountDetails) {
@@ -94,11 +138,17 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
         val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
         val whereArgs = arrayOf(details.key.toString())
         resolver.delete(Messages.CONTENT_URI, where, whereArgs)
-        resolver.delete(Messages.Conversations.CONTENT_URI, where, whereArgs)
-        val conversationsValues = data.insertConversations.map(ParcelableMessageConversationValuesCreator::create)
-        val messagesValues = data.insertMessages.map(ParcelableMessageValuesCreator::create)
+        resolver.delete(Conversations.CONTENT_URI, where, whereArgs)
+        val conversationsValues = data.conversations.map {
+            val values = ParcelableMessageConversationValuesCreator.create(it)
+            if (it._id > 0) {
+                values.put(Conversations._ID, it._id)
+            }
+            return@map values
+        }
+        val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
 
-        ContentResolverUtils.bulkInsert(resolver, Messages.Conversations.CONTENT_URI, conversationsValues)
+        ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
         ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
     }
 
@@ -143,9 +193,8 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
 
 
     data class GetMessagesData(
-            val insertConversations: Collection<ParcelableMessageConversation>,
-            val updateConversations: Collection<ParcelableMessageConversation>,
-            val insertMessages: Collection<ParcelableMessage>
+            val conversations: Collection<ParcelableMessageConversation>,
+            val messages: Collection<ParcelableMessage>
     )
 }
 
