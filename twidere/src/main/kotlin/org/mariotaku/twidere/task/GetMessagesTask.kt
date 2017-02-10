@@ -221,16 +221,10 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     )
 
     class RefreshNewTaskParam(
-            val context: Context,
-            val getAccountKeys: () -> Array<UserKey>
-    ) : SimpleRefreshTaskParam() {
+            context: Context,
+            getAccountKeys: () -> Array<UserKey>
+    ) : RefreshMessagesTaskParam(context, getAccountKeys) {
 
-        private val accounts by lazy {
-            AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
-        }
-
-        override val accountKeys: Array<UserKey>
-            get() = getAccountKeys()
 
         override val sinceIds: Array<String?>?
             get() {
@@ -251,6 +245,47 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
 
         override val hasSinceIds: Boolean = true
         override val hasMaxIds: Boolean = false
+    }
+
+    class LoadMoreTaskParam(
+            context: Context,
+            getAccountKeys: () -> Array<UserKey>
+    ) : RefreshMessagesTaskParam(context, getAccountKeys) {
+
+
+        override val maxIds: Array<String?>?
+            get() {
+                val keys = accounts.map { account ->
+                    when (account?.type) {
+                        AccountType.FANFOU -> {
+                            return@map null
+                        }
+                    }
+                    return@map account?.key
+                }.toTypedArray()
+                val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+                        keys, false)
+                val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+                        keys, true)
+                return incomingIds + outgoingIds
+            }
+
+        override val hasSinceIds: Boolean = false
+        override val hasMaxIds: Boolean = true
+    }
+
+    open class RefreshMessagesTaskParam(
+            val context: Context,
+            val getAccountKeys: () -> Array<UserKey>
+    ) : SimpleRefreshTaskParam() {
+
+        protected val accounts: Array<AccountDetails?> by lazy {
+            AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
+        }
+
+        override final val accountKeys: Array<UserKey>
+            get() = getAccountKeys()
+
     }
 }
 

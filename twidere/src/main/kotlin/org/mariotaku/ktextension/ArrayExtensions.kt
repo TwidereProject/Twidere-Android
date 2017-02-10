@@ -17,3 +17,7 @@ fun <T : Any> Array<T>.toNulls(): Array<T?> {
     @Suppress("UNCHECKED_CAST")
     return this as Array<T?>
 }
+
+fun <T : Any> Array<T>.toStringArray(): Array<String> {
+    return Array(size) { this[it].toString() }
+}

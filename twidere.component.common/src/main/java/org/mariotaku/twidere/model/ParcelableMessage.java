@@ -76,6 +76,10 @@ public class ParcelableMessage {
     @CursorField(Messages.LOCAL_TIMESTAMP)
     public long local_timestamp;
 
+    @JsonField(name = "sort_id")
+    @CursorField(value = Messages.SORT_ID)
+    public long sort_id;
+
     @JsonField(name = "text_unescaped")
     @CursorField(Messages.TEXT_UNESCAPED)
     public String text_unescaped;
@@ -119,16 +123,19 @@ public class ParcelableMessage {
                 ", conversation_id='" + conversation_id + '\'' +
                 ", message_type='" + message_type + '\'' +
                 ", message_timestamp=" + message_timestamp +
+                ", local_timestamp=" + local_timestamp +
+                ", sort_id=" + sort_id +
                 ", text_unescaped='" + text_unescaped + '\'' +
                 ", media=" + Arrays.toString(media) +
                 ", spans=" + Arrays.toString(spans) +
+                ", extras=" + extras +
+                ", internalExtras=" + internalExtras +
                 ", sender_key=" + sender_key +
                 ", recipient_key=" + recipient_key +
                 ", is_outgoing=" + is_outgoing +
                 ", request_cursor='" + request_cursor + '\'' +
                 '}';
     }
-
 
     @OnPreJsonSerialize
     void beforeJsonSerialize() {

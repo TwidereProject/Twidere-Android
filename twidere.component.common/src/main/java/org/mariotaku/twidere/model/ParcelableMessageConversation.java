@@ -76,6 +76,10 @@ public class ParcelableMessageConversation {
     @CursorField(value = Conversations.LOCAL_TIMESTAMP)
     public long local_timestamp;
 
+    @JsonField(name = "sort_id")
+    @CursorField(value = Conversations.SORT_ID)
+    public long sort_id;
+
     @JsonField(name = "text_unescaped")
     @CursorField(Conversations.TEXT_UNESCAPED)
     public String text_unescaped;
@@ -121,11 +125,13 @@ public class ParcelableMessageConversation {
         return "ParcelableMessageConversation{" +
                 "_id=" + _id +
                 ", account_key=" + account_key +
+                ", account_color=" + account_color +
                 ", id='" + id + '\'' +
                 ", conversation_type='" + conversation_type + '\'' +
                 ", message_type='" + message_type + '\'' +
                 ", message_timestamp=" + message_timestamp +
                 ", local_timestamp=" + local_timestamp +
+                ", sort_id=" + sort_id +
                 ", text_unescaped='" + text_unescaped + '\'' +
                 ", media=" + Arrays.toString(media) +
                 ", spans=" + Arrays.toString(spans) +

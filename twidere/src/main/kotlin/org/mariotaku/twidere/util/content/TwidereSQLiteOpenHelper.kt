@@ -37,6 +37,7 @@ import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.DatabaseUpgradeHelper.safeUpgrade
 import org.mariotaku.twidere.util.migrateAccounts
 import java.util.*
@@ -79,9 +80,10 @@ class TwidereSQLiteOpenHelper(
         db.endTransaction()
 
         db.beginTransaction()
-        db.execSQL(createTable(Messages.TABLE_NAME, Messages.COLUMNS, Messages.TYPES, true))
-        db.execSQL(createTable(Messages.Conversations.TABLE_NAME, Messages.Conversations.COLUMNS,
-                Messages.Conversations.TYPES, true))
+        db.execSQL(createTable(Messages.TABLE_NAME, Messages.COLUMNS, Messages.TYPES, true,
+                messagesConstraint()))
+        db.execSQL(createTable(Conversations.TABLE_NAME, Conversations.COLUMNS,
+                Conversations.TYPES, true, messageConversationsConstraint()))
         db.setTransactionSuccessful()
         db.endTransaction()
 
@@ -100,6 +102,7 @@ class TwidereSQLiteOpenHelper(
 
         setupDefaultTabs(db)
     }
+
 
     private fun setupDefaultTabs(db: SQLiteDatabase) {
         db.beginTransaction()
@@ -239,9 +242,10 @@ class TwidereSQLiteOpenHelper(
         safeUpgrade(db, SavedSearches.TABLE_NAME, SavedSearches.COLUMNS, SavedSearches.TYPES, true, null)
 
         // DM columns
-        safeUpgrade(db, Messages.TABLE_NAME, Messages.COLUMNS, Messages.TYPES, true, null)
-        safeUpgrade(db, Messages.Conversations.TABLE_NAME, Messages.Conversations.COLUMNS,
-                Messages.Conversations.TYPES, true, null)
+        safeUpgrade(db, Messages.TABLE_NAME, Messages.COLUMNS, Messages.TYPES, true, null,
+                messagesConstraint())
+        safeUpgrade(db, Conversations.TABLE_NAME, Conversations.COLUMNS,
+                Conversations.TYPES, true, null, messageConversationsConstraint())
 
         if (oldVersion < 131) {
             migrateFilteredUsers(db)
@@ -312,4 +316,13 @@ class TwidereSQLiteOpenHelper(
         return qb.buildSQL()
     }
 
+    private fun messagesConstraint(): Constraint {
+        return Constraint.unique("unique_message", Columns(Messages.ACCOUNT_KEY, Messages.CONVERSATION_ID,
+                Messages.MESSAGE_ID), OnConflict.REPLACE)
+    }
+
+    private fun messageConversationsConstraint(): Constraint {
+        return Constraint.unique("unique_message_conversations", Columns(Conversations.ACCOUNT_KEY,
+                Conversations.CONVERSATION_ID), OnConflict.REPLACE)
+    }
 }

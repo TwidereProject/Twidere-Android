@@ -74,10 +74,10 @@ open class ContentScrollHandler<A>(
         if (!contentListSupport.refreshing && adapter.loadMoreSupportedPosition != ILoadMoreSupportAdapter.NONE
                 && adapter.loadMoreIndicatorPosition == ILoadMoreSupportAdapter.NONE) {
             var position: Long = 0
-            if (contentListSupport.reachingEnd && scrollDirection > 0) {
+            if (contentListSupport.reachingEnd && scrollDirection < 0) {
                 position = position or ILoadMoreSupportAdapter.END
             }
-            if (contentListSupport.reachingStart && scrollDirection < 0) {
+            if (contentListSupport.reachingStart && scrollDirection > 0) {
                 position = position or ILoadMoreSupportAdapter.START
             }
             resetScrollDirection()
@@ -133,12 +133,15 @@ open class ContentScrollHandler<A>(
                     lastY = Float.NaN
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    if (!java.lang.Float.isNaN(lastY)) {
-                        val delta = lastY - event.rawY
-                        listener.setScrollDirection(if (delta < 0) -1 else 1)
+                    if (lastY.isNaN()) {
+                        lastY = event.y
                     } else {
-                        lastY = event.rawY
+                        val delta = event.y - lastY
+                        listener.setScrollDirection(if (delta < 0) -1 else 1)
                     }
+                }
+                MotionEvent.ACTION_UP -> {
+                    lastY = Float.NaN
                 }
             }
             return false

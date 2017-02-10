@@ -452,12 +452,12 @@ class ParcelableActivitiesAdapter(
     }
 
     companion object {
-        val ITEM_VIEW_TYPE_STUB = 0
-        val ITEM_VIEW_TYPE_GAP = 1
-        val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
-        val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
-        val ITEM_VIEW_TYPE_STATUS = 4
-        val ITEM_VIEW_TYPE_EMPTY = 5
+        const val ITEM_VIEW_TYPE_STUB = 0
+        const val ITEM_VIEW_TYPE_GAP = 1
+        const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
+        const val ITEM_VIEW_TYPE_TITLE_SUMMARY = 3
+        const val ITEM_VIEW_TYPE_STATUS = 4
+        const val ITEM_VIEW_TYPE_EMPTY = 5
 
     }
 }

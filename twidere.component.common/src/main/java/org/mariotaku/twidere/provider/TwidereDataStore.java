@@ -361,6 +361,7 @@ public interface TwidereDataStore {
         String MESSAGE_TYPE = "message_type";
         String MESSAGE_TIMESTAMP = "message_timestamp";
         String LOCAL_TIMESTAMP = "local_timestamp";
+        String SORT_ID = "sort_id";
         String TEXT_UNESCAPED = "text_unescaped";
         String MEDIA = "media";
         String SPANS = "spans";
@@ -384,6 +385,7 @@ public interface TwidereDataStore {
             String CONVERSATION_TYPE = "conversation_type";
             String MESSAGE_TYPE = "message_type";
             String MESSAGE_TIMESTAMP = "message_timestamp";
+            String SORT_ID = "sort_id";
             String LOCAL_TIMESTAMP = "local_timestamp";
             String TEXT_UNESCAPED = "text_unescaped";
             String MEDIA = "media";

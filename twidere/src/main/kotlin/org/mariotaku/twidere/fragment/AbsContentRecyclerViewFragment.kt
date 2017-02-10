@@ -178,11 +178,15 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
         adapter = onCreateAdapter(context)
         layoutManager = onCreateLayoutManager(context)
+        scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
+
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
+        val swipeLayout = swipeLayout
         if (swipeLayout is ExtendedSwipeRefreshLayout) {
-            (swipeLayout as ExtendedSwipeRefreshLayout).setTouchInterceptor(object : IExtendedView.TouchInterceptor {
+            swipeLayout.setTouchInterceptor(object : IExtendedView.TouchInterceptor {
                 override fun dispatchTouchEvent(view: View, event: MotionEvent): Boolean {
+                    scrollListener.touchListener.onTouch(view, event)
                     return false
                 }
 
@@ -198,13 +202,14 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
                 }
 
             })
+        } else {
+            recyclerView.setOnTouchListener(scrollListener.touchListener)
         }
         setupRecyclerView(context, recyclerView)
         recyclerView.adapter = adapter
 
-        scrollListener = RecyclerViewScrollHandler(this, RecyclerViewScrollHandler.RecyclerViewCallback(recyclerView))
         scrollListener.touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-        recyclerView.setOnTouchListener(scrollListener.touchListener)
+
     }
 
     protected open fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

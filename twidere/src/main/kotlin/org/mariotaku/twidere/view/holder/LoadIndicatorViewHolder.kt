@@ -22,6 +22,7 @@ package org.mariotaku.twidere.view.holder
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_load_indicator.view.*
+import org.mariotaku.twidere.R
 
 /**
  * Created by mariotaku on 14/11/19.
@@ -31,5 +32,8 @@ class LoadIndicatorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun setLoadProgressVisible(visible: Boolean) {
         loadProgress.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+    companion object {
+        const val layoutResource = R.layout.list_item_load_indicator
     }
 }

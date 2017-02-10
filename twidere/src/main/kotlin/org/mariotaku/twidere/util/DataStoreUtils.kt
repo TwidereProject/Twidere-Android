@@ -171,6 +171,12 @@ object DataStoreUtils {
                 OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), having, null)
     }
 
+    fun getOldestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
+        val having: Expression = Expression.equals(Messages.IS_OUTGOING, if (outgoing) 1 else 0)
+        return getStringFieldArray(context, uri, accountKeys, Messages.ACCOUNT_KEY, Messages.MESSAGE_ID,
+                OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), having, null)
+    }
+
 
     fun getNewestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
