@@ -359,7 +359,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val accountIds = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
         val maxSortIds = longArrayOf(status.sort_id)
-        getStatuses(BaseRefreshTaskParam(accountIds, maxIds, null, maxSortIds, null))
+        getStatuses(BaseRefreshTaskParam(accountKeys = accountIds, maxIds = maxIds, sinceIds = null,
+                maxSortIds = maxSortIds, sinceSortIds = null))
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {

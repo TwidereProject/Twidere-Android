@@ -8,6 +8,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.loader.ObjectCursorLoader
@@ -35,6 +36,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter.listener = this
+        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         loaderManager.initLoader(0, null, this)
     }
 
@@ -68,6 +70,10 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
             }
         })
         return true
+    }
+
+    override fun onLoadMoreContents(position: Long) {
+        super.onLoadMoreContents(position)
     }
 
     override fun onConversationClick(position: Int) {

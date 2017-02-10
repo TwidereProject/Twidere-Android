@@ -10,13 +10,20 @@ interface RefreshTaskParam {
 
     val sinceIds: Array<String?>?
 
+    val cursors: Array<String?>?
+
     val maxSortIds: LongArray?
 
     val sinceSortIds: LongArray?
 
     val hasMaxIds: Boolean
+        get() = maxIds != null
 
     val hasSinceIds: Boolean
+        get() = sinceIds != null
+
+    val hasCursors: Boolean
+        get() = cursors != null
 
     val isLoadingMore: Boolean
 

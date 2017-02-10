@@ -155,7 +155,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val loader = ConversationLoader(activity, status, sinceId, maxId, sinceSortId, maxSortId,
                     adapter.getData(), true, loadingMore)
             // Setting comparator to null lets statuses sort ascending
-            loader.comparator = null
+            loader.comparator = Comparator { l, r ->
+                (l.sort_id - r.sort_id).toInt()
+            }
             return loader
         }
 
@@ -1503,7 +1505,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         override val lightFont: Boolean
         override val mediaPreviewEnabled: Boolean
         override val sensitiveContentEnabled: Boolean
-        private val mShowCardActions: Boolean
+        private val showCardActions: Boolean
         override val useStarsForLikes: Boolean
         private var mDetailMediaExpanded: Boolean = false
 
@@ -1533,8 +1535,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var data: List<ParcelableStatus>? = null
         private var replyError: CharSequence? = null
         private var conversationError: CharSequence? = null
-        private var mReplyStart: Int = 0
-        private var mShowingActionCardPosition: Int = 0
+        private var replyStart: Int = 0
+        private var showingActionCardPosition: Int = 0
 
         init {
             setHasStableIds(true)
@@ -1555,7 +1557,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             linkHighlightingStyle = preferences[linkHighlightOptionKey]
             mediaPreviewEnabled = preferences[mediaPreviewKey]
             sensitiveContentEnabled = preferences.getBoolean(SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS, false)
-            mShowCardActions = !preferences[hideCardActionsKey]
+            showCardActions = !preferences[hideCardActionsKey]
             useStarsForLikes = preferences[iWantMyStarsBackKey]
             val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
             listener.setAdapter(this)
@@ -1570,9 +1572,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)]
                 }
                 ITEM_IDX_REPLY -> {
-                    if (data == null || mReplyStart < 0) return null
+                    if (data == null || replyStart < 0) return null
                     return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)
-                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + mReplyStart]
+                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart]
                 }
                 ITEM_IDX_STATUS -> {
                     return status
@@ -1622,15 +1624,15 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
 
         override fun isCardActionsShown(position: Int): Boolean {
-            if (position == RecyclerView.NO_POSITION) return mShowCardActions
-            return mShowCardActions || mShowingActionCardPosition == position
+            if (position == RecyclerView.NO_POSITION) return showCardActions
+            return showCardActions || showingActionCardPosition == position
         }
 
         override fun showCardActions(position: Int) {
-            if (mShowingActionCardPosition != RecyclerView.NO_POSITION) {
-                notifyItemChanged(mShowingActionCardPosition)
+            if (showingActionCardPosition != RecyclerView.NO_POSITION) {
+                notifyItemChanged(showingActionCardPosition)
             }
-            mShowingActionCardPosition = position
+            showingActionCardPosition = position
             if (position != RecyclerView.NO_POSITION) {
                 notifyItemChanged(position)
             }
@@ -1638,12 +1640,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun setData(data: List<ParcelableStatus>?): Boolean {
             val status = this.status ?: return false
-            val changed = !CompareUtils.objectEquals(data, data)
+            val changed = this.data != data
             this.data = data
             if (data == null || data.isEmpty()) {
                 setTypeCount(ITEM_IDX_CONVERSATION, 0)
                 setTypeCount(ITEM_IDX_REPLY, 0)
-                mReplyStart = -1
+                replyStart = -1
             } else {
                 var sortId = status.sort_id
                 if (status.is_retweet) {
@@ -1657,8 +1659,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 var conversationCount = 0
                 var replyCount = 0
                 var replyStart = -1
-                for (i in 0 until data.size) {
-                    val item = data[i]
+                data.forEachIndexed { i, item ->
                     if (item.sort_id < sortId) {
                         conversationCount++
                     } else if (item.sort_id > sortId && status.id != item.id) {
@@ -1670,7 +1671,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 }
                 setTypeCount(ITEM_IDX_CONVERSATION, conversationCount)
                 setTypeCount(ITEM_IDX_REPLY, replyCount)
-                mReplyStart = replyStart
+                this.replyStart = replyStart
             }
             notifyDataSetChanged()
             updateItemDecoration()

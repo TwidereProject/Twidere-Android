@@ -22,11 +22,8 @@ abstract class SimpleRefreshTaskParam : RefreshTaskParam {
     override val sinceIds: Array<String?>?
         get() = null
 
-    override val hasMaxIds: Boolean
-        get() = maxIds != null
-
-    override val hasSinceIds: Boolean
-        get() = sinceIds != null
+    override val cursors: Array<String?>?
+        get() = null
 
     override val sinceSortIds: LongArray?
         get() = null

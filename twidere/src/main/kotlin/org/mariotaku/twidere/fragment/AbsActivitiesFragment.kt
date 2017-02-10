@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -310,7 +309,8 @@ abstract class AbsActivitiesFragment protected constructor() :
         val accountIds = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)
-        getActivities(BaseRefreshTaskParam(accountIds, maxIds, null, maxSortIds, null))
+        getActivities(BaseRefreshTaskParam(accountKeys = accountIds, maxIds = maxIds,
+                sinceIds = null, maxSortIds = maxSortIds, sinceSortIds = null))
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
