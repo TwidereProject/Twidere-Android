@@ -20,11 +20,29 @@
 package org.mariotaku.twidere.view.holder.message
 
 import android.view.View
+import kotlinx.android.synthetic.main.list_item_message_conversation_sticker.view.*
+import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.MessagesConversationAdapter
+import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.model.message.StickerExtras
 
 /**
  * Created by mariotaku on 2017/2/9.
  */
 
-class StickerMessageViewHolder(itemView: View) : AbsMessageViewHolder(itemView) {
+class StickerMessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
 
+    private val messageContent by lazy { itemView.messageContent }
+    private val stickerIcon by lazy { itemView.stickerIcon }
+
+    override fun display(message: ParcelableMessage) {
+        super.display(message)
+        MessageViewHolder.setMessageContentGravity(messageContent, message.is_outgoing)
+        val extras = message.extras as StickerExtras
+        adapter.mediaLoader.displayStickerImage(stickerIcon, extras.url)
+    }
+
+    companion object {
+        const val layoutResource = R.layout.list_item_message_conversation_sticker
+    }
 }

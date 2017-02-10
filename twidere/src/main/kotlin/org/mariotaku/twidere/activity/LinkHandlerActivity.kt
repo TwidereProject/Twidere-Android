@@ -486,25 +486,25 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
 
         }
         var userHost: String? = null
-        var isAccountIdRequired = true
+        var accountRequired = true
         when (linkId) {
             LINK_ID_ACCOUNTS -> {
-                isAccountIdRequired = false
+                accountRequired = false
                 fragment = AccountsManagerFragment()
             }
             LINK_ID_DRAFTS -> {
-                isAccountIdRequired = false
+                accountRequired = false
                 fragment = DraftsFragment()
             }
             LINK_ID_FILTERS -> {
-                isAccountIdRequired = false
+                accountRequired = false
                 fragment = FiltersFragment()
             }
             LINK_ID_PROFILE_EDITOR -> {
                 fragment = UserProfileEditorFragment()
             }
             LINK_ID_MAP -> {
-                isAccountIdRequired = false
+                accountRequired = false
                 if (!args.containsKey(EXTRA_LATITUDE) && !args.containsKey(EXTRA_LONGITUDE)) {
                     val lat = uri.getQueryParameter(QUERY_PARAM_LAT).toDouble(Double.NaN)
                     val lng = uri.getQueryParameter(QUERY_PARAM_LNG).toDouble(Double.NaN)
@@ -616,14 +616,9 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
                 fragment = MessagesConversationFragment()
-                isAccountIdRequired = false
-                val paramRecipientId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID)
-                val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                if (paramRecipientId != null) {
-                    args.putString(EXTRA_RECIPIENT_ID, paramRecipientId)
-                } else if (paramScreenName != null) {
-                    args.putString(EXTRA_SCREEN_NAME, paramScreenName)
-                }
+                accountRequired = true
+                val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
+                args.putString(EXTRA_CONVERSATION_ID, conversationId)
             }
             LINK_ID_DIRECT_MESSAGES -> {
                 fragment = MessagesEntriesFragment()
@@ -736,7 +731,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 fragment = IncomingFriendshipsFragment()
             }
             LINK_ID_ITEMS -> {
-                isAccountIdRequired = false
+                accountRequired = false
                 fragment = ItemsListFragment()
             }
             LINK_ID_STATUS_RETWEETERS -> {
@@ -771,7 +766,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
             LINK_ID_FILTERS_SUBSCRIPTIONS -> {
                 fragment = FiltersSubscriptionsFragment()
-                isAccountIdRequired = false
+                accountRequired = false
             }
             LINK_ID_FILTERS_SUBSCRIPTIONS_ADD -> {
                 val url = uri.getQueryParameter("url") ?: return null
@@ -780,7 +775,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 args.putString(IntentConstants.EXTRA_ACTION, FiltersSubscriptionsFragment.ACTION_ADD_URL_SUBSCRIPTION)
                 args.putString(FiltersSubscriptionsFragment.EXTRA_ADD_SUBSCRIPTION_URL, url)
                 args.putString(FiltersSubscriptionsFragment.EXTRA_ADD_SUBSCRIPTION_NAME, name)
-                isAccountIdRequired = false
+                accountRequired = false
             }
             else -> {
                 return null
@@ -802,7 +797,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             }
         }
 
-        if (isAccountIdRequired && accountKey == null) {
+        if (accountRequired && accountKey == null) {
             val exception = Utils.NoAccountException()
             exception.accountHost = userHost
             throw exception

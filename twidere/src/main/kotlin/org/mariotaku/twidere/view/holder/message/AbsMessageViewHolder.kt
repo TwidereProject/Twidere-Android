@@ -21,13 +21,14 @@ package org.mariotaku.twidere.view.holder.message
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.model.ParcelableMessage
 
 /**
  * Created by mariotaku on 2017/2/9.
  */
 
-abstract class AbsMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConversationAdapter) : RecyclerView.ViewHolder(itemView) {
     open fun display(message: ParcelableMessage) {
 
     }

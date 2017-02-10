@@ -23,7 +23,12 @@ package org.mariotaku.twidere.model.message;
 
 import android.os.Parcelable;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.model.ParcelableMessage.MessageType;
+
+import java.io.IOException;
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -31,7 +36,11 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 @JsonObject
 public abstract class MessageExtras implements Parcelable {
-    public static MessageExtras parse(final String messageType, final String json) {
+    public static MessageExtras parse(final String messageType, final String json) throws IOException {
+        switch (messageType) {
+            case MessageType.STICKER:
+                return LoganSquare.parse(json, StickerExtras.class);
+        }
         return null;
     }
 }

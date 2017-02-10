@@ -33,12 +33,8 @@ import java.io.InputStream;
  * Created by mariotaku on 15/8/28.
  */
 public class ReadOnlyDiskLRUNameCache extends BaseDiskCache {
-    public ReadOnlyDiskLRUNameCache(File cacheDir) {
-        super(cacheDir);
-    }
-
-    public ReadOnlyDiskLRUNameCache(File cacheDir, File reserveCacheDir) {
-        super(cacheDir, reserveCacheDir);
+    public ReadOnlyDiskLRUNameCache(File cacheDir, File reserveCacheDir, FileNameGenerator fileNameGenerator) {
+        super(cacheDir, reserveCacheDir, fileNameGenerator);
     }
 
     @Override
@@ -70,9 +66,5 @@ public class ReadOnlyDiskLRUNameCache extends BaseDiskCache {
             dir = reserveCacheDir;
         }
         return new File(dir, fileName);
-    }
-
-    public ReadOnlyDiskLRUNameCache(File cacheDir, File reserveCacheDir, FileNameGenerator fileNameGenerator) {
-        super(cacheDir, reserveCacheDir, fileNameGenerator);
     }
 }

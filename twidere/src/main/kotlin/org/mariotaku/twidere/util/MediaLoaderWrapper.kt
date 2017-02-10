@@ -52,7 +52,7 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
             .resetViewBeforeLoading(true)
             .cacheInMemory(true)
             .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.ARGB_8888)
+            .bitmapConfig(Bitmap.Config.RGB_565)
             .build()
 
     private val dashboardProfileImageDisplayOptions = DisplayImageOptions.Builder()
@@ -76,6 +76,14 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build()
 
+
+    private val stickerDisplayOptions = DisplayImageOptions.Builder()
+            .resetViewBeforeLoading(true)
+            .showImageOnLoading(android.R.color.transparent)
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.ARGB_8888)
+            .build()
 
     fun displayPreviewImage(view: ImageView, url: String?) {
         imageLoader.displayImage(url, view, previewDisplayOptions)
@@ -170,6 +178,11 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
 
     fun displayImage(view: ImageView, url: String?) {
         imageLoader.displayImage(url, view)
+    }
+
+
+    fun displayStickerImage(view: ImageView, url: String?) {
+        imageLoader.displayImage(url, view, stickerDisplayOptions)
     }
 
     fun displayProfileImage(view: ImageView, url: String?, listener: ImageLoadingListener) {

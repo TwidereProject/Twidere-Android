@@ -168,6 +168,7 @@ public interface IntentConstants {
     String EXTRA_ALPHA_SLIDER = "alpha_slider";
     String EXTRA_OPEN_ACCOUNTS_DRAWER = "open_accounts_drawer";
     String EXTRA_RECIPIENT_ID = "recipient_id";
+    String EXTRA_CONVERSATION_ID = "conversation_id";
     String EXTRA_OFFICIAL_KEY_ONLY = "official_key_only";
     String EXTRA_SEARCH_ID = "search_id";
     String EXTRA_CLEAR_BUTTON = "clear_button";

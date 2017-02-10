@@ -23,7 +23,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_entry.view.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.MessagesConversationsAdapter
+import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.extension.model.getConversationName
 import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.model.timestamp
@@ -35,7 +35,7 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationTyp
  * Created by mariotaku on 2017/2/9.
  */
 
-class MessageConversationViewHolder(itemView: View, val adapter: MessagesConversationsAdapter) : RecyclerView.ViewHolder(itemView) {
+class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter) : RecyclerView.ViewHolder(itemView) {
 
     private val content by lazy { itemView.content }
     private val time by lazy { itemView.time }

@@ -7,7 +7,7 @@ import android.support.v4.content.Loader
 import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.adapter.MessagesConversationsAdapter
+import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.loader.ObjectCursorLoader
@@ -24,8 +24,8 @@ import org.mariotaku.twidere.util.Utils
 /**
  * Created by mariotaku on 16/3/28.
  */
-class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesConversationsAdapter>(),
-        LoaderManager.LoaderCallbacks<List<ParcelableMessageConversation>?>, MessagesConversationsAdapter.MessageConversationClickListener {
+class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntriesAdapter>(),
+        LoaderManager.LoaderCallbacks<List<ParcelableMessageConversation>?>, MessagesEntriesAdapter.MessageConversationClickListener {
 
     private val accountKeys: Array<UserKey>
         get() = Utils.getAccountKeys(context, arguments) ?: DataStoreUtils.getActivatedAccountKeys(context)
@@ -56,8 +56,8 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesConve
         showContentOrError()
     }
 
-    override fun onCreateAdapter(context: Context): MessagesConversationsAdapter {
-        return MessagesConversationsAdapter(context)
+    override fun onCreateAdapter(context: Context): MessagesEntriesAdapter {
+        return MessagesEntriesAdapter(context)
     }
 
     override fun triggerRefresh(): Boolean {

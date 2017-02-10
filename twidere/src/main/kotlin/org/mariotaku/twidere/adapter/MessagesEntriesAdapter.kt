@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.view.holder.message.MessageConversationViewHolder
+import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
 
 /**
  * Created by mariotaku on 2017/2/9.
  */
 
-class MessagesConversationsAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context),
+class MessagesEntriesAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context),
         IItemCountsAdapter {
     override val itemCounts: ItemCounts = ItemCounts(1)
 
@@ -40,15 +40,15 @@ class MessagesConversationsAdapter(context: Context) : LoadMoreSupportAdapter<Re
         when (holder.itemViewType) {
             ITEM_TYPE_MESSAGE_ENTRY -> {
                 val conversation = getConversation(position)!!
-                (holder as MessageConversationViewHolder).display(conversation)
+                (holder as MessageEntryViewHolder).display(conversation)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(MessageConversationViewHolder.layoutResource, parent, false)
-        return MessageConversationViewHolder(itemView, this)
+        val itemView = inflater.inflate(MessageEntryViewHolder.layoutResource, parent, false)
+        return MessageEntryViewHolder(itemView, this)
     }
 
     override fun getItemViewType(position: Int): Int {

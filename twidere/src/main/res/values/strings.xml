@@ -325,6 +325,7 @@
 
     <string name="content">Content</string>
     <string name="content_and_storage">Content &amp; Storage</string>
+    <string name="content_description_sticker">Sticker</string>
     <string name="content_to_notify">Content to notify</string>
     <string name="content_to_refresh">Content to refresh</string>
 
