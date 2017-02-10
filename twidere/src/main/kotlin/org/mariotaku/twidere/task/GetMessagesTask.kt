@@ -76,12 +76,31 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
     private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshTaskParam, index: Int): GetMessagesData {
         val accountKey = details.key
 
-        
+        val sinceIds = if (param.hasSinceIds) param.sinceIds else null
+        val maxIds = if (param.hasMaxIds) param.maxIds else null
+
         val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
+            val maxId = maxIds?.get(index)
+            val sinceId = sinceIds?.get(index)
+            if (maxId != null) {
+                maxId(maxId)
+            }
+            if (sinceIds != null) {
+                sinceId(sinceId)
+            }
         })
         val sent = microBlog.getSentDirectMessages(Paging().apply {
             count(100)
+            val accountsCount = param.accountKeys.size
+            val maxId = maxIds?.get(accountsCount + index)
+            val sinceId = sinceIds?.get(accountsCount + index)
+            if (maxId != null) {
+                maxId(maxId)
+            }
+            if (sinceId != null) {
+                sinceId(sinceId)
+            }
         })
 
 

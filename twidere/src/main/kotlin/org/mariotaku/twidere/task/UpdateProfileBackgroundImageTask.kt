@@ -2,9 +2,6 @@ package org.mariotaku.twidere.task
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
-import com.squareup.otto.Bus
-import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -13,12 +10,11 @@ import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
+import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.Utils
-import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
-import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/3/11.
@@ -52,7 +48,7 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
             try {
                 Thread.sleep(5000L)
             } catch (e: InterruptedException) {
-                Log.w(LOGTAG, e)
+                DebugLog.w(LOGTAG, tr = e)
             }
             val user = twitter.verifyCredentials()
             return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey))

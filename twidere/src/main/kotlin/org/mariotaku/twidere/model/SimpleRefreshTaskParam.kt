@@ -7,15 +7,6 @@ abstract class SimpleRefreshTaskParam : RefreshTaskParam {
 
     internal var cached: Array<UserKey>? = null
 
-    override val accountKeys: Array<UserKey>
-        get() {
-            if (cached != null) return cached!!
-            cached = getAccountKeysWorker()
-            return cached!!
-        }
-
-    abstract fun getAccountKeysWorker(): Array<UserKey>
-
     override val maxIds: Array<String?>?
         get() = null
 

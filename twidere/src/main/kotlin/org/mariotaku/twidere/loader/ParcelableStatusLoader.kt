@@ -36,8 +36,8 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.util.Utils.findStatus
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.deleteActivityStatus
 import javax.inject.Inject
 
 /**
@@ -75,7 +75,7 @@ class ParcelableStatusLoader(
         }
         if (details == null) return SingleResponse(MicroBlogException("No account"))
         try {
-            val status = findStatus(context, accountKey, statusId)
+            val status = DataStoreUtils.findStatus(context, accountKey, statusId)
             ParcelableStatusUtils.updateExtraInformation(status, details)
             val response = SingleResponse(status)
             response.extras[EXTRA_ACCOUNT] = details
@@ -85,7 +85,7 @@ class ParcelableStatusLoader(
                 // Delete all deleted status
                 val cr = context.contentResolver
                 DataStoreUtils.deleteStatus(cr, accountKey, statusId, null)
-                DataStoreUtils.deleteActivityStatus(cr, accountKey, statusId, null)
+                deleteActivityStatus(cr, accountKey, statusId, null)
             }
             return SingleResponse(e)
         }

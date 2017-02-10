@@ -8,7 +8,6 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -20,7 +19,8 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 abstract class AbsFriendshipOperationTask(
         context: Context,
         @FriendshipTaskEvent.Action protected val action: Int
-) : BaseAbstractTask<AbsFriendshipOperationTask.Arguments, SingleResponse<ParcelableUser>, Any?>(context) {
+) : ExceptionHandlingAbstractTask<AbsFriendshipOperationTask.Arguments, ParcelableUser,
+        MicroBlogException, Any?>(context) {
 
     override fun beforeExecute() {
         microBlogWrapper.addUpdatingRelationshipId(params.accountKey, params.userKey)
@@ -30,34 +30,31 @@ abstract class AbsFriendshipOperationTask(
         bus.post(event)
     }
 
-    override fun afterExecute(handler: Any?, result: SingleResponse<ParcelableUser>?) {
+    override fun afterExecute(callback: Any?, result: ParcelableUser?, exception: MicroBlogException?) {
         microBlogWrapper.removeUpdatingRelationshipId(params.accountKey, params.userKey)
         val event = FriendshipTaskEvent(action, params.accountKey,
                 params.userKey)
         event.isFinished = true
-        if (result!!.hasData()) {
-            val user = result.data!!
+        if (result != null) {
+            val user = result
             showSucceededMessage(params, user)
             event.isSucceeded = true
-            event.user = result.data
+            event.user = user
         } else {
-            showErrorMessage(params, result.exception)
+            showErrorMessage(params, exception)
         }
         bus.post(event)
     }
 
-    override fun doLongOperation(args: Arguments): SingleResponse<ParcelableUser> {
-        val details = AccountUtils.getAccountDetails(AccountManager.get(context), args.accountKey, true) ?: return SingleResponse.getInstance()
+    override fun onExecute(params: Arguments): ParcelableUser {
+        val am = AccountManager.get(context)
+        val details = AccountUtils.getAccountDetails(am, params.accountKey, true)
+                ?: throw MicroBlogException("No account")
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        try {
-            val user = perform(twitter, details, args)
-            val parcelableUser = ParcelableUserUtils.fromUser(user, args.accountKey)
-            succeededWorker(twitter, details, args, parcelableUser)
-            return SingleResponse.getInstance(parcelableUser)
-        } catch (e: MicroBlogException) {
-            return SingleResponse.getInstance<ParcelableUser>(e)
-        }
-
+        val user = perform(twitter, details, params)
+        val parcelableUser = ParcelableUserUtils.fromUser(user, params.accountKey)
+        succeededWorker(twitter, details, params, parcelableUser)
+        return parcelableUser
     }
 
     @Throws(MicroBlogException::class)

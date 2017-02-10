@@ -24,11 +24,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.calculateHashCode
-import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.*
 
 /**
  * Created by mariotaku on 2017/2/7.
@@ -72,7 +68,7 @@ class RetweetStatusTask(
             for (uri in DataStoreUtils.STATUSES_URIS) {
                 resolver.update(uri, values, where.sql, whereArgs)
             }
-            DataStoreUtils.updateActivityStatus(resolver, accountKey, statusId, DataStoreUtils.UpdateActivityAction { activity ->
+            updateActivityStatus(resolver, accountKey, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 activity.status_my_retweet_id = result.my_retweet_id
                 for (statusesArray in statusesMatrix) {
@@ -87,7 +83,7 @@ class RetweetStatusTask(
                         }
                     }
                 }
-            })
+            }
             UpdateStatusTask.deleteDraft(context, draftId)
             return SingleResponse(result)
         } catch (e: MicroBlogException) {
@@ -127,7 +123,7 @@ class RetweetStatusTask(
     companion object {
         private val creatingRetweetIds = ArrayIntList()
         fun isCreatingRetweet(accountKey: UserKey?, statusId: String?): Boolean {
-            return creatingRetweetIds.contains(calculateHashCode(accountKey, statusId))
+            return creatingRetweetIds.contains(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         }
 
     }

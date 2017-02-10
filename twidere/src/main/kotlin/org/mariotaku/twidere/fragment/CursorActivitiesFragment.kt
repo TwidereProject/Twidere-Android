@@ -32,8 +32,8 @@ import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.toNulls
 import org.mariotaku.library.objectcursor.ObjectCursor
-import org.mariotaku.sqliteqb.library.ArgsArray
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -77,15 +77,12 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         showContentOrError()
     }
 
-    override fun onCreateActivitiesLoader(context: Context,
-                                          args: Bundle,
-                                          fromUser: Boolean): Loader<List<ParcelableActivity>> {
+    override fun onCreateActivitiesLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableActivity>> {
         val uri = contentUri
-        val table = getTableNameByUri(uri)
+        val table = getTableNameByUri(uri)!!
         val sortOrder = sortOrder
         val accountKeys = accountKeys
-        val accountWhere = Expression.`in`(Column(Activities.ACCOUNT_KEY),
-                ArgsArray(accountKeys.size))
+        val accountWhere = Expression.inArgs(Column(Activities.ACCOUNT_KEY), accountKeys.size)
         val filterWhere = getFiltersWhere(table)
         val where: Expression
         if (filterWhere != null) {
@@ -147,8 +144,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getActivities(object : SimpleRefreshTaskParam() {
-            override fun getAccountKeysWorker(): Array<UserKey> {
-                return this@CursorActivitiesFragment.accountKeys
+            override val accountKeys: Array<UserKey> by lazy {
+                this@CursorActivitiesFragment.accountKeys
             }
 
             override val maxIds: Array<String?>?
@@ -158,7 +155,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 get() {
                     val context = context ?: return null
                     return DataStoreUtils.getOldestActivityMaxSortPositions(context,
-                            contentUri, accountKeys)
+                            contentUri, accountKeys.toNulls())
                 }
 
             override val hasMaxIds: Boolean
@@ -172,8 +169,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
         getActivities(object : SimpleRefreshTaskParam() {
-            override fun getAccountKeysWorker(): Array<UserKey> {
-                return this@CursorActivitiesFragment.accountKeys
+            override val accountKeys: Array<UserKey> by lazy {
+                this@CursorActivitiesFragment.accountKeys
             }
 
             override val sinceIds: Array<String?>?
@@ -183,7 +180,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 get() {
                     val context = context ?: return null
                     return DataStoreUtils.getNewestActivityMaxSortPositions(context,
-                            contentUri, accountKeys)
+                            contentUri, accountKeys.toNulls())
                 }
 
             override val hasSinceIds: Boolean
@@ -202,7 +199,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected fun getNewestActivityIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
-        return DataStoreUtils.getNewestActivityMaxPositions(context, contentUri, accountKeys)
+        return DataStoreUtils.getNewestActivityMaxPositions(context, contentUri, accountKeys.toNulls())
     }
 
     protected abstract val notificationType: Int
@@ -220,7 +217,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     protected fun getOldestActivityIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
-        return DataStoreUtils.getOldestActivityMaxPositions(context, contentUri, accountKeys)
+        return DataStoreUtils.getOldestActivityMaxPositions(context, contentUri, accountKeys.toNulls())
     }
 
     protected abstract val isFilterEnabled: Boolean

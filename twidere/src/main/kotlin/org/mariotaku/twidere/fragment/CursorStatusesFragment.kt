@@ -32,7 +32,7 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
-import org.mariotaku.sqliteqb.library.ArgsArray
+import org.mariotaku.ktextension.toNulls
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -79,11 +79,10 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         val uri = contentUri
-        val table = DataStoreUtils.getTableNameByUri(uri)
+        val table = DataStoreUtils.getTableNameByUri(uri)!!
         val sortOrder = Statuses.DEFAULT_SORT_ORDER
         val accountKeys = this.accountKeys
-        val accountWhere = Expression.`in`(Column(Statuses.ACCOUNT_KEY),
-                ArgsArray(accountKeys.size))
+        val accountWhere = Expression.inArgs(Column(Statuses.ACCOUNT_KEY), accountKeys.size)
         val filterWhere = getFiltersWhere(table)
         val where: Expression
         if (filterWhere != null) {
@@ -178,8 +177,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getStatuses(object : SimpleRefreshTaskParam() {
-            override fun getAccountKeysWorker(): Array<UserKey> {
-                return this@CursorStatusesFragment.accountKeys
+            override val accountKeys: Array<UserKey> by lazy {
+                this@CursorStatusesFragment.accountKeys
             }
 
             override val maxIds: Array<String?>?
@@ -189,7 +188,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 get() {
                     val context = context ?: return null
                     return DataStoreUtils.getOldestStatusSortIds(context, contentUri,
-                            accountKeys)
+                            accountKeys.toNulls())
                 }
 
             override val hasMaxIds: Boolean
@@ -203,8 +202,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
         getStatuses(object : SimpleRefreshTaskParam() {
-            override fun getAccountKeysWorker(): Array<UserKey> {
-                return this@CursorStatusesFragment.accountKeys
+            override val accountKeys: Array<UserKey> by lazy {
+                this@CursorStatusesFragment.accountKeys
             }
 
             override val hasMaxIds: Boolean
@@ -214,7 +213,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 get() = getNewestStatusIds(accountKeys)
 
             override val sinceSortIds: LongArray?
-                get() = DataStoreUtils.getNewestStatusSortIds(context, contentUri, accountKeys)
+                get() = DataStoreUtils.getNewestStatusSortIds(context, contentUri, accountKeys.toNulls())
 
             override val shouldAbort: Boolean
                 get() = context == null
@@ -229,7 +228,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getNewestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
-        return DataStoreUtils.getNewestStatusIds(context, contentUri, accountKeys)
+        return DataStoreUtils.getNewestStatusIds(context, contentUri, accountKeys.toNulls())
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
@@ -245,7 +244,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     protected fun getOldestStatusIds(accountKeys: Array<UserKey>): Array<String?>? {
         val context = context ?: return null
-        return DataStoreUtils.getOldestStatusIds(context, contentUri, accountKeys)
+        return DataStoreUtils.getOldestStatusIds(context, contentUri, accountKeys.toNulls())
     }
 
     protected open fun processWhere(where: Expression, whereArgs: Array<String>): ParameterizedExpression {

@@ -1,14 +1,17 @@
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.toNulls
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.loader.ObjectCursorLoader
@@ -16,6 +19,8 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversationCursorIndices
 import org.mariotaku.twidere.model.SimpleRefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
@@ -65,9 +70,36 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
         twitterWrapper.getMessagesAsync(object : SimpleRefreshTaskParam() {
-            override fun getAccountKeysWorker(): Array<UserKey> {
-                return this@MessagesEntriesFragment.accountKeys
+            private val accounts by lazy {
+                AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
             }
+
+            override val accountKeys: Array<UserKey> by lazy {
+                this@MessagesEntriesFragment.accountKeys
+            }
+
+            override val sinceIds: Array<String?>?
+                get() {
+                    val result = arrayOfNulls<String>(accountKeys.size)
+                    val hasSinceAccountKeys = accounts.mapNotNull { account ->
+                        when (account?.type) {
+                            AccountType.FANFOU -> {
+                                return@mapNotNull null
+                            }
+                        }
+                        return@mapNotNull account?.key
+                    }.toTypedArray()
+                    val incomingIds = DataStoreUtils.getMessageIds(context, Messages.CONTENT_URI,
+                            hasSinceAccountKeys.toNulls(), false)
+                    val outgoingIds = DataStoreUtils.getMessageIds(context, Messages.CONTENT_URI,
+                            hasSinceAccountKeys.toNulls(), true)
+                    loop@ for (idx in 0..accountKeys.lastIndex) {
+
+                    }
+                    return result
+                }
+            override val hasSinceIds: Boolean = true
+            override val hasMaxIds: Boolean = false
         })
         return true
     }

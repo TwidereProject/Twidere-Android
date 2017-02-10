@@ -25,10 +25,11 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.calculateHashCode
+import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.updateActivityStatus
 
 /**
  * Created by mariotaku on 2017/2/7.
@@ -37,7 +38,7 @@ class CreateFavoriteTask(
         context: Context,
         private val accountKey: UserKey,
         private val status: ParcelableStatus
-) : BaseAbstractTask<Any, SingleResponse<ParcelableStatus>, Any>(context) {
+) : BaseAbstractTask<Any?, SingleResponse<ParcelableStatus>, Any?>(context) {
 
     private val statusId = status.id
 
@@ -82,7 +83,7 @@ class CreateFavoriteTask(
             for (uri in DataStoreUtils.STATUSES_URIS) {
                 resolver.update(uri, values, statusWhere, statusWhereArgs)
             }
-            DataStoreUtils.updateActivityStatus(resolver, accountKey, statusId) { activity ->
+            updateActivityStatus(resolver, accountKey, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
                     if (statusesArray == null) continue

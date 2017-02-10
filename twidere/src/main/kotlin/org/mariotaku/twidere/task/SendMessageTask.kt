@@ -7,7 +7,9 @@ import org.mariotaku.twidere.model.SingleResponse
 /**
  * Created by mariotaku on 2017/2/8.
  */
-class SendMessageTask(context: Context) : BaseAbstractTask<Unit, SingleResponse<ParcelableMessage>, Unit>(context) {
+class SendMessageTask(
+        context: Context
+) : BaseAbstractTask<Unit, SingleResponse<ParcelableMessage>, Unit>(context) {
     override fun doLongOperation(params: Unit?): SingleResponse<ParcelableMessage> {
         return SingleResponse(UnsupportedOperationException())
     }

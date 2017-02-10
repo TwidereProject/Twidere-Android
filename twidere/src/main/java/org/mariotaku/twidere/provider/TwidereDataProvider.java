@@ -68,7 +68,6 @@ import org.mariotaku.sqliteqb.library.SQLConstants;
 import org.mariotaku.sqliteqb.library.SQLFunctions;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.BuildConfig;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.activity.HomeActivity;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -140,7 +139,72 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public final class TwidereDataProvider extends ContentProvider implements Constants,
+import static org.mariotaku.twidere.TwidereConstants.AUTHORITY_DRAFTS;
+import static org.mariotaku.twidere.TwidereConstants.AUTHORITY_INTERACTIONS;
+import static org.mariotaku.twidere.TwidereConstants.BROADCAST_NOTIFICATION_DELETED;
+import static org.mariotaku.twidere.TwidereConstants.INTENT_ACTION_DISCARD_DRAFT;
+import static org.mariotaku.twidere.TwidereConstants.INTENT_ACTION_SEND_DRAFT;
+import static org.mariotaku.twidere.TwidereConstants.KEY_COMBINED_NOTIFICATIONS;
+import static org.mariotaku.twidere.TwidereConstants.KEY_I_WANT_MY_STARS_BACK;
+import static org.mariotaku.twidere.TwidereConstants.KEY_NAME_FIRST;
+import static org.mariotaku.twidere.TwidereConstants.LOGTAG;
+import static org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_DIRECT_MESSAGES;
+import static org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_DRAFTS;
+import static org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_HOME_TIMELINE;
+import static org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_INTERACTIONS_TIMELINE;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_DIRECT_MESSAGES;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_PREFERENCES;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_READ;
+import static org.mariotaku.twidere.TwidereConstants.PERMISSION_WRITE;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_ACCOUNT_KEY;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_FROM_NOTIFICATION;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFICATION_TYPE;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_QUERY;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_READ_POSITION;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_READ_POSITIONS;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TIMESTAMP;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE;
+import static org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_URL;
+import static org.mariotaku.twidere.TwidereConstants.SCHEME_TWIDERE;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_ACTIVITIES_ABOUT_ME;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_CACHED_HASHTAGS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_CACHED_RELATIONSHIPS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_CACHED_STATUSES;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_CACHED_USERS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_DRAFTS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_FILTERED_KEYWORDS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_FILTERED_LINKS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_FILTERED_SOURCES;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_FILTERED_USERS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_MENTIONS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_MESSAGES;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_MESSAGES_CONVERSATIONS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_SEARCH_HISTORY;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_STATUSES;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_TABS;
+import static org.mariotaku.twidere.TwidereConstants.TABLE_ID_TRENDS_LOCAL;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_ALL_PREFERENCES;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_CACHED_IMAGES;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_CACHE_FILES;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_DATABASE_PREPARE;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_DNS;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_DRAFTS_UNSENT;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_EMPTY;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_NOTIFICATIONS;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_NULL;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_PERMISSIONS;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_PREFERENCES;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_RAW_QUERY;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_SUGGESTIONS_AUTO_COMPLETE;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_SUGGESTIONS_SEARCH;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_UNREAD_COUNTS;
+import static org.mariotaku.twidere.TwidereConstants.VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE;
+
+public final class TwidereDataProvider extends ContentProvider implements
         OnSharedPreferenceChangeListener, LazyLoadCallback {
 
     public static final String TAG_OLDEST_MESSAGES = "oldest_messages";
@@ -330,8 +394,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private int bulkInsertInternal(@NonNull Uri uri, @NonNull ContentValues[] valuesArray) {
-        final int tableId = DataStoreUtils.getTableId(uri);
-        final String table = DataStoreUtils.getTableNameById(tableId);
+        final int tableId = DataStoreUtils.INSTANCE.getTableId(uri);
+        final String table = DataStoreUtils.INSTANCE.getTableNameById(tableId);
         checkWritePermission(tableId, table);
         int result = 0;
         final long[] newIds = new long[valuesArray.length];
@@ -394,8 +458,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private int deleteInternal(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        final int tableId = DataStoreUtils.getTableId(uri);
-        final String table = DataStoreUtils.getTableNameById(tableId);
+        final int tableId = DataStoreUtils.INSTANCE.getTableId(uri);
+        final String table = DataStoreUtils.INSTANCE.getTableNameById(tableId);
         checkWritePermission(tableId, table);
         switch (tableId) {
             case VIRTUAL_TABLE_ID_NOTIFICATIONS: {
@@ -446,8 +510,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private Uri insertInternal(@NonNull Uri uri, ContentValues values) {
-        final int tableId = DataStoreUtils.getTableId(uri);
-        final String table = DataStoreUtils.getTableNameById(tableId);
+        final int tableId = DataStoreUtils.INSTANCE.getTableId(uri);
+        final String table = DataStoreUtils.INSTANCE.getTableNameById(tableId);
         checkWritePermission(tableId, table);
         final long rowId;
         switch (tableId) {
@@ -596,8 +660,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
 
     @Override
     public ParcelFileDescriptor openFile(@NonNull final Uri uri, @NonNull final String mode) throws FileNotFoundException {
-        final int table_id = DataStoreUtils.getTableId(uri);
-        final String table = DataStoreUtils.getTableNameById(table_id);
+        final int table_id = DataStoreUtils.INSTANCE.getTableId(uri);
+        final String table = DataStoreUtils.INSTANCE.getTableNameById(table_id);
         final int modeCode;
         switch (mode) {
             case "r":
@@ -633,8 +697,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     public Cursor query(@NonNull final Uri uri, final String[] projection, final String selection, final String[] selectionArgs,
                         final String sortOrder) {
         try {
-            final int tableId = DataStoreUtils.getTableId(uri);
-            final String table = DataStoreUtils.getTableNameById(tableId);
+            final int tableId = DataStoreUtils.INSTANCE.getTableId(uri);
+            final String table = DataStoreUtils.INSTANCE.getTableNameById(tableId);
             checkReadPermission(tableId, table, projection);
             switch (tableId) {
                 case VIRTUAL_TABLE_ID_DATABASE_PREPARE: {
@@ -908,8 +972,8 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
     }
 
     private int updateInternal(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        final int tableId = DataStoreUtils.getTableId(uri);
-        final String table = DataStoreUtils.getTableNameById(tableId);
+        final int tableId = DataStoreUtils.INSTANCE.getTableId(uri);
+        final String table = DataStoreUtils.INSTANCE.getTableNameById(tableId);
         checkWritePermission(tableId, table);
         int result = 0;
         if (table != null) {
@@ -1120,7 +1184,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     @Override
                     public void run() {
                         final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                                DataStoreUtils.getAccountKeys(context));
+                                DataStoreUtils.INSTANCE.getAccountKeys(context));
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isHomeTimelineNotificationEnabled()) continue;
                             final long positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, pref.getAccountKey());
@@ -1136,7 +1200,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                     @Override
                     public void run() {
                         final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                                DataStoreUtils.getAccountKeys(context));
+                                DataStoreUtils.INSTANCE.getAccountKeys(context));
                         final boolean combined = preferences.getBoolean(KEY_COMBINED_NOTIFICATIONS);
                         for (final AccountPreferences pref : prefs) {
                             if (!pref.isInteractionsNotificationEnabled()) continue;
@@ -1150,7 +1214,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             }
             case TABLE_ID_MESSAGES: {
                 final AccountPreferences[] prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                        DataStoreUtils.getAccountKeys(context));
+                        DataStoreUtils.INSTANCE.getAccountKeys(context));
                 for (final AccountPreferences pref : prefs) {
                     if (!pref.isDirectMessagesNotificationEnabled()) continue;
                     final StringLongPair[] pairs = readStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES);
@@ -1266,7 +1330,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
             applyNotificationPreferences(builder, pref, pref.getMentionsNotificationType());
 
             final Resources resources = context.getResources();
-            final String accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, nameFirst);
+            final String accountName = DataStoreUtils.INSTANCE.getAccountDisplayName(context, accountKey, nameFirst);
             builder.setContentText(accountName);
             final InboxStyle style = new InboxStyle();
             builder.setStyle(style);
@@ -1296,7 +1360,7 @@ public final class TwidereDataProvider extends ContentProvider implements Consta
                         activity.status_quoted_user_key)) {
                     continue;
                 }
-                final UserKey[] filteredUserIds = DataStoreUtils.getFilteredUserIds(context);
+                final UserKey[] filteredUserIds = DataStoreUtils.INSTANCE.getFilteredUserIds(context);
                 if (timestamp == -1) {
                     timestamp = activity.timestamp;
                 }

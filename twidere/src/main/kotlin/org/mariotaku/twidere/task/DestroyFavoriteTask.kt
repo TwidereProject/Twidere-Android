@@ -22,9 +22,10 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.AsyncTwitterWrapper.calculateHashCode
+import org.mariotaku.twidere.util.AsyncTwitterWrapper.Companion.calculateHashCode
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.updateActivityStatus
 
 /**
  * Created by mariotaku on 2017/2/7.
@@ -33,10 +34,8 @@ class DestroyFavoriteTask(
         context: Context,
         private val accountKey: UserKey,
         private val statusId: String
-) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableStatus>>(context) {
-
-
-    override fun doInBackground(vararg params: Any): SingleResponse<ParcelableStatus> {
+) : BaseAbstractTask<Any?, SingleResponse<ParcelableStatus>, Any?>(context) {
+    override fun doLongOperation(params: Any?): SingleResponse<ParcelableStatus> {
         val resolver = context.contentResolver
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
                 ?: return SingleResponse.getInstance<ParcelableStatus>()
@@ -67,7 +66,7 @@ class DestroyFavoriteTask(
                 resolver.update(uri, values, where.sql, whereArgs)
             }
 
-            DataStoreUtils.updateActivityStatus(resolver, accountKey, statusId, DataStoreUtils.UpdateActivityAction { activity ->
+            updateActivityStatus(resolver, accountKey, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
                     if (statusesArray == null) continue
@@ -79,7 +78,7 @@ class DestroyFavoriteTask(
                         status.favorite_count = result.favorite_count - 1
                     }
                 }
-            })
+            }
             return SingleResponse.getInstance(result)
         } catch (e: MicroBlogException) {
             return SingleResponse.getInstance<ParcelableStatus>(e)
@@ -87,8 +86,7 @@ class DestroyFavoriteTask(
 
     }
 
-    override fun onPreExecute() {
-        super.onPreExecute()
+    override fun beforeExecute() {
         val hashCode = AsyncTwitterWrapper.calculateHashCode(accountKey, statusId)
         if (!destroyingFavoriteIds.contains(hashCode)) {
             destroyingFavoriteIds.add(hashCode)
@@ -96,7 +94,7 @@ class DestroyFavoriteTask(
         bus.post(StatusListChangedEvent())
     }
 
-    override fun onPostExecute(result: SingleResponse<ParcelableStatus>) {
+    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableStatus>) {
         destroyingFavoriteIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY,
                 accountKey, statusId)
@@ -117,7 +115,6 @@ class DestroyFavoriteTask(
         }
         bus.post(taskEvent)
         bus.post(StatusListChangedEvent())
-        super.onPostExecute(result)
     }
 
     companion object {

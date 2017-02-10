@@ -33,7 +33,7 @@ import java.util.*
 
 class CacheUsersStatusesTask(
         private val context: Context
-) : AbstractTask<TwitterListResponse<Status>, Unit, Unit>() {
+) : AbstractTask<TwitterListResponse<Status>, Unit?, Unit?>() {
 
     override fun doLongOperation(params: TwitterListResponse<Status>) {
         val resolver = context.contentResolver

@@ -155,7 +155,7 @@ abstract class GetActivitiesTask(
         var olderCount = -1
         if (minPositionKey > 0) {
             olderCount = DataStoreUtils.getActivitiesCount(context, contentUri, minPositionKey,
-                    Activities.POSITION_KEY, false, details.key)
+                    Activities.POSITION_KEY, false, arrayOf(details.key))
         }
         val writeUri = UriUtils.appendQueryParameters(contentUri, QUERY_PARAM_NOTIFY, notify)
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {

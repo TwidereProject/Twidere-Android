@@ -166,7 +166,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             }
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
 
-            for (UserKey accountKey : DataStoreUtils.getAccountKeys(mContext)) {
+            for (UserKey accountKey : DataStoreUtils.INSTANCE.getAccountKeys(mContext)) {
                 final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(mContext), accountKey, true);
                 final MicroBlog twitter = MicroBlogAPIFactory.getInstance(mContext, accountKey);
                 if (details == null || twitter == null) continue;

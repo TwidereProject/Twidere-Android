@@ -20,23 +20,24 @@ class AddUserListMembersTask(
         context: Context,
         private val accountKey: UserKey,
         private val listId: String,
-        private val users: Array<ParcelableUser>
-) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
+        private val users: Array<out ParcelableUser>
+) : BaseAbstractTask<Any?, SingleResponse<ParcelableUserList>, Any?>(context) {
 
-    override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
-        val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
+    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUserList> {
         try {
+            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
+                    throw MicroBlogException("No account")
             val userIds = users.map(ParcelableUser::key).toTypedArray()
             val result = microBlog.addUserListMembers(listId, UserKey.getIds(userIds))
             val list = ParcelableUserListUtils.from(result, accountKey)
-            return SingleResponse.getInstance(list)
+            return SingleResponse(list)
         } catch (e: MicroBlogException) {
-            return SingleResponse.getInstance<ParcelableUserList>(e)
+            return SingleResponse(e)
         }
 
     }
 
-    override fun onPostExecute(result: SingleResponse<ParcelableUserList>) {
+    override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableUserList>) {
         if (result.data != null) {
             val message: String
             if (users.size == 1) {
@@ -56,7 +57,6 @@ class AddUserListMembersTask(
         } else {
             Utils.showErrorMessage(context, R.string.action_adding_member, result.exception, true)
         }
-        super.onPostExecute(result)
     }
 
 }

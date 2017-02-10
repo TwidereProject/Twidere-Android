@@ -35,7 +35,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -53,7 +52,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.annotation.WorkerThread;
 import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.accessibility.AccessibilityEventCompat;
@@ -80,10 +78,8 @@ import android.widget.Toast;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
-import org.mariotaku.microblog.library.MicroBlog;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
-import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.pickncrop.library.PNCUtils;
 import org.mariotaku.sqliteqb.library.AllColumns;
 import org.mariotaku.sqliteqb.library.Columns;
@@ -98,17 +94,12 @@ import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableStatus;
-import org.mariotaku.twidere.model.ParcelableStatusCursorIndices;
-import org.mariotaku.twidere.model.ParcelableStatusValuesCreator;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.model.util.ParcelableStatusUtils;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages;
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 import java.io.Closeable;
@@ -126,7 +117,6 @@ import java.util.regex.Pattern;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.NotificationEvent;
 
-import static org.mariotaku.twidere.util.DataStoreUtils.STATUSES_URIS;
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 
 public final class Utils implements Constants {
@@ -310,7 +300,7 @@ public final class Utils implements Constants {
             } catch (NumberFormatException e) {
                 // Ignore
             }
-            final UserKey accountKey = DataStoreUtils.findAccountKey(context, accountId);
+            final UserKey accountKey = DataStoreUtils.INSTANCE.findAccountKey(context, accountId);
             args.putParcelable(EXTRA_ACCOUNT_KEY, accountKey);
             if (accountKey == null) return new UserKey[]{new UserKey(accountId, null)};
             return new UserKey[]{accountKey};
@@ -330,59 +320,6 @@ public final class Utils implements Constants {
                                                        @Nullable final UserKey accountKey) {
         if (accountKey == null) return tag;
         return accountKey + ":" + tag;
-    }
-
-    @NonNull
-    @WorkerThread
-    public static ParcelableStatus findStatus(@NonNull final Context context,
-                                              @NonNull final UserKey accountKey,
-                                              @NonNull final String statusId)
-            throws MicroBlogException {
-        final ParcelableStatus cached = findStatusInDatabases(context, accountKey, statusId);
-        if (cached != null) return cached;
-        final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey);
-        if (twitter == null) throw new MicroBlogException("Account does not exist");
-        final Status result = twitter.showStatus(statusId);
-        final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
-        final String[] whereArgs = {accountKey.toString(), statusId};
-        final ContentResolver resolver = context.getContentResolver();
-        final ParcelableStatus status = ParcelableStatusUtils.INSTANCE.fromStatus(result, accountKey, false);
-        resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs);
-        try {
-            resolver.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(status));
-        } catch (IOException e) {
-            // Ignore
-        }
-        return status;
-    }
-
-    @Nullable
-    @WorkerThread
-    public static ParcelableStatus findStatusInDatabases(@NonNull final Context context,
-                                                         @NonNull final UserKey accountKey,
-                                                         @NonNull final String statusId) {
-        final ContentResolver resolver = context.getContentResolver();
-        ParcelableStatus status = null;
-        final String where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.equalsArgs(Statuses.STATUS_ID)).getSQL();
-        final String[] whereArgs = {accountKey.toString(), statusId};
-        for (final Uri uri : STATUSES_URIS) {
-            final Cursor cur = resolver.query(uri, Statuses.COLUMNS, where, whereArgs, null);
-            if (cur == null) {
-                continue;
-            }
-            try {
-                if (cur.getCount() > 0 && cur.moveToFirst()) {
-                    status = ParcelableStatusCursorIndices.fromCursor(cur);
-                }
-            } catch (IOException e) {
-                // Ignore
-            } finally {
-                cur.close();
-            }
-        }
-        return status;
     }
 
     @SuppressWarnings("deprecation")
@@ -461,7 +398,7 @@ public final class Utils implements Constants {
                 Context.MODE_PRIVATE);
         final String string = prefs.getString(KEY_DEFAULT_ACCOUNT_KEY, null);
         UserKey accountKey = string != null ? UserKey.valueOf(string) : null;
-        final UserKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
+        final UserKey[] accountKeys = DataStoreUtils.INSTANCE.getAccountKeys(context);
         int idMatchIdx = -1;
         for (int i = 0, accountIdsLength = accountKeys.length; i < accountIdsLength; i++) {
             if (accountKeys[i].equals(accountKey)) {
@@ -715,7 +652,7 @@ public final class Utils implements Constants {
     }
 
     public static boolean hasAutoRefreshAccounts(final Context context) {
-        final UserKey[] accountKeys = DataStoreUtils.getAccountKeys(context);
+        final UserKey[] accountKeys = DataStoreUtils.INSTANCE.getAccountKeys(context);
         return !ArrayUtils.isEmpty(AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountKeys));
     }
 

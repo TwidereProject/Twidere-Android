@@ -1,11 +1,9 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import android.util.Log
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
@@ -38,6 +36,6 @@ class GetSavedSearchesTask(
                 DebugLog.w(LOGTAG, tr = e)
             }
         }
-        return SingleResponse.getInstance(Unit)
+        return SingleResponse(Unit)
     }
 }

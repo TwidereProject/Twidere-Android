@@ -5,7 +5,6 @@ import android.widget.Toast
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -17,7 +16,7 @@ import org.mariotaku.twidere.util.Utils
 /**
  * Created by mariotaku on 16/3/11.
  */
-class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.ACCEPT), Constants {
+class AcceptFriendshipTask(context: Context) : AbsFriendshipOperationTask(context, FriendshipTaskEvent.Action.ACCEPT) {
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails, args: AbsFriendshipOperationTask.Arguments): User {

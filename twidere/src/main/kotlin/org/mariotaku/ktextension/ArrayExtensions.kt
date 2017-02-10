@@ -13,3 +13,7 @@ fun Array<*>?.isNullOrEmpty(): Boolean {
     return this == null || this.isEmpty()
 }
 
+fun <T : Any> Array<T>.toNulls(): Array<T?> {
+    @Suppress("UNCHECKED_CAST")
+    return this as Array<T?>
+}

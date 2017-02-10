@@ -98,7 +98,7 @@ public class SessionEvent extends BaseEvent implements Parcelable {
 
     public void dumpPreferences(Context context) {
         final HashMap<String, String> preferences = new HashMap<>();
-        for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context))) {
+        for (AccountPreferences pref : AccountPreferences.getAccountPreferences(context, DataStoreUtils.INSTANCE.getAccountKeys(context))) {
             final UserKey accountKey = pref.getAccountKey();
             preferences.put("notification_" + accountKey + "_home", String.valueOf(pref.isHomeTimelineNotificationEnabled()));
             preferences.put("notification_" + accountKey + "_interactions", String.valueOf(pref.isInteractionsNotificationEnabled()));
