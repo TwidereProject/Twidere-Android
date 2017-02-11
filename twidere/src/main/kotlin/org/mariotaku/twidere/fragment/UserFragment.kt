@@ -105,6 +105,7 @@ import org.mariotaku.twidere.constant.lightFontKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -471,9 +472,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         profileNameContainer.screenName.text = "@${user.screen_name}"
         val linkify = TwidereLinkify(this)
         if (user.description_unescaped != null) {
-            val text = SpannableStringBuilder.valueOf(user.description_unescaped)
-            ParcelableStatusUtils.applySpans(text, user.description_spans)
-            linkify.applyAllLinks(text, user.account_key, false, false)
+            val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
+                user.description_spans?.applyTo(this)
+                linkify.applyAllLinks(this, user.account_key, false, false)
+            }
             descriptionContainer.description.text = text
         } else {
             descriptionContainer.description.text = user.description_plain

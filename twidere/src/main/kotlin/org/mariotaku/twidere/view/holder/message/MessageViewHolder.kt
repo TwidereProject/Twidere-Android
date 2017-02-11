@@ -20,17 +20,21 @@
 package org.mariotaku.twidere.view.holder.message
 
 import android.support.v4.view.GravityCompat
+import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.list_item_message_conversation_text.view.*
+import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.messagebubbleview.library.MessageBubbleView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
+import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.model.SpanItem
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -49,12 +53,12 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         text.textSize = textSize
         time.textSize = textSize * 0.8f
         date.textSize = textSize * 0.9f
+        mediaPreview.style = adapter.mediaPreviewStyle
     }
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
         setOutgoingStatus(messageContent, message.is_outgoing)
-        text.text = message.text_unescaped
         if (showDate) {
             date.visibility = View.VISIBLE
             date.text = DateUtils.getRelativeTimeSpanString(message.timestamp, System.currentTimeMillis(),
@@ -62,8 +66,49 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         } else {
             date.visibility = View.GONE
         }
+
+
+        // Loop through text and spans to found non-space char count
+        val hideText = run {
+
+            fun String.nonSpaceCount(range: IntRange): Int {
+                if (range.isEmpty()) return 0
+                return range.count { !Character.isSpaceChar(this[it]) }
+            }
+
+            val text = message.text_unescaped
+
+            var nonSpaceCount = 0
+            var curPos = 0
+            message.spans?.forEach { span ->
+                if (message.media?.firstOrNull { media -> span.link == media.url } != null) {
+                    // Skip if span is hidden
+                    span.type = SpanItem.SpanType.HIDE
+                } else {
+                    nonSpaceCount += text.nonSpaceCount(curPos until span.end)
+                }
+                curPos = span.end
+            }
+            nonSpaceCount += text.nonSpaceCount(curPos..text.lastIndex)
+            return@run nonSpaceCount == 0
+        }
+
+
+        text.text = SpannableStringBuilder.valueOf(message.text_unescaped).apply {
+            message.spans?.applyTo(this)
+            adapter.linkify.applyAllLinks(this, message.account_key, layoutPosition.toLong(),
+                    false, adapter.linkHighlightingStyle, true)
+        }
+
+        text.visibility = if (hideText || text.empty) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+
         time.text = DateUtils.formatDateTime(adapter.context, message.timestamp,
                 DateUtils.FORMAT_SHOW_TIME)
+
         if (message.media.isNullOrEmpty()) {
             mediaPreview.visibility = View.GONE
         } else {

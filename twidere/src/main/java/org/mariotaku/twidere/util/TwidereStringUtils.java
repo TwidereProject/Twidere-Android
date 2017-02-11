@@ -19,12 +19,11 @@
 
 package org.mariotaku.twidere.util;
 
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.style.ReplacementSpan;
+
+import org.mariotaku.twidere.text.ZeroWidthSpan;
 
 /**
  * Created by mariotaku on 14/12/23.
@@ -61,16 +60,4 @@ public class TwidereStringUtils {
         }
     }
 
-    private static class ZeroWidthSpan extends ReplacementSpan {
-
-        @Override
-        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-            return 0;
-        }
-
-        @Override
-        public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
-
-        }
-    }
 }

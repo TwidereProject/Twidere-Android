@@ -24,11 +24,16 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.apache.commons.lang3.time.DateUtils
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
+import org.mariotaku.twidere.annotation.PreviewStyle
+import org.mariotaku.twidere.constant.linkHighlightOptionKey
+import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
+import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageViewHolder
 import org.mariotaku.twidere.view.holder.message.StickerMessageViewHolder
@@ -38,6 +43,12 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
         IItemCountsAdapter {
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
     override val itemCounts: ItemCounts = ItemCounts(1)
+
+    @PreviewStyle
+    val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
+    val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
+    val linkify: TwidereLinkify = TwidereLinkify(null)
+
     var messages: List<ParcelableMessage>? = null
         set(value) {
             field = value

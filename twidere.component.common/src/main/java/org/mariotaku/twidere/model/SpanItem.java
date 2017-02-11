@@ -23,6 +23,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.IntDef;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 
@@ -67,6 +68,10 @@ public class SpanItem implements Parcelable {
     @ParcelableNoThanks
     public int orig_end = -1;
 
+    @ParcelableNoThanks
+    @SpanType
+    public int type = SpanType.LINK;
+
     @Override
     public String toString() {
         return "SpanItem{" +
@@ -94,5 +99,11 @@ public class SpanItem implements Parcelable {
         spanItem.start = spanned.getSpanStart(span);
         spanItem.end = spanned.getSpanEnd(span);
         return spanItem;
+    }
+
+    @IntDef({SpanType.HIDE, SpanType.LINK})
+    public @interface SpanType {
+        int HIDE = -1;
+        int LINK = 0;
     }
 }

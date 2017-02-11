@@ -4,6 +4,7 @@ import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.util.HtmlSpanBuilder
@@ -252,13 +253,6 @@ object ParcelableStatusUtils {
             return it.fullName
         }
         return status.inReplyToScreenName
-    }
-
-    fun applySpans(text: Spannable, spans: Array<SpanItem>?) {
-        spans?.forEach { span ->
-            text.setSpan(URLSpan(span.link), span.start, span.end,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
     }
 
     fun updateExtraInformation(status: ParcelableStatus, details: AccountDetails) {
