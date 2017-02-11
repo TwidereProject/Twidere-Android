@@ -61,7 +61,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         loader.selection = Expression.inArgs(Conversations.ACCOUNT_KEY, accountKeys.size).sql
         loader.selectionArgs = accountKeys.toStringArray()
         loader.projection = Conversations.COLUMNS
-        loader.sortOrder = OrderBy(Conversations.LOCAL_TIMESTAMP, false).sql
+        loader.sortOrder = OrderBy(Conversations.SORT_ID, false).sql
         return loader
     }
 

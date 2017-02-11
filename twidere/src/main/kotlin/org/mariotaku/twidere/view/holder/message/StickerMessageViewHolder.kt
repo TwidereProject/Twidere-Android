@@ -35,8 +35,8 @@ class StickerMessageViewHolder(itemView: View, adapter: MessagesConversationAdap
     private val messageContent by lazy { itemView.messageContent }
     private val stickerIcon by lazy { itemView.stickerIcon }
 
-    override fun display(message: ParcelableMessage) {
-        super.display(message)
+    override fun display(message: ParcelableMessage, showDate: Boolean) {
+        super.display(message, showDate)
         MessageViewHolder.setMessageContentGravity(messageContent, message.is_outgoing)
         val extras = message.extras as StickerExtras
         adapter.mediaLoader.displayStickerImage(stickerIcon, extras.url)

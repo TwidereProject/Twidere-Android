@@ -23,17 +23,20 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.apache.commons.lang3.time.DateUtils
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
+import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageViewHolder
 import org.mariotaku.twidere.view.holder.message.StickerMessageViewHolder
+import java.util.*
 
 class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context),
         IItemCountsAdapter {
-
+    private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
     override val itemCounts: ItemCounts = ItemCounts(1)
     var messages: List<ParcelableMessage>? = null
         set(value) {
@@ -59,14 +62,24 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE -> {
-                (holder as AbsMessageViewHolder).display(getMessage(position)!!)
+                val message = getMessage(position)!!
+                // Display date for oldest item
+                var showDate = true
+                // ... or if current message is > 1 day newer than previous one
+                if (position < itemCounts.getItemStartPosition(ITEM_START_MESSAGE)
+                        + itemCounts[ITEM_START_MESSAGE] - 1) {
+                    calendars.first.timeInMillis = getMessage(position + 1)!!.timestamp
+                    calendars.second.timeInMillis = message.timestamp
+                    showDate = !DateUtils.isSameDay(calendars.first, calendars.second)
+                }
+                (holder as AbsMessageViewHolder).display(message, showDate)
             }
         }
 
     }
 
     override fun getItemCount(): Int {
-        itemCounts[0] = messages?.size ?: 0
+        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
         return itemCounts.itemCount
     }
 
@@ -76,7 +89,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
 
     override fun getItemViewType(position: Int): Int {
         when (itemCounts.getItemCountIndex(position)) {
-            0 -> {
+            ITEM_START_MESSAGE -> {
                 when (getMessage(position)!!.message_type) {
                     MessageType.STICKER -> {
                         return ITEM_TYPE_STICKER_MESSAGE
@@ -89,6 +102,8 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
     }
 
     companion object {
+        private const val ITEM_START_MESSAGE = 0
+
         const val ITEM_TYPE_TEXT_MESSAGE = 1
         const val ITEM_TYPE_STICKER_MESSAGE = 2
     }

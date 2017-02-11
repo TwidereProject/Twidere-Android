@@ -29,7 +29,8 @@ import org.mariotaku.twidere.model.ParcelableMessage
  */
 
 abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConversationAdapter) : RecyclerView.ViewHolder(itemView) {
-    open fun display(message: ParcelableMessage) {
+
+    open fun display(message: ParcelableMessage, showDate: Boolean) {
 
     }
 }

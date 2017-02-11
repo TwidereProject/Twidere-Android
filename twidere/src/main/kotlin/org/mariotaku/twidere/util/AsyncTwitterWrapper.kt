@@ -240,7 +240,7 @@ class AsyncTwitterWrapper(
         TaskStarter.execute<Any, Unit, Any>(task)
     }
 
-    fun getMessagesAsync(param: RefreshTaskParam) {
+    fun getMessagesAsync(param: GetMessagesTask.RefreshMessagesTaskParam) {
         val task = GetMessagesTask(context)
         task.params = param
         TaskStarter.execute(task)
@@ -293,9 +293,7 @@ class AsyncTwitterWrapper(
             })
         }
         if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_DIRECT_MESSAGES)) {
-            getMessagesAsync(object : SimpleRefreshTaskParam() {
-                override val accountKeys: Array<UserKey> by lazy { action() }
-            })
+            getMessagesAsync(GetMessagesTask.RefreshMessagesTaskParam(context, action))
         }
         if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_SAVED_SEARCHES)) {
             getSavedSearchesAsync(action())

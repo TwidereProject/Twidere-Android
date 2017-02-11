@@ -20,8 +20,10 @@
 package org.mariotaku.twidere.view.holder.message
 
 import android.support.v4.view.GravityCompat
+import android.text.format.DateUtils
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.list_item_message_conversation_text.view.*
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.messagebubbleview.library.MessageBubbleView
@@ -36,16 +38,32 @@ import org.mariotaku.twidere.model.ParcelableMessage
 
 class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
 
+    private val date by lazy { itemView.date }
     private val text by lazy { itemView.text }
     private val time by lazy { itemView.time }
     private val mediaPreview by lazy { itemView.mediaPreview }
     private val messageContent by lazy { itemView.messageContent }
 
-    override fun display(message: ParcelableMessage) {
-        super.display(message)
+    init {
+        val textSize = adapter.textSize
+        text.textSize = textSize
+        time.textSize = textSize * 0.8f
+        date.textSize = textSize * 0.9f
+    }
+
+    override fun display(message: ParcelableMessage, showDate: Boolean) {
+        super.display(message, showDate)
         setOutgoingStatus(messageContent, message.is_outgoing)
         text.text = message.text_unescaped
-        time.time = message.timestamp
+        if (showDate) {
+            date.visibility = View.VISIBLE
+            date.text = DateUtils.getRelativeTimeSpanString(message.timestamp, System.currentTimeMillis(),
+                    DateUtils.DAY_IN_MILLIS, DateUtils.FORMAT_SHOW_DATE)
+        } else {
+            date.visibility = View.GONE
+        }
+        time.text = DateUtils.formatDateTime(adapter.context, message.timestamp,
+                DateUtils.FORMAT_SHOW_TIME)
         if (message.media.isNullOrEmpty()) {
             mediaPreview.visibility = View.GONE
         } else {
@@ -67,6 +85,9 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
             val lp = view.layoutParams
             when (lp) {
                 is FrameLayout.LayoutParams -> {
+                    lp.gravity = if (outgoing) GravityCompat.END else GravityCompat.START
+                }
+                is LinearLayout.LayoutParams -> {
                     lp.gravity = if (outgoing) GravityCompat.END else GravityCompat.START
                 }
             }

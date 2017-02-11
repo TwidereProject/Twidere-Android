@@ -1,6 +1,5 @@
 package org.mariotaku.twidere.util
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils.isEmpty
 import okhttp3.ConnectionPool
@@ -34,7 +33,6 @@ object HttpClientFactory {
         DebugModeUtils.initForOkHttpClient(builder)
     }
 
-    @SuppressLint("SSLCertificateSocketFactoryGetInsecure")
     internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder,
                                                conf: HttpClientConfiguration, dns: Dns,
                                                connectionPool: ConnectionPool) {

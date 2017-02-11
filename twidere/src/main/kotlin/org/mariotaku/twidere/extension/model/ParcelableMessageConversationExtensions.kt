@@ -15,6 +15,7 @@ fun ParcelableMessageConversation.setFrom(message: ParcelableMessage, details: A
     message_type = message.message_type
     message_timestamp = message.message_timestamp
     local_timestamp = message.local_timestamp
+    sort_id = message.sort_id
     text_unescaped = message.text_unescaped
     media = message.media
     spans = message.spans

@@ -31,8 +31,10 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils
  * Created by mariotaku on 2017/2/8.
  */
 
-class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Unit, (Boolean) -> Unit>(context) {
-    override fun doLongOperation(param: RefreshTaskParam) {
+class GetMessagesTask(
+        context: Context
+) : BaseAbstractTask<GetMessagesTask.RefreshMessagesTaskParam, Unit, (Boolean) -> Unit>(context) {
+    override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
         val am = AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
@@ -121,13 +123,13 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
 
         conversations.addLocalConversations(accountKey, conversationIds)
 
-        received.forEach { dm ->
-            val message = ParcelableMessageUtils.incomingMessage(accountKey, dm)
+        received.forEachIndexed { i, dm ->
+            val message = ParcelableMessageUtils.incomingMessage(accountKey, dm, 1.0 - (i.toDouble() / received.size))
             insertMessages.add(message)
             conversations.addConversation(details, message, dm.sender, dm.recipient)
         }
-        sent.forEach { dm ->
-            val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm)
+        sent.forEachIndexed { i, dm ->
+            val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm, 1.0 - (i.toDouble() / sent.size))
             insertMessages.add(message)
             conversations.addConversation(details, message, dm.sender, dm.recipient)
         }
@@ -225,7 +227,6 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             getAccountKeys: () -> Array<UserKey>
     ) : RefreshMessagesTaskParam(context, getAccountKeys) {
 
-
         override val sinceIds: Array<String?>?
             get() {
                 val keys = accounts.map { account ->
@@ -252,7 +253,6 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             getAccountKeys: () -> Array<UserKey>
     ) : RefreshMessagesTaskParam(context, getAccountKeys) {
 
-
         override val maxIds: Array<String?>?
             get() {
                 val keys = accounts.map { account ->
@@ -278,6 +278,11 @@ class GetMessagesTask(context: Context) : BaseAbstractTask<RefreshTaskParam, Uni
             val context: Context,
             val getAccountKeys: () -> Array<UserKey>
     ) : SimpleRefreshTaskParam() {
+
+        /**
+         * If `conversationId` has value, load messages in conversationId
+         */
+        open var conversationId: String? = null
 
         protected val accounts: Array<AccountDetails?> by lazy {
             AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)

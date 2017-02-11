@@ -31,7 +31,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderManager.LoaderCallbac
         super.onActivityCreated(savedInstanceState)
         adapter = MessagesConversationAdapter(context)
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
         loaderManager.initLoader(0, null, this)
     }
 
@@ -46,7 +46,7 @@ class MessagesConversationFragment : BaseFragment(), LoaderManager.LoaderCallbac
         loader.selection = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
                 Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
         loader.selectionArgs = arrayOf(accountKey.toString(), conversationId)
-        loader.sortOrder = OrderBy(Messages.LOCAL_TIMESTAMP, true).sql
+        loader.sortOrder = OrderBy(Messages.SORT_ID, false).sql
         return loader
     }
 
