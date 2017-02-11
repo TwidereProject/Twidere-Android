@@ -21,10 +21,14 @@
 
 package org.mariotaku.microblog.library.fanfou.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.fanfou.model.Conversation;
+import org.mariotaku.microblog.library.twitter.model.DirectMessage;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 
 /**
  * Created by mariotaku on 16/3/31.
@@ -41,4 +45,7 @@ public interface DirectMessagesResources {
     DirectMessage sendFanfouDirectMessage(@Param("user") String user, @Param("text") String text)
             throws MicroBlogException;
 
+    @GET("/direct_messages/conversation_list.json")
+    ResponseList<Conversation> getConversationList(@Param Paging paging)
+            throws MicroBlogException;
 }

@@ -38,10 +38,11 @@ fun <T> AccountDetails.newMicroBlogInstance(
         context: Context,
         includeEntities: Boolean = true,
         includeRetweets: Boolean = true,
-        extraRequestParams: Map<String, String>? = MicroBlogAPIFactory.getExtraParams(type, includeEntities, includeRetweets),
+        extraRequestParams: Map<String, String>? = MicroBlogAPIFactory.getExtraParams(type,
+                includeEntities, includeRetweets),
         cls: Class<T>
 ): T {
-    return credentials.newMicroBlogInstance(context, type == AccountType.TWITTER, extraRequestParams, cls)
+    return credentials.newMicroBlogInstance(context, type, extraRequestParams, cls)
 }
 
 val AccountDetails.is_oauth: Boolean

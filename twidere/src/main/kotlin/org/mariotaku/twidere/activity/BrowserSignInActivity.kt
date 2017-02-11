@@ -203,7 +203,7 @@ class BrowserSignInActivity : BaseActivity() {
                 val endpoint = MicroBlogAPIFactory.getOAuthSignInEndpoint(apiConfig.apiUrlFormat,
                         apiConfig.isSameOAuthUrl)
                 val auth = OAuthAuthorization(apiConfig.consumerKey, apiConfig.consumerSecret)
-                val oauth = newMicroBlogInstance(activity, endpoint, auth, true, null,
+                val oauth = newMicroBlogInstance(activity, endpoint, auth, apiConfig.type, null,
                         TwitterOAuth::class.java)
                 return SingleResponse(oauth.getRequestToken(TwidereConstants.OAUTH_CALLBACK_OOB))
             } catch (e: MicroBlogException) {

@@ -73,6 +73,7 @@
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/element_spacing_small"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="@string/sample_status_text"/>
@@ -81,7 +82,6 @@
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/element_spacing_small"
                     android:textColor="?android:attr/textColorTertiary"
                     tools:text="12:00"/>
             </LinearLayout>

@@ -11,11 +11,11 @@ import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory
 import org.mariotaku.restfu.RestAPIFactory
 import org.mariotaku.restfu.http.Authorization
 import org.mariotaku.restfu.http.Endpoint
-import org.mariotaku.restfu.http.SimpleValueMap
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.ConsumerKeyType
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
@@ -23,6 +23,7 @@ import org.mariotaku.twidere.model.account.cred.EmptyCredentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
+import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.TwitterContentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
@@ -100,24 +101,15 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     return Endpoint(endpointUrl)
 }
 
-fun <T> Credentials.newMicroBlogInstance(
-        context: Context,
-        twitterExtraQueries: Boolean = true,
-        extraRequestParams: Map<String, String>? = null,
-        cls: Class<T>
-): T {
-    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(),
-            twitterExtraQueries, extraRequestParams, cls)
+fun <T> Credentials.newMicroBlogInstance(context: Context, @AccountType accountType: String? = null,
+        extraRequestParams: Map<String, String>? = null, cls: Class<T>): T {
+    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(), accountType,
+            extraRequestParams, cls)
 }
 
-fun <T> newMicroBlogInstance(
-        context: Context,
-        endpoint: Endpoint,
-        auth: Authorization,
-        twitterExtraQueries: Boolean = true,
-        extraRequestParams: Map<String, String>? = null,
-        cls: Class<T>
-): T {
+fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authorization,
+        @AccountType accountType: String? = null, extraRequestParams: Map<String, String>? = null,
+        cls: Class<T>): T {
     val factory = RestAPIFactory<MicroBlogException>()
     val userAgent: String
     if (auth is OAuthAuthorization) {
@@ -149,10 +141,13 @@ fun <T> newMicroBlogInstance(
     }
     factory.setAuthorization(auth)
     factory.setEndpoint(endpoint)
-    if (twitterExtraQueries) {
-        factory.setConstantPool(sTwitterConstantPool)
-    } else {
-        factory.setConstantPool(SimpleValueMap())
+    when (accountType) {
+        AccountType.TWITTER -> {
+            factory.setConstantPool(sTwitterConstantPool)
+        }
+        AccountType.FANFOU -> {
+            factory.setConstantPool(sFanfouConstantPool)
+        }
     }
     val converterFactory = TwitterConverterFactory()
     factory.setRestConverterFactory(converterFactory)

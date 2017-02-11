@@ -18,16 +18,28 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/element_spacing_normal">
 
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/element_spacing_normal"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:textColorTertiary"
+        tools:text="Yesterday"/>
+
     <RelativeLayout
         android:id="@+id/messageContent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date">
 
         <ImageView
             android:id="@+id/stickerIcon"
@@ -37,4 +49,4 @@
             android:scaleType="fitCenter"/>
     </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

@@ -19,12 +19,9 @@
 
 package org.mariotaku.twidere.view.holder.message
 
-import android.support.v4.view.GravityCompat
 import android.text.SpannableStringBuilder
 import android.text.format.DateUtils
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.list_item_message_conversation_text.view.*
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.isNullOrEmpty
@@ -35,6 +32,7 @@ import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.SpanItem
+import org.mariotaku.twidere.view.FixedTextView
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -42,11 +40,12 @@ import org.mariotaku.twidere.model.SpanItem
 
 class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
 
-    private val date by lazy { itemView.date }
+    override val date: FixedTextView by lazy { itemView.date }
+    override val messageContent: MessageBubbleView by lazy { itemView.messageContent }
+
     private val text by lazy { itemView.text }
     private val time by lazy { itemView.time }
     private val mediaPreview by lazy { itemView.mediaPreview }
-    private val messageContent by lazy { itemView.messageContent }
 
     init {
         val textSize = adapter.textSize
@@ -58,15 +57,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
-        setOutgoingStatus(messageContent, message.is_outgoing)
-        if (showDate) {
-            date.visibility = View.VISIBLE
-            date.text = DateUtils.getRelativeTimeSpanString(message.timestamp, System.currentTimeMillis(),
-                    DateUtils.DAY_IN_MILLIS, DateUtils.FORMAT_SHOW_DATE)
-        } else {
-            date.visibility = View.GONE
-        }
-
+        messageContent.setOutgoing(message.is_outgoing)
 
         // Loop through text and spans to found non-space char count
         val hideText = run {
@@ -121,21 +112,8 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
     companion object {
         const val layoutResource = R.layout.list_item_message_conversation_text
 
-        fun setOutgoingStatus(view: MessageBubbleView, outgoing: Boolean) {
-            view.setCaretPosition(if (outgoing) MessageBubbleView.BOTTOM_END else MessageBubbleView.BOTTOM_START)
-            setMessageContentGravity(view, outgoing)
-        }
-
-        fun setMessageContentGravity(view: View, outgoing: Boolean) {
-            val lp = view.layoutParams
-            when (lp) {
-                is FrameLayout.LayoutParams -> {
-                    lp.gravity = if (outgoing) GravityCompat.END else GravityCompat.START
-                }
-                is LinearLayout.LayoutParams -> {
-                    lp.gravity = if (outgoing) GravityCompat.END else GravityCompat.START
-                }
-            }
+        fun MessageBubbleView.setOutgoing(outgoing: Boolean) {
+            setCaretPosition(if (outgoing) MessageBubbleView.BOTTOM_END else MessageBubbleView.BOTTOM_START)
         }
     }
 }
