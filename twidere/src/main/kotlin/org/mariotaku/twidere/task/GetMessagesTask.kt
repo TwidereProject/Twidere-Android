@@ -3,6 +3,7 @@ package org.mariotaku.twidere.task
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.content.Context
+import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -54,11 +55,11 @@ class GetMessagesTask(
         bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, false, null))
     }
 
-    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshTaskParam, index: Int): GetMessagesData {
+    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
         when (details.type) {
             AccountType.FANFOU -> {
                 // Use fanfou DM api
-                return getFanfouMessages(microBlog)
+                return getFanfouMessages(microBlog, details, param, index)
             }
             AccountType.TWITTER -> {
                 // Use official DM api
@@ -71,15 +72,20 @@ class GetMessagesTask(
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getFanfouMessages(microBlog: MicroBlog): GetMessagesData {
-        return GetMessagesData(emptyList(), emptyList())
+    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+        val conversationId = param.conversationId
+        if (conversationId == null) {
+            return getFanfouConversations(microBlog, details, param, index)
+        } else {
+            return GetMessagesData(emptyList(), emptyList())
+        }
     }
 
-    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshTaskParam, index: Int): GetMessagesData {
+    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshTaskParam, index: Int): GetMessagesData {
+    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
         val accountKey = details.key
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
@@ -134,6 +140,35 @@ class GetMessagesTask(
             conversations.addConversation(details, message, dm.sender, dm.recipient)
         }
         return GetMessagesData(conversations.values, insertMessages)
+    }
+
+    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+        val accountKey = details.key
+        val cursor = param.cursors?.get(index)
+        val page = cursor?.substringAfter("page:").toInt(-1)
+        val result = microBlog.getConversationList(Paging().apply {
+            count(60)
+            if (page >= 0) {
+                page(page)
+            }
+        })
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
+
+        val conversationIds = hashSetOf<String>()
+        result.mapTo(conversationIds) { "${accountKey.id}-${it.otherId}" }
+        conversations.addLocalConversations(accountKey, conversationIds)
+        result.forEachIndexed { i, item ->
+            val dm = item.dm
+            // Sender is our self, treat as outgoing message
+            val message = if (dm.senderId == accountKey.id) {
+                ParcelableMessageUtils.outgoingMessage(accountKey, dm, 1.0 - (i.toDouble() / result.size))
+            } else {
+                ParcelableMessageUtils.incomingMessage(accountKey, dm, 1.0 - (i.toDouble() / result.size))
+            }
+            val mc = conversations.addConversation(details, message, dm.sender, dm.recipient)
+            mc.request_cursor = "page:$page"
+        }
+        return GetMessagesData(conversations.values, emptyList())
     }
 
     @SuppressLint("Recycle")
@@ -199,7 +234,7 @@ class GetMessagesTask(
             details: AccountDetails,
             message: ParcelableMessage,
             vararg users: User
-    ) {
+    ): ParcelableMessageConversation {
         val conversation = this[message.conversation_id] ?: run {
             val obj = ParcelableMessageConversation()
             obj.id = message.conversation_id
@@ -214,6 +249,7 @@ class GetMessagesTask(
         users.forEach { user ->
             conversation.addParticipant(details.key, user)
         }
+        return conversation
     }
 
 

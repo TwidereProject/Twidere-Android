@@ -93,8 +93,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @WorkerThread
-    public static MicroBlog getInstance(@NonNull final Context context,
-                                        @NonNull final UserKey accountKey) {
+    public static MicroBlog getInstance(@NonNull final Context context, @NonNull final UserKey accountKey) {
         final AccountManager am = AccountManager.get(context);
         final Account account = AccountUtils.findByAccountKey(am, accountKey);
         if (account == null) return null;
@@ -106,7 +105,8 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    public static HashMap<String, String> getExtraParams(@NonNull @AccountType String accountType, boolean includeEntities, boolean includeRetweets) {
+    public static HashMap<String, String> getExtraParams(@NonNull @AccountType String accountType,
+            boolean includeEntities, boolean includeRetweets) {
         final HashMap<String, String> extraParams = new HashMap<>();
         switch (accountType) {
             case AccountType.FANFOU: {
@@ -243,14 +243,14 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     public static Endpoint getOAuthEndpoint(String apiUrlFormat, @Nullable String domain,
-                                            @Nullable String versionSuffix,
-                                            boolean sameOAuthSigningUrl) {
+            @Nullable String versionSuffix,
+            boolean sameOAuthSigningUrl) {
         return getOAuthEndpoint(apiUrlFormat, domain, versionSuffix, sameOAuthSigningUrl, false);
     }
 
     public static Endpoint getOAuthEndpoint(@NonNull String apiUrlFormat, @Nullable String domain,
-                                            @Nullable String versionSuffix,
-                                            boolean sameOAuthSigningUrl, boolean fixUrl) {
+            @Nullable String versionSuffix,
+            boolean sameOAuthSigningUrl, boolean fixUrl) {
         String endpointUrl, signEndpointUrl;
         endpointUrl = getApiUrl(apiUrlFormat, domain, versionSuffix);
         if (fixUrl) {
@@ -297,8 +297,8 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
         @Override
         public <E extends Exception> HttpRequest create(@NonNull Endpoint endpoint, @NonNull RestRequest info,
-                                                        @Nullable Authorization authorization,
-                                                        RestConverter.Factory<E> converterFactory)
+                @Nullable Authorization authorization,
+                RestConverter.Factory<E> converterFactory)
                 throws IOException, RestConverter.ConvertException, E {
             final String restMethod = info.getMethod();
             final String url = Endpoint.constructUrl(endpoint.getUrl(), info);
@@ -362,8 +362,8 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
         @Override
         public RestRequest create(RestMethod<MicroBlogException> restMethod,
-                                  RestConverter.Factory<MicroBlogException> factory,
-                                  ValueMap valuePool) throws RestConverter.ConvertException, IOException, MicroBlogException {
+                RestConverter.Factory<MicroBlogException> factory,
+                ValueMap valuePool) throws RestConverter.ConvertException, IOException, MicroBlogException {
             final HttpMethod method = restMethod.getMethod();
             final String path = restMethod.getPath();
             final MultiValueMap<String> headers = restMethod.getHeaders(valuePool);

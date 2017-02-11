@@ -8,7 +8,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.ErrorInfoStore
 
@@ -23,7 +23,7 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
     }
 
     override val contentUri: Uri
-        get() = TwidereDataStore.Statuses.CONTENT_URI
+        get() = Statuses.CONTENT_URI
 
     @TimelineType
     override val timelineType: String

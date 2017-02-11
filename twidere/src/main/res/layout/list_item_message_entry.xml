@@ -31,7 +31,8 @@
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
     app:ignorePadding="true"
-    tools:context=".adapter.MessagesEntriesAdapter">
+    tools:context=".adapter.MessagesEntriesAdapter"
+    tools:layout_height="?android:listPreferredItemHeight">
 
     <org.mariotaku.twidere.view.ProfileImageView
         android:id="@+id/profileImage"
@@ -90,18 +91,33 @@
             android:textColor="?android:attr/textColorSecondary"
             tools:text="12:00"/>
 
-        <org.mariotaku.twidere.view.FixedTextView
+        <org.mariotaku.twidere.view.TimelineContentTextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/name"
-            android:layout_alignStart="@+id/name"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/name"
             android:layout_marginTop="@dimen/element_spacing_xsmall"
+            android:layout_toEndOf="@+id/stateIndicator"
+            android:layout_toRightOf="@+id/stateIndicator"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:textColor="?android:attr/textColorSecondary"
             tools:text="@string/sample_status_text"/>
+
+        <org.mariotaku.twidere.view.IconActionView
+            android:id="@+id/stateIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/text"
+            android:layout_alignLeft="@+id/name"
+            android:layout_alignStart="@+id/name"
+            android:layout_alignTop="@+id/text"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_activity_action_reply"/>
     </RelativeLayout>
 
 </org.mariotaku.twidere.view.ColorLabelRelativeLayout>

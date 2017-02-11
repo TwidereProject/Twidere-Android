@@ -42,6 +42,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
     private val name by lazy { itemView.name }
     private val text by lazy { itemView.text }
     private val profileImage by lazy { itemView.profileImage }
+    private val stateIndicator by lazy { itemView.stateIndicator }
 
     init {
         setup()
@@ -50,7 +51,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
     fun display(conversation: ParcelableMessageConversation) {
         if (adapter.drawAccountColors) {
             content.drawEnd(conversation.account_color)
-        }else {
+        } else {
             content.drawEnd()
         }
         val (name, secondaryName) = conversation.getConversationName(itemView.context)
@@ -59,6 +60,12 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         this.name.screenName = secondaryName
         this.name.updateText(adapter.bidiFormatter)
         this.text.text = conversation.getSummaryText(itemView.context)
+        if (conversation.is_outgoing) {
+            stateIndicator.visibility = View.VISIBLE
+            stateIndicator.setImageResource(R.drawable.ic_activity_action_reply)
+        } else {
+            stateIndicator.visibility = View.GONE
+        }
         if (conversation.conversation_type == ConversationType.ONE_TO_ONE) {
             val user = conversation.user
             if (user != null) {
