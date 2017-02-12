@@ -23,10 +23,11 @@ import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_conversation_notice.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
+import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.view.FixedTextView
 
-class ConversationCreateMessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
+class NoticeSummaryEventViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
     override val messageContent: View = itemView
     override val date: FixedTextView by lazy { itemView.date }
 
@@ -34,7 +35,8 @@ class ConversationCreateMessageViewHolder(itemView: View, adapter: MessagesConve
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
-        text.setText(R.string.message_conversation_created)
+        text.text = message.getSummaryText(adapter.context, adapter.userColorNameManager,
+                adapter.conversation, adapter.nameFirst)
     }
 
     override fun setMessageContentGravity(view: View, outgoing: Boolean) {
@@ -44,5 +46,4 @@ class ConversationCreateMessageViewHolder(itemView: View, adapter: MessagesConve
     companion object {
         const val layoutResource = R.layout.list_item_message_conversation_notice
     }
-
 }

@@ -54,6 +54,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.io.IOException
 import java.util.*
@@ -65,7 +66,7 @@ object DataStoreUtils {
 
     val STATUSES_URIS = arrayOf(Statuses.CONTENT_URI, CachedStatuses.CONTENT_URI)
     val CACHE_URIS = arrayOf(CachedUsers.CONTENT_URI, CachedStatuses.CONTENT_URI, CachedHashtags.CONTENT_URI, CachedTrends.Local.CONTENT_URI)
-    val MESSAGES_URIS = arrayOf(Messages.CONTENT_URI, Messages.Conversations.CONTENT_URI)
+    val MESSAGES_URIS = arrayOf(Messages.CONTENT_URI, Conversations.CONTENT_URI)
     val ACTIVITIES_URIS = arrayOf(Activities.AboutMe.CONTENT_URI)
 
     private val CONTENT_PROVIDER_URI_MATCHER = UriMatcher(UriMatcher.NO_MATCH)
@@ -93,7 +94,7 @@ object DataStoreUtils {
                 TABLE_ID_FILTERS_SUBSCRIPTIONS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Messages.CONTENT_PATH,
                 TABLE_ID_MESSAGES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Messages.Conversations.CONTENT_PATH,
+        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Conversations.CONTENT_PATH,
                 TABLE_ID_MESSAGES_CONVERSATIONS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedTrends.Local.CONTENT_PATH,
                 TABLE_ID_TRENDS_LOCAL)
@@ -227,7 +228,7 @@ object DataStoreUtils {
     }
 
     fun getActivitiesCount(context: Context, uri: Uri,
-                           accountKey: UserKey): Int {
+            accountKey: UserKey): Int {
         val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
         return queryCount(context, uri, where, arrayOf(accountKey.toString()))
     }
@@ -281,11 +282,11 @@ object DataStoreUtils {
     }
 
     fun getStatusesCount(context: Context,
-                         preferences: SharedPreferences,
-                         uri: Uri,
-                         extraArgs: Bundle?, compare: Long,
-                         compareColumn: String, greaterThan: Boolean,
-                         accountKeys: Array<UserKey>?): Int {
+            preferences: SharedPreferences,
+            uri: Uri,
+            extraArgs: Bundle?, compare: Long,
+            compareColumn: String, greaterThan: Boolean,
+            accountKeys: Array<UserKey>?): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
 
         val expressions = ArrayList<Expression>()
@@ -317,7 +318,7 @@ object DataStoreUtils {
     }
 
     fun getActivitiesCount(context: Context, uri: Uri, compare: Long,
-                           compareColumn: String, greaterThan: Boolean, accountKeys: Array<UserKey>?): Int {
+            compareColumn: String, greaterThan: Boolean, accountKeys: Array<UserKey>?): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
         val selection = Expression.and(
                 Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size),
@@ -331,9 +332,9 @@ object DataStoreUtils {
     }
 
     fun getActivitiesCount(context: Context, uri: Uri,
-                           extraWhere: Expression?, extraWhereArgs: Array<String>?,
-                           since: Long, sinceColumn: String, followingOnly: Boolean,
-                           accountKeys: Array<UserKey>?): Int {
+            extraWhere: Expression?, extraWhereArgs: Array<String>?,
+            since: Long, sinceColumn: String, followingOnly: Boolean,
+            accountKeys: Array<UserKey>?): Int {
         val keys = (accountKeys ?: getActivatedAccountKeys(context)).map { it.toString() }.toTypedArray()
         val expressions = ArrayList<Expression>()
         expressions.add(Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size))
@@ -403,7 +404,7 @@ object DataStoreUtils {
             TABLE_ID_FILTERED_LINKS -> return Filters.Links.TABLE_NAME
             TABLE_ID_FILTERS_SUBSCRIPTIONS -> return Filters.Subscriptions.TABLE_NAME
             TABLE_ID_MESSAGES -> return Messages.TABLE_NAME
-            TABLE_ID_MESSAGES_CONVERSATIONS -> return Messages.Conversations.TABLE_NAME
+            TABLE_ID_MESSAGES_CONVERSATIONS -> return Conversations.TABLE_NAME
             TABLE_ID_TRENDS_LOCAL -> return CachedTrends.Local.TABLE_NAME
             TABLE_ID_TABS -> return Tabs.TABLE_NAME
             TABLE_ID_CACHED_STATUSES -> return CachedStatuses.TABLE_NAME
@@ -595,9 +596,9 @@ object DataStoreUtils {
     }
 
     private fun getStringFieldArray(context: Context, uri: Uri,
-                                    keys: Array<UserKey?>, keyField: String,
-                                    valueField: String, sortExpression: OrderBy?,
-                                    extraHaving: Expression?, extraHavingArgs: Array<String>?): Array<String?> {
+            keys: Array<UserKey?>, keyField: String,
+            valueField: String, sortExpression: OrderBy?,
+            extraHaving: Expression?, extraHavingArgs: Array<String>?): Array<String?> {
         return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, extraHaving,
                 extraHavingArgs, object : FieldArrayCreator<Array<String?>> {
             override fun newArray(size: Int): Array<String?> {
@@ -611,9 +612,9 @@ object DataStoreUtils {
     }
 
     private fun getLongFieldArray(context: Context, uri: Uri,
-                                  keys: Array<UserKey?>, keyField: String,
-                                  valueField: String, sortExpression: OrderBy?,
-                                  extraHaving: Expression?, extraHavingArgs: Array<String>?): LongArray {
+            keys: Array<UserKey?>, keyField: String,
+            valueField: String, sortExpression: OrderBy?,
+            extraHaving: Expression?, extraHavingArgs: Array<String>?): LongArray {
         return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, extraHaving,
                 extraHavingArgs, object : FieldArrayCreator<LongArray> {
             override fun newArray(size: Int): LongArray {
@@ -674,7 +675,7 @@ object DataStoreUtils {
     }
 
     fun deleteStatus(cr: ContentResolver, accountKey: UserKey,
-                     statusId: String, status: ParcelableStatus?) {
+            statusId: String, status: ParcelableStatus?) {
 
         val host = accountKey.host
         val deleteWhere: String
@@ -743,7 +744,7 @@ object DataStoreUtils {
     }
 
     fun queryCount(context: Context, uri: Uri,
-                   selection: String?, selectionArgs: Array<String>?): Int {
+            selection: String?, selectionArgs: Array<String>?): Int {
         val resolver = context.contentResolver
         val projection = arrayOf(SQLFunctions.COUNT())
         val cur = resolver.query(uri, projection, selection, selectionArgs, null) ?: return -1
@@ -758,7 +759,7 @@ object DataStoreUtils {
     }
 
     fun getInteractionsCount(context: Context, extraArgs: Bundle?,
-                             accountIds: Array<UserKey>, since: Long, sinceColumn: String): Int {
+            accountIds: Array<UserKey>, since: Long, sinceColumn: String): Int {
         var extraWhere: Expression? = null
         var extraWhereArgs: Array<String>? = null
         var followingOnly = false
@@ -840,8 +841,8 @@ object DataStoreUtils {
 
     @WorkerThread
     fun findStatusInDatabases(context: Context,
-                              accountKey: UserKey,
-                              statusId: String): ParcelableStatus? {
+            accountKey: UserKey,
+            statusId: String): ParcelableStatus? {
         val resolver = context.contentResolver
         var status: ParcelableStatus? = null
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
@@ -853,8 +854,6 @@ object DataStoreUtils {
                 if (cur.count > 0 && cur.moveToFirst()) {
                     status = ParcelableStatusCursorIndices.fromCursor(cur)
                 }
-            } catch (e: IOException) {
-                // Ignore
             } finally {
                 cur.close()
             }
@@ -876,12 +875,25 @@ object DataStoreUtils {
         val resolver = context.contentResolver
         val status = ParcelableStatusUtils.fromStatus(result, accountKey, false)
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
-        try {
-            resolver.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(status))
-        } catch (e: IOException) {
-            // Ignore
-        }
-
+        resolver.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(status))
         return status
     }
+
+    @WorkerThread
+    fun findMessageConversation(context: Context, accountKey: UserKey, conversationId: String): ParcelableMessageConversation? {
+        val resolver = context.contentResolver
+        val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
+        val whereArgs = arrayOf(accountKey.toString(), conversationId)
+        val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
+        try {
+            if (cur.count > 0 && cur.moveToFirst()) {
+                return ParcelableMessageConversationCursorIndices.fromCursor(cur)
+            }
+        } finally {
+            cur.close()
+        }
+        return null
+    }
+
 }

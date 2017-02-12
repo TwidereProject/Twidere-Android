@@ -122,6 +122,10 @@ public class DMResponse implements Parcelable {
         Message joinConversation;
         @JsonField(name = "message")
         Message message;
+        @JsonField(name = "participants_leave")
+        Message participantsLeave;
+        @JsonField(name = "participants_join")
+        Message participantsJoin;
 
         public Message getJoinConversation() {
             return joinConversation;
@@ -135,10 +139,21 @@ public class DMResponse implements Parcelable {
             return message;
         }
 
+        public Message getParticipantsLeave() {
+            return participantsLeave;
+        }
+
+        public Message getParticipantsJoin() {
+            return participantsJoin;
+        }
+
         @Override
         public String toString() {
             return "Entry{" +
-                    "message=" + message +
+                    "conversationCreate=" + conversationCreate +
+                    ", joinConversation=" + joinConversation +
+                    ", message=" + message +
+                    ", participantsLeave=" + participantsLeave +
                     '}';
         }
 
@@ -160,6 +175,9 @@ public class DMResponse implements Parcelable {
 
             @JsonField(name = "request_id")
             String requestId;
+
+            @JsonField(name = "sender_id")
+            String senderId;
 
             @JsonField(name = "message_data")
             Data messageData;
@@ -185,6 +203,10 @@ public class DMResponse implements Parcelable {
 
             public String getRequestId() {
                 return requestId;
+            }
+
+            public String getSenderId() {
+                return senderId;
             }
 
             public Data getMessageData() {
@@ -240,9 +262,9 @@ public class DMResponse implements Parcelable {
                 @JsonField(name = "time")
                 long time;
                 @JsonField(name = "sender_id")
-                long senderId;
+                String senderId;
                 @JsonField(name = "recipient_id")
-                long recipientId;
+                String recipientId;
                 @JsonField(name = "text")
                 String text;
                 @JsonField(name = "entities")
@@ -254,11 +276,11 @@ public class DMResponse implements Parcelable {
                     return text;
                 }
 
-                public long getRecipientId() {
+                public String getRecipientId() {
                     return recipientId;
                 }
 
-                public long getSenderId() {
+                public String getSenderId() {
                     return senderId;
                 }
 
@@ -427,6 +449,26 @@ public class DMResponse implements Parcelable {
         @Type
         String type;
 
+        public String getType() {
+            return type;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public long getSortTimestamp() {
+            return sortTimestamp;
+        }
+
+        public long getSortEventId() {
+            return sortEventId;
+        }
+
+        public boolean isReadOnly() {
+            return readOnly;
+        }
+
         public Participant[] getParticipants() {
             return participants;
         }
@@ -454,7 +496,7 @@ public class DMResponse implements Parcelable {
         @StringDef({Type.ONE_TO_ONE, Type.GROUP_DM})
         @Retention(RetentionPolicy.SOURCE)
         public @interface Type {
-            String ONE_TO_ONE = "one_to_one", GROUP_DM = "group_dm";
+            String ONE_TO_ONE = "ONE_TO_ONE", GROUP_DM = "GROUP_DM";
         }
 
         @ParcelablePlease
@@ -462,10 +504,16 @@ public class DMResponse implements Parcelable {
         public static class Participant implements Parcelable {
 
             @JsonField(name = "user_id")
-            long userId;
+            String userId;
+            @JsonField(name = "join_time")
+            long joinTime;
 
-            public long getUserId() {
+            public String getUserId() {
                 return userId;
+            }
+
+            public long getJoinTime() {
+                return joinTime;
             }
 
             @Override

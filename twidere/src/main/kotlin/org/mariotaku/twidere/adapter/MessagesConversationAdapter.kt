@@ -29,14 +29,14 @@ import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.linkHighlightOptionKey
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.timestamp
-import org.mariotaku.twidere.model.ItemCounts
-import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
-import org.mariotaku.twidere.view.holder.message.ConversationCreateMessageViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageViewHolder
+import org.mariotaku.twidere.view.holder.message.NoticeSummaryEventViewHolder
 import org.mariotaku.twidere.view.holder.message.StickerMessageViewHolder
 import java.util.*
 
@@ -48,13 +48,13 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
     @PreviewStyle
     val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
     val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
+    val nameFirst: Boolean = preferences[nameFirstKey]
     val linkify: TwidereLinkify = TwidereLinkify(null)
 
     var messages: List<ParcelableMessage>? = null
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+        private set
+    var conversation: ParcelableMessageConversation? = null
+        private set
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -67,9 +67,10 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
                 val view = inflater.inflate(StickerMessageViewHolder.layoutResource, parent, false)
                 return StickerMessageViewHolder(view, this)
             }
-            ITEM_TYPE_CONVERSATION_CREATE -> {
-                val view = inflater.inflate(ConversationCreateMessageViewHolder.layoutResource, parent, false)
-                return ConversationCreateMessageViewHolder(view, this)
+            ITEM_TYPE_CONVERSATION_CREATE, ITEM_TYPE_JOIN_CONVERSATION,
+            ITEM_TYPE_PARTICIPANTS_LEAVE, ITEM_TYPE_PARTICIPANTS_JOIN -> {
+                val view = inflater.inflate(NoticeSummaryEventViewHolder.layoutResource, parent, false)
+                return NoticeSummaryEventViewHolder(view, this)
             }
         }
         throw UnsupportedOperationException()
@@ -77,7 +78,8 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_CONVERSATION_CREATE -> {
+            ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_CONVERSATION_CREATE,
+            ITEM_TYPE_JOIN_CONVERSATION, ITEM_TYPE_PARTICIPANTS_LEAVE, ITEM_TYPE_PARTICIPANTS_JOIN -> {
                 val message = getMessage(position)!!
                 // Display date for oldest item
                 var showDate = true
@@ -99,10 +101,6 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
         return itemCounts.itemCount
     }
 
-    fun getMessage(position: Int): ParcelableMessage? {
-        return messages?.get(position - itemCounts.getItemStartPosition(0))
-    }
-
     override fun getItemViewType(position: Int): Int {
         when (itemCounts.getItemCountIndex(position)) {
             ITEM_START_MESSAGE -> {
@@ -113,11 +111,34 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
                     MessageType.CONVERSATION_CREATE -> {
                         return ITEM_TYPE_CONVERSATION_CREATE
                     }
+                    MessageType.JOIN_CONVERSATION -> {
+                        return ITEM_TYPE_JOIN_CONVERSATION
+                    }
+                    MessageType.PARTICIPANTS_LEAVE -> {
+                        return ITEM_TYPE_PARTICIPANTS_LEAVE
+                    }
+                    MessageType.PARTICIPANTS_JOIN -> {
+                        return ITEM_TYPE_PARTICIPANTS_JOIN
+                    }
                     else -> return ITEM_TYPE_TEXT_MESSAGE
                 }
             }
         }
         throw UnsupportedOperationException()
+    }
+
+    fun getMessage(position: Int): ParcelableMessage? {
+        return messages?.get(position - itemCounts.getItemStartPosition(0))
+    }
+
+    fun findUser(key: UserKey): ParcelableUser? {
+        return conversation?.participants?.firstOrNull { it.key == key }
+    }
+
+    fun setData(conversation: ParcelableMessageConversation?, messages: List<ParcelableMessage>?) {
+        this.conversation = conversation
+        this.messages = messages
+        notifyDataSetChanged()
     }
 
     companion object {
@@ -126,6 +147,10 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
         const val ITEM_TYPE_TEXT_MESSAGE = 1
         const val ITEM_TYPE_STICKER_MESSAGE = 2
         const val ITEM_TYPE_CONVERSATION_CREATE = 3
+        const val ITEM_TYPE_JOIN_CONVERSATION = 4
+        const val ITEM_TYPE_PARTICIPANTS_LEAVE = 5
+        const val ITEM_TYPE_PARTICIPANTS_JOIN = 6
     }
 
 }
+

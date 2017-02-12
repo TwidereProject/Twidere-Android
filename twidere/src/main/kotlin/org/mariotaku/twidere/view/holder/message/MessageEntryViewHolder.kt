@@ -59,7 +59,8 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         this.name.name = name
         this.name.screenName = secondaryName
         this.name.updateText(adapter.bidiFormatter)
-        this.text.text = conversation.getSummaryText(itemView.context)
+        this.text.text = conversation.getSummaryText(itemView.context, adapter.userColorNameManager,
+                adapter.nameFirst)
         if (conversation.is_outgoing) {
             stateIndicator.visibility = View.VISIBLE
             stateIndicator.setImageResource(R.drawable.ic_activity_action_reply)

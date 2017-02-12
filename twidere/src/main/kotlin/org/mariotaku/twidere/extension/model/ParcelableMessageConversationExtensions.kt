@@ -4,12 +4,12 @@ import android.content.Context
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
-import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.util.UserColorNameManager
 
-fun ParcelableMessageConversation.setFrom(message: ParcelableMessage, details: AccountDetails) {
+fun ParcelableMessageConversation.applyFrom(message: ParcelableMessage, details: AccountDetails) {
     account_key = details.key
     account_color = details.color
     message_type = message.message_type
@@ -39,13 +39,10 @@ fun ParcelableMessageConversation.getConversationName(context: Context): Pair<St
     }, null)
 }
 
-fun ParcelableMessageConversation.getSummaryText(context: Context): String {
-    when (message_type) {
-        MessageType.STICKER -> {
-            return context.getString(R.string.message_summary_type_sticker)
-        }
-    }
-    return text_unescaped
+fun ParcelableMessageConversation.getSummaryText(context: Context, manager: UserColorNameManager,
+        nameFirst: Boolean): CharSequence? {
+    return getSummaryText(context, manager, nameFirst, message_type, extras, sender_key,
+            text_unescaped, this)
 }
 
 val ParcelableMessageConversation.user: ParcelableUser?

@@ -4,8 +4,10 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -30,6 +32,8 @@ class MessagesEntriesAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
             field = value
             notifyDataSetChanged()
         }
+
+    val nameFirst: Boolean = preferences[nameFirstKey]
 
     var listener: MessageConversationClickListener? = null
 
@@ -86,5 +90,6 @@ class MessagesEntriesAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
         const val ITEM_TYPE_MESSAGE_ENTRY = 1
         const val ITEM_VIEW_TYPE_LOAD_INDICATOR = 2
     }
+
 
 }

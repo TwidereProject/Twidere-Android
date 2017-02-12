@@ -40,6 +40,10 @@ public abstract class MessageExtras implements Parcelable {
         switch (messageType) {
             case MessageType.STICKER:
                 return LoganSquare.parse(json, StickerExtras.class);
+            case MessageType.JOIN_CONVERSATION:
+            case MessageType.PARTICIPANTS_LEAVE:
+            case MessageType.PARTICIPANTS_JOIN:
+                return LoganSquare.parse(json, UserArrayExtras.class);
         }
         return null;
     }

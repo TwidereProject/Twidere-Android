@@ -152,10 +152,12 @@ public class ParcelableMessage {
 
 
     @StringDef({MessageType.TEXT, MessageType.STICKER, MessageType.CONVERSATION_CREATE,
-            MessageType.JOIN_CONVERSATION})
+            MessageType.JOIN_CONVERSATION, MessageType.PARTICIPANTS_LEAVE})
     public @interface MessageType {
         String CONVERSATION_CREATE = "conversation_create";
         String JOIN_CONVERSATION = "join_conversation";
+        String PARTICIPANTS_LEAVE = "participants_leave";
+        String PARTICIPANTS_JOIN = "participants_join";
         String TEXT = "text";
         String STICKER = "sticker";
     }
