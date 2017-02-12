@@ -343,9 +343,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
                 if (media.video_info == null) {
                     return Pair.create<String, String>(media.media_url, null)
                 }
-                val firstMatch = media.video_info.variants.first { variant ->
+                val firstMatch = media.video_info.variants.filter { variant ->
                     supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-                } ?: return null
+                }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
                 return Pair.create(firstMatch.url, firstMatch.content_type)
             }
             ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
