@@ -10,6 +10,7 @@ import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
 import org.apache.commons.lang3.text.translate.EntityArrays;
 import org.apache.commons.lang3.text.translate.LookupTranslator;
 import org.mariotaku.commons.text.CodePointArray;
+import org.mariotaku.microblog.library.twitter.model.DMResponse;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.EntitySupport;
 import org.mariotaku.microblog.library.twitter.model.ExtendedEntitySupport;
@@ -42,20 +43,20 @@ public class InternalTwitterContentUtils {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final String quotedTextPlain,
-                                     final SpanItem[] spans, final SpanItem[] quotedSpans,
-                                     final String source, final String quotedSource,
-                                     final UserKey retweetedById, final UserKey quotedUserId) {
+            final String textPlain, final String quotedTextPlain,
+            final SpanItem[] spans, final SpanItem[] quotedSpans,
+            final String source, final String quotedSource,
+            final UserKey retweetedById, final UserKey quotedUserId) {
         return isFiltered(database, userKey, textPlain, quotedTextPlain, spans, quotedSpans, source,
                 quotedSource, retweetedById, quotedUserId, true);
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
-                                     final String textPlain, final String quotedTextPlain,
-                                     final SpanItem[] spans, final SpanItem[] quotedSpans,
-                                     final String source, final String quotedSource,
-                                     final UserKey retweetedByKey, final UserKey quotedUserKey,
-                                     final boolean filterRts) {
+            final String textPlain, final String quotedTextPlain,
+            final SpanItem[] spans, final SpanItem[] quotedSpans,
+            final String source, final String quotedSource,
+            final UserKey retweetedByKey, final UserKey quotedUserKey,
+            final boolean filterRts) {
         if (database == null) return false;
         if (textPlain == null && spans == null && userKey == null && source == null)
             return false;
@@ -163,7 +164,7 @@ public class InternalTwitterContentUtils {
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,
-                                     final boolean filterRTs) {
+            final boolean filterRTs) {
         if (database == null || status == null) return false;
         return isFiltered(database, status.user_key, status.text_plain, status.quoted_text_plain,
                 status.spans, status.quoted_spans, status.source, status.quoted_source,
@@ -218,6 +219,13 @@ public class InternalTwitterContentUtils {
 
     @NonNull
     public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DirectMessage message) {
+        final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, false);
+        parseEntities(builder, message);
+        return builder.buildWithIndices();
+    }
+
+    @NonNull
+    public static Pair<String, SpanItem[]> formatDirectMessageText(@NonNull final DMResponse.Entry.Message.Data message) {
         final HtmlBuilder builder = new HtmlBuilder(message.getText(), false, true, false);
         parseEntities(builder, message);
         return builder.buildWithIndices();

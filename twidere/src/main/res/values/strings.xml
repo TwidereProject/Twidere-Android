@@ -665,6 +665,7 @@
     <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="message_conversation_created">Conversation created.</string>
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>

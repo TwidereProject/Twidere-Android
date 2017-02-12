@@ -157,7 +157,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     adapter.getData(), true, loadingMore)
             // Setting comparator to null lets statuses sort ascending
             loader.comparator = Comparator { l, r ->
-                (l.sort_id - r.sort_id).toInt()
+                (r.sort_id - l.sort_id).toInt()
             }
             return loader
         }
@@ -365,8 +365,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, event: KeyEvent,
-                                              metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent,
+            metaState: Int): Boolean {
         if (!KeyboardShortcutsHandler.isValidForHotkey(keyCode, event)) return false
         val focusedChild = RecyclerViewUtils.findRecyclerViewChild(recyclerView, layoutManager.focusedChild)
         val position: Int
@@ -411,8 +411,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, repeatCount: Int,
-                                              event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, repeatCount: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode,
                 repeatCount, event, metaState)
     }
@@ -426,7 +426,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableStatus>>,
-                                data: SingleResponse<ParcelableStatus>) {
+            data: SingleResponse<ParcelableStatus>) {
         val activity = activity ?: return
         val status = data.data
         if (status != null) {
@@ -811,9 +811,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         @UiThread
         fun displayStatus(account: AccountDetails?,
-                          status: ParcelableStatus?,
-                          statusActivity: StatusActivity?,
-                          translation: TranslationResult?) {
+                status: ParcelableStatus?,
+                statusActivity: StatusActivity?,
+                translation: TranslationResult?) {
             if (account == null || status == null) return
             val fragment = adapter.fragment
             val context = adapter.context
@@ -1445,7 +1445,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         ) : StatusLinkClickHandler(context, manager, preferences) {
 
             override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
-                                     extraId: Long, type: Int, sensitive: Boolean, start: Int, end: Int): Boolean {
+                    extraId: Long, type: Int, sensitive: Boolean, start: Int, end: Int): Boolean {
                 val current = getCurrentMedia(link, extraId.toInt())
                 if (current != null && !current.open_browser) {
                     expandOrOpenMedia(current)

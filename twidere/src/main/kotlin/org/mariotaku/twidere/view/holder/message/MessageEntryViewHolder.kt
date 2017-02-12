@@ -71,12 +71,12 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
             if (user != null) {
                 adapter.mediaLoader.displayProfileImage(profileImage, user)
             } else {
-                adapter.mediaLoader.cancelDisplayTask(profileImage)
+                adapter.mediaLoader.displayProfileImage(profileImage, null)
                 // TODO display default profile image
             }
         } else {
             adapter.mediaLoader.cancelDisplayTask(profileImage)
-            // TODO display default profile image
+            profileImage.setImageResource(R.drawable.ic_profile_image_default_group)
         }
     }
 
