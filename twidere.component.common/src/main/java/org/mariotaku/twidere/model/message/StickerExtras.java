@@ -41,21 +41,28 @@ public class StickerExtras extends MessageExtras implements Parcelable {
     @JsonField(name = "url")
     @ParcelableThisPlease
     String url;
+    @JsonField(name = "display_name")
+    @ParcelableThisPlease
+    String displayName;
 
     StickerExtras() {
 
     }
 
     public StickerExtras(@NonNull String url) {
-        setUrl(url);
+        this.url = url;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(final String url) {
-        this.url = url;
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(final String displayName) {
+        this.displayName = displayName;
     }
 
     @Override

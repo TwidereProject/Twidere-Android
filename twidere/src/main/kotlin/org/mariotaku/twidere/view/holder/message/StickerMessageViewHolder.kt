@@ -43,6 +43,7 @@ class StickerMessageViewHolder(itemView: View, adapter: MessagesConversationAdap
         super.display(message, showDate)
         val extras = message.extras as StickerExtras
         adapter.mediaLoader.displayStickerImage(stickerIcon, extras.url)
+        stickerIcon.contentDescription = extras.displayName
     }
 
     companion object {

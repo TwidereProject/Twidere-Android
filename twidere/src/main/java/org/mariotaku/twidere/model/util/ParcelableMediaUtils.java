@@ -65,7 +65,7 @@ public class ParcelableMediaUtils {
         return list.toArray(new ParcelableMedia[list.size()]);
     }
 
-    private static ParcelableMedia fromMediaEntity(MediaEntity entity) {
+    public static ParcelableMedia fromMediaEntity(MediaEntity entity) {
         final ParcelableMedia media = new ParcelableMedia();
         final String mediaUrl = InternalTwitterContentUtils.getMediaUrl(entity);
         media.url = mediaUrl;

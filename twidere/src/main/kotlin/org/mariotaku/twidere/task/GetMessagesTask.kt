@@ -152,12 +152,14 @@ class GetMessagesTask(
         conversations.addLocalConversations(accountKey, conversationIds)
 
         received.forEachIndexed { i, dm ->
-            val message = ParcelableMessageUtils.incomingMessage(accountKey, dm, 1.0 - (i.toDouble() / received.size))
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, false,
+                    1.0 - (i.toDouble() / received.size))
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
         sent.forEachIndexed { i, dm ->
-            val message = ParcelableMessageUtils.outgoingMessage(accountKey, dm, 1.0 - (i.toDouble() / sent.size))
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true,
+                    1.0 - (i.toDouble() / sent.size))
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
@@ -182,11 +184,8 @@ class GetMessagesTask(
         result.forEachIndexed { i, item ->
             val dm = item.dm
             // Sender is our self, treat as outgoing message
-            val message = if (dm.senderId == accountKey.id) {
-                ParcelableMessageUtils.outgoingMessage(accountKey, dm, 1.0 - (i.toDouble() / result.size))
-            } else {
-                ParcelableMessageUtils.incomingMessage(accountKey, dm, 1.0 - (i.toDouble() / result.size))
-            }
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, dm.senderId == accountKey.id,
+                    1.0 - (i.toDouble() / result.size))
             val mc = conversations.addConversation(message.conversation_id, details, message,
                     setOf(dm.sender, dm.recipient))
             mc.request_cursor = "page:$page"

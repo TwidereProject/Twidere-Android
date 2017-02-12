@@ -29,7 +29,7 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
         android:padding="@dimen/element_spacing_normal"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorTertiary"

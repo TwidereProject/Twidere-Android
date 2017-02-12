@@ -78,6 +78,8 @@ public class MediaEntity extends UrlEntity implements Parcelable {
     Map<String, Feature> features;
     @JsonField(name = "ext_alt_text")
     String altText;
+    @JsonField(name = "ext")
+    ExtInfo extInfo;
 
     public Map<String, Feature> getFeatures() {
         return features;
@@ -137,6 +139,10 @@ public class MediaEntity extends UrlEntity implements Parcelable {
         return altText;
     }
 
+    public ExtInfo getExtInfo() {
+        return extInfo;
+    }
+
     @Override
     public String toString() {
         return "MediaEntity{" +
@@ -156,13 +162,36 @@ public class MediaEntity extends UrlEntity implements Parcelable {
                 '}';
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        MediaEntityParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<MediaEntity> CREATOR = new Creator<MediaEntity>() {
+        @Override
+        public MediaEntity createFromParcel(Parcel source) {
+            MediaEntity target = new MediaEntity();
+            MediaEntityParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        @Override
+        public MediaEntity[] newArray(int size) {
+            return new MediaEntity[size];
+        }
+    };
+
     public @interface Type {
         String PHOTO = "photo";
         String VIDEO = "video";
         String ANIMATED_GIF = "animated_gif";
-
     }
-
 
     @ParcelablePlease
     @JsonObject
@@ -394,6 +423,78 @@ public class MediaEntity extends UrlEntity implements Parcelable {
         String LARGE = "large";
     }
 
+    @ParcelablePlease
+    @JsonObject
+    public static class ExtInfo implements Parcelable {
+
+        @JsonField(name = "stickerInfo")
+        Item stickerInfo;
+        @JsonField(name = "altText")
+        Item altText;
+
+        public Item getStickerInfo() {
+            return stickerInfo;
+        }
+
+        public Item getAltText() {
+            return altText;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            MediaEntity$ExtInfoParcelablePlease.writeToParcel(this, dest, flags);
+        }
+
+        public static final Creator<ExtInfo> CREATOR = new Creator<ExtInfo>() {
+            public ExtInfo createFromParcel(Parcel source) {
+                ExtInfo target = new ExtInfo();
+                MediaEntity$ExtInfoParcelablePlease.readFromParcel(target, source);
+                return target;
+            }
+
+            public ExtInfo[] newArray(int size) {
+                return new ExtInfo[size];
+            }
+        };
+
+        @ParcelablePlease
+        @JsonObject
+        public static class Item implements Parcelable {
+            @JsonField(name = "ttl")
+            long ttl;
+
+            public long getTtl() {
+                return ttl;
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                MediaEntity$ExtInfo$ItemParcelablePlease.writeToParcel(this, dest, flags);
+            }
+
+            public static final Creator<Item> CREATOR = new Creator<Item>() {
+                public Item createFromParcel(Parcel source) {
+                    Item target = new Item();
+                    MediaEntity$ExtInfo$ItemParcelablePlease.readFromParcel(target, source);
+                    return target;
+                }
+
+                public Item[] newArray(int size) {
+                    return new Item[size];
+                }
+            };
+        }
+    }
 
     @ParcelablePlease
     @JsonObject
@@ -452,30 +553,6 @@ public class MediaEntity extends UrlEntity implements Parcelable {
             }
         };
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        MediaEntityParcelablePlease.writeToParcel(this, dest, flags);
-    }
-
-    public static final Creator<MediaEntity> CREATOR = new Creator<MediaEntity>() {
-        @Override
-        public MediaEntity createFromParcel(Parcel source) {
-            MediaEntity target = new MediaEntity();
-            MediaEntityParcelablePlease.readFromParcel(target, source);
-            return target;
-        }
-
-        @Override
-        public MediaEntity[] newArray(int size) {
-            return new MediaEntity[size];
-        }
-    };
 
     public static class SizeMapBagger extends ParcelMapBagger<Size> {
         public SizeMapBagger() {
