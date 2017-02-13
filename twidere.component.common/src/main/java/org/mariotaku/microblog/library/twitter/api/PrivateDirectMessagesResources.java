@@ -21,6 +21,13 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
+import org.mariotaku.microblog.library.MicroBlogException;
+import org.mariotaku.microblog.library.twitter.model.ConversationTimeline;
+import org.mariotaku.microblog.library.twitter.model.NewDm;
+import org.mariotaku.microblog.library.twitter.model.Paging;
+import org.mariotaku.microblog.library.twitter.model.ResponseCode;
+import org.mariotaku.microblog.library.twitter.model.UserEvents;
+import org.mariotaku.microblog.library.twitter.model.UserInbox;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
@@ -29,12 +36,6 @@ import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.microblog.library.twitter.model.ConversationTimeline;
-import org.mariotaku.microblog.library.twitter.model.NewDm;
-import org.mariotaku.microblog.library.twitter.model.Paging;
-import org.mariotaku.microblog.library.twitter.model.ResponseCode;
-import org.mariotaku.microblog.library.twitter.model.UserInbox;
 
 
 @Queries(@KeyValue(key = "include_groups", value = "true"))
@@ -53,6 +54,9 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @GET("/dm/user_inbox.json")
     UserInbox getUserInbox(@Query Paging paging) throws MicroBlogException;
+
+    @GET("/dm/user_updates.json")
+    UserEvents getUserUpdates(@Query("cursor") String cursor) throws MicroBlogException;
 
     @GET("/dm/conversation/{conversation_id}.json")
     ConversationTimeline getUserInbox(@Path("conversation_id") String conversationId, @Query Paging paging) throws MicroBlogException;

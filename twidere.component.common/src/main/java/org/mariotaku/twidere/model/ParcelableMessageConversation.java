@@ -25,12 +25,17 @@ import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
+import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.message.MessageExtras;
+import org.mariotaku.twidere.model.message.conversation.ConversationExtras;
+import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras;
+import org.mariotaku.twidere.model.util.ConversationExtrasConverter;
 import org.mariotaku.twidere.model.util.MessageExtrasConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
@@ -96,13 +101,16 @@ public class ParcelableMessageConversation {
     @CursorField(value = Conversations.SPANS, converter = LoganSquareCursorFieldConverter.class)
     public SpanItem[] spans;
 
-    @JsonField(name = "extras")
-    @CursorField(value = Conversations.EXTRAS, converter = MessageExtrasConverter.class)
-    public MessageExtras extras;
+    @CursorField(value = Conversations.MESSAGE_EXTRAS, converter = MessageExtrasConverter.class)
+    public MessageExtras message_extras;
 
-    @JsonField(name = "extras")
-    @ParcelableNoThanks
-    ParcelableMessage.InternalExtras internalExtras;
+    @JsonField(name = "conversation_extras_type")
+    @CursorField(Conversations.CONVERSATION_EXTRAS_TYPE)
+    public String conversation_extras_type;
+
+    @JsonField(name = "conversation_extras")
+    @CursorField(value = Conversations.CONVERSATION_EXTRAS, converter = ConversationExtrasConverter.class)
+    public ConversationExtras conversation_extras;
 
     @JsonField(name = "participants")
     @CursorField(value = Conversations.PARTICIPANTS, converter = LoganSquareCursorFieldConverter.class)
@@ -124,6 +132,32 @@ public class ParcelableMessageConversation {
     @CursorField(value = Conversations.REQUEST_CURSOR)
     public String request_cursor;
 
+    @JsonField(name = "message_extras")
+    @ParcelableNoThanks
+    ParcelableMessage.InternalExtras internalMessageExtras;
+
+    @JsonField(name = "conversation_extras")
+    @ParcelableNoThanks
+    InternalExtras internalConversationExtras;
+
+
+    @OnPreJsonSerialize
+    void beforeJsonSerialize() {
+        internalMessageExtras = ParcelableMessage.InternalExtras.from(message_extras);
+        internalConversationExtras = InternalExtras.from(conversation_extras);
+    }
+
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() {
+        if (internalMessageExtras != null) {
+            message_extras = internalMessageExtras.getExtras();
+        }
+        if (internalConversationExtras != null) {
+            conversation_extras = internalConversationExtras.getExtras();
+        }
+    }
+
     @Override
     public String toString() {
         return "ParcelableMessageConversation{" +
@@ -140,13 +174,16 @@ public class ParcelableMessageConversation {
                 ", text_unescaped='" + text_unescaped + '\'' +
                 ", media=" + Arrays.toString(media) +
                 ", spans=" + Arrays.toString(spans) +
-                ", extras=" + extras +
-                ", internalExtras=" + internalExtras +
+                ", message_extras=" + message_extras +
+                ", conversation_extras=" + conversation_extras +
                 ", participants=" + Arrays.toString(participants) +
+                ", extras_type='" + conversation_extras_type + '\'' +
                 ", sender_key=" + sender_key +
                 ", recipient_key=" + recipient_key +
                 ", is_outgoing=" + is_outgoing +
                 ", request_cursor='" + request_cursor + '\'' +
+                ", internalMessageExtras=" + internalMessageExtras +
+                ", internalConversationExtras=" + internalConversationExtras +
                 '}';
     }
 
@@ -156,4 +193,34 @@ public class ParcelableMessageConversation {
         String GROUP = "group";
     }
 
+    @StringDef({ExtrasType.FANFOU, ExtrasType.TWITTER_OFFICIAL})
+    public @interface ExtrasType {
+        String FANFOU = "fanfou";
+        String TWITTER_OFFICIAL = "twitter_official";
+    }
+
+
+    @JsonObject
+    static class InternalExtras {
+        @JsonField(name = "twitter_official")
+        TwitterOfficialConversationExtras twitterOfficial;
+
+        public static InternalExtras from(final ConversationExtras extras) {
+            if (extras == null) return null;
+            InternalExtras result = new InternalExtras();
+            if (extras instanceof TwitterOfficialConversationExtras) {
+                result.twitterOfficial = (TwitterOfficialConversationExtras) extras;
+            } else {
+                return null;
+            }
+            return result;
+        }
+
+        public ConversationExtras getExtras() {
+            if (twitterOfficial != null) {
+                return twitterOfficial;
+            }
+            return null;
+        }
+    }
 }

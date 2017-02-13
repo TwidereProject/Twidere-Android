@@ -391,18 +391,20 @@ public interface TwidereDataStore {
             String TEXT_UNESCAPED = "text_unescaped";
             String MEDIA = "media";
             String SPANS = "spans";
-            String EXTRAS = "extras";
+            String MESSAGE_EXTRAS = "message_extras";
             String PARTICIPANTS = "participants";
             String SENDER_KEY = "sender_key";
             String RECIPIENT_KEY = "recipient_key";
             String REQUEST_CURSOR = "request_cursor";
             String IS_OUTGOING = "is_outgoing";
+            String CONVERSATION_EXTRAS = "conversation_extras";
+            String CONVERSATION_EXTRAS_TYPE = "conversation_extras_type";
 
             String[] COLUMNS = ParcelableMessageConversationTableInfo.COLUMNS;
+
             String[] TYPES = ParcelableMessageConversationTableInfo.TYPES;
 
             String TABLE_NAME = "messages_conversations";
-
             String CONTENT_PATH = "messages/conversations";
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }

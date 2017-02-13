@@ -23,6 +23,7 @@ package org.mariotaku.microblog.library.twitter.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -94,8 +95,8 @@ public class DMResponse implements Parcelable {
         return conversations;
     }
 
-    public User getUser(long userId) {
-        return users.get(String.valueOf(userId));
+    public User getUser(String userId) {
+        return users.get(userId);
     }
 
     public Conversation getConversation(String conversationId) {
@@ -129,6 +130,8 @@ public class DMResponse implements Parcelable {
         Message participantsJoin;
         @JsonField(name = "conversation_name_update")
         Message conversationNameUpdate;
+        @JsonField(name = "conversation_read")
+        Message conversationRead;
 
         public Message getJoinConversation() {
             return joinConversation;
@@ -154,6 +157,10 @@ public class DMResponse implements Parcelable {
             return conversationNameUpdate;
         }
 
+        public Message getConversationRead() {
+            return conversationRead;
+        }
+
         @Override
         public String toString() {
             return "Entry{" +
@@ -163,6 +170,7 @@ public class DMResponse implements Parcelable {
                     ", participantsLeave=" + participantsLeave +
                     ", participantsJoin=" + participantsJoin +
                     ", conversationNameUpdate=" + conversationNameUpdate +
+                    ", conversationRead=" + conversationRead +
                     '}';
         }
 
@@ -455,11 +463,11 @@ public class DMResponse implements Parcelable {
         @JsonField(name = "conversation_id")
         String conversationId;
         @JsonField(name = "last_read_event_id")
-        long lastReadEventId;
+        String lastReadEventId;
         @JsonField(name = "max_entry_id")
-        long maxEntryId;
+        String maxEntryId;
         @JsonField(name = "min_entry_id")
-        long minEntryId;
+        String minEntryId;
         @JsonField(name = "notifications_disabled")
         boolean notificationsDisabled;
         @JsonField(name = "participants")
@@ -467,7 +475,7 @@ public class DMResponse implements Parcelable {
         @JsonField(name = "read_only")
         boolean readOnly;
         @JsonField(name = "sort_event_id")
-        long sortEventId;
+        String sortEventId;
         @JsonField(name = "sort_timestamp")
         long sortTimestamp;
         @JsonField(name = "status")
@@ -498,7 +506,7 @@ public class DMResponse implements Parcelable {
             return sortTimestamp;
         }
 
-        public long getSortEventId() {
+        public String getSortEventId() {
             return sortEventId;
         }
 
@@ -514,15 +522,15 @@ public class DMResponse implements Parcelable {
             return conversationId;
         }
 
-        public long getLastReadEventId() {
+        public String getLastReadEventId() {
             return lastReadEventId;
         }
 
-        public long getMaxEntryId() {
+        public String getMaxEntryId() {
             return maxEntryId;
         }
 
-        public long getMinEntryId() {
+        public String getMinEntryId() {
             return minEntryId;
         }
 

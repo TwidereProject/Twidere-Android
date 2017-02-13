@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.StringUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.useCursor
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.*
@@ -173,11 +174,25 @@ object DataStoreUtils {
     }
 
     fun getOldestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
+        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
         val having: Expression = Expression.equals(Messages.IS_OUTGOING, if (outgoing) 1 else 0)
         return getStringFieldArray(context, uri, accountKeys, Messages.ACCOUNT_KEY, Messages.MESSAGE_ID,
                 OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), having, null)
     }
 
+    fun getOldestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<ParcelableMessageConversation?> {
+        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
+        return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
+                OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), null, null,
+                ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
+    }
+
+    fun getNewestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<ParcelableMessageConversation?> {
+        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
+        return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
+                OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), null, null,
+                ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
+    }
 
     fun getNewestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
         return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
@@ -595,14 +610,37 @@ object DataStoreUtils {
         return false
     }
 
-    private fun getStringFieldArray(context: Context, uri: Uri,
-            keys: Array<UserKey?>, keyField: String,
-            valueField: String, sortExpression: OrderBy?,
-            extraHaving: Expression?, extraHavingArgs: Array<String>?): Array<String?> {
-        return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, extraHaving,
-                extraHavingArgs, object : FieldArrayCreator<Array<String?>> {
+    private fun <T> getObjectFieldArray(context: Context, uri: Uri, keys: Array<UserKey?>,
+            keyField: String, valueFields: Array<String>, sortExpression: OrderBy?, extraHaving: Expression?,
+            extraHavingArgs: Array<String>?, createIndices: (Cursor) -> ObjectCursor.CursorIndices<T>,
+            createArray: (Int) -> Array<T?>): Array<T?> {
+        return getFieldsArray(context, uri, keys, keyField, valueFields, sortExpression,
+                extraHaving, extraHavingArgs, object : FieldArrayCreator<Array<T?>, ObjectCursor.CursorIndices<T>> {
+            override fun newArray(size: Int): Array<T?> {
+                return createArray(size)
+            }
+
+            override fun newIndex(cur: Cursor): ObjectCursor.CursorIndices<T> {
+                return createIndices(cur)
+            }
+
+            override fun assign(array: Array<T?>, arrayIdx: Int, cur: Cursor, colIdx: ObjectCursor.CursorIndices<T>) {
+                array[arrayIdx] = colIdx.newObject(cur)
+            }
+        })
+    }
+
+    private fun getStringFieldArray(context: Context, uri: Uri, keys: Array<UserKey?>,
+            keyField: String, valueField: String, sortExpression: OrderBy?, extraHaving: Expression?,
+            extraHavingArgs: Array<String>?): Array<String?> {
+        return getFieldsArray(context, uri, keys, keyField, arrayOf(valueField), sortExpression,
+                extraHaving, extraHavingArgs, object : FieldArrayCreator<Array<String?>, Int> {
             override fun newArray(size: Int): Array<String?> {
                 return arrayOfNulls(size)
+            }
+
+            override fun newIndex(cur: Cursor): Int {
+                return cur.getColumnIndex(valueField)
             }
 
             override fun assign(array: Array<String?>, arrayIdx: Int, cur: Cursor, colIdx: Int) {
@@ -611,14 +649,17 @@ object DataStoreUtils {
         })
     }
 
-    private fun getLongFieldArray(context: Context, uri: Uri,
-            keys: Array<UserKey?>, keyField: String,
-            valueField: String, sortExpression: OrderBy?,
-            extraHaving: Expression?, extraHavingArgs: Array<String>?): LongArray {
-        return getFieldArray(context, uri, keys, keyField, valueField, sortExpression, extraHaving,
-                extraHavingArgs, object : FieldArrayCreator<LongArray> {
+    private fun getLongFieldArray(context: Context, uri: Uri, keys: Array<UserKey?>,
+            keyField: String, valueField: String, sortExpression: OrderBy?, extraWhere: Expression?,
+            extraWhereArgs: Array<String>?): LongArray {
+        return getFieldsArray(context, uri, keys, keyField, arrayOf(valueField), sortExpression,
+                extraWhere, extraWhereArgs, object : FieldArrayCreator<LongArray, Int> {
             override fun newArray(size: Int): LongArray {
                 return LongArray(size)
+            }
+
+            override fun newIndex(cur: Cursor): Int {
+                return cur.getColumnIndex(valueField)
             }
 
             override fun assign(array: LongArray, arrayIdx: Int, cur: Cursor, colIdx: Int) {
@@ -628,12 +669,12 @@ object DataStoreUtils {
     }
 
     @SuppressLint("Recycle")
-    private fun <T> getFieldArray(
+    private fun <T, I> getFieldsArray(
             context: Context, uri: Uri,
             keys: Array<UserKey?>, keyField: String,
-            valueField: String, sortExpression: OrderBy?,
+            valueFields: Array<String>, sortExpression: OrderBy?,
             extraWhere: Expression?, extraWhereArgs: Array<String>?,
-            creator: FieldArrayCreator<T>
+            creator: FieldArrayCreator<T, I>
     ): T {
         val resolver = context.contentResolver
         val resultArray = creator.newArray(keys.size)
@@ -646,7 +687,7 @@ object DataStoreUtils {
         } else {
             bindingArgs = nonNullKeys
         }
-        val builder = SQLQueryBuilder.select(Columns(keyField, valueField))
+        val builder = SQLQueryBuilder.select(Columns(keyField, *valueFields))
         builder.from(Table(tableName))
         if (extraWhere != null) {
             builder.where(extraWhere)
@@ -659,13 +700,14 @@ object DataStoreUtils {
         val rawUri = Uri.withAppendedPath(TwidereDataStore.CONTENT_URI_RAW_QUERY, builder.buildSQL())
         resolver.query(rawUri, null, null, bindingArgs, null)?.useCursor { cur ->
             cur.moveToFirst()
+            val colIdx = creator.newIndex(cur)
             while (!cur.isAfterLast) {
-                val string = cur.getString(0)
-                if (string != null) {
-                    val accountKey = UserKey.valueOf(string)
-                    val idx = ArrayUtils.indexOf(keys, accountKey)
-                    if (idx >= 0) {
-                        creator.assign(resultArray, idx, cur, 1)
+                val keyString = cur.getString(cur.getColumnIndex(keyField))
+                if (keyString != null) {
+                    val accountKey = UserKey.valueOf(keyString)
+                    val arrayIdx = ArrayUtils.indexOf(keys, accountKey)
+                    if (arrayIdx >= 0) {
+                        creator.assign(resultArray, arrayIdx, cur, colIdx)
                     }
                 }
                 cur.moveToNext()
@@ -737,10 +779,12 @@ object DataStoreUtils {
         cursor.close()
     }
 
-    internal interface FieldArrayCreator<T> {
+    internal interface FieldArrayCreator<T, I> {
         fun newArray(size: Int): T
 
-        fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: Int)
+        fun newIndex(cur: Cursor): I
+
+        fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: I)
     }
 
     fun queryCount(context: Context, uri: Uri,

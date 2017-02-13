@@ -19,36 +19,29 @@
  * under the License.
  */
 
-package org.mariotaku.twidere.model.message;
+package org.mariotaku.twidere.model.message.conversation;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.twidere.model.ParcelableMessage.MessageType;
+import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType;
 
 import java.io.IOException;
 
 /**
- * Created by mariotaku on 2017/2/9.
+ * Created by mariotaku on 2017/2/13.
  */
 
-@JsonObject
-public abstract class MessageExtras implements Parcelable {
-    public static MessageExtras parse(@NonNull final String messageType, @Nullable final String json) throws IOException {
+public abstract class ConversationExtras implements Parcelable {
+    public static ConversationExtras parse(@NonNull final String extrasType, @Nullable final String json) throws IOException {
         if (json == null) return null;
-        switch (messageType) {
-            case MessageType.STICKER:
-                return LoganSquare.parse(json, StickerExtras.class);
-            case MessageType.JOIN_CONVERSATION:
-            case MessageType.PARTICIPANTS_LEAVE:
-            case MessageType.PARTICIPANTS_JOIN:
-                return LoganSquare.parse(json, UserArrayExtras.class);
-            case MessageType.CONVERSATION_NAME_UPDATE:
-                return LoganSquare.parse(json, NameUpdatedExtras.class);
+        switch (extrasType) {
+            case ExtrasType.TWITTER_OFFICIAL: {
+                return LoganSquare.parse(json, TwitterOfficialConversationExtras.class);
+            }
         }
         return null;
     }

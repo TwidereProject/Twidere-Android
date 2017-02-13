@@ -21,35 +21,53 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
- * Created by mariotaku on 16/3/1.
+ * Created by mariotaku on 15/7/5.
  */
+@ParcelablePlease
 @JsonObject
-public class UserEventsResponse extends TwitterResponseObject {
-    @JsonField(name = "user_events")
-    UserEvents userEvents;
+public class UserEvents extends TwitterResponseObject implements Parcelable {
 
-    public UserEvents getUserEvents() {
+    @JsonField(name = "user_events")
+    DMResponse userEvents;
+
+    public DMResponse getUserEvents() {
         return userEvents;
     }
 
-    @JsonObject
-    public static class UserEvents {
-        @JsonField(name = "cursor")
-        String cursor;
-        @JsonField(name = "last_seen_event_id")
-        long lastSeenEventId;
-
-        public String getCursor() {
-            return cursor;
-        }
-
-        public long getLastSeenEventId() {
-            return lastSeenEventId;
-        }
+    @Override
+    public String toString() {
+        return "UserEvents{" +
+                "userEvents=" + userEvents +
+                "} " + super.toString();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UserEventsParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<UserEvents> CREATOR = new Creator<UserEvents>() {
+        public UserEvents createFromParcel(Parcel source) {
+            UserEvents target = new UserEvents();
+            UserEventsParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public UserEvents[] newArray(int size) {
+            return new UserEvents[size];
+        }
+    };
 }

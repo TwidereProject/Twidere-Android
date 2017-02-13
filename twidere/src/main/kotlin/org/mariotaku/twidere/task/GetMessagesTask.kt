@@ -19,6 +19,7 @@ import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
+import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
@@ -74,27 +75,43 @@ class GetMessagesTask(
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+        if (param.conversationId != null) return GetMessagesData(emptyList(), emptyList())
         val accountKey = details.key
-        val cursor = param.cursors?.get(index)
-        val page = cursor?.substringAfter("page:").toInt(-1)
-        val inbox = microBlog.getUserInbox(Paging().apply {
-            count(60)
-            if (page >= 0) {
-                page(page)
-            }
-        }).userInbox
+        val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
+        val cursor = if (param.hasCursors) param.cursors?.get(index) else null
+        val response = if (cursor != null) {
+            microBlog.getUserUpdates(cursor).userEvents
+        } else {
+            microBlog.getUserInbox(Paging().apply {
+                if (maxId != null) {
+                    maxId(maxId)
+                }
+            }).userInbox
+        }
+
+
+        val respConversations = response.conversations
+        val respEntries = response.entries
+        val respUsers = response.users
+
+        if (respConversations == null || respEntries == null || respUsers == null) {
+            return GetMessagesData(emptyList(), emptyList())
+        }
+
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
-        val conversationIds = inbox.conversations.keys
-        conversations.addLocalConversations(accountKey, conversationIds)
-        val messages = inbox.entries.mapNotNull {
-            ParcelableMessageUtils.fromEntry(accountKey, it, inbox.users)
+        respConversations.keys.let {
+            conversations.addLocalConversations(accountKey, it)
+        }
+        val messages = respEntries.mapNotNull {
+            ParcelableMessageUtils.fromEntry(accountKey, it, respUsers)
         }
         val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
-        for ((k, v) in inbox.conversations) {
+        for ((k, v) in respConversations) {
             val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
-            val participants = inbox.users.filterKeys { userId ->
+            val participants = respUsers.filterKeys { userId ->
                 v.participants.any { it.userId == userId }
             }.values
             val conversationType = when (v.type?.toUpperCase(Locale.US)) {
@@ -105,6 +122,13 @@ class GetMessagesTask(
             val conversation = conversations.addConversation(k, details, message, participants,
                     conversationType)
             conversation.conversation_name = v.name
+            conversation.request_cursor = response.cursor
+            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
+            conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
+                this.minEntryId = v.minEntryId
+                this.maxEntryId = v.maxEntryId
+                this.status = v.status
+            }
         }
         return GetMessagesData(conversations.values, messages)
     }
@@ -300,23 +324,27 @@ class GetMessagesTask(
 
         override val sinceIds: Array<String?>?
             get() {
-                val keys = accounts.map { account ->
-                    when (account?.type) {
-                        AccountType.FANFOU -> {
-                            return@map null
-                        }
-                    }
-                    return@map account?.key
-                }.toTypedArray()
                 val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
-                        keys, false)
+                        defaultKeys, false)
                 val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
-                        keys, true)
+                        defaultKeys, true)
                 return incomingIds + outgoingIds
+            }
+
+        override val cursors: Array<String?>?
+            get() {
+                val cursors = arrayOfNulls<String>(defaultKeys.size)
+                val newestConversations = DataStoreUtils.getNewestConversations(context,
+                        Messages.Conversations.CONTENT_URI, twitterOfficialKeys)
+                newestConversations.forEachIndexed { i, conversation ->
+                    cursors[i] = conversation?.request_cursor
+                }
+                return cursors
             }
 
         override val hasSinceIds: Boolean = true
         override val hasMaxIds: Boolean = false
+        override val hasCursors: Boolean = true
     }
 
     class LoadMoreTaskParam(
@@ -324,22 +352,19 @@ class GetMessagesTask(
             getAccountKeys: () -> Array<UserKey>
     ) : RefreshMessagesTaskParam(context, getAccountKeys) {
 
-        override val maxIds: Array<String?>?
-            get() {
-                val keys = accounts.map { account ->
-                    when (account?.type) {
-                        AccountType.FANFOU -> {
-                            return@map null
-                        }
-                    }
-                    return@map account?.key
-                }.toTypedArray()
-                val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
-                        keys, false)
-                val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
-                        keys, true)
-                return incomingIds + outgoingIds
+        override val maxIds: Array<String?>? by lazy {
+            val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+                    defaultKeys, false)
+            val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+                    defaultKeys, true)
+            val oldestConversations = DataStoreUtils.getOldestConversations(context,
+                    Messages.Conversations.CONTENT_URI, twitterOfficialKeys)
+            oldestConversations.forEachIndexed { i, conversation ->
+                val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
+                incomingIds[i] = extras.maxEntryId
             }
+            return@lazy incomingIds + outgoingIds
+        }
 
         override val hasSinceIds: Boolean = false
         override val hasMaxIds: Boolean = true
@@ -357,6 +382,26 @@ class GetMessagesTask(
 
         protected val accounts: Array<AccountDetails?> by lazy {
             AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
+        }
+
+        protected val defaultKeys: Array<UserKey?>by lazy {
+            return@lazy accounts.map { account ->
+                account ?: return@map null
+                if (account.isOfficial(context) || account.type == AccountType.FANFOU) {
+                    return@map null
+                }
+                return@map account.key
+            }.toTypedArray()
+        }
+
+        protected val twitterOfficialKeys: Array<UserKey?> by lazy {
+            return@lazy accounts.map { account ->
+                account ?: return@map null
+                if (!account.isOfficial(context)) {
+                    return@map null
+                }
+                return@map account.key
+            }.toTypedArray()
         }
 
         override final val accountKeys: Array<UserKey>

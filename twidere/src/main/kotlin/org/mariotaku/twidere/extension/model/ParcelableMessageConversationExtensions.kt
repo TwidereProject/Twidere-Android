@@ -19,7 +19,7 @@ fun ParcelableMessageConversation.applyFrom(message: ParcelableMessage, details:
     text_unescaped = message.text_unescaped
     media = message.media
     spans = message.spans
-    extras = message.extras
+    message_extras = message.extras
     sender_key = message.sender_key
     recipient_key = message.recipient_key
     is_outgoing = message.is_outgoing
@@ -43,7 +43,7 @@ fun ParcelableMessageConversation.getConversationName(context: Context,
 
 fun ParcelableMessageConversation.getSummaryText(context: Context, manager: UserColorNameManager,
         nameFirst: Boolean): CharSequence? {
-    return getSummaryText(context, manager, nameFirst, message_type, extras, sender_key,
+    return getSummaryText(context, manager, nameFirst, message_type, message_extras, sender_key,
             text_unescaped, this)
 }
 

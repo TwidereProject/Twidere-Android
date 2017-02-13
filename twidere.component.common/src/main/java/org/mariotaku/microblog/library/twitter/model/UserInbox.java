@@ -21,14 +21,19 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 /**
  * Created by mariotaku on 15/7/5.
  */
+@ParcelablePlease
 @JsonObject
-public class UserInbox extends TwitterResponseObject {
+public class UserInbox extends TwitterResponseObject implements Parcelable {
 
     @JsonField(name = "user_inbox")
     DMResponse userInbox;
@@ -37,5 +42,32 @@ public class UserInbox extends TwitterResponseObject {
         return userInbox;
     }
 
+    @Override
+    public String toString() {
+        return "UserInbox{" +
+                "userInbox=" + userInbox +
+                "} " + super.toString();
+    }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        UserInboxParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<UserInbox> CREATOR = new Creator<UserInbox>() {
+        public UserInbox createFromParcel(Parcel source) {
+            UserInbox target = new UserInbox();
+            UserInboxParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public UserInbox[] newArray(int size) {
+            return new UserInbox[size];
+        }
+    };
 }

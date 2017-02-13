@@ -92,8 +92,8 @@ object ParcelableMessageUtils {
         this.is_outgoing = false
     }
 
-    private fun ParcelableMessage.applyUsersEvent(accountKey: UserKey,
-            message: DMResponse.Entry.Message, users: Map<String, User>, @MessageType type: String) {
+    private fun ParcelableMessage.applyUsersEvent(accountKey: UserKey, message: DMResponse.Entry.Message,
+            users: Map<String, User>, @MessageType type: String) {
         this.commonEntry(accountKey, message)
         this.message_type = type
         this.extras = UserArrayExtras().apply {
@@ -105,8 +105,8 @@ object ParcelableMessageUtils {
         this.is_outgoing = false
     }
 
-    private fun ParcelableMessage.applyNameUpdatedEvent(accountKey: UserKey,
-            message: DMResponse.Entry.Message, users: Map<String, User>) {
+    private fun ParcelableMessage.applyNameUpdatedEvent(accountKey: UserKey, message: DMResponse.Entry.Message,
+            users: Map<String, User>) {
         this.commonEntry(accountKey, message)
         this.message_type = MessageType.CONVERSATION_NAME_UPDATE
         this.extras = NameUpdatedExtras().apply {

@@ -33,6 +33,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
+import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.message.AbsMessageViewHolder
 import org.mariotaku.twidere.view.holder.message.MessageViewHolder
@@ -50,6 +51,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
     val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
     val nameFirst: Boolean = preferences[nameFirstKey]
     val linkify: TwidereLinkify = TwidereLinkify(null)
+    val mediaLoadingHandler: MediaLoadingHandler = MediaLoadingHandler()
 
     var messages: List<ParcelableMessage>? = null
         private set
@@ -139,6 +141,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
         const val ITEM_TYPE_STICKER_MESSAGE = 2
         const val ITEM_TYPE_NOTICE_MESSAGE = 3
     }
+
 
 }
 
