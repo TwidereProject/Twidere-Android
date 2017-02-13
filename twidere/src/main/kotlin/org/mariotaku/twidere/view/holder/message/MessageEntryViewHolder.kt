@@ -54,7 +54,8 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         } else {
             content.drawEnd()
         }
-        val (name, secondaryName) = conversation.getConversationName(itemView.context)
+        val (name, secondaryName) = conversation.getConversationName(itemView.context,
+                adapter.userColorNameManager)
         this.time.time = conversation.timestamp
         this.name.name = name
         this.name.screenName = secondaryName
