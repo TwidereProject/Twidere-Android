@@ -20,13 +20,11 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
-import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.extension.model.aspect_ratio
@@ -75,8 +73,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     }
 
     fun displayMedia(loader: MediaLoaderWrapper, media: Array<ParcelableMedia>?, accountId: UserKey? = null,
-                     extraId: Long = -1, withCredentials: Boolean = false,
-                     mediaClickListener: OnMediaClickListener? = null, loadingHandler: MediaLoadingHandler? = null) {
+            extraId: Long = -1, withCredentials: Boolean = false,
+            mediaClickListener: OnMediaClickListener? = null, loadingHandler: MediaLoadingHandler? = null) {
         if (media == null || style == PreviewStyle.NONE) {
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
@@ -102,19 +100,23 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             if (i < mediaSize) {
                 val item = media[i]
-                val url = if (TextUtils.isEmpty(item.preview_url)) item.media_url else item.preview_url
-                if (ObjectUtils.notEqual(url, imageView.tag) || imageView.drawable == null) {
+                val video = item.type == ParcelableMedia.Type.VIDEO
+                val url = item.preview_url ?: run {
+                    if (video) return@run null
+                    item.media_url
+                }
+                if (url != imageView.tag || imageView.drawable == null) {
                     if (withCredentials) {
-                        loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler)
+                        loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler, video)
                     } else {
-                        loader.displayPreviewImage(imageView, url, loadingHandler)
+                        loader.displayPreviewImage(imageView, url, loadingHandler, video)
                     }
                 }
                 imageView.tag = url
                 if (imageView is MediaPreviewImageView) {
                     imageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
                 }
-                if (TextUtils.isEmpty(item.alt_text)) {
+                if (item.alt_text.isNullOrEmpty()) {
                     child.contentDescription = context.getString(R.string.media)
                 } else {
                     child.contentDescription = item.alt_text
@@ -222,8 +224,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     }
 
     private fun measureGridMedia(childCount: Int, columnCount: Int, contentWidth: Int,
-                                 widthHeightRatio: Float, horizontalSpacing: Int, verticalSpacing: Int,
-                                 childIndices: IntArray): Int {
+            widthHeightRatio: Float, horizontalSpacing: Int, verticalSpacing: Int,
+            childIndices: IntArray): Int {
         val childWidth = (contentWidth - horizontalSpacing * (columnCount - 1)) / columnCount
         val childHeight = Math.round(childWidth * widthHeightRatio)
         val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
@@ -236,7 +238,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     }
 
     private fun layoutGridMedia(childCount: Int, columnCount: Int, horizontalSpacing: Int,
-                                verticalSpacing: Int, childIndices: IntArray) {
+            verticalSpacing: Int, childIndices: IntArray) {
         val initialLeft = paddingLeft
         var left = initialLeft
         var top = paddingTop
@@ -257,7 +259,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     }
 
     private fun measure3Media(contentWidth: Int, horizontalSpacing: Int, childIndices: IntArray,
-                              ratioMultiplier: Float): Int {
+            ratioMultiplier: Float): Int {
         val child0 = getChildAt(childIndices[0])
         val child1 = getChildAt(childIndices[1])
         val child2 = getChildAt(childIndices[2])

@@ -131,28 +131,32 @@ public class ParcelableMediaUtils {
         final String externalUrl = status.getExternalUrl();
         int i = 0;
         for (Attachment attachment : attachments) {
-            final String mimetype = attachment.getMimetype();
-            if (mimetype != null && mimetype.startsWith("image/")) {
-                ParcelableMedia media = new ParcelableMedia();
+            final String mimeType = attachment.getMimetype();
+            if (mimeType == null) continue;
+            ParcelableMedia media = new ParcelableMedia();
+
+            if (mimeType.startsWith("image/")) {
                 media.type = ParcelableMedia.Type.IMAGE;
-                media.width = attachment.getWidth();
-                media.height = attachment.getHeight();
-                media.url = TextUtils.isEmpty(externalUrl) ? attachment.getUrl() : externalUrl;
-                media.page_url = TextUtils.isEmpty(externalUrl) ? attachment.getUrl() : externalUrl;
-                media.media_url = attachment.getUrl();
-                media.preview_url = attachment.getLargeThumbUrl();
-                temp[i++] = media;
+            } else if (mimeType.startsWith("video/")) {
+                media.type = ParcelableMedia.Type.VIDEO;
             }
+            media.width = attachment.getWidth();
+            media.height = attachment.getHeight();
+            media.url = TextUtils.isEmpty(externalUrl) ? attachment.getUrl() : externalUrl;
+            media.page_url = TextUtils.isEmpty(externalUrl) ? attachment.getUrl() : externalUrl;
+            media.media_url = attachment.getUrl();
+            media.preview_url = attachment.getLargeThumbUrl();
+            temp[i++] = media;
         }
         return ArrayUtils.subarray(temp, 0, i);
     }
 
     @NonNull
     private static ParcelableMedia[] fromCard(@Nullable CardEntity card,
-                                              @Nullable UrlEntity[] urlEntities,
-                                              @Nullable MediaEntity[] mediaEntities,
-                                              @Nullable MediaEntity[] extendedMediaEntities,
-                                              UserKey accountKey) {
+            @Nullable UrlEntity[] urlEntities,
+            @Nullable MediaEntity[] mediaEntities,
+            @Nullable MediaEntity[] extendedMediaEntities,
+            UserKey accountKey) {
         if (card == null) return new ParcelableMedia[0];
         final String name = card.getName();
         if ("animated_gif".equals(name) || "player".equals(name)) {
