@@ -839,6 +839,7 @@ object DataStoreUtils {
 
                 val keywordItem = FiltersData.BaseItem()
                 keywordItem.value = "@" + user.screen_name
+                keywordItem.userKey = user.key
                 keywordValues.add(`FiltersData$BaseItemValuesCreator`.create(keywordItem))
 
                 // Insert user link (without scheme) to links
@@ -846,6 +847,7 @@ object DataStoreUtils {
                 val userLink = LinkCreator.getUserWebLink(user)
                 val linkWithoutScheme = userLink.toString().substringAfter("://")
                 linkItem.value = linkWithoutScheme
+                linkItem.userKey = user.key
                 linkValues.add(`FiltersData$BaseItemValuesCreator`.create(linkItem))
             }
 
@@ -863,27 +865,15 @@ object DataStoreUtils {
     }
 
     fun removeFromFilter(context: Context, users: Collection<ParcelableUser>) {
-        val userKeyValues = ArrayList<String>()
-        val linkValues = ArrayList<String>()
-        val keywordValues = ArrayList<String>()
         val cr = context.contentResolver
-        for (user in users) {
-            // Delete from filtered users
-            userKeyValues.add(user.key.toString())
-            // Delete user mention from keywords
-            keywordValues.add("@" + user.screen_name)
-
-            // Delete user link (without scheme) from links
-            val userLink = LinkCreator.getUserWebLink(user)
-            val linkWithoutScheme = userLink.toString().substringAfter("://")
-            linkValues.add(linkWithoutScheme)
-        }
+        // Delete from filtered users
+        val userKeyValues = users.map { it.key.toString() }
         ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY,
                 false, userKeyValues, null, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE,
-                false, keywordValues, null, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, false,
-                linkValues, null, null)
+        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.USER_KEY,
+                false, userKeyValues, null, null)
+        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.USER_KEY,
+                false, userKeyValues, null, null)
     }
 
     @WorkerThread

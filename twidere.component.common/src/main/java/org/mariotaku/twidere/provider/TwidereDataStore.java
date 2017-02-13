@@ -603,6 +603,8 @@ public interface TwidereDataStore {
 
         String SOURCE = "source";
 
+        String USER_KEY = "user_key";
+
         String ENABLE_IN_HOME_TIMELINE = "enable_in_home_timeline";
 
         String ENABLE_IN_MENTIONS = "enable_in_mentions";

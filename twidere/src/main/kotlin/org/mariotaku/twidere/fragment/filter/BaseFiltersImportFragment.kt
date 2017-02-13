@@ -188,7 +188,12 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Ba
     private fun performImport(filterEverywhere: Boolean) {
         val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)
                 .filter { adapter.isItemChecked(it) }
-                .map { adapter.getUser(it)!! }
+                .mapNotNull {
+                    val user = adapter.getUser(it) ?: return@mapNotNull null
+                    // Skip if already filtered
+                    if (user.is_filtered) return@mapNotNull null
+                    return@mapNotNull user
+                }
         selectedUsers.forEach { it.is_filtered = true }
         val weakDf = WeakReference(ProgressDialogFragment.show(childFragmentManager, "import_progress"))
         val weakThis = WeakReference(this)

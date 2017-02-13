@@ -218,7 +218,6 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         return FilterListAdapter(context)
     }
 
-
     protected open fun performDeletion() {
         val ids = listView.checkedItemIds
         val where = Expression.inArgs(Columns.Column(Filters._ID), ids.size)

@@ -17,6 +17,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
@@ -26,6 +27,7 @@ import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -34,9 +36,9 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.Analyzer
-import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
@@ -57,7 +59,9 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             REQUEST_SELECT_USER -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
                 val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
-                DataStoreUtils.addToFilter(context, listOf(user), false)
+                executeAfterFragmentResumed { fragment ->
+                    AddUserFilterDialogFragment.show(fragment.childFragmentManager, user)
+                }
             }
             REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT -> {
                 if (resultCode != FragmentActivity.RESULT_OK || data == null) return
@@ -136,6 +140,19 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         // No-op
     }
 
+    override fun performDeletion() {
+        val positions = listView.checkedItemPositions
+        val keys = (0 until positions.size()).mapNotNull {
+            if (!positions.valueAt(it)) return@mapNotNull null
+            return@mapNotNull (adapter as FilterUsersListAdapter).getUserKeyString(positions.keyAt(it))
+        }
+        super.performDeletion()
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Keywords.CONTENT_URI,
+                Filters.USER_KEY, false, keys, null, null)
+        ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Links.CONTENT_URI,
+                Filters.USER_KEY, false, keys, null, null)
+    }
+
     class FilterUsersListAdapter(
             context: Context
     ) : SimpleCursorAdapter(context, R.layout.list_item_two_line, null,
@@ -199,6 +216,14 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 return cursor.getLong(indices!!.source) < 0
             }
             return false
+        }
+
+        fun getUserKeyString(position: Int): String? {
+            val cursor = this.cursor ?: return null
+            if (cursor.moveToPosition(position)) {
+                return cursor.getString(indices!!.userKey)
+            }
+            return null
         }
     }
 

@@ -21,6 +21,8 @@
 
 package org.mariotaku.twidere.model;
 
+import android.support.annotation.Nullable;
+
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
@@ -146,9 +148,11 @@ public class FiltersData {
         @Override
         public String toString() {
             return "UserItem{" +
-                    "userKey='" + userKey + '\'' +
+                    "_id=" + _id +
+                    ", userKey=" + userKey +
                     ", name='" + name + '\'' +
                     ", screenName='" + screenName + '\'' +
+                    ", source=" + source +
                     '}';
         }
 
@@ -180,9 +184,16 @@ public class FiltersData {
         /**
          * Used for filter list subscription
          */
-        @CursorField(value = Filters.Users.SOURCE, type = "INTEGER DEFAULT -1")
+        @CursorField(value = Filters.SOURCE, type = "INTEGER DEFAULT -1")
         @JsonField(name = "source")
         long source = -1;
+        /**
+         * Used for "filter everywhere"
+         */
+        @CursorField(value = Filters.USER_KEY, converter = UserKeyCursorFieldConverter.class, type = TwidereDataStore.TYPE_TEXT)
+        @JsonField(name = "user_key", typeConverter = UserKeyConverter.class)
+        @Nullable
+        UserKey userKey = null;
 
         public long getId() {
             return _id;
@@ -204,10 +215,22 @@ public class FiltersData {
             this.source = source;
         }
 
+        @Nullable
+        public UserKey getUserKey() {
+            return userKey;
+        }
+
+        public void setUserKey(@Nullable final UserKey userKey) {
+            this.userKey = userKey;
+        }
+
         @Override
         public String toString() {
             return "BaseItem{" +
-                    "value='" + value + '\'' +
+                    "_id=" + _id +
+                    ", value='" + value + '\'' +
+                    ", source=" + source +
+                    ", userKey=" + userKey +
                     '}';
         }
 
