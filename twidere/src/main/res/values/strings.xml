@@ -688,6 +688,10 @@
     </string>
     <string name="message_format_participants_leave">
         <xliff:g example="User" id="name">%1$s</xliff:g> left</string>
+    <string name="message_format_sender_time">
+        <xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g
+        example="12:00" id="time">%2$s</xliff:g>
+    </string>
     <string name="message_join_conversation">Joined conversation.</string>
     <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>

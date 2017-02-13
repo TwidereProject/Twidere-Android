@@ -97,6 +97,7 @@
     <dimen name="preferred_tab_column_width">420dp</dimen>
 
     <dimen name="profile_image_size_activity_small">32dp</dimen>
+    <dimen name="profile_image_size_direct_message">36dp</dimen>
 
     <dimen name="settings_panel_margin_start_details">@dimen/element_size_normal</dimen>
     <dimen name="settings_panel_width_entries">240dp</dimen>

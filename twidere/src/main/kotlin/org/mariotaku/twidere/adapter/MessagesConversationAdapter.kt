@@ -63,15 +63,21 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
         when (viewType) {
             ITEM_TYPE_TEXT_MESSAGE -> {
                 val view = inflater.inflate(MessageViewHolder.layoutResource, parent, false)
-                return MessageViewHolder(view, this)
+                val holder = MessageViewHolder(view, this)
+                holder.setup()
+                return holder
             }
             ITEM_TYPE_STICKER_MESSAGE -> {
                 val view = inflater.inflate(StickerMessageViewHolder.layoutResource, parent, false)
-                return StickerMessageViewHolder(view, this)
+                val holder = StickerMessageViewHolder(view, this)
+                holder.setup()
+                return holder
             }
             ITEM_TYPE_NOTICE_MESSAGE -> {
                 val view = inflater.inflate(NoticeSummaryEventViewHolder.layoutResource, parent, false)
-                return NoticeSummaryEventViewHolder(view, this)
+                val holder = NoticeSummaryEventViewHolder(view, this)
+                holder.setup()
+                return holder
             }
         }
         throw UnsupportedOperationException()

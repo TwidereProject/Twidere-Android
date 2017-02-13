@@ -36,31 +36,30 @@
         android:textColor="?android:textColorTertiary"
         tools:text="Yesterday"/>
 
-    <org.mariotaku.messagebubbleview.library.MessageBubbleView
+    <RelativeLayout
         android:id="@+id/messageContent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:clickable="true"
-        app:bubbleColor="?messageBubbleColor"
-        app:caretHeight="8dp"
-        app:caretPosition="topStart"
-        app:caretWidth="8dp"
-        app:cornerRadius="2dp">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <org.mariotaku.twidere.view.ProfileImageView
+            android:id="@+id/profileImage"
+            android:layout_width="@dimen/profile_image_size_direct_message"
+            android:layout_height="@dimen/profile_image_size_direct_message"
+            android:layout_alignParentTop="true"
+            tools:src="@drawable/ic_profile_image_twidere"/>
+
+        <org.mariotaku.messagebubbleview.library.MessageBubbleView
+            android:id="@+id/messageBubble"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <org.mariotaku.twidere.view.CardMediaContainer
-                android:id="@+id/mediaPreview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
-
-                <include layout="@layout/layout_card_media_preview"/>
-
-            </org.mariotaku.twidere.view.CardMediaContainer>
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/profileImage"
+            android:layout_toRightOf="@+id/profileImage"
+            android:clickable="true"
+            app:bubbleColor="?messageBubbleColor"
+            app:caretHeight="@dimen/element_spacing_normal"
+            app:caretPosition="topStart"
+            app:caretWidth="@dimen/element_spacing_normal"
+            app:cornerRadius="2dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -69,23 +68,37 @@
                 android:orientation="vertical"
                 android:padding="@dimen/element_spacing_normal">
 
+                <org.mariotaku.twidere.view.CardMediaContainer
+                    android:id="@+id/mediaPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <include layout="@layout/layout_card_media_preview"/>
+
+                </org.mariotaku.twidere.view.CardMediaContainer>
+
+
                 <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/element_spacing_small"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="@string/sample_status_text"/>
 
-                <org.mariotaku.twidere.view.FixedTextView
-                    android:id="@+id/time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?android:attr/textColorTertiary"
-                    tools:text="12:00"/>
             </LinearLayout>
-        </RelativeLayout>
-    </org.mariotaku.messagebubbleview.library.MessageBubbleView>
+        </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/nameTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/messageBubble"
+            android:layout_alignStart="@+id/messageBubble"
+            android:layout_below="@+id/messageBubble"
+            android:layout_margin="@dimen/element_spacing_normal"
+            android:textColor="?android:attr/textColorTertiary"
+            tools:text="12:00"/>
+    </RelativeLayout>
 </LinearLayout>

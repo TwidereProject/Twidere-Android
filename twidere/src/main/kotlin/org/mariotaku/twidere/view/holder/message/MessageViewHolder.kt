@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.view.holder.message
 
 import android.text.SpannableStringBuilder
-import android.text.format.DateUtils
 import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_conversation_text.view.*
 import org.mariotaku.ktextension.empty
@@ -29,10 +28,10 @@ import org.mariotaku.messagebubbleview.library.MessageBubbleView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.extension.model.applyTo
-import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.view.FixedTextView
+import org.mariotaku.twidere.view.ProfileImageView
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -41,23 +40,25 @@ import org.mariotaku.twidere.view.FixedTextView
 class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : AbsMessageViewHolder(itemView, adapter) {
 
     override val date: FixedTextView by lazy { itemView.date }
-    override val messageContent: MessageBubbleView by lazy { itemView.messageContent }
+    override val messageContent: View by lazy { itemView.messageContent }
+    override val profileImage: ProfileImageView by lazy { itemView.profileImage }
+    override val nameTime: FixedTextView by lazy { itemView.nameTime }
 
     private val text by lazy { itemView.text }
-    private val time by lazy { itemView.time }
     private val mediaPreview by lazy { itemView.mediaPreview }
+    private val messageBubble by lazy { itemView.messageBubble }
 
-    init {
+    override fun setup() {
+        super.setup()
         val textSize = adapter.textSize
         text.textSize = textSize
-        time.textSize = textSize * 0.8f
-        date.textSize = textSize * 0.9f
         mediaPreview.style = adapter.mediaPreviewStyle
     }
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
-        messageContent.setOutgoing(message.is_outgoing)
+
+        messageBubble.setOutgoing(message.is_outgoing)
 
         // Loop through text and spans to found non-space char count
         val hideText = run {
@@ -97,9 +98,6 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
             View.VISIBLE
         }
 
-        time.text = DateUtils.formatDateTime(adapter.context, message.timestamp,
-                DateUtils.FORMAT_SHOW_TIME)
-
         if (message.media.isNullOrEmpty()) {
             mediaPreview.visibility = View.GONE
         } else {
@@ -107,13 +105,14 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
             mediaPreview.displayMedia(adapter.mediaLoader, message.media, message.account_key,
                     withCredentials = true, loadingHandler = adapter.mediaLoadingHandler)
         }
+
     }
 
     companion object {
         const val layoutResource = R.layout.list_item_message_conversation_text
 
         fun MessageBubbleView.setOutgoing(outgoing: Boolean) {
-            setCaretPosition(if (outgoing) MessageBubbleView.BOTTOM_END else MessageBubbleView.BOTTOM_START)
+            setCaretPosition(if (outgoing) MessageBubbleView.BOTTOM_END else MessageBubbleView.TOP_START)
         }
     }
 }

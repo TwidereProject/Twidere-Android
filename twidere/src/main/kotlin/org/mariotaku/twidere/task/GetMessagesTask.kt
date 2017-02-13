@@ -77,60 +77,12 @@ class GetMessagesTask(
 
     private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
-        if (param.conversationId != null) return GetMessagesData(emptyList(), emptyList())
-        val accountKey = details.key
-        val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
-        val cursor = if (param.hasCursors) param.cursors?.get(index) else null
-        val response = if (cursor != null) {
-            microBlog.getUserUpdates(cursor).userEvents
+        val conversationId = param.conversationId
+        if (conversationId == null) {
+            return getTwitterOfficialUserInbox(microBlog, details, param, index)
         } else {
-            microBlog.getUserInbox(Paging().apply {
-                if (maxId != null) {
-                    maxId(maxId)
-                }
-            }).userInbox
-        }
-
-
-        val respConversations = response.conversations
-        val respEntries = response.entries
-        val respUsers = response.users
-
-        if (respConversations == null || respEntries == null || respUsers == null) {
             return GetMessagesData(emptyList(), emptyList())
         }
-
-        val conversations = hashMapOf<String, ParcelableMessageConversation>()
-
-        respConversations.keys.let {
-            conversations.addLocalConversations(accountKey, it)
-        }
-        val messages = respEntries.mapNotNull {
-            ParcelableMessageUtils.fromEntry(accountKey, it, respUsers)
-        }
-        val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
-        for ((k, v) in respConversations) {
-            val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
-            val participants = respUsers.filterKeys { userId ->
-                v.participants.any { it.userId == userId }
-            }.values
-            val conversationType = when (v.type?.toUpperCase(Locale.US)) {
-                DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
-                DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
-                else -> ConversationType.ONE_TO_ONE
-            }
-            val conversation = conversations.addConversation(k, details, message, participants,
-                    conversationType)
-            conversation.conversation_name = v.name
-            conversation.request_cursor = response.cursor
-            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
-            conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
-                this.minEntryId = v.minEntryId
-                this.maxEntryId = v.maxEntryId
-                this.status = v.status
-            }
-        }
-        return GetMessagesData(conversations.values, messages)
     }
 
     private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
@@ -199,6 +151,66 @@ class GetMessagesTask(
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
         return GetMessagesData(conversations.values, insertMessages)
+    }
+
+    private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
+            conversationId: String, param: RefreshMessagesTaskParam, index: Int) {
+
+    }
+
+    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+        val accountKey = details.key
+        val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
+        val cursor = if (param.hasCursors) param.cursors?.get(index) else null
+        val response = if (cursor != null) {
+            microBlog.getUserUpdates(cursor).userEvents
+        } else {
+            microBlog.getUserInbox(Paging().apply {
+                if (maxId != null) {
+                    maxId(maxId)
+                }
+            }).userInbox
+        }
+
+        val respConversations = response.conversations
+        val respEntries = response.entries
+        val respUsers = response.users
+
+        if (respConversations == null || respEntries == null || respUsers == null) {
+            return GetMessagesData(emptyList(), emptyList())
+        }
+
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
+
+        respConversations.keys.let {
+            conversations.addLocalConversations(accountKey, it)
+        }
+        val messages = respEntries.mapNotNull {
+            ParcelableMessageUtils.fromEntry(accountKey, it, respUsers)
+        }
+        val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
+        for ((k, v) in respConversations) {
+            val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
+            val participants = respUsers.filterKeys { userId ->
+                v.participants.any { it.userId == userId }
+            }.values
+            val conversationType = when (v.type?.toUpperCase(Locale.US)) {
+                DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
+                DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
+                else -> ConversationType.ONE_TO_ONE
+            }
+            val conversation = conversations.addConversation(k, details, message, participants,
+                    conversationType)
+            conversation.conversation_name = v.name
+            conversation.request_cursor = response.cursor
+            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
+            conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
+                this.minEntryId = v.minEntryId
+                this.maxEntryId = v.maxEntryId
+                this.status = v.status
+            }
+        }
+        return GetMessagesData(conversations.values, messages)
     }
 
     private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {

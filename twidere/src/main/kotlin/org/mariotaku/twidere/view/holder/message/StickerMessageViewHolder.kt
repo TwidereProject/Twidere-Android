@@ -27,6 +27,7 @@ import org.mariotaku.twidere.adapter.MessagesConversationAdapter
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.message.StickerExtras
 import org.mariotaku.twidere.view.FixedTextView
+import org.mariotaku.twidere.view.ProfileImageView
 
 /**
  * Created by mariotaku on 2017/2/9.
@@ -36,6 +37,8 @@ class StickerMessageViewHolder(itemView: View, adapter: MessagesConversationAdap
 
     override val date: FixedTextView by lazy { itemView.date }
     override val messageContent: RelativeLayout by lazy { itemView.messageContent }
+    override val profileImage: ProfileImageView by lazy { itemView.profileImage }
+    override val nameTime: FixedTextView by lazy { itemView.nameTime }
 
     private val stickerIcon by lazy { itemView.stickerIcon }
 
