@@ -923,6 +923,7 @@
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
+    <string name="preference_title_text_size">Text size</string>
     <string name="preference_title_translate">Translate</string>
     <string name="preference_title_trends_location">Trends location</string>
 

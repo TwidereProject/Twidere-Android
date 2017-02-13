@@ -14,11 +14,10 @@
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
     <org.mariotaku.twidere.preference.SeekBarDialogPreference
-        android:defaultValue="@integer/default_text_size"
+        android:defaultValue="15"
         android:key="text_size_int"
         android:order="22"
-        android:summary="@string/text_size_summary"
-        android:title="@string/size"
+        android:title="@string/preference_title_text_size"
         app:max="24"
         app:min="12"
         app:progressTextSuffix="sp">
