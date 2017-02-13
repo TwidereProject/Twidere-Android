@@ -737,7 +737,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                              repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
@@ -1047,7 +1047,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountId: UserKey?,
-                                          inReplyToStatus: ParcelableStatus): Boolean {
+            inReplyToStatus: ParcelableStatus): Boolean {
         if (screenNames == null || screenNames.isEmpty() || accountId == null) return false
         val myScreenName = DataStoreUtils.getAccountScreenName(this, accountId)
         if (TextUtils.isEmpty(myScreenName)) return false
@@ -1785,7 +1785,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-            adapter.mediaLoader.displayPreviewImage(imageView, media.uri)
+            adapter.mediaLoader.displayPreviewImage(imageView, media.uri, true)
             videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
                 View.VISIBLE
             } else {

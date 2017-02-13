@@ -158,6 +158,7 @@ public class ParcelableMessage {
         String JOIN_CONVERSATION = "join_conversation";
         String PARTICIPANTS_LEAVE = "participants_leave";
         String PARTICIPANTS_JOIN = "participants_join";
+        String CONVERSATION_NAME_UPDATE = "conversation_name_update";
         String TEXT = "text";
         String STICKER = "sticker";
     }

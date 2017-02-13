@@ -63,6 +63,10 @@ public class ParcelableMessageConversation {
     @CursorField(Conversations.CONVERSATION_TYPE)
     public String conversation_type;
 
+    @JsonField(name = "conversation_name")
+    @CursorField(Conversations.CONVERSATION_NAME)
+    public String conversation_name;
+
     @ParcelableMessage.MessageType
     @JsonField(name = "message_type")
     @CursorField(Conversations.MESSAGE_TYPE)
@@ -128,6 +132,7 @@ public class ParcelableMessageConversation {
                 ", account_color=" + account_color +
                 ", id='" + id + '\'' +
                 ", conversation_type='" + conversation_type + '\'' +
+                ", conversation_name='" + conversation_name + '\'' +
                 ", message_type='" + message_type + '\'' +
                 ", message_timestamp=" + message_timestamp +
                 ", local_timestamp=" + local_timestamp +

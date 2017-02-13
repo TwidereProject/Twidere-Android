@@ -34,6 +34,7 @@ import org.mariotaku.microblog.library.twitter.model.util.ParcelMapBagger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -126,6 +127,8 @@ public class DMResponse implements Parcelable {
         Message participantsLeave;
         @JsonField(name = "participants_join")
         Message participantsJoin;
+        @JsonField(name = "conversation_name_update")
+        Message conversationNameUpdate;
 
         public Message getJoinConversation() {
             return joinConversation;
@@ -147,6 +150,10 @@ public class DMResponse implements Parcelable {
             return participantsJoin;
         }
 
+        public Message getConversationNameUpdate() {
+            return conversationNameUpdate;
+        }
+
         @Override
         public String toString() {
             return "Entry{" +
@@ -154,6 +161,8 @@ public class DMResponse implements Parcelable {
                     ", joinConversation=" + joinConversation +
                     ", message=" + message +
                     ", participantsLeave=" + participantsLeave +
+                    ", participantsJoin=" + participantsJoin +
+                    ", conversationNameUpdate=" + conversationNameUpdate +
                     '}';
         }
 
@@ -173,11 +182,17 @@ public class DMResponse implements Parcelable {
             @JsonField(name = "conversation_id")
             String conversationId;
 
+            @JsonField(name = "conversation_name")
+            String conversationName;
+
             @JsonField(name = "request_id")
             String requestId;
 
             @JsonField(name = "sender_id")
             String senderId;
+
+            @JsonField(name = "by_user_id")
+            String byUserId;
 
             @JsonField(name = "message_data")
             Data messageData;
@@ -217,6 +232,14 @@ public class DMResponse implements Parcelable {
                 return participants;
             }
 
+            public String getConversationName() {
+                return conversationName;
+            }
+
+            public String getByUserId() {
+                return byUserId;
+            }
+
             @Override
             public String toString() {
                 return "Message{" +
@@ -224,7 +247,12 @@ public class DMResponse implements Parcelable {
                         ", id=" + id +
                         ", time=" + time +
                         ", conversationId='" + conversationId + '\'' +
+                        ", conversationName='" + conversationName + '\'' +
+                        ", requestId='" + requestId + '\'' +
+                        ", senderId='" + senderId + '\'' +
+                        ", byUserId='" + byUserId + '\'' +
                         ", messageData=" + messageData +
+                        ", participants=" + Arrays.toString(participants) +
                         '}';
             }
 
@@ -449,6 +477,15 @@ public class DMResponse implements Parcelable {
         @Type
         String type;
 
+        @JsonField(name = "created_by_user_id")
+        String createdByUserId;
+
+        @JsonField(name = "created_time")
+        String createdTime;
+
+        @JsonField(name = "name")
+        String name;
+
         public String getType() {
             return type;
         }
@@ -491,6 +528,18 @@ public class DMResponse implements Parcelable {
 
         public boolean isNotificationsDisabled() {
             return notificationsDisabled;
+        }
+
+        public String getCreatedByUserId() {
+            return createdByUserId;
+        }
+
+        public String getCreatedTime() {
+            return createdTime;
+        }
+
+        public String getName() {
+            return name;
         }
 
         @StringDef({Type.ONE_TO_ONE, Type.GROUP_DM})

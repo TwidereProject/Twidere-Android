@@ -669,6 +669,16 @@
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
+    <string
+        name="message_format_conversation_name_update">Conversation name changed to
+        <xliff:g
+            example="User" id="name">%1$s</xliff:g>
+    </string>
+    <string name="message_format_conversation_name_update_by_user">
+        <xliff:g example="User"
+                 id="by_user">%1$s</xliff:g> changed conversation name to <xliff:g
+        example="New name" id="name">%2$s</xliff:g>
+    </string>
     <string name="message_format_participants_join">
         <xliff:g example="User" id="name">%1$s</xliff:g> joined</string>
     <string name="message_format_participants_join_added">

@@ -102,7 +102,9 @@ class GetMessagesTask(
                 DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
                 else -> ConversationType.ONE_TO_ONE
             }
-            conversations.addConversation(k, details, message, participants, conversationType)
+            val conversation = conversations.addConversation(k, details, message, participants,
+                    conversationType)
+            conversation.conversation_name = v.name
         }
         return GetMessagesData(conversations.values, messages)
     }

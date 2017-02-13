@@ -7,6 +7,7 @@ import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.MessageExtras
+import org.mariotaku.twidere.model.message.NameUpdatedExtras
 import org.mariotaku.twidere.model.message.UserArrayExtras
 import org.mariotaku.twidere.util.UserColorNameManager
 
@@ -61,6 +62,16 @@ internal fun getSummaryText(context: Context, manager: UserColorNameManager, nam
             } else {
                 val usersName = res.getQuantityString(R.plurals.N_users, users.size, users.size)
                 return res.getString(R.string.message_format_participants_leave, usersName)
+            }
+        }
+        MessageType.CONVERSATION_NAME_UPDATE -> {
+            extras as NameUpdatedExtras
+            val res = context.resources
+            if (extras.user != null) {
+                return res.getString(R.string.message_format_conversation_name_update_by_user,
+                        manager.getDisplayName(extras.user, nameFirst), extras.name)
+            } else {
+                return res.getString(R.string.message_format_conversation_name_update, extras.name)
             }
         }
     }

@@ -67,8 +67,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
                 val view = inflater.inflate(StickerMessageViewHolder.layoutResource, parent, false)
                 return StickerMessageViewHolder(view, this)
             }
-            ITEM_TYPE_CONVERSATION_CREATE, ITEM_TYPE_JOIN_CONVERSATION,
-            ITEM_TYPE_PARTICIPANTS_LEAVE, ITEM_TYPE_PARTICIPANTS_JOIN -> {
+            ITEM_TYPE_NOTICE_MESSAGE -> {
                 val view = inflater.inflate(NoticeSummaryEventViewHolder.layoutResource, parent, false)
                 return NoticeSummaryEventViewHolder(view, this)
             }
@@ -78,8 +77,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_CONVERSATION_CREATE,
-            ITEM_TYPE_JOIN_CONVERSATION, ITEM_TYPE_PARTICIPANTS_LEAVE, ITEM_TYPE_PARTICIPANTS_JOIN -> {
+            ITEM_TYPE_TEXT_MESSAGE, ITEM_TYPE_STICKER_MESSAGE, ITEM_TYPE_NOTICE_MESSAGE -> {
                 val message = getMessage(position)!!
                 // Display date for oldest item
                 var showDate = true
@@ -108,17 +106,10 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
                     MessageType.STICKER -> {
                         return ITEM_TYPE_STICKER_MESSAGE
                     }
-                    MessageType.CONVERSATION_CREATE -> {
-                        return ITEM_TYPE_CONVERSATION_CREATE
-                    }
-                    MessageType.JOIN_CONVERSATION -> {
-                        return ITEM_TYPE_JOIN_CONVERSATION
-                    }
-                    MessageType.PARTICIPANTS_LEAVE -> {
-                        return ITEM_TYPE_PARTICIPANTS_LEAVE
-                    }
-                    MessageType.PARTICIPANTS_JOIN -> {
-                        return ITEM_TYPE_PARTICIPANTS_JOIN
+                    MessageType.CONVERSATION_CREATE, MessageType.JOIN_CONVERSATION,
+                    MessageType.PARTICIPANTS_LEAVE, MessageType.PARTICIPANTS_JOIN,
+                    MessageType.CONVERSATION_NAME_UPDATE -> {
+                        return ITEM_TYPE_NOTICE_MESSAGE
                     }
                     else -> return ITEM_TYPE_TEXT_MESSAGE
                 }
@@ -146,10 +137,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
 
         const val ITEM_TYPE_TEXT_MESSAGE = 1
         const val ITEM_TYPE_STICKER_MESSAGE = 2
-        const val ITEM_TYPE_CONVERSATION_CREATE = 3
-        const val ITEM_TYPE_JOIN_CONVERSATION = 4
-        const val ITEM_TYPE_PARTICIPANTS_LEAVE = 5
-        const val ITEM_TYPE_PARTICIPANTS_JOIN = 6
+        const val ITEM_TYPE_NOTICE_MESSAGE = 3
     }
 
 }

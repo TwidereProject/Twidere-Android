@@ -383,6 +383,7 @@ public interface TwidereDataStore {
             String ACCOUNT_COLOR = "account_color";
             String CONVERSATION_ID = "conversation_id";
             String CONVERSATION_TYPE = "conversation_type";
+            String CONVERSATION_NAME = "conversation_name";
             String MESSAGE_TYPE = "message_type";
             String MESSAGE_TIMESTAMP = "message_timestamp";
             String SORT_ID = "sort_id";
