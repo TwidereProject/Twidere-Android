@@ -130,7 +130,7 @@ class MultiSelectEventHandler(
                     }
                 }
                 ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                        Filters.Users.USER_KEY, false, userIds, null)
+                        Filters.Users.USER_KEY, false, userIds, null, null)
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList)
                 Toast.makeText(activity, R.string.message_toast_users_filters_added, Toast.LENGTH_SHORT).show()
                 mode.finish()

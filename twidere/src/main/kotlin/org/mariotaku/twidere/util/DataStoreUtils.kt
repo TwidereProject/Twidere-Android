@@ -878,9 +878,12 @@ object DataStoreUtils {
             val linkWithoutScheme = userLink.toString().substringAfter("://")
             linkValues.add(linkWithoutScheme)
         }
-        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, false, userKeyValues, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, false, keywordValues, null)
-        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, false, linkValues, null)
+        ContentResolverUtils.bulkDelete(cr, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY,
+                false, userKeyValues, null, null)
+        ContentResolverUtils.bulkDelete(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE,
+                false, keywordValues, null, null)
+        ContentResolverUtils.bulkDelete(cr, Filters.Links.CONTENT_URI, Filters.Links.VALUE, false,
+                linkValues, null, null)
     }
 
     @WorkerThread

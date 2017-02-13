@@ -2,6 +2,7 @@ package org.mariotaku.twidere.task
 
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.useCursor
@@ -172,21 +173,35 @@ class GetMessagesTask(
             }).userInbox
         }
 
-        val respConversations = response.conversations
-        val respEntries = response.entries
-        val respUsers = response.users
-
-        if (respConversations == null || respEntries == null || respUsers == null) {
-            return GetMessagesData(emptyList(), emptyList())
-        }
+        val respConversations = response.conversations.orEmpty()
+        val respEntries = response.entries.orEmpty()
+        val respUsers = response.users.orEmpty()
 
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
         respConversations.keys.let {
             conversations.addLocalConversations(accountKey, it)
         }
-        val messages = respEntries.mapNotNull {
-            ParcelableMessageUtils.fromEntry(accountKey, it, respUsers)
+        val messages = ArrayList<ParcelableMessage>()
+        val messageDeletionsMap = HashMap<String, ArrayList<String>>()
+        val conversationDeletions = ArrayList<String>()
+        respEntries.mapNotNullTo(messages) { entry ->
+            when {
+                entry.messageDelete != null -> {
+                    val list = messageDeletionsMap.getOrPut(entry.messageDelete.conversationId) { ArrayList<String>() }
+                    entry.messageDelete.messages?.forEach {
+                        list.add(it.messageId)
+                    }
+                    return@mapNotNullTo null
+                }
+                entry.removeConversation != null -> {
+                    conversationDeletions.add(entry.removeConversation.conversationId)
+                    return@mapNotNullTo null
+                }
+                else -> {
+                    return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, entry, respUsers)
+                }
+            }
         }
         val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
         for ((k, v) in respConversations) {
@@ -210,7 +225,8 @@ class GetMessagesTask(
                 this.status = v.status
             }
         }
-        return GetMessagesData(conversations.values, messages)
+        return GetMessagesData(conversations.values, messages, conversationDeletions,
+                messageDeletionsMap, response.cursor)
     }
 
     private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
@@ -266,21 +282,6 @@ class GetMessagesTask(
         }
     }
 
-    private fun storeMessages(data: GetMessagesData, details: AccountDetails) {
-        val resolver = context.contentResolver
-        val conversationsValues = data.conversations.map {
-            val values = ParcelableMessageConversationValuesCreator.create(it)
-            if (it._id > 0) {
-                values.put(Conversations._ID, it._id)
-            }
-            return@map values
-        }
-        val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
-
-        ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
-        ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
-    }
-
     private fun ParcelableMessageConversation.addParticipant(
             accountKey: UserKey,
             user: User
@@ -323,10 +324,50 @@ class GetMessagesTask(
         return conversation
     }
 
+    private fun storeMessages(data: GetMessagesData, details: AccountDetails) {
+        val resolver = context.contentResolver
+        val conversationsValues = data.conversations.map {
+            val values = ParcelableMessageConversationValuesCreator.create(it)
+            if (it._id > 0) {
+                values.put(Conversations._ID, it._id)
+            }
+            return@map values
+        }
+        val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
+
+        for ((conversationId, messageIds) in data.deleteMessages) {
+            val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+            val whereArgs = arrayOf(details.key.toString(), conversationId)
+            ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.MESSAGE_ID,
+                    false, messageIds, where, whereArgs)
+        }
+
+        val accountWhere = Expression.equalsArgs(Messages.ACCOUNT_KEY).sql
+        val accountWhereArgs = arrayOf(details.key.toString())
+
+        ContentResolverUtils.bulkDelete(resolver, Conversations.CONTENT_URI, Conversations.CONVERSATION_ID,
+                false, data.deleteConversations, accountWhere, accountWhereArgs)
+        ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.CONVERSATION_ID,
+                false, data.deleteConversations, accountWhere, accountWhereArgs)
+
+        ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
+        ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
+
+        if (data.conversationRequestCursor != null) {
+            resolver.update(Conversations.CONTENT_URI, ContentValues().apply {
+                put(Conversations.REQUEST_CURSOR, data.conversationRequestCursor)
+            }, accountWhere, accountWhereArgs)
+        }
+    }
+
 
     data class GetMessagesData(
             val conversations: Collection<ParcelableMessageConversation>,
-            val messages: Collection<ParcelableMessage>
+            val messages: Collection<ParcelableMessage>,
+            val deleteConversations: List<String> = emptyList(),
+            val deleteMessages: Map<String, List<String>> = emptyMap(),
+            val conversationRequestCursor: String? = null
     )
 
     class RefreshNewTaskParam(

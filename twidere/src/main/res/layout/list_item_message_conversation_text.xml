@@ -45,7 +45,7 @@
             android:id="@+id/profileImage"
             android:layout_width="@dimen/profile_image_size_direct_message"
             android:layout_height="@dimen/profile_image_size_direct_message"
-            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/messageBubble"
             tools:src="@drawable/ic_profile_image_twidere"/>
 
         <org.mariotaku.messagebubbleview.library.MessageBubbleView
@@ -55,9 +55,10 @@
             android:layout_toEndOf="@+id/profileImage"
             android:layout_toRightOf="@+id/profileImage"
             android:clickable="true"
+            android:minHeight="@dimen/profile_image_size_direct_message"
             app:bubbleColor="?messageBubbleColor"
             app:caretHeight="@dimen/element_spacing_normal"
-            app:caretPosition="topStart"
+            app:caretPosition="bottomStart"
             app:caretWidth="@dimen/element_spacing_normal"
             app:cornerRadius="2dp">
 
@@ -72,6 +73,7 @@
                     android:id="@+id/mediaPreview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minWidth="200dp"
                     android:visibility="gone">
 
                     <include layout="@layout/layout_card_media_preview"/>

@@ -53,13 +53,13 @@ abstract class FileBasedFiltersDataSyncAction<DownloadSession : Closeable, Uploa
 
     override fun removeFromLocal(data: FiltersData) {
         ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Users.CONTENT_URI,
-                Filters.Users.USER_KEY, false, data.users?.map { it.userKey }, null)
+                Filters.Users.USER_KEY, false, data.users?.map { it.userKey }, null, null)
         ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Keywords.CONTENT_URI,
-                Filters.Keywords.VALUE, false, data.keywords?.map { it.value }, null)
+                Filters.Keywords.VALUE, false, data.keywords?.map { it.value }, null, null)
         ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Sources.CONTENT_URI,
-                Filters.Sources.VALUE, false, data.sources?.map { it.value }, null)
+                Filters.Sources.VALUE, false, data.sources?.map { it.value }, null, null)
         ContentResolverUtils.bulkDelete(context.contentResolver, Filters.Links.CONTENT_URI,
-                Filters.Links.VALUE, false, data.links?.map { it.value }, null)
+                Filters.Links.VALUE, false, data.links?.map { it.value }, null, null)
     }
 
     override fun newData(): FiltersData {

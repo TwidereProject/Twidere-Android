@@ -73,7 +73,7 @@ class GetTrendsTask(
         }
         ContentResolverUtils.bulkInsert(cr, uri, allTrends.map(ParcelableTrendValuesCreator::create))
         ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false,
-                hashtags, null)
+                hashtags, null, null)
         ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtags.map {
             val values = ContentValues()
             values.put(CachedHashtags.NAME, it)

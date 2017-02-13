@@ -50,13 +50,13 @@ class RefreshFiltersSubscriptionsTask(val context: Context) : AbstractTask<Unit?
         // Delete 'orphaned' filter items with `sourceId` > 0
         val extraWhere = Expression.greaterThan(Filters.SOURCE, 0).sql
         ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.SOURCE,
-                true, sourceIds, extraWhere)
+                true, sourceIds, extraWhere, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.SOURCE,
-                true, sourceIds, extraWhere)
+                true, sourceIds, extraWhere, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.SOURCE,
-                true, sourceIds, extraWhere)
+                true, sourceIds, extraWhere, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Links.CONTENT_URI, Filters.Links.SOURCE,
-                true, sourceIds, extraWhere)
+                true, sourceIds, extraWhere, null)
         try {
             Thread.sleep(1000)
         } catch (e: InterruptedException) {

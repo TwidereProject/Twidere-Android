@@ -134,6 +134,7 @@ dependencies {
     compile "com.android.support:preference-v14:$android_support_lib_version"
     compile "com.android.support:customtabs:$android_support_lib_version"
     compile "com.android.support:design:$android_support_lib_version"
+    compile "com.android.support:percent:$android_support_lib_version"
     compile 'com.twitter:twitter-text:1.13.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'

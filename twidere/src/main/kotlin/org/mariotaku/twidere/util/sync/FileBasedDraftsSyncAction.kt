@@ -143,7 +143,7 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
             val fileList = removeLocalIdsList.joinToString(",") { "$it.eml" }
             DebugLog.d(LOGTAG_SYNC, "Removing local drafts $fileList")
             ContentResolverUtils.bulkDelete(context.contentResolver, Drafts.CONTENT_URI,
-                    Drafts.UNIQUE_ID, false, removeLocalIdsList, null)
+                    Drafts.UNIQUE_ID, false, removeLocalIdsList, null, null)
         }
 
         // Remove remote items

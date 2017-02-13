@@ -239,15 +239,15 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
         }
         ContentResolverUtils.bulkDelete(resolver, Filters.Subscriptions.CONTENT_URI, Filters._ID,
-                false, ids, null)
+                false, ids, null, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.SOURCE,
-                false, ids, null)
+                false, ids, null, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.SOURCE,
-                false, ids, null)
+                false, ids, null, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.SOURCE,
-                false, ids, null)
+                false, ids, null, null)
         ContentResolverUtils.bulkDelete(resolver, Filters.Links.CONTENT_URI, Filters.Links.SOURCE,
-                false, ids, null)
+                false, ids, null, null)
     }
 
     private fun showAddUrlSubscription() {

@@ -106,9 +106,12 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 }
             }
             val resolver = context.contentResolver
-            ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI, Filters.Users.USER_KEY, false, userKeys, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI, Filters.Keywords.VALUE, false, keywords, null)
-            ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI, Filters.Sources.VALUE, false, sources, null)
+            ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
+                    Filters.Users.USER_KEY, false, userKeys, null, null)
+            ContentResolverUtils.bulkDelete(resolver, Filters.Keywords.CONTENT_URI,
+                    Filters.Keywords.VALUE, false, keywords, null, null)
+            ContentResolverUtils.bulkDelete(resolver, Filters.Sources.CONTENT_URI,
+                    Filters.Sources.VALUE, false, sources, null, null)
             ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, userValues)
             ContentResolverUtils.bulkInsert(resolver, Filters.Keywords.CONTENT_URI, keywordValues)
             ContentResolverUtils.bulkInsert(resolver, Filters.Sources.CONTENT_URI, sourceValues)

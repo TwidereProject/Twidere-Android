@@ -112,7 +112,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         const val layoutResource = R.layout.list_item_message_conversation_text
 
         fun MessageBubbleView.setOutgoing(outgoing: Boolean) {
-            setCaretPosition(if (outgoing) MessageBubbleView.BOTTOM_END else MessageBubbleView.TOP_START)
+            setCaretPosition(if (outgoing) MessageBubbleView.TOP_END else MessageBubbleView.BOTTOM_START)
         }
     }
 }
