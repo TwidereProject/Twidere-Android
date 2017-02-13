@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.Fragment
 import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
@@ -57,21 +58,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     private var mediaDownloadEvent: MediaDownloadEvent? = null
 
 
-    private var aspectRatioSource = object : AspectRatioSource {
-        override fun getHeight(): Int {
-            val height = media?.height ?: 0
-            if (height <= 0) return view!!.measuredHeight
-            return height
-        }
-
-        override fun getWidth(): Int {
-            val width = media?.width ?: 0
-            if (width <= 0) return view!!.measuredWidth
-            return width
-        }
-
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
@@ -101,7 +87,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         playPauseButton.setOnClickListener(this)
         volumeButton.setOnClickListener(this)
         videoControl.visibility = View.GONE
-        videoContainer.setAspectRatioSource(aspectRatioSource)
+        videoContainer.setAspectRatioSource(MediaAspectRatioSource(media, this))
         if (isLoopEnabled) {
             videoViewProgress.thumb = ColorDrawable(Color.TRANSPARENT)
             videoViewProgress.isEnabled = false
@@ -414,6 +400,31 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             positionLabel.text = String.format(Locale.ROOT, "%02d:%02d", positionSecs / 60, positionSecs % 60)
             handler.postDelayed(this, 16)
         }
+    }
+
+    class MediaAspectRatioSource(val media: ParcelableMedia?, val fragment: Fragment) : AspectRatioSource {
+        override fun getHeight(): Int {
+            var height = media?.height ?: 0
+            if (height <= 0) {
+                height = fragment.view!!.measuredHeight
+            }
+            if (height <= 0) {
+                height = 100
+            }
+            return height
+        }
+
+        override fun getWidth(): Int {
+            var width = media?.width ?: 0
+            if (width <= 0) {
+                width = fragment.view!!.measuredWidth
+            }
+            if (width <= 0) {
+                width = 100
+            }
+            return width
+        }
+
     }
 
     companion object {
