@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.extension
 
 import android.content.DialogInterface.*
+import android.content.res.ColorStateList
 import android.support.v7.app.AlertDialog
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
@@ -11,8 +12,10 @@ import org.mariotaku.chameleon.ChameleonUtils
 
 fun AlertDialog.applyTheme(): AlertDialog {
     val theme = Chameleon.getOverrideTheme(context, ChameleonUtils.getActivity(context))
-    getButton(BUTTON_POSITIVE)?.setTextColor(theme.colorAccent)
-    getButton(BUTTON_NEGATIVE)?.setTextColor(theme.colorAccent)
-    getButton(BUTTON_NEUTRAL)?.setTextColor(theme.colorAccent)
+    val buttonColor = ColorStateList(arrayOf(intArrayOf(-android.R.attr.state_enabled), intArrayOf(0)),
+            intArrayOf(theme.textColorSecondary, theme.colorAccent))
+    getButton(BUTTON_POSITIVE)?.setTextColor(buttonColor)
+    getButton(BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+    getButton(BUTTON_NEUTRAL)?.setTextColor(buttonColor)
     return this
 }

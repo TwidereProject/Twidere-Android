@@ -23,6 +23,7 @@ import android.text.Editable
 import android.text.Spanned
 import android.text.TextWatcher
 import android.widget.TextView
+import org.mariotaku.twidere.text.SafeSpannableStringBuilder
 
 import org.mariotaku.twidere.util.EmojiSupportUtils
 import org.mariotaku.twidere.util.ExternalThemeManager
@@ -33,7 +34,7 @@ import javax.inject.Inject
 /**
  * Created by mariotaku on 15/12/20.
  */
-class EmojiEditableFactory(textView: TextView) : SafeEditableFactory() {
+class EmojiEditableFactory(textView: TextView) : Editable.Factory() {
 
     @Inject
     lateinit internal var externalThemeManager: ExternalThemeManager
@@ -43,7 +44,7 @@ class EmojiEditableFactory(textView: TextView) : SafeEditableFactory() {
     }
 
     override fun newEditable(source: CharSequence): Editable {
-        val editable = super.newEditable(source)
+        val editable = SafeSpannableStringBuilder(source)
         EmojiSupportUtils.applyEmoji(externalThemeManager, editable)
         editable.setSpan(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -52,8 +53,7 @@ class EmojiEditableFactory(textView: TextView) : SafeEditableFactory() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 if (count <= 0) return
-                EmojiSupportUtils.applyEmoji(externalThemeManager, editable,
-                        start, count)
+                EmojiSupportUtils.applyEmoji(externalThemeManager, editable, start, count)
             }
 
             override fun afterTextChanged(s: Editable) {

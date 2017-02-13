@@ -22,7 +22,6 @@ package org.mariotaku.twidere.view
 import android.content.Context
 import android.content.res.Resources
 import android.support.v4.text.BidiFormatter
-import android.support.v7.widget.AppCompatTextView
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
@@ -32,13 +31,12 @@ import android.text.style.StyleSpan
 import android.util.AttributeSet
 import android.util.TypedValue
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.text.util.SafeEditableFactory
-import org.mariotaku.twidere.text.util.SafeSpannableFactory
+import org.mariotaku.twidere.util.EmojiSupportUtils
 
 /**
  * Created by mariotaku on 15/5/28.
  */
-class NameView(context: Context, attrs: AttributeSet? = null) : AppCompatTextView(context, attrs, 0) {
+class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(context, attrs) {
 
     var nameFirst: Boolean = false
     var twoLine: Boolean = false
@@ -62,8 +60,7 @@ class NameView(context: Context, attrs: AttributeSet? = null) : AppCompatTextVie
     private var secondaryTextSize: AbsoluteSizeSpan? = null
 
     init {
-        setSpannableFactory(SafeSpannableFactory())
-        setEditableFactory(SafeEditableFactory())
+        EmojiSupportUtils.initForTextView(this)
         ellipsize = TextUtils.TruncateAt.END
         val a = context.obtainStyledAttributes(attrs, R.styleable.NameView, 0, 0)
         setPrimaryTextColor(a.getColor(R.styleable.NameView_nv_primaryTextColor, 0))

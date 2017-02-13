@@ -26,7 +26,7 @@ import org.mariotaku.twidere.text.SafeSpannableString
 /**
  * Created by mariotaku on 15/12/20.
  */
-open class SafeSpannableFactory : Spannable.Factory() {
+object SafeSpannableFactory : Spannable.Factory() {
     override fun newSpannable(source: CharSequence): Spannable {
         return SafeSpannableString(source)
     }

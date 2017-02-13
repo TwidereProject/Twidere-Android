@@ -26,7 +26,7 @@ import org.mariotaku.twidere.text.SafeSpannableStringBuilder
 /**
  * Created by mariotaku on 15/12/20.
  */
-open class SafeEditableFactory : Editable.Factory() {
+object SafeEditableFactory : Editable.Factory() {
     override fun newEditable(source: CharSequence): Editable {
         return SafeSpannableStringBuilder(source)
     }

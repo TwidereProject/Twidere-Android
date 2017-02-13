@@ -94,6 +94,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.media_type
+import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -315,8 +316,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position) ?: return
-        AbsStatusesFragment.handleActionClick(context, fragmentManager, twitterWrapper,
-                holder as StatusViewHolder, status, id)
+        handleActionClick(holder as StatusViewHolder, status, id)
     }
 
 

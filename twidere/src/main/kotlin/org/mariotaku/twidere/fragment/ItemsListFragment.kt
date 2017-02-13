@@ -25,6 +25,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ITEMS
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NEW_DOCUMENT_API
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.MenuUtils
@@ -62,8 +63,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position) ?: return
-                AbsStatusesFragment.handleActionClick(context, fragmentManager,
-                        twitterWrapper, holder as StatusViewHolder, status, id)
+                handleActionClick(holder as StatusViewHolder, status, id)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
