@@ -77,8 +77,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
                 // TODO display default profile image
             }
         } else {
-            adapter.mediaLoader.cancelDisplayTask(profileImage)
-            profileImage.setImageResource(R.drawable.ic_profile_image_default_group)
+            adapter.mediaLoader.displayGroupConversationAvatar(profileImage, conversation.conversation_avatar)
         }
     }
 

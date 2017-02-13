@@ -36,11 +36,13 @@ import org.mariotaku.twidere.model.ParcelableUser;
 
 @ParcelablePlease
 @JsonObject
-public class NameUpdatedExtras extends MessageExtras implements Parcelable {
+public class ConversationInfoUpdatedExtras extends MessageExtras implements Parcelable {
     @JsonField(name = "user")
     ParcelableUser user;
     @JsonField(name = "name")
     String name;
+    @JsonField(name = "avatar")
+    String avatar;
 
     public String getName() {
         return name;
@@ -50,12 +52,19 @@ public class NameUpdatedExtras extends MessageExtras implements Parcelable {
         this.name = name;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(final String avatar) {
+        this.avatar = avatar;
+    }
+
     public void setUser(final ParcelableUser user) {
         this.user = user;
     }
 
     public ParcelableUser getUser() {
-
         return user;
     }
 
@@ -66,18 +75,18 @@ public class NameUpdatedExtras extends MessageExtras implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        NameUpdatedExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        ConversationInfoUpdatedExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<NameUpdatedExtras> CREATOR = new Creator<NameUpdatedExtras>() {
-        public NameUpdatedExtras createFromParcel(Parcel source) {
-            NameUpdatedExtras target = new NameUpdatedExtras();
-            NameUpdatedExtrasParcelablePlease.readFromParcel(target, source);
+    public static final Creator<ConversationInfoUpdatedExtras> CREATOR = new Creator<ConversationInfoUpdatedExtras>() {
+        public ConversationInfoUpdatedExtras createFromParcel(Parcel source) {
+            ConversationInfoUpdatedExtras target = new ConversationInfoUpdatedExtras();
+            ConversationInfoUpdatedExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
-        public NameUpdatedExtras[] newArray(int size) {
-            return new NameUpdatedExtras[size];
+        public ConversationInfoUpdatedExtras[] newArray(int size) {
+            return new ConversationInfoUpdatedExtras[size];
         }
     };
 }

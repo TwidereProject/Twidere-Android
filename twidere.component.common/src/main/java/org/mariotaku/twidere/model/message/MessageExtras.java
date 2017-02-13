@@ -48,7 +48,8 @@ public abstract class MessageExtras implements Parcelable {
             case MessageType.PARTICIPANTS_JOIN:
                 return LoganSquare.parse(json, UserArrayExtras.class);
             case MessageType.CONVERSATION_NAME_UPDATE:
-                return LoganSquare.parse(json, NameUpdatedExtras.class);
+            case MessageType.CONVERSATION_AVATAR_UPDATE:
+                return LoganSquare.parse(json, ConversationInfoUpdatedExtras.class);
         }
         return null;
     }

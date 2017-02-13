@@ -56,6 +56,11 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build()
 
+    private val groupConversationAvatarDisplayOptions = DisplayImageOptions.Builder()
+            .cloneFrom(profileImageDisplayOptions)
+            .showImageForEmptyUri(R.drawable.ic_profile_image_default_group)
+            .build()
+
     private val dashboardProfileImageDisplayOptions = DisplayImageOptions.Builder()
             .cacheInMemory(true)
             .cacheOnDisk(true)
@@ -174,6 +179,10 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
 
     fun displayProfileImage(view: ImageView, url: String?) {
         imageLoader.displayImage(url, view, profileImageDisplayOptions)
+    }
+
+    fun displayGroupConversationAvatar(view: ImageView, url: String?) {
+        imageLoader.displayImage(url, view, groupConversationAvatarDisplayOptions)
     }
 
     fun loadImageSync(url: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap? {

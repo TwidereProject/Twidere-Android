@@ -129,6 +129,8 @@ public class DMResponse implements Parcelable {
         Message participantsJoin;
         @JsonField(name = "conversation_name_update")
         Message conversationNameUpdate;
+        @JsonField(name = "conversation_avatar_update")
+        Message conversationAvatarUpdate;
         @JsonField(name = "conversation_read")
         Message conversationRead;
         @JsonField(name = "message_delete")
@@ -160,6 +162,10 @@ public class DMResponse implements Parcelable {
             return conversationNameUpdate;
         }
 
+        public Message getConversationAvatarUpdate() {
+            return conversationAvatarUpdate;
+        }
+
         public Message getConversationRead() {
             return conversationRead;
         }
@@ -175,7 +181,8 @@ public class DMResponse implements Parcelable {
         @Override
         public String toString() {
             return "Entry{" +
-                    "conversationCreate=" + conversationCreate +
+                    "conversationAvatarUpdate=" + conversationAvatarUpdate +
+                    ", conversationCreate=" + conversationCreate +
                     ", joinConversation=" + joinConversation +
                     ", message=" + message +
                     ", participantsLeave=" + participantsLeave +
@@ -183,6 +190,7 @@ public class DMResponse implements Parcelable {
                     ", conversationNameUpdate=" + conversationNameUpdate +
                     ", conversationRead=" + conversationRead +
                     ", messageDelete=" + messageDelete +
+                    ", removeConversation=" + removeConversation +
                     '}';
         }
 
@@ -231,6 +239,9 @@ public class DMResponse implements Parcelable {
 
             @JsonField(name = "conversation_name")
             String conversationName;
+
+            @JsonField(name = "conversation_avatar_image_https")
+            String conversationAvatarImageHttps;
 
             @JsonField(name = "request_id")
             String requestId;
@@ -286,6 +297,10 @@ public class DMResponse implements Parcelable {
                 return conversationName;
             }
 
+            public String getConversationAvatarImageHttps() {
+                return conversationAvatarImageHttps;
+            }
+
             public String getByUserId() {
                 return byUserId;
             }
@@ -302,6 +317,7 @@ public class DMResponse implements Parcelable {
                         ", time=" + time +
                         ", conversationId='" + conversationId + '\'' +
                         ", conversationName='" + conversationName + '\'' +
+                        ", conversationAvatarImageHttps='" + conversationAvatarImageHttps + '\'' +
                         ", requestId='" + requestId + '\'' +
                         ", senderId='" + senderId + '\'' +
                         ", byUserId='" + byUserId + '\'' +
@@ -562,6 +578,9 @@ public class DMResponse implements Parcelable {
         @JsonField(name = "name")
         String name;
 
+        @JsonField(name = "avatar_image_https")
+        String avatarImageHttps;
+
         public String getType() {
             return type;
         }
@@ -616,6 +635,10 @@ public class DMResponse implements Parcelable {
 
         public String getName() {
             return name;
+        }
+
+        public String getAvatarImageHttps() {
+            return avatarImageHttps;
         }
 
         @StringDef({Type.ONE_TO_ONE, Type.GROUP_DM})

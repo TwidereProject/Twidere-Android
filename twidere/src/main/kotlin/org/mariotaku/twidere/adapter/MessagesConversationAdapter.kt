@@ -116,7 +116,7 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
                     }
                     MessageType.CONVERSATION_CREATE, MessageType.JOIN_CONVERSATION,
                     MessageType.PARTICIPANTS_LEAVE, MessageType.PARTICIPANTS_JOIN,
-                    MessageType.CONVERSATION_NAME_UPDATE -> {
+                    MessageType.CONVERSATION_NAME_UPDATE, MessageType.CONVERSATION_AVATAR_UPDATE -> {
                         return ITEM_TYPE_NOTICE_MESSAGE
                     }
                     else -> return ITEM_TYPE_TEXT_MESSAGE

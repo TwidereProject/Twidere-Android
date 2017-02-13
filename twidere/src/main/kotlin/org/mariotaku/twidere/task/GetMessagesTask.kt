@@ -217,6 +217,7 @@ class GetMessagesTask(
             val conversation = conversations.addConversation(k, details, message, participants,
                     conversationType)
             conversation.conversation_name = v.name
+            conversation.conversation_avatar = v.avatarImageHttps
             conversation.request_cursor = response.cursor
             conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
             conversation.conversation_extras = TwitterOfficialConversationExtras().apply {

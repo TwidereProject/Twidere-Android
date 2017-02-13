@@ -72,6 +72,10 @@ public class ParcelableMessageConversation {
     @CursorField(Conversations.CONVERSATION_NAME)
     public String conversation_name;
 
+    @JsonField(name = "conversation_avatar")
+    @CursorField(Conversations.CONVERSATION_AVATAR)
+    public String conversation_avatar;
+
     @ParcelableMessage.MessageType
     @JsonField(name = "message_type")
     @CursorField(Conversations.MESSAGE_TYPE)
@@ -167,6 +171,7 @@ public class ParcelableMessageConversation {
                 ", id='" + id + '\'' +
                 ", conversation_type='" + conversation_type + '\'' +
                 ", conversation_name='" + conversation_name + '\'' +
+                ", conversation_avatar='" + conversation_avatar + '\'' +
                 ", message_type='" + message_type + '\'' +
                 ", message_timestamp=" + message_timestamp +
                 ", local_timestamp=" + local_timestamp +
@@ -175,9 +180,9 @@ public class ParcelableMessageConversation {
                 ", media=" + Arrays.toString(media) +
                 ", spans=" + Arrays.toString(spans) +
                 ", message_extras=" + message_extras +
+                ", conversation_extras_type='" + conversation_extras_type + '\'' +
                 ", conversation_extras=" + conversation_extras +
                 ", participants=" + Arrays.toString(participants) +
-                ", extras_type='" + conversation_extras_type + '\'' +
                 ", sender_key=" + sender_key +
                 ", recipient_key=" + recipient_key +
                 ", is_outgoing=" + is_outgoing +
