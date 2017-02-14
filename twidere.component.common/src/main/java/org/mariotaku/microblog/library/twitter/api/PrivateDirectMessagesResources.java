@@ -23,6 +23,7 @@ package org.mariotaku.microblog.library.twitter.api;
 
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.ConversationTimeline;
+import org.mariotaku.microblog.library.twitter.model.DMResponse;
 import org.mariotaku.microblog.library.twitter.model.NewDm;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseCode;
@@ -46,11 +47,7 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     ResponseCode destroyDirectMessagesConversation(@Path("conversation_id") String conversationId) throws MicroBlogException;
 
     @POST("/dm/new.json")
-    ResponseCode sendDm(@Param NewDm newDm) throws MicroBlogException;
-
-    @POST("/dm/conversation/{account_id}-{user_id}/delete.json")
-    @BodyType(BodyType.FORM)
-    ResponseCode destroyDirectMessagesConversation(@Path("account_id") String accountId, @Path("user_id") String userId) throws MicroBlogException;
+    DMResponse sendDm(@Param NewDm newDm) throws MicroBlogException;
 
     @GET("/dm/user_inbox.json")
     UserInbox getUserInbox(@Query Paging paging) throws MicroBlogException;

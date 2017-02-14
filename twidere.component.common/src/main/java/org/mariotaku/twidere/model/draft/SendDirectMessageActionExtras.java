@@ -37,6 +37,9 @@ public class SendDirectMessageActionExtras implements ActionExtras {
     @ParcelableThisPlease
     @JsonField(name = "recipient_id")
     String recipientId;
+    @ParcelableThisPlease
+    @JsonField(name = "conversation_id")
+    String conversationId;
 
     public String getRecipientId() {
         return recipientId;
@@ -44,6 +47,14 @@ public class SendDirectMessageActionExtras implements ActionExtras {
 
     public void setRecipientId(String recipientId) {
         this.recipientId = recipientId;
+    }
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(final String conversationId) {
+        this.conversationId = conversationId;
     }
 
     @Override

@@ -50,7 +50,7 @@ class GetMessagesTask(
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
             }
-            storeMessages(messages, details)
+            storeMessages(context, messages, details)
         }
     }
 
@@ -59,7 +59,7 @@ class GetMessagesTask(
         bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, false, null))
     }
 
-    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         when (details.type) {
             AccountType.FANFOU -> {
                 // Use fanfou DM api
@@ -77,25 +77,25 @@ class GetMessagesTask(
     }
 
     private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
-            param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getTwitterOfficialUserInbox(microBlog, details, param, index)
         } else {
-            return GetMessagesData(emptyList(), emptyList())
+            return DatabaseUpdateData(emptyList(), emptyList())
         }
     }
 
-    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getFanfouConversations(microBlog, details, param, index)
         } else {
-            return GetMessagesData(emptyList(), emptyList())
+            return DatabaseUpdateData(emptyList(), emptyList())
         }
     }
 
-    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
@@ -137,7 +137,7 @@ class GetMessagesTask(
             conversationIds.add(ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId))
         }
 
-        conversations.addLocalConversations(accountKey, conversationIds)
+        conversations.addLocalConversations(context, accountKey, conversationIds)
 
         received.forEachIndexed { i, dm ->
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, false,
@@ -151,7 +151,7 @@ class GetMessagesTask(
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
-        return GetMessagesData(conversations.values, insertMessages)
+        return DatabaseUpdateData(conversations.values, insertMessages)
     }
 
     private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
@@ -159,8 +159,7 @@ class GetMessagesTask(
 
     }
 
-    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
-        val accountKey = details.key
+    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
         val cursor = if (param.hasCursors) param.cursors?.get(index) else null
         val response = if (cursor != null) {
@@ -173,64 +172,11 @@ class GetMessagesTask(
             }).userInbox
         }
 
-        val respConversations = response.conversations.orEmpty()
-        val respEntries = response.entries.orEmpty()
-        val respUsers = response.users.orEmpty()
-
-        val conversations = hashMapOf<String, ParcelableMessageConversation>()
-
-        respConversations.keys.let {
-            conversations.addLocalConversations(accountKey, it)
-        }
-        val messages = ArrayList<ParcelableMessage>()
-        val messageDeletionsMap = HashMap<String, ArrayList<String>>()
-        val conversationDeletions = ArrayList<String>()
-        respEntries.mapNotNullTo(messages) { entry ->
-            when {
-                entry.messageDelete != null -> {
-                    val list = messageDeletionsMap.getOrPut(entry.messageDelete.conversationId) { ArrayList<String>() }
-                    entry.messageDelete.messages?.forEach {
-                        list.add(it.messageId)
-                    }
-                    return@mapNotNullTo null
-                }
-                entry.removeConversation != null -> {
-                    conversationDeletions.add(entry.removeConversation.conversationId)
-                    return@mapNotNullTo null
-                }
-                else -> {
-                    return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, entry, respUsers)
-                }
-            }
-        }
-        val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
-        for ((k, v) in respConversations) {
-            val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
-            val participants = respUsers.filterKeys { userId ->
-                v.participants.any { it.userId == userId }
-            }.values
-            val conversationType = when (v.type?.toUpperCase(Locale.US)) {
-                DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
-                DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
-                else -> ConversationType.ONE_TO_ONE
-            }
-            val conversation = conversations.addConversation(k, details, message, participants,
-                    conversationType)
-            conversation.conversation_name = v.name
-            conversation.conversation_avatar = v.avatarImageHttps
-            conversation.request_cursor = response.cursor
-            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
-            conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
-                this.minEntryId = v.minEntryId
-                this.maxEntryId = v.maxEntryId
-                this.status = v.status
-            }
-        }
-        return GetMessagesData(conversations.values, messages, conversationDeletions,
-                messageDeletionsMap, response.cursor)
+        return createDatabaseUpdateData(context, details, response)
     }
 
-    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): GetMessagesData {
+
+    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val cursor = param.cursors?.get(index)
         val page = cursor?.substringAfter("page:").toInt(-1)
@@ -244,7 +190,7 @@ class GetMessagesTask(
 
         val conversationIds = hashSetOf<String>()
         result.mapTo(conversationIds) { "${accountKey.id}-${it.otherId}" }
-        conversations.addLocalConversations(accountKey, conversationIds)
+        conversations.addLocalConversations(context, accountKey, conversationIds)
         result.forEachIndexed { i, item ->
             val dm = item.dm
             // Sender is our self, treat as outgoing message
@@ -254,116 +200,10 @@ class GetMessagesTask(
                     setOf(dm.sender, dm.recipient))
             mc.request_cursor = "page:$page"
         }
-        return GetMessagesData(conversations.values, emptyList())
+        return DatabaseUpdateData(conversations.values, emptyList())
     }
 
-    @SuppressLint("Recycle")
-    private fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(accountKey: UserKey, conversationIds: Set<String>) {
-        val where = Expression.and(Expression.inArgs(Conversations.CONVERSATION_ID, conversationIds.size),
-                Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
-        val whereArgs = conversationIds.toTypedArray() + accountKey.toString()
-        return context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
-                where, whereArgs, null).useCursor { cur ->
-            val indices = ParcelableMessageConversationCursorIndices(cur)
-            cur.moveToFirst()
-            while (!cur.isAfterLast) {
-                val conversationId = cur.getString(indices.id)
-                val timestamp = cur.getLong(indices.local_timestamp)
-                val conversation = this[conversationId] ?: run {
-                    val obj = indices.newObject(cur)
-                    this[conversationId] = obj
-                    return@run obj
-                }
-                if (timestamp > conversation.local_timestamp) {
-                    this[conversationId] = indices.newObject(cur)
-                }
-                indices.newObject(cur)
-                cur.moveToNext()
-            }
-        }
-    }
-
-    private fun ParcelableMessageConversation.addParticipant(
-            accountKey: UserKey,
-            user: User
-    ) {
-        val userKey = UserKeyUtils.fromUser(user)
-        val participants = this.participants
-        if (participants == null) {
-            this.participants = arrayOf(ParcelableUserUtils.fromUser(user, accountKey))
-        } else {
-            val index = participants.indexOfFirst { it.key == userKey }
-            if (index >= 0) {
-                participants[index] = ParcelableUserUtils.fromUser(user, accountKey)
-            } else {
-                this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
-            }
-        }
-    }
-
-    private fun MutableMap<String, ParcelableMessageConversation>.addConversation(
-            conversationId: String,
-            details: AccountDetails,
-            message: ParcelableMessage,
-            users: Collection<User>,
-            conversationType: String = ConversationType.ONE_TO_ONE
-    ): ParcelableMessageConversation {
-        val conversation = this[conversationId] ?: run {
-            val obj = ParcelableMessageConversation()
-            obj.id = conversationId
-            obj.conversation_type = conversationType
-            obj.applyFrom(message, details)
-            this[conversationId] = obj
-            return@run obj
-        }
-        if (message.timestamp > conversation.timestamp) {
-            conversation.applyFrom(message, details)
-        }
-        users.forEach { user ->
-            conversation.addParticipant(details.key, user)
-        }
-        return conversation
-    }
-
-    private fun storeMessages(data: GetMessagesData, details: AccountDetails) {
-        val resolver = context.contentResolver
-        val conversationsValues = data.conversations.map {
-            val values = ParcelableMessageConversationValuesCreator.create(it)
-            if (it._id > 0) {
-                values.put(Conversations._ID, it._id)
-            }
-            return@map values
-        }
-        val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
-
-        for ((conversationId, messageIds) in data.deleteMessages) {
-            val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
-            val whereArgs = arrayOf(details.key.toString(), conversationId)
-            ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.MESSAGE_ID,
-                    false, messageIds, where, whereArgs)
-        }
-
-        val accountWhere = Expression.equalsArgs(Messages.ACCOUNT_KEY).sql
-        val accountWhereArgs = arrayOf(details.key.toString())
-
-        ContentResolverUtils.bulkDelete(resolver, Conversations.CONTENT_URI, Conversations.CONVERSATION_ID,
-                false, data.deleteConversations, accountWhere, accountWhereArgs)
-        ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.CONVERSATION_ID,
-                false, data.deleteConversations, accountWhere, accountWhereArgs)
-
-        ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
-        ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
-
-        if (data.conversationRequestCursor != null) {
-            resolver.update(Conversations.CONTENT_URI, ContentValues().apply {
-                put(Conversations.REQUEST_CURSOR, data.conversationRequestCursor)
-            }, accountWhere, accountWhereArgs)
-        }
-    }
-
-
-    data class GetMessagesData(
+    data class DatabaseUpdateData(
             val conversations: Collection<ParcelableMessageConversation>,
             val messages: Collection<ParcelableMessage>,
             val deleteConversations: List<String> = emptyList(),
@@ -460,6 +300,176 @@ class GetMessagesTask(
 
         override final val accountKeys: Array<UserKey>
             get() = getAccountKeys()
+
+    }
+
+    companion object {
+
+        fun createDatabaseUpdateData(context: Context, account: AccountDetails,
+                response: DMResponse): DatabaseUpdateData {
+            val respConversations = response.conversations.orEmpty()
+            val respEntries = response.entries.orEmpty()
+            val respUsers = response.users.orEmpty()
+
+            val conversations = hashMapOf<String, ParcelableMessageConversation>()
+
+            respConversations.keys.let {
+                conversations.addLocalConversations(context, account.key, it)
+            }
+            val messages = ArrayList<ParcelableMessage>()
+            val messageDeletionsMap = HashMap<String, ArrayList<String>>()
+            val conversationDeletions = ArrayList<String>()
+            respEntries.mapNotNullTo(messages) { entry ->
+                when {
+                    entry.messageDelete != null -> {
+                        val list = messageDeletionsMap.getOrPut(entry.messageDelete.conversationId) { ArrayList<String>() }
+                        entry.messageDelete.messages?.forEach {
+                            list.add(it.messageId)
+                        }
+                        return@mapNotNullTo null
+                    }
+                    entry.removeConversation != null -> {
+                        conversationDeletions.add(entry.removeConversation.conversationId)
+                        return@mapNotNullTo null
+                    }
+                    else -> {
+                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(account.key, entry, respUsers)
+                    }
+                }
+            }
+            val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
+            for ((k, v) in respConversations) {
+                val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
+                val participants = respUsers.filterKeys { userId ->
+                    v.participants.any { it.userId == userId }
+                }.values
+                val conversationType = when (v.type?.toUpperCase(Locale.US)) {
+                    DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
+                    DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
+                    else -> ConversationType.ONE_TO_ONE
+                }
+                val conversation = conversations.addConversation(k, account, message, participants,
+                        conversationType)
+                conversation.conversation_name = v.name
+                conversation.conversation_avatar = v.avatarImageHttps
+                conversation.request_cursor = response.cursor
+                conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
+                conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
+                    this.minEntryId = v.minEntryId
+                    this.maxEntryId = v.maxEntryId
+                    this.status = v.status
+                }
+            }
+            return DatabaseUpdateData(conversations.values, messages, conversationDeletions,
+                    messageDeletionsMap, response.cursor)
+        }
+
+        fun storeMessages(context: Context, data: DatabaseUpdateData, details: AccountDetails) {
+            val resolver = context.contentResolver
+            val conversationsValues = data.conversations.map {
+                val values = ParcelableMessageConversationValuesCreator.create(it)
+                if (it._id > 0) {
+                    values.put(Conversations._ID, it._id)
+                }
+                return@map values
+            }
+            val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
+
+            for ((conversationId, messageIds) in data.deleteMessages) {
+                val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                        Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+                val whereArgs = arrayOf(details.key.toString(), conversationId)
+                ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.MESSAGE_ID,
+                        false, messageIds, where, whereArgs)
+            }
+
+            val accountWhere = Expression.equalsArgs(Messages.ACCOUNT_KEY).sql
+            val accountWhereArgs = arrayOf(details.key.toString())
+
+            ContentResolverUtils.bulkDelete(resolver, Conversations.CONTENT_URI, Conversations.CONVERSATION_ID,
+                    false, data.deleteConversations, accountWhere, accountWhereArgs)
+            ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.CONVERSATION_ID,
+                    false, data.deleteConversations, accountWhere, accountWhereArgs)
+
+            ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
+            ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
+
+            if (data.conversationRequestCursor != null) {
+                resolver.update(Conversations.CONTENT_URI, ContentValues().apply {
+                    put(Conversations.REQUEST_CURSOR, data.conversationRequestCursor)
+                }, accountWhere, accountWhereArgs)
+            }
+        }
+
+
+        @SuppressLint("Recycle")
+        fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(context: Context,
+                accountKey: UserKey, conversationIds: Set<String>) {
+            val where = Expression.and(Expression.inArgs(Conversations.CONVERSATION_ID, conversationIds.size),
+                    Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
+            val whereArgs = conversationIds.toTypedArray() + accountKey.toString()
+            return context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
+                    where, whereArgs, null).useCursor { cur ->
+                val indices = ParcelableMessageConversationCursorIndices(cur)
+                cur.moveToFirst()
+                while (!cur.isAfterLast) {
+                    val conversationId = cur.getString(indices.id)
+                    val timestamp = cur.getLong(indices.local_timestamp)
+                    val conversation = this[conversationId] ?: run {
+                        val obj = indices.newObject(cur)
+                        this[conversationId] = obj
+                        return@run obj
+                    }
+                    if (timestamp > conversation.local_timestamp) {
+                        this[conversationId] = indices.newObject(cur)
+                    }
+                    indices.newObject(cur)
+                    cur.moveToNext()
+                }
+            }
+        }
+
+        private fun ParcelableMessageConversation.addParticipant(
+                accountKey: UserKey,
+                user: User
+        ) {
+            val userKey = UserKeyUtils.fromUser(user)
+            val participants = this.participants
+            if (participants == null) {
+                this.participants = arrayOf(ParcelableUserUtils.fromUser(user, accountKey))
+            } else {
+                val index = participants.indexOfFirst { it.key == userKey }
+                if (index >= 0) {
+                    participants[index] = ParcelableUserUtils.fromUser(user, accountKey)
+                } else {
+                    this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
+                }
+            }
+        }
+
+        fun MutableMap<String, ParcelableMessageConversation>.addConversation(
+                conversationId: String,
+                details: AccountDetails,
+                message: ParcelableMessage,
+                users: Collection<User>,
+                conversationType: String = ConversationType.ONE_TO_ONE
+        ): ParcelableMessageConversation {
+            val conversation = this[conversationId] ?: run {
+                val obj = ParcelableMessageConversation()
+                obj.id = conversationId
+                obj.conversation_type = conversationType
+                obj.applyFrom(message, details)
+                this[conversationId] = obj
+                return@run obj
+            }
+            if (message.timestamp > conversation.timestamp) {
+                conversation.applyFrom(message, details)
+            }
+            users.forEach { user ->
+                conversation.addParticipant(details.key, user)
+            }
+            return conversation
+        }
 
     }
 }

@@ -66,6 +66,7 @@ val mediaPreloadOnWifiOnlyKey = KBooleanKey(KEY_PRELOAD_WIFI_ONLY, true)
 val autoRefreshCompatibilityModeKey = KBooleanKey("auto_refresh_compatibility_mode", Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
 val floatingDetailedContentsKey = KBooleanKey("floating_detailed_contents", true)
 val localTrendsWoeIdKey = KIntKey(KEY_LOCAL_TRENDS_WOEID, 1)
+val phishingLinksWaringKey = KBooleanKey(KEY_PHISHING_LINK_WARNING, true)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.service
 
+import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.Service
@@ -42,10 +43,7 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.ManualTaskStarter
-import org.mariotaku.ktextension.configure
-import org.mariotaku.ktextension.toLong
-import org.mariotaku.ktextension.toTypedArray
-import org.mariotaku.ktextension.useCursor
+import org.mariotaku.ktextension.*
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
@@ -59,13 +57,13 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.task.SendMessageTask
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.NotificationManagerWrapper
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.deleteDrafts
@@ -132,13 +130,21 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         when (draft.action_type) {
             Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2,
             Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                updateStatuses(draft.action_type, ParcelableStatusUpdateUtils.fromDraftItem(this, draft))
+                updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, draft))
             }
             Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {
-                val recipientId = (draft.action_extras as? SendDirectMessageActionExtras)?.recipientId ?: return
-                val accountKey = draft.account_keys?.firstOrNull() ?: return
-                val imageUri = draft.media.firstOrNull()?.uri
-                sendMessage(accountKey, recipientId, draft.text, imageUri)
+                val extras = draft.action_extras as? SendDirectMessageActionExtras ?: return
+                val message = ParcelableNewMessage().apply {
+                    this.account = draft.account_keys?.firstOrNull()?.convert { key ->
+                        val am = AccountManager.get(this@LengthyOperationsService)
+                        return@convert AccountUtils.getAccountDetails(am, key, true)
+                    }
+                    this.text = draft.text
+                    this.media = draft.media
+                    this.recipient_id = extras.recipientId
+                    this.conversation_id = extras.conversationId
+                }
+                sendMessage(message)
             }
             Draft.Action.FAVORITE -> {
                 performStatusAction(draft) { accountKey, status ->
@@ -167,22 +173,18 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     private fun handleSendDirectMessageIntent(intent: Intent) {
-        val accountId = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-        val recipientId = intent.getStringExtra(EXTRA_RECIPIENT_ID)
-        val text = intent.getStringExtra(EXTRA_TEXT)
-        val imageUri = intent.getStringExtra(EXTRA_IMAGE_URI)
-        if (accountId == null || recipientId == null || text == null) return
-        sendMessage(accountId, recipientId, text, imageUri)
+        val message = intent.getParcelableExtra<ParcelableNewMessage>(EXTRA_MESSAGE) ?: return
+        sendMessage(message)
     }
 
-    private fun sendMessage(accountId: UserKey, recipientId: String, text: String, imageUri: String?) {
+    private fun sendMessage(message: ParcelableNewMessage) {
         val title = getString(R.string.sending_direct_message)
         val builder = Builder(this)
         builder.setSmallIcon(R.drawable.ic_stat_send)
         builder.setProgress(100, 0, true)
         builder.setTicker(title)
         builder.setContentTitle(title)
-        builder.setContentText(text)
+        builder.setContentText(message.text)
         builder.setCategory(NotificationCompat.CATEGORY_PROGRESS)
         builder.setOngoing(true)
         val notification = builder.build()
@@ -192,12 +194,18 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val result = ManualTaskStarter.invokeExecute(task)
         invokeAfterExecute(task, result)
 
-        val resolver = contentResolver
         if (result.hasData()) {
             showOkMessage(R.string.message_direct_message_sent, false)
         } else {
-            val values = ContentValuesCreator.createMessageDraft(accountId, recipientId, text, imageUri)
-            resolver.insert(Drafts.CONTENT_URI, values)
+            UpdateStatusTask.saveDraft(this, Draft.Action.SEND_DIRECT_MESSAGE) {
+                account_keys = arrayOf(message.account.key)
+                text = message.text
+                media = message.media
+                action_extras = SendDirectMessageActionExtras().apply {
+                    recipientId = message.recipient_id
+                    conversationId = message.conversation_id
+                }
+            }
             showErrorMessage(R.string.action_sending_direct_message, result.exception, true)
         }
         stopForeground(false)
@@ -216,10 +224,11 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             return
         @Draft.Action
         val actionType = intent.getStringExtra(EXTRA_ACTION)
-        updateStatuses(actionType, *statuses)
+        statuses.forEach { it.draft_action = actionType }
+        updateStatuses(*statuses)
     }
 
-    private fun updateStatuses(@Draft.Action actionType: String, vararg statuses: ParcelableStatusUpdate) {
+    private fun updateStatuses(vararg statuses: ParcelableStatusUpdate) {
         val context = this
         val builder = Builder(context)
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
@@ -289,7 +298,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 }
             })
             task.callback = this
-            task.params = Pair(actionType, item)
+            task.params = item
             invokeBeforeExecute(task)
 
             val result = ManualTaskStarter.invokeExecute(task)
@@ -387,7 +396,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     }
 
     internal class MessageMediaUploadListener(private val context: Context, private val manager: NotificationManagerWrapper,
-                                              builder: NotificationCompat.Builder, private val message: String) : ReadListener {
+            builder: NotificationCompat.Builder, private val message: String) : ReadListener {
 
         var percent: Int = 0
 
@@ -411,8 +420,8 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         private val BULK_SIZE = (128 * 1024).toLong() // 128KiB
 
         private fun updateSendDirectMessageNotification(context: Context,
-                                                        builder: NotificationCompat.Builder,
-                                                        progress: Int, message: String?): Notification {
+                builder: NotificationCompat.Builder,
+                progress: Int, message: String?): Notification {
             builder.setContentTitle(context.getString(R.string.sending_direct_message))
             if (message != null) {
                 builder.setContentText(message)
@@ -424,9 +433,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
 
         private fun updateUpdateStatusNotification(context: Context,
-                                                   builder: NotificationCompat.Builder,
-                                                   progress: Int,
-                                                   status: ParcelableStatusUpdate?): Notification {
+                builder: NotificationCompat.Builder,
+                progress: Int,
+                status: ParcelableStatusUpdate?): Notification {
             builder.setContentTitle(context.getString(R.string.updating_status_notification))
             if (status != null) {
                 builder.setContentText(status.text)
@@ -438,7 +447,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
 
         fun updateStatusesAsync(context: Context, @Draft.Action action: String,
-                                vararg statuses: ParcelableStatusUpdate) {
+                vararg statuses: ParcelableStatusUpdate) {
             val intent = Intent(context, LengthyOperationsService::class.java)
             intent.action = INTENT_ACTION_UPDATE_STATUS
             intent.putExtra(EXTRA_STATUSES, statuses)

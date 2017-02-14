@@ -62,14 +62,14 @@ import java.util.concurrent.TimeUnit
 class UpdateStatusTask(
         context: Context,
         internal val stateCallback: UpdateStatusTask.StateCallback
-) : BaseAbstractTask<Pair<String, ParcelableStatusUpdate>, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
+) : BaseAbstractTask<ParcelableStatusUpdate, UpdateStatusTask.UpdateStatusResult, Any?>(context) {
 
-    override fun doLongOperation(params: Pair<String, ParcelableStatusUpdate>): UpdateStatusResult {
-        val draftId = saveDraft(params.first, params.second)
+    override fun doLongOperation(params: ParcelableStatusUpdate): UpdateStatusResult {
+        val draftId = saveDraft(params)
         microBlogWrapper.addSendingDraftId(draftId)
         try {
-            val result = doUpdateStatus(params.second, draftId)
-            deleteOrUpdateDraft(params.second, result, draftId)
+            val result = doUpdateStatus(params, draftId)
+            deleteOrUpdateDraft(params, result, draftId)
             return result
         } catch (e: UpdateStatusException) {
             return UpdateStatusResult(e, draftId)
@@ -85,16 +85,17 @@ class UpdateStatusTask(
     override fun afterExecute(handler: Any?, result: UpdateStatusResult) {
         stateCallback.afterExecute(result)
         if (params != null) {
-            logUpdateStatus(params.first, params.second, result)
+            logUpdateStatus(params, result)
         }
     }
 
-    private fun logUpdateStatus(actionType: String, statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {
+    private fun logUpdateStatus(statusUpdate: ParcelableStatusUpdate, result: UpdateStatusResult) {
         val mediaType = statusUpdate.media?.firstOrNull()?.type ?: ParcelableMedia.Type.UNKNOWN
         val hasLocation = statusUpdate.location != null
         val preciseLocation = statusUpdate.display_coordinates
-        Analyzer.log(UpdateStatus(result.accountTypes.firstOrNull(), actionType, mediaType,
-                hasLocation, preciseLocation, result.succeed, result.exceptions.firstOrNull() ?: result.exception))
+        Analyzer.log(UpdateStatus(result.accountTypes.firstOrNull(), statusUpdate.draft_action,
+                mediaType, hasLocation, preciseLocation, result.succeed,
+                result.exceptions.firstOrNull() ?: result.exception))
     }
 
     @Throws(UpdateStatusException::class)
@@ -151,8 +152,8 @@ class UpdateStatusTask(
 
     @Throws(UploadException::class)
     private fun uploadMedia(uploader: MediaUploaderInterface?,
-                            update: ParcelableStatusUpdate,
-                            pendingUpdate: PendingStatusUpdate) {
+            update: ParcelableStatusUpdate,
+            pendingUpdate: PendingStatusUpdate) {
         stateCallback.onStartUploadingMedia()
         if (uploader == null) {
             uploadMediaWithDefaultProvider(update, pendingUpdate)
@@ -163,8 +164,8 @@ class UpdateStatusTask(
 
     @Throws(UploadException::class)
     private fun uploadMediaWithExtension(uploader: MediaUploaderInterface,
-                                         update: ParcelableStatusUpdate,
-                                         pending: PendingStatusUpdate) {
+            update: ParcelableStatusUpdate,
+            pending: PendingStatusUpdate) {
         uploader.waitForService()
         val media: Array<UploaderMediaItem>
         try {
@@ -201,8 +202,8 @@ class UpdateStatusTask(
 
     @Throws(UpdateStatusException::class)
     private fun shortenStatus(shortener: StatusShortenerInterface?,
-                              update: ParcelableStatusUpdate,
-                              pending: PendingStatusUpdate) {
+            update: ParcelableStatusUpdate,
+            pending: PendingStatusUpdate) {
         if (shortener == null) return
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
@@ -280,8 +281,8 @@ class UpdateStatusTask(
 
     @Throws(MicroBlogException::class, UploadException::class)
     private fun fanfouUpdateStatusWithPhoto(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
-                                            pendingUpdate: PendingStatusUpdate, overrideText: String,
-                                            sizeLimit: SizeLimit, updateIndex: Int): Status {
+            pendingUpdate: PendingStatusUpdate, overrideText: String,
+            sizeLimit: SizeLimit, updateIndex: Int): Status {
         if (statusUpdate.media.size > 1) {
             throw MicroBlogException(context.getString(R.string.error_too_many_photos_fanfou))
         }
@@ -353,8 +354,8 @@ class UpdateStatusTask(
 
     @Throws(MicroBlogException::class)
     private fun twitterUpdateStatus(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
-                                    pendingUpdate: PendingStatusUpdate, overrideText: String,
-                                    index: Int): Status {
+            pendingUpdate: PendingStatusUpdate, overrideText: String,
+            index: Int): Status {
         val status = StatusUpdate(overrideText)
         if (statusUpdate.in_reply_to_status != null) {
             status.inReplyToStatusId(statusUpdate.in_reply_to_status.id)
@@ -500,7 +501,7 @@ class UpdateStatusTask(
 
     @Throws(IOException::class, MicroBlogException::class)
     private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
-                                   ownerIds: Array<String>): MediaUploadResponse {
+            ownerIds: Array<String>): MediaUploadResponse {
         val mediaType = body.contentType().contentType
         val length = body.length()
         val stream = body.stream()
@@ -550,11 +551,10 @@ class UpdateStatusTask(
         }
     }
 
-    private fun saveDraft(@Draft.Action draftAction: String?, statusUpdate: ParcelableStatusUpdate): Long {
-        return saveDraft(context, draftAction) {
+    private fun saveDraft(statusUpdate: ParcelableStatusUpdate): Long {
+        return saveDraft(context, statusUpdate.draft_action ?: Draft.Action.UPDATE_STATUS) {
             this.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
             this.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
-            this.action_type = draftAction ?: Draft.Action.UPDATE_STATUS
             this.text = statusUpdate.text
             this.location = statusUpdate.location
             this.media = statusUpdate.media
@@ -907,7 +907,7 @@ class UpdateStatusTask(
                 val deleteAlways: List<MediaDeletionItem>?
         )
 
-        fun saveDraft(context: Context, @Draft.Action action: String?, config: Draft.() -> Unit): Long {
+        fun saveDraft(context: Context, @Draft.Action action: String, config: Draft.() -> Unit): Long {
             val draft = Draft()
             draft.action_type = action
             draft.timestamp = System.currentTimeMillis()

@@ -62,11 +62,10 @@
             app:caretWidth="@dimen/element_spacing_normal"
             app:cornerRadius="2dp">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/mediaPreview"
-                android:orientation="vertical"
                 android:padding="@dimen/element_spacing_normal">
 
                 <org.mariotaku.twidere.view.CardMediaContainer
@@ -80,16 +79,16 @@
 
                 </org.mariotaku.twidere.view.CardMediaContainer>
 
-
                 <org.mariotaku.twidere.view.TimelineContentTextView
                     android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/mediaPreview"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorPrimary"
                     tools:text="@string/sample_status_text"/>
 
-            </LinearLayout>
+            </RelativeLayout>
         </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
         <org.mariotaku.twidere.view.FixedTextView

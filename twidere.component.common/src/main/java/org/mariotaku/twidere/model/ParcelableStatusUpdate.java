@@ -68,6 +68,10 @@ public class ParcelableStatusUpdate implements Parcelable {
     @JsonField(name = "draft_unique_id")
     @ParcelableThisPlease
     public String draft_unique_id;
+    @JsonField(name = "draft_action")
+    @ParcelableThisPlease
+    @Draft.Action
+    public String draft_action;
 
     public ParcelableStatusUpdate() {
     }

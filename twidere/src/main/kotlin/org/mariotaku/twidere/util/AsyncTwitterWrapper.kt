@@ -649,55 +649,6 @@ class AsyncTwitterWrapper(
 
     }
 
-
-    internal inner class DestroyMessageConversationTask(private val mAccountKey: UserKey, private val mUserId: String) : ManagedAsyncTask<Any, Any, SingleResponse<Boolean>>(context) {
-
-        private fun deleteMessages(accountKey: UserKey, userId: String) {
-            val whereArgs = arrayOf(accountKey.toString(), userId)
-            resolver.delete(DirectMessages.Inbox.CONTENT_URI, Expression.and(
-                    Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
-                    Expression.equalsArgs(Inbox.SENDER_ID)
-            ).sql, whereArgs)
-            resolver.delete(DirectMessages.Outbox.CONTENT_URI, Expression.and(
-                    Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
-                    Expression.equalsArgs(Outbox.RECIPIENT_ID)
-            ).sql, whereArgs)
-        }
-
-        private fun isMessageNotFound(e: Exception?): Boolean {
-            if (e !is MicroBlogException) return false
-            return e.errorCode == ErrorInfo.PAGE_NOT_FOUND || e.statusCode == HttpResponseCode.NOT_FOUND
-        }
-
-        override fun doInBackground(vararg args: Any): SingleResponse<Boolean> {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey) ?: return SingleResponse(MicroBlogException("No account"))
-            try {
-                microBlog.destroyDirectMessagesConversation(mAccountKey.id, mUserId)
-                deleteMessages(mAccountKey, mUserId)
-                return SingleResponse(true)
-            } catch (e: MicroBlogException) {
-                if (isMessageNotFound(e)) {
-                    deleteMessages(mAccountKey, mUserId)
-                }
-                return SingleResponse(e)
-            }
-
-        }
-
-
-        override fun onPostExecute(result: SingleResponse<Boolean>) {
-            super.onPostExecute(result)
-            if (result.hasData() || isMessageNotFound(result.exception)) {
-                Utils.showInfoMessage(context, R.string.message_direct_message_deleted, false)
-            } else {
-                Utils.showErrorMessage(context, R.string.action_deleting, result.exception, true)
-            }
-        }
-
-
-    }
-
-
     internal inner class DestroySavedSearchTask(
             context: Context,
             private val accountKey: UserKey,
