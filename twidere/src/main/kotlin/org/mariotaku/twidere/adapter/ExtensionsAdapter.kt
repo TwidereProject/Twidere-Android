@@ -28,13 +28,7 @@ import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
 import org.mariotaku.twidere.util.PermissionsManager
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 
-class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line) {
-
-    private val mPermissionsManager: PermissionsManager
-
-    init {
-        mPermissionsManager = PermissionsManager(context)
-    }
+class ExtensionsAdapter(context: Context) : BaseArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line) {
 
     override fun getItemId(position: Int): Long {
         return getItem(position).hashCode().toLong()
@@ -57,7 +51,7 @@ class ExtensionsAdapter(context: Context) : ArrayAdapter<ExtensionInfo>(context,
         val permissionValid = PermissionsManager.isPermissionValid(*permissions)
         holder.checkbox.visibility = if (permissionValid) View.VISIBLE else View.GONE
         if (permissionValid) {
-            holder.checkbox.isChecked = mPermissionsManager.checkPermission(info.pname, *permissions)
+            holder.checkbox.isChecked = permissionsManager.checkPermission(info.packageName, *permissions)
         }
         holder.text1.text = info.label
         holder.text2.visibility = if (TextUtils.isEmpty(info.description)) View.GONE else View.VISIBLE

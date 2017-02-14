@@ -29,10 +29,9 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.support.v4.content.FixedAsyncTaskLoader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.util.ParseUtils
+import java.text.Collator
 import java.util.*
 
 class ExtensionsListLoader(
@@ -52,6 +51,7 @@ class ExtensionsListLoader(
                 extensions.add(ExtensionInfo(info, packageManager))
             }
         }
+        extensions.sort(ExtensionInfoComparator(Collator.getInstance()))
         return extensions
     }
 
@@ -100,39 +100,24 @@ class ExtensionsListLoader(
         cancelLoad()
     }
 
-    class ExtensionInfo(info: ApplicationInfo, pm: PackageManager) : Comparable<ExtensionInfo> {
-        val permissions: Array<String>?
-        val label: String
-        val description: String
-        val pname: String
-        val settings: String
-        val icon: Drawable
+    data class ExtensionInfo(
+            val packageName: String,
+            val label: CharSequence,
+            val description: CharSequence?,
+            val icon: Drawable,
+            val permissions: Array<String>?,
+            val settings: String?
+    ) {
 
-        init {
-            val meta = info.metaData
-            val permissionString = meta.getString(METADATA_KEY_EXTENSION_PERMISSIONS)
-            permissions = permissionString?.split('|')?.filterNot(String::isEmpty)?.toTypedArray()
-            settings = meta.getString(METADATA_KEY_EXTENSION_SETTINGS)
-            icon = info.loadIcon(pm)
-            pname = info.packageName
-            label = ParseUtils.parseString(info.loadLabel(pm), pname)
-            description = ParseUtils.parseString(info.loadDescription(pm))
-        }
+        constructor(info: ApplicationInfo, pm: PackageManager) : this(
+                info.packageName,
+                info.loadLabel(pm) ?: info.packageName,
+                info.loadDescription(pm),
+                info.loadIcon(pm),
+                info.metaData?.getString(METADATA_KEY_EXTENSION_PERMISSIONS)?.split('|')?.filterNot(String::isEmpty)?.toTypedArray(),
+                info.metaData?.getString(METADATA_KEY_EXTENSION_SETTINGS)
+        )
 
-        override fun compareTo(another: ExtensionInfo): Int {
-            return label.compareTo(another.label, ignoreCase = true)
-        }
-
-        override fun toString(): String {
-            return "ExtensionInfo{" +
-                    "permissions=" + Arrays.toString(permissions) +
-                    ", label='" + label + '\'' +
-                    ", description='" + description + '\'' +
-                    ", pname='" + pname + '\'' +
-                    ", settings='" + settings + '\'' +
-                    ", icon=" + icon +
-                    '}'
-        }
     }
 
     /**
@@ -141,14 +126,14 @@ class ExtensionsListLoader(
      */
     class InterestingConfigChanges {
 
-        internal val mLastConfiguration = Configuration()
-        internal var mLastDensity: Int = 0
+        internal val lastConfiguration = Configuration()
+        internal var lastDensity: Int = 0
 
         internal fun applyNewConfig(res: Resources): Boolean {
-            val configChanges = mLastConfiguration.updateFrom(res.configuration)
-            val densityChanged = mLastDensity != res.displayMetrics.densityDpi
+            val configChanges = lastConfiguration.updateFrom(res.configuration)
+            val densityChanged = lastDensity != res.displayMetrics.densityDpi
             if (densityChanged || configChanges and (ActivityInfo.CONFIG_LOCALE or ActivityInfo.CONFIG_UI_MODE or ActivityInfo.CONFIG_SCREEN_LAYOUT) != 0) {
-                mLastDensity = res.displayMetrics.densityDpi
+                lastDensity = res.displayMetrics.densityDpi
                 return true
             }
             return false
@@ -159,27 +144,34 @@ class ExtensionsListLoader(
      * Helper class to look for interesting changes to the installed apps so
      * that the loader can be updated.
      */
-    class PackageIntentReceiver(internal val mLoader: ExtensionsListLoader) : BroadcastReceiver() {
+    class PackageIntentReceiver(internal val loader: ExtensionsListLoader) : BroadcastReceiver() {
 
         init {
             val filter = IntentFilter(Intent.ACTION_PACKAGE_ADDED)
             filter.addAction(Intent.ACTION_PACKAGE_REMOVED)
             filter.addAction(Intent.ACTION_PACKAGE_CHANGED)
             filter.addDataScheme("package")
-            mLoader.context.registerReceiver(this, filter)
+            loader.context.registerReceiver(this, filter)
             // Register for events related to sdcard installation.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-                val sdFilter = IntentFilter()
-                sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE)
-                sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)
-                mLoader.context.registerReceiver(this, sdFilter)
-            }
+            val sdFilter = IntentFilter()
+            sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE)
+            sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)
+            loader.context.registerReceiver(this, sdFilter)
         }
 
         override fun onReceive(context: Context, intent: Intent) {
             // Tell the loader about the change.
-            mLoader.onContentChanged()
+            loader.onContentChanged()
         }
+    }
+
+    class ExtensionInfoComparator(val collator: Collator) : Comparator<ExtensionInfo> {
+        override fun compare(o1: ExtensionInfo, o2: ExtensionInfo): Int {
+            val label1 = o1.label.toString()
+            val label2 = o2.label.toString()
+            return collator.compare(label1, label2)
+        }
+
     }
 
 }
