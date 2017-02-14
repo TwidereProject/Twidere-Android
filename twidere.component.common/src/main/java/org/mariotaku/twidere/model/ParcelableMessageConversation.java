@@ -21,6 +21,8 @@
 
 package org.mariotaku.twidere.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -28,6 +30,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
@@ -46,9 +49,10 @@ import java.util.Arrays;
 /**
  * Created by mariotaku on 16/6/6.
  */
+@ParcelablePlease
 @JsonObject
 @CursorObject(tableInfo = true, valuesCreator = true)
-public class ParcelableMessageConversation {
+public class ParcelableMessageConversation implements Parcelable {
     @CursorField(value = Conversations._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
     public long _id;
 
@@ -228,4 +232,26 @@ public class ParcelableMessageConversation {
             return null;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableMessageConversationParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ParcelableMessageConversation> CREATOR = new Creator<ParcelableMessageConversation>() {
+        public ParcelableMessageConversation createFromParcel(Parcel source) {
+            ParcelableMessageConversation target = new ParcelableMessageConversation();
+            ParcelableMessageConversationParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableMessageConversation[] newArray(int size) {
+            return new ParcelableMessageConversation[size];
+        }
+    };
 }

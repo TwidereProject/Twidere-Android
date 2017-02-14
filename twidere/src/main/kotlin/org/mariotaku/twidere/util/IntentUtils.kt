@@ -96,8 +96,8 @@ object IntentUtils {
     }
 
     fun openUserProfile(context: Context, user: ParcelableUser,
-                        newDocument: Boolean, @Referral referral: String? = null,
-                        activityOptions: Bundle? = null) {
+            newDocument: Boolean, @Referral referral: String? = null,
+            activityOptions: Bundle? = null) {
         val extras = Bundle()
         extras.putParcelable(EXTRA_USER, user)
         if (user.extras != null) {
@@ -117,9 +117,9 @@ object IntentUtils {
     }
 
     fun openUserProfile(context: Context, accountKey: UserKey?,
-                        userKey: UserKey?, screenName: String?,
-                        newDocument: Boolean, @Referral referral: String? = null,
-                        activityOptions: Bundle? = null) {
+            userKey: UserKey?, screenName: String?,
+            newDocument: Boolean, @Referral referral: String? = null,
+            activityOptions: Bundle? = null) {
         val intent = userProfile(accountKey, userKey, screenName, referral, null)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
@@ -128,7 +128,7 @@ object IntentUtils {
     }
 
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-                    @Referral referral: String? = null, profileUrl: String?): Intent {
+            @Referral referral: String? = null, profileUrl: String?): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         if (referral != null) {
@@ -151,7 +151,7 @@ object IntentUtils {
     }
 
     fun openUserMentions(context: Context, accountKey: UserKey?,
-                         screenName: String) {
+            screenName: String) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_MENTIONS)
@@ -164,25 +164,25 @@ object IntentUtils {
     }
 
     fun openMedia(context: Context, status: ParcelableStatus,
-                  current: ParcelableMedia? = null, newDocument: Boolean,
-                  displaySensitiveContents: Boolean, options: Bundle? = null) {
+            current: ParcelableMedia? = null, newDocument: Boolean,
+            displaySensitiveContents: Boolean, options: Bundle? = null) {
         val media = ParcelableMediaUtils.getPrimaryMedia(status) ?: return
         openMedia(context, status.account_key, status.is_possibly_sensitive, status, current,
                 media, newDocument, displaySensitiveContents, options)
     }
 
     fun openMedia(context: Context, accountKey: UserKey?, media: Array<ParcelableMedia>,
-                  current: ParcelableMedia? = null, isPossiblySensitive: Boolean,
-                  newDocument: Boolean, displaySensitiveContents: Boolean, options: Bundle? = null) {
+            current: ParcelableMedia? = null, isPossiblySensitive: Boolean,
+            newDocument: Boolean, displaySensitiveContents: Boolean, options: Bundle? = null) {
         openMedia(context, accountKey, isPossiblySensitive, null, current, media, newDocument,
                 displaySensitiveContents, options)
     }
 
     fun openMedia(context: Context, accountKey: UserKey?, isPossiblySensitive: Boolean,
-                  status: ParcelableStatus?,
-                  current: ParcelableMedia? = null, media: Array<ParcelableMedia>,
-                  newDocument: Boolean, displaySensitiveContents: Boolean,
-                  options: Bundle? = null) {
+            status: ParcelableStatus?,
+            current: ParcelableMedia? = null, media: Array<ParcelableMedia>,
+            newDocument: Boolean, displaySensitiveContents: Boolean,
+            options: Bundle? = null) {
         if (context is FragmentActivity && isPossiblySensitive && !displaySensitiveContents) {
             val fm = context.supportFragmentManager
             val fragment = SensitiveContentWarningDialogFragment()
@@ -204,7 +204,7 @@ object IntentUtils {
     }
 
     fun openMediaDirectly(context: Context, accountKey: UserKey?, status: ParcelableStatus,
-                          current: ParcelableMedia, newDocument: Boolean, options: Bundle? = null) {
+            current: ParcelableMedia, newDocument: Boolean, options: Bundle? = null) {
         val media = ParcelableMediaUtils.getPrimaryMedia(status) ?: return
         openMediaDirectly(context, accountKey, media, current, options, newDocument, status)
     }
@@ -248,10 +248,9 @@ object IntentUtils {
         return resolveInfo?.filter
     }
 
-    fun openMediaDirectly(context: Context, accountKey: UserKey?,
-                          media: Array<ParcelableMedia>, current: ParcelableMedia? = null,
-                          options: Bundle? = null, newDocument: Boolean,
-                          status: ParcelableStatus?) {
+    fun openMediaDirectly(context: Context, accountKey: UserKey?, media: Array<ParcelableMedia>,
+            current: ParcelableMedia? = null, options: Bundle? = null, newDocument: Boolean,
+            status: ParcelableStatus? = null, message: ParcelableMessage? = null) {
         val intent = Intent(context, MediaViewerActivity::class.java)
         intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
         intent.putExtra(EXTRA_CURRENT_MEDIA, current)
@@ -260,6 +259,10 @@ object IntentUtils {
             intent.putExtra(EXTRA_STATUS, status)
             intent.data = getMediaViewerUri("status", status.id, accountKey)
         }
+        if (message != null) {
+            intent.putExtra(EXTRA_MESSAGE, message)
+            intent.data = getMediaViewerUri("message", message.id, accountKey)
+        }
         if (newDocument && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
@@ -267,7 +270,7 @@ object IntentUtils {
     }
 
     fun getMediaViewerUri(type: String, id: String,
-                          accountKey: UserKey?): Uri {
+            accountKey: UserKey?): Uri {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority("media")
@@ -291,7 +294,7 @@ object IntentUtils {
     }
 
     fun openIncomingFriendships(context: Context,
-                                accountKey: UserKey?) {
+            accountKey: UserKey?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_INCOMING_FRIENDSHIPS)
@@ -316,7 +319,7 @@ object IntentUtils {
     }
 
     fun openMutesUsers(context: Context,
-                       accountKey: UserKey?) {
+            accountKey: UserKey?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_MUTES_USERS)
@@ -329,7 +332,7 @@ object IntentUtils {
     }
 
     fun openScheduledStatuses(context: Context,
-                              accountKey: UserKey?) {
+            accountKey: UserKey?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_SCHEDULED_STATUSES)
@@ -401,7 +404,7 @@ object IntentUtils {
     }
 
     fun openStatusFavoriters(context: Context, accountKey: UserKey?,
-                             statusId: String) {
+            statusId: String) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_STATUS_FAVORITERS)
@@ -414,7 +417,7 @@ object IntentUtils {
     }
 
     fun openStatusRetweeters(context: Context, accountKey: UserKey?,
-                             statusId: String) {
+            statusId: String) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_STATUS_RETWEETERS)
@@ -427,7 +430,7 @@ object IntentUtils {
     }
 
     fun openTweetSearch(context: Context, accountKey: UserKey?,
-                        query: String) {
+            query: String) {
         openSearch(context, accountKey, query, QUERY_PARAM_VALUE_TWEETS)
     }
 
@@ -442,9 +445,9 @@ object IntentUtils {
     }
 
     fun openUserFavorites(context: Context,
-                          accountKey: UserKey?,
-                          userKey: UserKey?,
-                          screenName: String?) {
+            accountKey: UserKey?,
+            userKey: UserKey?,
+            screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_FAVORITES)
@@ -463,9 +466,9 @@ object IntentUtils {
     }
 
     fun openUserFollowers(context: Context,
-                          accountKey: UserKey?,
-                          userKey: UserKey?,
-                          screenName: String?) {
+            accountKey: UserKey?,
+            userKey: UserKey?,
+            screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_FOLLOWERS)
@@ -483,9 +486,9 @@ object IntentUtils {
     }
 
     fun openUserFriends(context: Context,
-                        accountKey: UserKey?,
-                        userKey: UserKey?,
-                        screenName: String?) {
+            accountKey: UserKey?,
+            userKey: UserKey?,
+            screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_FRIENDS)
@@ -504,10 +507,10 @@ object IntentUtils {
     }
 
     fun openUserListDetails(context: Context,
-                            accountKey: UserKey?,
-                            listId: String?,
-                            userId: UserKey?,
-                            screenName: String?, listName: String?) {
+            accountKey: UserKey?,
+            listId: String?,
+            userId: UserKey?,
+            screenName: String?, listName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_LIST)
@@ -531,7 +534,7 @@ object IntentUtils {
     }
 
     fun openUserListDetails(context: Context,
-                            userList: ParcelableUserList) {
+            userList: ParcelableUserList) {
         val userKey = userList.user_key
         val listId = userList.id
         val extras = Bundle()
@@ -564,9 +567,9 @@ object IntentUtils {
     }
 
     fun openUserLists(context: Context,
-                      accountKey: UserKey?,
-                      userKey: UserKey?,
-                      screenName: String?) {
+            accountKey: UserKey?,
+            userKey: UserKey?,
+            screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_LISTS)
@@ -585,9 +588,9 @@ object IntentUtils {
 
 
     fun openUserGroups(context: Context,
-                       accountKey: UserKey?,
-                       userId: UserKey?,
-                       screenName: String?) {
+            accountKey: UserKey?,
+            userId: UserKey?,
+            screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_USER_GROUPS)

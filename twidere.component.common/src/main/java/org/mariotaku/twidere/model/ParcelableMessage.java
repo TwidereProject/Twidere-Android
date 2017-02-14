@@ -21,6 +21,8 @@
 
 package org.mariotaku.twidere.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -28,12 +30,13 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
 import com.bluelinelabs.logansquare.annotation.OnPreJsonSerialize;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
+import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
-import org.mariotaku.twidere.model.message.MessageExtras;
 import org.mariotaku.twidere.model.message.ConversationInfoUpdatedExtras;
+import org.mariotaku.twidere.model.message.MessageExtras;
 import org.mariotaku.twidere.model.message.StickerExtras;
 import org.mariotaku.twidere.model.message.UserArrayExtras;
 import org.mariotaku.twidere.model.util.MessageExtrasConverter;
@@ -46,9 +49,10 @@ import java.util.Arrays;
 /**
  * Created by mariotaku on 16/6/6.
  */
+@ParcelablePlease
 @JsonObject
 @CursorObject(tableInfo = true, valuesCreator = true)
-public class ParcelableMessage {
+public class ParcelableMessage implements Parcelable {
 
     @CursorField(value = Messages._ID, type = TwidereDataStore.TYPE_PRIMARY_KEY, excludeWrite = true)
     public long _id;
@@ -201,4 +205,26 @@ public class ParcelableMessage {
             return null;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelableMessageParcelablePlease.writeToParcel(this, dest, flags);
+    }
+
+    public static final Creator<ParcelableMessage> CREATOR = new Creator<ParcelableMessage>() {
+        public ParcelableMessage createFromParcel(Parcel source) {
+            ParcelableMessage target = new ParcelableMessage();
+            ParcelableMessageParcelablePlease.readFromParcel(target, source);
+            return target;
+        }
+
+        public ParcelableMessage[] newArray(int size) {
+            return new ParcelableMessage[size];
+        }
+    };
 }
