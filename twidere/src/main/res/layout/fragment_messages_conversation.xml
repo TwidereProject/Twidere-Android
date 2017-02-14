@@ -57,35 +57,58 @@
         android:gravity="bottom"
         android:orientation="horizontal"
         android:outlineProvider="bounds"
-        android:padding="@dimen/element_spacing_normal"
+        android:paddingBottom="@dimen/element_spacing_normal"
+        android:paddingTop="@dimen/element_spacing_normal"
         tools:ignore="UnusedAttribute">
 
         <org.mariotaku.twidere.view.IconActionView
-            android:id="@+id/addImage"
+            android:id="@+id/addMedia"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:color="?android:textColorSecondary"
             android:contentDescription="@string/add_image"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_gallery"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            app:iabColor="?android:textColorSecondary"
+            tools:tint="?android:textColorSecondary"/>
 
-        <org.mariotaku.twidere.view.IconActionView
-            android:id="@+id/sendMessage"
+        <FrameLayout
+            android:id="@+id/sendMessageContainer"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:color="?android:textColorSecondary"
-            android:contentDescription="@string/action_send"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_action_send"/>
+            android:layout_marginEnd="@dimen/element_spacing_normal"
+            android:layout_marginLeft="@dimen/element_spacing_minus_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
+            android:layout_marginStart="@dimen/element_spacing_minus_normal">
+
+            <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/sendMessage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/action_send"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_action_send"
+                app:iabColor="?android:textColorSecondary"
+                tools:tint="?android:textColorSecondary"/>
+
+            <com.pnikosis.materialishprogress.ProgressWheel
+                android:id="@+id/sendProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:matProg_barColor="?colorAccent"
+                app:matProg_barWidth="3dp"
+                app:matProg_progressIndeterminate="true"/>
+        </FrameLayout>
 
         <org.mariotaku.messagebubbleview.library.MessageBubbleView
             android:id="@+id/editTextContainer"
@@ -93,20 +116,22 @@
             android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="true"
             android:layout_gravity="end"
-            android:layout_toEndOf="@+id/addImage"
-            android:layout_toLeftOf="@+id/sendMessage"
-            android:layout_toRightOf="@+id/addImage"
-            android:layout_toStartOf="@+id/sendMessage"
+            android:layout_toEndOf="@+id/addMedia"
+            android:layout_toLeftOf="@+id/sendMessageContainer"
+            android:layout_toRightOf="@+id/addMedia"
+            android:layout_toStartOf="@+id/sendMessageContainer"
             app:bubbleColor="?messageBubbleColor"
-            app:caretHeight="8dp"
+            app:caretHeight="@dimen/element_spacing_normal"
             app:caretPosition="topEnd"
-            app:caretWidth="8dp"
+            app:caretWidth="@dimen/element_spacing_normal"
             app:cornerRadius="2dp">
 
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:minHeight="@dimen/element_size_normal"
+                android:orientation="vertical"
                 android:padding="@dimen/element_spacing_normal">
 
                 <org.mariotaku.twidere.view.ComposeEditText
@@ -128,7 +153,15 @@
                     <requestFocus/>
                 </org.mariotaku.twidere.view.ComposeEditText>
 
-            </FrameLayout>
+                <org.mariotaku.twidere.view.ExtendedRecyclerView
+                    android:id="@+id/attachedMediaPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="104dp"
+                    android:layout_marginTop="@dimen/element_spacing_normal"
+                    android:clipChildren="false"
+                    tools:listitem="@layout/grid_item_media_editor"/>
+
+            </LinearLayout>
         </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
     </RelativeLayout>

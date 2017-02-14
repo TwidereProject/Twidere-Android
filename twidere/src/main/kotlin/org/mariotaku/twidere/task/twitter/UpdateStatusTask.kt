@@ -322,8 +322,9 @@ class UpdateStatusTask(
                     if (pendingUpdate.sharedMediaIds != null) {
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
-                        val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload,
-                                account, update, ownerIds, true)
+                        val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(context,
+                                mediaLoader, upload, account, update.media, ownerIds, true,
+                                stateCallback)
                         mediaIds = ids
                         deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                         deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -337,8 +338,9 @@ class UpdateStatusTask(
                 AccountType.STATUSNET -> {
                     // TODO use their native API
                     val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                    val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(upload, account,
-                            update, ownerIds, false)
+                    val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(context,
+                            mediaLoader, upload, account, update.media, ownerIds, false,
+                            stateCallback)
                     mediaIds = ids
                     deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                     deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -445,111 +447,10 @@ class UpdateStatusTask(
         return uploader
     }
 
-    @Throws(UploadException::class)
-    private fun uploadAllMediaShared(
-            upload: TwitterUpload,
-            account: AccountDetails,
-            update: ParcelableStatusUpdate,
-            ownerIds: Array<String>,
-            chucked: Boolean
-    ): SharedMediaUploadResult {
-        val deleteOnSuccess = ArrayList<MediaDeletionItem>()
-        val deleteAlways = ArrayList<MediaDeletionItem>()
-        val mediaIds = update.media.mapIndexed { index, media ->
-            val resp: MediaUploadResponse
-            //noinspection TryWithIdenticalCatches
-            var body: MediaStreamBody? = null
-            try {
-                val sizeLimit = account.size_limit
-                body = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
-                        media.type, chucked, ContentLengthInputStream.ReadListener { length, position ->
-                    stateCallback.onUploadingProgressChanged(index, position, length)
-                })
-                val mediaUploadEvent = MediaUploadEvent.create(context, media)
-                mediaUploadEvent.setFileSize(body.body.length())
-                body.geometry?.let { geometry ->
-                    mediaUploadEvent.setGeometry(geometry.x, geometry.y)
-                }
-                if (chucked) {
-                    resp = uploadMediaChucked(upload, body.body, ownerIds)
-                } else {
-                    resp = upload.uploadMedia(body.body, ownerIds)
-                }
-                mediaUploadEvent.markEnd()
-                HotMobiLogger.getInstance(context).log(mediaUploadEvent)
-            } catch (e: IOException) {
-                throw UploadException(e)
-            } catch (e: MicroBlogException) {
-                throw UploadException(e)
-            } finally {
-                Utils.closeSilently(body)
-            }
-            body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
-            body?.deleteAlways?.addAllTo(deleteAlways)
-            if (media.alt_text?.isNotEmpty() ?: false) {
-                try {
-                    upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
-                } catch (e: MicroBlogException) {
-                    // Ignore
-                }
-            }
-            return@mapIndexed resp.id
-        }
-        return SharedMediaUploadResult(mediaIds.toTypedArray(), deleteOnSuccess, deleteAlways)
-    }
-
-
-    @Throws(IOException::class, MicroBlogException::class)
-    private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
-            ownerIds: Array<String>): MediaUploadResponse {
-        val mediaType = body.contentType().contentType
-        val length = body.length()
-        val stream = body.stream()
-        var response = upload.initUploadMedia(mediaType, length, ownerIds)
-        val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
-        for (segmentIndex in 0..segments - 1) {
-            val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - segmentIndex * BULK_SIZE).toInt()
-            val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
-                    stream)
-            upload.appendUploadMedia(response.id, segmentIndex, bulk)
-        }
-        response = upload.finalizeUploadMedia(response.id)
-        var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
-        while (info != null && shouldWaitForProcess(info)) {
-            val checkAfterSecs = info.checkAfterSecs
-            if (checkAfterSecs <= 0) {
-                break
-            }
-            try {
-                Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs))
-            } catch (e: InterruptedException) {
-                break
-            }
-
-            response = upload.getUploadMediaStatus(response.id)
-            info = response.processingInfo
-        }
-        if (info != null && MediaUploadResponse.ProcessingInfo.State.FAILED == info.state) {
-            val exception = MicroBlogException()
-            val errorInfo = info.error
-            if (errorInfo != null) {
-                exception.errors = arrayOf(errorInfo)
-            }
-            throw exception
-        }
-        return response
-    }
-
     private fun isDuplicate(exception: Exception): Boolean {
         return exception is MicroBlogException && exception.errorCode == ErrorInfo.STATUS_IS_DUPLICATE
     }
 
-    private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
-        when (info.state) {
-            MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
-            else -> return false
-        }
-    }
 
     private fun saveDraft(statusUpdate: ParcelableStatusUpdate): Long {
         return saveDraft(context, statusUpdate.draft_action ?: Draft.Action.UPDATE_STATUS) {
@@ -656,12 +557,7 @@ class UpdateStatusTask(
         constructor(message: String) : super(message)
     }
 
-    interface StateCallback {
-        @WorkerThread
-        fun onStartUploadingMedia()
-
-        @WorkerThread
-        fun onUploadingProgressChanged(index: Int, current: Long, total: Long)
+    interface StateCallback : UploadCallback {
 
         @WorkerThread
         fun onShorteningStatus()
@@ -674,6 +570,15 @@ class UpdateStatusTask(
 
         @UiThread
         fun beforeExecute()
+    }
+
+    interface UploadCallback {
+        @WorkerThread
+        fun onStartUploadingMedia()
+
+        @WorkerThread
+        fun onUploadingProgressChanged(index: Int, current: Long, total: Long)
+
     }
 
     data class SizeLimit(
@@ -709,7 +614,7 @@ class UpdateStatusTask(
 
     }
 
-    internal data class SharedMediaUploadResult(
+    data class SharedMediaUploadResult(
             val ids: Array<String>,
             val deleteOnSuccess: List<MediaDeletionItem>,
             val deleteAlways: List<MediaDeletionItem>
@@ -718,6 +623,62 @@ class UpdateStatusTask(
     companion object {
 
         private val BULK_SIZE = 256 * 1024// 128 Kib
+
+        @Throws(UploadException::class)
+        fun uploadAllMediaShared(
+                context: Context,
+                mediaLoader: MediaLoaderWrapper,
+                upload: TwitterUpload,
+                account: AccountDetails,
+                media: Array<ParcelableMediaUpdate>,
+                ownerIds: Array<String>?,
+                chucked: Boolean,
+                callback: UploadCallback?
+        ): SharedMediaUploadResult {
+            val deleteOnSuccess = ArrayList<MediaDeletionItem>()
+            val deleteAlways = ArrayList<MediaDeletionItem>()
+            val mediaIds = media.mapIndexed { index, media ->
+                val resp: MediaUploadResponse
+                //noinspection TryWithIdenticalCatches
+                var body: MediaStreamBody? = null
+                try {
+                    val sizeLimit = account.size_limit
+                    body = getBodyFromMedia(context, mediaLoader, Uri.parse(media.uri), sizeLimit,
+                            media.type, chucked, ContentLengthInputStream.ReadListener { length, position ->
+                        callback?.onUploadingProgressChanged(index, position, length)
+                    })
+                    val mediaUploadEvent = MediaUploadEvent.create(context, media)
+                    mediaUploadEvent.setFileSize(body.body.length())
+                    body.geometry?.let { geometry ->
+                        mediaUploadEvent.setGeometry(geometry.x, geometry.y)
+                    }
+                    if (chucked) {
+                        resp = uploadMediaChucked(upload, body.body, ownerIds)
+                    } else {
+                        resp = upload.uploadMedia(body.body, ownerIds)
+                    }
+                    mediaUploadEvent.markEnd()
+                    HotMobiLogger.getInstance(context).log(mediaUploadEvent)
+                } catch (e: IOException) {
+                    throw UploadException(e)
+                } catch (e: MicroBlogException) {
+                    throw UploadException(e)
+                } finally {
+                    Utils.closeSilently(body)
+                }
+                body?.deleteOnSuccess?.addAllTo(deleteOnSuccess)
+                body?.deleteAlways?.addAllTo(deleteAlways)
+                if (media.alt_text?.isNotEmpty() ?: false) {
+                    try {
+                        upload.createMetadata(NewMediaMetadata(resp.id, media.alt_text))
+                    } catch (e: MicroBlogException) {
+                        // Ignore
+                    }
+                }
+                return@mapIndexed resp.id
+            }
+            return SharedMediaUploadResult(mediaIds.toTypedArray(), deleteOnSuccess, deleteAlways)
+        }
 
         @Throws(IOException::class)
         fun getBodyFromMedia(
@@ -810,6 +771,54 @@ class UpdateStatusTask(
                 }
             }
             return null
+        }
+
+        @Throws(IOException::class, MicroBlogException::class)
+        private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
+                ownerIds: Array<String>?): MediaUploadResponse {
+            val mediaType = body.contentType().contentType
+            val length = body.length()
+            val stream = body.stream()
+            var response = upload.initUploadMedia(mediaType, length, ownerIds)
+            val segments = if (length == 0L) 0 else (length / BULK_SIZE + 1).toInt()
+            for (segmentIndex in 0..segments - 1) {
+                val currentBulkSize = Math.min(BULK_SIZE.toLong(), length - segmentIndex * BULK_SIZE).toInt()
+                val bulk = SimpleBody(ContentType.OCTET_STREAM, null, currentBulkSize.toLong(),
+                        stream)
+                upload.appendUploadMedia(response.id, segmentIndex, bulk)
+            }
+            response = upload.finalizeUploadMedia(response.id)
+            var info: MediaUploadResponse.ProcessingInfo? = response.processingInfo
+            while (info != null && shouldWaitForProcess(info)) {
+                val checkAfterSecs = info.checkAfterSecs
+                if (checkAfterSecs <= 0) {
+                    break
+                }
+                try {
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(checkAfterSecs))
+                } catch (e: InterruptedException) {
+                    break
+                }
+
+                response = upload.getUploadMediaStatus(response.id)
+                info = response.processingInfo
+            }
+            if (info != null && MediaUploadResponse.ProcessingInfo.State.FAILED == info.state) {
+                val exception = MicroBlogException()
+                val errorInfo = info.error
+                if (errorInfo != null) {
+                    exception.errors = arrayOf(errorInfo)
+                }
+                throw exception
+            }
+            return response
+        }
+
+        private fun shouldWaitForProcess(info: MediaUploadResponse.ProcessingInfo): Boolean {
+            when (info.state) {
+                MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
+                else -> return false
+            }
         }
 
         private fun videoStream(

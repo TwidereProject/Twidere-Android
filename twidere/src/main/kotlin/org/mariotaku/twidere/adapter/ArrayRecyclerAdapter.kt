@@ -42,7 +42,7 @@ abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(context: Context) : BaseR
         return data[position]
     }
 
-    open fun remove(position: Int): Boolean {
+    fun remove(position: Int): Boolean {
         data.removeAt(position)
         notifyItemRemoved(position)
         return true

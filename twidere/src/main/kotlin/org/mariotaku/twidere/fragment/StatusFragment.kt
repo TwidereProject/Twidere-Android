@@ -746,11 +746,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     internal class LoadTranslationTask(val fragment: StatusFragment) : AsyncTask<ParcelableStatus, Any, SingleResponse<TranslationResult>>() {
-        val context: Context
-
-        init {
-            context = fragment.activity
-        }
+        private val context = fragment.activity
 
         override fun doInBackground(vararg params: ParcelableStatus): SingleResponse<TranslationResult> {
             val status = params[0]

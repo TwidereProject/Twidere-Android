@@ -22,10 +22,12 @@ package org.mariotaku.twidere.activity
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.ContentValues
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.PorterDuff.Mode
-import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.AsyncTask
@@ -41,7 +43,7 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.*
+import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.*
 import android.text.style.ImageSpan
@@ -51,9 +53,7 @@ import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
-import android.webkit.MimeTypeMap
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.twitter.Extractor
@@ -62,7 +62,6 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.commons.io.StreamUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
 import org.mariotaku.ktextension.getTypedArray
@@ -72,8 +71,8 @@ import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.adapter.ArrayRecyclerAdapter
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
+import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountUser
@@ -89,6 +88,7 @@ import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.preference.ServicePickerPreference
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
+import org.mariotaku.twidere.task.compose.AbsAddMediaTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -98,7 +98,8 @@ import org.mariotaku.twidere.view.CheckableLinearLayout
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
-import java.io.*
+import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
+import java.io.IOException
 import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
@@ -150,7 +151,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && intent != null) {
                     val src = MediaPickerActivity.getMediaUris(intent)
-                    currentTask = AsyncTaskUtils.executeTask(AddMediaTask(this, src, true))
+                    TaskStarter.execute(AddMediaTask(this, src, true))
                 }
             }
             REQUEST_EDIT_IMAGE -> {
@@ -338,7 +339,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 IntentUtils.openDrafts(this)
             }
             R.id.delete -> {
-                AsyncTaskUtils.executeTask(DeleteMediaTask(this))
+                AsyncTaskUtils.executeTask(DeleteMediaTask(this, media))
             }
             R.id.toggle_sensitive -> {
                 if (!hasMedia()) return false
@@ -472,8 +473,23 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this, PreviewGridOnStartDragListener(this))
-        itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(mediaPreviewAdapter))
+        mediaPreviewAdapter = MediaPreviewAdapter(this)
+        mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
+            override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
+                attachedMediaPreview.showContextMenuForChild(holder.itemView)
+            }
+
+            override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
+                mediaPreviewAdapter.remove(position)
+                updateAttachedMediaView()
+            }
+
+            override fun onStartDrag(viewHolder: ViewHolder) {
+                itemTouchHelper.startDrag(viewHolder)
+            }
+
+        }
+        itemTouchHelper = ItemTouchHelper(AttachedMediaItemTouchHelperCallback(mediaPreviewAdapter.touchAdapter))
 
         setFinishOnTouchOutside(false)
         val am = AccountManager.get(this)
@@ -549,14 +565,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelector.adapter = accountsAdapter
 
 
-        attachedMediaPreview.layoutManager = LinearLayoutManager(this).apply {
-            orientation = HORIZONTAL
-        }
+        attachedMediaPreview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         attachedMediaPreview.adapter = mediaPreviewAdapter
         registerForContextMenu(attachedMediaPreview)
         itemTouchHelper.attachToRecyclerView(attachedMediaPreview)
-        val previewGridSpacing = resources.getDimensionPixelSize(R.dimen.element_spacing_small)
-        attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(previewGridSpacing))
+        attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(resources.getDimensionPixelSize(R.dimen.element_spacing_small)))
 
         if (savedInstanceState != null) {
             // Restore from previous saved state
@@ -741,11 +754,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
-    private fun addMedia(media: ParcelableMediaUpdate) {
-        mediaPreviewAdapter.add(media)
-        updateAttachedMediaView()
-    }
-
     private fun addMedia(media: List<ParcelableMediaUpdate>) {
         mediaPreviewAdapter.addAll(media)
         updateAttachedMediaView()
@@ -765,11 +773,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             editText.minLines = resources.getInteger(R.integer.default_compose_min_lines)
         }
         setMenu()
-    }
-
-    private fun createTempImageUri(extraNum: Int, ext: String): Uri {
-        val file = File(cacheDir, "tmp_media_${System.currentTimeMillis()}_$extraNum.$ext")
-        return Uri.fromFile(file)
     }
 
     private fun displayNewDraftNotification(text: String, draftUri: Uri) {
@@ -804,21 +807,21 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             if (stream != null) {
                 val src = arrayOf(stream)
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
+                TaskStarter.execute(AddMediaTask(this, src, false))
             }
         } else if (Intent.ACTION_SEND_MULTIPLE == action) {
             shouldSaveAccounts = false
             val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
             if (extraStream != null) {
                 val src = extraStream.toTypedArray()
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
+                TaskStarter.execute(AddMediaTask(this, src, false))
             }
         } else {
             shouldSaveAccounts = !hasAccountIds
             val data = intent.data
             if (data != null) {
                 val src = arrayOf(data)
-                AsyncTaskUtils.executeTask(AddMediaTask(this, src, false))
+                TaskStarter.execute(AddMediaTask(this, src, false))
             }
         }
         val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
@@ -1503,66 +1506,30 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class AddMediaTask(
             activity: ComposeActivity,
-            val sources: Array<Uri>,
-            val deleteSrc: Boolean
-    ) : AsyncTask<Any, Any, List<ParcelableMediaUpdate>?>() {
+            sources: Array<Uri>,
+            deleteSrc: Boolean
+    ) : AbsAddMediaTask<ComposeActivity>(activity, sources, deleteSrc) {
 
-        val activityRef: WeakReference<ComposeActivity> = WeakReference(activity)
-
-        override fun doInBackground(vararg params: Any): List<ParcelableMediaUpdate>? {
-            val activity = activityRef.get() ?: return null
-            val resolver = activity.contentResolver
-            return sources.mapIndexedNotNull { index, source ->
-
-                var st: InputStream? = null
-                var os: OutputStream? = null
-                try {
-                    val sourceMimeType = resolver.getType(source)
-                    val mediaType = sourceMimeType?.let {
-                        return@let when {
-                            it.startsWith("video/") -> ParcelableMedia.Type.VIDEO
-                            it.startsWith("image/") -> ParcelableMedia.Type.IMAGE
-                            else -> ParcelableMedia.Type.IMAGE
-                        }
-                    } ?: ParcelableMedia.Type.IMAGE
-                    val extension = sourceMimeType?.let { mimeType ->
-                        MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
-                    } ?: "tmp"
-                    val destination = activity.createTempImageUri(index, extension)
-                    st = resolver.openInputStream(source)
-                    os = resolver.openOutputStream(destination)
-                    if (st == null || os == null) throw FileNotFoundException()
-                    StreamUtils.copy(st, os, null, null)
-                    if (deleteSrc) {
-                        Utils.deleteMedia(activity, source)
-                    }
-                    return@mapIndexedNotNull ParcelableMediaUpdate(destination.toString(), mediaType)
-                } catch (e: IOException) {
-                    DebugLog.w(LOGTAG, tr = e)
-                    return@mapIndexedNotNull null
-                } finally {
-                    Utils.closeSilently(os)
-                    Utils.closeSilently(st)
-                }
-            }
+        init {
+            callback = activity
         }
 
-        override fun onPostExecute(media: List<ParcelableMediaUpdate>?) {
-            val activity = activityRef.get() ?: return
-            if (media == null) return
+        override fun afterExecute(activity: ComposeActivity?, result: List<ParcelableMediaUpdate>?) {
+            if (activity == null || result == null) return
             activity.setProgressVisible(false)
-            activity.addMedia(media)
+            activity.addMedia(result)
             activity.setMenu()
             activity.updateTextCount()
         }
 
-        override fun onPreExecute() {
-            val activity = activityRef.get() ?: return
+        override fun beforeExecute() {
+            val activity = this.callback ?: return
             activity.setProgressVisible(true)
         }
+
     }
 
-    internal class DeleteMediaTask(activity: ComposeActivity, vararg val media: ParcelableMediaUpdate) : AsyncTask<Any, Any, Boolean>() {
+    internal class DeleteMediaTask(activity: ComposeActivity, val media: Array<ParcelableMediaUpdate>) : AsyncTask<Any, Any, Boolean>() {
 
         val activity: WeakReference<ComposeActivity>
 
@@ -1571,20 +1538,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         override fun doInBackground(vararg params: Any): Boolean {
-            try {
-                media.forEach {
-                    val uri = Uri.parse(it.uri)
-                    if (ContentResolver.SCHEME_FILE == uri.scheme) {
-                        val file = File(uri.path)
-                        if (!file.delete()) {
-                            Log.d(LOGTAG, String.format("Unable to delete %s", file))
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                return false
+            media.forEach {
+                Utils.deleteMedia(activity.get(), Uri.parse(it.uri))
             }
-
             return true
         }
 
@@ -1705,114 +1661,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         internal class NoAddress
     }
 
-    internal class MediaPreviewAdapter(
-            activity: ComposeActivity,
-            val dragStartListener: SimpleItemTouchHelperCallback.OnStartDragListener
-    ) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(activity), SimpleItemTouchHelperCallback.ItemTouchHelperAdapter {
-        private val inflater = LayoutInflater.from(activity)
-
-        init {
-            setHasStableIds(true)
-        }
-
-        fun onStartDrag(viewHolder: ViewHolder) {
-            dragStartListener.onStartDrag(viewHolder)
-        }
-
-        fun asList(): List<ParcelableMediaUpdate> = Collections.unmodifiableList(data)
-
-        override fun getItemId(position: Int): Long {
-            return getItem(position).hashCode().toLong()
-        }
-
-        override fun onBindViewHolder(holder: MediaPreviewViewHolder, position: Int, item: ParcelableMediaUpdate) {
-            val media = getItem(position)
-            holder.displayMedia(this, media)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPreviewViewHolder {
-            val view = inflater.inflate(R.layout.grid_item_media_editor, parent, false)
-            return MediaPreviewViewHolder(view)
-        }
-
-        override fun onViewAttachedToWindow(holder: MediaPreviewViewHolder) {
-            super.onViewAttachedToWindow(holder)
-            holder.adapter = this
-        }
-
-        override fun onViewDetachedFromWindow(holder: MediaPreviewViewHolder) {
-            holder.adapter = null
-            super.onViewDetachedFromWindow(holder)
-        }
-
-        override fun remove(position: Int): Boolean {
-            val result = super.remove(position)
-            if (result) {
-                (context as ComposeActivity).updateAttachedMediaView()
-            }
-            return result
-        }
-
-        override fun onItemDismiss(position: Int) {
-            // No-op
-        }
-
-        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-            Collections.swap(data, fromPosition, toPosition)
-            notifyItemMoved(fromPosition, toPosition)
-            return true
-        }
-
-        fun setAltText(position: Int, altText: String?) {
-            data[position].alt_text = altText
-            notifyDataSetChanged()
-        }
-    }
-
-    internal class MediaPreviewViewHolder(itemView: View) : ViewHolder(itemView), OnLongClickListener, OnClickListener {
-
-        internal val imageView = itemView.findViewById(R.id.image) as ImageView
-        internal val videoIndicatorView = itemView.findViewById(R.id.videoIndicator)
-        internal val removeView = itemView.findViewById(R.id.remove)
-        internal val editView = itemView.findViewById(R.id.edit)
-        var adapter: MediaPreviewAdapter? = null
-
-        init {
-            itemView.setOnLongClickListener(this)
-            itemView.setOnClickListener(this)
-            removeView.setOnClickListener(this)
-            editView.setOnClickListener(this)
-        }
-
-        fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-            adapter.mediaLoader.displayPreviewImage(imageView, media.uri, true)
-            videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
-        }
-
-        override fun onLongClick(v: View): Boolean {
-            adapter?.onStartDrag(this)
-            return false
-        }
-
-        override fun onClick(v: View) {
-            when (v.id) {
-                R.id.remove -> {
-                    val adapter = this.adapter ?: return
-                    if (layoutPosition >= 0 && layoutPosition < adapter.itemCount) {
-                        adapter.remove(layoutPosition)
-                    }
-                }
-                R.id.edit -> {
-                    itemView.parent.showContextMenuForChild(itemView)
-                }
-            }
-        }
-    }
-
     class EditAltTextDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
@@ -1910,22 +1758,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         companion object {
             val ALPHA_FULL = 1.0f
-        }
-    }
-
-    private class PreviewGridItemDecoration(private val previewGridSpacing: Int) : ItemDecoration() {
-
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: State?) {
-            outRect.left = previewGridSpacing
-            outRect.right = previewGridSpacing
-        }
-    }
-
-    private class PreviewGridOnStartDragListener(private val activity: ComposeActivity) : SimpleItemTouchHelperCallback.OnStartDragListener {
-
-        override fun onStartDrag(viewHolder: ViewHolder) {
-            val helper = activity.itemTouchHelper
-            helper.startDrag(viewHolder)
         }
     }
 

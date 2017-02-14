@@ -21,9 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Typeface
 import android.support.v4.widget.SimpleCursorAdapter
-import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import org.mariotaku.kpreferences.get
@@ -70,6 +68,7 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         val actionName = draft.getActionName(context)
         var summaryText: String? = null
         when (actionType) {
+            Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT,
             Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)

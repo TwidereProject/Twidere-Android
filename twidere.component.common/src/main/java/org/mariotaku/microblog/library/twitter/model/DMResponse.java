@@ -495,11 +495,17 @@ public class DMResponse implements Parcelable {
                 public static class Attachment implements Parcelable {
                     @JsonField(name = "photo")
                     MediaEntity photo;
+                    @JsonField(name = "video")
+                    MediaEntity video;
                     @JsonField(name = "sticker")
                     StickerEntity sticker;
 
                     public MediaEntity getPhoto() {
                         return photo;
+                    }
+
+                    public MediaEntity getVideo() {
+                        return video;
                     }
 
                     public StickerEntity getSticker() {

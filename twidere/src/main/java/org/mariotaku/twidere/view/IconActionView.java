@@ -35,6 +35,7 @@ public class IconActionView extends AppCompatImageView implements IIconActionBut
 
     public IconActionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        if (isInEditMode()) return;
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.IconActionButton,
                 R.attr.cardActionButtonStyle, R.style.Widget_CardActionButton);
         mDefaultColor = a.getColor(R.styleable.IconActionButton_iabColor, 0);

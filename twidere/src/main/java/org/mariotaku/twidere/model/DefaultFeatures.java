@@ -35,8 +35,12 @@ public class DefaultFeatures {
 
     @JsonField(name = "default_twitter_consumer_key")
     String defaultTwitterConsumerKey;
+
     @JsonField(name = "default_twitter_consumer_secret")
     String defaultTwitterConsumerSecret;
+
+    @JsonField(name = "twitter_direct_message_media_limit")
+    long twitterDirectMessageMediaLimit = 1;
 
     public boolean isMediaLinkCountsInStatus() {
         return mediaLinkCountsInStatus;
@@ -48,6 +52,10 @@ public class DefaultFeatures {
 
     public String getDefaultTwitterConsumerSecret() {
         return defaultTwitterConsumerSecret;
+    }
+
+    public long getTwitterDirectMessageMediaLimit() {
+        return twitterDirectMessageMediaLimit;
     }
 
     @WorkerThread

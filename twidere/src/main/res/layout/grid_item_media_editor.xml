@@ -24,21 +24,21 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:layout_gravity="center"
-    tools:layout_height="128dp">
+    tools:showIn="@layout/activity_compose">
 
     <org.mariotaku.twidere.view.HighlightImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        tools:src="@drawable/nyan_stars_background_tile" />
+        tools:src="@drawable/nyan_stars_background_tile"/>
 
     <ImageView
         android:id="@+id/videoIndicator"
         android:layout_width="@dimen/element_size_msmall"
         android:layout_height="@dimen/element_size_msmall"
         android:layout_gravity="center"
-        android:src="@drawable/ic_card_media_play" />
+        android:src="@drawable/ic_card_media_play"/>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
         android:id="@+id/remove"
@@ -61,7 +61,7 @@
             android:layout_gravity="center"
             android:contentDescription="@string/remove"
             android:scaleType="center"
-            android:src="@drawable/ic_btn_grid_item_remove" />
+            android:src="@drawable/ic_btn_grid_item_remove"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
 
     <com.lnikkila.extendedtouchview.ExtendedTouchView
@@ -85,6 +85,6 @@
             android:layout_gravity="center"
             android:contentDescription="@string/action_edit"
             android:scaleType="center"
-            android:src="@drawable/ic_btn_grid_item_edit" />
+            android:src="@drawable/ic_btn_grid_item_edit"/>
     </com.lnikkila.extendedtouchview.ExtendedTouchView>
 </org.mariotaku.twidere.view.SquareFrameLayout>

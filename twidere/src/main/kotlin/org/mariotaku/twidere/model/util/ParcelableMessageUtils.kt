@@ -186,6 +186,11 @@ object ParcelableMessageUtils {
                 val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(photo))
                 return Triple(MessageType.TEXT, null, media)
             }
+            attachment.video != null -> {
+                val video = attachment.video
+                val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(video))
+                return Triple(MessageType.TEXT, null, media)
+            }
             attachment.sticker != null -> {
                 val sticker = attachment.sticker
                 val image = sticker.images["size_2x"] ?: sticker.images.values.firstOrNull() ?:

@@ -73,6 +73,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
             var nonSpaceCount = 0
             var curPos = 0
             message.spans?.forEach { span ->
+                nonSpaceCount += text.nonSpaceCount(curPos..span.start)
                 if (message.media?.firstOrNull { media -> span.link == media.url } != null) {
                     // Skip if span is hidden
                     span.type = SpanItem.SpanType.HIDE
