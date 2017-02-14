@@ -25,6 +25,7 @@ import android.text.SpannableString
 import android.text.style.URLSpan
 import android.view.ActionMode
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.webkit.URLUtil
 import android.widget.TextView
@@ -37,7 +38,8 @@ import org.mariotaku.twidere.R
 class StatusActionModeCallback(private val textView: TextView, private val context: Context) : ActionMode.Callback {
 
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-        mode.menuInflater.inflate(R.menu.action_status_text_selection, menu)
+        val inflater = mode.menuInflater ?: MenuInflater(context)
+        inflater.inflate(R.menu.action_status_text_selection, menu)
         mode.setTitle(android.R.string.selectTextMode)
         return true
     }

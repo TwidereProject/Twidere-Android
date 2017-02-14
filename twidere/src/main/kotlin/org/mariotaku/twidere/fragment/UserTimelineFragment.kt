@@ -80,9 +80,8 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
             return sb.toString()
         }
 
-    override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+    override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
+            Loader<List<ParcelableStatus>?> {
         refreshing = true
         val data = adapterData
         val accountKey = Utils.getAccountKey(context, args)
@@ -98,9 +97,9 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {
-        val timelineLoader = loader as UserTimelineLoader
+        val timelineLoader = loader as? UserTimelineLoader
         if (!adapter.hasPinnedStatuses) {
-            adapter.pinnedStatuses = timelineLoader.pinnedStatuses
+            adapter.pinnedStatuses = timelineLoader?.pinnedStatuses
         }
         super.onStatusesLoaded(loader, data)
     }
