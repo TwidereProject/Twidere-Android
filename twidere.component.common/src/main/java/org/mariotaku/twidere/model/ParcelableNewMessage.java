@@ -42,9 +42,9 @@ public class ParcelableNewMessage implements Parcelable {
     @JsonField(name = "conversation_id")
     @ParcelableThisPlease
     public String conversation_id;
-    @JsonField(name = "recipient_id")
+    @JsonField(name = "recipient_ids")
     @ParcelableThisPlease
-    public String recipient_id;
+    public String[] recipient_ids;
     @JsonField(name = "text")
     @ParcelableThisPlease
     public String text;

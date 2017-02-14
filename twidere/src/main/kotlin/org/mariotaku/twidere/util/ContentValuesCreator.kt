@@ -24,12 +24,11 @@ import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
-import org.mariotaku.twidere.provider.TwidereDataStore.*
-import java.util.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Filters
+import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 
 object ContentValuesCreator {
 
@@ -60,23 +59,6 @@ object ContentValuesCreator {
         values.put(Filters.Users.USER_KEY, user.key.toString())
         values.put(Filters.Users.NAME, user.name)
         values.put(Filters.Users.SCREEN_NAME, user.screen_name)
-        return values
-    }
-
-    fun createMessageDraft(accountKey: UserKey, recipientId: String, text: String, imageUri: String?): ContentValues {
-        val values = ContentValues()
-        values.put(Drafts.ACTION_TYPE, Draft.Action.SEND_DIRECT_MESSAGE)
-        values.put(Drafts.TEXT, text)
-        values.put(Drafts.ACCOUNT_KEYS, accountKey.toString())
-        values.put(Drafts.TIMESTAMP, System.currentTimeMillis())
-        if (imageUri != null) {
-            val mediaArray = arrayOf(ParcelableMediaUpdate(imageUri, 0))
-            values.put(Drafts.MEDIA, JsonSerializer.serialize(Arrays.asList(*mediaArray),
-                    ParcelableMediaUpdate::class.java))
-        }
-        val extra = SendDirectMessageActionExtras()
-        extra.recipientId = recipientId
-        values.put(Drafts.ACTION_EXTRAS, JsonSerializer.serialize(extra))
         return values
     }
 

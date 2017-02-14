@@ -44,19 +44,26 @@ class SendMessageTask(
 
     private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         val response = microBlog.sendDm(NewDm().apply {
-            setConversationId(message.conversation_id)
+            val conversationId = message.conversation_id
+            if (conversationId != null) {
+                setConversationId(conversationId)
+            } else {
+                setRecipientIds(message.recipient_ids)
+            }
             setText(message.text)
         })
         return GetMessagesTask.createDatabaseUpdateData(context, account, response)
     }
 
     private fun sendFanfouDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        val response = microBlog.sendFanfouDirectMessage(message.recipient_id, message.text)
+        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val response = microBlog.sendFanfouDirectMessage(recipientId, message.text)
         return createDatabaseUpdateData(account, response)
     }
 
     private fun sendDefaultDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
-        val response = microBlog.sendDirectMessage(message.recipient_id, message.text)
+        val recipientId = message.recipient_ids.singleOrNull() ?: throw MicroBlogException("No recipient")
+        val response = microBlog.sendDirectMessage(recipientId, message.text)
         return createDatabaseUpdateData(account, response)
     }
 

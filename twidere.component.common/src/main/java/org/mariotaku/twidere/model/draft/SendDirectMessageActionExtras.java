@@ -28,6 +28,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import java.util.Arrays;
+
 /**
  * Created by mariotaku on 16/2/21.
  */
@@ -35,18 +37,18 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 @JsonObject
 public class SendDirectMessageActionExtras implements ActionExtras {
     @ParcelableThisPlease
-    @JsonField(name = "recipient_id")
-    String recipientId;
+    @JsonField(name = "recipient_ids")
+    String[] recipientIds;
     @ParcelableThisPlease
     @JsonField(name = "conversation_id")
     String conversationId;
 
-    public String getRecipientId() {
-        return recipientId;
+    public String[] getRecipientIds() {
+        return recipientIds;
     }
 
-    public void setRecipientId(String recipientId) {
-        this.recipientId = recipientId;
+    public void setRecipientIds(String[] recipientIds) {
+        this.recipientIds = recipientIds;
     }
 
     public String getConversationId() {
@@ -68,19 +70,31 @@ public class SendDirectMessageActionExtras implements ActionExtras {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SendDirectMessageActionExtras that = (SendDirectMessageActionExtras) o;
+        final SendDirectMessageActionExtras that = (SendDirectMessageActionExtras) o;
 
-        return recipientId != null ? recipientId.equals(that.recipientId) : that.recipientId == null;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(recipientIds, that.recipientIds)) return false;
+        return conversationId != null ? conversationId.equals(that.conversationId) : that.conversationId == null;
 
     }
 
     @Override
     public int hashCode() {
-        return recipientId != null ? recipientId.hashCode() : 0;
+        int result = Arrays.hashCode(recipientIds);
+        result = 31 * result + (conversationId != null ? conversationId.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "SendDirectMessageActionExtras{" +
+                "conversationId='" + conversationId + '\'' +
+                ", recipientIds=" + Arrays.toString(recipientIds) +
+                '}';
     }
 
     public static final Creator<SendDirectMessageActionExtras> CREATOR = new Creator<SendDirectMessageActionExtras>() {

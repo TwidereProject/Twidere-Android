@@ -141,7 +141,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                     }
                     this.text = draft.text
                     this.media = draft.media
-                    this.recipient_id = extras.recipientId
+                    this.recipient_ids = extras.recipientIds
                     this.conversation_id = extras.conversationId
                 }
                 sendMessage(message)
@@ -190,6 +190,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val notification = builder.build()
         startForeground(NOTIFICATION_ID_SEND_DIRECT_MESSAGE, notification)
         val task = SendMessageTask(this)
+        task.params = message
         invokeBeforeExecute(task)
         val result = ManualTaskStarter.invokeExecute(task)
         invokeAfterExecute(task, result)
@@ -202,7 +203,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 text = message.text
                 media = message.media
                 action_extras = SendDirectMessageActionExtras().apply {
-                    recipientId = message.recipient_id
+                    recipientIds = message.recipient_ids
                     conversationId = message.conversation_id
                 }
             }
@@ -452,6 +453,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             intent.action = INTENT_ACTION_UPDATE_STATUS
             intent.putExtra(EXTRA_STATUSES, statuses)
             intent.putExtra(EXTRA_ACTION, action)
+            context.startService(intent)
+        }
+
+        fun sendMessageAsync(context: Context, message: ParcelableNewMessage) {
+            val intent = Intent(context, LengthyOperationsService::class.java)
+            intent.action = INTENT_ACTION_SEND_DIRECT_MESSAGE
+            intent.putExtra(EXTRA_MESSAGE, message)
             context.startService(intent)
         }
     }

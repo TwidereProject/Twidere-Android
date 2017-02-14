@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.fragment
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.LoaderManager
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.empty
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
@@ -20,7 +22,9 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
+import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import java.util.concurrent.atomic.AtomicReference
@@ -30,6 +34,10 @@ class MessagesConversationFragment : BaseFragment(), LoaderManager.LoaderCallbac
 
     private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
     private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+
+    private val account: AccountDetails? by lazy {
+        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -45,6 +53,12 @@ class MessagesConversationFragment : BaseFragment(), LoaderManager.LoaderCallbac
         }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
+
+        sendMessage.setOnClickListener {
+            performSendMessage()
+        }
+
+
         loaderManager.initLoader(0, null, this)
     }
 
@@ -61,8 +75,28 @@ class MessagesConversationFragment : BaseFragment(), LoaderManager.LoaderCallbac
     }
 
     override fun onLoadFinished(loader: Loader<List<ParcelableMessage>?>, data: List<ParcelableMessage>?) {
-        val conversation = (loader as? ConversationLoader)?.conversation
+        val conversationLoader = loader as? ConversationLoader
+        val conversation = conversationLoader?.conversation
         adapter.setData(conversation, data)
+    }
+
+    private fun performSendMessage() {
+        val conversation = adapter.conversation ?: return
+        if (editText.empty) {
+            editText.error = getString(R.string.hint_error_message_no_content)
+            return
+        }
+        val text = editText.text.toString()
+        val message = ParcelableNewMessage().apply {
+            this.account = this@MessagesConversationFragment.account
+            this.conversation_id = conversation.id
+            this.recipient_ids = conversation.participants?.map {
+                it.key.id
+            }?.toTypedArray()
+            this.text = text
+        }
+        LengthyOperationsService.sendMessageAsync(context, message)
+        editText.text = null
     }
 
     internal class ConversationLoader(
