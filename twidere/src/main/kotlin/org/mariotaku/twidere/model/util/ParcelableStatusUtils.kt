@@ -1,10 +1,8 @@
 package org.mariotaku.twidere.model.util
 
-import android.text.Spannable
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.util.HtmlSpanBuilder
@@ -28,8 +26,7 @@ object ParcelableStatusUtils {
         status.retweet_id = null
     }
 
-    fun fromStatus(orig: Status, accountKey: UserKey,
-                   isGap: Boolean): ParcelableStatus {
+    fun fromStatus(orig: Status, accountKey: UserKey, isGap: Boolean): ParcelableStatus {
         val result = ParcelableStatus()
         result.is_gap = isGap
         result.account_key = accountKey
@@ -41,6 +38,7 @@ object ParcelableStatusUtils {
         result.extras.external_url = orig.inferExternalUrl()
         result.extras.support_entities = orig.entities != null
         result.extras.statusnet_conversation_id = orig.statusnetConversationId
+        result.extras.conversation_id = orig.conversationId
         result.is_pinned_status = orig.user.pinnedTweetIds?.contains(orig.id) ?: false
 
         val retweetedStatus = orig.retweetedStatus

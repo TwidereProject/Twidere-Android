@@ -157,9 +157,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val loader = ConversationLoader(activity, status, sinceId, maxId, sinceSortId, maxSortId,
                     adapter.getData(), true, loadingMore)
             // Setting comparator to null lets statuses sort ascending
-            loader.comparator = Comparator { l, r ->
-                (r.sort_id - l.sort_id).toInt()
-            }
+            loader.comparator = null
             return loader
         }
 
@@ -1557,13 +1555,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val itemType = getItemType(position)
             when (itemType) {
                 ITEM_IDX_CONVERSATION -> {
-                    if (data == null) return null
-                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)]
+                    return data?.get(position - getIndexStart(ITEM_IDX_CONVERSATION))
                 }
                 ITEM_IDX_REPLY -> {
-                    if (data == null || replyStart < 0) return null
-                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)
-                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart]
+                    if (replyStart < 0) return null
+                    return data?.get(position - getIndexStart(ITEM_IDX_CONVERSATION)
+                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart)
                 }
                 ITEM_IDX_STATUS -> {
                     return status
@@ -1651,7 +1648,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 data.forEachIndexed { i, item ->
                     if (item.sort_id < sortId) {
                         conversationCount++
-                    } else if (item.sort_id > sortId && status.id != item.id) {
+                    } else if (status.id == item.id) {
+                        this.status = item
+                    } else if (item.sort_id > sortId) {
                         if (replyStart < 0) {
                             replyStart = i
                         }

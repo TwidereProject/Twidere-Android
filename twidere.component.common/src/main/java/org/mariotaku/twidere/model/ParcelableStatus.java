@@ -520,6 +520,10 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
         @ParcelableThisPlease
         @Nullable
         public int[] quoted_display_text_range;
+        @JsonField(name = "conversation_id")
+        @ParcelableThisPlease
+        @Nullable
+        public String conversation_id;
 
         @Override
         public int describeContents() {

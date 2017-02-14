@@ -66,16 +66,14 @@ class ConversationLoader(
                 canLoadAllReplies = isOfficial
                 if (isOfficial) {
                     return microBlog.showConversation(status.id, paging)
-                } else {
-                    return showConversationCompat(microBlog, details, status, true)
                 }
+                return showConversationCompat(microBlog, details, status, true)
             }
             AccountType.STATUSNET -> {
                 canLoadAllReplies = true
                 if (status.extras != null && status.extras.statusnet_conversation_id != null) {
                     return microBlog.getStatusNetConversation(status.extras.statusnet_conversation_id, paging)
                 }
-                return microBlog.showConversation(status.id, paging)
             }
             AccountType.FANFOU -> {
                 canLoadAllReplies = true
@@ -88,10 +86,8 @@ class ConversationLoader(
     }
 
     @Throws(MicroBlogException::class)
-    private fun showConversationCompat(twitter: MicroBlog,
-                                       details: AccountDetails,
-                                       status: ParcelableStatus,
-                                       loadReplies: Boolean): List<Status> {
+    private fun showConversationCompat(twitter: MicroBlog, details: AccountDetails,
+            status: ParcelableStatus, loadReplies: Boolean): List<Status> {
         val statuses = ArrayList<Status>()
         val noSinceMaxId = maxId == null && sinceId == null
         // Load conversations
