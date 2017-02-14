@@ -38,13 +38,18 @@ import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 
-
-@Queries(@KeyValue(key = "include_groups", value = "true"))
+@Queries({@KeyValue(key = "include_groups", value = "true"),
+        @KeyValue(key = "include_conversation_info", value = "true"),
+        @KeyValue(key = "ext", value = "stickerInfo,mediaRestrictions,altText")})
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
     @BodyType(BodyType.FORM)
-    ResponseCode destroyDirectMessagesConversation(@Path("conversation_id") String conversationId) throws MicroBlogException;
+    ResponseCode deleteDmConversation(@Path("conversation_id") String conversationId) throws MicroBlogException;
+
+    @POST("/dm/conversation/{conversation_id}/update_name.json")
+    @BodyType(BodyType.FORM)
+    ResponseCode updateDmConversationName(@Path("conversation_id") String conversationId, @Param("name") String name) throws MicroBlogException;
 
     @POST("/dm/new.json")
     DMResponse sendDm(@Param NewDm newDm) throws MicroBlogException;
@@ -56,5 +61,5 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     UserEvents getUserUpdates(@Query("cursor") String cursor) throws MicroBlogException;
 
     @GET("/dm/conversation/{conversation_id}.json")
-    ConversationTimeline getUserInbox(@Path("conversation_id") String conversationId, @Query Paging paging) throws MicroBlogException;
+    ConversationTimeline getDmConversation(@Path("conversation_id") String conversationId, @Query Paging paging) throws MicroBlogException;
 }

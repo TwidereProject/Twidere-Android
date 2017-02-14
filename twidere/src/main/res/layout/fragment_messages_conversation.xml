@@ -27,19 +27,12 @@
     android:visibility="visible"
     tools:context=".fragment.MessagesConversationFragment">
 
-    <FrameLayout
+    <include
         android:id="@+id/listContainer"
+        layout="@layout/fragment_content_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/inputPanel">
-
-        <org.mariotaku.twidere.view.ExtendedRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"/>
-
-    </FrameLayout>
+        android:layout_above="@+id/inputPanel"/>
 
     <View
         android:id="@+id/inputPanelShadowCompat"

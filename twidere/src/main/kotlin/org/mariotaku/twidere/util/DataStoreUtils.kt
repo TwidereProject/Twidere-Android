@@ -187,10 +187,11 @@ object DataStoreUtils {
                 ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
     }
 
-    fun getNewestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<ParcelableMessageConversation?> {
+    fun getNewestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>,
+            extraWhere: Expression? = null, extraWhereArgs: Array<String>? = null): Array<ParcelableMessageConversation?> {
         if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
         return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
-                OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), null, null,
+                OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), extraWhere, extraWhereArgs,
                 ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
     }
 
@@ -611,11 +612,11 @@ object DataStoreUtils {
     }
 
     private fun <T> getObjectFieldArray(context: Context, uri: Uri, keys: Array<UserKey?>,
-            keyField: String, valueFields: Array<String>, sortExpression: OrderBy?, extraHaving: Expression?,
-            extraHavingArgs: Array<String>?, createIndices: (Cursor) -> ObjectCursor.CursorIndices<T>,
+            keyField: String, valueFields: Array<String>, sortExpression: OrderBy?, extraWhere: Expression?,
+            extraWhereArgs: Array<String>?, createIndices: (Cursor) -> ObjectCursor.CursorIndices<T>,
             createArray: (Int) -> Array<T?>): Array<T?> {
         return getFieldsArray(context, uri, keys, keyField, valueFields, sortExpression,
-                extraHaving, extraHavingArgs, object : FieldArrayCreator<Array<T?>, ObjectCursor.CursorIndices<T>> {
+                extraWhere, extraWhereArgs, object : FieldArrayCreator<Array<T?>, ObjectCursor.CursorIndices<T>> {
             override fun newArray(size: Int): Array<T?> {
                 return createArray(size)
             }
@@ -631,10 +632,10 @@ object DataStoreUtils {
     }
 
     private fun getStringFieldArray(context: Context, uri: Uri, keys: Array<UserKey?>,
-            keyField: String, valueField: String, sortExpression: OrderBy?, extraHaving: Expression?,
-            extraHavingArgs: Array<String>?): Array<String?> {
+            keyField: String, valueField: String, sortExpression: OrderBy?, extraWhere: Expression?,
+            extraWhereArgs: Array<String>?): Array<String?> {
         return getFieldsArray(context, uri, keys, keyField, arrayOf(valueField), sortExpression,
-                extraHaving, extraHavingArgs, object : FieldArrayCreator<Array<String?>, Int> {
+                extraWhere, extraWhereArgs, object : FieldArrayCreator<Array<String?>, Int> {
             override fun newArray(size: Int): Array<String?> {
                 return arrayOfNulls(size)
             }

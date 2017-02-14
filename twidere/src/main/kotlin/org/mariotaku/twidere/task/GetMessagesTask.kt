@@ -56,7 +56,7 @@ class GetMessagesTask(
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
-        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, false, null))
+        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
     }
 
     private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
@@ -82,7 +82,7 @@ class GetMessagesTask(
         if (conversationId == null) {
             return getTwitterOfficialUserInbox(microBlog, details, param, index)
         } else {
-            return DatabaseUpdateData(emptyList(), emptyList())
+            return getTwitterOfficialConversation(microBlog, details, conversationId, param, index)
         }
     }
 
@@ -155,11 +155,18 @@ class GetMessagesTask(
     }
 
     private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
-            conversationId: String, param: RefreshMessagesTaskParam, index: Int) {
+            conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+        val maxId = param.maxIds?.get(index) ?: return DatabaseUpdateData(emptyList(), emptyList())
+        val paging = Paging().apply {
+            maxId(maxId)
+        }
 
+        val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
+        return createDatabaseUpdateData(context, details, response)
     }
 
-    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
         val cursor = if (param.hasCursors) param.cursors?.get(index) else null
         val response = if (cursor != null) {
@@ -211,10 +218,9 @@ class GetMessagesTask(
             val conversationRequestCursor: String? = null
     )
 
-    class RefreshNewTaskParam(
-            context: Context,
-            getAccountKeys: () -> Array<UserKey>
-    ) : RefreshMessagesTaskParam(context, getAccountKeys) {
+    abstract class RefreshNewTaskParam(
+            context: Context
+    ) : RefreshMessagesTaskParam(context) {
 
         override val sinceIds: Array<String?>?
             get() {
@@ -241,10 +247,9 @@ class GetMessagesTask(
         override val hasCursors: Boolean = true
     }
 
-    class LoadMoreTaskParam(
-            context: Context,
-            getAccountKeys: () -> Array<UserKey>
-    ) : RefreshMessagesTaskParam(context, getAccountKeys) {
+    abstract class LoadMoreEntriesTaskParam(
+            context: Context
+    ) : RefreshMessagesTaskParam(context) {
 
         override val maxIds: Array<String?>? by lazy {
             val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
@@ -264,15 +269,27 @@ class GetMessagesTask(
         override val hasMaxIds: Boolean = true
     }
 
-    open class RefreshMessagesTaskParam(
-            val context: Context,
-            val getAccountKeys: () -> Array<UserKey>
+    class LoadMoreMessageTaskParam(
+            context: Context,
+            accountKey: UserKey,
+            override val conversationId: String,
+            maxId: String
+    ) : RefreshMessagesTaskParam(context) {
+        override val accountKeys: Array<UserKey> = arrayOf(accountKey)
+        override val maxIds: Array<String?>? = arrayOf(maxId)
+        override val hasMaxIds: Boolean = true
+    }
+
+    abstract class RefreshMessagesTaskParam(
+            val context: Context
     ) : SimpleRefreshTaskParam() {
 
         /**
          * If `conversationId` has value, load messages in conversationId
          */
-        open var conversationId: String? = null
+        open val conversationId: String? = null
+
+        var taskTag: String? = null
 
         protected val accounts: Array<AccountDetails?> by lazy {
             AccountUtils.getAllAccountDetails(AccountManager.get(context), accountKeys, false)
@@ -298,15 +315,12 @@ class GetMessagesTask(
             }.toTypedArray()
         }
 
-        override final val accountKeys: Array<UserKey>
-            get() = getAccountKeys()
-
     }
 
     companion object {
 
-        fun createDatabaseUpdateData(context: Context, account: AccountDetails,
-                response: DMResponse): DatabaseUpdateData {
+        fun createDatabaseUpdateData(context: Context, account: AccountDetails, response: DMResponse):
+                DatabaseUpdateData {
             val respConversations = response.conversations.orEmpty()
             val respEntries = response.entries.orEmpty()
             val respUsers = response.users.orEmpty()

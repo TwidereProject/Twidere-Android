@@ -44,8 +44,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Inbox
-import org.mariotaku.twidere.provider.TwidereDataStore.DirectMessages.Outbox
 import org.mariotaku.twidere.task.*
 import org.mariotaku.twidere.util.collection.CompactHashSet
 import java.util.*
@@ -163,7 +161,7 @@ class AsyncTwitterWrapper(
     }
 
     fun createUserListAsync(accountKey: UserKey, listName: String, isPublic: Boolean,
-                            description: String): Int {
+            description: String): Int {
         val task = CreateUserListTask(context, accountKey, listName, isPublic,
                 description)
         return asyncTaskManager.add(task, true)
@@ -293,7 +291,9 @@ class AsyncTwitterWrapper(
             })
         }
         if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_DIRECT_MESSAGES)) {
-            getMessagesAsync(GetMessagesTask.RefreshMessagesTaskParam(context, action))
+            getMessagesAsync(object : GetMessagesTask.RefreshMessagesTaskParam(context) {
+                override val accountKeys: Array<UserKey> by lazy { action() }
+            })
         }
         if (preferences.getBoolean(SharedPreferenceConstants.KEY_HOME_REFRESH_SAVED_SEARCHES)) {
             getSavedSearchesAsync(action())
@@ -524,7 +524,7 @@ class AsyncTwitterWrapper(
     }
 
     internal class CreateUserListTask(context: Context, private val mAccountKey: UserKey, private val mListName: String?,
-                                      private val mIsPublic: Boolean, private val mDescription: String) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
+            private val mIsPublic: Boolean, private val mDescription: String) : ManagedAsyncTask<Any, Any, SingleResponse<ParcelableUserList>>(context) {
 
         override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
             val microBlog = MicroBlogAPIFactory.getInstance(context, mAccountKey

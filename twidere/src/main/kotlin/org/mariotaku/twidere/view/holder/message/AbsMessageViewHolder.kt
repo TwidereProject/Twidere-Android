@@ -70,7 +70,7 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
             val time = DateUtils.formatDateTime(context, message.timestamp, DateUtils.FORMAT_SHOW_TIME)
             if (message.is_outgoing) {
                 this.text = time
-            } else if (sender != null) {
+            } else if (adapter.displaySenderProfile && sender != null) {
                 val senderName = manager.getDisplayName(sender, adapter.nameFirst)
                 this.text = context.getString(R.string.message_format_sender_time, senderName, time)
             } else {
@@ -79,7 +79,8 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
         }
 
         profileImage?.apply {
-            if (adapter.profileImageEnabled && sender != null && !message.is_outgoing) {
+            if (adapter.displaySenderProfile && adapter.profileImageEnabled && sender != null
+                    && !message.is_outgoing) {
                 this.visibility = View.VISIBLE
                 adapter.mediaLoader.displayProfileImage(this, sender)
             } else {

@@ -72,7 +72,7 @@
                     android:id="@+id/mediaPreview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minWidth="200dp"
+                    android:layout_marginBottom="@dimen/element_spacing_normal"
                     android:visibility="gone">
 
                     <include layout="@layout/layout_card_media_preview"/>

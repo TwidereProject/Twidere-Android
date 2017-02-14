@@ -195,17 +195,18 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     public static String getUserAgentName(Context context, ConsumerKeyType type) {
         switch (type) {
             case TWITTER_FOR_ANDROID: {
-                final String versionName = "5.2.4";
-                final String internalVersionName = "524-r1";
+                final String versionName = "6.3.4";
+                final String internalVersionName = "6110049-r-917";
                 final String model = Build.MODEL;
                 final String manufacturer = Build.MANUFACTURER;
                 final int sdkInt = Build.VERSION.SDK_INT;
+                final String sdkRelease = Build.VERSION.RELEASE;
                 final String device = Build.DEVICE;
                 final String brand = Build.BRAND;
                 final String product = Build.PRODUCT;
                 final int debug = BuildConfig.DEBUG ? 1 : 0;
-                return String.format(Locale.ROOT, "TwitterAndroid /%s (%s) %s/%d (%s;%s;%s;%s;%d)",
-                        versionName, internalVersionName, model, sdkInt, manufacturer, device, brand,
+                return String.format(Locale.US, "TwitterAndroid /%s (%s) %s/%s (%s;%s;%s;%s;%d)",
+                        versionName, internalVersionName, model, sdkRelease, manufacturer, model, brand,
                         product, debug);
             }
             case TWITTER_FOR_IPHONE: {

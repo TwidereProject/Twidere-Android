@@ -28,6 +28,7 @@
     <string name="action_creating_list">creating list</string>
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Delete</string>
+    <string name="action_delete_messages">Delete messages</string>
     <string name="action_deleting">deleting</string>
     <string name="action_deleting_search">deleting search</string>
     <string name="action_denying_follow_request">denying follow request</string>
@@ -52,6 +53,7 @@
     <string name="action_invert_selection">Invert selection</string>
     <!-- Used for decide something later, like permission request -->
     <string name="action_later">Later</string>
+    <string name="action_leave_conversation">Leave conversation</string>
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="action_like">Like</string>
     <string name="action_liking">liking</string>
@@ -538,6 +540,7 @@
     <string name="hint_accounts_dashboard_message">Swipe from screen edge to open accounts dashboard.</string>
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
+    <string name="hint_error_message_no_content">No content</string>
     <string name="hint_no_account">No account</string>
 
     <string name="hints">Hints</string>
@@ -812,7 +815,6 @@
     <string name="no_location">No location</string>
     <string name="no_rule">No rule</string>
     <string name="no_status_content_text">No content</string>
-    <string name="hint_error_message_no_content">No content</string>
     <string name="no_tab">No tab</string>
     <string name="no_tab_hint">No tab</string>
     <string name="no_thanks">No, thanks</string>

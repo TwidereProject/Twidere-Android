@@ -21,6 +21,7 @@ package org.mariotaku.twidere.model.event;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Created by mariotaku on 14/12/10.
@@ -29,11 +30,14 @@ public class GetMessagesTaskEvent {
 
     @NonNull
     public final Uri uri;
+    @Nullable
+    public final String taskTag;
     public final boolean running;
     public final Exception exception;
 
-    public GetMessagesTaskEvent(@NonNull Uri uri, boolean running, Exception exception) {
+    public GetMessagesTaskEvent(@NonNull Uri uri, @Nullable String taskTag, boolean running, Exception exception) {
         this.uri = uri;
+        this.taskTag = taskTag;
         this.running = running;
         this.exception = exception;
     }
