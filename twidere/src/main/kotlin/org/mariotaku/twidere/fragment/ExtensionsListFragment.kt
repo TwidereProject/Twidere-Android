@@ -21,7 +21,6 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -43,18 +42,12 @@ import org.mariotaku.twidere.adapter.ExtensionsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.loader.ExtensionsListLoader
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
-import org.mariotaku.twidere.util.PermissionsManager
 
 class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         LoaderCallbacks<List<ExtensionInfo>>, AdapterView.OnItemClickListener {
 
-    private var packageManager: PackageManager? = null
-
-    private var permissionsManager: PermissionsManager? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        packageManager = activity.packageManager
-        permissionsManager = PermissionsManager(activity)
 
         listView.onItemClickListener = this
 
@@ -99,8 +92,8 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
         val extensionInfo = adapter.getItem(adapterMenuInfo.position)
         if (extensionInfo.settings != null) {
             val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
-            intent.setClassName(extensionInfo.pname, extensionInfo.settings)
-            menu.setItemAvailability(R.id.settings, packageManager!!.queryIntentActivities(intent, 0).size == 1)
+            intent.setClassName(extensionInfo.packageName, extensionInfo.settings)
+            menu.setItemAvailability(R.id.settings, context.packageManager.queryIntentActivities(intent, 0).size == 1)
         } else {
             menu.setItemAvailability(R.id.settings, false)
         }
@@ -118,7 +111,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
                 uninstallExtension(extensionInfo)
             }
             R.id.revoke -> {
-                permissionsManager!!.revoke(extensionInfo.pname)
+                permissionsManager.revoke(extensionInfo.packageName)
                 adapter.notifyDataSetChanged()
             }
             else -> {
@@ -130,9 +123,9 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
 
     private fun openSettings(info: ExtensionInfo): Boolean {
         val intent = Intent(IntentConstants.INTENT_ACTION_EXTENSION_SETTINGS)
-        intent.`package` = info.pname
+        intent.`package` = info.packageName
         if (info.settings != null) {
-            intent.setClassName(info.pname, info.settings)
+            intent.setClassName(info.packageName, info.settings)
         } else {
             val pm = activity.packageManager
             val activities = pm.queryIntentActivities(intent, 0)
@@ -140,7 +133,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
                 return false
             }
             val resolveInfo = activities[0]
-            intent.setClassName(info.pname, resolveInfo.activityInfo.name)
+            intent.setClassName(info.packageName, resolveInfo.activityInfo.name)
         }
         try {
             startActivity(intent)
@@ -154,7 +147,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
 
     private fun uninstallExtension(info: ExtensionInfo?): Boolean {
         if (info == null) return false
-        val packageUri = Uri.parse("package:${info.pname}")
+        val packageUri = Uri.parse("package:${info.packageName}")
         val uninstallIntent = Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageUri)
         try {
             startActivity(uninstallIntent)

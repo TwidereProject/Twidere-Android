@@ -59,6 +59,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var validator: TwidereValidator
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit var permissionsManager: PermissionsManager
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 

@@ -51,6 +51,8 @@ open class BaseArrayAdapter<T>(
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
+    @Inject
+    lateinit var permissionsManager: PermissionsManager
 
     final override val profileImageStyle: Int
     final override val textSize: Float
