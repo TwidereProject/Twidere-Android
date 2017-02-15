@@ -106,13 +106,16 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 // Processing deletion
                 if (count < before) {
                     val spans = s.getSpans(start, start, ParticipantSpan::class.java)
-                    spans.forEach { span ->
-                        val deleteStart = s.getSpanStart(span)
-                        val deleteEnd = s.getSpanEnd(span)
-                        s.removeSpan(span)
-                        s.setSpan(MarkForDeleteSpan(), deleteStart, deleteEnd,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                        updateCheckState()
+                    if (spans.isNotEmpty()) {
+                        spans.forEach { span ->
+                            val deleteStart = s.getSpanStart(span)
+                            val deleteEnd = s.getSpanEnd(span)
+                            s.removeSpan(span)
+                            s.setSpan(MarkForDeleteSpan(), deleteStart, deleteEnd,
+                                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            updateCheckState()
+                        }
+                        return
                     }
                 }
                 val spaceNextStart = run {
@@ -123,7 +126,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 // Skip if last char is space
                 if (spaceNextStart > s.lastIndex) return
                 if (s.getSpans(start, start + count, ParticipantSpan::class.java).isEmpty()) {
-                    s.setSpan(PendingQuerySpan(), spaceNextStart, spaceNextStart + count, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    s.setSpan(PendingQuerySpan(), spaceNextStart, start + count, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                     searchUser(s.substring(spaceNextStart), true)
                 }
             }
