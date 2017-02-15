@@ -313,8 +313,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                     positiveButton.isEnabled = nameValid && urlValid
                 }
 
-                val watcher = object : SimpleTextWatcher() {
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val watcher = object : SimpleTextWatcher {
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                         updateEnableState()
                     }
                 }

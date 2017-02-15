@@ -60,7 +60,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         }
         setContentView(R.layout.activity_user_selector)
 
-        editScreenName.addTextChangedListener(object : SimpleTextWatcher() {
+        editScreenName.addTextChangedListener(object : SimpleTextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 searchUser(accountKey, s.toString(), true)
             }

@@ -65,7 +65,7 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
 
             fun String.nonSpaceCount(range: IntRange): Int {
                 if (range.isEmpty()) return 0
-                return range.count { !Character.isSpaceChar(this[it]) }
+                return range.count { !this[it].isWhitespace() }
             }
 
             val text = message.text_unescaped

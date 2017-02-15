@@ -423,10 +423,10 @@
     <string name="error_message">Error: <xliff:g id="message">%s</xliff:g>
     </string>
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
-    <string name="error_message_media_upload_failed">Media upload failed.</string>
-    <string name="error_message_media_uploader_not_found">Media uploader not found, maybe it was uninstalled.</string>
     <string name="error_message_media_message_attachment_not_supported">Attach media to DM is not supported</string>
     <string name="error_message_media_message_too_many">Too many media</string>
+    <string name="error_message_media_upload_failed">Media upload failed.</string>
+    <string name="error_message_media_uploader_not_found">Media uploader not found, maybe it was uninstalled.</string>
     <string name="error_message_message_too_long">Message too long</string>
     <string name="error_message_no_content">No content</string>
     <string
@@ -488,7 +488,7 @@
     <string name="filter_type_sources">Sources</string>
     <string name="filter_type_users">Users</string>
     <string name="filter_user_confirm_message">Add <xliff:g
-        example="Username" id="name">%s</xliff:g> to filter?</string>
+        example="Username" id="name">%1$s</xliff:g> to filter?</string>
 
     <string name="follow_request_sent">Follow request sent</string>
 
@@ -543,6 +543,7 @@
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
     <string name="hint_error_message_no_content">No content</string>
+    <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>
 
     <string name="hints">Hints</string>

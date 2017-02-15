@@ -139,9 +139,9 @@ public final class Utils implements Constants {
     }
 
     public static void addIntentToMenuForExtension(final Context context, final Menu menu,
-                                                   final int groupId, final String action,
-                                                   final String parcelableKey, final String parcelableJSONKey,
-                                                   final Parcelable parcelable) {
+            final int groupId, final String action,
+            final String parcelableKey, final String parcelableJSONKey,
+            final Parcelable parcelable) {
         if (context == null || menu == null || action == null || parcelableKey == null || parcelable == null)
             return;
         final PackageManager pm = context.getPackageManager();
@@ -184,7 +184,7 @@ public final class Utils implements Constants {
     }
 
     public static void announceForAccessibilityCompat(final Context context, final View view, final CharSequence text,
-                                                      final Class<?> cls) {
+            final Class<?> cls) {
         final AccessibilityManager accessibilityManager = (AccessibilityManager) context
                 .getSystemService(Context.ACCESSIBILITY_SERVICE);
         if (!accessibilityManager.isEnabled()) return;
@@ -213,7 +213,7 @@ public final class Utils implements Constants {
     }
 
     public static int calculateInSampleSize(final int width, final int height, final int preferredWidth,
-                                            final int preferredHeight) {
+            final int preferredHeight) {
         if (preferredHeight > height && preferredWidth > width) return 1;
         final int result = Math.round(Math.max(width, height) / (float) Math.max(preferredWidth, preferredHeight));
         return Math.max(1, result);
@@ -317,7 +317,7 @@ public final class Utils implements Constants {
 
     @NonNull
     public static String getReadPositionTagWithAccount(@NonNull final String tag,
-                                                       @Nullable final UserKey accountKey) {
+            @Nullable final UserKey accountKey) {
         if (accountKey == null) return tag;
         return accountKey + ":" + tag;
     }
@@ -353,7 +353,7 @@ public final class Utils implements Constants {
 
 
     public static boolean isOfficialCredentials(@NonNull final Context context,
-                                                @NonNull final AccountDetails account) {
+            @NonNull final AccountDetails account) {
         return AccountDetailsExtensionsKt.isOfficial(account, context);
     }
 
@@ -449,8 +449,8 @@ public final class Utils implements Constants {
 
 
     public static String getMediaUploadStatus(@NonNull final Context context,
-                                              @Nullable final CharSequence[] links,
-                                              @Nullable final CharSequence text) {
+            @Nullable final CharSequence[] links,
+            @Nullable final CharSequence text) {
         if (ArrayUtils.isEmpty(links) || text == null) return ParseUtils.parseString(text);
         return text + " " + TwidereArrayUtils.toString(links, ' ', false);
     }
@@ -590,7 +590,7 @@ public final class Utils implements Constants {
     }
 
     public static String getTwitterErrorMessage(final Context context, final CharSequence action,
-                                                final MicroBlogException te) {
+            final MicroBlogException te) {
         if (context == null) return null;
         if (te == null) return context.getString(R.string.error_unknown_error);
         if (te.exceededRateLimitation()) {
@@ -660,7 +660,12 @@ public final class Utils implements Constants {
         if (context == null) return false;
         final Context app = context.getApplicationContext();
         final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        final Intent intent = app.registerReceiver(null, filter);
+        final Intent intent;
+        try {
+            intent = app.registerReceiver(null, filter);
+        } catch (Exception e) {
+            return false;
+        }
         if (intent == null) return false;
         final boolean plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0) != 0;
         final float level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
@@ -772,13 +777,13 @@ public final class Utils implements Constants {
     }
 
     public static void showErrorMessage(final Context context, final CharSequence action,
-                                        final CharSequence message, final boolean longMessage) {
+            final CharSequence message, final boolean longMessage) {
         if (context == null) return;
         showErrorMessage(context, getErrorMessage(context, action, message), longMessage);
     }
 
     public static void showErrorMessage(final Context context, final CharSequence action,
-                                        @Nullable final Throwable t, final boolean longMessage) {
+            @Nullable final Throwable t, final boolean longMessage) {
         if (context == null) return;
         if (t instanceof MicroBlogException) {
             showTwitterErrorMessage(context, action, (MicroBlogException) t, longMessage);
@@ -788,14 +793,14 @@ public final class Utils implements Constants {
     }
 
     public static void showErrorMessage(final Context context, final int actionRes, final String desc,
-                                        final boolean longMessage) {
+            final boolean longMessage) {
         if (context == null) return;
         showErrorMessage(context, context.getString(actionRes), desc, longMessage);
     }
 
     public static void showErrorMessage(final Context context, final int action,
-                                        @Nullable final Throwable t,
-                                        final boolean long_message) {
+            @Nullable final Throwable t,
+            final boolean long_message) {
         if (context == null) return;
         showErrorMessage(context, context.getString(action), t, long_message);
     }
@@ -842,7 +847,7 @@ public final class Utils implements Constants {
     }
 
     public static void showTwitterErrorMessage(final Context context, final CharSequence action,
-                                               final MicroBlogException te, final boolean long_message) {
+            final MicroBlogException te, final boolean long_message) {
         if (context == null) return;
         final String message;
         if (te != null) {
