@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.fragment.MessagesEntriesFragment;
+import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.StringHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;

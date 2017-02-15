@@ -26,6 +26,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.NewDm
+import org.mariotaku.microblog.library.twitter.model.fixMedia
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -92,6 +93,7 @@ class SendMessageTask(
             deleteOnSuccess?.forEach { it.delete(context) }
         }
         deleteAlways?.forEach { it.delete(context) }
+        response.fixMedia(microBlog)
         return GetMessagesTask.createDatabaseUpdateData(context, account, response)
     }
 

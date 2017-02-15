@@ -55,6 +55,10 @@ import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
+import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment
+import org.mariotaku.twidere.fragment.message.MessageNewConversationFragment
+import org.mariotaku.twidere.fragment.message.MessagesConversationFragment
+import org.mariotaku.twidere.fragment.message.MessagesEntriesFragment
 import org.mariotaku.twidere.graphic.EmptyDrawable
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
@@ -624,13 +628,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 args.putString(EXTRA_CONVERSATION_ID, conversationId)
             }
             LINK_ID_MESSAGES_CONVERSATION_NEW -> {
-                fragment = Fragment()
-                val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
+                fragment = MessageNewConversationFragment()
                 accountRequired = true
             }
             LINK_ID_MESSAGES_CONVERSATION_INFO -> {
-                fragment = Fragment()
+                fragment = MessageConversationInfoFragment()
                 val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
+                args.putString(EXTRA_CONVERSATION_ID, conversationId)
                 accountRequired = true
             }
             LINK_ID_INTERACTIONS -> {

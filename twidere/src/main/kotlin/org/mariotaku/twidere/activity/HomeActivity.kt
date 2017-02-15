@@ -834,8 +834,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun triggerActionsClick() {
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
-        val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment ?: return
-        val handled = fragment.onActionClick("home") ?: false
+        val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
+        val handled = fragment?.onActionClick("home") ?: false
         if (!handled) {
             startActivity(Intent(INTENT_ACTION_COMPOSE))
         }

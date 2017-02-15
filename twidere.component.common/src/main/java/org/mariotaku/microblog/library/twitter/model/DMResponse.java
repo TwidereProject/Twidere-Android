@@ -401,7 +401,7 @@ public class DMResponse implements Parcelable {
             public static class Data implements EntitySupport, Parcelable {
 
                 @JsonField(name = "id")
-                long id;
+                String id;
 
                 @JsonField(name = "time")
                 long time;
@@ -464,7 +464,7 @@ public class DMResponse implements Parcelable {
                     return time;
                 }
 
-                public long getId() {
+                public String getId() {
                     return id;
                 }
 
@@ -497,6 +497,8 @@ public class DMResponse implements Parcelable {
                     MediaEntity photo;
                     @JsonField(name = "video")
                     MediaEntity video;
+                    @JsonField(name = "animated_gif")
+                    MediaEntity animatedGif;
                     @JsonField(name = "sticker")
                     StickerEntity sticker;
 
@@ -506,6 +508,10 @@ public class DMResponse implements Parcelable {
 
                     public MediaEntity getVideo() {
                         return video;
+                    }
+
+                    public MediaEntity getAnimatedGif() {
+                        return animatedGif;
                     }
 
                     public StickerEntity getSticker() {
