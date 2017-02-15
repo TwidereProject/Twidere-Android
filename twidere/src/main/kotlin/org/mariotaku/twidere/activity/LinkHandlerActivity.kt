@@ -232,7 +232,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     private fun isFragmentKeyboardShortcutHandled(handler: KeyboardShortcutsHandler,
-                                                  keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = currentVisibleFragment
         if (fragment is KeyboardShortcutCallback) {
             return fragment.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
@@ -336,7 +336,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_MUTES_USERS -> {
                 setTitle(R.string.action_twitter_muted_users)
             }
-            LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
+            LINK_ID_MESSAGES_CONVERSATION -> {
                 setTitle(R.string.direct_messages)
             }
             LINK_ID_USER_LIST -> {
@@ -409,7 +409,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_SCHEDULED_STATUSES -> {
                 title = getString(R.string.scheduled_statuses)
             }
-            LINK_ID_DIRECT_MESSAGES -> {
+            LINK_ID_MESSAGES -> {
                 title = getString(R.string.direct_messages)
             }
             LINK_ID_INTERACTIONS -> {
@@ -436,7 +436,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                                     repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = currentVisibleFragment
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutRepeat(handler, keyCode,
@@ -446,7 +446,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
     }
 
     private fun handleFragmentKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                                     event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         val fragment = currentVisibleFragment
         if (fragment is KeyboardShortcutCallback) {
             if (fragment.handleKeyboardShortcutSingle(handler, keyCode,
@@ -614,14 +614,24 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 fragment = MutesUsersListFragment()
                 args[EXTRA_SIMPLE_LAYOUT] = true
             }
-            LINK_ID_DIRECT_MESSAGES_CONVERSATION -> {
+            LINK_ID_MESSAGES -> {
+                fragment = MessagesEntriesFragment()
+            }
+            LINK_ID_MESSAGES_CONVERSATION -> {
                 fragment = MessagesConversationFragment()
                 accountRequired = true
                 val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
                 args.putString(EXTRA_CONVERSATION_ID, conversationId)
             }
-            LINK_ID_DIRECT_MESSAGES -> {
-                fragment = MessagesEntriesFragment()
+            LINK_ID_MESSAGES_CONVERSATION_NEW -> {
+                fragment = Fragment()
+                val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
+                accountRequired = true
+            }
+            LINK_ID_MESSAGES_CONVERSATION_INFO -> {
+                fragment = Fragment()
+                val conversationId = uri.getQueryParameter(QUERY_PARAM_CONVERSATION_ID) ?: return null
+                accountRequired = true
             }
             LINK_ID_INTERACTIONS -> {
                 fragment = InteractionsTimelineFragment()

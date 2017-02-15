@@ -95,8 +95,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_USER_BLOCKS = "user_blocks";
     String AUTHORITY_STATUS = "status";
     String AUTHORITY_PUBLIC_TIMELINE = "public_timeline";
-    String AUTHORITY_DIRECT_MESSAGES_CONVERSATION = "direct_messages_conversation";
-    String AUTHORITY_DIRECT_MESSAGES = "direct_messages";
+    String AUTHORITY_MESSAGES = "direct_messages";
     String AUTHORITY_SEARCH = "search";
     String AUTHORITY_MAP = "map";
     String AUTHORITY_SCHEDULED_STATUSES = "scheduled_statuses";
@@ -130,6 +129,10 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PATH_FILTERS_IMPORT_MUTES = "import/mutes";
     String PATH_FILTERS_SUBSCRIPTIONS = "subscriptions";
     String PATH_FILTERS_SUBSCRIPTIONS_ADD = "subscriptions/add";
+
+    String PATH_MESSAGES_CONVERSATION = "conversation";
+    String PATH_MESSAGES_CONVERSATION_NEW = "conversation/new";
+    String PATH_MESSAGES_CONVERSATION_INFO = "conversation/info";
 
     String QUERY_PARAM_ACCOUNT_KEY = "account_key";
     String QUERY_PARAM_ACCOUNT_HOST = "account_host";

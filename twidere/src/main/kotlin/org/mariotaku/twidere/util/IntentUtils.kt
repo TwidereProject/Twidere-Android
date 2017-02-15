@@ -14,64 +14,9 @@ import android.support.v4.app.FragmentActivity
 import android.text.TextUtils
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_ACCOUNTS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_DIRECT_MESSAGES
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_DIRECT_MESSAGES_CONVERSATION
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_DRAFTS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_FILTERS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_GROUP
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_INCOMING_FRIENDSHIPS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_INTERACTIONS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_ITEMS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_MAP
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_MUTES_USERS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_PROFILE_EDITOR
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_PUBLIC_TIMELINE
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_SAVED_SEARCHES
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_SCHEDULED_STATUSES
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_SEARCH
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_STATUS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_STATUS_FAVORITERS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_STATUS_RETWEETERS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_BLOCKS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_FAVORITES
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_FOLLOWERS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_FRIENDS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_GROUPS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_LIST
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_LISTS
-import org.mariotaku.twidere.TwidereConstants.AUTHORITY_USER_MENTIONS
-import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.TwidereConstants.EXTRA_ACTIVITY_OPTIONS
-import org.mariotaku.twidere.TwidereConstants.EXTRA_CURRENT_MEDIA
-import org.mariotaku.twidere.TwidereConstants.EXTRA_GROUP
-import org.mariotaku.twidere.TwidereConstants.EXTRA_MEDIA
-import org.mariotaku.twidere.TwidereConstants.EXTRA_NEW_DOCUMENT
-import org.mariotaku.twidere.TwidereConstants.EXTRA_QUERY
-import org.mariotaku.twidere.TwidereConstants.EXTRA_STATUS
-import org.mariotaku.twidere.TwidereConstants.EXTRA_TYPE
-import org.mariotaku.twidere.TwidereConstants.EXTRA_USER
-import org.mariotaku.twidere.TwidereConstants.EXTRA_USER_LIST
-import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_ACCOUNT_KEY
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_CONVERSATION_ID
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_GROUP_ID
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_GROUP_NAME
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LAT
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIST_ID
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LIST_NAME
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_LNG
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_QUERY
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SCREEN_NAME
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_STATUS_ID
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_USER_KEY
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_VALUE_TWEETS
-import org.mariotaku.twidere.TwidereConstants.SCHEME_HTTP
-import org.mariotaku.twidere.TwidereConstants.SCHEME_TWIDERE
+import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.Referral
-import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -285,12 +230,36 @@ object IntentUtils {
     fun openMessageConversation(context: Context, accountKey: UserKey, conversationId: String) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION)
+        builder.authority(AUTHORITY_MESSAGES)
+        builder.path(PATH_MESSAGES_CONVERSATION)
         builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
         intent.`package` = BuildConfig.APPLICATION_ID
         context.startActivity(intent)
+    }
+
+    fun messageConversationInfo(accountKey: UserKey, conversationId: String): Intent {
+        val builder = Uri.Builder()
+        builder.scheme(SCHEME_TWIDERE)
+        builder.authority(AUTHORITY_MESSAGES)
+        builder.path(PATH_MESSAGES_CONVERSATION_INFO)
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
+        builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
+        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        intent.`package` = BuildConfig.APPLICATION_ID
+        return intent
+    }
+
+    fun newMessageConversation(accountKey: UserKey): Intent {
+        val builder = Uri.Builder()
+        builder.scheme(SCHEME_TWIDERE)
+        builder.authority(AUTHORITY_MESSAGES)
+        builder.path(PATH_MESSAGES_CONVERSATION_NEW)
+        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
+        val intent = Intent(Intent.ACTION_VIEW, builder.build())
+        intent.`package` = BuildConfig.APPLICATION_ID
+        return intent
     }
 
     fun openIncomingFriendships(context: Context,
@@ -610,7 +579,7 @@ object IntentUtils {
     fun openDirectMessages(context: Context, accountKey: UserKey?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_DIRECT_MESSAGES)
+        builder.authority(AUTHORITY_MESSAGES)
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }

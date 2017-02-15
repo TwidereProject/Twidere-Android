@@ -45,7 +45,6 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.content.res.ResourcesCompat
@@ -91,6 +90,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
@@ -195,7 +195,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableRelationship>>,
-                                    data: SingleResponse<ParcelableRelationship>) {
+                data: SingleResponse<ParcelableRelationship>) {
             followProgress.visibility = View.GONE
             val relationship = data.data
             displayRelationship(user, relationship)
@@ -228,7 +228,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-                                    data: SingleResponse<ParcelableUser>) {
+                data: SingleResponse<ParcelableUser>) {
             val activity = activity ?: return
             if (data.data != null) {
                 val user = data.data
@@ -274,7 +274,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun displayRelationship(user: ParcelableUser?,
-                                    userRelationship: ParcelableRelationship?) {
+            userRelationship: ParcelableRelationship?) {
         if (user == null) {
             relationship = null
             return
@@ -554,7 +554,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     fun getUserInfo(accountKey: UserKey, userKey: UserKey?, screenName: String?,
-                    omitIntentExtra: Boolean) {
+            omitIntentExtra: Boolean) {
         val lm = loaderManager
         lm.destroyLoader(LOADER_ID_USER)
         lm.destroyLoader(LOADER_ID_FRIENDSHIP)
@@ -893,7 +893,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.send_direct_message -> {
                 val builder = Uri.Builder()
                 builder.scheme(SCHEME_TWIDERE)
-                builder.authority(AUTHORITY_DIRECT_MESSAGES_CONVERSATION)
+                builder.authority(AUTHORITY_MESSAGES)
+                builder.path(PATH_MESSAGES_CONVERSATION_NEW)
                 builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString())
                 builder.appendQueryParameter(QUERY_PARAM_USER_KEY, user.key.toString())
                 val intent = Intent(Intent.ACTION_VIEW, builder.build())
@@ -1088,13 +1089,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, repeatCount: Int,
-                                              event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, repeatCount: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-                                                     keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
@@ -1103,7 +1104,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun handleFragmentKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
-                                                     keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
@@ -1112,7 +1113,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun isFragmentKeyboardShortcutHandled(handler: KeyboardShortcutsHandler,
-                                                  keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
@@ -1209,8 +1210,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onLinkClick(link: String, orig: String?, accountKey: UserKey?,
-                             extraId: Long, type: Int, sensitive: Boolean,
-                             start: Int, end: Int): Boolean {
+            extraId: Long, type: Int, sensitive: Boolean,
+            start: Int, end: Int): Boolean {
         val user = user ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {

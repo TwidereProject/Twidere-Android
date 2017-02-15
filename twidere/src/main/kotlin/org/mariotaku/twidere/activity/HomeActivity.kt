@@ -79,6 +79,7 @@ import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.graphic.EmptyDrawable
@@ -620,8 +621,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,
-                                                     keyCode: Int, repeatCount: Int,
-                                                     event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, repeatCount: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutRepeat(handler, keyCode,
@@ -631,8 +632,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun handleFragmentKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
-                                                     keyCode: Int, event: KeyEvent,
-                                                     metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent,
+            metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutSingle(handler, keyCode,
@@ -642,7 +643,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun isFragmentKeyboardShortcutHandled(handler: KeyboardShortcutsHandler,
-                                                  keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.isKeyboardShortcutHandled(handler, keyCode,
@@ -833,6 +834,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun triggerActionsClick() {
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
+        val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment ?: return
+        fragment.onActionClick("home")
         val tab = pagerAdapter.getTab(position)
         when (tab.cls) {
             MessagesEntriesFragment::class.java -> {
@@ -844,23 +847,17 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun updateActionsButton() {
-        val icon: Int
-        val title: Int
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
-        val tab = pagerAdapter.getTab(position)
-        if (MessagesEntriesFragment::class.java == tab.cls) {
-            icon = R.drawable.ic_action_add
-            title = R.string.new_direct_message
-        } else if (TrendsSuggestionsFragment::class.java == tab.cls) {
-            icon = R.drawable.ic_action_search
-            title = android.R.string.search_go
-        } else {
-            icon = R.drawable.ic_action_status_compose
-            title = R.string.action_compose
+        val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
+        val info = fragment?.getActionInfo("home") ?: run {
+            actionsButton.setImageResource(R.drawable.ic_action_status_compose)
+            actionsButton.contentDescription = getString(R.string.action_compose)
+            return
         }
-        actionsButton.setImageResource(icon)
-        actionsButton.contentDescription = getString(title)
+
+        actionsButton.setImageResource(info.icon)
+        actionsButton.contentDescription = info.title
     }
 
 
