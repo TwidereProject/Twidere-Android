@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
@@ -10,6 +11,9 @@ import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEYS
+import org.mariotaku.twidere.TwidereConstants.REQUEST_SELECT_ACCOUNT
+import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter.MessageConversationClickListener
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -119,7 +123,9 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     override fun onActionClick(tag: String) {
         val accountKey = accountKeys.singleOrNull() ?: run {
-
+            val selectIntent = Intent(context, AccountSelectorActivity::class.java)
+            selectIntent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
+            startActivityForResult(selectIntent, REQUEST_SELECT_ACCOUNT)
             return
         }
         startActivity(IntentUtils.newMessageConversation(accountKey))

@@ -835,14 +835,9 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val position = mainPager.currentItem
         if (pagerAdapter.count == 0) return
         val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment ?: return
-        fragment.onActionClick("home")
-        val tab = pagerAdapter.getTab(position)
-        when (tab.cls) {
-            MessagesEntriesFragment::class.java -> {
-                //TODO: open message creator
-            }
-            TrendsSuggestionsFragment::class.java -> openSearchView(null)
-            else -> startActivity(Intent(INTENT_ACTION_COMPOSE))
+        val handled = fragment.onActionClick("home") ?: false
+        if (!handled) {
+            startActivity(Intent(INTENT_ACTION_COMPOSE))
         }
     }
 

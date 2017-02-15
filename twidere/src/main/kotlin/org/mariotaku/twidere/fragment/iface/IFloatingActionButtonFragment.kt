@@ -26,7 +26,7 @@ package org.mariotaku.twidere.fragment.iface
 interface IFloatingActionButtonFragment {
 
     fun getActionInfo(tag: String): ActionInfo?
-    fun onActionClick(tag: String)
+    fun onActionClick(tag: String) : Boolean
 
     data class ActionInfo(val icon: Int, val title: String)
 }
