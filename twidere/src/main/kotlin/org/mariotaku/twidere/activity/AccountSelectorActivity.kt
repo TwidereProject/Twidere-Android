@@ -44,7 +44,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
 
     private lateinit var adapter: AccountDetailsAdapter
 
-    private val keysWhiteList: Array<UserKey>?
+    private val onlyIncludeKeys: Array<UserKey>?
         get() {
             return intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS)?.toTypedArray(UserKey.CREATOR)
         }
@@ -94,7 +94,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
             setSortEnabled(false)
             val am = AccountManager.get(context)
             val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), false)
-            val extraKeys = keysWhiteList
+            val extraKeys = onlyIncludeKeys
             val oauthOnly = isOAuthOnly
             val accountHost = accountHost
             addAll(allAccountDetails.filter {
