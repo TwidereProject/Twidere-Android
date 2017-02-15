@@ -11,9 +11,7 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
@@ -46,11 +44,12 @@ import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PreviewGridItemDecoration
+import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.util.concurrent.atomic.AtomicReference
 
 class MessagesConversationFragment : AbsContentListRecyclerViewFragment<MessagesConversationAdapter>(),
-        LoaderManager.LoaderCallbacks<List<ParcelableMessage>?> {
+        LoaderManager.LoaderCallbacks<List<ParcelableMessage>?>, EditAltTextDialogFragment.EditAltTextCallback {
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
 
     private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
@@ -95,11 +94,14 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 TaskStarter.execute(task)
             }
 
+            override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
+                attachedMediaPreview.showContextMenuForChild(holder.itemView)
+            }
         }
-
         attachedMediaPreview.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         attachedMediaPreview.adapter = mediaPreviewAdapter
         attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(resources.getDimensionPixelSize(R.dimen.element_spacing_small)))
+        registerForContextMenu(attachedMediaPreview)
 
         sendMessage.setOnClickListener {
             performSendMessage()
@@ -191,6 +193,35 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 message.id)
         param.taskTag = loadMoreTaskTag
         twitterWrapper.getMessagesAsync(param)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+        if (v === attachedMediaPreview) {
+            menu.setHeaderTitle(R.string.edit_media)
+            activity.menuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val menuInfo = item.menuInfo
+        if (menuInfo is ExtendedRecyclerView.ContextMenuInfo) {
+            when (menuInfo.recyclerViewId) {
+                R.id.attachedMediaPreview -> {
+                    val position = menuInfo.position
+                    val altText = mediaPreviewAdapter.getItem(position).alt_text
+                    executeAfterFragmentResumed { fragment ->
+                        EditAltTextDialogFragment.show(fragment.childFragmentManager, position,
+                                altText)
+                    }
+                    return true
+                }
+            }
+        }
+        return super.onContextItemSelected(item)
+    }
+
+    override fun onSetAltText(position: Int, altText: String?) {
+        mediaPreviewAdapter.setAltText(position, altText)
     }
 
     @Subscribe

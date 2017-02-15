@@ -53,7 +53,6 @@ import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.twitter.Extractor
@@ -63,10 +62,7 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
-import org.mariotaku.ktextension.getTypedArray
-import org.mariotaku.ktextension.setItemChecked
-import org.mariotaku.ktextension.toTypedArray
+import org.mariotaku.ktextension.*
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -78,6 +74,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -107,7 +104,7 @@ import javax.inject.Inject
 import android.Manifest.permission as AndroidPermission
 
 class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener, OnLongClickListener,
-        ActionMode.Callback, PermissionRequestCancelCallback {
+        ActionMode.Callback, PermissionRequestCancelCallback, EditAltTextDialogFragment.EditAltTextCallback {
 
     // Utility classes
     @Inject
@@ -666,13 +663,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             when (menuInfo.recyclerViewId) {
                 R.id.attachedMediaPreview -> {
                     val position = menuInfo.position
-                    val mediaUpdate = mediaPreviewAdapter.getItem(position)
-                    val args = Bundle()
-                    args.putString(EXTRA_TEXT, mediaUpdate.alt_text)
-                    args.putInt(EXTRA_POSITION, position)
-                    val df = EditAltTextDialogFragment()
-                    df.arguments = args
-                    df.show(supportFragmentManager, "edit_alt_text")
+                    val altText = mediaPreviewAdapter.getItem(position).alt_text
+                    executeAfterFragmentResumed { activity ->
+                        EditAltTextDialogFragment.show(activity.supportFragmentManager, position,
+                                altText)
+                    }
                     return true
                 }
             }
@@ -1656,32 +1651,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         internal class NoAddress
     }
 
-    class EditAltTextDialogFragment : BaseDialogFragment() {
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(R.string.edit_description)
-            builder.setView(R.layout.dialog_compose_edit_alt_text)
-            builder.setNegativeButton(android.R.string.cancel, null)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
-                val editText = (dialog as Dialog).findViewById(R.id.edit_text) as EditText
-                (activity as ComposeActivity).setMediaAltText(arguments.getInt(EXTRA_POSITION),
-                        ParseUtils.parseString(editText.text))
-            }
-            builder.setNeutralButton(R.string.action_clear) { dialogInterface, i ->
-                (activity as ComposeActivity).setMediaAltText(arguments.getInt(EXTRA_POSITION), null)
-            }
-            val dialog = builder.create()
-            dialog.setOnShowListener {
-                it as AlertDialog
-                it.applyTheme()
-                val editText = it.findViewById(R.id.edit_text) as EditText
-                editText.setText(arguments.getString(EXTRA_TEXT))
-            }
-            return dialog
-        }
-    }
-
-    private fun setMediaAltText(position: Int, altText: String?) {
+    override fun onSetAltText(position: Int, altText: String?) {
         mediaPreviewAdapter.setAltText(position, altText)
     }
 
