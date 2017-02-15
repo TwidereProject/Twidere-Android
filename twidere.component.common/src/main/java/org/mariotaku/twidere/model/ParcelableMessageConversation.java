@@ -140,6 +140,14 @@ public class ParcelableMessageConversation implements Parcelable {
     @CursorField(value = Conversations.REQUEST_CURSOR)
     public String request_cursor;
 
+    /**
+     * True if this is a temporary conversation, i.e. Created by user but haven't send any message
+     * yet.
+     */
+    @JsonField(name = "is_temp")
+    @CursorField(value = Conversations.IS_TEMP)
+    public boolean is_temp;
+
     @JsonField(name = "message_extras")
     @ParcelableNoThanks
     ParcelableMessage.InternalExtras internalMessageExtras;
@@ -191,6 +199,7 @@ public class ParcelableMessageConversation implements Parcelable {
                 ", recipient_key=" + recipient_key +
                 ", is_outgoing=" + is_outgoing +
                 ", request_cursor='" + request_cursor + '\'' +
+                ", is_temp=" + is_temp +
                 ", internalMessageExtras=" + internalMessageExtras +
                 ", internalConversationExtras=" + internalConversationExtras +
                 '}';

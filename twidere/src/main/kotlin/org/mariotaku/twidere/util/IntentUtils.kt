@@ -228,6 +228,10 @@ object IntentUtils {
     }
 
     fun openMessageConversation(context: Context, accountKey: UserKey, conversationId: String) {
+        context.startActivity(messageConversation(accountKey, conversationId))
+    }
+
+    fun messageConversation(accountKey: UserKey, conversationId: String): Intent {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_MESSAGES)
@@ -236,7 +240,7 @@ object IntentUtils {
         builder.appendQueryParameter(QUERY_PARAM_CONVERSATION_ID, conversationId)
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
         intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
+        return intent
     }
 
     fun messageConversationInfo(accountKey: UserKey, conversationId: String): Intent {

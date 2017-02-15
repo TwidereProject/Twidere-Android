@@ -97,7 +97,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         if (!fromCache) {
             showProgress()
         }
-        return CacheUserSearchLoader(this, accountKey, query, fromCache, true)
+        return CacheUserSearchLoader(this, accountKey, query, !fromCache, true, true)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>>) {

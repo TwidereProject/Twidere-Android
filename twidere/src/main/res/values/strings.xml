@@ -25,6 +25,7 @@
     <string name="action_center">Center</string>
     <string name="action_clear">Clear</string>
     <string name="action_compose">Compose</string>
+    <string name="action_create_conversation">Create conversation</string>
     <string name="action_creating_list">creating list</string>
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
     <string name="action_delete">Delete</string>
@@ -428,6 +429,7 @@
     <string name="error_message_media_upload_failed">Media upload failed.</string>
     <string name="error_message_media_uploader_not_found">Media uploader not found, maybe it was uninstalled.</string>
     <string name="error_message_message_too_long">Message too long</string>
+    <string name="error_message_message_too_many_participants">Too many participants</string>
     <string name="error_message_no_content">No content</string>
     <string
         name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g>

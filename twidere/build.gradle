@@ -56,6 +56,8 @@ android {
     }
     buildTypes {
         debug {
+            minifyEnabled false
+            shrinkResources false
             resValue("bool", "debug", "true")
         }
         release {

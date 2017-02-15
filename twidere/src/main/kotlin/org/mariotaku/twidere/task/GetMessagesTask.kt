@@ -329,9 +329,7 @@ class GetMessagesTask(
 
             val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
-            respConversations.keys.let {
-                conversations.addLocalConversations(context, account.key, it)
-            }
+            conversations.addLocalConversations(context, account.key, respConversations.keys)
             val messages = ArrayList<ParcelableMessage>()
             val messageDeletionsMap = HashMap<String, ArrayList<String>>()
             val conversationDeletions = ArrayList<String>()

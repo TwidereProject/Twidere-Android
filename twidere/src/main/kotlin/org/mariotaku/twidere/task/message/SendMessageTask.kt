@@ -27,13 +27,16 @@ import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.NewDm
 import org.mariotaku.microblog.library.twitter.model.fixMedia
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableNewMessage
+import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.GetMessagesTask
 import org.mariotaku.twidere.task.GetMessagesTask.Companion.addConversation
@@ -45,15 +48,33 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
  */
 class SendMessageTask(
         context: Context
-) : ExceptionHandlingAbstractTask<ParcelableNewMessage, Unit, MicroBlogException, Unit>(context) {
-    override fun onExecute(params: ParcelableNewMessage) {
+) : ExceptionHandlingAbstractTask<ParcelableNewMessage, SendMessageTask.SendMessageResult, MicroBlogException, Unit>(context) {
+
+    override fun onExecute(params: ParcelableNewMessage): SendMessageResult {
         val account = params.account
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val updateData = requestSendMessage(microBlog, account, params)
+        if (params.is_temp_conversation && params.conversation_id != null) {
+            val deleteTempWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                    Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
+            val deleteTempWhereArgs = arrayOf(account.key.toString(), params.conversation_id)
+            context.contentResolver.delete(Conversations.CONTENT_URI, deleteTempWhere,
+                    deleteTempWhereArgs)
+        }
         GetMessagesTask.storeMessages(context, updateData, account)
+        return SendMessageResult(updateData.conversations.map { it.id })
     }
 
-    fun requestSendMessage(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+    override fun onException(callback: Unit?, exception: MicroBlogException) {
+        bus.post(SendMessageTaskEvent(params.account.key, params.conversation_id, null, false))
+    }
+
+    override fun onSucceed(callback: Unit?, result: SendMessageResult) {
+        bus.post(SendMessageTaskEvent(params.account.key, params.conversation_id,
+                result.conversationIds.singleOrNull(), true))
+    }
+
+    private fun requestSendMessage(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
@@ -71,9 +92,11 @@ class SendMessageTask(
         var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
         var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
         val response = try {
-            val newDm = NewDm()
             val conversationId = message.conversation_id
-            if (conversationId != null) {
+            val tempConversation = message.is_temp_conversation
+
+            val newDm = NewDm()
+            if (!tempConversation && conversationId != null) {
                 newDm.setConversationId(conversationId)
             } else {
                 newDm.setRecipientIds(message.recipient_ids)
@@ -117,5 +140,9 @@ class SendMessageTask(
         val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true)
         conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
+    }
+
+    class SendMessageResult(var conversationIds: List<String>) {
+
     }
 }

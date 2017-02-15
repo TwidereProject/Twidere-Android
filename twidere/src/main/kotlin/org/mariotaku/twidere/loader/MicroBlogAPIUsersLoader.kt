@@ -69,7 +69,7 @@ abstract class MicroBlogAPIUsersLoader(
             data.add(item)
             pos++
         }
-        Collections.sort(data)
+        processUsersData(data)
         return ListResponse.getListInstance(data)
     }
 
@@ -79,4 +79,8 @@ abstract class MicroBlogAPIUsersLoader(
 
     @Throws(MicroBlogException::class)
     protected abstract fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User>
+
+    protected open fun processUsersData(list: MutableList<ParcelableUser>) {
+        Collections.sort(data)
+    }
 }

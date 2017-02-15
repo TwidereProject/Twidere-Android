@@ -398,6 +398,7 @@ public interface TwidereDataStore {
             String RECIPIENT_KEY = "recipient_key";
             String REQUEST_CURSOR = "request_cursor";
             String IS_OUTGOING = "is_outgoing";
+            String IS_TEMP = "is_temp";
             String CONVERSATION_EXTRAS = "conversation_extras";
             String CONVERSATION_EXTRAS_TYPE = "conversation_extras_type";
 

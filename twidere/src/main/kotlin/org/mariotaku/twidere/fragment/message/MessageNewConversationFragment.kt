@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.message
 
+import android.accounts.AccountManager
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -30,22 +31,28 @@ import android.text.Editable
 import android.text.Spannable
 import android.text.TextUtils
 import android.text.style.ReplacementSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
+import org.mariotaku.twidere.model.ParcelableMessageConversation
+import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.model.ParcelableMessageConversationValuesCreator
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.text.MarkForDeleteSpan
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
 /**
@@ -53,13 +60,24 @@ import org.mariotaku.twidere.util.view.SimpleTextWatcher
  */
 class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<ParcelableUser>?> {
 
-    private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
+    private val accountKey by lazy { arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY) }
+    private val account by lazy {
+        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+    }
+
+    private val selectedRecipients: List<ParcelableUser>
+        get() {
+            val text = editParticipants.editableText ?: return emptyList()
+            return text.getSpans(0, text.length, ParticipantSpan::class.java).map(ParticipantSpan::user)
+        }
+
     private var loaderInitialized: Boolean = false
 
     private lateinit var usersAdapter: SelectableUsersAdapter
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
         usersAdapter = SelectableUsersAdapter(context)
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -92,6 +110,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                         s.removeSpan(span)
                         s.setSpan(MarkForDeleteSpan(), deleteStart, deleteEnd,
                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        updateCheckState()
                     }
                 }
                 val spaceNextStart = run {
@@ -156,7 +175,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val query = args.getString(EXTRA_QUERY)
         val fromCache = args.getBoolean(EXTRA_FROM_CACHE)
         val fromUser = args.getBoolean(EXTRA_FROM_USER)
-        return CacheUserSearchLoader(context, accountKey, query, fromCache, fromUser)
+        return CacheUserSearchLoader(context, accountKey, query, !fromCache, true, fromUser)
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableUser>?>) {
@@ -168,6 +187,55 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         updateCheckState()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_messages_conversation_new, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.setItemAvailability(R.id.create_conversation, selectedRecipients.isNotEmpty())
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.create_conversation -> {
+                createConversation()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun createConversation() {
+        val account = this.account ?: return
+        val selected = this.selectedRecipients
+        if (selected.isEmpty()) return
+        val maxParticipants = if (account.isOfficial(context)) {
+            defaultFeatures.twitterDirectMessageMaxParticipants
+        } else {
+            1
+        }
+        if (selected.size > maxParticipants) {
+            editParticipants.error = getString(R.string.error_message_message_too_many_participants)
+            return
+        }
+        val conversation = ParcelableMessageConversation()
+        conversation.account_color = account.color
+        conversation.account_key = account.key
+        conversation.id = "twidere:temp:${System.currentTimeMillis()}"
+        conversation.local_timestamp = System.currentTimeMillis()
+        conversation.conversation_type = if (selected.size > 1) {
+            ConversationType.ONE_TO_ONE
+        } else {
+            ConversationType.GROUP
+        }
+        conversation.participants = (selected + account.user).toTypedArray()
+        conversation.is_temp = true
+        val values = ParcelableMessageConversationValuesCreator.create(conversation)
+        context.contentResolver.insert(Conversations.CONTENT_URI, values)
+        activity.startActivity(IntentUtils.messageConversation(accountKey, conversation.id))
+        activity.finish()
+    }
+
     private fun updateCheckState() {
         val selected = selectedRecipients
         usersAdapter.clearCheckState()
@@ -175,6 +243,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             usersAdapter.setCheckState(user.key, true)
         }
         usersAdapter.notifyDataSetChanged()
+        activity?.supportInvalidateOptionsMenu()
     }
 
     private fun searchUser(query: String, fromCache: Boolean) {
@@ -194,11 +263,6 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         }
     }
 
-    private val selectedRecipients: List<ParcelableUser>
-        get() {
-            val text = editParticipants.editableText ?: return emptyList()
-            return text.getSpans(0, text.length, ParticipantSpan::class.java).map(ParticipantSpan::user)
-        }
 
     class PendingQuerySpan
 

@@ -29,6 +29,8 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelableThisPlease;
 
+import java.util.Arrays;
+
 /**
  * Created by mariotaku on 2017/2/14.
  */
@@ -58,6 +60,23 @@ public class ParcelableNewMessage implements Parcelable {
     @ParcelableThisPlease
     @Draft.Action
     public String draft_action;
+    @JsonField(name = "is_temp_conversation")
+    @ParcelableThisPlease
+    public boolean is_temp_conversation;
+
+    @Override
+    public String toString() {
+        return "ParcelableNewMessage{" +
+                "account=" + account +
+                ", conversation_id='" + conversation_id + '\'' +
+                ", recipient_ids=" + Arrays.toString(recipient_ids) +
+                ", text='" + text + '\'' +
+                ", media=" + Arrays.toString(media) +
+                ", draft_unique_id='" + draft_unique_id + '\'' +
+                ", draft_action='" + draft_action + '\'' +
+                ", is_temp_conversation=" + is_temp_conversation +
+                '}';
+    }
 
     @Override
     public int describeContents() {

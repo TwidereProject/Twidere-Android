@@ -37,11 +37,13 @@ import kotlinx.android.synthetic.main.fragment_messages_conversation.*
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
+import org.mariotaku.ktextension.set
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PICK_MEDIA
+import org.mariotaku.twidere.activity.LinkHandlerActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
@@ -56,6 +58,7 @@ import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
+import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
@@ -250,6 +253,19 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         if (!event.running && event.taskTag == loadMoreTaskTag) {
             setLoadMoreIndicatorPosition(ILoadMoreSupportAdapter.NONE)
         }
+    }
+
+    @Subscribe
+    fun onSendMessageTaskEvent(event: SendMessageTaskEvent) {
+        if (event.success || event.accountKey != accountKey || event.conversationId != conversationId) {
+            return
+        }
+        val newConversationId = event.newConversationId ?: return
+        arguments[EXTRA_CONVERSATION_ID] = newConversationId
+        if (activity is LinkHandlerActivity) {
+            activity.intent = IntentUtils.messageConversation(accountKey, newConversationId)
+        }
+        loaderManager.restartLoader(0, null, this)
     }
 
     private fun performSendMessage() {
