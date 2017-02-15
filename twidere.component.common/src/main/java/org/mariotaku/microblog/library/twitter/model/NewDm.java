@@ -38,7 +38,7 @@ public class NewDm extends SimpleValueMap {
     }
 
     public void setRecipientIds(String[] recipientIds) {
-        put("conversation_ids", InternalArrayUtil.join(recipientIds, ","));
+        put("recipient_ids", InternalArrayUtil.join(recipientIds, ","));
     }
 
     public void setMediaId(String mediaId) {

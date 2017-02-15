@@ -257,7 +257,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     @Subscribe
     fun onSendMessageTaskEvent(event: SendMessageTaskEvent) {
-        if (event.success || event.accountKey != accountKey || event.conversationId != conversationId) {
+        if (!event.success || event.accountKey != accountKey || event.conversationId != conversationId) {
             return
         }
         val newConversationId = event.newConversationId ?: return
@@ -291,10 +291,13 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             this.account = conversationAccount
             this.media = mediaPreviewAdapter.asList().toTypedArray()
             this.conversation_id = conversation.id
-            this.recipient_ids = conversation.participants?.map {
+            this.recipient_ids = conversation.participants?.filter {
+                it.key != accountKey
+            }?.map {
                 it.key.id
             }?.toTypedArray()
             this.text = text
+            this.is_temp_conversation = conversation.is_temp
         }
         LengthyOperationsService.sendMessageAsync(context, message)
         editText.text = null

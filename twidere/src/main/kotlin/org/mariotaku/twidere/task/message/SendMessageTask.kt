@@ -91,7 +91,7 @@ class SendMessageTask(
     private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
         var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
-        val response = try {
+        val sendResponse = try {
             val conversationId = message.conversation_id
             val tempConversation = message.is_temp_conversation
 
@@ -116,6 +116,10 @@ class SendMessageTask(
             deleteOnSuccess?.forEach { it.delete(context) }
         }
         deleteAlways?.forEach { it.delete(context) }
+        val conversationId = sendResponse.entries?.firstOrNull {
+            it.message != null
+        }?.message?.conversationId
+        val response = microBlog.getDmConversation(conversationId, null).conversationTimeline
         response.fixMedia(microBlog)
         return GetMessagesTask.createDatabaseUpdateData(context, account, response)
     }
