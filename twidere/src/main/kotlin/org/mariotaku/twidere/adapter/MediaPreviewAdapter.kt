@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.adapter
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
@@ -84,7 +85,8 @@ class MediaPreviewAdapter(
     }
 
     interface Listener : SimpleItemTouchHelperCallback.OnStartDragListener {
-        fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder)
-        fun onEditClick(position: Int, holder: MediaPreviewViewHolder)
+        fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {}
+        fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {}
+        override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {}
     }
 }

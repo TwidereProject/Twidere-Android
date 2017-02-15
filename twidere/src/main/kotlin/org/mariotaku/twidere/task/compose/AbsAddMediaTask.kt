@@ -35,7 +35,8 @@ import java.lang.ref.WeakReference
 open class AbsAddMediaTask<Callback>(
         context: Context,
         val sources: Array<Uri>,
-        val deleteSrc: Boolean
+        val copySrc: Boolean = false,
+        val deleteSrc: Boolean = false
 ) : AbstractTask<Unit, List<ParcelableMediaUpdate>?, Callback>() {
 
     private val contextRef = WeakReference(context)
@@ -59,13 +60,17 @@ open class AbsAddMediaTask<Callback>(
                 val extension = sourceMimeType?.let { mimeType ->
                     MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
                 } ?: "tmp"
-                val destination = createTempImageUri(context, index, extension)
-                st = resolver.openInputStream(source)
-                os = resolver.openOutputStream(destination)
-                if (st == null || os == null) throw FileNotFoundException()
-                StreamUtils.copy(st, os, null, null)
-                if (deleteSrc) {
-                    Utils.deleteMedia(context, source)
+                st = resolver.openInputStream(source) ?: throw FileNotFoundException("Unable to open $source")
+                val destination: Uri
+                if (copySrc) {
+                    destination = createTempImageUri(context, index, extension)
+                    os = resolver.openOutputStream(destination) ?: throw FileNotFoundException("Unable to open $destination")
+                    StreamUtils.copy(st, os, null, null)
+                    if (deleteSrc) {
+                        Utils.deleteMedia(context, source)
+                    }
+                } else {
+                    destination = source
                 }
                 return@mapIndexedNotNull ParcelableMediaUpdate(destination.toString(), mediaType)
             } catch (e: IOException) {

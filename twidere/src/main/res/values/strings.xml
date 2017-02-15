@@ -425,7 +425,9 @@
     <string name="error_message_device_incompatible">This device is not compatible with Twidere, upgrade to latest Android OS is recommended.\nYou can send information below to help me report this issue to device manufacturer.</string>
     <string name="error_message_media_upload_failed">Media upload failed.</string>
     <string name="error_message_media_uploader_not_found">Media uploader not found, maybe it was uninstalled.</string>
-    <string name="error_message_message_too_long">Message too long.</string>
+    <string name="error_message_media_message_attachment_not_supported">Attach media to DM is not supported</string>
+    <string name="error_message_media_message_too_many">Too many media</string>
+    <string name="error_message_message_too_long">Message too long</string>
     <string name="error_message_no_content">No content</string>
     <string
         name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g>

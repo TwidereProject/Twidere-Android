@@ -62,8 +62,8 @@ class GetMessagesTask(
     private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         when (details.type) {
             AccountType.FANFOU -> {
-                // Use fanfou DM api
-                return getFanfouMessages(microBlog, details, param, index)
+                // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
+                // return getFanfouMessages(microBlog, details, param, index)
             }
             AccountType.TWITTER -> {
                 // Use official DM api

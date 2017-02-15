@@ -47,11 +47,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:colorBackground"
+        android:clipToPadding="false"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:outlineProvider="bounds"
-        android:paddingBottom="@dimen/element_spacing_normal"
-        android:paddingTop="@dimen/element_spacing_normal"
+        android:padding="@dimen/element_spacing_normal"
         tools:ignore="UnusedAttribute">
 
         <org.mariotaku.twidere.view.IconActionView
@@ -60,25 +60,24 @@
             android:layout_height="@dimen/element_size_normal"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_marginEnd="@dimen/element_spacing_normal"
+            android:layout_marginRight="@dimen/element_spacing_normal"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/add_image"
             android:scaleType="centerInside"
             android:src="@drawable/ic_action_gallery"
-            android:visibility="visible"
+            android:visibility="gone"
             app:iabColor="?android:textColorSecondary"
-            tools:tint="?android:textColorSecondary"/>
+            tools:tint="?android:textColorSecondary"
+            tools:visibility="visible"/>
 
         <FrameLayout
             android:id="@+id/sendMessageContainer"
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="@dimen/element_spacing_normal"
-            android:layout_marginLeft="@dimen/element_spacing_minus_normal"
-            android:layout_marginRight="@dimen/element_spacing_normal"
-            android:layout_marginStart="@dimen/element_spacing_minus_normal">
+            android:layout_alignParentRight="true">
 
             <org.mariotaku.twidere.view.IconActionView
                 android:id="@+id/sendMessage"

@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
 import org.mariotaku.abstask.library.TaskStarter
@@ -31,6 +32,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
@@ -40,9 +42,11 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.GetMessagesTask
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
+import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.PreviewGridItemDecoration
+import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.util.concurrent.atomic.AtomicReference
 
 class MessagesConversationFragment : AbsContentListRecyclerViewFragment<MessagesConversationAdapter>(),
@@ -70,6 +74,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val account = this.account ?: run {
+            activity?.finish()
+            return
+        }
         adapter.listener = object : MessagesConversationAdapter.Listener {
             override fun onMediaClick(position: Int, media: ParcelableMedia, accountKey: UserKey?) {
                 val message = adapter.getMessage(position) ?: return
@@ -79,6 +87,15 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             }
         }
         mediaPreviewAdapter = MediaPreviewAdapter(context)
+
+        mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
+            override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
+                val task = DeleteMediaTask(this@MessagesConversationFragment,
+                        arrayOf(mediaPreviewAdapter.getItem(position)))
+                TaskStarter.execute(task)
+            }
+
+        }
 
         attachedMediaPreview.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         attachedMediaPreview.adapter = mediaPreviewAdapter
@@ -94,6 +111,12 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         // No refresh for this fragment
         refreshEnabled = false
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+
+        if (account.isOfficial(context)) {
+            addMedia.visibility = View.VISIBLE
+        } else {
+            addMedia.visibility = View.GONE
+        }
 
         updateMediaPreview()
 
@@ -116,7 +139,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             REQUEST_PICK_MEDIA -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val mediaUris = MediaPickerActivity.getMediaUris(data)
-                    TaskStarter.execute(AddMediaTask(this, mediaUris, true))
+                    TaskStarter.execute(AddMediaTask(this, mediaUris))
                 }
             }
         }
@@ -179,13 +202,25 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun performSendMessage() {
         val conversation = adapter.conversation ?: return
+        val conversationAccount = this.account ?: return
         if (editText.empty && adapter.itemCount == 0) {
             editText.error = getString(R.string.hint_error_message_no_content)
             return
         }
+        if (conversationAccount.isOfficial(context)) {
+            if (adapter.itemCount > defaultFeatures.twitterDirectMessageMediaLimit) {
+                editText.error = getString(R.string.error_message_media_message_too_many)
+                return
+            } else {
+                editText.error = null
+            }
+        } else {
+            editText.error = getString(R.string.error_message_media_message_attachment_not_supported)
+            return
+        }
         val text = editText.text.toString()
         val message = ParcelableNewMessage().apply {
-            this.account = this@MessagesConversationFragment.account
+            this.account = conversationAccount
             this.media = mediaPreviewAdapter.asList().toTypedArray()
             this.conversation_id = conversation.id
             this.recipient_ids = conversation.participants?.map {
@@ -218,12 +253,18 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         updateMediaPreview()
     }
 
+    private fun removeMedia(media: List<ParcelableMediaUpdate>) {
+        mediaPreviewAdapter.removeAll(media)
+        updateMediaPreview()
+    }
+
     private fun updateMediaPreview() {
         attachedMediaPreview.visibility = if (mediaPreviewAdapter.itemCount > 0) {
             View.VISIBLE
         } else {
             View.GONE
         }
+        editText.error = null
     }
 
     private fun setProgressVisible(visible: Boolean) {
@@ -232,9 +273,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     internal class AddMediaTask(
             fragment: MessagesConversationFragment,
-            sources: Array<Uri>,
-            deleteSrc: Boolean
-    ) : AbsAddMediaTask<MessagesConversationFragment>(fragment.context, sources, deleteSrc) {
+            sources: Array<Uri>
+    ) : AbsAddMediaTask<MessagesConversationFragment>(fragment.context, sources) {
 
         init {
             callback = fragment
@@ -244,6 +284,32 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             if (callback == null || result == null) return
             callback.setProgressVisible(false)
             callback.attachMedia(result)
+        }
+
+        override fun beforeExecute() {
+            val fragment = callback ?: return
+            fragment.setProgressVisible(true)
+        }
+
+    }
+
+    internal class DeleteMediaTask(
+            fragment: MessagesConversationFragment,
+            val media: Array<ParcelableMediaUpdate>
+    ) : AbsDeleteMediaTask<MessagesConversationFragment>(fragment.context,
+            media.map { Uri.parse(it.uri) }.toTypedArray()) {
+
+        init {
+            callback = fragment
+        }
+
+        override fun afterExecute(callback: MessagesConversationFragment?, result: BooleanArray?) {
+            if (callback == null || result == null) return
+            callback.setProgressVisible(false)
+            callback.removeMedia(media.filterIndexed { i, media -> result[i] })
+            if (result.any { false }) {
+                Toast.makeText(callback.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
+            }
         }
 
         override fun beforeExecute() {

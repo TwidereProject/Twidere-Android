@@ -25,6 +25,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
+import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -61,6 +62,8 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
     lateinit var permissionsManager: PermissionsManager
+    @Inject
+    lateinit var defaultFeatures: DefaultFeatures
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 
