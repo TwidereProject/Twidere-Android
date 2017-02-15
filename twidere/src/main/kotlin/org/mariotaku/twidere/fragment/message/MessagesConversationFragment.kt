@@ -271,12 +271,12 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     private fun performSendMessage() {
         val conversation = adapter.conversation ?: return
         val conversationAccount = this.account ?: return
-        if (editText.empty && adapter.itemCount == 0) {
+        if (editText.empty && mediaPreviewAdapter.itemCount == 0) {
             editText.error = getString(R.string.hint_error_message_no_content)
             return
         }
         if (conversationAccount.isOfficial(context)) {
-            if (adapter.itemCount > defaultFeatures.twitterDirectMessageMediaLimit) {
+            if (mediaPreviewAdapter.itemCount > defaultFeatures.twitterDirectMessageMediaLimit) {
                 editText.error = getString(R.string.error_message_media_message_too_many)
                 return
             } else {
