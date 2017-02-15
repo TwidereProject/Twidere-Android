@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.fragment.message
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.RectF
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
@@ -108,6 +108,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             }
         })
         val nameFirst = preferences[nameFirstKey]
+        val roundRadius = resources.getDimension(R.dimen.element_spacing_xsmall)
+        val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
         usersAdapter.itemCheckedListener = itemChecked@ { pos, checked ->
             val text: Editable = editParticipants.editableText ?: return@itemChecked
             val user = usersAdapter.getUser(pos) ?: return@itemChecked
@@ -119,7 +121,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                     if (start < 0 || end < 0 || end < start) return@forEach
                     text.delete(start, end)
                 }
-                val span = ParticipantSpan(user, userColorNameManager.getDisplayName(user, nameFirst))
+                val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+                val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                 val start = text.length
                 text.append(user.screen_name)
                 val end = text.length
@@ -197,27 +200,38 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             return text.getSpans(0, text.length, ParticipantSpan::class.java).map(ParticipantSpan::user)
         }
 
-    class PendingQuerySpan {
+    class PendingQuerySpan
 
-    }
-
-    class ParticipantSpan(val user: ParcelableUser, val displayName: String) : ReplacementSpan() {
+    class ParticipantSpan(
+            val user: ParcelableUser,
+            val displayName: String,
+            val roundRadius: Float,
+            val padding: Float
+    ) : ReplacementSpan() {
 
         private var backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private var backgroundBounds = RectF()
         private var nameWidth: Float = 0f
 
         init {
-            backgroundPaint.color = Color.GRAY
+            backgroundPaint.color = 0x20808080
         }
 
         override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
-            canvas.drawRect(x, top.toFloat(), x + nameWidth, bottom.toFloat(), backgroundPaint)
-            canvas.drawText(displayName, x, y.toFloat(), paint)
+            backgroundBounds.set(x, top.toFloat() + padding / 2, x + nameWidth + padding * 2, bottom - padding / 2)
+            canvas.drawRoundRect(backgroundBounds, roundRadius, roundRadius, backgroundPaint)
+            val textSizeBackup = paint.textSize
+            paint.textSize = textSizeBackup - padding
+            canvas.drawText(displayName, x + padding, y - padding / 2, paint)
+            paint.textSize = textSizeBackup
         }
 
         override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
+            val textSizeBackup = paint.textSize
+            paint.textSize = textSizeBackup - padding
             nameWidth = paint.measureText(displayName)
-            return nameWidth.toInt()
+            paint.textSize = textSizeBackup
+            return Math.round(nameWidth + padding * 2)
         }
 
     }
