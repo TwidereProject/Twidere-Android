@@ -541,7 +541,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                         DataStoreUtils.getAccountKeys(context))
                 prefs.filter(AccountPreferences::isDirectMessagesNotificationEnabled).forEach {
-                    val pairs = readStateManager.getPositionPairs(CustomTabType.DIRECT_MESSAGES)
                     // TODO show messages notifications
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)

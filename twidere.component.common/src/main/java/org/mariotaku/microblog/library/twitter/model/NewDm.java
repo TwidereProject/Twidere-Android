@@ -37,6 +37,13 @@ public class NewDm extends SimpleValueMap {
         put("conversation_id", conversationId);
     }
 
+    /**
+     * Help you identify which is new message, this id will be attached in request result
+     */
+    public void setRequestId(String requestId) {
+        put("request_id", requestId);
+    }
+
     public void setRecipientIds(String[] recipientIds) {
         put("recipient_ids", InternalArrayUtil.join(recipientIds, ","));
     }

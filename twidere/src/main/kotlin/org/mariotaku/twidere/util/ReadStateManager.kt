@@ -26,8 +26,6 @@ import org.mariotaku.twidere.TwidereConstants.TIMELINE_POSITIONS_PREFERENCES_NAM
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.model.StringLongPair
-import org.mariotaku.twidere.util.collection.CompactHashSet
 
 class ReadStateManager(context: Context) {
 
@@ -39,24 +37,6 @@ class ReadStateManager(context: Context) {
         return preferences.getLong(key, -1)
     }
 
-    fun getPositionPairs(key: String): Array<StringLongPair> {
-        if (TextUtils.isEmpty(key)) return emptyArray()
-        val set = preferences.getStringSet(key, null) ?: return emptyArray()
-        try {
-            return set.map { StringLongPair.valueOf(it) }.toTypedArray()
-        } catch (e: NumberFormatException) {
-            return emptyArray()
-        }
-    }
-
-    fun getPosition(key: String, keyId: String): Long {
-        if (TextUtils.isEmpty(key)) return -1
-        val set = preferences.getStringSet(key, null) ?: return -1
-        val prefix = keyId + ":"
-        val first = set.firstOrNull { it.startsWith(prefix) } ?: return -1
-        return StringLongPair.valueOf(first).value
-    }
-
     fun registerOnSharedPreferenceChangeListener(listener: OnSharedPreferenceChangeListener) {
         preferences.registerOnSharedPreferenceChangeListener(listener)
     }
@@ -65,55 +45,12 @@ class ReadStateManager(context: Context) {
         preferences.unregisterOnSharedPreferenceChangeListener(listener)
     }
 
-    fun setPosition(key: String, keyId: String, position: Long, acceptOlder: Boolean = false): Boolean {
-        if (TextUtils.isEmpty(key)) return false
-        val set: MutableSet<String> = preferences.getStringSet(key, null) ?: CompactHashSet<String>()
-        val prefix = keyId + ":"
-        val keyValue: String? = set.firstOrNull { it.startsWith(prefix) }
-        val pair: StringLongPair
-        if (keyValue != null) {
-            // Found value
-            pair = StringLongPair.valueOf(keyValue)
-            if (!acceptOlder && pair.value > position) return false
-            set.remove(keyValue)
-            pair.value = position
-        } else {
-            pair = StringLongPair(keyId, position)
-        }
-        set.add(pair.toString())
-        val editor = preferences.edit()
-        editor.putStringSet(key, set)
-        editor.apply()
-        return true
-    }
-
-
-    fun setPositionPairs(key: String, pairs: Array<StringLongPair>?): Boolean {
-        if (TextUtils.isEmpty(key)) return false
-        val editor = preferences.edit()
-        if (pairs == null) {
-            editor.remove(key)
-        } else {
-            val set = CompactHashSet<String>()
-            for (pair in pairs) {
-                set.add(pair.toString())
-            }
-            editor.putStringSet(key, set)
-        }
-        editor.apply()
-        return true
-    }
-
-    @JvmOverloads fun setPosition(key: String, position: Long, acceptOlder: Boolean = false): Boolean {
+    fun setPosition(key: String, position: Long, acceptOlder: Boolean = false): Boolean {
         if (TextUtils.isEmpty(key) || !acceptOlder && getPosition(key) >= position) return false
         val editor = preferences.edit()
         editor.putLong(key, position)
         editor.apply()
         return true
-    }
-
-    interface OnReadStateChangeListener {
-        fun onReadStateChanged()
     }
 
     companion object {

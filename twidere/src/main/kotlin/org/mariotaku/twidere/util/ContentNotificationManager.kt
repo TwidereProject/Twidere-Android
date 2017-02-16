@@ -43,7 +43,6 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
@@ -64,6 +63,81 @@ class ContentNotificationManager(
 
     private var nameFirst: Boolean = false
     private var useStarForLikes: Boolean = false
+
+    fun showTimeline(pref: AccountPreferences, minPositionKey: Long) {
+        val accountKey = pref.accountKey
+        val resources = context.resources
+        val nm = notificationManager
+        val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
+                Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey))
+        val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
+                selection)
+        val selectionArgs = arrayOf(accountKey.toString())
+        val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
+        val statusProjection = arrayOf(Statuses.POSITION_KEY)
+        val statusCursor = context.contentResolver.query(Statuses.CONTENT_URI, statusProjection,
+                filteredSelection.sql, selectionArgs, Statuses.DEFAULT_SORT_ORDER) ?: return
+
+        val userCursor = context.contentResolver.rawQuery(SQLQueryBuilder.select(Columns(*userProjection))
+                .from(Table(Statuses.TABLE_NAME))
+                .where(filteredSelection)
+                .groupBy(Columns.Column(Statuses.USER_KEY))
+                .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs) ?: return
+
+        try {
+            val usersCount = userCursor.count
+            val statusesCount = statusCursor.count
+            if (statusesCount == 0 || usersCount == 0) return
+            val statusIndices = ParcelableStatusCursorIndices(statusCursor)
+            val userIndices = ParcelableStatusCursorIndices(userCursor)
+            val positionKey = if (statusCursor.moveToFirst()) statusCursor.getLong(statusIndices.position_key) else -1L
+            val notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
+                    statusesCount, statusesCount)
+            val notificationContent: String
+            userCursor.moveToFirst()
+            val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+                    userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
+                    nameFirst)
+            if (usersCount == 1) {
+                notificationContent = context.getString(R.string.from_name, displayName)
+            } else if (usersCount == 2) {
+                userCursor.moveToPosition(1)
+                val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
+                        userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
+                        nameFirst)
+                notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName)
+            } else {
+                notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
+            }
+
+            // Setup notification
+            val builder = NotificationCompat.Builder(context)
+            builder.setAutoCancel(true)
+            builder.setSmallIcon(R.drawable.ic_stat_twitter)
+            builder.setTicker(notificationTitle)
+            builder.setContentTitle(notificationTitle)
+            builder.setContentText(notificationContent)
+            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+            builder.setContentIntent(getContentIntent(context, CustomTabType.HOME_TIMELINE,
+                    NotificationType.HOME_TIMELINE, accountKey, positionKey))
+            builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.HOME_TIMELINE,
+                    accountKey, positionKey, false))
+            builder.setNumber(statusesCount)
+            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+            applyNotificationPreferences(builder, pref, pref.homeTimelineNotificationType)
+            try {
+                nm.notify("home_" + accountKey, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey), builder.build())
+                Utils.sendPebbleNotification(context, null, notificationContent)
+            } catch (e: SecurityException) {
+                // Silently ignore
+            }
+
+        } finally {
+            statusCursor.close()
+            userCursor.close()
+        }
+    }
+
 
     fun showInteractions(pref: AccountPreferences, position: Long) {
         val cr = context.contentResolver
@@ -163,11 +237,8 @@ class ContentNotificationManager(
         }
         val notificationId = Utils.getNotificationId(NOTIFICATION_ID_INTERACTIONS_TIMELINE, accountKey)
         notificationManager.notify("interactions", notificationId, builder.build())
-
-        Utils.sendPebbleNotification(context, context.resources.getString(R.string.interactions), pebbleNotificationStringBuilder.toString())
-
+        Utils.sendPebbleNotification(context, context.getString(R.string.interactions), pebbleNotificationStringBuilder.toString())
     }
-
 
     private fun applyNotificationPreferences(builder: NotificationCompat.Builder, pref: AccountPreferences, defaultFlags: Int) {
         var notificationDefaults = 0
@@ -193,80 +264,6 @@ class ContentNotificationManager(
 
     private fun isNotificationAudible(): Boolean {
         return !activityTracker.isHomeActivityStarted
-    }
-
-    fun showTimeline(pref: AccountPreferences, position: Long) {
-        val accountKey = pref.accountKey
-        val resources = context.resources
-        val nm = notificationManager
-        val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.greaterThan(Statuses.POSITION_KEY, position))
-        val filteredSelection = buildStatusFilterWhereClause(preferences,
-                Statuses.TABLE_NAME, selection)
-        val selectionArgs = arrayOf(accountKey.toString())
-        val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
-        val statusProjection = arrayOf(Statuses.POSITION_KEY)
-        val statusCursor = context.contentResolver.query(Statuses.CONTENT_URI, statusProjection,
-                filteredSelection.sql, selectionArgs, Statuses.DEFAULT_SORT_ORDER)
-
-        val userCursor = context.contentResolver.rawQuery(SQLQueryBuilder.select(Columns(*userProjection))
-                .from(Table(Statuses.TABLE_NAME))
-                .where(filteredSelection)
-                .groupBy(Columns.Column(Statuses.USER_KEY))
-                .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs)
-
-        try {
-            val usersCount = userCursor.count
-            val statusesCount = statusCursor.count
-            if (statusesCount == 0 || usersCount == 0) return
-            val statusIndices = ParcelableStatusCursorIndices(statusCursor)
-            val userIndices = ParcelableStatusCursorIndices(userCursor)
-            val positionKey = if (statusCursor.moveToFirst()) statusCursor.getLong(statusIndices.position_key) else -1L
-            val notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
-                    statusesCount, statusesCount)
-            val notificationContent: String
-            userCursor.moveToFirst()
-            val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
-                    userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
-                    nameFirst)
-            if (usersCount == 1) {
-                notificationContent = context.getString(R.string.from_name, displayName)
-            } else if (usersCount == 2) {
-                userCursor.moveToPosition(1)
-                val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
-                        userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
-                        nameFirst)
-                notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName)
-            } else {
-                notificationContent = resources.getString(R.string.from_name_and_N_others, displayName, usersCount - 1)
-            }
-
-            // Setup notification
-            val builder = NotificationCompat.Builder(context)
-            builder.setAutoCancel(true)
-            builder.setSmallIcon(R.drawable.ic_stat_twitter)
-            builder.setTicker(notificationTitle)
-            builder.setContentTitle(notificationTitle)
-            builder.setContentText(notificationContent)
-            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
-            builder.setContentIntent(getContentIntent(context, CustomTabType.HOME_TIMELINE,
-                    NotificationType.HOME_TIMELINE, accountKey, positionKey))
-            builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.HOME_TIMELINE,
-                    accountKey, positionKey, false))
-            builder.setNumber(statusesCount)
-            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
-            applyNotificationPreferences(builder, pref, pref.homeTimelineNotificationType)
-            try {
-                nm.notify("home_" + accountKey, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey), builder.build())
-                Utils.sendPebbleNotification(context, null, notificationContent)
-            } catch (e: SecurityException) {
-                // Silently ignore
-            }
-
-        } finally {
-            statusCursor.close()
-            userCursor.close()
-        }
     }
 
 
@@ -301,26 +298,6 @@ class ContentNotificationManager(
         nameFirst = preferences[nameFirstKey]
         useStarForLikes = preferences[iWantMyStarsBackKey]
     }
-
-
-    private fun getMarkReadDeleteIntent(context: Context, @NotificationType notificationType: String,
-            accountKey: UserKey?, positions: Array<StringLongPair>): PendingIntent {
-        // Setup delete intent
-        val intent = Intent(context, NotificationReceiver::class.java)
-        val linkBuilder = Uri.Builder()
-        linkBuilder.scheme(SCHEME_TWIDERE)
-        linkBuilder.authority(AUTHORITY_INTERACTIONS)
-        linkBuilder.appendPath(notificationType)
-        if (accountKey != null) {
-            linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        }
-        linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITIONS, StringLongPair.toString(positions))
-        linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, System.currentTimeMillis().toString())
-        linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, notificationType)
-        intent.data = linkBuilder.build()
-        return PendingIntent.getBroadcast(context, 0, intent, 0)
-    }
-
 
     private fun getMarkReadDeleteIntent(context: Context, @NotificationType type: String,
             accountKey: UserKey?, position: Long,

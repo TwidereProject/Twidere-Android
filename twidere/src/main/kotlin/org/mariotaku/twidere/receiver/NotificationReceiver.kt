@@ -64,23 +64,12 @@ class NotificationReceiver : BroadcastReceiver() {
                 }
                 val manager = holder.readStateManager
                 val paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION)
-                val paramReadPositions = uri.getQueryParameter(QUERY_PARAM_READ_POSITIONS)
                 @ReadPositionTag
                 val tag = getPositionTag(notificationType)
 
                 if (tag != null && !TextUtils.isEmpty(paramReadPosition)) {
                     manager.setPosition(Utils.getReadPositionTagWithAccount(tag, accountKey),
                             paramReadPosition.toLong(-1))
-                } else if (!TextUtils.isEmpty(paramReadPositions)) {
-                    try {
-                        val pairs = StringLongPair.valuesOf(paramReadPositions)
-                        for (pair in pairs) {
-                            manager.setPosition(tag!!, pair.key, pair.value)
-                        }
-                    } catch (ignore: NumberFormatException) {
-
-                    }
-
                 }
             }
         }

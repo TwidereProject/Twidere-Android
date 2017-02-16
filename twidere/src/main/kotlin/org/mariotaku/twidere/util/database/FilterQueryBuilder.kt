@@ -38,7 +38,7 @@ object FilterQueryBuilder {
         val query = FilterQueryBuilder.isFilteredQuery(userKey,
                 textPlain, quotedTextPlain, spans, quotedSpans, source, quotedSource, retweetedByKey,
                 quotedUserKey, true)
-        val cur = cr.rawQuery(query.first, query.second)
+        val cur = cr.rawQuery(query.first, query.second) ?: return false
         try {
             return cur.moveToFirst() && cur.getInt(0) != 0
         } finally {

@@ -24,23 +24,31 @@ import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.useCursor
+import org.mariotaku.microblog.library.MicroBlog
+import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.DMResponse
+import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.microblog.library.twitter.model.fixMedia
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.applyFrom
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
+import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.BaseAbstractTask
+import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -56,10 +64,10 @@ class GetMessagesTask(
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
             val details = getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
-            val microBlog = details.newMicroBlogInstance(context, true, cls = org.mariotaku.microblog.library.MicroBlog::class.java)
+            val microBlog = details.newMicroBlogInstance(context, true, cls = MicroBlog::class.java)
             val messages = try {
                 getMessages(microBlog, details, param, i)
-            } catch (e: org.mariotaku.microblog.library.MicroBlogException) {
+            } catch (e: MicroBlogException) {
                 return@forEachIndexed
             }
             Companion.storeMessages(context, messages, details)
@@ -68,16 +76,16 @@ class GetMessagesTask(
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
-        bus.post(org.mariotaku.twidere.model.event.GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
+        bus.post(GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
     }
 
-    private fun getMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         when (details.type) {
-            org.mariotaku.twidere.annotation.AccountType.FANFOU -> {
+            AccountType.FANFOU -> {
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
                 // return getFanfouMessages(microBlog, details, param, index)
             }
-            org.mariotaku.twidere.annotation.AccountType.TWITTER -> {
+            AccountType.TWITTER -> {
                 // Use official DM api
                 if (details.isOfficial(context)) {
                     return getTwitterOfficialMessages(microBlog, details, param, index)
@@ -88,7 +96,7 @@ class GetMessagesTask(
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getTwitterOfficialMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialMessages(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
@@ -98,7 +106,7 @@ class GetMessagesTask(
         }
     }
 
-    private fun getFanfouMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getFanfouMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getFanfouConversations(microBlog, details, param, index)
@@ -107,13 +115,13 @@ class GetMessagesTask(
         }
     }
 
-    private fun getDefaultMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
         val maxIds = if (param.hasMaxIds) param.maxIds else null
 
-        val received = microBlog.getDirectMessages(org.mariotaku.microblog.library.twitter.model.Paging().apply {
+        val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
             val maxId = maxIds?.get(index)
             val sinceId = sinceIds?.get(index)
@@ -124,7 +132,7 @@ class GetMessagesTask(
                 sinceId(sinceId)
             }
         })
-        val sent = microBlog.getSentDirectMessages(org.mariotaku.microblog.library.twitter.model.Paging().apply {
+        val sent = microBlog.getSentDirectMessages(Paging().apply {
             count(100)
             val accountsCount = param.accountKeys.size
             val maxId = maxIds?.get(accountsCount + index)
@@ -143,22 +151,22 @@ class GetMessagesTask(
 
         val conversationIds = hashSetOf<String>()
         received.forEach {
-            conversationIds.add(org.mariotaku.twidere.model.util.ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
+            conversationIds.add(ParcelableMessageUtils.incomingConversationId(it.senderId, it.recipientId))
         }
         sent.forEach {
-            conversationIds.add(org.mariotaku.twidere.model.util.ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId))
+            conversationIds.add(ParcelableMessageUtils.outgoingConversationId(it.senderId, it.recipientId))
         }
 
         conversations.addLocalConversations(context, accountKey, conversationIds)
 
         received.forEachIndexed { i, dm ->
-            val message = org.mariotaku.twidere.model.util.ParcelableMessageUtils.fromMessage(accountKey, dm, false,
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, false,
                     1.0 - (i.toDouble() / received.size))
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
         sent.forEachIndexed { i, dm ->
-            val message = org.mariotaku.twidere.model.util.ParcelableMessageUtils.fromMessage(accountKey, dm, true,
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true,
                     1.0 - (i.toDouble() / sent.size))
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
@@ -166,10 +174,10 @@ class GetMessagesTask(
         return DatabaseUpdateData(conversations.values, insertMessages)
     }
 
-    private fun getTwitterOfficialConversation(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialConversation(microBlog: MicroBlog, details: AccountDetails,
             conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = param.maxIds?.get(index) ?: return DatabaseUpdateData(emptyList(), emptyList())
-        val paging = org.mariotaku.microblog.library.twitter.model.Paging().apply {
+        val paging = Paging().apply {
             maxId(maxId)
         }
 
@@ -178,14 +186,14 @@ class GetMessagesTask(
         return Companion.createDatabaseUpdateData(context, details, response)
     }
 
-    private fun getTwitterOfficialUserInbox(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+    private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
         val cursor = if (param.hasCursors) param.cursors?.get(index) else null
         val response = if (cursor != null) {
             microBlog.getUserUpdates(cursor).userEvents
         } else {
-            microBlog.getUserInbox(org.mariotaku.microblog.library.twitter.model.Paging().apply {
+            microBlog.getUserInbox(Paging().apply {
                 if (maxId != null) {
                     maxId(maxId)
                 }
@@ -196,11 +204,11 @@ class GetMessagesTask(
     }
 
 
-    private fun getFanfouConversations(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val cursor = param.cursors?.get(index)
         val page = cursor?.substringAfter("page:").toInt(-1)
-        val result = microBlog.getConversationList(org.mariotaku.microblog.library.twitter.model.Paging().apply {
+        val result = microBlog.getConversationList(Paging().apply {
             count(60)
             if (page >= 0) {
                 page(page)
@@ -214,7 +222,7 @@ class GetMessagesTask(
         result.forEachIndexed { i, item ->
             val dm = item.dm
             // Sender is our self, treat as outgoing message
-            val message = org.mariotaku.twidere.model.util.ParcelableMessageUtils.fromMessage(accountKey, dm, dm.senderId == accountKey.id,
+            val message = ParcelableMessageUtils.fromMessage(accountKey, dm, dm.senderId == accountKey.id,
                     1.0 - (i.toDouble() / result.size))
             val mc = conversations.addConversation(message.conversation_id, details, message,
                     setOf(dm.sender, dm.recipient))
@@ -237,9 +245,9 @@ class GetMessagesTask(
 
         override val sinceIds: Array<String?>?
             get() {
-                val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
                         defaultKeys, false)
-                val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
+                val outgoingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
                         defaultKeys, true)
                 return incomingIds + outgoingIds
             }
@@ -247,7 +255,7 @@ class GetMessagesTask(
         override val cursors: Array<String?>?
             get() {
                 val cursors = arrayOfNulls<String>(defaultKeys.size)
-                val newestConversations = org.mariotaku.twidere.util.DataStoreUtils.getNewestConversations(context,
+                val newestConversations = DataStoreUtils.getNewestConversations(context,
                         Conversations.CONTENT_URI, twitterOfficialKeys)
                 newestConversations.forEachIndexed { i, conversation ->
                     cursors[i] = conversation?.request_cursor
@@ -265,11 +273,11 @@ class GetMessagesTask(
     ) : RefreshMessagesTaskParam(context) {
 
         override val maxIds: Array<String?>? by lazy {
-            val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+            val incomingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, false)
-            val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
+            val outgoingIds = DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, true)
-            val oldestConversations = org.mariotaku.twidere.util.DataStoreUtils.getOldestConversations(context,
+            val oldestConversations = DataStoreUtils.getOldestConversations(context,
                     Conversations.CONTENT_URI, twitterOfficialKeys)
             oldestConversations.forEachIndexed { i, conversation ->
                 val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
@@ -305,13 +313,13 @@ class GetMessagesTask(
         var taskTag: String? = null
 
         protected val accounts: Array<AccountDetails?> by lazy {
-            org.mariotaku.twidere.model.util.AccountUtils.getAllAccountDetails(android.accounts.AccountManager.get(context), accountKeys, false)
+            AccountUtils.getAllAccountDetails(android.accounts.AccountManager.get(context), accountKeys, false)
         }
 
         protected val defaultKeys: Array<UserKey?>by lazy {
             return@lazy accounts.map { account ->
                 account ?: return@map null
-                if (account.isOfficial(context) || account.type == org.mariotaku.twidere.annotation.AccountType.FANFOU) {
+                if (account.isOfficial(context) || account.type == AccountType.FANFOU) {
                     return@map null
                 }
                 return@map account.key
@@ -358,7 +366,7 @@ class GetMessagesTask(
                         return@mapNotNullTo null
                     }
                     else -> {
-                        return@mapNotNullTo org.mariotaku.twidere.model.util.ParcelableMessageUtils.fromEntry(account.key, entry, respUsers)
+                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(account.key, entry, respUsers)
                     }
                 }
             }
@@ -379,6 +387,7 @@ class GetMessagesTask(
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
                 conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
+                conversation.last_read_id = v.lastReadEventId
                 conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId

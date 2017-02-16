@@ -38,10 +38,10 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 
 /**
  * Created by mariotaku on 2017/2/8.
@@ -88,7 +88,8 @@ class SendMessageTask(
         return sendDefaultDM(microBlog, account, message)
     }
 
-    private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+    private fun sendTwitterOfficialDM(microBlog: MicroBlog, account: AccountDetails,
+            message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         var deleteOnSuccess: List<UpdateStatusTask.MediaDeletionItem>? = null
         var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
         val sendResponse = try {
