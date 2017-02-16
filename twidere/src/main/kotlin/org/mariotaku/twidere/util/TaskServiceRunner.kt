@@ -15,9 +15,9 @@ import org.mariotaku.twidere.model.SimpleRefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.GetActivitiesAboutMeTask
-import org.mariotaku.twidere.task.GetHomeTimelineTask
-import org.mariotaku.twidere.task.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
+import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 
 /**

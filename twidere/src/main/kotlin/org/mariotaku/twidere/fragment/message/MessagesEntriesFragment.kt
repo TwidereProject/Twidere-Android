@@ -47,7 +47,7 @@ import org.mariotaku.twidere.model.ParcelableMessageConversationCursorIndices
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.task.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ErrorInfoStore
 import org.mariotaku.twidere.util.IntentUtils

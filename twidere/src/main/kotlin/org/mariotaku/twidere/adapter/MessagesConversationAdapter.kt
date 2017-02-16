@@ -164,7 +164,11 @@ class MessagesConversationAdapter(context: Context) : LoadMoreSupportAdapter<Rec
     }
 
     interface Listener {
+
         fun onMediaClick(position: Int, media: ParcelableMedia, accountKey: UserKey?)
+
+        fun onMessageLongClick(position: Int, holder: RecyclerView.ViewHolder): Boolean
+
     }
 
     companion object {

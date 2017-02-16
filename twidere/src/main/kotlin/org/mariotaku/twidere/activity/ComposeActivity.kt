@@ -62,7 +62,10 @@ import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.checkAnySelfPermissionsGranted
+import org.mariotaku.ktextension.getTypedArray
+import org.mariotaku.ktextension.setItemChecked
+import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -651,25 +654,32 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
-        if (v === attachedMediaPreview) {
-            menu.setHeaderTitle(R.string.edit_media)
-            supportMenuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+        if (menuInfo !is ExtendedRecyclerView.ContextMenuInfo) return
+        when (menuInfo.recyclerViewId) {
+            R.id.attachedMediaPreview -> {
+                menu.setHeaderTitle(R.string.edit_media)
+                supportMenuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+            }
         }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        val menuInfo = item.menuInfo
-        if (menuInfo is ExtendedRecyclerView.ContextMenuInfo) {
-            when (menuInfo.recyclerViewId) {
-                R.id.attachedMediaPreview -> {
-                    val position = menuInfo.position
-                    val altText = mediaPreviewAdapter.getItem(position).alt_text
-                    executeAfterFragmentResumed { activity ->
-                        EditAltTextDialogFragment.show(activity.supportFragmentManager, position,
-                                altText)
+        val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: run {
+            return super.onContextItemSelected(item)
+        }
+        when (menuInfo.recyclerViewId) {
+            R.id.attachedMediaPreview -> {
+                when (item.itemId) {
+                    R.id.edit_description -> {
+                        val position = menuInfo.position
+                        val altText = mediaPreviewAdapter.getItem(position).alt_text
+                        executeAfterFragmentResumed { activity ->
+                            EditAltTextDialogFragment.show(activity.supportFragmentManager, position,
+                                    altText)
+                        }
                     }
-                    return true
                 }
+                return true
             }
         }
         return super.onContextItemSelected(item)

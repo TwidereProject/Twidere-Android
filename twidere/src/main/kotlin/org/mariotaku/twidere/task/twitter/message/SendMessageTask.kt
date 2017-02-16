@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.message
+package org.mariotaku.twidere.task.twitter.message
 
 import android.content.Context
 import org.mariotaku.ktextension.isNotNullOrEmpty
@@ -38,9 +38,9 @@ import org.mariotaku.twidere.model.event.SendMessageTaskEvent
 import org.mariotaku.twidere.model.util.ParcelableMessageUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
-import org.mariotaku.twidere.task.GetMessagesTask
-import org.mariotaku.twidere.task.GetMessagesTask.Companion.addConversation
-import org.mariotaku.twidere.task.GetMessagesTask.Companion.addLocalConversations
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addConversation
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.addLocalConversations
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 
 /**

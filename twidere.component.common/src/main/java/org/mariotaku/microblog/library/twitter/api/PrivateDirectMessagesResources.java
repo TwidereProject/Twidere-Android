@@ -54,6 +54,9 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     @POST("/dm/new.json")
     DMResponse sendDm(@Param NewDm newDm) throws MicroBlogException;
 
+    @POST("/dm/destroy.json")
+    ResponseCode destroyDm(@Param("dm_id") String id) throws MicroBlogException;
+
     @GET("/dm/user_inbox.json")
     UserInbox getUserInbox(@Query Paging paging) throws MicroBlogException;
 

@@ -45,6 +45,11 @@ import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
+import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
+import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
+import org.mariotaku.twidere.task.twitter.GetSavedSearchesTask
+import org.mariotaku.twidere.task.twitter.GetTrendsTask
+import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.collection.CompactHashSet
 import java.util.*
 

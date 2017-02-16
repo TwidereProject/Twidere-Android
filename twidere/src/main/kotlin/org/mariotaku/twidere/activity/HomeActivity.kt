@@ -72,13 +72,15 @@ import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.activity.iface.IControlBarActivity
+import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.AccountsDashboardFragment
+import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.CustomTabsFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -87,7 +89,6 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -112,7 +113,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
     private val readStateChangeListener = OnSharedPreferenceChangeListener { sharedPreferences, key -> updateUnreadCount() }
-    private val controlBarShowHideHelper = IControlBarActivity.ControlBarShowHideHelper(this)
+    private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
 
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
         override fun setActionBarUpIndicator(upDrawable: Drawable, @StringRes contentDescRes: Int) {
@@ -171,133 +172,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     val leftDrawerFragment: Fragment?
         get() = supportFragmentManager.findFragmentById(R.id.leftDrawer)
-
-    override fun getSystemWindowsInsets(insets: Rect): Boolean {
-        if (mainTabs == null || homeContent == null) return false
-        val height = mainTabs.height
-        if (height != 0) {
-            insets.top = height
-        } else {
-            insets.top = ThemeUtils.getActionBarHeight(this)
-        }
-        return true
-    }
-
-    override fun setControlBarVisibleAnimate(visible: Boolean, listener: IControlBarActivity.ControlBarShowHideHelper.ControlBarAnimationListener?) {
-        controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        when (item.itemId) {
-            android.R.id.home -> {
-                val fm = supportFragmentManager
-                val count = fm.backStackEntryCount
-                if (homeMenu.isDrawerOpen(GravityCompat.START) || homeMenu.isDrawerOpen(GravityCompat.END)) {
-                    homeMenu.closeDrawers()
-                    return true
-                } else if (count == 0) {
-                    homeMenu.openDrawer(GravityCompat.START)
-                    return true
-                }
-                return true
-            }
-            R.id.search -> {
-                openSearchView(selectedAccountToSearch)
-                return true
-            }
-            R.id.actions -> {
-                triggerActionsClick()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true
-        var action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_HOME, keyCode, event, metaState)
-        if (action != null) {
-            when (action) {
-                KeyboardShortcutConstants.ACTION_HOME_ACCOUNTS_DASHBOARD -> {
-                    if (homeMenu.isDrawerOpen(GravityCompat.START)) {
-                        homeMenu.closeDrawers()
-                    } else {
-                        homeMenu.openDrawer(GravityCompat.START)
-                        setControlBarVisibleAnimate(true)
-                    }
-                    return true
-                }
-            }
-        }
-        action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
-        if (action != null) {
-            when (action) {
-                KeyboardShortcutConstants.ACTION_NAVIGATION_PREVIOUS_TAB -> {
-                    val previous = mainPager.currentItem - 1
-                    if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.START) != null) {
-                        homeMenu.openDrawer(GravityCompat.START)
-                        setControlBarVisibleAnimate(true)
-                    } else if (previous < pagerAdapter.count) {
-                        if (homeMenu.isDrawerOpen(GravityCompat.END)) {
-                            homeMenu.closeDrawers()
-                        } else {
-                            mainPager.setCurrentItem(previous, true)
-                        }
-                    }
-                    return true
-                }
-                KeyboardShortcutConstants.ACTION_NAVIGATION_NEXT_TAB -> {
-                    val next = mainPager.currentItem + 1
-                    if (next >= pagerAdapter.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
-                        homeMenu.openDrawer(GravityCompat.END)
-                        setControlBarVisibleAnimate(true)
-                    } else if (next >= 0) {
-                        if (homeMenu.isDrawerOpen(GravityCompat.START)) {
-                            homeMenu.closeDrawers()
-                        } else {
-                            mainPager.setCurrentItem(next, true)
-                        }
-                    }
-                    return true
-                }
-            }
-        }
-        return handler.handleKey(this, null, keyCode, event, metaState)
-    }
-
-    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true
-        return super.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
-    }
-
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState))
-            return true
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
-    }
-
-    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_MENU -> {
-                if (isDrawerOpen) {
-                    homeMenu.closeDrawers()
-                } else {
-                    homeMenu.openDrawer(GravityCompat.START)
-                }
-                return true
-            }
-            KeyEvent.KEYCODE_BACK -> {
-                if (isDrawerOpen) {
-                    homeMenu.closeDrawers()
-                    return true
-                }
-            }
-        }
-        return super.onKeyUp(keyCode, event)
-    }
 
     private val isDrawerOpen: Boolean
         get() {
@@ -405,6 +279,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        drawerToggle.syncState()
+    }
+
     override fun onStart() {
         super.onStart()
         multiSelectHandler.dispatchOnStart()
@@ -431,21 +311,31 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         super.onStop()
     }
 
-    fun notifyAccountsChanged() {
+    override fun onDestroy() {
+        stopService(Intent(this, StreamingService::class.java))
+
+        // Delete unused items in databases.
+
+        val context = applicationContext
+        TaskStarter.execute(object : AbstractTask<Any?, Any?, Any?>() {
+            override fun doLongOperation(o: Any?): Any? {
+                DataStoreUtils.cleanDatabasesByItemLimit(context)
+                return null
+            }
+        })
+        super.onDestroy()
+    }
+
+    override fun onAttachFragment(fragment: Fragment?) {
+        super.onAttachFragment(fragment)
+        // Must exclude fragments not belongs tabs, otherwise it will crash
+        if (fragment !is AccountsDashboardFragment) {
+            updateActionsButton()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-    }
-
-    @Subscribe
-    fun notifyTaskStateChanged(event: TaskStateChangedEvent) {
-        updateActionsButton()
-    }
-
-    @Subscribe
-    fun notifyUnreadCountUpdated(event: UnreadCountUpdatedEvent) {
-        updateUnreadCount()
     }
 
     override fun onClick(v: View) {
@@ -499,17 +389,164 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         return true
     }
 
-    fun openSearchView(account: AccountDetails?) {
-        selectedAccountToSearch = account
-        onSearchRequested()
-    }
-
     override fun onFitSystemWindows(insets: Rect) {
         super.onFitSystemWindows(insets)
         val fragment = leftDrawerFragment
         if (fragment is AccountsDashboardFragment) {
             fragment.requestFitSystemWindows()
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        val tabPosition = handleIntent(intent, false)
+        if (tabPosition >= 0) {
+            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
+        }
+    }
+
+    override fun getSystemWindowsInsets(insets: Rect): Boolean {
+        if (mainTabs == null || homeContent == null) return false
+        val height = mainTabs.height
+        if (height != 0) {
+            insets.top = height
+        } else {
+            insets.top = ThemeUtils.getActionBarHeight(this)
+        }
+        return true
+    }
+
+    override fun setControlBarVisibleAnimate(visible: Boolean,
+            listener: ControlBarShowHideHelper.ControlBarAnimationListener?) {
+        controlBarShowHideHelper.setControlBarVisibleAnimate(visible, listener)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        when (item.itemId) {
+            android.R.id.home -> {
+                val fm = supportFragmentManager
+                val count = fm.backStackEntryCount
+                if (homeMenu.isDrawerOpen(GravityCompat.START) || homeMenu.isDrawerOpen(GravityCompat.END)) {
+                    homeMenu.closeDrawers()
+                    return true
+                } else if (count == 0) {
+                    homeMenu.openDrawer(GravityCompat.START)
+                    return true
+                }
+                return true
+            }
+            R.id.search -> {
+                openSearchView(selectedAccountToSearch)
+                return true
+            }
+            R.id.actions -> {
+                triggerActionsClick()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
+            event: KeyEvent, metaState: Int): Boolean {
+        if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true
+        var action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_HOME, keyCode, event, metaState)
+        if (action != null) {
+            when (action) {
+                KeyboardShortcutConstants.ACTION_HOME_ACCOUNTS_DASHBOARD -> {
+                    if (homeMenu.isDrawerOpen(GravityCompat.START)) {
+                        homeMenu.closeDrawers()
+                    } else {
+                        homeMenu.openDrawer(GravityCompat.START)
+                        setControlBarVisibleAnimate(true)
+                    }
+                    return true
+                }
+            }
+        }
+        action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
+        if (action != null) {
+            when (action) {
+                KeyboardShortcutConstants.ACTION_NAVIGATION_PREVIOUS_TAB -> {
+                    val previous = mainPager.currentItem - 1
+                    if (previous < 0 && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.START) != null) {
+                        homeMenu.openDrawer(GravityCompat.START)
+                        setControlBarVisibleAnimate(true)
+                    } else if (previous < pagerAdapter.count) {
+                        if (homeMenu.isDrawerOpen(GravityCompat.END)) {
+                            homeMenu.closeDrawers()
+                        } else {
+                            mainPager.setCurrentItem(previous, true)
+                        }
+                    }
+                    return true
+                }
+                KeyboardShortcutConstants.ACTION_NAVIGATION_NEXT_TAB -> {
+                    val next = mainPager.currentItem + 1
+                    if (next >= pagerAdapter.count && DrawerLayoutAccessor.findDrawerWithGravity(homeMenu, Gravity.END) != null) {
+                        homeMenu.openDrawer(GravityCompat.END)
+                        setControlBarVisibleAnimate(true)
+                    } else if (next >= 0) {
+                        if (homeMenu.isDrawerOpen(GravityCompat.START)) {
+                            homeMenu.closeDrawers()
+                        } else {
+                            mainPager.setCurrentItem(next, true)
+                        }
+                    }
+                    return true
+                }
+            }
+        }
+        return handler.handleKey(this, null, keyCode, event, metaState)
+    }
+
+    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
+            event: KeyEvent, metaState: Int): Boolean {
+        if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true
+        return super.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
+    }
+
+    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+        if (handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState))
+            return true
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_MENU -> {
+                if (isDrawerOpen) {
+                    homeMenu.closeDrawers()
+                } else {
+                    homeMenu.openDrawer(GravityCompat.START)
+                }
+                return true
+            }
+            KeyEvent.KEYCODE_BACK -> {
+                if (isDrawerOpen) {
+                    homeMenu.closeDrawers()
+                    return true
+                }
+            }
+        }
+        return super.onKeyUp(keyCode, event)
+    }
+
+
+    fun notifyAccountsChanged() {
+    }
+
+    @Subscribe
+    fun notifyUnreadCountUpdated(event: UnreadCountUpdatedEvent) {
+        updateUnreadCount()
+    }
+
+    fun openSearchView(account: AccountDetails?) {
+        selectedAccountToSearch = account
+        onSearchRequested()
     }
 
     fun updateUnreadCount() {
@@ -523,34 +560,6 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     val tabs: List<SupportTabSpec>
         get() = pagerAdapter.tabs
-
-    override fun onNewIntent(intent: Intent) {
-        val tabPosition = handleIntent(intent, false)
-        if (tabPosition >= 0) {
-            mainPager.currentItem = tabPosition.coerceInOr(0 until pagerAdapter.count, 0)
-        }
-    }
-
-    override fun onDestroy() {
-        stopService(Intent(this, StreamingService::class.java))
-
-        // Delete unused items in databases.
-
-        val context = applicationContext
-        TaskStarter.execute(object : AbstractTask<Any?, Any?, Any?>() {
-            override fun doLongOperation(o: Any?): Any? {
-                DataStoreUtils.cleanDatabasesByItemLimit(context)
-                return null
-            }
-        })
-        super.onDestroy()
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState()
-    }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -842,9 +851,15 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     private fun updateActionsButton() {
-        val position = mainPager.currentItem
-        if (pagerAdapter.count == 0) return
-        val fragment = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
+        val fragment = run {
+            if (pagerAdapter.count == 0) return@run null
+            val position = mainPager.currentItem
+            val f = pagerAdapter.instantiateItem(mainPager, position) as? IFloatingActionButtonFragment
+            if (f is Fragment && (f.isDetached || f.host == null)) {
+                return@run null
+            }
+            return@run f
+        }
         val info = fragment?.getActionInfo("home") ?: run {
             actionsButton.setImageResource(R.drawable.ic_action_status_compose)
             actionsButton.contentDescription = getString(R.string.action_compose)

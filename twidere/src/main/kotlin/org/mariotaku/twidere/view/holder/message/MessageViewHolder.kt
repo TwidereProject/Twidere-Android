@@ -53,6 +53,11 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         val textSize = adapter.textSize
         text.textSize = textSize
         mediaPreview.style = adapter.mediaPreviewStyle
+
+        messageBubble.setOnLongClickListener {
+            val listener = adapter.listener ?: return@setOnLongClickListener false
+            return@setOnLongClickListener listener.onMessageLongClick(layoutPosition, this)
+        }
     }
 
     override fun display(message: ParcelableMessage, showDate: Boolean) {

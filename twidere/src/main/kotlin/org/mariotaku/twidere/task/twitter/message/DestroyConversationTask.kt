@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.task.message
+package org.mariotaku.twidere.task.twitter.message
 
 import android.content.Context
 import org.mariotaku.microblog.library.MicroBlogException
