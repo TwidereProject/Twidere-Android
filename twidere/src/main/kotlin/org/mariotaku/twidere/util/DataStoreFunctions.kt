@@ -24,8 +24,8 @@ import java.io.IOException
  */
 
 fun buildStatusFilterWhereClause(preferences: SharedPreferences,
-                                 table: String,
-                                 extraSelection: Expression?): Expression {
+        table: String,
+        extraSelection: Expression?): Expression {
     val filteredUsersQuery = SQLQueryBuilder
             .select(Columns.Column(Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
             .from(Tables(Filters.Users.TABLE_NAME))
@@ -113,7 +113,6 @@ fun deleteAccountData(resolver: ContentResolver, accountKey: UserKey) {
     // Also delete tweets related to the account we previously
     // deleted.
     resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
-    resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
     resolver.delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
     resolver.delete(Messages.CONTENT_URI, where, whereArgs)
     resolver.delete(Messages.Conversations.CONTENT_URI, where, whereArgs)
@@ -121,7 +120,7 @@ fun deleteAccountData(resolver: ContentResolver, accountKey: UserKey) {
 
 
 fun deleteActivityStatus(cr: ContentResolver, accountKey: UserKey,
-                         statusId: String, result: ParcelableStatus?) {
+        statusId: String, result: ParcelableStatus?) {
 
     val host = accountKey.host
     val deleteWhere: String
@@ -171,9 +170,9 @@ fun deleteActivityStatus(cr: ContentResolver, accountKey: UserKey,
 }
 
 fun updateActivityStatus(resolver: ContentResolver,
-                         accountKey: UserKey,
-                         statusId: String,
-                         action: (ParcelableActivity) -> Unit) {
+        accountKey: UserKey,
+        statusId: String,
+        action: (ParcelableActivity) -> Unit) {
     val activityWhere = Expression.and(
             Expression.equalsArgs(Activities.ACCOUNT_KEY),
             Expression.or(
@@ -190,8 +189,8 @@ fun updateActivityStatus(resolver: ContentResolver,
 
 @WorkerThread
 fun updateActivity(cr: ContentResolver, uri: Uri,
-                   where: String?, whereArgs: Array<String>?,
-                   action: (ParcelableActivity) -> Unit) {
+        where: String?, whereArgs: Array<String>?,
+        action: (ParcelableActivity) -> Unit) {
     val c = cr.query(uri, Activities.COLUMNS, where, whereArgs, null) ?: return
     val values = LongSparseArray<ContentValues>()
     try {

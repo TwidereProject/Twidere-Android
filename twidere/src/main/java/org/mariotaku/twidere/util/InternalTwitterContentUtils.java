@@ -21,7 +21,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.SpanItem;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
+import org.mariotaku.twidere.util.database.FilterQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +46,11 @@ public class InternalTwitterContentUtils {
             final String textPlain, final String quotedTextPlain,
             final SpanItem[] spans, final SpanItem[] quotedSpans,
             final String source, final String quotedSource,
-            final UserKey retweetedById, final UserKey quotedUserId) {
+            final UserKey retweetedByKey, final UserKey quotedUserKey) {
         return isFiltered(database, userKey, textPlain, quotedTextPlain, spans, quotedSpans, source,
-                quotedSource, retweetedById, quotedUserId, true);
+                quotedSource, retweetedByKey, quotedUserKey, true);
     }
+
 
     public static boolean isFiltered(final SQLiteDatabase database, final UserKey userKey,
             final String textPlain, final String quotedTextPlain,
@@ -57,110 +58,19 @@ public class InternalTwitterContentUtils {
             final String source, final String quotedSource,
             final UserKey retweetedByKey, final UserKey quotedUserKey,
             final boolean filterRts) {
-        if (database == null) return false;
         if (textPlain == null && spans == null && userKey == null && source == null)
             return false;
-        final StringBuilder builder = new StringBuilder();
-        final List<String> selectionArgs = new ArrayList<>();
-        builder.append("SELECT ");
-        if (textPlain != null) {
-            selectionArgs.add(textPlain);
-            addTextPlainStatement(builder);
-        }
-        if (quotedTextPlain != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(quotedTextPlain);
-            addTextPlainStatement(builder);
-        }
-        if (spans != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            addSpansStatement(spans, builder, selectionArgs);
-        }
-        if (quotedSpans != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            addSpansStatement(quotedSpans, builder, selectionArgs);
-        }
-        if (userKey != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(String.valueOf(userKey));
-            createUserKeyStatement(builder);
-        }
-        if (retweetedByKey != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(String.valueOf(retweetedByKey));
-            createUserKeyStatement(builder);
-        }
-        if (quotedUserKey != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(String.valueOf(quotedUserKey));
-            createUserKeyStatement(builder);
-        }
-        if (source != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(source);
-            appendSourceStatement(builder);
-        }
-        if (quotedSource != null) {
-            if (!selectionArgs.isEmpty()) {
-                builder.append(" OR ");
-            }
-            selectionArgs.add(quotedSource);
-            appendSourceStatement(builder);
-        }
-        final Cursor cur = database.rawQuery(builder.toString(),
-                selectionArgs.toArray(new String[selectionArgs.size()]));
+
+        final Pair<String, String[]> query = FilterQueryBuilder.INSTANCE.isFilteredQuery(userKey,
+                textPlain, quotedTextPlain, spans, quotedSpans, source, quotedSource, retweetedByKey,
+                quotedUserKey, filterRts);
+        final Cursor cur = database.rawQuery(query.getFirst(), query.getSecond());
         if (cur == null) return false;
         try {
             return cur.moveToFirst() && cur.getInt(0) != 0;
         } finally {
             cur.close();
         }
-    }
-
-    static void addTextPlainStatement(StringBuilder builder) {
-        builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||").append(Filters.Keywords.TABLE_NAME).append(".").append(Filters.VALUE).append("||'%' FROM ").append(Filters.Keywords.TABLE_NAME).append("))");
-    }
-
-    static void addSpansStatement(SpanItem[] spans, StringBuilder builder, List<String> selectionArgs) {
-        StringBuilder spansFlat = new StringBuilder();
-        for (SpanItem span : spans) {
-            spansFlat.append(span.link);
-            spansFlat.append(' ');
-        }
-        selectionArgs.add(spansFlat.toString());
-        builder.append("(SELECT 1 IN (SELECT ? LIKE '%'||")
-                .append(Filters.Links.TABLE_NAME)
-                .append(".")
-                .append(Filters.VALUE)
-                .append("||'%' FROM ")
-                .append(Filters.Links.TABLE_NAME)
-                .append("))");
-    }
-
-    static void createUserKeyStatement(StringBuilder builder) {
-        builder.append("(SELECT ").append("?").append(" IN (SELECT ").append(Filters.Users.USER_KEY).append(" FROM ").append(Filters.Users.TABLE_NAME).append("))");
-    }
-
-    static void appendSourceStatement(StringBuilder builder) {
-        builder.append("(SELECT 1 IN (SELECT ? LIKE '%>'||")
-                .append(Filters.Sources.TABLE_NAME).append(".")
-                .append(Filters.VALUE).append("||'</a>%' FROM ")
-                .append(Filters.Sources.TABLE_NAME)
-                .append("))");
     }
 
     public static boolean isFiltered(final SQLiteDatabase database, final ParcelableStatus status,

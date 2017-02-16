@@ -32,9 +32,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -48,9 +46,6 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.CacheFiles;
-import org.mariotaku.twidere.provider.TwidereDataStore.CachedImages;
-import org.mariotaku.twidere.provider.TwidereDataStore.DNS;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
 import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 
@@ -61,7 +56,6 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 
 import static android.text.TextUtils.isEmpty;
 
@@ -78,38 +72,9 @@ public final class Twidere implements TwidereConstants {
         activity.finish();
     }
 
-    public static ParcelFileDescriptor getCachedImageFd(final Context context, final String url) {
-        if (context == null || url == null) return null;
-        final ContentResolver resolver = context.getContentResolver();
-        final Uri.Builder builder = CachedImages.CONTENT_URI.buildUpon();
-        builder.appendQueryParameter(QUERY_PARAM_URL, url);
-        try {
-            return resolver.openFileDescriptor(builder.build(), "r");
-        } catch (final Exception e) {
-            return null;
-        }
-    }
-
-    public static ParcelFileDescriptor getCacheFileFd(final Context context, final String name) {
-        if (context == null || name == null) return null;
-        final ContentResolver resolver = context.getContentResolver();
-        final Uri.Builder builder = CacheFiles.CONTENT_URI.buildUpon();
-        builder.appendQueryParameter(QUERY_PARAM_NAME, name);
-        try {
-            return resolver.openFileDescriptor(builder.build(), "r");
-        } catch (final Exception e) {
-            return null;
-        }
-    }
-
     public static ComposingStatus getComposingStatusFromIntent(final Intent intent) {
         if (intent == null) return null;
         return new ComposingStatus(intent);
-    }
-
-    public static TwidereSharedPreferences getSharedPreferences(final Context context) {
-        if (context == null) return null;
-        return new TwidereSharedPreferences(context);
     }
 
     public static ParcelableStatus getStatusFromIntent(final Intent intent) {
@@ -200,31 +165,6 @@ public final class Twidere implements TwidereConstants {
         }
         throw new UnknownHostException("Bad address " + host + " = " + address);
     }
-
-    @NonNull
-    public static InetAddress[] resolveHost(final Context context, final String host) throws UnknownHostException {
-        if (context == null || host == null) return InetAddress.getAllByName(host);
-        final ContentResolver resolver = context.getContentResolver();
-        final Uri uri = Uri.withAppendedPath(DNS.CONTENT_URI, host);
-        final Cursor cur = resolver.query(uri, DNS.MATRIX_COLUMNS, null, null, null);
-        if (cur == null) return InetAddress.getAllByName(host);
-        try {
-            cur.moveToFirst();
-            final ArrayList<InetAddress> addresses = new ArrayList<>();
-            final int idxHost = cur.getColumnIndex(DNS.HOST), idxAddr = cur.getColumnIndex(DNS.ADDRESS);
-            while (!cur.isAfterLast()) {
-                addresses.add(fromAddressString(cur.getString(idxHost), cur.getString(idxAddr)));
-                cur.moveToNext();
-            }
-            if (addresses.isEmpty()) {
-                throw new UnknownHostException("Unknown host " + host);
-            }
-            return addresses.toArray(new InetAddress[addresses.size()]);
-        } finally {
-            cur.close();
-        }
-    }
-
 
     @Nullable
     @RequiresPermission(allOf = {Manifest.permission.GET_ACCOUNTS}, conditional = true)

@@ -40,6 +40,7 @@ import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -48,9 +49,9 @@ import java.util.*
  */
 
 class GetMessagesTask(
-        context: android.content.Context
-) : org.mariotaku.twidere.task.BaseAbstractTask<GetMessagesTask.RefreshMessagesTaskParam, Unit, (Boolean) -> Unit>(context) {
-    override fun doLongOperation(param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam) {
+        context: Context
+) : BaseAbstractTask<GetMessagesTask.RefreshMessagesTaskParam, Unit, (Boolean) -> Unit>(context) {
+    override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
@@ -61,16 +62,16 @@ class GetMessagesTask(
             } catch (e: org.mariotaku.microblog.library.MicroBlogException) {
                 return@forEachIndexed
             }
-            org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.storeMessages(context, messages, details)
+            Companion.storeMessages(context, messages, details)
         }
     }
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Unit) {
         callback?.invoke(true)
-        bus.post(org.mariotaku.twidere.model.event.GetMessagesTaskEvent(org.mariotaku.twidere.provider.TwidereDataStore.Messages.CONTENT_URI, params?.taskTag, false, null))
+        bus.post(org.mariotaku.twidere.model.event.GetMessagesTaskEvent(Messages.CONTENT_URI, params?.taskTag, false, null))
     }
 
-    private fun getMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails, param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         when (details.type) {
             org.mariotaku.twidere.annotation.AccountType.FANFOU -> {
                 // Use fanfou DM api, disabled since it's conversation api is not suitable for paging
@@ -87,8 +88,8 @@ class GetMessagesTask(
         return getDefaultMessages(microBlog, details, param, index)
     }
 
-    private fun getTwitterOfficialMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails,
-            param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getTwitterOfficialMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getTwitterOfficialUserInbox(microBlog, details, param, index)
@@ -97,16 +98,16 @@ class GetMessagesTask(
         }
     }
 
-    private fun getFanfouMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails, param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getFanfouMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val conversationId = param.conversationId
         if (conversationId == null) {
             return getFanfouConversations(microBlog, details, param, index)
         } else {
-            return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
+            return DatabaseUpdateData(emptyList(), emptyList())
         }
     }
 
-    private fun getDefaultMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails, param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getDefaultMessages(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
@@ -137,8 +138,8 @@ class GetMessagesTask(
         })
 
 
-        val insertMessages = arrayListOf<org.mariotaku.twidere.model.ParcelableMessage>()
-        val conversations = hashMapOf<String, org.mariotaku.twidere.model.ParcelableMessageConversation>()
+        val insertMessages = arrayListOf<ParcelableMessage>()
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
         val conversationIds = hashSetOf<String>()
         received.forEach {
@@ -162,23 +163,23 @@ class GetMessagesTask(
             insertMessages.add(message)
             conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
         }
-        return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData(conversations.values, insertMessages)
+        return DatabaseUpdateData(conversations.values, insertMessages)
     }
 
-    private fun getTwitterOfficialConversation(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails,
-            conversationId: String, param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
-        val maxId = param.maxIds?.get(index) ?: return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
+    private fun getTwitterOfficialConversation(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+            conversationId: String, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+        val maxId = param.maxIds?.get(index) ?: return DatabaseUpdateData(emptyList(), emptyList())
         val paging = org.mariotaku.microblog.library.twitter.model.Paging().apply {
             maxId(maxId)
         }
 
         val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
         response.fixMedia(microBlog)
-        return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.createDatabaseUpdateData(context, details, response)
+        return Companion.createDatabaseUpdateData(context, details, response)
     }
 
-    private fun getTwitterOfficialUserInbox(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails,
-            param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getTwitterOfficialUserInbox(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val maxId = if (param.hasMaxIds) param.maxIds?.get(index) else null
         val cursor = if (param.hasCursors) param.cursors?.get(index) else null
         val response = if (cursor != null) {
@@ -191,11 +192,11 @@ class GetMessagesTask(
             }).userInbox
         }
         response.fixMedia(microBlog)
-        return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.Companion.createDatabaseUpdateData(context, details, response)
+        return Companion.createDatabaseUpdateData(context, details, response)
     }
 
 
-    private fun getFanfouConversations(microBlog: org.mariotaku.microblog.library.MicroBlog, details: org.mariotaku.twidere.model.AccountDetails, param: org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam, index: Int): org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+    private fun getFanfouConversations(microBlog: org.mariotaku.microblog.library.MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val cursor = param.cursors?.get(index)
         val page = cursor?.substringAfter("page:").toInt(-1)
@@ -205,7 +206,7 @@ class GetMessagesTask(
                 page(page)
             }
         })
-        val conversations = hashMapOf<String, org.mariotaku.twidere.model.ParcelableMessageConversation>()
+        val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
         val conversationIds = hashSetOf<String>()
         result.mapTo(conversationIds) { "${accountKey.id}-${it.otherId}" }
@@ -219,26 +220,26 @@ class GetMessagesTask(
                     setOf(dm.sender, dm.recipient))
             mc.request_cursor = "page:$page"
         }
-        return org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData(conversations.values, emptyList())
+        return DatabaseUpdateData(conversations.values, emptyList())
     }
 
     data class DatabaseUpdateData(
-            val conversations: Collection<org.mariotaku.twidere.model.ParcelableMessageConversation>,
-            val messages: Collection<org.mariotaku.twidere.model.ParcelableMessage>,
+            val conversations: Collection<ParcelableMessageConversation>,
+            val messages: Collection<ParcelableMessage>,
             val deleteConversations: List<String> = emptyList(),
             val deleteMessages: Map<String, List<String>> = emptyMap(),
             val conversationRequestCursor: String? = null
     )
 
     abstract class RefreshNewTaskParam(
-            context: android.content.Context
-    ) : org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam(context) {
+            context: Context
+    ) : RefreshMessagesTaskParam(context) {
 
         override val sinceIds: Array<String?>?
             get() {
-                val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, org.mariotaku.twidere.provider.TwidereDataStore.Messages.CONTENT_URI,
+                val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
                         defaultKeys, false)
-                val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, org.mariotaku.twidere.provider.TwidereDataStore.Messages.CONTENT_URI,
+                val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
                         defaultKeys, true)
                 return incomingIds + outgoingIds
             }
@@ -247,7 +248,7 @@ class GetMessagesTask(
             get() {
                 val cursors = arrayOfNulls<String>(defaultKeys.size)
                 val newestConversations = org.mariotaku.twidere.util.DataStoreUtils.getNewestConversations(context,
-                        org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations.CONTENT_URI, twitterOfficialKeys)
+                        Conversations.CONTENT_URI, twitterOfficialKeys)
                 newestConversations.forEachIndexed { i, conversation ->
                     cursors[i] = conversation?.request_cursor
                 }
@@ -260,18 +261,18 @@ class GetMessagesTask(
     }
 
     abstract class LoadMoreEntriesTaskParam(
-            context: android.content.Context
-    ) : org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam(context) {
+            context: Context
+    ) : RefreshMessagesTaskParam(context) {
 
         override val maxIds: Array<String?>? by lazy {
-            val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, org.mariotaku.twidere.provider.TwidereDataStore.Messages.CONTENT_URI,
+            val incomingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, false)
-            val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, org.mariotaku.twidere.provider.TwidereDataStore.Messages.CONTENT_URI,
+            val outgoingIds = org.mariotaku.twidere.util.DataStoreUtils.getOldestMessageIds(context, Messages.CONTENT_URI,
                     defaultKeys, true)
             val oldestConversations = org.mariotaku.twidere.util.DataStoreUtils.getOldestConversations(context,
-                    org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations.CONTENT_URI, twitterOfficialKeys)
+                    Conversations.CONTENT_URI, twitterOfficialKeys)
             oldestConversations.forEachIndexed { i, conversation ->
-                val extras = conversation?.conversation_extras as? org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras ?: return@forEachIndexed
+                val extras = conversation?.conversation_extras as? TwitterOfficialConversationExtras ?: return@forEachIndexed
                 incomingIds[i] = extras.maxEntryId
             }
             return@lazy incomingIds + outgoingIds
@@ -282,19 +283,19 @@ class GetMessagesTask(
     }
 
     class LoadMoreMessageTaskParam(
-            context: android.content.Context,
-            accountKey: org.mariotaku.twidere.model.UserKey,
+            context: Context,
+            accountKey: UserKey,
             override val conversationId: String,
             maxId: String
-    ) : org.mariotaku.twidere.task.twitter.message.GetMessagesTask.RefreshMessagesTaskParam(context) {
-        override val accountKeys: Array<org.mariotaku.twidere.model.UserKey> = arrayOf(accountKey)
+    ) : RefreshMessagesTaskParam(context) {
+        override val accountKeys: Array<UserKey> = arrayOf(accountKey)
         override val maxIds: Array<String?>? = arrayOf(maxId)
         override val hasMaxIds: Boolean = true
     }
 
     abstract class RefreshMessagesTaskParam(
-            val context: android.content.Context
-    ) : org.mariotaku.twidere.model.SimpleRefreshTaskParam() {
+            val context: Context
+    ) : SimpleRefreshTaskParam() {
 
         /**
          * If `conversationId` has value, load messages in conversationId
@@ -303,11 +304,11 @@ class GetMessagesTask(
 
         var taskTag: String? = null
 
-        protected val accounts: Array<org.mariotaku.twidere.model.AccountDetails?> by lazy {
+        protected val accounts: Array<AccountDetails?> by lazy {
             org.mariotaku.twidere.model.util.AccountUtils.getAllAccountDetails(android.accounts.AccountManager.get(context), accountKeys, false)
         }
 
-        protected val defaultKeys: Array<org.mariotaku.twidere.model.UserKey?>by lazy {
+        protected val defaultKeys: Array<UserKey?>by lazy {
             return@lazy accounts.map { account ->
                 account ?: return@map null
                 if (account.isOfficial(context) || account.type == org.mariotaku.twidere.annotation.AccountType.FANFOU) {
@@ -317,7 +318,7 @@ class GetMessagesTask(
             }.toTypedArray()
         }
 
-        protected val twitterOfficialKeys: Array<org.mariotaku.twidere.model.UserKey?> by lazy {
+        protected val twitterOfficialKeys: Array<UserKey?> by lazy {
             return@lazy accounts.map { account ->
                 account ?: return@map null
                 if (!account.isOfficial(context)) {
@@ -331,22 +332,22 @@ class GetMessagesTask(
 
     companion object {
 
-        fun createDatabaseUpdateData(context: android.content.Context, account: org.mariotaku.twidere.model.AccountDetails, response: org.mariotaku.microblog.library.twitter.model.DMResponse):
-                org.mariotaku.twidere.task.twitter.message.GetMessagesTask.DatabaseUpdateData {
+        fun createDatabaseUpdateData(context: Context, account: AccountDetails, response: DMResponse):
+                DatabaseUpdateData {
             val respConversations = response.conversations.orEmpty()
             val respEntries = response.entries.orEmpty()
             val respUsers = response.users.orEmpty()
 
-            val conversations = hashMapOf<String, org.mariotaku.twidere.model.ParcelableMessageConversation>()
+            val conversations = hashMapOf<String, ParcelableMessageConversation>()
 
             conversations.addLocalConversations(context, account.key, respConversations.keys)
-            val messages = java.util.ArrayList<org.mariotaku.twidere.model.ParcelableMessage>()
-            val messageDeletionsMap = java.util.HashMap<String, java.util.ArrayList<String>>()
-            val conversationDeletions = java.util.ArrayList<String>()
+            val messages = ArrayList<ParcelableMessage>()
+            val messageDeletionsMap = HashMap<String, ArrayList<String>>()
+            val conversationDeletions = ArrayList<String>()
             respEntries.mapNotNullTo(messages) { entry ->
                 when {
                     entry.messageDelete != null -> {
-                        val list = messageDeletionsMap.getOrPut(entry.messageDelete.conversationId) { java.util.ArrayList<String>() }
+                        val list = messageDeletionsMap.getOrPut(entry.messageDelete.conversationId) { ArrayList<String>() }
                         entry.messageDelete.messages?.forEach {
                             list.add(it.messageId)
                         }
@@ -361,7 +362,7 @@ class GetMessagesTask(
                     }
                 }
             }
-            val messagesMap = messages.groupBy(org.mariotaku.twidere.model.ParcelableMessage::conversation_id)
+            val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
             for ((k, v) in respConversations) {
                 val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
                 val participants = respUsers.filterKeys { userId ->

@@ -44,6 +44,8 @@ import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
 /**
@@ -212,6 +214,7 @@ public class ParcelableMessageConversation implements Parcelable {
     }
 
     @StringDef({ExtrasType.FANFOU, ExtrasType.TWITTER_OFFICIAL})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface ExtrasType {
         String FANFOU = "fanfou";
         String TWITTER_OFFICIAL = "twitter_official";

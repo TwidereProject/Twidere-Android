@@ -30,7 +30,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.TwidereArrayUtils
@@ -164,11 +163,9 @@ class StreamingService : Service() {
         }
 
         override fun onDirectMessageDeleted(event: DeletionEvent) {
-            val where = Expression.equalsArgs(DirectMessages.MESSAGE_ID).sql
+            val where = Expression.equalsArgs(Messages.MESSAGE_ID).sql
             val whereArgs = arrayOf(event.id)
-            for (uri in MESSAGES_URIS) {
-                context.contentResolver.delete(uri, where, whereArgs)
-            }
+            context.contentResolver.delete(Messages.CONTENT_URI, where, whereArgs)
         }
 
         override fun onStatusDeleted(event: DeletionEvent) {
@@ -182,15 +179,6 @@ class StreamingService : Service() {
         @Throws(IOException::class)
         override fun onDirectMessage(directMessage: DirectMessage) {
             if (directMessage.id == null) return
-
-            val resolver = context.contentResolver
-            val where = Expression.and(Expression.equalsArgs(DirectMessages.ACCOUNT_KEY),
-                    Expression.equalsArgs(DirectMessages.MESSAGE_ID)).sql
-            val whereArgs = arrayOf(account.key.toString(), directMessage.id)
-            for (uri in MESSAGES_URIS) {
-                resolver.delete(uri, where, whereArgs)
-            }
-
 
         }
 
@@ -261,24 +249,7 @@ class StreamingService : Service() {
 
         @Throws(IOException::class)
         override fun onStatus(status: Status) {
-            val resolver = context.contentResolver
 
-            val values = ContentValuesCreator.createStatus(status, account.key)
-            if (!statusStreamStarted) {
-                statusStreamStarted = true
-                values.put(Statuses.IS_GAP, true)
-            }
-            val where = Expression.and(Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY),
-                    Expression.equalsArgs(Statuses.STATUS_ID)).sql
-            val whereArgs = arrayOf(account.key.toString(), status.id.toString())
-            resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
-            resolver.delete(Mentions.CONTENT_URI, where, whereArgs)
-            resolver.insert(Statuses.CONTENT_URI, values)
-            val rt = status.retweetedStatus
-            if (rt != null && rt.extendedText.contains("@" + account.user.screen_name) ||
-                    rt == null && status.extendedText.contains("@" + account.user.screen_name)) {
-                resolver.insert(Mentions.CONTENT_URI, values)
-            }
         }
 
         override fun onTrackLimitationNotice(numberOfLimitedStatuses: Int) {
@@ -334,7 +305,6 @@ class StreamingService : Service() {
 
         private val NOTIFICATION_SERVICE_STARTED = 1
 
-        private val MESSAGES_URIS = arrayOf(DirectMessages.Inbox.CONTENT_URI, DirectMessages.Outbox.CONTENT_URI)
     }
 
 }

@@ -168,21 +168,6 @@ public interface TwidereDataStore {
         Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
     }
 
-    interface CachedImages extends BaseColumns {
-        String TABLE_NAME = "cached_images";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String URL = "url";
-
-        String PATH = "path";
-
-        String[] MATRIX_COLUMNS = {URL, PATH};
-
-        String[] COLUMNS = {_ID, URL, PATH};
-    }
-
     interface CachedStatuses extends Statuses {
         String TABLE_NAME = "cached_statuses";
         String CONTENT_PATH = TABLE_NAME;
@@ -412,94 +397,6 @@ public interface TwidereDataStore {
         }
     }
 
-    interface DirectMessages extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
-
-        String TABLE_NAME = "messages";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String MESSAGE_ID = "message_id";
-        String MESSAGE_TIMESTAMP = "message_timestamp";
-        String SENDER_ID = "sender_id";
-        String RECIPIENT_ID = "recipient_id";
-        String CONVERSATION_ID = "conversation_id";
-
-        String IS_OUTGOING = "is_outgoing";
-
-        String TEXT_PLAIN = "text_plain";
-        String TEXT_UNESCAPED = "text_unescaped";
-        String SPANS = "spans";
-        String SENDER_NAME = "sender_name";
-        String RECIPIENT_NAME = "recipient_name";
-        String SENDER_SCREEN_NAME = "sender_screen_name";
-        String RECIPIENT_SCREEN_NAME = "recipient_screen_name";
-        String SENDER_PROFILE_IMAGE_URL = "sender_profile_image_url";
-        String RECIPIENT_PROFILE_IMAGE_URL = "recipient_profile_image_url";
-
-        String MEDIA_JSON = "media_json";
-
-        String DEFAULT_SORT_ORDER = MESSAGE_ID + " DESC";
-
-        interface Conversation extends DirectMessages {
-
-        }
-
-        interface ConversationEntries extends BaseColumns {
-
-            String TABLE_NAME = "messages_conversation_entries";
-
-            String CONTENT_PATH_SEGMENT = "conversation_entries";
-            String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
-
-            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
-
-            String MESSAGE_ID = DirectMessages.MESSAGE_ID;
-            String ACCOUNT_KEY = DirectMessages.ACCOUNT_KEY;
-            String IS_OUTGOING = DirectMessages.IS_OUTGOING;
-            String MESSAGE_TIMESTAMP = DirectMessages.MESSAGE_TIMESTAMP;
-            String NAME = "name";
-            String SCREEN_NAME = "screen_name";
-            String PROFILE_IMAGE_URL = "profile_image_url";
-            String TEXT_UNESCAPED = "text_unescaped";
-            String CONVERSATION_ID = "conversation_id";
-
-            int IDX__ID = 0;
-            int IDX_MESSAGE_TIMESTAMP = 1;
-            int IDX_MESSAGE_ID = 2;
-            int IDX_ACCOUNT_KEY = 3;
-            int IDX_IS_OUTGOING = 4;
-            int IDX_NAME = 5;
-            int IDX_SCREEN_NAME = 6;
-            int IDX_PROFILE_IMAGE_URL = 7;
-            int IDX_TEXT_UNESCAPED = 8;
-            int IDX_CONVERSATION_ID = 9;
-        }
-
-        interface Inbox extends DirectMessages {
-
-            String TABLE_NAME = "messages_inbox";
-
-            String CONTENT_PATH_SEGMENT = "inbox";
-            String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
-
-            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
-
-        }
-
-        interface Outbox extends DirectMessages {
-
-            String TABLE_NAME = "messages_outbox";
-
-            String CONTENT_PATH_SEGMENT = "outbox";
-            String CONTENT_PATH = DirectMessages.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
-
-            Uri CONTENT_URI = Uri.withAppendedPath(DirectMessages.CONTENT_URI, CONTENT_PATH_SEGMENT);
-
-        }
-
-    }
-
     interface SearchHistory extends BaseColumns {
 
         String TABLE_NAME = "search_history";
@@ -514,21 +411,6 @@ public interface TwidereDataStore {
         String[] COLUMNS = {_ID, RECENT_QUERY, QUERY};
         String[] TYPES = {TYPE_PRIMARY_KEY, TYPE_INT, TYPE_TEXT_NOT_NULL_UNIQUE};
         String DEFAULT_SORT_ORDER = RECENT_QUERY + " DESC";
-    }
-
-    interface DNS extends BaseColumns {
-        String TABLE_NAME = "dns";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String HOST = "host";
-
-        String ADDRESS = "address";
-
-        String[] MATRIX_COLUMNS = {HOST, ADDRESS};
-
-        String[] COLUMNS = {_ID, HOST, ADDRESS};
     }
 
     interface SavedSearches extends BaseColumns, AccountSupportColumns {
@@ -674,32 +556,6 @@ public interface TwidereDataStore {
         }
     }
 
-    interface Mentions extends Statuses {
-
-        String TABLE_NAME = "mentions";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-    }
-
-    interface Notifications extends BaseColumns {
-
-        String TABLE_NAME = "notifications";
-
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String ID = "id";
-
-        String COUNT = "count";
-
-        String[] MATRIX_COLUMNS = {ID, COUNT};
-
-        String[] COLUMNS = {_ID, ID, COUNT};
-    }
-
     interface Permissions extends BaseColumns {
         String TABLE_NAME = "permissions";
         String CONTENT_PATH = TABLE_NAME;
@@ -713,37 +569,6 @@ public interface TwidereDataStore {
         String[] MATRIX_COLUMNS = {PACKAGE_NAME, PERMISSION};
 
         String[] COLUMNS = {_ID, PACKAGE_NAME, PERMISSION};
-    }
-
-    interface Preferences extends BaseColumns {
-        String TABLE_NAME = "preferences";
-        String CONTENT_PATH = TABLE_NAME;
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        int TYPE_INVALID = -1;
-
-        int TYPE_NULL = 0;
-
-        int TYPE_BOOLEAN = 1;
-
-        int TYPE_INTEGER = 2;
-
-        int TYPE_LONG = 3;
-
-        int TYPE_FLOAT = 4;
-
-        int TYPE_STRING = 5;
-
-        String KEY = "key";
-
-        String VALUE = "value";
-
-        String TYPE = "type";
-
-        String[] MATRIX_COLUMNS = {KEY, VALUE, TYPE};
-
-        String[] COLUMNS = {_ID, KEY, VALUE, TYPE};
     }
 
     interface Statuses extends BaseColumns, InsertedDateColumns, AccountSupportColumns {
@@ -1034,31 +859,5 @@ public interface TwidereDataStore {
                 TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_FALSE, TYPE_BOOLEAN_DEFAULT_TRUE};
     }
 
-
-    interface UnreadCounts extends BaseColumns {
-
-        String CONTENT_PATH = "unread_counts";
-
-        Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-
-        String TAB_POSITION = "tab_position";
-
-        String TAB_TYPE = "tab_type";
-
-        String COUNT = "count";
-
-        String[] MATRIX_COLUMNS = {TAB_POSITION, TAB_TYPE, COUNT};
-
-        String[] COLUMNS = {_ID, TAB_POSITION, TAB_TYPE, COUNT};
-
-        interface ByType extends UnreadCounts {
-
-            String CONTENT_PATH_SEGMENT = "by_type";
-
-            String CONTENT_PATH = UnreadCounts.CONTENT_PATH + "/" + CONTENT_PATH_SEGMENT;
-
-            Uri CONTENT_URI = Uri.withAppendedPath(UnreadCounts.CONTENT_URI, CONTENT_PATH_SEGMENT);
-        }
-    }
 
 }

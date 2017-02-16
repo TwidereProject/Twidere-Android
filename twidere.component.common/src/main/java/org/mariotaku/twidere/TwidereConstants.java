@@ -64,8 +64,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String KEYBOARD_SHORTCUTS_PREFERENCES_NAME = "keyboard_shortcuts_preferences";
     String ETAG_CACHE_PREFERENCES_NAME = "etag_cache";
 
-    String TWITTER_CONSUMER_KEY_LEGACY = "uAFVpMhBntJutfVj6abfA";
-    String TWITTER_CONSUMER_SECRET_LEGACY = "JARXkJTfxo0F8MyctYy9bUmrLISjo8vXAHsZHYuk2E";
     String TWITTER_CONSUMER_KEY = "0WEJk1x6AlgtjGRhyABXw";
     String TWITTER_CONSUMER_SECRET = "gWXNqEFhO3fMkAqoIKpTdjK0MOJs68xnOky0FRdDTP8";
 
@@ -192,7 +190,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int REQUEST_REQUEST_PERMISSIONS = 30;
     int REQUEST_PURCHASE_EXTRA_FEATURES = 41;
 
-    int TABLE_ID_ACCOUNTS = 1;
     int TABLE_ID_STATUSES = 12;
     int TABLE_ID_MENTIONS = 13;
     int TABLE_ID_ACTIVITIES_ABOUT_ME = 14;
@@ -213,15 +210,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int TABLE_ID_CACHED_STATUSES = 62;
     int TABLE_ID_CACHED_HASHTAGS = 63;
     int TABLE_ID_CACHED_RELATIONSHIPS = 64;
-    int VIRTUAL_TABLE_ID_NOTIFICATIONS = 101;
-    int VIRTUAL_TABLE_ID_PREFERENCES = 102;
-    int VIRTUAL_TABLE_ID_ALL_PREFERENCES = 103;
     int VIRTUAL_TABLE_ID_PERMISSIONS = 104;
-    int VIRTUAL_TABLE_ID_DNS = 105;
-    int VIRTUAL_TABLE_ID_CACHED_IMAGES = 106;
-    int VIRTUAL_TABLE_ID_CACHE_FILES = 107;
-    int VIRTUAL_TABLE_ID_UNREAD_COUNTS = 108;
-    int VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE = 109;
     int VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP = 121;
     int VIRTUAL_TABLE_ID_CACHED_USERS_WITH_SCORE = 122;
     int VIRTUAL_TABLE_ID_DRAFTS_UNSENT = 131;
@@ -243,8 +232,6 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int NOTIFICATION_ID_UPDATE_STATUS = 101;
     int NOTIFICATION_ID_SEND_DIRECT_MESSAGE = 102;
 
-    String ICON_SPECIAL_TYPE_CUSTOMIZE = "_customize";
-
 
     String METADATA_KEY_EXTENSION = "org.mariotaku.twidere.extension";
     String METADATA_KEY_EXTENSION_PERMISSIONS = "org.mariotaku.twidere.extension.permissions";
@@ -262,17 +249,11 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String PERMISSION_READ = "read";
     String PERMISSION_WRITE = "write";
     String PERMISSION_DIRECT_MESSAGES = "direct_messages";
-    @Deprecated
-    String PERMISSION_ACCOUNTS = "accounts";
     String PERMISSION_PREFERENCES = "preferences";
 
     int TAB_CODE_HOME_TIMELINE = 1;
     int TAB_CODE_NOTIFICATIONS_TIMELINE = 2;
     int TAB_CODE_DIRECT_MESSAGES = 4;
-
-    int TWITTER_MAX_IMAGE_SIZE = 3145728;
-    int TWITTER_MAX_IMAGE_WIDTH = 1024;
-    int TWITTER_MAX_IMAGE_HEIGHT = 2048;
 
     String USER_TYPE_TWITTER_COM = "twitter.com";
     String USER_TYPE_FANFOU_COM = "fanfou.com";

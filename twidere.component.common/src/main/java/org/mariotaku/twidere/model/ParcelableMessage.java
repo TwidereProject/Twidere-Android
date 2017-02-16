@@ -44,6 +44,8 @@ import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 
 /**
@@ -159,6 +161,7 @@ public class ParcelableMessage implements Parcelable {
 
     @StringDef({MessageType.TEXT, MessageType.STICKER, MessageType.CONVERSATION_CREATE,
             MessageType.JOIN_CONVERSATION, MessageType.PARTICIPANTS_LEAVE})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface MessageType {
         String CONVERSATION_CREATE = "conversation_create";
         String JOIN_CONVERSATION = "join_conversation";

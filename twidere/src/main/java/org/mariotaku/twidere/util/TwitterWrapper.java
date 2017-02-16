@@ -23,7 +23,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.util.SimpleArrayMap;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -41,34 +40,16 @@ import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.ListResponse;
 import org.mariotaku.twidere.model.SingleResponse;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.provider.TwidereDataStore.Notifications;
-import org.mariotaku.twidere.provider.TwidereDataStore.UnreadCounts;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Set;
 
 public class TwitterWrapper implements Constants {
 
-    public static int clearNotification(final Context context, final int notificationType, final UserKey accountId) {
-        final Uri.Builder builder = Notifications.CONTENT_URI.buildUpon();
-        builder.appendPath(String.valueOf(notificationType));
-        if (accountId != null) {
-            builder.appendPath(String.valueOf(accountId));
-        }
-        return context.getContentResolver().delete(builder.build(), null, null);
-    }
-
-    public static int clearUnreadCount(final Context context, final int position) {
-        if (context == null || position < 0) return 0;
-        final Uri uri = UnreadCounts.CONTENT_URI.buildUpon().appendPath(String.valueOf(position)).build();
-        return context.getContentResolver().delete(uri, null, null);
-    }
-
     public static SingleResponse<Boolean> deleteProfileBannerImage(final Context context,
-                                                                   final UserKey accountKey) {
+            final UserKey accountKey) {
         final MicroBlog twitter = MicroBlogAPIFactory.getInstance(context, accountKey);
         if (twitter == null) return SingleResponse.Companion.getInstance(false);
         try {
@@ -79,38 +60,9 @@ public class TwitterWrapper implements Constants {
         }
     }
 
-    public static int removeUnreadCounts(final Context context, final int position, final long account_id,
-                                         final long... statusIds) {
-        if (context == null || position < 0 || statusIds == null || statusIds.length == 0)
-            return 0;
-        int result = 0;
-        final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
-        builder.appendPath(String.valueOf(position));
-        builder.appendPath(String.valueOf(account_id));
-        builder.appendPath(TwidereArrayUtils.toString(statusIds, ',', false));
-        result += context.getContentResolver().delete(builder.build(), null, null);
-        return result;
-    }
-
-    public static int removeUnreadCounts(final Context context, final int position,
-                                         final SimpleArrayMap<UserKey, Set<String>> counts) {
-        if (context == null || position < 0 || counts == null) return 0;
-        int result = 0;
-        for (int i = 0, j = counts.size(); i < j; i++) {
-            final UserKey key = counts.keyAt(i);
-            final Set<String> value = counts.valueAt(i);
-            final Uri.Builder builder = UnreadCounts.CONTENT_URI.buildUpon();
-            builder.appendPath(String.valueOf(position));
-            builder.appendPath(String.valueOf(key));
-            builder.appendPath(CollectionUtils.toString(value, ',', false));
-            result += context.getContentResolver().delete(builder.build(), null, null);
-        }
-        return result;
-    }
-
     @NonNull
     public static User showUser(@NonNull final MicroBlog twitter, final String id, final String screenName,
-                                final String accountType) throws MicroBlogException {
+            final String accountType) throws MicroBlogException {
         if (id != null) {
             if (AccountType.FANFOU.equals(accountType)) {
                 return twitter.showFanfouUser(id);
@@ -127,7 +79,7 @@ public class TwitterWrapper implements Constants {
 
     @NonNull
     public static User showUserAlternative(@NonNull final MicroBlog twitter, final String id,
-                                           final String screenName)
+            final String screenName)
             throws MicroBlogException {
         final String searchScreenName;
         if (screenName != null) {
@@ -161,7 +113,7 @@ public class TwitterWrapper implements Constants {
 
     @NonNull
     public static User tryShowUser(@NonNull final MicroBlog twitter, final String id, final String screenName,
-                                   String accountType)
+            String accountType)
             throws MicroBlogException {
         try {
             return showUser(twitter, id, screenName, accountType);
@@ -175,9 +127,9 @@ public class TwitterWrapper implements Constants {
     }
 
     public static void updateProfileBannerImage(@NonNull final Context context,
-                                                @NonNull final MicroBlog twitter,
-                                                @NonNull final Uri imageUri,
-                                                final boolean deleteImage)
+            @NonNull final MicroBlog twitter,
+            @NonNull final Uri imageUri,
+            final boolean deleteImage)
             throws IOException, MicroBlogException {
         FileBody fileBody = null;
         try {
@@ -192,10 +144,10 @@ public class TwitterWrapper implements Constants {
     }
 
     public static void updateProfileBackgroundImage(@NonNull final Context context,
-                                                    @NonNull final MicroBlog twitter,
-                                                    @NonNull final Uri imageUri,
-                                                    final boolean tile,
-                                                    final boolean deleteImage)
+            @NonNull final MicroBlog twitter,
+            @NonNull final Uri imageUri,
+            final boolean tile,
+            final boolean deleteImage)
             throws IOException, MicroBlogException {
         FileBody fileBody = null;
         try {
@@ -210,7 +162,7 @@ public class TwitterWrapper implements Constants {
     }
 
     public static User updateProfileImage(@NonNull final Context context, @NonNull final MicroBlog twitter,
-                                          @NonNull final Uri imageUri, final boolean deleteImage)
+            @NonNull final Uri imageUri, final boolean deleteImage)
             throws IOException, MicroBlogException {
         FileBody fileBody = null;
         try {
@@ -262,12 +214,12 @@ public class TwitterWrapper implements Constants {
         }
 
         public MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                                   final List<DirectMessage> list) {
+                final List<DirectMessage> list) {
             this(accountKey, maxId, sinceId, list, null);
         }
 
         MessageListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                            final List<DirectMessage> list, final Exception exception) {
+                final List<DirectMessage> list, final Exception exception) {
             super(accountKey, maxId, sinceId, list, exception);
         }
 
@@ -286,12 +238,12 @@ public class TwitterWrapper implements Constants {
         }
 
         public StatusListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                                  final List<Status> list, final boolean truncated) {
+                final List<Status> list, final boolean truncated) {
             this(accountKey, maxId, sinceId, list, truncated, null);
         }
 
         StatusListResponse(final UserKey accountKey, final String maxId, final String sinceId, final List<Status> list,
-                           final boolean truncated, final Exception exception) {
+                final boolean truncated, final Exception exception) {
             super(accountKey, maxId, sinceId, list, exception);
             this.truncated = truncated;
         }
@@ -305,17 +257,17 @@ public class TwitterWrapper implements Constants {
         public final String sinceId;
 
         public TwitterListResponse(final UserKey accountKey,
-                                   final Exception exception) {
+                final Exception exception) {
             this(accountKey, null, null, null, exception);
         }
 
         public TwitterListResponse(final UserKey accountKey, final String maxId,
-                                   final String sinceId, final List<Data> list) {
+                final String sinceId, final List<Data> list) {
             this(accountKey, maxId, sinceId, list, null);
         }
 
         TwitterListResponse(final UserKey accountKey, final String maxId, final String sinceId,
-                            final List<Data> list, final Exception exception) {
+                final List<Data> list, final Exception exception) {
             super(list, exception);
             this.accountKey = accountKey;
             this.maxId = maxId;

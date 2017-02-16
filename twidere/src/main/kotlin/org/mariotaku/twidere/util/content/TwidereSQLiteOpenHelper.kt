@@ -82,8 +82,8 @@ class TwidereSQLiteOpenHelper(
         db.beginTransaction()
         db.execSQL(createTable(Messages.TABLE_NAME, Messages.COLUMNS, Messages.TYPES, true,
                 messagesConstraint()))
-        db.execSQL(createTable(Conversations.TABLE_NAME, Conversations.COLUMNS,
-                Conversations.TYPES, true, messageConversationsConstraint()))
+        db.execSQL(createTable(Conversations.TABLE_NAME, Conversations.COLUMNS, Conversations.TYPES,
+                true, messageConversationsConstraint()))
         db.setTransactionSuccessful()
         db.endTransaction()
 
@@ -210,13 +210,13 @@ class TwidereSQLiteOpenHelper(
             }
         }
         if (oldVersion <= 164) {
-            db.execSQL(SQLQueryBuilder.dropView(true, DirectMessages.TABLE_NAME).sql)
-            db.execSQL(SQLQueryBuilder.dropView(true, DirectMessages.ConversationEntries.TABLE_NAME).sql)
+            db.execSQL(SQLQueryBuilder.dropView(true, "messages").sql)
+            db.execSQL(SQLQueryBuilder.dropView(true, "messages_conversation_entries").sql)
             db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_received_messages").sql)
             db.execSQL(SQLQueryBuilder.dropTrigger(true, "delete_old_sent_messages").sql)
 
-            db.execSQL(SQLQueryBuilder.dropTable(true, DirectMessages.Inbox.TABLE_NAME).sql)
-            db.execSQL(SQLQueryBuilder.dropTable(true, DirectMessages.Outbox.TABLE_NAME).sql)
+            db.execSQL(SQLQueryBuilder.dropTable(true, "messages_inbox").sql)
+            db.execSQL(SQLQueryBuilder.dropTable(true, "messages_outbox").sql)
 
             db.execSQL(SQLQueryBuilder.dropIndex(true, "messages_inbox_index").sql)
             db.execSQL(SQLQueryBuilder.dropIndex(true, "messages_outbox_index").sql)
@@ -301,7 +301,7 @@ class TwidereSQLiteOpenHelper(
     }
 
     private fun createTable(tableName: String, columns: Array<String>, types: Array<String>,
-                            createIfNotExists: Boolean, vararg constraints: Constraint): String {
+            createIfNotExists: Boolean, vararg constraints: Constraint): String {
         val qb = SQLQueryBuilder.createTable(createIfNotExists, tableName)
         qb.columns(*NewColumn.createNewColumns(columns, types))
         qb.constraint(*constraints)
@@ -309,7 +309,7 @@ class TwidereSQLiteOpenHelper(
     }
 
     private fun createIndex(indexName: String, tableName: String, columns: Array<String>,
-                            createIfNotExists: Boolean): String {
+            createIfNotExists: Boolean): String {
         val qb = SQLQueryBuilder.createIndex(false, createIfNotExists)
         qb.name(indexName)
         qb.on(Table(tableName), Columns(*columns))

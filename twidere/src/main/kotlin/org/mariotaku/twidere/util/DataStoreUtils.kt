@@ -47,6 +47,7 @@ import org.mariotaku.twidere.extension.model.getAccountKey
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.model.getColor
 import org.mariotaku.twidere.extension.model.isActivated
+import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras
@@ -112,32 +113,8 @@ object DataStoreUtils {
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, SearchHistory.CONTENT_PATH,
                 TABLE_ID_SEARCH_HISTORY)
 
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#",
-                VIRTUAL_TABLE_ID_NOTIFICATIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Notifications.CONTENT_PATH + "/#/*",
-                VIRTUAL_TABLE_ID_NOTIFICATIONS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Permissions.CONTENT_PATH,
                 VIRTUAL_TABLE_ID_PERMISSIONS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, DNS.CONTENT_PATH + "/*",
-                VIRTUAL_TABLE_ID_DNS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedImages.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_CACHED_IMAGES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CacheFiles.CONTENT_PATH + "/*",
-                VIRTUAL_TABLE_ID_CACHE_FILES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Preferences.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_ALL_PREFERENCES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Preferences.CONTENT_PATH + "/*",
-                VIRTUAL_TABLE_ID_PREFERENCES)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH,
-                VIRTUAL_TABLE_ID_UNREAD_COUNTS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#",
-                VIRTUAL_TABLE_ID_UNREAD_COUNTS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.CONTENT_PATH + "/#/#/*",
-                VIRTUAL_TABLE_ID_UNREAD_COUNTS)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, UnreadCounts.ByType.CONTENT_PATH + "/*",
-                VIRTUAL_TABLE_ID_UNREAD_COUNTS_BY_TYPE)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_RELATIONSHIP + "/*",
                 VIRTUAL_TABLE_ID_CACHED_USERS_WITH_RELATIONSHIP)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH_WITH_SCORE + "/*",
@@ -698,8 +675,7 @@ object DataStoreUtils {
         if (sortExpression != null) {
             builder.orderBy(sortExpression)
         }
-        val rawUri = Uri.withAppendedPath(TwidereDataStore.CONTENT_URI_RAW_QUERY, builder.buildSQL())
-        resolver.query(rawUri, null, null, bindingArgs, null)?.useCursor { cur ->
+        resolver.rawQuery(builder.buildSQL(), bindingArgs)?.useCursor { cur ->
             cur.moveToFirst()
             val colIdx = creator.newIndex(cur)
             while (!cur.isAfterLast) {
@@ -788,8 +764,7 @@ object DataStoreUtils {
         fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: I)
     }
 
-    fun queryCount(context: Context, uri: Uri,
-            selection: String?, selectionArgs: Array<String>?): Int {
+    fun queryCount(context: Context, uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val resolver = context.contentResolver
         val projection = arrayOf(SQLFunctions.COUNT())
         val cur = resolver.query(uri, projection, selection, selectionArgs, null) ?: return -1

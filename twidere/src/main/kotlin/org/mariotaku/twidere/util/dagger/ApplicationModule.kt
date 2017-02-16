@@ -132,7 +132,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun restHttpClient(prefs: SharedPreferencesWrapper, dns: TwidereDns,
-                       connectionPool: ConnectionPool): RestHttpClient {
+            connectionPool: ConnectionPool): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
         return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool)
     }
@@ -180,14 +180,21 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun asyncTwitterWrapper(bus: Bus, preferences: SharedPreferencesWrapper,
-                            asyncTaskManager: AsyncTaskManager): AsyncTwitterWrapper {
-        return AsyncTwitterWrapper(application, bus, preferences, asyncTaskManager)
+            asyncTaskManager: AsyncTaskManager, notificationManagerWrapper: NotificationManagerWrapper): AsyncTwitterWrapper {
+        return AsyncTwitterWrapper(application, bus, preferences, asyncTaskManager, notificationManagerWrapper)
     }
 
     @Provides
     @Singleton
     fun readStateManager(): ReadStateManager {
         return ReadStateManager(application)
+    }
+
+    @Provides
+    @Singleton
+    fun contentNotificationManager(activityTracker: ActivityTracker, userColorNameManager: UserColorNameManager,
+            notificationManagerWrapper: NotificationManagerWrapper, preferences: SharedPreferencesWrapper): ContentNotificationManager {
+        return ContentNotificationManager(application, activityTracker, userColorNameManager, notificationManagerWrapper, preferences)
     }
 
     @Provides
