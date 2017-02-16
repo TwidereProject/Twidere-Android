@@ -675,7 +675,7 @@ object DataStoreUtils {
         if (sortExpression != null) {
             builder.orderBy(sortExpression)
         }
-        resolver.rawQuery(builder.buildSQL(), bindingArgs)?.useCursor { cur ->
+        resolver.rawQuery(builder.buildSQL(), bindingArgs).useCursor { cur ->
             cur.moveToFirst()
             val colIdx = creator.newIndex(cur)
             while (!cur.isAfterLast) {

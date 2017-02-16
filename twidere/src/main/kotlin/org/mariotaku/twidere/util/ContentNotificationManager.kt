@@ -65,7 +65,7 @@ class ContentNotificationManager(
     private var nameFirst: Boolean = false
     private var useStarForLikes: Boolean = false
 
-    fun showInteractionsNotification(pref: AccountPreferences, position: Long) {
+    fun showInteractions(pref: AccountPreferences, position: Long) {
         val cr = context.contentResolver
         val accountKey = pref.accountKey
         val where = Expression.and(
@@ -195,7 +195,7 @@ class ContentNotificationManager(
         return !activityTracker.isHomeActivityStarted
     }
 
-    fun showTimelineNotification(pref: AccountPreferences, position: Long) {
+    fun showTimeline(pref: AccountPreferences, position: Long) {
         val accountKey = pref.accountKey
         val resources = context.resources
         val nm = notificationManager

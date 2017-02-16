@@ -521,7 +521,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                             DataStoreUtils.getAccountKeys(context))
                     prefs.filter(AccountPreferences::isHomeTimelineNotificationEnabled).forEach {
                         val positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, it.accountKey)
-                        contentNotificationManager.showTimelineNotification(it, positionTag)
+                        contentNotificationManager.showTimeline(it, positionTag)
                     }
                     notifyUnreadCountChanged(NOTIFICATION_ID_HOME_TIMELINE)
                 }
@@ -531,7 +531,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                             DataStoreUtils.getAccountKeys(context))
                     prefs.filter(AccountPreferences::isInteractionsNotificationEnabled).forEach {
-                        contentNotificationManager.showInteractionsNotification(it, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                        contentNotificationManager.showInteractions(it, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
                                 it.accountKey))
                     }
                     notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE)
@@ -562,8 +562,15 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
         private fun getConflictAlgorithm(tableId: Int): Int {
             when (tableId) {
-                TABLE_ID_CACHED_HASHTAGS, TABLE_ID_CACHED_STATUSES, TABLE_ID_CACHED_USERS, TABLE_ID_CACHED_RELATIONSHIPS, TABLE_ID_SEARCH_HISTORY, TABLE_ID_MESSAGES, TABLE_ID_MESSAGES_CONVERSATIONS -> return SQLiteDatabase.CONFLICT_REPLACE
-                TABLE_ID_FILTERED_USERS, TABLE_ID_FILTERED_KEYWORDS, TABLE_ID_FILTERED_SOURCES, TABLE_ID_FILTERED_LINKS -> return SQLiteDatabase.CONFLICT_IGNORE
+                TABLE_ID_CACHED_HASHTAGS, TABLE_ID_CACHED_STATUSES, TABLE_ID_CACHED_USERS,
+                TABLE_ID_CACHED_RELATIONSHIPS, TABLE_ID_SEARCH_HISTORY, TABLE_ID_MESSAGES,
+                TABLE_ID_MESSAGES_CONVERSATIONS -> {
+                    return SQLiteDatabase.CONFLICT_REPLACE
+                }
+                TABLE_ID_FILTERED_USERS, TABLE_ID_FILTERED_KEYWORDS, TABLE_ID_FILTERED_SOURCES,
+                TABLE_ID_FILTERED_LINKS -> {
+                    return SQLiteDatabase.CONFLICT_IGNORE
+                }
             }
             return SQLiteDatabase.CONFLICT_NONE
         }
