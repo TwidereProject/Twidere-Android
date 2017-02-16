@@ -667,6 +667,8 @@ public class DMResponse implements Parcelable {
             String userId;
             @JsonField(name = "join_time")
             long joinTime;
+            @JsonField(name = "last_read_event_id")
+            String lastReadEventId;
 
             public String getUserId() {
                 return userId;
@@ -674,6 +676,10 @@ public class DMResponse implements Parcelable {
 
             public long getJoinTime() {
                 return joinTime;
+            }
+
+            public String getLastReadEventId() {
+                return lastReadEventId;
             }
 
             @Override

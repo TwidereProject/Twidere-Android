@@ -240,6 +240,10 @@ class ContentNotificationManager(
         Utils.sendPebbleNotification(context, context.getString(R.string.interactions), pebbleNotificationStringBuilder.toString())
     }
 
+    fun showMessages(pref: AccountPreferences) {
+
+    }
+
     private fun applyNotificationPreferences(builder: NotificationCompat.Builder, pref: AccountPreferences, defaultFlags: Int) {
         var notificationDefaults = 0
         if (AccountPreferences.isNotificationHasLight(defaultFlags)) {

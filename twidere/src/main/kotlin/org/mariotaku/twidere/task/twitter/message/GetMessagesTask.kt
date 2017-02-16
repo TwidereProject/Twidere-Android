@@ -343,6 +343,8 @@ class GetMessagesTask(
 
         fun createDatabaseUpdateData(context: Context, account: AccountDetails, response: DMResponse):
                 DatabaseUpdateData {
+            val accountKey = account.key
+
             val respConversations = response.conversations.orEmpty()
             val respEntries = response.entries.orEmpty()
             val respUsers = response.users.orEmpty()
@@ -388,12 +390,12 @@ class GetMessagesTask(
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
                 conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
-                conversation.last_read_id = v.lastReadEventId
-                val longEventId = v.lastReadEventId.toLong(-1)
+                conversation.last_read_id = v.participants.first { it.userId == accountKey.id }?.lastReadEventId
+                val longEventId = conversation.last_read_id.toLong(-1)
                 // Find recent message timestamp
                 conversation.last_read_timestamp = messagesMap[k]?.filter { message ->
-                    if (message.id == v.lastReadEventId) return@filter true
-                    if (longEventId > 0 && longEventId < message.id.toLong(-1)) return@filter true
+                    if (message.id == conversation.last_read_id) return@filter true
+                    if (longEventId > 0 && longEventId >= message.id.toLong(-1)) return@filter true
                     return@filter false
                 }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
                 conversation.conversation_extras = TwitterOfficialConversationExtras().apply {

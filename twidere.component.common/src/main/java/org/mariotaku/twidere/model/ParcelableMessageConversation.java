@@ -23,6 +23,7 @@ package org.mariotaku.twidere.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -142,10 +143,17 @@ public class ParcelableMessageConversation implements Parcelable {
     @CursorField(value = Conversations.REQUEST_CURSOR)
     public String request_cursor;
 
+    /**
+     * Last read id of <b>current</b> user
+     */
     @JsonField(name = "last_read_id")
     @CursorField(value = Conversations.LAST_READ_ID)
+    @Nullable
     public String last_read_id;
 
+    /**
+     * Last read timestamp of <b>current</b> user
+     */
     @JsonField(name = "last_read_timestamp")
     @CursorField(value = Conversations.LAST_READ_TIMESTAMP)
     public long last_read_timestamp;
