@@ -383,6 +383,7 @@ public interface TwidereDataStore {
             String RECIPIENT_KEY = "recipient_key";
             String REQUEST_CURSOR = "request_cursor";
             String LAST_READ_ID = "last_read_id";
+            String LAST_READ_TIMESTAMP = "last_read_timestamp";
             String IS_OUTGOING = "is_outgoing";
             String IS_TEMP = "is_temp";
             String CONVERSATION_EXTRAS = "conversation_extras";

@@ -146,6 +146,10 @@ public class ParcelableMessageConversation implements Parcelable {
     @CursorField(value = Conversations.LAST_READ_ID)
     public String last_read_id;
 
+    @JsonField(name = "last_read_timestamp")
+    @CursorField(value = Conversations.LAST_READ_TIMESTAMP)
+    public long last_read_timestamp;
+
     /**
      * True if this is a temporary conversation, i.e. Created by user but haven't send any message
      * yet.

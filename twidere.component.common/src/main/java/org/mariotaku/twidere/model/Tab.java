@@ -121,7 +121,7 @@ public class Tab implements Parcelable {
 
     @CustomTabType
     public String getType() {
-        return type;
+        return getTypeAlias(type);
     }
 
     public void setType(@CustomTabType String type) {
@@ -272,7 +272,7 @@ public class Tab implements Parcelable {
     }
 
     @JsonObject
-    static class InternalExtras  {
+    static class InternalExtras {
 
         @JsonField(name = "base")
         TabExtras base;

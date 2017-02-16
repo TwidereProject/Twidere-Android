@@ -180,7 +180,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     }
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
-                                           checked: Boolean) {
+            checked: Boolean) {
         updateTitle(mode)
     }
 
@@ -466,15 +466,16 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             R.layout.list_item_custom_tab, null, emptyArray(), intArrayOf(), 0) {
 
         private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
+        private val tempTab: Tab = Tab()
         private var indices: TabCursorIndices? = null
 
         override fun bindView(view: View, context: Context?, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val holder = view.tag as TwoLineWithIconViewHolder
-            val indices = indices!!
-            val type = Tab.getTypeAlias(cursor.getString(indices.type))
-            val name = cursor.getString(indices.name)
-            val iconKey = cursor.getString(indices.icon)
+            indices?.parseFields(tempTab, cursor)
+            val type = tempTab.type
+            val name = tempTab.name
+            val iconKey = tempTab.icon
             if (type != null && CustomTabUtils.isTabTypeValid(type)) {
                 val typeName = CustomTabUtils.getTabTypeName(context, type)
                 holder.text1.text = if (TextUtils.isEmpty(name)) typeName else name

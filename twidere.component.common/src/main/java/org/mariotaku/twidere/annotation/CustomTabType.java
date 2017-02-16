@@ -45,7 +45,6 @@ public @interface CustomTabType {
     String NOTIFICATIONS_TIMELINE = "notifications_timeline";
     String TRENDS_SUGGESTIONS = "trends_suggestions";
     String DIRECT_MESSAGES = "direct_messages";
-    String DIRECT_MESSAGES_NEXT = "direct_messages_next";
     String FAVORITES = "favorites";
     String USER_TIMELINE = "user_timeline";
     String SEARCH_STATUSES = "search_statuses";

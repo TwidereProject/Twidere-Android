@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.ktextension.toInt
+import org.mariotaku.ktextension.toLong
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -372,7 +373,7 @@ class GetMessagesTask(
             }
             val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
             for ((k, v) in respConversations) {
-                val message = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
+                val recentMessage = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
                 }.values
@@ -381,13 +382,20 @@ class GetMessagesTask(
                     DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
                     else -> ConversationType.ONE_TO_ONE
                 }
-                val conversation = conversations.addConversation(k, account, message, participants,
+                val conversation = conversations.addConversation(k, account, recentMessage, participants,
                         conversationType)
                 conversation.conversation_name = v.name
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
                 conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
                 conversation.last_read_id = v.lastReadEventId
+                val longEventId = v.lastReadEventId.toLong(-1)
+                // Find recent message timestamp
+                conversation.last_read_timestamp = messagesMap[k]?.filter { message ->
+                    if (message.id == v.lastReadEventId) return@filter true
+                    if (longEventId > 0 && longEventId < message.id.toLong(-1)) return@filter true
+                    return@filter false
+                }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
                 conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId
