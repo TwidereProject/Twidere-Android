@@ -42,7 +42,9 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
     private val name by lazy { itemView.name }
     private val text by lazy { itemView.text }
     private val profileImage by lazy { itemView.profileImage }
+    private val typeIndicator by lazy { itemView.typeIndicator }
     private val stateIndicator by lazy { itemView.stateIndicator }
+    private val unreadCount by lazy { itemView.unreadCount }
 
     init {
         setup()
@@ -64,7 +66,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
                 adapter.nameFirst)
         if (conversation.is_outgoing) {
             stateIndicator.visibility = View.VISIBLE
-            stateIndicator.setImageResource(R.drawable.ic_activity_action_reply)
+            stateIndicator.setImageResource(R.drawable.ic_message_type_outgoing)
         } else {
             stateIndicator.visibility = View.GONE
         }
@@ -76,15 +78,23 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
                 adapter.mediaLoader.displayProfileImage(profileImage, null)
                 // TODO display default profile image
             }
+            typeIndicator.visibility = View.GONE
         } else {
             adapter.mediaLoader.displayGroupConversationAvatar(profileImage, conversation.conversation_avatar)
+            typeIndicator.visibility = View.VISIBLE
+        }
+        if (conversation.unread_count > 0) {
+            unreadCount.visibility = View.VISIBLE
+            unreadCount.text = conversation.unread_count.toString()
+        } else {
+            unreadCount.visibility = View.GONE
         }
     }
 
     private fun setup() {
         val textSize = adapter.textSize
-        name.setPrimaryTextSize(textSize * 1.1f)
-        name.setSecondaryTextSize(textSize)
+        name.setPrimaryTextSize(textSize * 1.05f)
+        name.setSecondaryTextSize(textSize * 0.95f)
         text.textSize = textSize
         time.textSize = textSize * 0.85f
 

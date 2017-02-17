@@ -537,11 +537,11 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                     notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE)
                 }
             }
-            TABLE_ID_MESSAGES -> {
+            TABLE_ID_MESSAGES_CONVERSATIONS -> {
                 val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                         DataStoreUtils.getAccountKeys(context))
                 prefs.filter(AccountPreferences::isDirectMessagesNotificationEnabled).forEach {
-                    // TODO show messages notifications
+                    contentNotificationManager.showMessages(it)
                 }
                 notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)
             }

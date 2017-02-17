@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_message_type_outgoing-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_message_type_outgoing-mdpi">
+            <polygon id="Shape" points="0 0 16 0 16 16 0 16"></polygon>
+            <polygon id="Shape" fill="#FFFFFF" fill-rule="nonzero" points="6 10.78 3.22 8 2.27333333 8.94 6 12.6666667 14 4.66666667 13.06 3.72666667"></polygon>
+        </g>
+    </g>
+</svg>

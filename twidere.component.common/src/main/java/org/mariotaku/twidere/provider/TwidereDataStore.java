@@ -389,6 +389,11 @@ public interface TwidereDataStore {
             String CONVERSATION_EXTRAS = "conversation_extras";
             String CONVERSATION_EXTRAS_TYPE = "conversation_extras_type";
 
+            /**
+             * This column isn't available in database, you'll need to calculate by yourself instead
+             */
+            String UNREAD_COUNT = "unread_count";
+
             String[] COLUMNS = ParcelableMessageConversationTableInfo.COLUMNS;
 
             String[] TYPES = ParcelableMessageConversationTableInfo.TYPES;

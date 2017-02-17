@@ -19,7 +19,9 @@
 
 package org.mariotaku.twidere.util
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -30,6 +32,8 @@ import android.support.v4.app.NotificationCompat
 import android.text.TextUtils
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.isEmpty
+import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.twidere.R
@@ -40,11 +44,14 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.getConversationName
+import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.util.database.FilterQueryBuilder
 import org.oshkimaadziig.george.androidutils.SpanFormatter
@@ -67,7 +74,6 @@ class ContentNotificationManager(
     fun showTimeline(pref: AccountPreferences, minPositionKey: Long) {
         val accountKey = pref.accountKey
         val resources = context.resources
-        val nm = notificationManager
         val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey))
         val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
@@ -75,16 +81,20 @@ class ContentNotificationManager(
         val selectionArgs = arrayOf(accountKey.toString())
         val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
         val statusProjection = arrayOf(Statuses.POSITION_KEY)
-        val statusCursor = context.contentResolver.query(Statuses.CONTENT_URI, statusProjection,
-                filteredSelection.sql, selectionArgs, Statuses.DEFAULT_SORT_ORDER) ?: return
 
+        @SuppressLint("Recycle")
+        val statusCursor = context.contentResolver.query(Statuses.CONTENT_URI, statusProjection,
+                filteredSelection.sql, selectionArgs, Statuses.DEFAULT_SORT_ORDER)
+
+        @SuppressLint("Recycle")
         val userCursor = context.contentResolver.rawQuery(SQLQueryBuilder.select(Columns(*userProjection))
                 .from(Table(Statuses.TABLE_NAME))
                 .where(filteredSelection)
                 .groupBy(Columns.Column(Statuses.USER_KEY))
-                .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs) ?: return
+                .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs)
 
         try {
+            if (statusCursor == null || userCursor == null) return
             val usersCount = userCursor.count
             val statusesCount = statusCursor.count
             if (statusesCount == 0 || usersCount == 0) return
@@ -126,15 +136,16 @@ class ContentNotificationManager(
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
             applyNotificationPreferences(builder, pref, pref.homeTimelineNotificationType)
             try {
-                nm.notify("home_" + accountKey, Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey), builder.build())
+                val notificationId = Utils.getNotificationId(NOTIFICATION_ID_HOME_TIMELINE, accountKey)
+                notificationManager.notify("home", notificationId, builder.build())
                 Utils.sendPebbleNotification(context, null, notificationContent)
             } catch (e: SecurityException) {
                 // Silently ignore
             }
 
         } finally {
-            statusCursor.close()
-            userCursor.close()
+            statusCursor?.close()
+            userCursor?.close()
         }
     }
 
@@ -147,6 +158,7 @@ class ContentNotificationManager(
                 Expression.greaterThanArgs(Activities.POSITION_KEY)
         ).sql
         val whereArgs = arrayOf(accountKey.toString(), position.toString())
+        @SuppressLint("Recycle")
         val c = cr.query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 OrderBy(Activities.TIMESTAMP, false).sql) ?: return
         val builder = NotificationCompat.Builder(context)
@@ -166,59 +178,52 @@ class ContentNotificationManager(
             builder.setAutoCancel(true)
             style.setSummaryText(accountName)
             val ci = ParcelableActivityCursorIndices(c)
-            var messageLines = 0
 
             var timestamp: Long = -1
-            c.moveToPosition(-1)
-            while (c.moveToNext()) {
-                if (messageLines == 5) {
-                    style.addLine(resources.getString(R.string.and_N_more, count - c.position))
-                    pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, count - c.position))
-                    break
-                }
+            val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
+            val remaining = c.forEachRow(5) { cur, idx ->
+
                 val activity = ci.newObject(c)
-                if (pref.isNotificationMentionsOnly && !ArrayUtils.contains(Activity.Action.MENTION_ACTIONS,
-                        activity.action)) {
-                    continue
+                if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
+                    return@forEachRow false
                 }
-                if (activity.status_id != null && FilterQueryBuilder.isFiltered(cr,
-                        activity.status_user_key, activity.status_text_plain,
-                        activity.status_quote_text_plain, activity.status_spans,
-                        activity.status_quote_spans, activity.status_source,
-                        activity.status_quote_source, activity.status_retweeted_by_user_key,
-                        activity.status_quoted_user_key)) {
-                    continue
-                }
-                val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
-                if (timestamp == -1L) {
-                    timestamp = activity.timestamp
+                if (activity.status_id != null && FilterQueryBuilder.isFiltered(cr, activity)) {
+                    return@forEachRow false
                 }
                 ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds,
                         pref.isNotificationFollowingOnly)
                 val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
-                if (ArrayUtils.isEmpty(sources)) continue
-                val message = ActivityTitleSummaryMessage.get(context,
-                        userColorNameManager, activity, sources,
-                        0, useStarForLikes, nameFirst)
-                if (message != null) {
-                    val summary = message.summary
-                    if (TextUtils.isEmpty(summary)) {
-                        style.addLine(message.title)
-                        pebbleNotificationStringBuilder.append(message.title)
-                        pebbleNotificationStringBuilder.append("\n")
-                    } else {
-                        style.addLine(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
-                                message.title, summary))
-                        pebbleNotificationStringBuilder.append(message.title)
-                        pebbleNotificationStringBuilder.append(": ")
-                        pebbleNotificationStringBuilder.append(message.summary)
-                        pebbleNotificationStringBuilder.append("\n")
-                    }
-                    messageLines++
+
+                if (sources.isEmpty()) return@forEachRow false
+
+
+                if (timestamp == -1L) {
+                    timestamp = activity.timestamp
                 }
+
+                val message = ActivityTitleSummaryMessage.get(context, userColorNameManager,
+                        activity, sources, 0, useStarForLikes, nameFirst) ?: return@forEachRow false
+                val summary = message.summary
+                if (summary.isNullOrEmpty()) {
+                    style.addLine(message.title)
+                    pebbleNotificationStringBuilder.append(message.title)
+                    pebbleNotificationStringBuilder.append("\n")
+                } else {
+                    style.addLine(SpanFormatter.format(resources.getString(R.string.title_summary_line_format),
+                            message.title, summary))
+                    pebbleNotificationStringBuilder.append(message.title)
+                    pebbleNotificationStringBuilder.append(": ")
+                    pebbleNotificationStringBuilder.append(summary)
+                    pebbleNotificationStringBuilder.append("\n")
+                }
+                return@forEachRow true
             }
-            if (messageLines == 0) return
-            val displayCount = messageLines + count - c.position
+            if (remaining < 0) return
+            if (remaining > 0) {
+                style.addLine(resources.getString(R.string.and_N_more, count - c.position))
+                pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, count - c.position))
+            }
+            val displayCount = 5 + remaining
             val title = resources.getQuantityString(R.plurals.N_new_interactions,
                     displayCount, displayCount)
             builder.setContentTitle(title)
@@ -241,7 +246,63 @@ class ContentNotificationManager(
     }
 
     fun showMessages(pref: AccountPreferences) {
+        val accountKey = pref.accountKey
+        val cr = context.contentResolver
+        val selection = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                Expression.lesserThan(Columns.Column(Conversations.LAST_READ_TIMESTAMP),
+                        Columns.Column(Conversations.LOCAL_TIMESTAMP))).sql
+        val selectionArgs = arrayOf(accountKey.toString())
+        @SuppressLint("Recycle")
+        val cur = cr.query(Conversations.CONTENT_URI, Conversations.COLUMNS, selection, selectionArgs,
+                OrderBy(Conversations.LOCAL_TIMESTAMP, false).sql) ?: return
+        try {
+            if (cur.isEmpty) return
+            val indices = ParcelableMessageConversationCursorIndices(cur)
+            val builder = NotificationCompat.Builder(context)
+            val accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, nameFirst)
+            applyNotificationPreferences(builder, pref, pref.directMessagesNotificationType)
+            builder.setSmallIcon(R.drawable.ic_stat_message)
+            builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+            builder.setAutoCancel(true)
+            val style = NotificationCompat.InboxStyle(builder)
+            style.setSummaryText(accountName)
+            val remaining = cur.forEachRow(5) { cur, pos ->
+                val conversation = indices.newObject(cur)
+                val title = conversation.getConversationName(context, userColorNameManager, nameFirst)
+                val summary = conversation.getSummaryText(context, userColorNameManager, nameFirst)
+                if (pos == 0) {
+                    builder.setTicker("New notification")
+                    builder.setContentTitle(title.first)
+                    builder.setContentText(summary)
+                }
+                style.addLine(SpanFormatter.format(context.getString(R.string.title_summary_line_format),
+                        title.first, summary))
+                return@forEachRow true
+            }
+            if (remaining > 0) {
+                style.addLine(context.getString(R.string.and_N_more, remaining))
+            }
+            val notificationId = Utils.getNotificationId(NOTIFICATION_ID_DIRECT_MESSAGES, accountKey)
+            notificationManager.notify("direct_messages", notificationId, builder.build())
+        } finally {
+            cur.close()
+        }
+    }
 
+    /**
+     * @return Remaining count, -1 if no rows present
+     */
+    private inline fun Cursor.forEachRow(limit: Int, action: (cur: Cursor, pos: Int) -> Boolean): Int {
+        moveToFirst()
+        var current = 0
+        while (!isAfterLast) {
+            if (current >= limit) break
+            if (action(this, position)) {
+                current++
+            }
+            moveToNext()
+        }
+        return count - position
     }
 
     private fun applyNotificationPreferences(builder: NotificationCompat.Builder, pref: AccountPreferences, defaultFlags: Int) {

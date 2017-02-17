@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.util;
 
 
+import android.net.Uri;
+
 import org.mariotaku.sqliteqb.library.Columns;
 import org.mariotaku.sqliteqb.library.Columns.Column;
 import org.mariotaku.sqliteqb.library.Expression;
@@ -31,6 +33,7 @@ import org.mariotaku.sqliteqb.library.Table;
 import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
 
@@ -39,6 +42,10 @@ import java.util.Locale;
 import kotlin.Pair;
 
 public class TwidereQueryBuilder {
+
+    public static Uri rawQuery(String rawQuery) {
+        return TwidereDataStore.CONTENT_URI_RAW_QUERY.buildUpon().appendPath(rawQuery).build();
+    }
 
     public static final class CachedUsersQueryBuilder {
 

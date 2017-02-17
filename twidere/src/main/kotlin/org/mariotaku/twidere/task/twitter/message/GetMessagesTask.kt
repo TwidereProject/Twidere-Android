@@ -435,8 +435,10 @@ class GetMessagesTask(
             ContentResolverUtils.bulkDelete(resolver, Messages.CONTENT_URI, Messages.CONVERSATION_ID,
                     false, data.deleteConversations, accountWhere, accountWhereArgs)
 
-            ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
+            // Don't change order! insert messages first
             ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
+            // Notifications will show on conversations inserted
+            ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
 
             if (data.conversationRequestCursor != null) {
                 resolver.update(Conversations.CONTENT_URI, ContentValues().apply {

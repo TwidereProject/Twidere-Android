@@ -92,7 +92,7 @@ dependencies {
     kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.8'
-    kapt 'com.github.mariotaku.ObjectCursor:processor:0.9.12'
+    kapt "com.github.mariotaku.ObjectCursor:processor:$mariotaku_object_cursor_version"
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
@@ -171,7 +171,7 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku:SQLiteQB:0.9.10'
-    compile 'com.github.mariotaku.ObjectCursor:core:0.9.12'
+    compile "com.github.mariotaku.ObjectCursor:core:$mariotaku_object_cursor_version"
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile "com.github.mariotaku.CommonsLibrary:parcel:$mariotaku_commons_library_version"

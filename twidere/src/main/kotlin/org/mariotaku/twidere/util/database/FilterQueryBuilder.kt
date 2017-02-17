@@ -21,6 +21,7 @@ package org.mariotaku.twidere.util.database
 
 import android.content.ContentResolver
 import org.mariotaku.twidere.extension.rawQuery
+import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.SpanItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
@@ -31,6 +32,13 @@ import java.util.*
  */
 
 object FilterQueryBuilder {
+
+    fun isFiltered(cr: ContentResolver, activity: ParcelableActivity): Boolean {
+        return isFiltered(cr, activity.status_user_key, activity.status_text_plain,
+                activity.status_quote_text_plain, activity.status_spans, activity.status_quote_spans,
+                activity.status_source, activity.status_quote_source, activity.status_retweeted_by_user_key,
+                activity.status_quoted_user_key)
+    }
 
     fun isFiltered(cr: ContentResolver, userKey: UserKey?, textPlain: String?, quotedTextPlain: String?,
             spans: Array<SpanItem>?, quotedSpans: Array<SpanItem>?, source: String?, quotedSource: String?,

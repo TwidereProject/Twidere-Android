@@ -22,11 +22,11 @@ package org.mariotaku.twidere.extension
 import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.database.Cursor
-import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.util.TwidereQueryBuilder
 
 @SuppressLint("Recycle")
 fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?): Cursor? {
-    val rawUri = TwidereDataStore.CONTENT_URI_RAW_QUERY.buildUpon().appendPath(sql).build()
+    val rawUri = TwidereQueryBuilder.rawQuery(sql)
     return query(rawUri, null, null, selectionArgs, null)
 }
 
