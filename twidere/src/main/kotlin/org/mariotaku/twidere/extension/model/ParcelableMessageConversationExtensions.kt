@@ -6,7 +6,9 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
+import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.util.UserColorNameManager
 
 fun ParcelableMessageConversation.applyFrom(message: ParcelableMessage, details: AccountDetails) {
@@ -51,4 +53,14 @@ val ParcelableMessageConversation.user: ParcelableUser?
     get() {
         val userKey = if (is_outgoing) recipient_key else sender_key
         return participants.firstOrNull { it.key == userKey }
+    }
+
+val ParcelableMessageConversation.readOnly: Boolean
+    get() {
+        when (conversation_extras_type) {
+            ExtrasType.TWITTER_OFFICIAL -> {
+                return (conversation_extras as? TwitterOfficialConversationExtras)?.readOnly ?: false
+            }
+        }
+        return false
     }

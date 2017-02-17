@@ -46,7 +46,6 @@ import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.receiver.NotificationReceiver
@@ -67,6 +66,10 @@ class ContentNotificationManager(
 
     private var nameFirst: Boolean = false
     private var useStarForLikes: Boolean = false
+
+    init {
+        updatePreferences()
+    }
 
     fun showTimeline(pref: AccountPreferences, minPositionKey: Long) {
         val accountKey = pref.accountKey
@@ -375,7 +378,7 @@ class ContentNotificationManager(
         return PendingIntent.getActivity(context, 0, homeIntent, 0)
     }
 
-    private fun updatePreferences() {
+    fun updatePreferences() {
         nameFirst = preferences[nameFirstKey]
         useStarForLikes = preferences[iWantMyStarsBackKey]
     }

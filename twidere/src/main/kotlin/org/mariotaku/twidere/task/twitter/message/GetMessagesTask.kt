@@ -32,6 +32,7 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.microblog.library.twitter.model.fixMedia
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.applyFrom
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -50,6 +51,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.UriUtils
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
@@ -71,7 +73,7 @@ class GetMessagesTask(
             } catch (e: MicroBlogException) {
                 return@forEachIndexed
             }
-            Companion.storeMessages(context, messages, details)
+            storeMessages(context, messages, details, param.showNotification)
         }
     }
 
@@ -244,6 +246,8 @@ class GetMessagesTask(
             context: Context
     ) : RefreshMessagesTaskParam(context) {
 
+        override val showNotification: Boolean = true
+
         override val sinceIds: Array<String?>?
             get() {
                 val incomingIds = DataStoreUtils.getNewestMessageIds(context, Messages.CONTENT_URI,
@@ -310,6 +314,8 @@ class GetMessagesTask(
          * If `conversationId` has value, load messages in conversationId
          */
         open val conversationId: String? = null
+
+        open val showNotification: Boolean = false
 
         var taskTag: String? = null
 
@@ -407,6 +413,7 @@ class GetMessagesTask(
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId
                     this.status = v.status
+                    this.readOnly = v.isReadOnly
                     val maxEntryTimestamp = messagesMap.findLastReadTimestamp(k, maxEntryId)
                     if (maxEntryTimestamp > 0) {
                         this.maxEntryTimestamp = maxEntryTimestamp
@@ -417,7 +424,8 @@ class GetMessagesTask(
                     messageDeletionsMap, response.cursor)
         }
 
-        fun storeMessages(context: Context, data: DatabaseUpdateData, details: AccountDetails) {
+        fun storeMessages(context: Context, data: DatabaseUpdateData, details: AccountDetails,
+                showNotification: Boolean = false) {
             val resolver = context.contentResolver
             val conversationsValues = data.conversations.map {
                 val values = ParcelableMessageConversationValuesCreator.create(it)
@@ -447,7 +455,8 @@ class GetMessagesTask(
             // Don't change order! insert messages first
             ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
             // Notifications will show on conversations inserted
-            ContentResolverUtils.bulkInsert(resolver, Conversations.CONTENT_URI, conversationsValues)
+            ContentResolverUtils.bulkInsert(resolver, UriUtils.appendQueryParameters(Conversations.CONTENT_URI,
+                    QUERY_PARAM_NOTIFY, showNotification), conversationsValues)
 
             if (data.conversationRequestCursor != null) {
                 resolver.update(Conversations.CONTENT_URI, ContentValues().apply {

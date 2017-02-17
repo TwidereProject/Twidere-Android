@@ -93,9 +93,9 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     lateinit internal var contentNotificationManager: ContentNotificationManager
 
     private lateinit var databaseWrapper: SQLiteDatabaseWrapper
+    private lateinit var backgroundExecutor: Executor
 
     private var handler: Handler? = null
-    private var backgroundExecutor: Executor? = null
 
 
     override fun onCreate(): Boolean {
@@ -511,7 +511,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
         if (valuesArray.isNullOrEmpty()) return
         when (tableId) {
             TABLE_ID_STATUSES -> {
-                backgroundExecutor!!.execute {
+                if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return
+                backgroundExecutor.execute {
                     val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                             DataStoreUtils.getAccountKeys(context))
                     prefs.filter(AccountPreferences::isHomeTimelineNotificationEnabled).forEach {
@@ -522,23 +523,27 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
             }
             TABLE_ID_ACTIVITIES_ABOUT_ME -> {
-                backgroundExecutor!!.execute {
+                if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return
+                backgroundExecutor.execute {
                     val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
                             DataStoreUtils.getAccountKeys(context))
                     prefs.filter(AccountPreferences::isInteractionsNotificationEnabled).forEach {
-                        contentNotificationManager.showInteractions(it, getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME,
-                                it.accountKey))
+                        val positionTag = getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME, it.accountKey)
+                        contentNotificationManager.showInteractions(it, positionTag)
                     }
                     notifyUnreadCountChanged(NOTIFICATION_ID_INTERACTIONS_TIMELINE)
                 }
             }
             TABLE_ID_MESSAGES_CONVERSATIONS -> {
-                val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                        DataStoreUtils.getAccountKeys(context))
-                prefs.filter(AccountPreferences::isDirectMessagesNotificationEnabled).forEach {
-                    contentNotificationManager.showMessages(it)
+                if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY, true)) return
+                backgroundExecutor.execute {
+                    val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
+                            DataStoreUtils.getAccountKeys(context))
+                    prefs.filter(AccountPreferences::isDirectMessagesNotificationEnabled).forEach {
+                        contentNotificationManager.showMessages(it)
+                    }
+                    notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)
                 }
-                notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)
             }
             TABLE_ID_DRAFTS -> {
             }

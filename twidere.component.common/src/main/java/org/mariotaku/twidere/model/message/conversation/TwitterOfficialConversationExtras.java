@@ -47,6 +47,8 @@ public class TwitterOfficialConversationExtras extends ConversationExtras implem
     public String status;
     @JsonField(name = "max_entry_timestamp")
     public long maxEntryTimestamp;
+    @JsonField(name = "read_only")
+    public boolean readOnly;
 
     @Override
     public String toString() {
@@ -55,6 +57,7 @@ public class TwitterOfficialConversationExtras extends ConversationExtras implem
                 ", minEntryId='" + minEntryId + '\'' +
                 ", status='" + status + '\'' +
                 ", maxEntryTimestamp=" + maxEntryTimestamp +
+                ", readOnly=" + readOnly +
                 "} " + super.toString();
     }
 
