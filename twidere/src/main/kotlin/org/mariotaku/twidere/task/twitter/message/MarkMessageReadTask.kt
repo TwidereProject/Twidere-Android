@@ -74,9 +74,13 @@ class MarkMessageReadTask(
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
-                    val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.lastReadEvent ?: run {
+                    val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
                         val message = findRecentMessage(accountKey, conversationId) ?: return null
                         return@run Pair(message.id, message.timestamp)
+                    }
+                    if (conversation.last_read_timestamp > event.second) {
+                        // Local is newer, ignore network request
+                        return event
                     }
                     if (microBlog.markDmRead(conversation.id, event.first).isSuccessful) {
                         return event
@@ -122,11 +126,11 @@ class MarkMessageReadTask(
         return null
     }
 
-    private val TwitterOfficialConversationExtras.lastReadEvent: Pair<String, Long>?
+    private val TwitterOfficialConversationExtras.maxReadEvent: Pair<String, Long>?
         get() {
-            val id = lastReadEventId ?: return null
-            if (lastReadEventTimestamp < 0) return null
-            return Pair(id, lastReadEventTimestamp)
+            val id = maxEntryId ?: return null
+            if (maxEntryTimestamp < 0) return null
+            return Pair(id, maxEntryTimestamp)
         }
 
 

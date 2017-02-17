@@ -14,6 +14,7 @@ import android.view.View.OnLongClickListener
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
@@ -314,15 +315,16 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             itemContent.drawEnd()
         }
 
-        if (status.media?.isNotEmpty() ?: false) {
-
+        if (status.media.isNotNullOrEmpty()) {
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
                 mediaLabel.visibility = View.VISIBLE
+                mediaLabel.contentDescription = status.media?.firstOrNull()?.alt_text
                 mediaPreview.visibility = View.GONE
             } else if (!adapter.mediaPreviewEnabled) {
                 // Media preview disabled, just show label
                 mediaLabel.visibility = View.VISIBLE
+                mediaLabel.contentDescription = status.media?.firstOrNull()?.alt_text
                 mediaPreview.visibility = View.GONE
             } else {
                 // Show media

@@ -45,18 +45,16 @@ public class TwitterOfficialConversationExtras extends ConversationExtras implem
     @JsonField(name = "status")
     @DMResponse.Status
     public String status;
-    @JsonField(name = "last_read_event_id")
-    public String lastReadEventId;
-    @JsonField(name = "last_read_event_timestamp")
-    public long lastReadEventTimestamp;
+    @JsonField(name = "max_entry_timestamp")
+    public long maxEntryTimestamp;
 
     @Override
     public String toString() {
         return "TwitterOfficialConversationExtras{" +
-                "lastReadEventId='" + lastReadEventId + '\'' +
-                ", maxEntryId='" + maxEntryId + '\'' +
+                "maxEntryId='" + maxEntryId + '\'' +
                 ", minEntryId='" + minEntryId + '\'' +
                 ", status='" + status + '\'' +
+                ", maxEntryTimestamp=" + maxEntryTimestamp +
                 "} " + super.toString();
     }
 

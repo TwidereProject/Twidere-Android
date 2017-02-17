@@ -398,12 +398,19 @@ class GetMessagesTask(
                 if (myLastReadTimestamp > 0) {
                     conversation.last_read_timestamp = myLastReadTimestamp
                 }
-                conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
+                val conversationExtras = conversation.conversation_extras as? TwitterOfficialConversationExtras ?: run {
+                    val extras = TwitterOfficialConversationExtras()
+                    conversation.conversation_extras = extras
+                    return@run extras
+                }
+                conversationExtras.apply {
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId
                     this.status = v.status
-                    this.lastReadEventId = v.lastReadEventId
-                    this.lastReadEventTimestamp = messagesMap.findLastReadTimestamp(k, v.lastReadEventId)
+                    val maxEntryTimestamp = messagesMap.findLastReadTimestamp(k, maxEntryId)
+                    if (maxEntryTimestamp > 0) {
+                        this.maxEntryTimestamp = maxEntryTimestamp
+                    }
                 }
             }
             return DatabaseUpdateData(conversations.values, messages, conversationDeletions,

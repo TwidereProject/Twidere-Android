@@ -160,10 +160,6 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         loaderManager.initLoader(0, null, this)
         showProgress()
-
-        if (savedInstanceState == null) {
-            markRead()
-        }
     }
 
     override fun onStart() {
@@ -210,6 +206,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
         }
         showContent()
+
+        if (conversation != null && !conversation.is_temp) {
+            markRead()
+        }
     }
 
     override fun onCreateAdapter(context: Context): MessagesConversationAdapter {
