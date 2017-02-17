@@ -85,7 +85,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessageConversation>?> {
         val loader = ObjectCursorLoader(context, ParcelableMessageConversationCursorIndices::class.java)
         val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
-            mapProjection(it)
+            TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()
         val qb = SQLQueryBuilder.select(Columns(*projection))
         qb.from(Table(Conversations.TABLE_NAME))
@@ -184,13 +184,6 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         } else {
             showError(R.drawable.ic_info_accounts, getString(R.string.message_toast_no_account_selected))
         }
-    }
-
-    private fun mapProjection(projection: String): Column = when (projection) {
-        Conversations.UNREAD_COUNT -> Column(SQLFunctions.COUNT(
-                "CASE WHEN ${Messages.TABLE_NAME}.${Messages.LOCAL_TIMESTAMP} > ${Conversations.TABLE_NAME}.${Conversations.LAST_READ_TIMESTAMP} THEN 1 ELSE NULL END"
-        ), projection)
-        else -> Column(Table(Conversations.TABLE_NAME), projection, projection)
     }
 
 }

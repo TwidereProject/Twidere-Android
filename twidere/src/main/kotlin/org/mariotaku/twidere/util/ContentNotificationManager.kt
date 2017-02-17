@@ -32,6 +32,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.isEmpty
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.*
+import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.HomeActivity
@@ -45,9 +46,9 @@ import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore
+import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.util.database.FilterQueryBuilder
 import org.oshkimaadziig.george.androidutils.SpanFormatter
@@ -86,7 +87,7 @@ class ContentNotificationManager(
         val userCursor = context.contentResolver.rawQuery(SQLQueryBuilder.select(Columns(*userProjection))
                 .from(Table(Statuses.TABLE_NAME))
                 .where(filteredSelection)
-                .groupBy(Columns.Column(Statuses.USER_KEY))
+                .groupBy(Column(Statuses.USER_KEY))
                 .orderBy(OrderBy(Statuses.DEFAULT_SORT_ORDER)).buildSQL(), selectionArgs)
 
         try {
@@ -242,37 +243,62 @@ class ContentNotificationManager(
     }
 
     fun showMessages(pref: AccountPreferences) {
+        val resources = context.resources
         val accountKey = pref.accountKey
         val cr = context.contentResolver
-        val selection = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
-                Expression.lesserThan(Columns.Column(Conversations.LAST_READ_TIMESTAMP),
-                        Columns.Column(Conversations.LOCAL_TIMESTAMP))).sql
+        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
+            TwidereQueryBuilder.mapConversationsProjection(it)
+        }.toTypedArray()
+        val qb = SQLQueryBuilder.select(Columns(*projection))
+        qb.from(Table(Conversations.TABLE_NAME))
+        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
+                Expression.equals(
+                        Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
+                        Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                )
+        ))
+        qb.where(Expression.and(
+                Expression.equalsArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY)),
+                Expression.lesserThan(Column(Table(Conversations.TABLE_NAME), Conversations.LAST_READ_TIMESTAMP),
+                        Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP))
+        ))
+        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
+        qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
         val selectionArgs = arrayOf(accountKey.toString())
-        @SuppressLint("Recycle")
-        val cur = cr.query(Conversations.CONTENT_URI, Conversations.COLUMNS, selection, selectionArgs,
-                OrderBy(Conversations.LOCAL_TIMESTAMP, false).sql) ?: return
+        val cur = cr.rawQuery(qb.buildSQL(), selectionArgs) ?: return
         try {
             if (cur.isEmpty) return
+
             val indices = ParcelableMessageConversationCursorIndices(cur)
+
+            var messageSum: Int = 0
+            cur.forEachRow { cur, pos ->
+                messageSum += cur.getInt(indices.unread_count)
+                return@forEachRow true
+            }
+
             val builder = NotificationCompat.Builder(context)
-            val accountName = DataStoreUtils.getAccountDisplayName(context, accountKey, nameFirst)
             applyNotificationPreferences(builder, pref, pref.directMessagesNotificationType)
             builder.setSmallIcon(R.drawable.ic_stat_message)
             builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
             builder.setAutoCancel(true)
             val style = NotificationCompat.InboxStyle(builder)
-            style.setSummaryText(accountName)
+            style.setSummaryText(DataStoreUtils.getAccountDisplayName(context, accountKey, nameFirst))
+
+            val notificationTitle = resources.getQuantityString(R.plurals.N_new_messages, messageSum,
+                    messageSum)
+            builder.setTicker(notificationTitle)
+            builder.setContentTitle(notificationTitle)
             val remaining = cur.forEachRow(5) { cur, pos ->
                 val conversation = indices.newObject(cur)
                 val title = conversation.getConversationName(context, userColorNameManager, nameFirst)
                 val summary = conversation.getSummaryText(context, userColorNameManager, nameFirst)
+                val line = SpanFormatter.format(context.getString(R.string.title_summary_line_format),
+                        title.first, summary)
                 if (pos == 0) {
-                    builder.setTicker("New notification")
-                    builder.setContentTitle(title.first)
-                    builder.setContentText(summary)
+                    builder.setContentText(line)
                 }
-                style.addLine(SpanFormatter.format(context.getString(R.string.title_summary_line_format),
-                        title.first, summary))
+                style.addLine(line)
                 return@forEachRow true
             }
             if (remaining > 0) {
@@ -286,13 +312,14 @@ class ContentNotificationManager(
     }
 
     /**
+     * @param limit -1 for no limit
      * @return Remaining count, -1 if no rows present
      */
-    private inline fun Cursor.forEachRow(limit: Int, action: (cur: Cursor, pos: Int) -> Boolean): Int {
+    private inline fun Cursor.forEachRow(limit: Int = -1, action: (cur: Cursor, pos: Int) -> Boolean): Int {
         moveToFirst()
         var current = 0
         while (!isAfterLast) {
-            if (current >= limit) break
+            if (limit >= 0 && current >= limit) break
             if (action(this, position)) {
                 current++
             }
