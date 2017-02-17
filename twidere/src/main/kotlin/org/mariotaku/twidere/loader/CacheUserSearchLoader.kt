@@ -58,9 +58,9 @@ class CacheUserSearchLoader(
         c.close()
         val collator = Collator.getInstance()
         list.sortWith(Comparator { l, r ->
-            val compare = collator.compare(l.name, r.name)
+            val compare = collator.compare(r.name, l.name)
             if (compare != 0) return@Comparator compare
-            return@Comparator l.screen_name.compareTo(r.screen_name)
+            return@Comparator r.screen_name.compareTo(l.screen_name)
         })
     }
 }

@@ -49,6 +49,8 @@ public class TwitterOfficialConversationExtras extends ConversationExtras implem
     public long maxEntryTimestamp;
     @JsonField(name = "read_only")
     public boolean readOnly;
+    @JsonField(name = "notifications_disabled")
+    public boolean notificationsDisabled;
 
     @Override
     public String toString() {
@@ -58,6 +60,7 @@ public class TwitterOfficialConversationExtras extends ConversationExtras implem
                 ", status='" + status + '\'' +
                 ", maxEntryTimestamp=" + maxEntryTimestamp +
                 ", readOnly=" + readOnly +
+                ", notificationsDisabled=" + notificationsDisabled +
                 "} " + super.toString();
     }
 

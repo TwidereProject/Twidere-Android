@@ -64,3 +64,13 @@ val ParcelableMessageConversation.readOnly: Boolean
         }
         return false
     }
+
+val ParcelableMessageConversation.notificationDisabled: Boolean
+    get() {
+        when (conversation_extras_type) {
+            ExtrasType.TWITTER_OFFICIAL -> {
+                return (conversation_extras as? TwitterOfficialConversationExtras)?.notificationsDisabled ?: false
+            }
+        }
+        return false
+    }

@@ -149,10 +149,9 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 val displayName = userColorNameManager.getDisplayName(user, nameFirst)
                 val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
                 val start = text.length
-                text.append(user.screen_name)
-                val end = text.length
+                text.append("${user.screen_name} ")
+                val end = text.length - 1
                 text.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                text.append(' ')
             } else {
                 text.getSpans(0, text.length, ParticipantSpan::class.java).forEach { span ->
                     if (user != span.user) {

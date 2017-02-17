@@ -414,6 +414,7 @@ class GetMessagesTask(
                     this.maxEntryId = v.maxEntryId
                     this.status = v.status
                     this.readOnly = v.isReadOnly
+                    this.notificationsDisabled = v.isNotificationsDisabled
                     val maxEntryTimestamp = messagesMap.findLastReadTimestamp(k, maxEntryId)
                     if (maxEntryTimestamp > 0) {
                         this.maxEntryTimestamp = maxEntryTimestamp
@@ -509,6 +510,7 @@ class GetMessagesTask(
                     this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
                 }
             }
+            participants.sortBy(ParcelableUser::screen_name)
         }
 
         private fun Map<String, List<ParcelableMessage>>.findLastReadTimestamp(conversationId: String, lastReadEventId: String?): Long {
