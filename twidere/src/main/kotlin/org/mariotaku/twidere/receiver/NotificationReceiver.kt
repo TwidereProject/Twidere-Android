@@ -24,14 +24,12 @@ import android.content.Context
 import android.content.Intent
 import android.text.TextUtils
 import edu.tsinghua.hotmobi.model.NotificationEvent
-import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
-import org.mariotaku.twidere.model.StringLongPair
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.UriExtraUtils
@@ -51,7 +49,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 val holder = DependencyHolder.get(context)
                 @NotificationType
                 val notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE)
-                val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.convert(UserKey::valueOf)
+                val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
                 val itemId = UriExtraUtils.getExtra(uri, "item_id").toLong(-1)
                 val itemUserId = UriExtraUtils.getExtra(uri, "item_user_id").toLong(-1)
                 val itemUserFollowing = UriExtraUtils.getExtra(uri, "item_user_following")?.toBoolean() ?: false

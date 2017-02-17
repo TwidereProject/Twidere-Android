@@ -47,6 +47,11 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     @BodyType(BodyType.FORM)
     ResponseCode deleteDmConversation(@Path("conversation_id") String conversationId) throws MicroBlogException;
 
+    @POST("/dm/conversation/{conversation_id}/mark_read.json")
+    @BodyType(BodyType.FORM)
+    ResponseCode markDmRead(@Path("conversation_id") String conversationId,
+            @Param("last_read_event_id") String lastReadEventId) throws MicroBlogException;
+
     @POST("/dm/conversation/{conversation_id}/update_name.json")
     @BodyType(BodyType.FORM)
     ResponseCode updateDmConversationName(@Path("conversation_id") String conversationId, @Param("name") String name) throws MicroBlogException;

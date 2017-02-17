@@ -16,7 +16,6 @@ import org.apache.james.mime4j.stream.BodyDescriptor
 import org.apache.james.mime4j.stream.MimeConfig
 import org.apache.james.mime4j.stream.RawField
 import org.apache.james.mime4j.util.MimeUtil
-import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.toInt
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
@@ -140,23 +139,23 @@ private class DraftContentHandler(private val context: Context, private val draf
     internal var malformedData: Boolean = false
     override fun headers(header: Header) {
         if (processingStack.isEmpty()) {
-            draft.timestamp = header.getField("Date")?.convert {
+            draft.timestamp = header.getField("Date")?.let {
                 (it as DateTimeField).date.time
             } ?: 0
-            draft.account_keys = header.getField("From")?.convert { field ->
+            draft.account_keys = header.getField("From")?.let { field ->
                 when (field) {
                     is MailboxField -> {
-                        return@convert arrayOf(field.mailbox.convert { UserKey(it.localPart, it.domain) })
+                        return@let arrayOf(field.mailbox.let { UserKey(it.localPart, it.domain) })
                     }
                     is MailboxListField -> {
-                        return@convert field.mailboxList.map { UserKey(it.localPart, it.domain) }.toTypedArray()
+                        return@let field.mailboxList.map { UserKey(it.localPart, it.domain) }.toTypedArray()
                     }
                     else -> {
-                        return@convert null
+                        return@let null
                     }
                 }
             }
-            draft.location = header.getField("X-GeoLocation")?.body?.convert(ParcelableLocation::valueOf)
+            draft.location = header.getField("X-GeoLocation")?.body?.let(ParcelableLocation::valueOf)
             draft.action_type = header.getField("X-Action-Type")?.body
         } else {
             processingStack.peek().headers(header)

@@ -98,7 +98,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         qb.where(Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size))
         qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
         qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
-        loader.uri = TwidereQueryBuilder.rawQuery(qb.buildSQL())
+        loader.uri = TwidereQueryBuilder.rawQuery(qb.buildSQL(), Conversations.CONTENT_URI)
         loader.selectionArgs = accountKeys.toStringArray()
         return loader
     }

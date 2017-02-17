@@ -9,10 +9,6 @@ inline fun <T> configure(receiver: T, block: T.() -> Unit): T {
     return receiver
 }
 
-inline fun <F, T> F.convert(block: (F) -> T): T {
-    return block(this)
-}
-
 fun rangeOfSize(start: Int, size: Int): IntRange {
     return IntRange(start, start + size)
 }

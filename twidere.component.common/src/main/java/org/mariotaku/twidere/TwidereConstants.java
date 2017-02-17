@@ -161,6 +161,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_FROM_NOTIFICATION = "from_notification";
     String QUERY_PARAM_NOTIFICATION_TYPE = "notification_type";
     String QUERY_PARAM_PREVIEW = "preview";
+    String QUERY_PARAM_NOTIFY_URI = "notify_uri";
 
     String DEFAULT_PROTOCOL = PROTOCOL_HTTPS;
 

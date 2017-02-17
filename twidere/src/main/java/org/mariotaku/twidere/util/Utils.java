@@ -99,7 +99,6 @@ import org.mariotaku.twidere.model.PebbleMessage;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers;
-import org.mariotaku.twidere.provider.TwidereDataStore.Messages;
 import org.mariotaku.twidere.view.TabPagerIndicator;
 
 import java.io.Closeable;
@@ -506,11 +505,6 @@ public final class Utils implements Constants {
     }
 
     public static Uri getNotificationUri(final int tableId, final Uri def) {
-        switch (tableId) {
-            case TABLE_ID_MESSAGES:
-            case TABLE_ID_MESSAGES_CONVERSATIONS:
-                return Messages.CONTENT_URI;
-        }
         return def;
     }
 

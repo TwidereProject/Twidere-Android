@@ -390,18 +390,20 @@ class GetMessagesTask(
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
                 conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.TWITTER_OFFICIAL
-                conversation.last_read_id = v.participants.first { it.userId == accountKey.id }?.lastReadEventId
-                val longEventId = conversation.last_read_id.toLong(-1)
+                val myLastReadEventId = v.participants.first { it.userId == accountKey.id }?.lastReadEventId
                 // Find recent message timestamp
-                conversation.last_read_timestamp = messagesMap[k]?.filter { message ->
-                    if (message.id == conversation.last_read_id) return@filter true
-                    if (longEventId > 0 && longEventId >= message.id.toLong(-1)) return@filter true
-                    return@filter false
-                }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
+                val myLastReadTimestamp = messagesMap.findLastReadTimestamp(k, myLastReadEventId)
+
+                conversation.last_read_id = myLastReadEventId
+                if (myLastReadTimestamp > 0) {
+                    conversation.last_read_timestamp = myLastReadTimestamp
+                }
                 conversation.conversation_extras = TwitterOfficialConversationExtras().apply {
                     this.minEntryId = v.minEntryId
                     this.maxEntryId = v.maxEntryId
                     this.status = v.status
+                    this.lastReadEventId = v.lastReadEventId
+                    this.lastReadEventTimestamp = messagesMap.findLastReadTimestamp(k, v.lastReadEventId)
                 }
             }
             return DatabaseUpdateData(conversations.values, messages, conversationDeletions,
@@ -447,9 +449,8 @@ class GetMessagesTask(
             }
         }
 
-
         @SuppressLint("Recycle")
-        fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(context: Context,
+        internal fun MutableMap<String, ParcelableMessageConversation>.addLocalConversations(context: Context,
                 accountKey: UserKey, conversationIds: Set<String>) {
             val where = Expression.and(Expression.inArgs(Conversations.CONVERSATION_ID, conversationIds.size),
                     Expression.equalsArgs(Conversations.ACCOUNT_KEY)).sql
@@ -475,6 +476,7 @@ class GetMessagesTask(
             }
         }
 
+
         private fun ParcelableMessageConversation.addParticipant(
                 accountKey: UserKey,
                 user: User
@@ -493,7 +495,16 @@ class GetMessagesTask(
             }
         }
 
-        fun MutableMap<String, ParcelableMessageConversation>.addConversation(
+        private fun Map<String, List<ParcelableMessage>>.findLastReadTimestamp(conversationId: String, lastReadEventId: String?): Long {
+            val longEventId = lastReadEventId.toLong(-1)
+            return this[conversationId]?.filter { message ->
+                if (message.id == lastReadEventId) return@filter true
+                if (longEventId > 0 && longEventId >= message.id.toLong(-1)) return@filter true
+                return@filter false
+            }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
+        }
+
+        internal fun MutableMap<String, ParcelableMessageConversation>.addConversation(
                 conversationId: String,
                 details: AccountDetails,
                 message: ParcelableMessage,

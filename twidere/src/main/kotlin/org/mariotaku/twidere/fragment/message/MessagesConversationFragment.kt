@@ -69,6 +69,7 @@ import org.mariotaku.twidere.task.compose.AbsAddMediaTask
 import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
 import org.mariotaku.twidere.task.twitter.message.DestroyMessageTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
 import org.mariotaku.twidere.util.ClipboardUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.IntentUtils
@@ -159,6 +160,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
         loaderManager.initLoader(0, null, this)
         showProgress()
+
+        if (savedInstanceState == null) {
+            markRead()
+        }
     }
 
     override fun onStart() {
@@ -379,6 +384,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun setProgressVisible(visible: Boolean) {
 
+    }
+
+    private fun markRead() {
+        TaskStarter.execute(MarkMessageReadTask(context, accountKey, conversationId))
     }
 
     internal class AddMediaTask(

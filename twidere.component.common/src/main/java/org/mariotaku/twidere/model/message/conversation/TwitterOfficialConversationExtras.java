@@ -39,35 +39,25 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse;
 public class TwitterOfficialConversationExtras extends ConversationExtras implements Parcelable {
 
     @JsonField(name = "max_entry_id")
-    String maxEntryId;
+    public String maxEntryId;
     @JsonField(name = "min_entry_id")
-    String minEntryId;
+    public String minEntryId;
     @JsonField(name = "status")
     @DMResponse.Status
-    String status;
+    public String status;
+    @JsonField(name = "last_read_event_id")
+    public String lastReadEventId;
+    @JsonField(name = "last_read_event_timestamp")
+    public long lastReadEventTimestamp;
 
-    public String getMaxEntryId() {
-        return maxEntryId;
-    }
-
-    public void setMaxEntryId(final String maxEntryId) {
-        this.maxEntryId = maxEntryId;
-    }
-
-    public String getMinEntryId() {
-        return minEntryId;
-    }
-
-    public void setMinEntryId(final String minEntryId) {
-        this.minEntryId = minEntryId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(final String status) {
-        this.status = status;
+    @Override
+    public String toString() {
+        return "TwitterOfficialConversationExtras{" +
+                "lastReadEventId='" + lastReadEventId + '\'' +
+                ", maxEntryId='" + maxEntryId + '\'' +
+                ", minEntryId='" + minEntryId + '\'' +
+                ", status='" + status + '\'' +
+                "} " + super.toString();
     }
 
     @Override

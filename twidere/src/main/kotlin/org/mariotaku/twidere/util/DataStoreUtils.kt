@@ -151,14 +151,14 @@ object DataStoreUtils {
     }
 
     fun getOldestMessageIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>, outgoing: Boolean): Array<String?> {
-        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
+        if (accountKeys.all { it == null }) return arrayOfNulls(accountKeys.size)
         val having: Expression = Expression.equals(Messages.IS_OUTGOING, if (outgoing) 1 else 0)
         return getStringFieldArray(context, uri, accountKeys, Messages.ACCOUNT_KEY, Messages.MESSAGE_ID,
                 OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), having, null)
     }
 
     fun getOldestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<ParcelableMessageConversation?> {
-        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
+        if (accountKeys.all { it == null }) return arrayOfNulls(accountKeys.size)
         return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
                 OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), null, null,
                 ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
@@ -166,7 +166,7 @@ object DataStoreUtils {
 
     fun getNewestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>,
             extraWhere: Expression? = null, extraWhereArgs: Array<String>? = null): Array<ParcelableMessageConversation?> {
-        if (accountKeys.all { it == null }) return kotlin.arrayOfNulls(accountKeys.size)
+        if (accountKeys.all { it == null }) return arrayOfNulls(accountKeys.size)
         return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
                 OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), extraWhere, extraWhereArgs,
                 ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })

@@ -51,6 +51,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.task.twitter.message.SendMessageTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
@@ -226,7 +227,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val conversation = ParcelableMessageConversation()
         conversation.account_color = account.color
         conversation.account_key = account.key
-        conversation.id = "twidere:temp:${System.currentTimeMillis()}"
+        conversation.id = "${SendMessageTask.TEMP_CONVERSATION_ID_PREFIX}${System.currentTimeMillis()}"
         conversation.local_timestamp = System.currentTimeMillis()
         conversation.conversation_type = if (selected.size > 1) {
             ConversationType.ONE_TO_ONE

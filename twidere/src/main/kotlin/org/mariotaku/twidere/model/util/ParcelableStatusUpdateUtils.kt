@@ -2,7 +2,6 @@ package org.mariotaku.twidere.model.util
 
 import android.accounts.AccountManager
 import android.content.Context
-import org.mariotaku.ktextension.convert
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
@@ -15,7 +14,7 @@ object ParcelableStatusUpdateUtils {
 
     fun fromDraftItem(context: Context, draft: Draft): ParcelableStatusUpdate {
         val statusUpdate = ParcelableStatusUpdate()
-        statusUpdate.accounts = draft.account_keys?.convert {
+        statusUpdate.accounts = draft.account_keys?.let {
             AccountUtils.getAllAccountDetails(AccountManager.get(context), it, true)
         } ?: emptyArray()
         statusUpdate.text = draft.text

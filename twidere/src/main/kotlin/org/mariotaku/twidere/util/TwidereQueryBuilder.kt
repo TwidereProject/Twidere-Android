@@ -17,17 +17,23 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.util
 
-import android.annotation.SuppressLint
-import android.content.ContentResolver
-import android.database.Cursor
+
 import android.net.Uri
-import org.mariotaku.twidere.util.TwidereQueryBuilder
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_URI
 
-@SuppressLint("Recycle")
-fun ContentResolver.rawQuery(sql: String, selectionArgs: Array<String>?, notifyUri: Uri? = null): Cursor? {
-    val rawUri = TwidereQueryBuilder.rawQuery(sql, notifyUri)
-    return query(rawUri, null, null, selectionArgs, null)
+import org.mariotaku.twidere.provider.TwidereDataStore
+
+object TwidereQueryBuilder {
+
+    fun rawQuery(rawQuery: String, notifyUri: Uri? = null): Uri {
+        val builder = TwidereDataStore.CONTENT_URI_RAW_QUERY.buildUpon().appendPath(rawQuery)
+        if (notifyUri != null) {
+            builder.appendQueryParameter(QUERY_PARAM_NOTIFY_URI, notifyUri.toString())
+        }
+        return builder.build()
+    }
+
+
 }
-

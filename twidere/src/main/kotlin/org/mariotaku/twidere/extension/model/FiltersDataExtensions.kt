@@ -3,7 +3,6 @@ package org.mariotaku.twidere.extension.model
 import android.content.ContentResolver
 import android.net.Uri
 import org.mariotaku.ktextension.addAllEnhanced
-import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.map
 import org.mariotaku.sqliteqb.library.Expression
@@ -119,7 +118,7 @@ fun FiltersData.parse(parser: XmlPullParser) {
         val item = FiltersData.UserItem()
         item.name = parser.getAttributeValue(null, ATTR_NAME) ?: return null
         item.screenName = parser.getAttributeValue(null, ATTR_SCREEN_NAME) ?: return null
-        item.userKey = parser.getAttributeValue(null, ATTR_KEY)?.convert(UserKey::valueOf) ?: return null
+        item.userKey = parser.getAttributeValue(null, ATTR_KEY)?.let(UserKey::valueOf) ?: return null
         return item
     }
 

@@ -68,7 +68,6 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.coerceInOr
-import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -690,7 +689,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val tabType = if (uri != null) Utils.matchTabType(uri) else null
         var initialTab = -1
         if (tabType != null) {
-            val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.convert(UserKey::valueOf)
+            val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
             val adapter = pagerAdapter
             for (i in 0 until adapter.count) {
                 val tab = adapter.getTab(i)

@@ -292,7 +292,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
         useStarsForLikes = preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)
         accountsAdapter.accounts = accounts
-        val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.convert(UserKey::valueOf)
+        val defaultKey = preferences.getString(KEY_DEFAULT_ACCOUNT_KEY, null)?.let(UserKey::valueOf)
                 ?: accounts.firstOrNull { it.activated }?.key
         val defaultAccount = accounts.firstOrNull { it.key.maybeEquals(defaultKey) }
         accountsAdapter.selectedAccount = defaultAccount

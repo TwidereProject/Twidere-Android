@@ -5,7 +5,6 @@ import android.net.Uri
 import com.bluelinelabs.logansquare.LoganSquare
 import com.bluelinelabs.logansquare.annotation.JsonField
 import com.bluelinelabs.logansquare.annotation.JsonObject
-import org.mariotaku.ktextension.convert
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
 import org.mariotaku.restfu.http.MultiValueMap
@@ -51,22 +50,22 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
                 return false
             }
             val etag = response.getHeader("ETag")
-            this.filters = response.body?.convert { body ->
+            this.filters = response.body?.let { body ->
                 when (response.body.contentType()?.contentType) {
                     "application/json" -> {
-                        return@convert body.toJsonFilters()
+                        return@let body.toJsonFilters()
                     }
                     "application/xml", "text/xml" -> {
-                        return@convert body.toXmlFilters()
+                        return@let body.toXmlFilters()
                     }
                     else -> {
                         // Infer from extension
                         val uri = Uri.parse(arguments.url)
                         when (uri.lastPathSegment?.substringAfterLast('.')) {
-                            "xml" -> return@convert body.toXmlFilters()
-                            "json" -> return@convert body.toJsonFilters()
+                            "xml" -> return@let body.toXmlFilters()
+                            "json" -> return@let body.toJsonFilters()
                         }
-                        return@convert null
+                        return@let null
                     }
                 }
             }

@@ -147,7 +147,9 @@ class SendMessageTask(
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }
 
-    class SendMessageResult(var conversationIds: List<String>) {
+    class SendMessageResult(var conversationIds: List<String>)
 
+    companion object {
+        const val TEMP_CONVERSATION_ID_PREFIX = "twidere:temp:"
     }
 }

@@ -30,7 +30,6 @@ import android.support.v4.app.DialogFragment
 import android.widget.Toast
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
-import org.mariotaku.ktextension.convert
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_REQUEST_PERMISSIONS
@@ -103,7 +102,7 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
     }
 
     private fun showPickFileDialog() {
-        val initialDirectory = intent?.data?.path?.convert(::File) ?: getExternalStorageDirectory() ?: File("/")
+        val initialDirectory = intent?.data?.path?.let(::File) ?: getExternalStorageDirectory() ?: File("/")
         val f = FileSelectorDialogFragment()
         f.arguments = Bundle {
             this[EXTRA_ACTION] = intent.action
