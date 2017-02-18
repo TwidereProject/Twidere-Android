@@ -91,5 +91,10 @@
         <item>place</item>
         <item>coordinate</item>
     </string-array>
+    <string-array name="values_tab_column_width">
+        <item>narrow</item>
+        <item>normal</item>
+        <item>wide</item>
+    </string-array>
 
 </resources>

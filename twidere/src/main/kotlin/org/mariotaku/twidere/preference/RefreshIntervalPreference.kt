@@ -14,7 +14,9 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by mariotaku on 2017/2/8.
  */
-class RefreshIntervalPreference(context: Context, attrs: AttributeSet? = null) : EntrySummaryListPreference(context, attrs) {
+class RefreshIntervalPreference(
+        context: Context, attrs: AttributeSet? = null
+) : EntrySummaryListPreference(context, attrs) {
 
     private val entriesBackup = entries
     private val valuesBackup = entryValues
