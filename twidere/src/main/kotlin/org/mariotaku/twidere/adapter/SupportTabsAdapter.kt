@@ -27,7 +27,6 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
 import org.mariotaku.twidere.model.SupportTabSpec
@@ -46,6 +45,7 @@ class SupportTabsAdapter @JvmOverloads constructor(
 ) : SupportFixedFragmentStatePagerAdapter(fm), TabProvider, TabListener {
 
     var hasMultipleColumns: Boolean = false
+    var preferredColumnWidth: Float = 0f
 
     private val tab = ArrayList<SupportTabSpec>()
 
@@ -54,7 +54,7 @@ class SupportTabsAdapter @JvmOverloads constructor(
     }
 
     fun addTab(cls: Class<out Fragment>, args: Bundle? = null, name: String,
-               icon: DrawableHolder? = null, type: String? = null, position: Int = 0, tag: String? = null) {
+            icon: DrawableHolder? = null, type: String? = null, position: Int = 0, tag: String? = null) {
         addTab(SupportTabSpec(name = name, icon = icon, cls = cls, args = args,
                 position = position, type = type, tag = tag))
     }
@@ -96,10 +96,9 @@ class SupportTabsAdapter @JvmOverloads constructor(
     override fun getPageWidth(position: Int): Float {
         val columnCount = count
         if (columnCount == 0) return 1f
-        if (hasMultipleColumns) {
+        if (hasMultipleColumns && preferredColumnWidth > 0) {
             val resources = context.resources
             val screenWidth = resources.displayMetrics.widthPixels
-            val preferredColumnWidth = resources.getDimension(R.dimen.preferred_tab_column_width)
             val pageWidth = preferredColumnWidth / screenWidth
             if (columnCount * preferredColumnWidth < screenWidth) {
                 return 1f / columnCount

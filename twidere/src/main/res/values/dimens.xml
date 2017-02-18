@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <resources>
     <dimen name="account_selector_popup_width">180dp</dimen>
 
@@ -93,8 +93,11 @@
 
     <dimen name="popup_width_account_selector">160dp</dimen>
 
-    <!-- Preferred size -->
-    <dimen name="preferred_tab_column_width">420dp</dimen>
+    <!-- Preferred tab column widths -->
+    <eat-comment/>
+    <dimen name="preferred_tab_column_width_narrow">320dp</dimen>
+    <dimen name="preferred_tab_column_width_normal">400dp</dimen>
+    <dimen name="preferred_tab_column_width_wide">480dp</dimen>
 
     <dimen name="profile_image_size_activity_small">32dp</dimen>
     <dimen name="profile_image_size_direct_message">36dp</dimen>
