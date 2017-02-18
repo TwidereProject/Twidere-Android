@@ -104,7 +104,7 @@ class ExtensionsListLoader(
             val packageName: String,
             val label: CharSequence,
             val description: CharSequence?,
-            val icon: Drawable,
+            val icon: Drawable?,
             val permissions: Array<String>?,
             val settings: String?
     ) {

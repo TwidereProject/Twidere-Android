@@ -154,11 +154,11 @@
   <string name="add_account">Hesap ekle</string>
   <string name="add_host_mapping">Sunucu haritalama ekle</string>
   <string name="add_image">Resim ekle</string>
-  <string name="add_member">Üye ekle</string>
-  <string name="add_or_remove_from_list">Listeye ekle veya sil</string>
-  <string name="add_tab">Sekme ekle</string>
-  <string name="add_to_filter">Filtre ekle</string>
-  <string name="add_to_list">Listeye ekle</string>
+  <string name="action_add_member">Üye ekle</string>
+  <string name="title_add_or_remove_from_list">Listeye ekle veya sil</string>
+  <string name="action_add_tab">Sekme ekle</string>
+  <string name="action_add_to_filter">Filtre ekle</string>
+  <string name="action_add_to_list">Listeye ekle</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> listeye eklendi "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">ve <xliff:g id="count">%d</xliff:g> daha</string>
   <string name="api_url_format">API URL Format</string>
@@ -244,7 +244,7 @@
   <string name="destroy_status">Tweeti sil</string>
   <string name="destroy_status_confirm_message">Bu tweeti sil?</string>
   <string name="developed_by">Tarafından geliştirildi</string>
-  <string name="direct_messages">Mesajlar</string>
+  <string name="title_direct_messages">Mesajlar</string>
   <string name="direct_messages_next">sonraki DM</string>
   <string name="discard">Yoksay</string>
   <string name="display_sensitive_contents">Hassas içeriği görüntüle</string>

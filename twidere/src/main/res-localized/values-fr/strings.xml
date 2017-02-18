@@ -178,11 +178,11 @@
   <string name="add_account">Ajouter un compte</string>
   <string name="add_host_mapping">Ajouter un hôte personnalisé</string>
   <string name="add_image">Ajouter une image</string>
-  <string name="add_member">Ajouter un membre</string>
-  <string name="add_or_remove_from_list">Ajouter ou supprimer de la liste</string>
-  <string name="add_tab">Ajouter un onglet</string>
-  <string name="add_to_filter">Ajouter au filtre</string>
-  <string name="add_to_list">Ajouter à la liste</string>
+  <string name="action_add_member">Ajouter un membre</string>
+  <string name="title_add_or_remove_from_list">Ajouter ou supprimer de la liste</string>
+  <string name="action_add_tab">Ajouter un onglet</string>
+  <string name="action_add_to_filter">Ajouter au filtre</string>
+  <string name="action_add_to_list">Ajouter à la liste</string>
   <string name="added_user_to_list">Utilisateur <xliff:g id="user">%1$s</xliff:g> ajouté à la liste "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">et encore <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Format de l\'adresse API</string>
@@ -269,7 +269,7 @@
   <string name="destroy_status">Supprimer ce tweet</string>
   <string name="destroy_status_confirm_message">Supprimer ce tweet ?</string>
   <string name="developed_by">Développé par</string>
-  <string name="direct_messages">Messages</string>
+  <string name="title_direct_messages">Messages</string>
   <string name="direct_messages_next">DM suivant</string>
   <string name="discard">Supprimer</string>
   <string name="display_sensitive_contents">Afficher le contenu qui peut être sensible</string>

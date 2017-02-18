@@ -153,10 +153,10 @@
   <string name="add_account">Engadir conta</string>
   <string name="add_host_mapping">Engadir host mapping</string>
   <string name="add_image">Engadir imaxe</string>
-  <string name="add_member">Engadir membro</string>
-  <string name="add_tab">Engadir tab.</string>
-  <string name="add_to_filter">Engadir a filtro</string>
-  <string name="add_to_list">Engadir á lista</string>
+  <string name="action_add_member">Engadir membro</string>
+  <string name="action_add_tab">Engadir tab.</string>
+  <string name="action_add_to_filter">Engadir a filtro</string>
+  <string name="action_add_to_list">Engadir á lista</string>
   <string name="added_user_to_list">Engadiches a <xliff:g id="user">%1$s</xliff:g> á lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">e <xliff:g id="count">%d</xliff:g> máis</string>
   <string name="api_url_format">Formato URL API</string>
@@ -242,7 +242,7 @@
   <string name="destroy_status">Eliminar chío</string>
   <string name="destroy_status_confirm_message">Eliminar este chío?</string>
   <string name="developed_by">Desenrolado por</string>
-  <string name="direct_messages">Mensaxes</string>
+  <string name="title_direct_messages">Mensaxes</string>
   <string name="direct_messages_next">DM next</string>
   <string name="discard">Descartar</string>
   <string name="display_sensitive_contents">Amosar contidos sensibles</string>

@@ -134,13 +134,12 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
             }
             R.id.refresh -> {
                 executeAfterFragmentResumed { fragment ->
-                    val dfRef = WeakReference(ProgressDialogFragment.show(fragment.childFragmentManager,
-                            FRAGMENT_TAG_RREFRESH_FILTERS))
+                    ProgressDialogFragment.show(fragment.childFragmentManager, FRAGMENT_TAG_RREFRESH_FILTERS)
                     val task = RefreshFiltersSubscriptionsTask(fragment.context)
                     val fragmentRef = WeakReference(fragment)
                     task.callback = {
                         fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
-                            val df = dfRef.get() ?: fragment.childFragmentManager.findFragmentByTag(FRAGMENT_TAG_RREFRESH_FILTERS) as? DialogFragment
+                            val df = fragment.childFragmentManager.findFragmentByTag(FRAGMENT_TAG_RREFRESH_FILTERS) as? DialogFragment
                             df?.dismiss()
                         }
                     }

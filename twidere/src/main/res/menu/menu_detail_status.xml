@@ -32,7 +32,7 @@
     <item
         android:id="@id/add_to_filter"
         android:icon="@drawable/ic_action_speaker_muted"
-        android:title="@string/add_to_filter"/>
+        android:title="@string/action_add_to_filter"/>
     <item
         android:id="@+id/mute_users"
         android:enabled="@bool/debug"

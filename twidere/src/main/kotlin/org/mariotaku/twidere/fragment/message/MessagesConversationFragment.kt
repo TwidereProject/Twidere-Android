@@ -105,6 +105,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
         val account = this.account ?: run {
             activity?.finish()
             return
@@ -191,6 +192,21 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
         return ConversationLoader(context, accountKey, conversationId)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_messages_conversation, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.info -> {
+                val intent = IntentUtils.messageConversationInfo(accountKey, conversationId)
+                startActivity(intent)
+                return true
+            }
+        }
+        return false
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableMessage>?>) {

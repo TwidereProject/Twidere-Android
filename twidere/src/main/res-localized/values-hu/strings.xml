@@ -164,10 +164,10 @@
   <string name="add_account">Fiók hozzáadása</string>
   <string name="add_host_mapping">Host hozzárendelés hozzáadása</string>
   <string name="add_image">Kép hozzáadása</string>
-  <string name="add_member">Tag hozzáadása</string>
-  <string name="add_tab">Fül hozzáadása</string>
-  <string name="add_to_filter">Hozzáadás a szűrőhöz</string>
-  <string name="add_to_list">Hozzáadás a listához</string>
+  <string name="action_add_member">Tag hozzáadása</string>
+  <string name="action_add_tab">Fül hozzáadása</string>
+  <string name="action_add_to_filter">Hozzáadás a szűrőhöz</string>
+  <string name="action_add_to_list">Hozzáadás a listához</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> hozzáadva a listához: "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">és még <xliff:g id="count">%d</xliff:g> elem</string>
   <string name="api_url_format">API URL formátum</string>
@@ -252,7 +252,7 @@
   <string name="destroy_status">Tweet törlése</string>
   <string name="destroy_status_confirm_message">Ennek a tweetnek a törlése?</string>
   <string name="developed_by">Fejlesztő:</string>
-  <string name="direct_messages">Üzenetek</string>
+  <string name="title_direct_messages">Üzenetek</string>
   <string name="discard">Elvetés</string>
   <string name="display_sensitive_contents">Érzékeny információk megjelenítése</string>
   <string name="display_sensitive_contents_summary">Érzékeny információk megjelenítése a kezdőlapon figyelmeztetés nélkül</string>

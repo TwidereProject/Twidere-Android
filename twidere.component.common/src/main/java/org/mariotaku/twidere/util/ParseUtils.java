@@ -35,14 +35,6 @@ public final class ParseUtils implements TwidereConstants {
         return parseString(object, null);
     }
 
-    public static String parseString(final int object) {
-        return String.valueOf(object);
-    }
-
-    public static String parseString(final long object) {
-        return String.valueOf(object);
-    }
-
     public static String parseString(final Object object, final String def) {
         if (object == null) return def;
         return String.valueOf(object);

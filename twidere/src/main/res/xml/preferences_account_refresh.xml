@@ -10,19 +10,19 @@
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_home_timeline"
-            android:title="@string/title_home"/>
+            android:title="@string/refresh_type_home"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_mentions"
-            android:title="@string/title_mentions"/>
+            android:title="@string/refresh_type_interactions"/>
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="auto_refresh_direct_messages"
-            android:title="@string/direct_messages"/>
+            android:title="@string/refresh_type_messages"/>
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="auto_refresh_trends"
-            android:title="@string/trends"/>
+            android:title="@string/refresh_type_trends"/>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
     <!--<org.mariotaku.twidere.preference.TintedPreferenceCategory-->

@@ -14,7 +14,7 @@
         <item
             android:id="@id/messages"
             android:icon="@drawable/ic_action_message"
-            android:title="@string/direct_messages"/>
+            android:title="@string/title_direct_messages"/>
         <item
             android:id="@id/favorites"
             android:enabled="false"

@@ -157,10 +157,10 @@
   <string name="add_account">Lisää tili</string>
   <string name="add_host_mapping">Lisää host mapping</string>
   <string name="add_image">Lisää kuva</string>
-  <string name="add_member">Lisää jäsen</string>
-  <string name="add_tab">Lisää välilehti</string>
-  <string name="add_to_filter">Lisää suodattimeen</string>
-  <string name="add_to_list">Lisää listaan</string>
+  <string name="action_add_member">Lisää jäsen</string>
+  <string name="action_add_tab">Lisää välilehti</string>
+  <string name="action_add_to_filter">Lisää suodattimeen</string>
+  <string name="action_add_to_list">Lisää listaan</string>
   <string name="added_user_to_list">Lisättiin <xliff:g id="user">%1$s</xliff:g> listalle "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">ja <xliff:g id="count">%d</xliff:g> muuta</string>
   <string name="api_url_format">API-URL:n muoto</string>
@@ -245,7 +245,7 @@
   <string name="destroy_status">Poista twiitti</string>
   <string name="destroy_status_confirm_message">Poistetaanko tämä twiitti?</string>
   <string name="developed_by">Kehittäjä</string>
-  <string name="direct_messages">Viestit</string>
+  <string name="title_direct_messages">Viestit</string>
   <string name="direct_messages_next">DM seuraavaksi</string>
   <string name="discard">Hylkää</string>
   <string name="display_sensitive_contents">Näytä arkaluontoinen materiaali</string>

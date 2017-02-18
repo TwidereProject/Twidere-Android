@@ -15,6 +15,10 @@
     <!-- [verb] Add mute filter rule -->
     <string name="action_add_filter_rule">Add rule</string>
     <string name="action_add_filters_subscription">Add subscription</string>
+    <string name="action_add_member">Add member</string>
+    <string name="action_add_tab">Add tab</string>
+    <string name="action_add_to_filter">Add to filter</string>
+    <string name="action_add_to_list">Add to list</string>
     <string name="action_adding_member">adding member</string>
     <!-- [verb] Action for blocking user -->
     <string name="action_block">Block</string>
@@ -25,6 +29,7 @@
     <string name="action_center">Center</string>
     <string name="action_clear">Clear</string>
     <string name="action_compose">Compose</string>
+    <string name="action_conversation_info">Conversation info</string>
     <string name="action_create_conversation">Create conversation</string>
     <string name="action_creating_list">creating list</string>
     <!-- [verb] Action for deleting a file or a twitter object like tweet-->
@@ -187,11 +192,6 @@
     <string name="add_account">Add account</string>
     <string name="add_host_mapping">Add host mapping</string>
     <string name="add_image">Add image</string>
-    <string name="add_member">Add member</string>
-    <string name="add_or_remove_from_list">Add or remove from list</string>
-    <string name="add_tab">Add tab</string>
-    <string name="add_to_filter">Add to filter</string>
-    <string name="add_to_list">Add to list</string>
 
     <string name="added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
 
@@ -222,8 +222,6 @@
     <string name="belongs_to">Belongs to</string>
 
     <string name="block_user_confirm_message">Block <xliff:g example="Username" id="name">%s</xliff:g>? This user won\'t be able to follow you, mention you or send you direct messages.</string>
-
-    <string name="both">Both</string>
 
     <string name="bug_reports">Bug reports</string>
     <string name="bug_reports_summary">Powered by Fabric</string>
@@ -324,9 +322,6 @@
     <string name="destroy_status_confirm_message">Delete this tweet?</string>
 
     <string name="developed_by">Developed by</string>
-
-    <string name="direct_messages">Messages</string>
-    <string name="direct_messages_next">DM next</string>
 
     <string name="discard">Discard</string>
 
@@ -717,6 +712,9 @@
     <string name="notification_ringtone">Ringtone</string>
     <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g></string>
     <string name="notification_status_multiple">New Tweet by <xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
+    <string name="notification_type_home">Home</string>
+    <string name="notification_type_interactions">Interactions</string>
+    <string name="notification_type_messages">Messages</string>
 
     <string name="notifications">Notifications</string>
     <string name="notifications_type">Notifications type</string>
@@ -880,6 +878,10 @@
     <string name="refresh_interval">Refresh interval</string>
     <string name="refresh_on_start">Refresh on start</string>
     <string name="refresh_on_start_summary">Refresh timeline and mentions on start.</string>
+    <string name="refresh_type_home">Home</string>
+    <string name="refresh_type_interactions">Interactions</string>
+    <string name="refresh_type_messages">Messages</string>
+    <string name="refresh_type_trends">Trends</string>
 
     <string name="register">Register</string>
 
@@ -1082,11 +1084,15 @@
 
     <string name="title_about">About</string>
     <string name="title_accounts">Accounts</string>
+    <string name="title_add_or_remove_from_list">Add or remove from list</string>
     <string name="title_block_user">Block <xliff:g id="name">%s</xliff:g></string>
     <string name="title_blocked_users">Blocked users</string>
     <string name="title_browser_sign_in">Browser sign in</string>
     <string name="title_compose">Compose</string>
     <string name="title_dialog_sync_connect_to">Connect to…</string>
+    <string name="title_direct_messages">Messages</string>
+    <string name="title_direct_messages_conversation_info">Conversation info</string>
+    <string name="title_direct_messages_conversation_new">New conversation</string>
     <string name="title_drafts">Drafts</string>
     <string name="title_edit_details">Edit details</string>
     <string name="title_edit_profile">Edit profile</string>
@@ -1105,6 +1111,7 @@
     <string name="title_likes">Likes</string>
     <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
     <string name="title_mentions">Mentions</string>
+    <string name="title_message_conversation_info">Conversation info</string>
     <string name="title_nicknames">Nicknames</string>
     <string name="title_open_source_license">Open source license</string>
     <string name="title_premium_features_name">Twidere ∞</string>

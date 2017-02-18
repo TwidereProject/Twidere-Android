@@ -178,11 +178,11 @@
   <string name="add_account">新增帳號</string>
   <string name="add_host_mapping">新增主機名對應</string>
   <string name="add_image">新增圖片</string>
-  <string name="add_member">新增成員</string>
-  <string name="add_or_remove_from_list">從列表新增或移除</string>
-  <string name="add_tab">新增標籤頁</string>
-  <string name="add_to_filter">新增到過濾器</string>
-  <string name="add_to_list">新增到列表</string>
+  <string name="action_add_member">新增成員</string>
+  <string name="title_add_or_remove_from_list">從列表新增或移除</string>
+  <string name="action_add_tab">新增標籤頁</string>
+  <string name="action_add_to_filter">新增到過濾器</string>
+  <string name="action_add_to_list">新增到列表</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> 被新增到了 "<xliff:g id="list">%2$s</xliff:g>\" 列表</string>
   <string name="and_N_more">和其他<xliff:g id="count">%d</xliff:g>個</string>
   <string name="api_url_format">API URL 格式</string>
@@ -268,7 +268,7 @@
   <string name="destroy_status">刪除推文</string>
   <string name="destroy_status_confirm_message">刪除這條推文嗎？</string>
   <string name="developed_by">開發者</string>
-  <string name="direct_messages">私信</string>
+  <string name="title_direct_messages">私信</string>
   <string name="direct_messages_next">下一則私訊</string>
   <string name="discard">捨棄</string>
   <string name="display_sensitive_contents">顯示敏感內容</string>

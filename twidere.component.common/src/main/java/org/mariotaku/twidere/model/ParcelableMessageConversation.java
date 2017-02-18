@@ -228,6 +228,7 @@ public class ParcelableMessageConversation implements Parcelable {
     }
 
     @StringDef({ConversationType.ONE_TO_ONE, ConversationType.GROUP})
+    @Retention(RetentionPolicy.SOURCE)
     public @interface ConversationType {
         String ONE_TO_ONE = "one_to_one";
         String GROUP = "group";

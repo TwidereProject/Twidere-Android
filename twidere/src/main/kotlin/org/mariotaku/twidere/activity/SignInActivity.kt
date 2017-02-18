@@ -410,8 +410,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
 
     private fun updateDefaultFeatures() {
         val weakThis = WeakReference(this)
-        val weakDf = WeakReference(ProgressDialogFragment.show(supportFragmentManager,
-                FRAGMENT_TAG_LOADING_DEFAULT_FEATURES))
+        ProgressDialogFragment.show(supportFragmentManager, FRAGMENT_TAG_LOADING_DEFAULT_FEATURES)
         task {
             val activity = weakThis.get() ?: return@task
             if (activity.isFinishing) return@task
@@ -434,7 +433,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             if (activity.isFinishing) return@alwaysUi
             activity.executeAfterFragmentResumed { activity ->
                 val fm = activity.supportFragmentManager
-                val df = weakDf.get() ?: fm.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
+                val df = fm.findFragmentByTag(FRAGMENT_TAG_LOADING_DEFAULT_FEATURES) as? DialogFragment
                 df?.dismiss()
             }
         }

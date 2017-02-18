@@ -35,7 +35,7 @@ class AddUserFilterDialogFragment : AbsUserMuteBlockDialogFragment() {
     }
 
     override fun getTitle(user: ParcelableUser): String {
-        return getString(R.string.add_to_filter)
+        return getString(R.string.action_add_to_filter)
     }
 
     override fun performUserAction(user: ParcelableUser, filterEverywhere: Boolean) {

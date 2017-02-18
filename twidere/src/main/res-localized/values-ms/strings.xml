@@ -58,7 +58,7 @@
   <!-- [noun] Count label for retweets, e.g. (N retweets)-->
   <string name="default_account">Akaun lalai</string>
   <string name="default_ringtone">Nada dering lalai</string>
-  <string name="direct_messages">Mesej</string>
+  <string name="title_direct_messages">Mesej</string>
   <string name="edit_api">Olah API</string>
   <string name="edit_tab">Sunting tab</string>
   <string name="error_message">Ralat: <xliff:g id="message">%s</xliff:g></string>

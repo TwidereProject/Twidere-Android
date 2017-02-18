@@ -173,11 +173,11 @@
   <string name="add_account">Добавить учетную запись</string>
   <string name="add_host_mapping">Добавить перенаправление узлов</string>
   <string name="add_image">Добавить изображение</string>
-  <string name="add_member">Добавить пользователя</string>
-  <string name="add_or_remove_from_list">Добавить или удалить из списка</string>
-  <string name="add_tab">Добавить вкладку</string>
-  <string name="add_to_filter">Добавить в фильтр</string>
-  <string name="add_to_list">Добавить в список</string>
+  <string name="action_add_member">Добавить пользователя</string>
+  <string name="title_add_or_remove_from_list">Добавить или удалить из списка</string>
+  <string name="action_add_tab">Добавить вкладку</string>
+  <string name="action_add_to_filter">Добавить в фильтр</string>
+  <string name="action_add_to_list">Добавить в список</string>
   <string name="added_user_to_list">Добавлен <xliff:g id="user">%1$s</xliff:g> в список "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">и еще <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Формат API URL</string>
@@ -263,7 +263,7 @@
   <string name="destroy_status">Удалить твит</string>
   <string name="destroy_status_confirm_message">Удалить этот твит?</string>
   <string name="developed_by">Разработано</string>
-  <string name="direct_messages">Сообщения</string>
+  <string name="title_direct_messages">Сообщения</string>
   <string name="direct_messages_next">Следующая DM</string>
   <string name="discard">Отменить</string>
   <string name="display_sensitive_contents">Показывать особый контент</string>

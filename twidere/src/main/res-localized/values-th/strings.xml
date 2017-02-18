@@ -155,11 +155,11 @@
   <string name="add_account">เพิ่มบัญชี</string>
   <string name="add_host_mapping">เพิ่มการกำหนดโฮสต์</string>
   <string name="add_image">เพิ่มรูปภาพ</string>
-  <string name="add_member">เพิ่มสมาชิก</string>
-  <string name="add_or_remove_from_list">เพิ่มหรือลบออกจากรายการ</string>
-  <string name="add_tab">เพิ่มแถบ</string>
-  <string name="add_to_filter">เพิ่มไปยังตัวกรอง</string>
-  <string name="add_to_list">เพิ่มไปยังรายการ</string>
+  <string name="action_add_member">เพิ่มสมาชิก</string>
+  <string name="title_add_or_remove_from_list">เพิ่มหรือลบออกจากรายการ</string>
+  <string name="action_add_tab">เพิ่มแถบ</string>
+  <string name="action_add_to_filter">เพิ่มไปยังตัวกรอง</string>
+  <string name="action_add_to_list">เพิ่มไปยังรายการ</string>
   <string name="added_user_to_list">เพิ่ม <xliff:g id="user">%1$s</xliff:g> เข้าสู่ลิสต์ <xliff:g id="list">%2$s</xliff:g> แล้ว</string>
   <string name="and_N_more">และอีก <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">รูปแบบ URL ของ API</string>
@@ -245,7 +245,7 @@
   <string name="destroy_status">ลบทวีต</string>
   <string name="destroy_status_confirm_message">ลบทวีตนี้หรือไม่</string>
   <string name="developed_by">พัฒนาโดย</string>
-  <string name="direct_messages">ข้อความส่วนตัว</string>
+  <string name="title_direct_messages">ข้อความส่วนตัว</string>
   <string name="direct_messages_next">ข้อความถัดไป</string>
   <string name="discard">โยนทิ้ง</string>
   <string name="display_sensitive_contents">แสดงเนื้อหาที่อ่อนไหว</string>

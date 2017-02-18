@@ -339,9 +339,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_MUTES_USERS -> {
                 setTitle(R.string.action_twitter_muted_users)
             }
-            LINK_ID_MESSAGES_CONVERSATION -> {
-                setTitle(R.string.direct_messages)
-            }
             LINK_ID_USER_LIST -> {
                 setTitle(R.string.user_list)
             }
@@ -413,7 +410,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 title = getString(R.string.scheduled_statuses)
             }
             LINK_ID_MESSAGES -> {
-                title = getString(R.string.direct_messages)
+                title = getString(R.string.title_direct_messages)
+            }
+            LINK_ID_MESSAGES_CONVERSATION -> {
+                title = getString(R.string.title_direct_messages)
+            }
+            LINK_ID_MESSAGES_CONVERSATION_NEW -> {
+                title = getString(R.string.title_direct_messages_conversation_new)
+            }
+            LINK_ID_MESSAGES_CONVERSATION_INFO -> {
+                title = getString(R.string.title_direct_messages_conversation_info)
             }
             LINK_ID_INTERACTIONS -> {
                 title = getString(R.string.interactions)

@@ -152,10 +152,10 @@
   <string name="add_account">계정 추가</string>
   <string name="add_host_mapping">호스트 매핑 추가</string>
   <string name="add_image">이미지 추가</string>
-  <string name="add_member">멤버 추가</string>
-  <string name="add_tab">탭 추가</string>
-  <string name="add_to_filter">필터에 추가</string>
-  <string name="add_to_list">리스트에 추가</string>
+  <string name="action_add_member">멤버 추가</string>
+  <string name="action_add_tab">탭 추가</string>
+  <string name="action_add_to_filter">필터에 추가</string>
+  <string name="action_add_to_list">리스트에 추가</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g>님을 "<xliff:g id="list">%2$s</xliff:g>\" 리스트에 추가하였습니다.</string>
   <string name="and_N_more">등 <xliff:g id="count">%d</xliff:g>개 이상</string>
   <string name="api_url_format">API 주소 형식</string>
@@ -242,7 +242,7 @@
   <string name="destroy_status">트윗 지우기</string>
   <string name="destroy_status_confirm_message">이 트윗을 지울까요?</string>
   <string name="developed_by">개발자</string>
-  <string name="direct_messages">쪽지</string>
+  <string name="title_direct_messages">쪽지</string>
   <string name="discard">지우기</string>
   <string name="display_sensitive_contents">민감한 콘텐츠 표시</string>
   <string name="display_sensitive_contents_summary">타임라인에서 경고 없이 민감한 콘텐츠 표시</string>

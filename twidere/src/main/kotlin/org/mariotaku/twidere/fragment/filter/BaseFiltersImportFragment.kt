@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
-import android.support.v4.util.ArrayMap
 import android.support.v7.app.AlertDialog
-import android.support.v7.widget.RecyclerView
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import nl.komponents.kovenant.task
@@ -20,9 +19,7 @@ import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.SelectableUsersAdapter
-import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants
@@ -35,14 +32,8 @@ import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.DataStoreUtils
-import org.mariotaku.twidere.util.ThemeUtils
-import org.mariotaku.twidere.util.support.ViewSupport
-import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
-import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
-import kotlin.collections.set
 
 /**
  * Created by mariotaku on 2016/12/26.
@@ -196,15 +187,15 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     return@mapNotNull user
                 }
         selectedUsers.forEach { it.is_filtered = true }
-        val weakDf = WeakReference(ProgressDialogFragment.show(childFragmentManager, "import_progress"))
+        ProgressDialogFragment.show(childFragmentManager, "import_progress")
         val weakThis = WeakReference(this)
         task {
             val context = weakThis.get()?.context ?: return@task
             DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
         }.alwaysUi {
-            executeAfterFragmentResumed(true) {
-                val fm = weakThis.get()?.fragmentManager ?: return@executeAfterFragmentResumed
-                val df = weakDf.get() ?: fm.findFragmentByTag("import_progress") as? DialogFragment
+            executeAfterFragmentResumed(true) { fragment ->
+                val fm = fragment.fragmentManager
+                val df = fm.findFragmentByTag("import_progress") as? DialogFragment
                 df?.dismiss()
             }
             weakThis.get()?.adapter?.notifyDataSetChanged()
@@ -224,7 +215,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
-            builder.setTitle(R.string.add_to_filter)
+            builder.setTitle(R.string.action_add_to_filter)
             builder.setView(R.layout.dialog_block_mute_filter_user_confirm)
             builder.setPositiveButton(android.R.string.ok, this)
             builder.setNegativeButton(android.R.string.cancel, null)

@@ -14,7 +14,7 @@
             android:title="@string/search"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="message"
-            android:title="@string/direct_messages"/>
+            android:title="@string/title_direct_messages"/>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
     <org.mariotaku.twidere.preference.TintedPreferenceCategory

@@ -17,12 +17,12 @@
         android:id="@+id/mute_submenu"
         android:icon="@drawable/ic_action_speaker_muted"
         app:showAsAction="ifRoom"
-        android:title="@string/add_to_filter">
+        android:title="@string/action_add_to_filter">
         <menu>
             <item
                 android:id="@id/mute_user"
                 android:icon="@drawable/ic_action_speaker_muted"
-                android:title="@string/add_to_filter"/>
+                android:title="@string/action_add_to_filter"/>
             <item
                 android:icon="@drawable/ic_action_cancel"
                 android:title="@android:string/cancel"/>

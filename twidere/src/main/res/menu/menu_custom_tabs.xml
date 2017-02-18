@@ -6,7 +6,7 @@
     <item
         android:id="@+id/add_submenu"
         android:icon="@drawable/ic_action_add"
-        android:title="@string/add_tab"
+        android:title="@string/action_add_tab"
         app:showAsAction="always">
         <menu/>
     </item>

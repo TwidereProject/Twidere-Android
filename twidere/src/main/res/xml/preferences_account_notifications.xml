@@ -26,21 +26,21 @@
         android:title="@string/notifications_type">
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_home"
-            android:title="@string/title_home"
+            android:title="@string/notification_type_home"
             app:dependencyKey="home_timeline_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"
             app:notificationType="none"/>
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_mentions"
-            android:title="@string/interactions"
+            android:title="@string/notification_type_interactions"
             app:dependencyKey="mentions_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"
             app:notificationType="vibration|light"/>
         <org.mariotaku.twidere.preference.NotificationTypePreference
             android:key="notification_type_direct_messages"
-            android:title="@string/direct_messages"
+            android:title="@string/notification_type_messages"
             app:dependencyKey="direct_messages_notification"
             app:dependencyValueDefault="false"
             app:dependencyValues="@array/dependency_values_true"

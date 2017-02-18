@@ -50,9 +50,11 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     private val media: ParcelableMedia? get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
     private val accountKey: UserKey get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
-    private var playAudio: Boolean = false
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerError: Int = 0
+
+    private var playAudio: Boolean = false
+    private var pausedByUser: Boolean = false
     private var positionBackup: Int = -1
     private var videoProgressRunnable: VideoPlayProgressRunnable? = null
     private var mediaDownloadEvent: MediaDownloadEvent? = null
@@ -69,14 +71,17 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
         val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        // Play audio by default if ringer mode on
-        playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
 
         videoProgressRunnable = VideoPlayProgressRunnable(handler, videoViewProgress,
                 durationLabel, positionLabel, videoView)
 
         if (savedInstanceState != null) {
             positionBackup = savedInstanceState.getInt(EXTRA_POSITION)
+            pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
+            playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
+        } else {
+            // Play audio by default if ringer mode on
+            playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
         }
 
         videoViewOverlay.setOnClickListener(this)
@@ -100,10 +105,9 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 if (!fromUser) return
-                val mp = mediaPlayer ?: return
-                val duration = mp.duration
+                val duration = videoView.duration
                 if (duration <= 0) return
-                mp.seekTo(Math.round(duration * (progress.toFloat() / seekBar.max)))
+                videoView.seekTo(Math.round(duration * (progress.toFloat() / seekBar.max)))
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {
@@ -123,9 +127,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     override fun onPause() {
-        mediaPlayer?.let { mp ->
-            positionBackup = mp.currentPosition
-        }
+        positionBackup = videoView.currentPosition
+        videoView.pause()
         super.onPause()
     }
 
@@ -147,6 +150,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(EXTRA_POSITION, positionBackup)
+        outState.putBoolean(EXTRA_PAUSED_BY_USER, pausedByUser)
+        outState.putBoolean(EXTRA_PLAY_AUDIO, playAudio)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -211,13 +216,15 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         if (userVisibleHint) {
             mediaPlayer = mp
             mediaPlayerError = 0
-            mp.setScreenOnWhilePlaying(true)
             updateVolume()
             mp.isLooping = isLoopEnabled
             if (mp.duration > 0 && positionBackup > 0) {
                 mp.seekTo(positionBackup)
             }
-            mp.start()
+            if (!pausedByUser) {
+                mp.start()
+                pausedByUser = false
+            }
             videoViewProgress.visibility = View.VISIBLE
             videoViewProgress.post(videoProgressRunnable)
             updatePlayerState()
@@ -226,7 +233,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     private fun updateVolume() {
-
         volumeButton.setImageResource(if (playAudio) R.drawable.ic_action_speaker_max else R.drawable.ic_action_speaker_muted)
         val mp = mediaPlayer ?: return
         try {
@@ -259,11 +265,12 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
                 updateVolume()
             }
             R.id.playPauseButton -> {
-                val mp = mediaPlayer ?: return
-                if (mp.isPlaying) {
-                    mp.pause()
+                if (videoView.isPlaying) {
+                    videoView.pause()
+                    pausedByUser = true
                 } else {
-                    mp.start()
+                    videoView.start()
+                    pausedByUser = false
                 }
                 updatePlayerState()
             }
@@ -344,37 +351,24 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     private fun updatePlayerState() {
-        val mp = mediaPlayer
-        if (mp != null) {
-            val playing = mp.isPlaying
-            playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
-            playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
-        } else {
-            playPauseButton.contentDescription = getString(R.string.play)
-            playPauseButton.setImageResource(R.drawable.ic_action_play_arrow)
-        }
+        val playing = videoView.isPlaying
+        playPauseButton.contentDescription = getString(if (playing) R.string.pause else R.string.play)
+        playPauseButton.setImageResource(if (playing) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow)
     }
 
     private fun pauseVideo(): Boolean {
-        val mp = mediaPlayer ?: return false
-        var result = false
-        if (mp.isPlaying) {
-            mp.pause()
-            result = true
-        }
+        videoView.pause()
         updatePlayerState()
-        return result
+        return true
     }
 
     private fun resumeVideo(): Boolean {
-        val mp = mediaPlayer ?: return false
-        var result = false
-        if (!mp.isPlaying) {
-            mp.start()
-            result = true
+        if (!pausedByUser) {
+            videoView.start()
+            pausedByUser = false
         }
         updatePlayerState()
-        return result
+        return true
     }
 
     private class VideoPlayProgressRunnable internal constructor(
@@ -432,6 +426,8 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         const val EXTRA_LOOP = "loop"
         const val EXTRA_DISABLE_CONTROL = "disable_control"
         const val EXTRA_DEFAULT_MUTE = "default_mute"
+        private const val EXTRA_PAUSED_BY_USER = "paused_by_user"
+        private const val EXTRA_PLAY_AUDIO = "play_audio"
         private val SUPPORTED_VIDEO_TYPES: Array<String>
         private val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
 

@@ -159,10 +159,10 @@
   <string name="add_account">Adicionar uma conta</string>
   <string name="add_host_mapping">Adicionar mapeamento de hosts</string>
   <string name="add_image">Adicionar imagem</string>
-  <string name="add_member">Adicionar membro</string>
-  <string name="add_tab">Adicionar aba</string>
-  <string name="add_to_filter">Adicionar filtro</string>
-  <string name="add_to_list">Adicionar à lista</string>
+  <string name="action_add_member">Adicionar membro</string>
+  <string name="action_add_tab">Adicionar aba</string>
+  <string name="action_add_to_filter">Adicionar filtro</string>
+  <string name="action_add_to_list">Adicionar à lista</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> foi adicionado à lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">e <xliff:g id="count">%d</xliff:g> mais</string>
   <string name="api_url_format">Formato da URL da API</string>
@@ -248,7 +248,7 @@
   <string name="destroy_status">Excluir tweet</string>
   <string name="destroy_status_confirm_message">Excluir este tweet?</string>
   <string name="developed_by">Desenvolvido por</string>
-  <string name="direct_messages">Mensagens</string>
+  <string name="title_direct_messages">Mensagens</string>
   <string name="discard">Descartar</string>
   <string name="display_sensitive_contents">Exibir conteúdos sensíveis</string>
   <string name="display_sensitive_contents_summary">Exibir conteúdo sensível sem avisar</string>

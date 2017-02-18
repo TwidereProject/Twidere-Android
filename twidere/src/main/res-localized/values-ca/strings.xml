@@ -152,10 +152,10 @@
   <string name="add_account">Afegeix un compte</string>
   <string name="add_host_mapping">Afegeix una associació de servidor</string>
   <string name="add_image">Afegeix una imatge</string>
-  <string name="add_member">Afegeix un membre</string>
-  <string name="add_tab">Afegeix una pestanya</string>
-  <string name="add_to_filter">Afegeix al filtre</string>
-  <string name="add_to_list">Afegeix a la llista</string>
+  <string name="action_add_member">Afegeix un membre</string>
+  <string name="action_add_tab">Afegeix una pestanya</string>
+  <string name="action_add_to_filter">Afegeix al filtre</string>
+  <string name="action_add_to_list">Afegeix a la llista</string>
   <string name="added_user_to_list">S\'ha afegit l\'usuari <xliff:g id="user">%1$s</xliff:g> a la llista «<xliff:g id="list">%2$s</xliff:g>».</string>
   <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> més</string>
   <string name="api_url_format">Format de la URL de l\'API</string>
@@ -241,7 +241,7 @@
   <string name="destroy_status">Esborra la piulada</string>
   <string name="destroy_status_confirm_message">Voleu esborrar aquesta piulada?</string>
   <string name="developed_by">Desenvolupat per</string>
-  <string name="direct_messages">Missatges</string>
+  <string name="title_direct_messages">Missatges</string>
   <string name="direct_messages_next">Següent missatge directe</string>
   <string name="discard">Descarta</string>
   <string name="display_sensitive_contents">Mostra continguts sensibles</string>

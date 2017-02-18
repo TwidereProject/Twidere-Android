@@ -34,7 +34,7 @@ val ParcelableMessageConversation.timestamp: Long
 fun ParcelableMessageConversation.getConversationName(context: Context,
         manager: UserColorNameManager, nameFirst: Boolean): Pair<String, String?> {
     if (conversation_type == ConversationType.ONE_TO_ONE) {
-        val user = this.user ?: return Pair(context.getString(R.string.direct_messages), null)
+        val user = this.user ?: return Pair(context.getString(R.string.title_direct_messages), null)
         return Pair(user.name, "@${user.screen_name}")
     }
     if (conversation_name != null) {

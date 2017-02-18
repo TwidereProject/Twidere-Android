@@ -54,9 +54,9 @@ class TrendsLocationSelectorActivity : BaseActivity() {
 
         if (savedInstanceState != null) return
         val weakThis = WeakReference(this)
-        val weakPd = WeakReference(ProgressDialogFragment.show(supportFragmentManager, PROGRESS_FRAGMENT_TAG).apply {
+        ProgressDialogFragment.show(supportFragmentManager, PROGRESS_FRAGMENT_TAG).apply {
             isCancelable = false
-        })
+        }
         task {
             val activity = weakThis.get() ?: throw InterruptedException()
             val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
@@ -76,7 +76,8 @@ class TrendsLocationSelectorActivity : BaseActivity() {
         }.alwaysUi {
             val activity = weakThis.get() ?: return@alwaysUi
             activity.executeAfterFragmentResumed { activity ->
-                val df = weakPd.get() ?: activity.supportFragmentManager.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
+                val fm = activity.supportFragmentManager
+                val df = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
                 df?.dismiss()
             }
         }

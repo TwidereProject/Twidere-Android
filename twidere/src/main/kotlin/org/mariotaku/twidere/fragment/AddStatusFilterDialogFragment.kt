@@ -67,7 +67,7 @@ class AddStatusFilterDialogFragment : BaseDialogFragment() {
                 }
             }
         }
-        builder.setTitle(R.string.add_to_filter)
+        builder.setTitle(R.string.action_add_to_filter)
         builder.setMultiChoiceItems(entries, null, null)
         builder.setPositiveButton(android.R.string.ok) { dialog, which ->
             val alertDialog = dialog as AlertDialog

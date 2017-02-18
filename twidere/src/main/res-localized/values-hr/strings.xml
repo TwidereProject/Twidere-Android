@@ -123,10 +123,10 @@
   <string name="add_account">Dodaj račun</string>
   <string name="add_host_mapping">Dodaj mapiranje domaćina</string>
   <string name="add_image">Dodaj sliku</string>
-  <string name="add_member">Dodaj člana</string>
-  <string name="add_tab">Dodaj tab</string>
-  <string name="add_to_filter">Dodaj u filter</string>
-  <string name="add_to_list">Dodaj na listu</string>
+  <string name="action_add_member">Dodaj člana</string>
+  <string name="action_add_tab">Dodaj tab</string>
+  <string name="action_add_to_filter">Dodaj u filter</string>
+  <string name="action_add_to_list">Dodaj na listu</string>
   <string name="added_user_to_list">Dodano <xliff:g id="user">%1$s</xliff:g> na listu "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> više</string>
   <string name="api_url_format">API URL Format</string>
@@ -196,7 +196,7 @@
   <string name="destroy_status">Obriši tweet</string>
   <string name="destroy_status_confirm_message">Obrisati ovaj tweet?</string>
   <string name="developed_by">Razvio</string>
-  <string name="direct_messages">Poruke</string>
+  <string name="title_direct_messages">Poruke</string>
   <string name="discard">Odbaci</string>
   <string name="display_sensitive_contents">Prikaži osvjetljive sadržaje</string>
   <string name="display_sensitive_contents_summary">Prikaži osjetljive sadržaje bez obavijesti u timelineu</string>

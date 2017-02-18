@@ -77,8 +77,8 @@
   <string name="action_view_map">Kort</string>
   <string name="add_account">Tilføj konto</string>
   <string name="add_image">Tilføj billede</string>
-  <string name="add_member">Tilføj medlem</string>
-  <string name="add_tab">Tilføj fane</string>
+  <string name="action_add_member">Tilføj medlem</string>
+  <string name="action_add_tab">Tilføj fane</string>
   <!-- App name, normally you don't need to translate this. -->
   <string name="auth_type_basic">Basik</string>
   <string name="auth_type_oauth">OAuth</string>
@@ -98,7 +98,7 @@
   <string name="count_label_retweets">Retweeter</string>
   <string name="default_api_settings">Standard API indstillinger</string>
   <string name="default_api_settings_summary">Disse indstillinger gælder kun for brugere der er logget ind fornyeligt</string>
-  <string name="direct_messages">Beskeder</string>
+  <string name="title_direct_messages">Beskeder</string>
   <string name="discard">Kasser</string>
   <string name="edit_api">Redigere API</string>
   <string name="edit_tab">Rediger fane</string>

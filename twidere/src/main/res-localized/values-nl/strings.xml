@@ -153,11 +153,11 @@
   <string name="add_account">Account toevoegen</string>
   <string name="add_host_mapping">Voeg host toewijzing toe</string>
   <string name="add_image">Afbeelding toevoegen</string>
-  <string name="add_member">Voeg lid toe</string>
-  <string name="add_or_remove_from_list">Toevoegen of verwijderen uit lijst</string>
-  <string name="add_tab">Voeg een tabblad toe</string>
-  <string name="add_to_filter">Voeg toe aan filter</string>
-  <string name="add_to_list">Toevoegen aan lijst</string>
+  <string name="action_add_member">Voeg lid toe</string>
+  <string name="title_add_or_remove_from_list">Toevoegen of verwijderen uit lijst</string>
+  <string name="action_add_tab">Voeg een tabblad toe</string>
+  <string name="action_add_to_filter">Voeg toe aan filter</string>
+  <string name="action_add_to_list">Toevoegen aan lijst</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> toegevoegd aan lijst \'\'<xliff:g id="list">%2$s</xliff:g>\'\'.</string>
   <string name="and_N_more">en <xliff:g id="count">%d</xliff:g> meer</string>
   <string name="api_url_format">API URL-formaat</string>
@@ -241,7 +241,7 @@
   <string name="destroy_status">Tweet verwijderen</string>
   <string name="destroy_status_confirm_message">Deze tweet verwijderen?</string>
   <string name="developed_by">Ontworpen door</string>
-  <string name="direct_messages">Berichten</string>
+  <string name="title_direct_messages">Berichten</string>
   <string name="direct_messages_next">Volgende DM</string>
   <string name="discard">Verwerp</string>
   <string name="display_sensitive_contents">Toon gevoelige inhoud</string>

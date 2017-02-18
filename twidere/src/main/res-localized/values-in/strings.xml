@@ -171,11 +171,11 @@
   <string name="add_account">Tambah akun</string>
   <string name="add_host_mapping">Tambah pemetaan host</string>
   <string name="add_image">Tambahkan gambar</string>
-  <string name="add_member">Tambah Anggota</string>
-  <string name="add_or_remove_from_list">Tambah atau hapus dari daftar</string>
-  <string name="add_tab">Tambah tab</string>
-  <string name="add_to_filter">Tambahkan ke penyaringan</string>
-  <string name="add_to_list">Masukkan ke daftar</string>
+  <string name="action_add_member">Tambah Anggota</string>
+  <string name="title_add_or_remove_from_list">Tambah atau hapus dari daftar</string>
+  <string name="action_add_tab">Tambah tab</string>
+  <string name="action_add_to_filter">Tambahkan ke penyaringan</string>
+  <string name="action_add_to_list">Masukkan ke daftar</string>
   <string name="added_user_to_list">Menambahkan <xliff:g id="user">%1$s</xliff:g> ke daftar "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">dan <xliff:g id="count">%d</xliff:g> lebih lagi</string>
   <string name="api_url_format">Format URL API</string>
@@ -261,7 +261,7 @@
   <string name="destroy_status">Hapus tweet</string>
   <string name="destroy_status_confirm_message">Hapus tweet ini?</string>
   <string name="developed_by">Dikelola oleh</string>
-  <string name="direct_messages">Pesan</string>
+  <string name="title_direct_messages">Pesan</string>
   <string name="direct_messages_next">DM selanjutnya</string>
   <string name="discard">Buang</string>
   <string name="display_sensitive_contents">Tampilkan konten yang sensitif.</string>

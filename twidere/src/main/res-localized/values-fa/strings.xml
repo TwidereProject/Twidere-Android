@@ -159,11 +159,11 @@
   <string name="add_account">افزودن حساب</string>
   <string name="add_host_mapping">افزودن مسیردهی میزبان</string>
   <string name="add_image">افزودن تصویر</string>
-  <string name="add_member">افزودن عضو</string>
-  <string name="add_or_remove_from_list">افزودن یا برداشتن از فهرست</string>
-  <string name="add_tab">افزودن برگه</string>
-  <string name="add_to_filter">افزودن به پالایه</string>
-  <string name="add_to_list">افزودن به فهرست</string>
+  <string name="action_add_member">افزودن عضو</string>
+  <string name="title_add_or_remove_from_list">افزودن یا برداشتن از فهرست</string>
+  <string name="action_add_tab">افزودن برگه</string>
+  <string name="action_add_to_filter">افزودن به پالایه</string>
+  <string name="action_add_to_list">افزودن به فهرست</string>
   <string name="added_user_to_list">‫<xliff:g id="user">%1$s</xliff:g> را به فهرست «<xliff:g id="list">%2$s</xliff:g>» افزود.</string>
   <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> بیش‌تر</string>
   <string name="api_url_format">قالب نشانی API</string>
@@ -249,7 +249,7 @@
   <string name="destroy_status">حذف توییت</string>
   <string name="destroy_status_confirm_message">این توییت حذف شود؟</string>
   <string name="developed_by">توسعه‌یافته توسّط</string>
-  <string name="direct_messages">پیام‌ها</string>
+  <string name="title_direct_messages">پیام‌ها</string>
   <string name="direct_messages_next">پیام مستقیم بعدی</string>
   <string name="discard">دور انداختن</string>
   <string name="display_sensitive_contents">نمایش محتوای حسّاسیت‌برانگیز</string>

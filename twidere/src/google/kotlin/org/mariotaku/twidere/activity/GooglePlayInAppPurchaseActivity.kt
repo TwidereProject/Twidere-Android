@@ -94,7 +94,7 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
     private fun getProductDetailsAndFinish() {
         executeAfterFragmentResumed {
             val weakThis = WeakReference(it as GooglePlayInAppPurchaseActivity)
-            val dfRef = WeakReference(ProgressDialogFragment.show(it.supportFragmentManager, TAG_PURCHASE_PROCESS))
+            ProgressDialogFragment.show(it.supportFragmentManager, TAG_PURCHASE_PROCESS)
             task {
                 val activity = weakThis.get() ?: throw PurchaseException(BILLING_RESPONSE_RESULT_USER_CANCELED)
                 val productId = activity.productId
@@ -114,9 +114,9 @@ class GooglePlayInAppPurchaseActivity : AbsExtraFeaturePurchaseActivity(),
                     weakThis.get()?.handleError(BILLING_RESPONSE_RESULT_ERROR)
                 }
             }.alwaysUi {
-                weakThis.get()?.executeAfterFragmentResumed {
-                    val fm = weakThis.get()?.supportFragmentManager
-                    val df = dfRef.get() ?: (fm?.findFragmentByTag(TAG_PURCHASE_PROCESS) as? DialogFragment)
+                weakThis.get()?.executeAfterFragmentResumed { fragment ->
+                    val fm = fragment.supportFragmentManager
+                    val df = fm?.findFragmentByTag(TAG_PURCHASE_PROCESS) as? DialogFragment
                     df?.dismiss()
                 }
             }

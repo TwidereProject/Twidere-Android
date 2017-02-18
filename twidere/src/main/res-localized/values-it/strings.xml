@@ -152,11 +152,11 @@
   <string name="add_account">Aggiungi account</string>
   <string name="add_host_mapping">Aggiungi mappatura host</string>
   <string name="add_image">Aggiungi immagine</string>
-  <string name="add_member">Aggiungi iscritto</string>
-  <string name="add_or_remove_from_list">Aggiungi o rimuovi dalla lista</string>
-  <string name="add_tab">Aggiungi tab</string>
-  <string name="add_to_filter">Aggiungi a filtro</string>
-  <string name="add_to_list">Aggiungi alla lista</string>
+  <string name="action_add_member">Aggiungi iscritto</string>
+  <string name="title_add_or_remove_from_list">Aggiungi o rimuovi dalla lista</string>
+  <string name="action_add_tab">Aggiungi tab</string>
+  <string name="action_add_to_filter">Aggiungi a filtro</string>
+  <string name="action_add_to_list">Aggiungi alla lista</string>
   <string name="added_user_to_list">Aggiunto <xliff:g id="user">%1$s</xliff:g> alla lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">e altri <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Formato API URL</string>
@@ -241,7 +241,7 @@
   <string name="destroy_status">Elimina tweet</string>
   <string name="destroy_status_confirm_message">Eliminare questo tweet?</string>
   <string name="developed_by">Sviluppato da</string>
-  <string name="direct_messages">Messaggi</string>
+  <string name="title_direct_messages">Messaggi</string>
   <string name="direct_messages_next">DM successivo</string>
   <string name="discard">Scarta</string>
   <string name="display_sensitive_contents">Mostra contenuti sensibili</string>

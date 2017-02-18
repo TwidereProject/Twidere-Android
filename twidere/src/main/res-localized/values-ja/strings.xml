@@ -178,11 +178,11 @@
   <string name="add_account">アカウントを追加</string>
   <string name="add_host_mapping">ホストマッピングを追加</string>
   <string name="add_image">画像を追加</string>
-  <string name="add_member">ユーザーを追加</string>
-  <string name="add_or_remove_from_list">リストから追加または削除する</string>
-  <string name="add_tab">タブを追加</string>
-  <string name="add_to_filter">フィルタに追加</string>
-  <string name="add_to_list">リストに追加</string>
+  <string name="action_add_member">ユーザーを追加</string>
+  <string name="title_add_or_remove_from_list">リストから追加または削除する</string>
+  <string name="action_add_tab">タブを追加</string>
+  <string name="action_add_to_filter">フィルタに追加</string>
+  <string name="action_add_to_list">リストに追加</string>
   <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g>さんをリスト"<xliff:g id="list">%2$s</xliff:g>\"に追加しました。</string>
   <string name="and_N_more">他<xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">API URL の形式</string>
@@ -269,7 +269,7 @@
   <string name="destroy_status">ツイートの削除</string>
   <string name="destroy_status_confirm_message">このツイートを削除しますか？</string>
   <string name="developed_by">開発者</string>
-  <string name="direct_messages">メッセージ</string>
+  <string name="title_direct_messages">メッセージ</string>
   <string name="direct_messages_next">DM next</string>
   <string name="discard">破棄</string>
   <string name="display_sensitive_contents">不適切な内容を表示</string>

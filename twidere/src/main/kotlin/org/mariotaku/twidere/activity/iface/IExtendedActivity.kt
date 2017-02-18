@@ -19,6 +19,8 @@
 
 package org.mariotaku.twidere.activity.iface
 
+import android.os.Handler
+import android.os.Looper
 import android.support.v4.app.FragmentActivity
 import java.util.*
 
@@ -33,6 +35,7 @@ interface IExtendedActivity<out A : FragmentActivity> {
 
         private var fragmentResumed: Boolean = false
         private val actionQueue = LinkedList<(A) -> Unit>()
+        private val handler = Handler(Looper.getMainLooper())
 
         fun dispatchOnPause() {
             fragmentResumed = false
@@ -49,7 +52,10 @@ interface IExtendedActivity<out A : FragmentActivity> {
             var action: ((A) -> Unit)?
             do {
                 action = actionQueue.poll()
-                action?.invoke(activity)
+                // Sometimes actions called too fast, so we wait for next loop
+                handler.post {
+                    action?.invoke(activity)
+                }
             } while (action != null)
         }
 

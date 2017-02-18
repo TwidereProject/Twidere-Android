@@ -139,10 +139,10 @@
   <string name="add_account">Lägg till konto</string>
   <string name="add_host_mapping">Lägg till värdmappning</string>
   <string name="add_image">Lägg till bild</string>
-  <string name="add_member">Lägg till medlem</string>
-  <string name="add_tab">Lägg till flik</string>
-  <string name="add_to_filter">Lägg till i filter</string>
-  <string name="add_to_list">Lägg till i listan</string>
+  <string name="action_add_member">Lägg till medlem</string>
+  <string name="action_add_tab">Lägg till flik</string>
+  <string name="action_add_to_filter">Lägg till i filter</string>
+  <string name="action_add_to_list">Lägg till i listan</string>
   <string name="and_N_more">och <xliff:g id="count">%d</xliff:g> mer</string>
   <string name="api_url_format">API URL-format</string>
   <string name="app_description">Din egna Twitter-app</string>
@@ -182,7 +182,7 @@
   <string name="destroy_saved_search_confirm_message">Ta bort den sparade sökningen \"<xliff:g id="name">%s</xliff:g>\"? Du kan spara den här sökningen på nytt senare.</string>
   <string name="destroy_status">Ta bort tweet</string>
   <string name="destroy_status_confirm_message">Ta bort det här tweetet?</string>
-  <string name="direct_messages">Meddelande</string>
+  <string name="title_direct_messages">Meddelande</string>
   <string name="discard">Avbryt</string>
   <string name="display_sensitive_contents">Visa känsligt innehåll</string>
   <string name="display_sensitive_contents_summary">Visa känsligt innehåll utan notis i tidslinjen</string>

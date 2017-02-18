@@ -155,11 +155,11 @@
   <string name="add_account">Додати профіль</string>
   <string name="add_host_mapping">Додати перенаправлення вузлів</string>
   <string name="add_image">Додати зображення</string>
-  <string name="add_member">Додати користувача</string>
-  <string name="add_or_remove_from_list">Додати або вилучити зі списку</string>
-  <string name="add_tab">Додати вкладку</string>
-  <string name="add_to_filter">Додати до фільтру</string>
-  <string name="add_to_list">Додати до списку</string>
+  <string name="action_add_member">Додати користувача</string>
+  <string name="title_add_or_remove_from_list">Додати або вилучити зі списку</string>
+  <string name="action_add_tab">Додати вкладку</string>
+  <string name="action_add_to_filter">Додати до фільтру</string>
+  <string name="action_add_to_list">Додати до списку</string>
   <string name="added_user_to_list">Додано <xliff:g id="user">%1$s</xliff:g> до списку "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">і ще <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Формат API URL</string>
@@ -245,7 +245,7 @@
   <string name="destroy_status">Видалення твіту</string>
   <string name="destroy_status_confirm_message">Видалити цей твіт?</string>
   <string name="developed_by">Розробник</string>
-  <string name="direct_messages">Повідомлення</string>
+  <string name="title_direct_messages">Повідомлення</string>
   <string name="direct_messages_next">наступне ПП</string>
   <string name="discard">Скасувати</string>
   <string name="display_sensitive_contents">Завжди показувати делікатний вміст</string>

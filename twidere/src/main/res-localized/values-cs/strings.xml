@@ -73,11 +73,11 @@
   <string name="action_view_map">Mapa</string>
   <string name="add_account">Přidat účet</string>
   <string name="add_image">Přidat obrázek</string>
-  <string name="add_member">Přidat člena</string>
-  <string name="add_or_remove_from_list">Přidat nebo odstranit ze seznamu</string>
-  <string name="add_tab">Přidat záložku</string>
-  <string name="add_to_filter">Přidat do filtru</string>
-  <string name="add_to_list">Přidat do seznamu</string>
+  <string name="action_add_member">Přidat člena</string>
+  <string name="title_add_or_remove_from_list">Přidat nebo odstranit ze seznamu</string>
+  <string name="action_add_tab">Přidat záložku</string>
+  <string name="action_add_to_filter">Přidat do filtru</string>
+  <string name="action_add_to_list">Přidat do seznamu</string>
   <string name="api_url_format">Formát adresy URL rozhraní API</string>
   <string name="app_description">Vaše vlastní Twitter aplikace</string>
   <!-- App name, normally you don't need to translate this. -->
@@ -122,7 +122,7 @@
   <string name="destroy_status">Odstranit tweet</string>
   <string name="destroy_status_confirm_message">Odstranit tento tweet?</string>
   <string name="developed_by">Vytvořeno</string>
-  <string name="direct_messages">Zprávy</string>
+  <string name="title_direct_messages">Zprávy</string>
   <string name="discard">Zahodit</string>
   <string name="dns_server">DNS Server</string>
   <string name="dns_server_summary">Nastavit DNS Server pro síťové požadavky.</string>

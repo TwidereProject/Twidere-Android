@@ -177,10 +177,10 @@
   <string name="add_account">Amestar cuenta</string>
   <string name="add_host_mapping">Amiestu de mapéu d\'agospiu</string>
   <string name="add_image">Amestar imaxe</string>
-  <string name="add_member">Amestar miembros</string>
-  <string name="add_tab">Amestar llingüeta</string>
-  <string name="add_to_filter">Amestar a Peñeres</string>
-  <string name="add_to_list">Amestar al llistáu</string>
+  <string name="action_add_member">Amestar miembros</string>
+  <string name="action_add_tab">Amestar llingüeta</string>
+  <string name="action_add_to_filter">Amestar a Peñeres</string>
+  <string name="action_add_to_list">Amestar al llistáu</string>
   <string name="added_user_to_list">Amestóse a <xliff:g id="user">%1$s</xliff:g> al llistáu «<xliff:g id="list">%2$s</xliff:g>».</string>
   <string name="and_N_more">y <xliff:g id="count">%d</xliff:g> más</string>
   <string name="api_url_format">Formatu d\'URL d\'API</string>
@@ -266,7 +266,7 @@
   <string name="destroy_status">Desaniciar tuit</string>
   <string name="destroy_status_confirm_message">¿Desaniciar esti tuit?</string>
   <string name="developed_by">Desendolcáu por</string>
-  <string name="direct_messages">Mensaxes</string>
+  <string name="title_direct_messages">Mensaxes</string>
   <string name="discard">Descartar</string>
   <string name="display_sensitive_contents">Amosar conteníu sensible</string>
   <string name="display_sensitive_contents_summary">Amuesa na llinia temporal conteníos sensibles ensin avisar</string>

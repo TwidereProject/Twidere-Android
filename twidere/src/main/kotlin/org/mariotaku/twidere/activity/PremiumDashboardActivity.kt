@@ -108,7 +108,7 @@ class PremiumDashboardActivity : BaseActivity() {
                 if (!BuildConfig.DEBUG) {
                     return true
                 }
-                val dfRef = WeakReference(ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress"))
+                ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress")
                 val weakThis = WeakReference(this)
                 val recreate = AtomicBoolean()
                 task {
@@ -124,7 +124,7 @@ class PremiumDashboardActivity : BaseActivity() {
                 }.alwaysUi {
                     weakThis.get()?.executeAfterFragmentResumed {
                         val fm = weakThis.get()?.supportFragmentManager
-                        val df = dfRef.get() ?: (fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment)
+                        val df = fm?.findFragmentByTag("consume_purchase_progress") as? DialogFragment
                         df?.dismiss()
                         if (recreate.get()) {
                             weakThis.get()?.recreate()

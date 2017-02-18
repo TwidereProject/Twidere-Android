@@ -107,9 +107,9 @@
   <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> ו-<xliff:g id="other">%2$s</xliff:g> הצטרפו לטוויטר.</string>
   <string name="add_account">הוסף חשבון</string>
   <string name="add_image">הוסף תמונה</string>
-  <string name="add_member">הוסף משתמש</string>
-  <string name="add_tab">הוסף כרטיסייה</string>
-  <string name="add_to_list">הוסף לרשימה</string>
+  <string name="action_add_member">הוסף משתמש</string>
+  <string name="action_add_tab">הוסף כרטיסייה</string>
+  <string name="action_add_to_list">הוסף לרשימה</string>
   <string name="added_user_to_list">המשתמש <xliff:g id="user">%1$s</xliff:g> נוסף לרשימה "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">ועוד <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">פורמט URL של הAPI</string>
@@ -154,7 +154,7 @@
   <string name="destroy_status">מחק ציוץ</string>
   <string name="destroy_status_confirm_message">האם למחוק את הציוץ הזה?</string>
   <string name="developed_by">פותח ע\"י</string>
-  <string name="direct_messages">הודעות</string>
+  <string name="title_direct_messages">הודעות</string>
   <string name="display_sensitive_contents">הצג תוכן רגיש</string>
   <string name="display_sensitive_contents_summary">הצג תוכן רגיש ללא הודעה מוקדמת בציר הזמן</string>
   <string name="dns_server">שרת DNS</string>
