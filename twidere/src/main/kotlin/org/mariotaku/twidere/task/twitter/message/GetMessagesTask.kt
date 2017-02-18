@@ -510,7 +510,7 @@ class GetMessagesTask(
                     this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
                 }
             }
-            participants.sortBy(ParcelableUser::screen_name)
+            this.participants.sortBy(ParcelableUser::screen_name)
         }
 
         private fun Map<String, List<ParcelableMessage>>.findLastReadTimestamp(conversationId: String, lastReadEventId: String?): Long {
