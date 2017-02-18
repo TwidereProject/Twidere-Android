@@ -1,6 +1,48 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string-array name="entries_auto_refresh_content">
+        <item>Home</item>
+        <item>Interactions</item>
+        <item>Direct messages</item>
+        <item>Trends</item>
+    </string-array>
+    <string-array name="entries_compose_now_action">
+        <item>Compose</item>
+        <item>Take photo</item>
+        <item>Add media</item>
+    </string-array>
+    <string-array name="entries_home_refresh_content">
+        <item>Interactions</item>
+        <item>Direct messages</item>
+        <item>Trends</item>
+        <item>Saved searches</item>
+    </string-array>
+    <string-array name="entries_image_sources">
+        <item>Camera</item>
+        <item>Gallery</item>
+        <item>Clipboard</item>
+    </string-array>
+    <string-array name="entries_media_preload">
+        <item>Wi-Fi</item>
+    </string-array>
+    <string-array name="entries_media_preview_style">
+        <item>Crop</item>
+        <item>Scale</item>
+        <item>Real size</item>
+    </string-array>
+    <string-array name="entries_notification_content">
+        <item>Home</item>
+        <item>Interactions</item>
+        <item>Direct messages</item>
+    </string-array>
+    <string-array name="entries_profile_image_style">
+        <item>Round</item>
+        <item>Square</item>
+    </string-array>
+    <string-array name="entries_proxy_type">
+        <item>HTTP</item>
+        <!--<item>SOCKS</item>-->
+    </string-array>
     <string-array name="entries_refresh_interval">
         <item>3 minutes</item>
         <item>5 minutes</item>
@@ -11,22 +53,15 @@
         <item>2 hours</item>
         <item>4 hours</item>
     </string-array>
-    <string-array name="entries_auto_refresh_content">
-        <item>Home</item>
-        <item>Interactions</item>
-        <item>Direct messages</item>
-        <item>Trends</item>
+    <string-array name="entries_tab_column_width">
+        <item>Narrow</item>
+        <item>Normal</item>
+        <item>Wide</item>
     </string-array>
-    <string-array name="entries_notification_content">
-        <item>Home</item>
-        <item>Interactions</item>
-        <item>Direct messages</item>
-    </string-array>
-    <string-array name="entries_home_refresh_content">
-        <item>Interactions</item>
-        <item>Direct messages</item>
-        <item>Trends</item>
-        <item>Saved searches</item>
+    <string-array name="entries_tab_display_option">
+        <item>Icon</item>
+        <item>Label</item>
+        <item>Icon and label</item>
     </string-array>
     <string-array name="entries_theme">
         <item>Light</item>
@@ -38,41 +73,4 @@
         <item>Pure white/black</item>
         <item>Transparent</item>
     </string-array>
-    <string-array name="entries_tab_display_option">
-        <item>Icon</item>
-        <item>Label</item>
-        <item>Icon and label</item>
-    </string-array>
-    <string-array name="entries_compose_now_action">
-        <item>Compose</item>
-        <item>Take photo</item>
-        <item>Add media</item>
-    </string-array>
-    <string-array name="entries_media_preview_style">
-        <item>Crop</item>
-        <item>Scale</item>
-        <item>Real size</item>
-    </string-array>
-    <string-array name="entries_image_sources">
-        <item>Camera</item>
-        <item>Gallery</item>
-        <item>Clipboard</item>
-    </string-array>
-    <string-array name="entries_profile_image_style">
-        <item>Round</item>
-        <item>Square</item>
-    </string-array>
-    <string-array name="entries_proxy_type">
-        <item>HTTP</item>
-        <!--<item>SOCKS</item>-->
-    </string-array>
-    <string-array name="entries_media_preload">
-        <item>Wi-Fi</item>
-    </string-array>
-    <string-array name="entries_tab_column_width">
-        <item>Narrow</item>
-        <item>Normal</item>
-        <item>Wide</item>
-    </string-array>
-
 </resources>
