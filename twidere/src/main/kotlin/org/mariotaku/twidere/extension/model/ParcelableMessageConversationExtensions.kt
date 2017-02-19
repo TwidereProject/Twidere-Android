@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import android.widget.ImageView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
@@ -9,6 +10,7 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationTyp
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
+import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 
 fun ParcelableMessageConversation.applyFrom(message: ParcelableMessage, details: AccountDetails) {
@@ -47,6 +49,19 @@ fun ParcelableMessageConversation.getSummaryText(context: Context, manager: User
         nameFirst: Boolean): CharSequence? {
     return getSummaryText(context, manager, nameFirst, message_type, message_extras, sender_key,
             text_unescaped, this)
+}
+
+fun ParcelableMessageConversation.displayAvatarTo(mediaLoader: MediaLoaderWrapper, view: ImageView) {
+    if (conversation_type == ConversationType.ONE_TO_ONE) {
+        val user = this.user
+        if (user != null) {
+            mediaLoader.displayProfileImage(view, user)
+        } else {
+            mediaLoader.displayProfileImage(view, null)
+        }
+    } else {
+        mediaLoader.displayGroupConversationAvatar(view, conversation_avatar)
+    }
 }
 
 val ParcelableMessageConversation.user: ParcelableUser?

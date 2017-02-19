@@ -41,18 +41,13 @@
             app:bannerAspectRatio="@fraction/aspect_ratio_profile_banner"
             tools:src="@drawable/nyan_stars_background"/>
 
-        <FrameLayout
-            android:id="@+id/profileBirthdayBanner"
+        <ViewStub
+            android:id="@+id/profileBirthdayStub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/profileBanner"
             android:layout_alignTop="@+id/profileBanner"
-            android:visibility="gone">
-
-            <org.mariotaku.twidere.view.BirthdayView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
+            android:layout="@layout/layout_user_profile_birthday_stub"/>
     </RelativeLayout>
 
     <org.mariotaku.twidere.view.ExtendedRelativeLayout

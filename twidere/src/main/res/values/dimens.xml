@@ -110,4 +110,5 @@
     <dimen name="toolbar_elevation">8dp</dimen>
 
     <dimen name="unread_indicator_size">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

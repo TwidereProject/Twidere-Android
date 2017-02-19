@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -38,7 +39,10 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.view.*
+import kotlinx.android.synthetic.main.layout_toolbar_message_conversation_title.*
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.chameleon.Chameleon
+import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.set
@@ -56,10 +60,8 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.extension.model.getConversationName
-import org.mariotaku.twidere.extension.model.getSummaryText
-import org.mariotaku.twidere.extension.model.isOfficial
-import org.mariotaku.twidere.extension.model.readOnly
+import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
@@ -161,6 +163,15 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         addMedia.setOnClickListener {
             openMediaPicker()
         }
+
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            activity.supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+        val theme = Chameleon.getOverrideTheme(context, activity)
+        conversationName.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+
+        conversationAvatar.style = preferences[profileImageStyleKey]
 
         // No refresh for this fragment
         refreshEnabled = false
@@ -429,12 +440,16 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun updateConversationStatus() {
         val conversation = adapter.conversation ?: return
-        activity.title = conversation.getConversationName(context, userColorNameManager,
+        val name = conversation.getConversationName(context, userColorNameManager,
                 preferences[nameFirstKey]).first
+        activity.title = name
         val readOnly = conversation.readOnly
         addMedia.isEnabled = !readOnly
         sendMessage.isEnabled = !readOnly
         editText.isEnabled = !readOnly
+
+        conversationName.text = name
+        conversation.displayAvatarTo(mediaLoader, conversationAvatar)
     }
 
     internal class AddMediaTask(

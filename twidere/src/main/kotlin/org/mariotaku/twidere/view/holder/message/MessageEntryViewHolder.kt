@@ -24,10 +24,10 @@ import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_entry.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
+import org.mariotaku.twidere.extension.model.displayAvatarTo
 import org.mariotaku.twidere.extension.model.getConversationName
 import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.model.timestamp
-import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 
@@ -71,18 +71,11 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
             stateIndicator.visibility = View.GONE
         }
         if (conversation.conversation_type == ConversationType.ONE_TO_ONE) {
-            val user = conversation.user
-            if (user != null) {
-                adapter.mediaLoader.displayProfileImage(profileImage, user)
-            } else {
-                adapter.mediaLoader.displayProfileImage(profileImage, null)
-                // TODO display default profile image
-            }
             typeIndicator.visibility = View.GONE
         } else {
-            adapter.mediaLoader.displayGroupConversationAvatar(profileImage, conversation.conversation_avatar)
             typeIndicator.visibility = View.VISIBLE
         }
+        conversation.displayAvatarTo(adapter.mediaLoader, profileImage)
         if (conversation.unread_count > 0) {
             unreadCount.visibility = View.VISIBLE
             unreadCount.text = conversation.unread_count.toString()

@@ -32,7 +32,9 @@
             android:layout_width="@dimen/element_size_normal"
             android:layout_height="@dimen/element_size_normal"
             android:layout_gravity="center"
-            android:padding="@dimen/element_spacing_xsmall"/>
+            android:padding="@dimen/element_spacing_xsmall"
+            tools:indeterminateDrawable="@android:color/transparent"
+            tools:progressDrawable="@android:color/transparent"/>
     </FrameLayout>
 
     <LinearLayout

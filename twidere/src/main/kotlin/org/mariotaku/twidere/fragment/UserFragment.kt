@@ -88,6 +88,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -148,7 +149,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
 
-    private var actionBarBackground: ActionBarDrawable? = null
+
+    private lateinit var profileBirthdayBanner: View
+    private lateinit var actionBarBackground: ActionBarDrawable
     private lateinit var pagerAdapter: SupportTabsAdapter
 
     // Data fields
@@ -527,9 +530,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val currentMonth = cal.get(Calendar.MONTH)
         val currentDay = cal.get(Calendar.DAY_OF_MONTH)
         cal.timeInMillis = user.created_at
-        if (cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay && !hideBirthdayView) {
-            profileBirthdayBanner.visibility = View.VISIBLE
-        } else {
+
+        val twitterversary = cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay
+        if ((BuildConfig.DEBUG || twitterversary) && !hideBirthdayView) {
+            if (profileBirthdayStub != null) {
+                profileBirthdayBanner = profileBirthdayStub.inflate()
+                profileBirthdayBanner.setOnClickListener(this)
+            } else {
+                profileBirthdayBanner.visibility = View.VISIBLE
+            }
+        } else if (profileBirthdayStub == null) {
             profileBirthdayBanner.visibility = View.GONE
         }
         updateTitleAlpha()
@@ -700,7 +710,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followersContainer.setOnClickListener(this)
         friendsContainer.setOnClickListener(this)
         errorIcon.setOnClickListener(this)
-        profileBirthdayBanner.setOnClickListener(this)
         profileBanner.setOnSizeChangedListener(this)
         profileBannerSpace.setOnTouchListener(this)
 
@@ -712,6 +721,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val actionBarElevation = ThemeUtils.getSupportActionBarElevation(activity)
         ViewCompat.setElevation(toolbarTabs, actionBarElevation)
 
+        actionBarBackground = ActionBarDrawable(ResourcesCompat.getDrawable(activity.resources,
+                R.drawable.shadow_user_banner_action_bar, null)!!)
         setupBaseActionBar()
         setupViewStyle()
         setupUserPages()
@@ -1254,7 +1265,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        if (profileBirthdayBanner.visibility == View.VISIBLE) {
+        if (profileBirthdayStub == null && profileBirthdayBanner.visibility == View.VISIBLE) {
             return profileBirthdayBanner.dispatchTouchEvent(event)
         }
         return profileBanner.dispatchTouchEvent(event)
@@ -1342,8 +1353,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private fun setupBaseActionBar() {
         val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
-        val shadow = ResourcesCompat.getDrawable(activity.resources, R.drawable.shadow_user_banner_action_bar, null)!!
-        actionBarBackground = ActionBarDrawable(shadow)
         if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
             //            mActionBarBackground.setAlpha(ThemeUtils.getActionBarAlpha(linkHandler.getCurrentThemeBackgroundAlpha()));
             profileBanner.alpha = activity.currentThemeBackgroundAlpha / 255f
@@ -1397,7 +1406,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val factor = (if (spaceHeight == 0) 0f else offset / spaceHeight.toFloat()).coerceIn(0f, 1f)
         profileBannerContainer.translationY = (-offset).toFloat()
         profileBanner.translationY = (offset / 2).toFloat()
-        profileBirthdayBanner.translationY = (offset / 2).toFloat()
+        if (profileBirthdayStub == null) {
+            profileBirthdayBanner.translationY = (offset / 2).toFloat()
+        }
 
         val activity = activity as BaseActivity
 
@@ -1487,8 +1498,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {
 
-        private val shadowDrawable: Drawable
-        private val colorDrawable: ColorDrawable
+        private val shadowDrawable = getDrawable(0)
+        private val colorDrawable = getDrawable(1) as ColorDrawable
         private var alphaValue: Int = 0
 
         var factor: Float = 0f
@@ -1511,8 +1522,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
 
         init {
-            shadowDrawable = getDrawable(0)
-            colorDrawable = getDrawable(1) as ColorDrawable
             alpha = 0xFF
             updateValue()
         }

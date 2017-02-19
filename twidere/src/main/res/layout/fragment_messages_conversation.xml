@@ -166,8 +166,12 @@
         android:layout_alignParentTop="true"
         android:background="?colorToolbar"
         android:elevation="@dimen/toolbar_elevation"
+        app:contentInsetStart="0dp"
         app:popupTheme="?actionBarPopupTheme"
-        tools:elevation="0dp"/>
+        tools:elevation="0dp">
+
+        <include layout="@layout/layout_toolbar_message_conversation_title"/>
+    </android.support.v7.widget.Toolbar>
 
     <View
         android:id="@+id/windowOverlay"

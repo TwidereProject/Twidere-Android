@@ -16,13 +16,11 @@
   ~
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
-<manifest
-    package="org.mariotaku.twidere"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:installLocation="internalOnly">
+-->
+<manifest package="org.mariotaku.twidere"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:installLocation="internalOnly">
 
     <uses-sdk tools:overrideLibrary="android.support.customtabs,net.ypresto.androidtranscoder"/>
 
@@ -75,7 +73,6 @@
     <!-- Used for account sync -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-
     <uses-permission android:name="org.mariotaku.twidere.permission.SHORTEN_STATUS"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.UPLOAD_MEDIA"/>
     <uses-permission android:name="org.mariotaku.twidere.permission.SYNC_TIMELINE"/>
@@ -165,10 +162,10 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/compose_shortcuts"/>
-
         </activity>
         <activity
             android:name=".activity.MainHondaJOJOActivity"
@@ -185,10 +182,10 @@
                 <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/compose_shortcuts"/>
-
         </activity>
         <activity
             android:name=".activity.HomeActivity"
@@ -527,7 +524,6 @@
             android:label="@string/title_premium_features_name"
             android:parentActivityName=".activity.HomeActivity"
             android:theme="@style/Theme.Twidere">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.HomeActivity"/>
@@ -557,6 +553,7 @@
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/account_authenticator"/>
@@ -569,11 +566,11 @@
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/sync_adapter"/>
         </service>
-
         <service
             android:name=".nyan.NyanWallpaperService"
             android:enabled="false"
