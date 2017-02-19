@@ -620,7 +620,7 @@
   <string name="saved_searches_already_saved_hint">Misschien had je deze zoekopdracht al bewaard</string>
   <string name="scheduled_statuses">Ingeplande tweets</string>
   <string name="scrapyard">Schroothoop</string>
-  <string name="search">Zoeken</string>
+  <string name="action_search">Zoeken</string>
   <string name="search_hint">Zoek tweets of gebruikers</string>
   <string name="search_statuses">Zoek Tweets</string>
   <string name="search_type_statuses">Tweets</string>

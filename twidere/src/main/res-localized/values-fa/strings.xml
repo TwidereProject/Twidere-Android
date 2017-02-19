@@ -633,7 +633,7 @@
   <string name="saved_searches_already_saved_hint">احتمالاً از پیش این جست‌‌وجو را ذخیره کرده‌اید</string>
   <string name="scheduled_statuses">تویتت‌های زمان‌بندی شده</string>
   <string name="scrapyard">ظاهر</string>
-  <string name="search">جست‌وجو</string>
+  <string name="action_search">جست‌وجو</string>
   <string name="search_hint">جست‌وجوی توییت‌ها یا کاربران</string>
   <string name="search_statuses">جست‌وجوی توییت‌ها</string>
   <string name="search_type_statuses">توییت‌ها</string>

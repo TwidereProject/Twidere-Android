@@ -718,7 +718,7 @@
   <string name="saved_searches_already_saved_hint">您可能已经保存过这个搜索了</string>
   <string name="scheduled_statuses">被排期推文</string>
   <string name="scrapyard">垃圾场</string>
-  <string name="search">搜索</string>
+  <string name="action_search">搜索</string>
   <string name="search_hint">搜索推文或用户</string>
   <string name="search_hint_users">搜索用户</string>
   <string name="search_statuses">搜索推文</string>

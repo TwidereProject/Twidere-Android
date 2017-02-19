@@ -716,7 +716,7 @@
   <string name="saved_searches_already_saved_hint">おそらく、既にこの検索は保存されています</string>
   <string name="scheduled_statuses">定期ツイート</string>
   <string name="scrapyard">ゴミ置き場</string>
-  <string name="search">検索</string>
+  <string name="action_search">検索</string>
   <string name="search_hint">ツイートかユーザーの検索</string>
   <string name="search_hint_users">ユーザー検索</string>
   <string name="search_statuses">ツイートの検索</string>

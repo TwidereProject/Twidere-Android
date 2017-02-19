@@ -621,7 +621,7 @@
   <string name="saved_searches_already_saved_hint">Belki de zaten bu arama kaydedilmiştir</string>
   <string name="scheduled_statuses">Zamanlanmış tweetler</string>
   <string name="scrapyard">Scrapyard</string>
-  <string name="search">Ara</string>
+  <string name="action_search">Ara</string>
   <string name="search_hint">Tweet yada kullanıcı ara</string>
   <string name="search_statuses">Tweet/ler ara</string>
   <string name="search_type_statuses">Tweetler</string>

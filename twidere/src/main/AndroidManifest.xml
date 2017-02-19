@@ -251,7 +251,7 @@
         </activity>
         <activity
             android:name=".activity.QuickSearchBarActivity"
-            android:label="@string/search"
+            android:label="@string/title_search"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Twidere.QuickSearchBar"
             android:windowSoftInputMode="adjustResize">

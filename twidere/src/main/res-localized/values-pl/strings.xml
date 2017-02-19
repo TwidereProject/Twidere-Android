@@ -436,7 +436,7 @@
   <string name="same_oauth_signing_url">Użyj tego samego adresu do logowania przez OAuth</string>
   <string name="save_to_gallery">Zapisz w galerii</string>
   <string name="saved_searches">Zapisane wyniki wyszukiwania</string>
-  <string name="search">Szukaj</string>
+  <string name="action_search">Szukaj</string>
   <string name="search_hint">Szukaj tweetów lub użytkowników</string>
   <string name="search_statuses">Szukaj tweetów</string>
   <string name="search_type_statuses">Tweety</string>

@@ -25,16 +25,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.Loader
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
+import kotlinx.android.synthetic.main.fragment_messages_conversation.view.*
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.empty
@@ -59,6 +62,7 @@ import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.readOnly
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
+import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
@@ -81,7 +85,8 @@ import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.util.concurrent.atomic.AtomicReference
 
 class MessagesConversationFragment : AbsContentListRecyclerViewFragment<MessagesConversationAdapter>(),
-        LoaderManager.LoaderCallbacks<List<ParcelableMessage>?>, EditAltTextDialogFragment.EditAltTextCallback {
+        IToolBarSupportFragment, LoaderManager.LoaderCallbacks<List<ParcelableMessage>?>,
+        EditAltTextDialogFragment.EditAltTextCallback {
     private lateinit var mediaPreviewAdapter: MediaPreviewAdapter
 
     private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
@@ -102,6 +107,14 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     // Layout manager reversed, so treat end as start
     override val reachingStart: Boolean
         get() = super.reachingEnd
+
+    override val controlBarHeight: Int
+        get() = toolbar.height
+
+    override var controlBarOffset: Float = 1f
+
+    override val toolbar: Toolbar
+        get() = conversationContainer.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -188,6 +201,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_messages_conversation, container, false)
+    }
+
+    override fun setupWindow(activity: FragmentActivity): Boolean {
+        return false
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessage>?> {
@@ -415,9 +432,9 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         activity.title = conversation.getConversationName(context, userColorNameManager,
                 preferences[nameFirstKey]).first
         val readOnly = conversation.readOnly
-        addMedia.isEnabled = readOnly
-        sendMessage.isEnabled = readOnly
-        editText.isEnabled = readOnly
+        addMedia.isEnabled = !readOnly
+        sendMessage.isEnabled = !readOnly
+        editText.isEnabled = !readOnly
     }
 
     internal class AddMediaTask(

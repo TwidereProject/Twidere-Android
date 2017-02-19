@@ -601,7 +601,7 @@
   <string name="saved_searches_already_saved_hint">Forse hai già salvato questa ricerca</string>
   <string name="scheduled_statuses">Tweet schedulati</string>
   <string name="scrapyard">Discarica</string>
-  <string name="search">Cerca</string>
+  <string name="action_search">Cerca</string>
   <string name="search_hint">Cerca tweets o utenti</string>
   <string name="search_statuses">Ricerca tweet</string>
   <string name="search_type_statuses">Tweet</string>

@@ -622,7 +622,7 @@
   <string name="saved_searches_already_saved_hint">Мабуть ви вже зберегли цей пошуковий запит</string>
   <string name="scheduled_statuses">Заплановані твіти</string>
   <string name="scrapyard">Смітник</string>
-  <string name="search">Пошук</string>
+  <string name="action_search">Пошук</string>
   <string name="search_hint">Пошук твітів або користувачів</string>
   <string name="search_statuses">Пошук твітів</string>
   <string name="search_type_statuses">Твіти</string>

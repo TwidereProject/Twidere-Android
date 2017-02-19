@@ -109,7 +109,7 @@
   <string name="retweeted_by_name">Έγινε ρετουϊτ από <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Έγινε ρετουϊτ από <xliff:g id="user_name">%1$s</xliff:g> και <xliff:g id="retweet_count">%2$d</xliff:g> άλλους</string>
   <string name="same_oauth_signing_url">Χρησιμοποίησε ίδιο URL για εισαγωγή OAuth</string>
-  <string name="search">Αναζήτηση</string>
+  <string name="action_search">Αναζήτηση</string>
   <string name="search_type_statuses">Tweets</string>
   <string name="search_type_users">Χρήστες</string>
   <string name="select_account">Επιλογή λογαριασμού</string>

@@ -688,7 +688,7 @@
   <string name="saved_searches_already_saved_hint">Mungkin anda sudah menyimpan pencarian ini</string>
   <string name="scheduled_statuses">Tweet terjadwal</string>
   <string name="scrapyard">Scrapyard</string>
-  <string name="search">Pencarian</string>
+  <string name="action_search">Pencarian</string>
   <string name="search_hint">Pencarian tweets atau pengguna</string>
   <string name="search_statuses">Cari Kicauan</string>
   <string name="search_type_statuses">Kicauan</string>

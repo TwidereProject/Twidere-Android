@@ -611,7 +611,7 @@
   <string name="saved_searches_already_saved_hint">Se cadra xa tes gardada esta busca</string>
   <string name="scheduled_statuses">Chíos programados</string>
   <string name="scrapyard">Scrapyard</string>
-  <string name="search">Buscar</string>
+  <string name="action_search">Buscar</string>
   <string name="search_hint">Buscar chíos ou usuarios</string>
   <string name="search_statuses">Buscar chíos</string>
   <string name="search_type_statuses">Chíos</string>

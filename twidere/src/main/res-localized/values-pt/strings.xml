@@ -624,7 +624,7 @@
   <string name="saved_searches_already_saved_hint">Talvez você já tenha salvo esta busca</string>
   <string name="scheduled_statuses">Tweets agendados</string>
   <string name="scrapyard">Interface</string>
-  <string name="search">Procurar</string>
+  <string name="action_search">Procurar</string>
   <string name="search_hint">Procurar por tweets ou usuários</string>
   <string name="search_statuses">Buscar Tweets</string>
   <string name="search_type_statuses">Tweets</string>

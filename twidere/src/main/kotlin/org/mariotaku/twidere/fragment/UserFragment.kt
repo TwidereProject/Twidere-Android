@@ -1044,14 +1044,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return true
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val host = host
-        if (host is AppCompatActivity) {
-            host.setSupportActionBar(toolbar)
-        }
-    }
-
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         if (handleFragmentKeyboardShortcutSingle(handler, keyCode, event, metaState)) return true
         val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)

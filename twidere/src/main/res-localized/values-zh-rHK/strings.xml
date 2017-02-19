@@ -714,7 +714,7 @@
   <string name="saved_searches_already_saved_hint">可能您已經保存了這個搜尋</string>
   <string name="scheduled_statuses">被排期推文</string>
   <string name="scrapyard">垃圾場</string>
-  <string name="search">搜尋</string>
+  <string name="action_search">搜尋</string>
   <string name="search_hint">搜尋推文或使用者</string>
   <string name="search_hint_users">搜尋使用者</string>
   <string name="search_statuses">搜尋推文</string>

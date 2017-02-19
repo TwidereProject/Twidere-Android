@@ -295,7 +295,7 @@
   <string name="same_oauth_signing_url">Použít stejnou adresu URL pro přihlášení OAuth</string>
   <string name="save_to_gallery">Uložit do galerie</string>
   <string name="saved_searches">Uložená hledání</string>
-  <string name="search">Hledat</string>
+  <string name="action_search">Hledat</string>
   <string name="search_hint">Hledat Tweety nebo uživatele</string>
   <string name="search_statuses">Hledat Tweety</string>
   <string name="search_type_statuses">Tweety</string>

@@ -41,7 +41,7 @@ public class KeyboardShortcutsHandler implements KeyboardShortcutConstants {
 
     static {
         sActionLabelMap.put(ACTION_COMPOSE, R.string.action_compose);
-        sActionLabelMap.put(ACTION_SEARCH, R.string.search);
+        sActionLabelMap.put(ACTION_SEARCH, R.string.action_search);
         sActionLabelMap.put(ACTION_MESSAGE, R.string.new_direct_message);
         sActionLabelMap.put(ACTION_HOME_ACCOUNTS_DASHBOARD, R.string.open_accounts_dashboard);
         sActionLabelMap.put(ACTION_STATUS_REPLY, R.string.action_reply);

@@ -714,7 +714,7 @@
   <string name="saved_searches_already_saved_hint">Vous avez certainement déjà enregistré cette recherche</string>
   <string name="scheduled_statuses">Tweets programmés</string>
   <string name="scrapyard">Divers</string>
-  <string name="search">Rechercher</string>
+  <string name="action_search">Rechercher</string>
   <string name="search_hint">Rechercher des tweets ou des utilisateurs</string>
   <string name="search_hint_users">Rechercher des utilisateurs</string>
   <string name="search_statuses">Rechercher des tweets</string>

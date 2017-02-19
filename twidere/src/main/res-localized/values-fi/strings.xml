@@ -602,7 +602,7 @@
   <string name="saved_searches_already_saved_hint">Kenties olet jo tallentanut tämän haun</string>
   <string name="scheduled_statuses">Ajoitetut twiitit</string>
   <string name="scrapyard">Romuvarasto</string>
-  <string name="search">Hae</string>
+  <string name="action_search">Hae</string>
   <string name="search_hint">Hae twiittejä tai käyttäjiä</string>
   <string name="search_statuses">Hae twiittejä</string>
   <string name="search_type_statuses">Twiitit</string>

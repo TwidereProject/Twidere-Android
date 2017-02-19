@@ -29,7 +29,6 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper
-import org.mariotaku.twidere.util.TwidereQueryBuilder
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.Utils
 import java.util.regex.Pattern

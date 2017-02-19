@@ -367,7 +367,7 @@
   <string name="safety">Säkerhet</string>
   <string name="same_oauth_signing_url">Använd samma URL för OAuth-signering</string>
   <string name="saved_searches">Sparade sökningar</string>
-  <string name="search">Sök</string>
+  <string name="action_search">Sök</string>
   <string name="search_hint">Sök efter tweets eller användare</string>
   <string name="search_statuses">Sök tweets</string>
   <string name="search_type_statuses">Tweets</string>

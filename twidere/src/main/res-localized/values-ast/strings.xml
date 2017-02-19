@@ -683,7 +683,7 @@
   <string name="saved_searches_already_saved_hint">Quiciabes yá guardesti esta gueta</string>
   <string name="scheduled_statuses">Tuits planificaos</string>
   <string name="scrapyard">Bagul d\'axustes</string>
-  <string name="search">Guetar</string>
+  <string name="action_search">Guetar</string>
   <string name="search_hint">Gueta tuits o usuarios</string>
   <string name="search_hint_users">Guetar usuarios</string>
   <string name="search_statuses">Guetar tuits</string>

@@ -714,7 +714,7 @@
   <string name="saved_searches_already_saved_hint">Vielleicht hast du diese Suche bereits gespeichert</string>
   <string name="scheduled_statuses">Geplante Tweets</string>
   <string name="scrapyard">Schrottplatz</string>
-  <string name="search">Suchen</string>
+  <string name="action_search">Suchen</string>
   <string name="search_hint">Tweets oder Benutzer suchen</string>
   <string name="search_hint_users">Benutzer suchen</string>
   <string name="search_statuses">Tweets suchen</string>

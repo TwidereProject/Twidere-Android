@@ -501,7 +501,7 @@
   <string name="saved_searches">Spremljene pretrage</string>
   <string name="scheduled_statuses">Planirani tweetovi</string>
   <string name="scrapyard">Reciklažno dvorište</string>
-  <string name="search">Pretraži</string>
+  <string name="action_search">Pretraži</string>
   <string name="search_hint">Pretraži tweetove ili korisnike</string>
   <string name="search_statuses">Pretraži Tweetove</string>
   <string name="search_type_statuses">Tweetovi</string>

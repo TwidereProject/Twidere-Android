@@ -612,7 +612,7 @@
   <string name="saved_searches_already_saved_hint">Potser ja heu desat aquesta cerca</string>
   <string name="scheduled_statuses">Piulades programades</string>
   <string name="scrapyard">Caixa d\'eines</string>
-  <string name="search">Cerca</string>
+  <string name="action_search">Cerca</string>
   <string name="search_hint">Cerca piulades o usuaris</string>
   <string name="search_statuses">Cerca Piulades</string>
   <string name="search_type_statuses">Piulades</string>

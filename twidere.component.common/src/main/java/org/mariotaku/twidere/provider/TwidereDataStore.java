@@ -317,6 +317,7 @@ public interface TwidereDataStore {
             String TYPE_USER = "user";
             String TYPE_SEARCH_HISTORY = "search_history";
             String TYPE_SCREEN_NAME = "screen_name";
+            String TYPE_MESSAGE = "message";
         }
     }
 

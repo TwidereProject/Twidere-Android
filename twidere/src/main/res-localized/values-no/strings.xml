@@ -535,7 +535,7 @@
   <string name="saved_searches">Lagrede søk</string>
   <string name="scheduled_statuses">Planlagte tweets</string>
   <string name="scrapyard">Diverse</string>
-  <string name="search">Søk</string>
+  <string name="action_search">Søk</string>
   <string name="search_hint">Søk tweets eller brukere</string>
   <string name="search_statuses">Søk tweets</string>
   <string name="search_type_statuses">Tweets</string>

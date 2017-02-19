@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.view.ViewPager.OnPageChangeListener
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -41,7 +40,6 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     private lateinit var pagerAdapter: SupportTabsAdapter
     override val toolbar: Toolbar
         get() = toolbarContainer.toolbar
-    private var mControlBarHeight: Int = 0
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -103,15 +101,6 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         return inflater!!.inflate(R.layout.fragment_toolbar_tab_pages, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val host = host
-        if (host is AppCompatActivity) {
-            host.setSupportActionBar(toolbar)
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val o = pagerAdapter.instantiateItem(viewPager, viewPager.currentItem)
         if (o is Fragment) {
@@ -150,7 +139,6 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun onControlBarOffsetChanged(activity: IControlBarActivity, offset: Float) {
-        mControlBarHeight = activity.controlBarHeight
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -212,14 +200,14 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                           event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         if (isFragmentKeyboardShortcutHandled(handler, keyCode, event, metaState)) return true
         val action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
         return ACTION_NAVIGATION_PREVIOUS_TAB == action || ACTION_NAVIGATION_NEXT_TAB == action
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                              repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
@@ -227,7 +215,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
         get() = currentVisibleFragment
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                                     repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutRepeat(handler, keyCode,
@@ -237,7 +225,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     private fun handleFragmentKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                                     event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.handleKeyboardShortcutSingle(handler, keyCode,
@@ -247,7 +235,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
     }
 
     private fun isFragmentKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                                  event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         val fragment = keyboardShortcutRecipient
         if (fragment is KeyboardShortcutCallback) {
             return fragment.isKeyboardShortcutHandled(handler, keyCode,

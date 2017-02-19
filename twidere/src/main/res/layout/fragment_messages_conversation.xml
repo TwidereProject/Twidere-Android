@@ -32,7 +32,8 @@
         layout="@layout/fragment_content_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/inputPanel"/>
+        android:layout_above="@+id/inputPanel"
+        android:layout_below="@+id/toolbar"/>
 
     <View
         android:id="@+id/inputPanelShadowCompat"
@@ -157,4 +158,21 @@
         </org.mariotaku.messagebubbleview.library.MessageBubbleView>
 
     </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="?colorToolbar"
+        android:elevation="@dimen/toolbar_elevation"
+        app:popupTheme="?actionBarPopupTheme"
+        tools:elevation="0dp"/>
+
+    <View
+        android:id="@+id/windowOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:background="?android:windowContentOverlay"/>
 </RelativeLayout>

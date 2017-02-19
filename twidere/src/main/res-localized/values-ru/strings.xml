@@ -691,7 +691,7 @@
   <string name="saved_searches_already_saved_hint">Возможно, вы уже сохранили этот поиск</string>
   <string name="scheduled_statuses">Запланированные твиты</string>
   <string name="scrapyard">Прочие настройки вида</string>
-  <string name="search">Поиск</string>
+  <string name="action_search">Поиск</string>
   <string name="search_hint">Поиск твитов или пользователей</string>
   <string name="search_statuses">Найти твиты</string>
   <string name="search_type_statuses">Твиты</string>

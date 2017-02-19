@@ -705,7 +705,7 @@
   <string name="saved_searches_already_saved_hint">Quizá ya hayas guardado esta búsqueda</string>
   <string name="scheduled_statuses">Planificación de tweets</string>
   <string name="scrapyard">Más ajustes</string>
-  <string name="search">Búsqueda</string>
+  <string name="action_search">Búsqueda</string>
   <string name="search_hint">Búsqueda de tweets o usuarios</string>
   <string name="search_hint_users">Buscar usuarios</string>
   <string name="search_statuses">Buscar Tweets</string>

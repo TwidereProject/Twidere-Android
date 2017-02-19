@@ -90,6 +90,7 @@
     <!-- [verb] Save settings/files etc. -->
     <string name="action_save">Save</string>
     <string name="action_saving_search">saving search</string>
+    <string name="action_search">Search</string>
     <string name="action_select_all">Select all</string>
     <string name="action_select_none">Select none</string>
     <string name="action_select_user">Select user</string>
@@ -942,7 +943,6 @@
 
     <string name="scrapyard">Scrapyard</string>
 
-    <string name="search">Search</string>
     <string name="search_hint">Search tweets or users</string>
     <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
@@ -1115,6 +1115,7 @@
     <string name="title_nicknames">Nicknames</string>
     <string name="title_open_source_license">Open source license</string>
     <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_search">Search</string>
     <string name="title_select_users">Select users</string>
     <string name="title_set_nickname">Set nickname</string>
     <string name="title_status">Tweet</string>

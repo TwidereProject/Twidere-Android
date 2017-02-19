@@ -613,7 +613,7 @@
   <string name="saved_searches_already_saved_hint">Talán egyszer már mentetted ezt a keresést</string>
   <string name="scheduled_statuses">Időzített tweet-ek</string>
   <string name="scrapyard">Szemetes</string>
-  <string name="search">Keresés</string>
+  <string name="action_search">Keresés</string>
   <string name="search_hint">Keresés tweetek és felhasználók között</string>
   <string name="search_statuses">Tweetek keresése</string>
   <string name="search_type_statuses">Tweet</string>

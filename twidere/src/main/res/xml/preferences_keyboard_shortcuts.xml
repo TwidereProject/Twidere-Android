@@ -11,7 +11,7 @@
             android:title="@string/action_compose"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="search"
-            android:title="@string/search"/>
+            android:title="@string/action_search"/>
         <org.mariotaku.twidere.preference.KeyboardShortcutPreference
             android:action="message"
             android:title="@string/title_direct_messages"/>

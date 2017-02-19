@@ -618,7 +618,7 @@
   <string name="saved_searches_already_saved_hint">이 검색을 이미 저장한 것 같습니다.</string>
   <string name="scheduled_statuses">예약 트윗</string>
   <string name="scrapyard">폐기된 설정</string>
-  <string name="search">검색</string>
+  <string name="action_search">검색</string>
   <string name="search_hint">트윗이나 사용자 검색</string>
   <string name="search_statuses">트윗 검색</string>
   <string name="search_type_statuses">트윗</string>

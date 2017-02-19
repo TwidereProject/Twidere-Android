@@ -622,7 +622,7 @@
   <string name="saved_searches_already_saved_hint">คุณได้บันทึกผลการค้นหานี้ไปก่อนแล้ว</string>
   <string name="scheduled_statuses">ทวีตตั้งเวลาส่ง</string>
   <string name="scrapyard">กองขยะ</string>
-  <string name="search">ค้นหา</string>
+  <string name="action_search">ค้นหา</string>
   <string name="search_hint">ค้นหาทวีตหรือผู้ใช้</string>
   <string name="search_statuses">ค้นหาทวีต</string>
   <string name="search_type_statuses">ทวีต</string>
