@@ -167,6 +167,7 @@
         android:background="?colorToolbar"
         android:elevation="@dimen/toolbar_elevation"
         app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
         app:popupTheme="?actionBarPopupTheme"
         tools:elevation="0dp">
 

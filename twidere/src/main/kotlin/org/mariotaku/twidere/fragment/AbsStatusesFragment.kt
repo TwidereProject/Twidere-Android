@@ -39,7 +39,6 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
@@ -353,7 +352,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     override fun onGapClick(holder: GapViewHolder, position: Int) {
         val adapter = this.adapter
         val status = adapter.getStatus(position) ?: return
-        DebugLog.v(TwidereConstants.LOGTAG, "Load activity gap " + status)
+        DebugLog.v(msg = "Load activity gap $status")
         adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
         val accountIds = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)

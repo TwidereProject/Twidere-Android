@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util
 
 import android.util.Log
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
 
 /**
  * Created by mariotaku on 2017/1/24.
@@ -9,7 +10,7 @@ import org.mariotaku.twidere.BuildConfig
 object DebugLog {
 
     @JvmStatic
-    fun v(tag: String, msg: String, tr: Throwable? = null): Int {
+    fun v(tag: String = LOGTAG, msg: String, tr: Throwable? = null): Int {
         if (!BuildConfig.DEBUG) return 0
         if (tr != null) {
             return Log.v(tag, msg, tr)
@@ -19,7 +20,7 @@ object DebugLog {
     }
 
     @JvmStatic
-    fun d(tag: String, msg: String, tr: Throwable? = null): Int {
+    fun d(tag: String = LOGTAG, msg: String, tr: Throwable? = null): Int {
         if (!BuildConfig.DEBUG) return 0
         if (tr != null) {
             return Log.d(tag, msg, tr)
@@ -29,7 +30,7 @@ object DebugLog {
     }
 
     @JvmStatic
-    fun w(tag: String, msg: String? = null, tr: Throwable? = null): Int {
+    fun w(tag: String = LOGTAG, msg: String? = null, tr: Throwable? = null): Int {
         if (!BuildConfig.DEBUG) return 0
         if (msg != null && tr != null) {
             return Log.w(tag, msg, tr)

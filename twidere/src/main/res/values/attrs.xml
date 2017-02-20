@@ -103,6 +103,7 @@
         <attr name="sivElevation" format="dimension"/>
         <attr name="sivCornerRadius" format="dimension"/>
         <attr name="sivCornerRadiusRatio" format="fraction"/>
+        <attr name="sivDrawShadow" format="boolean"/>
         <attr name="sivShape"/>
     </declare-styleable>
     <declare-styleable name="HeaderDrawerLayout">
@@ -143,6 +144,14 @@
     </declare-styleable>
     <declare-styleable name="ProfileBannerImageView">
         <attr name="bannerAspectRatio" format="fraction"/>
+    </declare-styleable>
+    <declare-styleable name="ConversationInfoAvatarBehavior">
+        <attr name="behavior_avatarMarginBottom" format="dimension"/>
+        <attr name="behavior_avatarMarginStart" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="ConversationInfoTitleBehavior">
+        <attr name="behavior_titleMarginBottom" format="dimension"/>
+        <attr name="behavior_titleMarginStart" format="dimension"/>
     </declare-styleable>
     <attr name="notificationType">
         <flag name="none" value="0"/>

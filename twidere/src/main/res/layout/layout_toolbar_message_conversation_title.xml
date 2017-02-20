@@ -21,6 +21,7 @@
 <LinearLayout
     android:id="@+id/conversationTitleContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,6 +36,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/element_spacing_normal"
         android:layout_weight="0"
+        app:sivShape="circle"
         tools:src="@drawable/ic_profile_image_default_group"/>
 
     <LinearLayout
@@ -43,7 +45,8 @@
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="1"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <org.mariotaku.twidere.view.FixedTextView
             android:id="@+id/conversationName"
@@ -52,5 +55,13 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             tools:text="Conversation name"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/conversationSummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="?android:textColorSecondary"
+            tools:text="Conversation summary"/>
     </LinearLayout>
 </LinearLayout>

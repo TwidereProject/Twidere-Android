@@ -10,7 +10,8 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
+        android:layout_height="180dp"
+        android:background="?colorToolbar"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -18,14 +19,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"/>
+                android:background="?colorToolbar"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin">
+
+                <include
+                    layout="@layout/layout_toolbar_message_conversation_title"
+                    tools:visibility="gone"/>
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -48,8 +58,42 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/element_spacing_large"
         android:src="@drawable/ic_action_edit"
+        app:backgroundTint="?android:colorBackground"
         app:layout_anchor="@+id/appBar"
         app:layout_anchorGravity="bottom|end"
-        tools:backgroundTint="?colorAccent"/>
+        tools:tint="?android:colorForeground"/>
+
+    <org.mariotaku.twidere.view.ProfileImageView
+        android:id="@+id/appBarConversationAvatar"
+        android:layout_width="@dimen/icon_size_conversation_info"
+        android:layout_height="@dimen/icon_size_conversation_info"
+        app:behavior_avatarMarginBottom="@dimen/element_spacing_large"
+        app:behavior_avatarMarginStart="@dimen/element_spacing_large"
+        app:layout_behavior="org.mariotaku.twidere.util.view.ConversationInfoAvatarBehavior"
+        app:sivDrawShadow="false"
+        app:sivElevation="8dp"
+        app:sivShape="circle"
+        tools:src="@drawable/ic_profile_image_default_group"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/appBarConversationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        android:ellipsize="end"
+        android:minLines="1"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="?android:textColorPrimary"
+        android:textStyle="normal"
+        app:behavior_titleMarginStart="@dimen/element_spacing_normal"
+        app:layout_behavior="org.mariotaku.twidere.util.view.ConversationInfoTitleBehavior"
+        tools:text="Title"/>
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/appBarConversationSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?android:textColorSecondary"
+        tools:text="Subtitle"/>
 
 </android.support.design.widget.CoordinatorLayout>

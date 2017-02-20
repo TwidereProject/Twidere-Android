@@ -26,7 +26,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.util.view.display
+import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 class SimpleParcelableUserListsAdapter(

@@ -81,6 +81,7 @@ public class ShapedImageView extends ImageView {
     private float mShadowRadius;
     private int mStyle;
     private float mCornerRadius, mCornerRadiusRatio;
+    private boolean mDrawShadow;
     private RectF mTransitionSource, mTransitionDestination;
     private int mStrokeWidth, mBorderAlpha;
     private int[] mBorderColors;
@@ -126,6 +127,7 @@ public class ShapedImageView extends ImageView {
         setStyle(shapeStyle);
         setCornerRadius(a.getDimension(R.styleable.ShapedImageView_sivCornerRadius, 0));
         setCornerRadiusRatio(a.getFraction(R.styleable.ShapedImageView_sivCornerRadiusRatio, 1, 1, -1));
+        setDrawShadow(a.getBoolean(R.styleable.ShapedImageView_sivDrawShadow, true));
 
         if (useOutline()) {
             if (a.hasValue(R.styleable.ShapedImageView_sivElevation)) {
@@ -151,7 +153,7 @@ public class ShapedImageView extends ImageView {
      * @param dest   The destination bound on the canvas.
      */
     public void drawBitmapWithCircleOnCanvas(Bitmap bitmap, Canvas canvas,
-                                             RectF source, @NonNull RectF dest) {
+            RectF source, @NonNull RectF dest) {
         if (bitmap == null) {
             if (getStyle() == SHAPE_CIRCLE) {
                 canvas.drawCircle(dest.centerX(), dest.centerY(), Math.min(dest.width(), dest.height()) / 2f,
@@ -263,6 +265,10 @@ public class ShapedImageView extends ImageView {
 
     public void setCornerRadiusRatio(float ratio) {
         mCornerRadiusRatio = ratio;
+    }
+
+    public void setDrawShadow(final boolean drawShadow) {
+        mDrawShadow = drawShadow;
     }
 
     public void setTransitionDestination(RectF dstBounds) {
@@ -423,7 +429,7 @@ public class ShapedImageView extends ImageView {
     private void initOutlineProvider() {
         if (!useOutline()) return;
         ViewSupport.setClipToOutline(this, true);
-        ViewSupport.setOutlineProvider(this, new CircularOutlineProvider());
+        ViewSupport.setOutlineProvider(this, new CircularOutlineProvider(mDrawShadow));
     }
 
     private void setBorderColorsInternal(int alpha, int... colors) {
@@ -504,6 +510,12 @@ public class ShapedImageView extends ImageView {
     }
 
     private static class CircularOutlineProvider extends ViewOutlineProviderCompat {
+        boolean drawShadow;
+
+        public CircularOutlineProvider(final boolean drawShadow) {
+            this.drawShadow = drawShadow;
+        }
+
         @Override
         public void getOutline(View view, OutlineCompat outline) {
             final int viewWidth = view.getWidth(), viewHeight = view.getHeight();
@@ -522,6 +534,11 @@ public class ShapedImageView extends ImageView {
             } else {
                 final float radius = imageView.getCalculatedCornerRadius();
                 outline.setRoundRect(contentLeft, contentTop, contentRight, contentBottom, radius);
+            }
+            if (drawShadow) {
+                outline.setAlpha(1);
+            } else {
+                outline.setAlpha(0);
             }
         }
     }

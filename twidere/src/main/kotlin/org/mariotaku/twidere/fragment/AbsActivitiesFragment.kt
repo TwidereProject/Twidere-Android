@@ -40,7 +40,6 @@ import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_GAP
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
@@ -193,7 +192,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int,
-                                              event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
@@ -305,7 +304,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onGapClick(holder: GapViewHolder, position: Int) {
         val activity = adapter.getActivity(position) ?: return
-        DebugLog.v(TwidereConstants.LOGTAG, "Load activity gap $activity")
+        DebugLog.v(msg = "Load activity gap $activity")
         val accountIds = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)
@@ -451,7 +450,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     protected abstract fun hasMoreData(data: List<ParcelableActivity>?): Boolean
 
     protected abstract fun onCreateActivitiesLoader(context: Context, args: Bundle,
-                                                    fromUser: Boolean): Loader<List<ParcelableActivity>>
+            fromUser: Boolean): Loader<List<ParcelableActivity>>
 
     protected abstract fun onContentLoaded(loader: Loader<List<ParcelableActivity>>, data: List<ParcelableActivity>?)
 
@@ -525,7 +524,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
-                                      layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = object : DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {

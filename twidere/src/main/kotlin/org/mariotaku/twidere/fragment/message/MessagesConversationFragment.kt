@@ -163,6 +163,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         addMedia.setOnClickListener {
             openMediaPicker()
         }
+        conversationTitleContainer.setOnClickListener {
+            val intent = IntentUtils.messageConversationInfo(accountKey, conversationId)
+            startActivity(intent)
+        }
 
         val activity = this.activity
         if (activity is AppCompatActivity) {
@@ -228,11 +232,6 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.info -> {
-                val intent = IntentUtils.messageConversationInfo(accountKey, conversationId)
-                startActivity(intent)
-                return true
-            }
         }
         return false
     }

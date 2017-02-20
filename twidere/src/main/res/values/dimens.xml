@@ -81,6 +81,7 @@
     <dimen name="icon_size_profile_type_user_profile">26dp</dimen>
     <dimen name="icon_size_status_profile_image">48dp</dimen>
     <dimen name="icon_size_user_profile">84dp</dimen>
+    <dimen name="icon_size_conversation_info">64dp</dimen>
 
     <dimen name="line_width_compose_account_profile_image">2dp</dimen>
 
