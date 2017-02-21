@@ -65,5 +65,9 @@
         <item quantity="one"><xliff:g id="count">%d</xliff:g> user</item>
         <item quantity="other"><xliff:g id="count">%d</xliff:g> users</item>
     </plurals>
+    <plurals name="N_message_participants">
+        <item quantity="one"><xliff:g id="count">%d</xliff:g> member</item>
+        <item quantity="other"><xliff:g id="count">%d</xliff:g> members</item>
+    </plurals>
 
 </resources>

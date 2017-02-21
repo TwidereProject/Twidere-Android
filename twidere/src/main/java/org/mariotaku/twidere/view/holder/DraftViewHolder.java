@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.view.holder;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,19 +27,19 @@ import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.view.CardMediaContainer;
 import org.mariotaku.twidere.view.iface.IColorLabelView;
 
-public class DraftViewHolder extends ViewListHolder {
+public class DraftViewHolder extends RecyclerView.ViewHolder {
 
     public final IColorLabelView content;
     public final TextView text;
     public final TextView time;
-    public CardMediaContainer media_preview_container;
+    public CardMediaContainer mediaPreviewContainer;
 
-    public DraftViewHolder(final View view) {
-        super(view);
-        content = (IColorLabelView) findViewById(R.id.content);
-        text = (TextView) findViewById(R.id.text);
-        time = (TextView) findViewById(R.id.time);
-        media_preview_container = (CardMediaContainer) findViewById(R.id.media_preview_container);
+    public DraftViewHolder(final View itemView) {
+        super(itemView);
+        content = (IColorLabelView) itemView.findViewById(R.id.content);
+        text = (TextView) itemView.findViewById(R.id.text);
+        time = (TextView) itemView.findViewById(R.id.time);
+        mediaPreviewContainer = (CardMediaContainer) itemView.findViewById(R.id.media_preview_container);
     }
 
     public void setTextSize(final float textSize) {

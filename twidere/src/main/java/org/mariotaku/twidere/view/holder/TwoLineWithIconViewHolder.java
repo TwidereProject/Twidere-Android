@@ -19,22 +19,23 @@
 
 package org.mariotaku.twidere.view.holder;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class TwoLineWithIconViewHolder extends ViewListHolder {
+public class TwoLineWithIconViewHolder extends RecyclerView.ViewHolder {
 
     public final ImageView icon;
     public final TextView text1, text2;
     public final CheckBox checkbox;
 
-    public TwoLineWithIconViewHolder(final View view) {
-        super(view);
-        icon = (ImageView) findViewById(android.R.id.icon);
-        text1 = (TextView) findViewById(android.R.id.text1);
-        text2 = (TextView) findViewById(android.R.id.text2);
-        checkbox = (CheckBox) findViewById(android.R.id.checkbox);
+    public TwoLineWithIconViewHolder(final View itemView) {
+        super(itemView);
+        icon = (ImageView) itemView.findViewById(android.R.id.icon);
+        text1 = (TextView) itemView.findViewById(android.R.id.text1);
+        text2 = (TextView) itemView.findViewById(android.R.id.text2);
+        checkbox = (CheckBox) itemView.findViewById(android.R.id.checkbox);
     }
 }

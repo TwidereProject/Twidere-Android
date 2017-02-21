@@ -30,9 +30,7 @@ import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
 import kotlinx.android.synthetic.main.header_message_conversation_info.view.*
@@ -44,6 +42,7 @@ import org.mariotaku.ktextension.useCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
+import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
@@ -52,12 +51,12 @@ import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.model.displayAvatarTo
 import org.mariotaku.twidere.extension.model.getConversationName
 import org.mariotaku.twidere.extension.model.notificationDisabled
+import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
-import org.mariotaku.twidere.model.ItemCounts
-import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.model.ParcelableMessageConversationCursorIndices
-import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_HEADER
+import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_SPACE
+import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
@@ -81,18 +80,18 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
         val activity = this.activity
 
         if (activity is AppCompatActivity) {
             activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
-
-        adapter = ConversationInfoAdapter(context)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL,
-                false)
-
         val theme = Chameleon.getOverrideTheme(context, activity)
+
+        adapter = ConversationInfoAdapter(context, theme)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LayoutManager(context)
+
 
         val profileImageStyle = preferences[profileImageStyleKey]
         appBarIcon.style = profileImageStyle
@@ -116,6 +115,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         return inflater.inflate(R.layout.fragment_messages_conversation_info, container, false)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_messages_conversation_info, menu)
+    }
+
     override fun setupWindow(activity: FragmentActivity): Boolean {
         return false
     }
@@ -135,7 +138,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         adapter.conversation = data
 
         val name = data.getConversationName(context, userColorNameManager, preferences[nameFirstKey]).first
-        val summary = resources.getQuantityString(R.plurals.N_users, data.participants.size, data.participants.size)
+        val summary = resources.getQuantityString(R.plurals.N_message_participants, data.participants.size, data.participants.size)
 
         data.displayAvatarTo(mediaLoader, conversationAvatar)
         data.displayAvatarTo(mediaLoader, appBarIcon)
@@ -167,10 +170,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
     }
 
-    class ConversationInfoAdapter(context: Context) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
+    class ConversationInfoAdapter(context: Context, val theme: Chameleon.Theme) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
             IItemCountsAdapter {
         private val inflater = LayoutInflater.from(context)
-        override val itemCounts: ItemCounts = ItemCounts(2)
+        override val itemCounts: ItemCounts = ItemCounts(4)
         var conversation: ParcelableMessageConversation? = null
             set(value) {
                 field = value
@@ -181,6 +184,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val conversation = this.conversation ?: return 0
             itemCounts[ITEM_INDEX_HEADER] = 1
             itemCounts[ITEM_INDEX_ITEM] = conversation.participants.size
+            itemCounts[ITEM_INDEX_ADD_USER] = 1
+            itemCounts[ITEM_INDEX_SPACE] = 1
             return itemCounts.itemCount
         }
 
@@ -190,8 +195,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                     (holder as HeaderViewHolder).display(this.conversation!!)
                 }
                 VIEW_TYPE_USER -> {
-                    val user = this.conversation!!.participants[position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)]
-                    (holder as SimpleUserViewHolder).displayUser(user)
+                    val participantIdx = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
+                    val user = this.conversation!!.participants[participantIdx]
+                    (holder as UserViewHolder).display(user, participantIdx == 0)
                 }
             }
         }
@@ -203,8 +209,16 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                     return HeaderViewHolder(view)
                 }
                 VIEW_TYPE_USER -> {
-                    val view = inflater.inflate(SimpleUserViewHolder.layoutResource, parent, false)
-                    return SimpleUserViewHolder(view, this)
+                    val view = inflater.inflate(R.layout.list_item_conversation_info_user, parent, false)
+                    return UserViewHolder(view, this)
+                }
+                VIEW_TYPE_ADD_USER -> {
+                    val view = inflater.inflate(R.layout.list_item_conversation_info_add_user, parent, false)
+                    return AddUserViewHolder(view, theme)
+                }
+                VIEW_TYPE_SPACE -> {
+                    val view = inflater.inflate(R.layout.list_item_conversation_info_space, parent, false)
+                    return SpaceViewHolder(view)
                 }
             }
             throw UnsupportedOperationException()
@@ -214,6 +228,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             when (itemCounts.getItemCountIndex(position)) {
                 ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
                 ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
+                ITEM_INDEX_ADD_USER -> return VIEW_TYPE_ADD_USER
+                ITEM_INDEX_SPACE -> return VIEW_TYPE_SPACE
             }
             throw UnsupportedOperationException()
         }
@@ -221,11 +237,27 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         companion object {
             private const val ITEM_INDEX_HEADER = 0
             private const val ITEM_INDEX_ITEM = 1
+            private const val ITEM_INDEX_ADD_USER = 2
+            private const val ITEM_INDEX_SPACE = 3
 
-            private const val VIEW_TYPE_HEADER = 1
-            private const val VIEW_TYPE_USER = 2
+            internal const val VIEW_TYPE_HEADER = 1
+            internal const val VIEW_TYPE_USER = 2
+            internal const val VIEW_TYPE_ADD_USER = 3
+            internal const val VIEW_TYPE_SPACE = 4
         }
 
+    }
+
+    internal class SpaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+    internal class AddUserViewHolder(itemView: View, theme: Chameleon.Theme) : RecyclerView.ViewHolder(itemView)
+
+    internal class UserViewHolder(itemView: View, adapter: IContentAdapter) : SimpleUserViewHolder(itemView, adapter) {
+        private val headerIcon = itemView.findViewById(R.id.headerIcon)
+        fun display(user: ParcelableUser, displayHeaderIcon: Boolean) {
+            super.displayUser(user)
+            headerIcon.visibility = if (displayHeaderIcon) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     internal class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -239,5 +271,18 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             const val layoutResource = R.layout.header_message_conversation_info
 
         }
+    }
+
+    internal class LayoutManager(
+            context: Context
+    ) : FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false) {
+
+        override fun getDecoratedMeasuredHeight(child: View): Int {
+            if (getItemViewType(child) == VIEW_TYPE_SPACE) {
+                return calculateSpaceItemHeight(child, VIEW_TYPE_SPACE, VIEW_TYPE_HEADER)
+            }
+            return super.getDecoratedMeasuredHeight(child)
+        }
+
     }
 }

@@ -72,8 +72,8 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
             Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)
-                holder.media_preview_container.visibility = View.VISIBLE
-                holder.media_preview_container.displayMedia(loader = imageLoader, media = media,
+                holder.mediaPreviewContainer.visibility = View.VISIBLE
+                holder.mediaPreviewContainer.displayMedia(loader = imageLoader, media = media,
                         loadingHandler = mediaLoadingHandler)
             }
             Draft.Action.FAVORITE, Draft.Action.RETWEET -> {
@@ -81,10 +81,10 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
                 if (extras != null) {
                     summaryText = extras.status.text_unescaped
                 }
-                holder.media_preview_container.visibility = View.GONE
+                holder.mediaPreviewContainer.visibility = View.GONE
             }
             else -> {
-                holder.media_preview_container.visibility = View.GONE
+                holder.mediaPreviewContainer.visibility = View.GONE
             }
         }
         if (accountKeys != null) {
@@ -113,7 +113,7 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
         val view = super.newView(context, cursor, parent)
         if (view.tag !is DraftViewHolder) {
             view.tag = DraftViewHolder(view).apply {
-                this.media_preview_container.style = mediaPreviewStyle
+                this.mediaPreviewContainer.style = mediaPreviewStyle
             }
         }
         return view

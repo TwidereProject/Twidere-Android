@@ -44,7 +44,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/list_item_conversation_info_user"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/editButton"

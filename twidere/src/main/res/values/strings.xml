@@ -12,6 +12,7 @@
     <string name="action_accept_permission_request">Accept</string>
     <string name="action_accepting_follow_request">accepting follow request</string>
     <string name="action_add">Add</string>
+    <string name="action_add_conversation_participant">Add member</string>
     <!-- [verb] Add mute filter rule -->
     <string name="action_add_filter_rule">Add rule</string>
     <string name="action_add_filters_subscription">Add subscription</string>

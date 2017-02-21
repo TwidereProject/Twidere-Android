@@ -43,7 +43,6 @@ import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.LayoutParams
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -94,6 +93,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.media_type
+import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
@@ -1956,25 +1956,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         override fun getDecoratedMeasuredHeight(child: View): Int {
-            var heightBeforeSpace = 0
             if (getItemViewType(child) == StatusAdapter.VIEW_TYPE_SPACE) {
-                for (i in 0 until childCount) {
-                    val childToMeasure = getChildAt(i)
-                    val paramsToMeasure = childToMeasure.layoutParams as LayoutParams
-                    val typeToMeasure = getItemViewType(childToMeasure)
-                    if (typeToMeasure == StatusAdapter.VIEW_TYPE_SPACE) {
-                        break
-                    }
-                    if (typeToMeasure == StatusAdapter.VIEW_TYPE_DETAIL_STATUS || heightBeforeSpace != 0) {
-                        heightBeforeSpace += super.getDecoratedMeasuredHeight(childToMeasure)
-                        +paramsToMeasure.topMargin + paramsToMeasure.bottomMargin
-                    }
-                }
-                if (heightBeforeSpace != 0) {
-                    val spaceHeight = recyclerView.measuredHeight - heightBeforeSpace
-                    this.spaceHeight = Math.max(0, spaceHeight)
-                    return this.spaceHeight
-                }
+                return calculateSpaceItemHeight(child, StatusAdapter.VIEW_TYPE_SPACE,
+                        StatusAdapter.VIEW_TYPE_DETAIL_STATUS)
             }
             return super.getDecoratedMeasuredHeight(child)
         }
@@ -2089,7 +2073,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         private fun calculateSpaceHeight(): Int {
             val space = findViewByPosition(itemCount - 1) ?: return spaceHeight
-            return getDecoratedMeasuredHeight(space)
+            spaceHeight = getDecoratedMeasuredHeight(space)
+            return spaceHeight
         }
 
 
