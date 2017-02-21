@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.view.ProfileImageView
@@ -34,5 +35,9 @@ open class SimpleUserViewHolder(itemView: View, val adapter: IContentAdapter) : 
             adapter.mediaLoader.cancelDisplayTask(profileImageView)
             profileImageView.visibility = View.GONE
         }
+    }
+
+    companion object {
+        const val layoutResource = R.layout.list_item_simple_user
     }
 }

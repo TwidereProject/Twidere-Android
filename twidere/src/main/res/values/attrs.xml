@@ -145,14 +145,46 @@
     <declare-styleable name="ProfileBannerImageView">
         <attr name="bannerAspectRatio" format="fraction"/>
     </declare-styleable>
-    <declare-styleable name="ConversationInfoAvatarBehavior">
-        <attr name="behavior_avatarMarginBottom" format="dimension"/>
-        <attr name="behavior_avatarMarginStart" format="dimension"/>
+    <declare-styleable name="AppBarChildBehavior">
+        <attr name="behavior_appBarId" format="reference"/>
+        <attr name="behavior_toolbarId" format="reference"/>
+        <attr name="behavior_dependencyViewId" format="reference"/>
+        <attr name="behavior_targetViewId" format="reference"/>
+
+        <attr name="behavior_marginLeft" format="dimension"/>
+        <attr name="behavior_marginRight" format="dimension"/>
+        <attr name="behavior_marginStart" format="dimension"/>
+        <attr name="behavior_marginEnd" format="dimension"/>
+        <attr name="behavior_marginTop" format="dimension"/>
+        <attr name="behavior_marginBottom" format="dimension"/>
+
+        <attr name="behavior_alignmentRule"/>
+
+        <attr name="behavior_childTransformation" format="string"/>
     </declare-styleable>
-    <declare-styleable name="ConversationInfoTitleBehavior">
-        <attr name="behavior_titleMarginBottom" format="dimension"/>
-        <attr name="behavior_titleMarginStart" format="dimension"/>
-    </declare-styleable>
+    <attr name="behavior_alignmentRule">
+        <flag name="left" value="0x00000001"/>
+        <flag name="right" value="0x00000002"/>
+        <flag name="toLeftOf" value="0x00000004"/>
+        <flag name="toRightOf" value="0x00000008"/>
+        <flag name="toLeftOfCenter" value="0x00000010"/>
+        <flag name="toRightOfCenter" value="0x00000020"/>
+        <flag name="centerHorizontal" value="0x00000003"/>
+        <flag name="start" value="0x00001001"/>
+        <flag name="end" value="0x00001002"/>
+        <flag name="toStartOf" value="0x00001004"/>
+        <flag name="toEndOf" value="0x00001008"/>
+        <flag name="toStartOfCenter" value="0x00001010"/>
+        <flag name="toEndOfCenter" value="0x00001020"/>
+        <flag name="top" value="0x00010000"/>
+        <flag name="bottom" value="0x00020000"/>
+        <flag name="above" value="0x00040000"/>
+        <flag name="below" value="0x00080000"/>
+        <flag name="aboveCenter" value="0x00100000"/>
+        <flag name="belowCenter" value="0x00200000"/>
+        <flag name="centerVertical" value="0x00030000"/>
+        <flag name="center" value="0x00030003"/>
+    </attr>
     <attr name="notificationType">
         <flag name="none" value="0"/>
         <flag name="ringtone" value="1"/>

@@ -69,6 +69,7 @@
 -keep class * extends org.mariotaku.twidere.util.TwitterCardFragmentFactory
 -keep class * extends org.mariotaku.twidere.util.Analyzer
 -keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesService
+-keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior.ChildTransformation
 
 -keepclassmembers class * {
     private <fields>;

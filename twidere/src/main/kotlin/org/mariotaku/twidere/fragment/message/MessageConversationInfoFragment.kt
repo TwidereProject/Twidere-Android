@@ -26,6 +26,9 @@ import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.FixedLinearLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +42,8 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
+import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -47,10 +52,12 @@ import org.mariotaku.twidere.extension.model.displayAvatarTo
 import org.mariotaku.twidere.extension.model.getConversationName
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
+import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversationCursorIndices
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 /**
  * Created by mariotaku on 2017/2/15.
@@ -61,6 +68,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     private val accountKey: UserKey get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY)
     private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
+
+    private lateinit var adapter: ConversationInfoAdapter
 
     override val controlBarHeight: Int get() = toolbar.measuredHeight
     override var controlBarOffset: Float = 0f
@@ -76,20 +85,29 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        adapter = ConversationInfoAdapter(context)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL,
+                false)
+
         val theme = Chameleon.getOverrideTheme(context, activity)
 
         val profileImageStyle = preferences[profileImageStyleKey]
-        appBarConversationAvatar.style = profileImageStyle
+        appBarIcon.style = profileImageStyle
         conversationAvatar.style = profileImageStyle
 
         val avatarBackground = ChameleonUtils.getColorDependent(theme.colorToolbar)
-        appBarConversationAvatar.setBackgroundColor(avatarBackground)
-        appBarConversationName.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
-        
+        appBarIcon.setBackgroundColor(avatarBackground)
+        appBarTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+        appBarSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+
         conversationAvatar.setBackgroundColor(avatarBackground)
         conversationName.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+        conversationSummary.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
         loaderManager.initLoader(0, null, this)
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -112,11 +130,17 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             activity?.finish()
             return
         }
+        adapter.conversation = data
+
         val name = data.getConversationName(context, userColorNameManager, preferences[nameFirstKey]).first
+        val summary = resources.getQuantityString(R.plurals.N_users, data.participants.size, data.participants.size)
+
         data.displayAvatarTo(mediaLoader, conversationAvatar)
-        data.displayAvatarTo(mediaLoader, appBarConversationAvatar)
-        appBarConversationName.text = name
+        data.displayAvatarTo(mediaLoader, appBarIcon)
+        appBarTitle.text = name
+        appBarSubtitle.text = summary
         conversationName.text = name
+        conversationSummary.text = summary
     }
 
     class ConversationInfoLoader(
@@ -138,6 +162,69 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         override fun onStartLoading() {
             forceLoad()
+        }
+    }
+
+    class ConversationInfoAdapter(context: Context) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
+            IItemCountsAdapter {
+        private val inflater = LayoutInflater.from(context)
+        override val itemCounts: ItemCounts = ItemCounts(2)
+        var conversation: ParcelableMessageConversation? = null
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
+        override fun getItemCount(): Int {
+            val conversation = this.conversation ?: return 0
+            itemCounts[ITEM_INDEX_ITEM] = conversation.participants.size
+            return itemCounts.itemCount
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            when (holder.itemViewType) {
+                VIEW_TYPE_USER -> {
+                    val user = this.conversation!!.participants[position - itemCounts.getItemStartPosition(position)]
+                    (holder as SimpleUserViewHolder).displayUser(user)
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            when (viewType) {
+                VIEW_TYPE_HEADER -> {
+                    val view = inflater.inflate(HeaderViewHolder.layoutResource, parent, false)
+                    return HeaderViewHolder(view)
+                }
+                VIEW_TYPE_USER -> {
+                    val view = inflater.inflate(SimpleUserViewHolder.layoutResource, parent, false)
+                    return SimpleUserViewHolder(view, this)
+                }
+            }
+            throw UnsupportedOperationException()
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            when (itemCounts.getItemCountIndex(position)) {
+                ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
+                ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
+            }
+            throw UnsupportedOperationException()
+        }
+
+        companion object {
+            private const val ITEM_INDEX_HEADER = 0
+            private const val ITEM_INDEX_ITEM = 1
+
+            private const val VIEW_TYPE_HEADER = 1
+            private const val VIEW_TYPE_USER = 2
+        }
+
+    }
+
+    internal class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        companion object {
+            const val layoutResource = R.layout.header_message_conversation_info
         }
     }
 }

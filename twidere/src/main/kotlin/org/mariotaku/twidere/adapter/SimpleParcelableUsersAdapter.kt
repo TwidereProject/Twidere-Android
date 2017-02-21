@@ -27,7 +27,7 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
-class SimpleParcelableUsersAdapter @JvmOverloads constructor(
+class SimpleParcelableUsersAdapter(
         context: Context,
         layoutRes: Int = R.layout.list_item_simple_user
 ) : BaseArrayAdapter<ParcelableUser>(context, layoutRes) {
@@ -54,7 +54,7 @@ class SimpleParcelableUsersAdapter @JvmOverloads constructor(
         return view
     }
 
-    @JvmOverloads fun setData(data: List<ParcelableUser>?, clearOld: Boolean = false) {
+    fun setData(data: List<ParcelableUser>?, clearOld: Boolean = false) {
         if (clearOld) {
             clear()
         }

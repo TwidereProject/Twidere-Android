@@ -21,31 +21,33 @@ package org.mariotaku.twidere.extension
 
 import android.graphics.Rect
 import android.graphics.RectF
-import android.support.annotation.MainThread
+import android.support.annotation.UiThread
 import android.view.View
 
 private val tempLocation = IntArray(2)
 private val tempRect = Rect()
 
-@MainThread
+@UiThread
 fun View.getBounds(rect: RectF) {
     rect.set(x, y, x + width, y + height)
 }
 
-@MainThread
+@UiThread
 fun View.getFrame(rect: Rect) {
     rect.set(left, top, right, bottom)
 }
 
-@MainThread
-fun View.getFrameRelatedTo(rect: Rect, view: View? = null) {
-    if (view != null) {
-        view.getFrame(tempRect)
-        offsetToRoot(view, tempRect)
-    }
+@UiThread
+fun View.getFrameRelatedTo(rect: Rect, other: View? = null) {
     this.getFrame(rect)
-    offsetToRoot(this, rect)
-    if (view != null) {
+    if (other == null) {
+        offsetToRoot(this, rect)
+    } else if (other === this) {
+        rect.offsetTo(0, 0)
+    } else if (other !== parent) {
+        offsetToRoot(this, rect)
+        other.getFrame(tempRect)
+        offsetToRoot(other, tempRect)
         rect.offset(-tempRect.left, -tempRect.top)
     }
 }
