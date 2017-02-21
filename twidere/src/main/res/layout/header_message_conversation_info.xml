@@ -21,11 +21,22 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/element_spacing_normal">
+
+    <org.mariotaku.twidere.view.FixedTextView
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/element_spacing_normal"
+        android:text="@string/title_conversation"
+        android:textColor="?colorAccent"/>
 
     <android.support.v7.widget.SwitchCompat
         android:layout_width="match_parent"
+        android:id="@+id/muteNotifications"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/element_size_normal"
         android:padding="@dimen/element_spacing_normal"

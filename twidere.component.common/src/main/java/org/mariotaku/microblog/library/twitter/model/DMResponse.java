@@ -137,6 +137,8 @@ public class DMResponse implements Parcelable {
         Message messageDelete;
         @JsonField(name = "remove_conversation")
         Message removeConversation;
+        @JsonField(name = "disable_notifications")
+        Message disableNotifications;
 
         public Message getJoinConversation() {
             return joinConversation;
@@ -178,6 +180,10 @@ public class DMResponse implements Parcelable {
             return removeConversation;
         }
 
+        public Message getDisableNotifications() {
+            return disableNotifications;
+        }
+
         @Override
         public String toString() {
             return "Entry{" +
@@ -191,6 +197,7 @@ public class DMResponse implements Parcelable {
                     ", conversationRead=" + conversationRead +
                     ", messageDelete=" + messageDelete +
                     ", removeConversation=" + removeConversation +
+                    ", disableNotifications=" + disableNotifications +
                     '}';
         }
 

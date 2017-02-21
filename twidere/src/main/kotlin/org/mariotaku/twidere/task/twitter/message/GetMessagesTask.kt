@@ -229,7 +229,7 @@ class GetMessagesTask(
                     1.0 - (i.toDouble() / result.size))
             val mc = conversations.addConversation(message.conversation_id, details, message,
                     setOf(dm.sender, dm.recipient))
-            mc.request_cursor = "page:$page"
+            mc?.request_cursor = "page:$page"
         }
         return DatabaseUpdateData(conversations.values, emptyList())
     }
@@ -381,7 +381,7 @@ class GetMessagesTask(
             }
             val messagesMap = messages.groupBy(ParcelableMessage::conversation_id)
             for ((k, v) in respConversations) {
-                val recentMessage = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp) ?: continue
+                val recentMessage = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp)
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
                 }.values
@@ -391,7 +391,8 @@ class GetMessagesTask(
                     else -> ConversationType.ONE_TO_ONE
                 }
                 val conversation = conversations.addConversation(k, account, recentMessage, participants,
-                        conversationType)
+                        conversationType) ?: continue
+                if (conversation.id in conversationDeletions) continue
                 conversation.conversation_name = v.name
                 conversation.conversation_avatar = v.avatarImageHttps
                 conversation.request_cursor = response.cursor
@@ -428,14 +429,18 @@ class GetMessagesTask(
         fun storeMessages(context: Context, data: DatabaseUpdateData, details: AccountDetails,
                 showNotification: Boolean = false) {
             val resolver = context.contentResolver
-            val conversationsValues = data.conversations.map {
+            val conversationsValues = data.conversations.filterNot {
+                it.id in data.deleteConversations
+            }.map {
                 val values = ParcelableMessageConversationValuesCreator.create(it)
                 if (it._id > 0) {
                     values.put(Conversations._ID, it._id)
                 }
                 return@map values
             }
-            val messagesValues = data.messages.map(ParcelableMessageValuesCreator::create)
+            val messagesValues = data.messages.filterNot {
+                data.deleteMessages[it.conversation_id]?.contains(it.id) ?: false
+            }.map(ParcelableMessageValuesCreator::create)
 
             for ((conversationId, messageIds) in data.deleteMessages) {
                 val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
@@ -525,11 +530,12 @@ class GetMessagesTask(
         internal fun MutableMap<String, ParcelableMessageConversation>.addConversation(
                 conversationId: String,
                 details: AccountDetails,
-                message: ParcelableMessage,
+                message: ParcelableMessage?,
                 users: Collection<User>,
                 conversationType: String = ConversationType.ONE_TO_ONE
-        ): ParcelableMessageConversation {
+        ): ParcelableMessageConversation? {
             val conversation = this[conversationId] ?: run {
+                if (message == null) return null
                 val obj = ParcelableMessageConversation()
                 obj.id = conversationId
                 obj.conversation_type = conversationType
@@ -537,7 +543,7 @@ class GetMessagesTask(
                 this[conversationId] = obj
                 return@run obj
             }
-            if (message.timestamp > conversation.timestamp) {
+            if (message != null && message.timestamp > conversation.timestamp) {
                 conversation.applyFrom(message, details)
             }
             users.forEach { user ->

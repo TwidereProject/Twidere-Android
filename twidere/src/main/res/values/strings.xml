@@ -1090,6 +1090,7 @@
     <string name="title_blocked_users">Blocked users</string>
     <string name="title_browser_sign_in">Browser sign in</string>
     <string name="title_compose">Compose</string>
+    <string name="title_conversation">Conversation</string>
     <string name="title_dialog_sync_connect_to">Connect to…</string>
     <string name="title_direct_messages">Messages</string>
     <string name="title_direct_messages_conversation_info">Conversation info</string>

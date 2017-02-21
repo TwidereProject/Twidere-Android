@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_message_type_speaker_muted-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_message_type_speaker_muted-mdpi">
+            <path d="M11,8 C11,6.82 10.32,5.80666667 9.33333333,5.31333333 L9.33333333,6.78666667 L10.9666667,8.42 C10.9866667,8.28666667 11,8.14666667 11,8 L11,8 Z M12.6666667,8 C12.6666667,8.62666667 12.5333333,9.21333333 12.3066667,9.76 L13.3133333,10.7666667 C13.7533333,9.94 14,9 14,8 C14,5.14666667 12.0066667,2.76 9.33333333,2.15333333 L9.33333333,3.52666667 C11.26,4.1 12.6666667,5.88666667 12.6666667,8 Z M2.84666667,2 L2,2.84666667 L5.15333333,6 L2,6 L2,10 L4.66666667,10 L8,13.3333333 L8,8.84666667 L10.8333333,11.68 C10.3866667,12.0266667 9.88666667,12.3 9.33333333,12.4666667 L9.33333333,13.84 C10.2533333,13.6333333 11.0866667,13.2066667 11.7933333,12.6333333 L13.1533333,14 L14,13.1533333 L8,7.15333333 L2.84666667,2 Z M8,2.66666667 L6.60666667,4.06 L8,5.45333333 L8,2.66666667 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+            <polygon id="Shape" points="0 0 16 0 16 16 0 16"></polygon>
+        </g>
+    </g>
+</svg>

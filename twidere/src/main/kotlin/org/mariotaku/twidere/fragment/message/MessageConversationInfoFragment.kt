@@ -35,6 +35,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
+import kotlinx.android.synthetic.main.header_message_conversation_info.view.*
 import kotlinx.android.synthetic.main.layout_toolbar_message_conversation_title.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
@@ -50,6 +51,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.model.displayAvatarTo
 import org.mariotaku.twidere.extension.model.getConversationName
+import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
 import org.mariotaku.twidere.model.ItemCounts
@@ -177,14 +179,18 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         override fun getItemCount(): Int {
             val conversation = this.conversation ?: return 0
+            itemCounts[ITEM_INDEX_HEADER] = 1
             itemCounts[ITEM_INDEX_ITEM] = conversation.participants.size
             return itemCounts.itemCount
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             when (holder.itemViewType) {
+                VIEW_TYPE_HEADER -> {
+                    (holder as HeaderViewHolder).display(this.conversation!!)
+                }
                 VIEW_TYPE_USER -> {
-                    val user = this.conversation!!.participants[position - itemCounts.getItemStartPosition(position)]
+                    val user = this.conversation!!.participants[position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)]
                     (holder as SimpleUserViewHolder).displayUser(user)
                 }
             }
@@ -223,8 +229,15 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     internal class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val muteSwitch = itemView.muteNotifications
+
+        fun display(conversation: ParcelableMessageConversation) {
+            muteSwitch.isChecked = conversation.notificationDisabled
+        }
+
         companion object {
             const val layoutResource = R.layout.header_message_conversation_info
+
         }
     }
 }
