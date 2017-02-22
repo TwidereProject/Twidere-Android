@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_users-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_users-mdpi">
+            <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
+            <path d="M20,15 C21.66,15 22.99,13.66 22.99,12 C22.99,10.34 21.66,9 20,9 C18.34,9 17,10.34 17,12 C17,13.66 18.34,15 20,15 Z M12,15 C13.66,15 14.99,13.66 14.99,12 C14.99,10.34 13.66,9 12,9 C10.34,9 9,10.34 9,12 C9,13.66 10.34,15 12,15 Z M12,17 C9.67,17 5,18.17 5,20.5 L5,23 L19,23 L19,20.5 C19,18.17 14.33,17 12,17 Z M20,17 C19.71,17 19.38,17.02 19.03,17.05 C20.19,17.89 21,19.02 21,20.5 L21,23 L27,23 L27,20.5 C27,18.17 22.33,17 20,17 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

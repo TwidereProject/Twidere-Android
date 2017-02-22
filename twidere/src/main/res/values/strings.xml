@@ -1223,4 +1223,5 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
+    <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
 </resources>

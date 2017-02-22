@@ -165,7 +165,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         }
         conversationTitleContainer.setOnClickListener {
             val intent = IntentUtils.messageConversationInfo(accountKey, conversationId)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_MANAGE_CONVERSATION_INFO)
         }
 
         val activity = this.activity
@@ -173,7 +173,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             activity.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
         val theme = Chameleon.getOverrideTheme(context, activity)
-        conversationName.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+        conversationTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
+        conversationSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
         conversationAvatar.style = preferences[profileImageStyleKey]
 
@@ -209,6 +210,11 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val mediaUris = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, mediaUris))
+                }
+            }
+            REQUEST_MANAGE_CONVERSATION_INFO -> {
+                if (resultCode == MessageConversationInfoFragment.RESULT_CLOSE) {
+                    activity?.finish()
                 }
             }
         }
@@ -439,15 +445,16 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
 
     private fun updateConversationStatus() {
         val conversation = adapter.conversation ?: return
-        val name = conversation.getConversationName(context, userColorNameManager,
+        val title = conversation.getTitle(context, userColorNameManager,
                 preferences[nameFirstKey]).first
-        activity.title = name
+        activity.title = title
         val readOnly = conversation.readOnly
         addMedia.isEnabled = !readOnly
         sendMessage.isEnabled = !readOnly
         editText.isEnabled = !readOnly
 
-        conversationName.text = name
+        conversationTitle.text = title
+        conversationSubtitle.text = conversation.getSubtitle(context)
         conversation.displayAvatarTo(mediaLoader, conversationAvatar)
     }
 
@@ -521,6 +528,10 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             atomicConversation.set(DataStoreUtils.findMessageConversation(context, accountKey, conversationId))
             return super.onLoadInBackground()
         }
+    }
+
+    companion object {
+        private const val REQUEST_MANAGE_CONVERSATION_INFO = 101
     }
 
 }

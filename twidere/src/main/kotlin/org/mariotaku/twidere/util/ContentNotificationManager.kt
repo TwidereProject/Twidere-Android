@@ -41,7 +41,7 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.model.getConversationName
+import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.getSummaryText
 import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.rawQuery
@@ -296,7 +296,7 @@ class ContentNotificationManager(
             val remaining = cur.forEachRow(5) { cur, pos ->
                 val conversation = indices.newObject(cur)
                 if (conversation.notificationDisabled) return@forEachRow false
-                val title = conversation.getConversationName(context, userColorNameManager, nameFirst)
+                val title = conversation.getTitle(context, userColorNameManager, nameFirst)
                 val summary = conversation.getSummaryText(context, userColorNameManager, nameFirst)
                 val line = SpanFormatter.format(context.getString(R.string.title_summary_line_format),
                         title.first, summary)

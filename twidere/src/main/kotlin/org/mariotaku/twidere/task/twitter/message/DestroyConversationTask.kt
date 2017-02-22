@@ -42,7 +42,8 @@ class DestroyConversationTask(
         context: Context,
         val accountKey: UserKey,
         val conversationId: String
-) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, Unit?>(context) {
+) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, ((Boolean) -> Unit)?>(context) {
+
     override fun onExecute(params: Unit?): Boolean {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
@@ -60,6 +61,11 @@ class DestroyConversationTask(
         val deleteConversationWhereArgs = arrayOf(accountKey.toString(), conversationId)
         context.contentResolver.delete(Conversations.CONTENT_URI, deleteConversationWhere, deleteConversationWhereArgs)
         return true
+    }
+
+    override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean?, exception: MicroBlogException?) {
+        val succeed = result ?: false
+        callback?.invoke(succeed)
     }
 
     private fun performDestroyConversation(microBlog: MicroBlog, account: AccountDetails): Boolean {

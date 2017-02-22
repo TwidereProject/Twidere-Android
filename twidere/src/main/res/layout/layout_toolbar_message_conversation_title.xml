@@ -49,7 +49,7 @@
         android:orientation="vertical">
 
         <org.mariotaku.twidere.view.FixedTextView
-            android:id="@+id/conversationName"
+            android:id="@+id/conversationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceMedium"
@@ -57,7 +57,7 @@
             tools:text="Conversation name"/>
 
         <org.mariotaku.twidere.view.FixedTextView
-            android:id="@+id/conversationSummary"
+            android:id="@+id/conversationSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceSmall"

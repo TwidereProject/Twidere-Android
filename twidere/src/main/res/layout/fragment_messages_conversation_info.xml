@@ -91,7 +91,7 @@
         app:behavior_childTransformation="org.mariotaku.twidere.util.view.ConversationTitlesTransformation"
         app:behavior_dependencyViewId="@+id/appBarIcon"
         app:behavior_marginStart="@dimen/element_spacing_normal"
-        app:behavior_targetViewId="@+id/conversationName"
+        app:behavior_targetViewId="@+id/conversationTitle"
         app:behavior_toolbarId="@+id/toolbar"
         app:layout_behavior="org.mariotaku.twidere.util.view.AppBarChildBehavior"
         tools:text="Title"/>
@@ -112,7 +112,7 @@
         app:behavior_dependencyViewId="@+id/appBarIcon"
         app:behavior_marginStart="@dimen/element_spacing_normal"
         app:behavior_marginTop="@dimen/element_spacing_small"
-        app:behavior_targetViewId="@+id/conversationSummary"
+        app:behavior_targetViewId="@+id/conversationSubtitle"
         app:behavior_toolbarId="@+id/toolbar"
         app:layout_behavior="org.mariotaku.twidere.util.view.AppBarChildBehavior"
         tools:text="Subtitle"/>

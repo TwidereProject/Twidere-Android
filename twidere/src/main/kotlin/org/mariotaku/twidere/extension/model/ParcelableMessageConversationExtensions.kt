@@ -33,8 +33,8 @@ fun ParcelableMessageConversation.applyFrom(message: ParcelableMessage, details:
 val ParcelableMessageConversation.timestamp: Long
     get() = if (message_timestamp > 0) message_timestamp else local_timestamp
 
-fun ParcelableMessageConversation.getConversationName(context: Context,
-        manager: UserColorNameManager, nameFirst: Boolean): Pair<String, String?> {
+fun ParcelableMessageConversation.getTitle(context: Context, manager: UserColorNameManager,
+        nameFirst: Boolean): Pair<String, String?> {
     if (conversation_type == ConversationType.ONE_TO_ONE) {
         val user = this.user ?: return Pair(context.getString(R.string.title_direct_messages), null)
         return Pair(user.name, "@${user.screen_name}")
@@ -43,6 +43,12 @@ fun ParcelableMessageConversation.getConversationName(context: Context,
         return Pair(conversation_name, null)
     }
     return Pair(participants.joinToString(separator = ", ") { manager.getDisplayName(it, nameFirst) }, null)
+}
+
+fun ParcelableMessageConversation.getSubtitle(context: Context): String {
+    val resources = context.resources
+    return resources.getQuantityString(R.plurals.N_message_participants, participants.size,
+            participants.size)
 }
 
 fun ParcelableMessageConversation.getSummaryText(context: Context, manager: UserColorNameManager,

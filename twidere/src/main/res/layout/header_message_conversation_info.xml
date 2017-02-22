@@ -47,7 +47,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/element_spacing_normal"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_action_info"
+                android:src="@drawable/ic_action_list"
                 app:iabColor="?android:textColorSecondary"/>
         </FrameLayout>
 
