@@ -29,8 +29,11 @@
     app:cardUseCompatPadding="false">
 
     <RelativeLayout
+        android:id="@+id/itemContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true">
 
         <Space
             android:id="@+id/headerSpace"

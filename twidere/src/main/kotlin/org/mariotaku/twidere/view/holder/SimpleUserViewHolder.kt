@@ -14,7 +14,10 @@ import org.mariotaku.twidere.view.ProfileImageView
  * Created by mariotaku on 2016/12/1.
  */
 
-open class SimpleUserViewHolder(itemView: View, val adapter: IContentAdapter) : RecyclerView.ViewHolder(itemView) {
+open class SimpleUserViewHolder<out A : IContentAdapter>(
+        itemView: View,
+        val adapter: A
+) : RecyclerView.ViewHolder(itemView) {
 
     val nameView: TextView = itemView.name
     val secondaryNameView: TextView = itemView.screenName

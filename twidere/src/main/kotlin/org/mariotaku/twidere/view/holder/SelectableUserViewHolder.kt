@@ -29,7 +29,7 @@ import org.mariotaku.twidere.util.support.ViewSupport
 class SelectableUserViewHolder(
         itemView: View,
         adapter: SelectableUsersAdapter
-) : SimpleUserViewHolder(itemView, adapter) {
+) : SimpleUserViewHolder<SelectableUsersAdapter>(itemView, adapter) {
     private val checkChangedListener = CompoundButton.OnCheckedChangeListener { view, value ->
         adapter.setItemChecked(layoutPosition, value)
     }
@@ -45,7 +45,7 @@ class SelectableUserViewHolder(
     override fun displayUser(user: ParcelableUser) {
         super.displayUser(user)
         checkBox.setOnCheckedChangeListener(null)
-        checkBox.isChecked = (adapter as SelectableUsersAdapter).isItemChecked(layoutPosition)
+        checkBox.isChecked = adapter.isItemChecked(layoutPosition)
         checkBox.setOnCheckedChangeListener(checkChangedListener)
         itemView.isEnabled = !user.is_filtered
         checkBox.isEnabled = !user.is_filtered

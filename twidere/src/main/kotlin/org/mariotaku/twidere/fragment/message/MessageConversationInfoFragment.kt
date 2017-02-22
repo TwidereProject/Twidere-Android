@@ -46,7 +46,6 @@ import org.mariotaku.ktextension.useCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
-import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
@@ -98,7 +97,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
         val theme = Chameleon.getOverrideTheme(context, activity)
 
-        adapter = ConversationInfoAdapter(context, theme)
+        adapter = ConversationInfoAdapter(context)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LayoutManager(context)
 
@@ -212,10 +211,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
     }
 
-    class ConversationInfoAdapter(context: Context, val theme: Chameleon.Theme) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
+    class ConversationInfoAdapter(context: Context) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
             IItemCountsAdapter {
         private val inflater = LayoutInflater.from(context)
         override val itemCounts: ItemCounts = ItemCounts(4)
+
+        var listener: Listener? = null
+
         var conversation: ParcelableMessageConversation? = null
             set(value) {
                 field = value
@@ -256,7 +258,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
                 VIEW_TYPE_ADD_USER -> {
                     val view = inflater.inflate(R.layout.list_item_conversation_info_add_user, parent, false)
-                    return AddUserViewHolder(view, theme)
+                    return AddUserViewHolder(view, this)
                 }
                 VIEW_TYPE_SPACE -> {
                     val view = inflater.inflate(R.layout.list_item_conversation_info_space, parent, false)
@@ -276,6 +278,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             throw UnsupportedOperationException()
         }
 
+        interface Listener {
+            fun onUserClick(position: Int)
+            fun onAddUserClick(position: Int)
+        }
+
         companion object {
             private const val ITEM_INDEX_HEADER = 0
             private const val ITEM_INDEX_ITEM = 1
@@ -288,14 +295,35 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             internal const val VIEW_TYPE_SPACE = 4
         }
 
+
     }
 
     internal class SpaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    internal class AddUserViewHolder(itemView: View, theme: Chameleon.Theme) : RecyclerView.ViewHolder(itemView)
+    internal class AddUserViewHolder(itemView: View, adapter: ConversationInfoAdapter) : RecyclerView.ViewHolder(itemView) {
+        private val itemContent = itemView.findViewById(R.id.itemContent)
 
-    internal class UserViewHolder(itemView: View, adapter: IContentAdapter) : SimpleUserViewHolder(itemView, adapter) {
+        init {
+            itemContent.setOnClickListener {
+                adapter.listener?.onUserClick(layoutPosition)
+            }
+        }
+
+    }
+
+    internal class UserViewHolder(
+            itemView: View,
+            adapter: ConversationInfoAdapter
+    ) : SimpleUserViewHolder<ConversationInfoAdapter>(itemView, adapter) {
         private val headerIcon = itemView.findViewById(R.id.headerIcon)
+        private val itemContent = itemView.findViewById(R.id.itemContent)
+
+        init {
+            itemContent.setOnClickListener {
+                adapter.listener?.onUserClick(layoutPosition)
+            }
+        }
+
         fun display(user: ParcelableUser, displayHeaderIcon: Boolean) {
             super.displayUser(user)
             headerIcon.visibility = if (displayHeaderIcon) View.VISIBLE else View.INVISIBLE

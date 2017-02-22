@@ -26,7 +26,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
     var value: ParcelableUser? = null
         private set
 
-    private lateinit var viewHolder: SimpleUserViewHolder
+    private lateinit var viewHolder: SimpleUserViewHolder<*>
     private lateinit var dependencyHolder: DependencyHolder
     private lateinit var hintView: View
 
