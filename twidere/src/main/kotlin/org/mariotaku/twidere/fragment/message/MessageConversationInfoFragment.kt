@@ -66,6 +66,7 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.Co
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.DestroyConversationTask
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
 
@@ -98,6 +99,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val theme = Chameleon.getOverrideTheme(context, activity)
 
         adapter = ConversationInfoAdapter(context)
+        adapter.listener = object : ConversationInfoAdapter.Listener {
+            override fun onUserClick(position: Int) {
+                val user = adapter.getUser(position) ?: return
+                startActivity(IntentUtils.userProfile(user))
+            }
+
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LayoutManager(context)
 
@@ -224,6 +232,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 notifyDataSetChanged()
             }
 
+        init {
+            setHasStableIds(true)
+        }
+
         override fun getItemCount(): Int {
             val conversation = this.conversation ?: return 0
             itemCounts[ITEM_INDEX_HEADER] = 1
@@ -240,7 +252,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
                 VIEW_TYPE_USER -> {
                     val participantIdx = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
-                    val user = this.conversation!!.participants[participantIdx]
+                    val user = getUser(position)!!
                     (holder as UserViewHolder).display(user, participantIdx == 0)
                 }
             }
@@ -278,9 +290,26 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             throw UnsupportedOperationException()
         }
 
+        override fun getItemId(position: Int): Long {
+            when (itemCounts.getItemCountIndex(position)) {
+                ITEM_INDEX_ITEM -> {
+                    val user = getUser(position)!!
+                    return user.hashCode().toLong()
+                }
+                else -> {
+                    return Integer.MAX_VALUE.toLong() + getItemViewType(position)
+                }
+            }
+        }
+
+        fun getUser(position: Int): ParcelableUser? {
+            val itemPos = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
+            return conversation?.participants?.getOrNull(itemPos)
+        }
+
         interface Listener {
-            fun onUserClick(position: Int)
-            fun onAddUserClick(position: Int)
+            fun onUserClick(position: Int) {}
+            fun onAddUserClick(position: Int) {}
         }
 
         companion object {
@@ -305,7 +334,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         init {
             itemContent.setOnClickListener {
-                adapter.listener?.onUserClick(layoutPosition)
+                adapter.listener?.onAddUserClick(layoutPosition)
             }
         }
 

@@ -32,10 +32,10 @@ allprojects {
 subprojects {
     buildscript {
         ext.kotlin_version = '1.0.6'
-        ext.android_support_lib_version = '25.1.1'
+        ext.android_support_lib_version = '25.2.0'
         ext.mariotaku_commons_library_version = '0.9.11'
         ext.mariotaku_restfu_version = '0.9.35'
-        ext.mariotaku_object_cursor_version = '0.9.13-SNAPSHOT'
+        ext.mariotaku_object_cursor_version = '0.9.13'
         ext.play_services_version = '10.2.0'
         ext.crashlyrics_version = '2.6.6'
         ext.fabric_plugin_version = '1.22.0'

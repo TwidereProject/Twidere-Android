@@ -28,6 +28,7 @@ import android.net.Uri
 import android.os.BadParcelableException
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentManager.FragmentLifecycleCallbacks
 import android.support.v4.app.NavUtils
 import android.support.v4.view.WindowCompat
@@ -65,7 +66,6 @@ import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.Utils.LINK_ID_FILTERS_IMPORT_BLOCKS
-import org.mariotaku.twidere.util.activity.LinkHandlerFragmentLifecycleCallbacks
 import org.mariotaku.twidere.util.linkhandler.TwidereLinkMatcher
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
@@ -89,7 +89,13 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         controlBarShowHideHelper = ControlBarShowHideHelper(this)
         multiSelectHandler.dispatchOnCreate()
 
-        fragmentLifecycleCallbacks = LinkHandlerFragmentLifecycleCallbacks.get(this)
+        fragmentLifecycleCallbacks = object : FragmentManager.FragmentLifecycleCallbacks() {
+            override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+                if (f is IToolBarSupportFragment) {
+                    setSupportActionBar(f.toolbar)
+                }
+            }
+        }
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentLifecycleCallbacks, false)
 
         val uri = intent.data ?: run {

@@ -40,21 +40,9 @@ object IntentUtils {
                 status.user_name, status.user_screen_name, timeString)
     }
 
-    fun openUserProfile(context: Context, user: ParcelableUser,
-            newDocument: Boolean, @Referral referral: String? = null,
-            activityOptions: Bundle? = null) {
-        val extras = Bundle()
-        extras.putParcelable(EXTRA_USER, user)
-        if (user.extras != null) {
-            extras.putString(EXTRA_PROFILE_URL, user.extras.statusnet_profile_url)
-        }
-        val uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        intent.setExtrasClassLoader(context.classLoader)
-        intent.putExtras(extras)
-        if (referral != null) {
-            intent.putExtra(EXTRA_REFERRAL, referral)
-        }
+    fun openUserProfile(context: Context, user: ParcelableUser, newDocument: Boolean,
+            @Referral referral: String? = null, activityOptions: Bundle? = null) {
+        val intent = userProfile(user, referral)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && newDocument) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
@@ -70,6 +58,21 @@ object IntentUtils {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT)
         }
         ActivityCompat.startActivity(context, intent, activityOptions)
+    }
+
+
+    fun userProfile(user: ParcelableUser, @Referral referral: String? = null): Intent {
+        val uri = LinkCreator.getTwidereUserLink(user.account_key, user.key, user.screen_name)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setExtrasClassLoader(ParcelableUser::class.java.classLoader)
+        intent.putExtra(EXTRA_USER, user)
+        if (user.extras != null) {
+            intent.putExtra(EXTRA_PROFILE_URL, user.extras.statusnet_profile_url)
+        }
+        if (referral != null) {
+            intent.putExtra(EXTRA_REFERRAL, referral)
+        }
+        return intent
     }
 
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,

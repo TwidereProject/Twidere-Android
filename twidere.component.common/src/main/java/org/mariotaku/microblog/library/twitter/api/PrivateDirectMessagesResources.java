@@ -45,7 +45,8 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
     @BodyType(BodyType.FORM)
-    ResponseCode deleteDmConversation(@Path("conversation_id") String conversationId) throws MicroBlogException;
+    ResponseCode deleteDmConversation(@Path("conversation_id") String conversationId)
+            throws MicroBlogException;
 
     @POST("/dm/conversation/{conversation_id}/mark_read.json")
     @BodyType(BodyType.FORM)
@@ -54,7 +55,21 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/update_name.json")
     @BodyType(BodyType.FORM)
-    ResponseCode updateDmConversationName(@Path("conversation_id") String conversationId, @Param("name") String name) throws MicroBlogException;
+    ResponseCode updateDmConversationName(@Path("conversation_id") String conversationId,
+            @Param("name") String name) throws MicroBlogException;
+
+    @POST("/dm/conversation/{conversation_id}/update_avatar.json")
+    @BodyType(BodyType.FORM)
+    ResponseCode updateDmConversationAvatar(@Path("conversation_id") String conversationId,
+            @Param("avatar_id") String avatarId) throws MicroBlogException;
+
+    @POST("/dm/conversation/{conversation_id}/disable_notifications.json")
+    ResponseCode disableDmConversations(@Path("conversation_id") String conversationId)
+            throws MicroBlogException;
+
+    @POST("/dm/conversation/{conversation_id}/enable_notifications.json")
+    ResponseCode enableDmConversations(@Path("conversation_id") String conversationId)
+            throws MicroBlogException;
 
     @POST("/dm/new.json")
     DMResponse sendDm(@Param NewDm newDm) throws MicroBlogException;
@@ -69,5 +84,6 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     UserEvents getUserUpdates(@Query("cursor") String cursor) throws MicroBlogException;
 
     @GET("/dm/conversation/{conversation_id}.json")
-    ConversationTimeline getDmConversation(@Path("conversation_id") String conversationId, @Query Paging paging) throws MicroBlogException;
+    ConversationTimeline getDmConversation(@Path("conversation_id") String conversationId,
+            @Query Paging paging) throws MicroBlogException;
 }
