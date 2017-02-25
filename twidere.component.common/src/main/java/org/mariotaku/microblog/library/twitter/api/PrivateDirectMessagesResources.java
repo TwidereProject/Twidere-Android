@@ -29,18 +29,16 @@ import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseCode;
 import org.mariotaku.microblog.library.twitter.model.UserEvents;
 import org.mariotaku.microblog.library.twitter.model.UserInbox;
+import org.mariotaku.microblog.library.twitter.template.DMAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
 import org.mariotaku.restfu.annotation.param.Path;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 
-@Queries({@KeyValue(key = "include_groups", value = "true"),
-        @KeyValue(key = "include_conversation_info", value = "true"),
-        @KeyValue(key = "ext", value = "stickerInfo,mediaRestrictions,altText")})
+@Queries(template = DMAnnotationTemplate.class)
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
@@ -52,6 +50,10 @@ public interface PrivateDirectMessagesResources extends PrivateResources {
     @BodyType(BodyType.FORM)
     ResponseCode markDmRead(@Path("conversation_id") String conversationId,
             @Param("last_read_event_id") String lastReadEventId) throws MicroBlogException;
+
+    @POST("/dm/update_last_seen_event_id.json")
+    @BodyType(BodyType.FORM)
+    ResponseCode updateLastSeenEventId(@Param("last_seen_event_id") String lastSeenEventId) throws MicroBlogException;
 
     @POST("/dm/conversation/{conversation_id}/update_name.json")
     @BodyType(BodyType.FORM)

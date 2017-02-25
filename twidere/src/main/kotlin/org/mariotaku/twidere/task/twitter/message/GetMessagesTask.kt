@@ -30,7 +30,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.DMResponse
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.microblog.library.twitter.model.fixMedia
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
 import org.mariotaku.twidere.annotation.AccountType
@@ -185,7 +184,6 @@ class GetMessagesTask(
         }
 
         val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
-        response.fixMedia(microBlog)
         return Companion.createDatabaseUpdateData(context, details, response)
     }
 
@@ -202,7 +200,6 @@ class GetMessagesTask(
                 }
             }).userInbox
         }
-        response.fixMedia(microBlog)
         return Companion.createDatabaseUpdateData(context, details, response)
     }
 

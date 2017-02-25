@@ -16,7 +16,6 @@ import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.restfu.oauth.OAuthToken
 import org.mariotaku.twidere.TwidereConstants.DEFAULT_TWITTER_API_URL_FORMAT
 import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.model.ConsumerKeyType
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.EmptyCredentials
@@ -26,6 +25,7 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.TwitterContentUtils
+import org.mariotaku.twidere.util.api.UserAgentExtraHeaders
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
 /**
@@ -111,17 +111,12 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
         @AccountType accountType: String? = null, extraRequestParams: Map<String, String>? = null,
         cls: Class<T>): T {
     val factory = RestAPIFactory<MicroBlogException>()
-    val userAgent: String
-    if (auth is OAuthAuthorization) {
+    val extraHeaders = if (auth is OAuthAuthorization) {
         val officialKeyType = TwitterContentUtils.getOfficialKeyType(context,
                 auth.consumerKey, auth.consumerSecret)
-        if (officialKeyType != ConsumerKeyType.UNKNOWN) {
-            userAgent = MicroBlogAPIFactory.getUserAgentName(context, officialKeyType)
-        } else {
-            userAgent = MicroBlogAPIFactory.getTwidereUserAgent(context)
-        }
+        MicroBlogAPIFactory.getExtraHeaders(context, officialKeyType)
     } else {
-        userAgent = MicroBlogAPIFactory.getTwidereUserAgent(context)
+        UserAgentExtraHeaders(MicroBlogAPIFactory.getTwidereUserAgent(context))
     }
     val holder = DependencyHolder.get(context)
     when (cls) {
@@ -152,7 +147,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
     val converterFactory = TwitterConverterFactory()
     factory.setRestConverterFactory(converterFactory)
     factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(extraRequestParams))
-    factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(userAgent))
+    factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(extraHeaders))
     factory.setExceptionFactory(MicroBlogAPIFactory.TwidereExceptionFactory(converterFactory))
     return factory.build<T>(cls)
 }

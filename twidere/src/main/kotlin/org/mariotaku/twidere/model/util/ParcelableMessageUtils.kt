@@ -190,6 +190,11 @@ object ParcelableMessageUtils {
                 val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(video))
                 return Triple(MessageType.TEXT, null, media)
             }
+            attachment.animatedGif != null -> {
+                val video = attachment.animatedGif
+                val media = arrayOf(ParcelableMediaUtils.fromMediaEntity(video))
+                return Triple(MessageType.TEXT, null, media)
+            }
             attachment.sticker != null -> {
                 val sticker = attachment.sticker
                 val image = sticker.images["size_2x"] ?: sticker.images.values.firstOrNull() ?:

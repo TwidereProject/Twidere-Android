@@ -26,7 +26,7 @@ object ParcelableUserUtils {
         obj.position = position
         obj.account_key = accountKey
         obj.key = UserKeyUtils.fromUser(user)
-        obj.created_at = user.createdAt.time
+        obj.created_at = user.createdAt?.time ?: -1
         obj.is_protected = user.isProtected
         obj.is_verified = user.isVerified
         obj.name = user.name

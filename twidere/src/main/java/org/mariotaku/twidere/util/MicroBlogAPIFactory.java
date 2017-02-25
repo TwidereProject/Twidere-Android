@@ -5,7 +5,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -35,7 +34,6 @@ import org.mariotaku.restfu.http.ValueMap;
 import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
 import org.mariotaku.restfu.oauth.OAuthToken;
-import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
@@ -44,14 +42,17 @@ import org.mariotaku.twidere.model.ConsumerKeyType;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
+import org.mariotaku.twidere.util.api.TwitterAndroidExtraHeaders;
+import org.mariotaku.twidere.util.api.UserAgentExtraHeaders;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import kotlin.Pair;
 import okhttp3.HttpUrl;
 
 /**
@@ -115,7 +116,6 @@ public class MicroBlogAPIFactory implements TwidereConstants {
             }
             case AccountType.TWITTER: {
                 extraParams.put("include_entities", String.valueOf(includeEntities));
-                extraParams.put("include_retweets", String.valueOf(includeRetweets));
                 break;
             }
         }
@@ -192,37 +192,26 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @WorkerThread
-    public static String getUserAgentName(Context context, ConsumerKeyType type) {
+    @Nullable
+    public static ExtraHeaders getExtraHeaders(Context context, ConsumerKeyType type) {
         switch (type) {
             case TWITTER_FOR_ANDROID: {
-                final String versionName = "6.3.4";
-                final String internalVersionName = "6110049-r-917";
-                final String model = Build.MODEL;
-                final String manufacturer = Build.MANUFACTURER;
-                final int sdkInt = Build.VERSION.SDK_INT;
-                final String sdkRelease = Build.VERSION.RELEASE;
-                final String device = Build.DEVICE;
-                final String brand = Build.BRAND;
-                final String product = Build.PRODUCT;
-                final int debug = BuildConfig.DEBUG ? 1 : 0;
-                return String.format(Locale.US, "TwitterAndroid /%s (%s) %s/%s (%s;%s;%s;%s;%d)",
-                        versionName, internalVersionName, model, sdkRelease, manufacturer, model, brand,
-                        product, debug);
+                return new TwitterAndroidExtraHeaders();
             }
             case TWITTER_FOR_IPHONE: {
-                return "Twitter-iPhone";
+                return new UserAgentExtraHeaders("Twitter-iPhone");
             }
             case TWITTER_FOR_IPAD: {
-                return "Twitter-iPad";
+                return new UserAgentExtraHeaders("Twitter-iPad");
             }
             case TWITTER_FOR_MAC: {
-                return "Twitter-Mac";
+                return new UserAgentExtraHeaders("Twitter-Mac");
             }
             case TWEETDECK: {
-                return UserAgentUtils.getDefaultUserAgentStringSafe(context);
+                return new UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context));
             }
         }
-        return "Twitter";
+        return null;
     }
 
     public static String getTwidereUserAgent(final Context context) {
@@ -290,10 +279,11 @@ public class MicroBlogAPIFactory implements TwidereConstants {
 
     public static class TwidereHttpRequestFactory implements HttpRequest.Factory {
 
-        private final String userAgent;
+        @Nullable
+        private final ExtraHeaders extraHeaders;
 
-        public TwidereHttpRequestFactory(final String userAgent) {
-            this.userAgent = userAgent;
+        public TwidereHttpRequestFactory(final @Nullable ExtraHeaders extraHeaders) {
+            this.extraHeaders = extraHeaders;
         }
 
         @Override
@@ -311,7 +301,11 @@ public class MicroBlogAPIFactory implements TwidereConstants {
             if (authorization != null && authorization.hasAuthorization()) {
                 headers.add("Authorization", RestFuUtils.sanitizeHeader(authorization.getHeader(endpoint, info)));
             }
-            headers.add("User-Agent", RestFuUtils.sanitizeHeader(userAgent));
+            if (extraHeaders != null) {
+                for (final Pair<String, String> pair : extraHeaders.get()) {
+                    headers.add(pair.getFirst(), RestFuUtils.sanitizeHeader(pair.getSecond()));
+                }
+            }
             return new HttpRequest(restMethod, url, headers, info.getBody(converterFactory), null);
         }
     }
@@ -383,5 +377,10 @@ public class MicroBlogAPIFactory implements TwidereConstants {
             return new RestRequest(method.value(), method.allowBody(), path, headers, queries,
                     params, rawValue, bodyType, extras);
         }
+    }
+
+    public interface ExtraHeaders {
+        @NonNull
+        List<Pair<String, String>> get();
     }
 }

@@ -489,11 +489,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         locationContainer.location.text = user.location
         urlContainer.visibility = if (TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded)) View.GONE else View.VISIBLE
         urlContainer.url.text = if (TextUtils.isEmpty(user.url_expanded)) user.url else user.url_expanded
-        val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
-        val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
-        val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
-        createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
-                createdAt, dailyTweets)
+        if (user.created_at >= 0) {
+            val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
+            val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()
+            val dailyTweets = Math.round(user.statuses_count / Math.max(1f, daysSinceCreation))
+
+            createdAtContainer.visibility = View.VISIBLE
+            createdAtContainer.createdAt.text = resources.getQuantityString(R.plurals.created_at_with_N_tweets_per_day, dailyTweets,
+                    createdAt, dailyTweets)
+        } else {
+            createdAtContainer.visibility = View.GONE
+        }
         listedContainer.listedCount.text = Utils.getLocalizedNumber(locale, user.listed_count)
         val groupsCount = if (user.extras != null) user.extras.groups_count else -1
         groupsContainer.groupsCount.text = Utils.getLocalizedNumber(locale, groupsCount)
@@ -526,13 +532,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         activity.title = UserColorNameManager.decideDisplayName(user.nickname, user.name,
                 user.screen_name, nameFirst)
 
-        val cal = Calendar.getInstance()
-        val currentMonth = cal.get(Calendar.MONTH)
-        val currentDay = cal.get(Calendar.DAY_OF_MONTH)
-        cal.timeInMillis = user.created_at
+        val userCreationDay = condition@ if (user.created_at >= 0) {
+            val cal = Calendar.getInstance()
+            val currentMonth = cal.get(Calendar.MONTH)
+            val currentDay = cal.get(Calendar.DAY_OF_MONTH)
+            cal.timeInMillis = user.created_at
+            cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay
+        } else {
+            false
+        }
 
-        val twitterversary = cal.get(Calendar.MONTH) == currentMonth && cal.get(Calendar.DAY_OF_MONTH) == currentDay
-        if ((BuildConfig.DEBUG || twitterversary) && !hideBirthdayView) {
+        if (userCreationDay && !hideBirthdayView) {
             if (profileBirthdayStub != null) {
                 profileBirthdayBanner = profileBirthdayStub.inflate()
                 profileBirthdayBanner.setOnClickListener(this)

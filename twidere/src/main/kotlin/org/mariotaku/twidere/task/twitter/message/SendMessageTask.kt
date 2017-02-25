@@ -26,7 +26,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.NewDm
-import org.mariotaku.microblog.library.twitter.model.fixMedia
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -121,7 +120,6 @@ class SendMessageTask(
             it.message != null
         }?.message?.conversationId
         val response = microBlog.getDmConversation(conversationId, null).conversationTimeline
-        response.fixMedia(microBlog)
         return GetMessagesTask.createDatabaseUpdateData(context, account, response)
     }
 
