@@ -73,7 +73,8 @@ class SendMessageTask(
                 result.conversationIds.singleOrNull(), true))
     }
 
-    private fun requestSendMessage(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
+    private fun requestSendMessage(microBlog: MicroBlog, account: AccountDetails,
+            message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {

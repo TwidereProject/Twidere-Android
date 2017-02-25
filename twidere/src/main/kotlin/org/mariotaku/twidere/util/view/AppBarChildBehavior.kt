@@ -60,7 +60,6 @@ class AppBarChildBehavior(
     private val dependencyRect = Rect()
 
     private val thisRect = Rect()
-    private val thisInitRect = Rect()
     private val targetRect = Rect()
 
     private val tempRect = Rect()
@@ -95,7 +94,7 @@ class AppBarChildBehavior(
         val dependency = parent.getDependencies(child).first()
 
         dependency.getFrameRelatedTo(dependencyRect, parent)
-        child.layoutRelatedTo(dependencyRect, layoutDirection)
+        child.layoutRelatedTo(parent, dependencyRect, layoutDirection)
 
         child.getFrameRelatedTo(thisRect, parent)
         target.getFrameRelatedTo(targetRect, parent)
@@ -116,7 +115,7 @@ class AppBarChildBehavior(
         return true
     }
 
-    internal fun View.layoutRelatedTo(frame: Rect, layoutDirection: Int) {
+    internal fun View.layoutRelatedTo(parent: CoordinatorLayout, frame: Rect, layoutDirection: Int) {
         val verticalRule = alignmentRule and VERTICAL_MASK
         val horizontalRule = alignmentRule and HORIZONTAL_MASK
         tempRect.set(0, 0, measuredWidth, measuredHeight)

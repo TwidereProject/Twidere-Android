@@ -19,8 +19,10 @@
 
 package org.mariotaku.twidere.fragment.message
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
@@ -34,6 +36,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
+import android.widget.CompoundButton
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
 import kotlinx.android.synthetic.main.header_message_conversation_info.view.*
@@ -45,10 +48,11 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
-import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
+import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
@@ -65,7 +69,9 @@ import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.Co
 import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_SPACE
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
 import org.mariotaku.twidere.task.twitter.message.DestroyConversationTask
+import org.mariotaku.twidere.task.twitter.message.SetConversationNotificationDisabledTask
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 import java.lang.ref.WeakReference
@@ -105,6 +111,18 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 startActivity(IntentUtils.userProfile(user))
             }
 
+            override fun onAddUserClick(position: Int) {
+                val conversation = adapter.conversation ?: return
+                val intent = Intent(IntentConstants.INTENT_ACTION_SELECT_USER)
+                intent.putExtra(EXTRA_ACCOUNT_KEY, conversation.account_key)
+                intent.setClass(context, UserSelectorActivity::class.java)
+                startActivityForResult(intent, REQUEST_CONVERSATION_ADD_USER)
+            }
+
+            override fun onDisableNotificationChanged(disabled: Boolean) {
+                performSetNotificationDisabled(disabled)
+            }
+
         }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LayoutManager(context)
@@ -123,9 +141,25 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         conversationTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
         conversationSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
+        editButton.setOnClickListener {
+            executeAfterFragmentResumed { fragment ->
+                val df = EditInfoDialogFragment()
+                df.show(fragment.childFragmentManager, "edit_info")
+            }
+        }
+
         loaderManager.initLoader(0, null, this)
+    }
 
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_CONVERSATION_ADD_USER -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val user = data.getParcelableExtra<ParcelableUser>(EXTRA_USER)
+                    performAddParticipant(user)
+                }
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -185,9 +219,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val task = DestroyConversationTask(context, accountKey, conversationId)
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
-            f.executeAfterFragmentResumed { fragment ->
-                val df = fragment.childFragmentManager.findFragmentByTag("leave_conversation_progress") as? DialogFragment
-                df?.dismiss()
+            f.dismissAlertDialogThen("leave_conversation_progress") {
                 if (succeed) {
                     activity?.setResult(RESULT_CLOSE)
                     activity?.finish()
@@ -195,6 +227,37 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
         }
         TaskStarter.execute(task)
+    }
+
+    private fun performAddParticipant(user: ParcelableUser) {
+        ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
+        val weakThis = WeakReference(this)
+        val task = AddParticipantsTask(context, accountKey, conversationId, arrayOf(user.key.id))
+        task.callback = callback@ { succeed ->
+            val f = weakThis.get() ?: return@callback
+            f.dismissAlertDialogThen("add_participant_progress") {}
+        }
+        TaskStarter.execute(task)
+    }
+
+    private fun performSetNotificationDisabled(disabled: Boolean) {
+        ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
+        val weakThis = WeakReference(this)
+        val task = SetConversationNotificationDisabledTask(context, accountKey, conversationId, disabled)
+        task.callback = callback@ { succeed ->
+            val f = weakThis.get() ?: return@callback
+            f.dismissAlertDialogThen("set_notifications_disabled_progress") {}
+        }
+        TaskStarter.execute(task)
+    }
+
+
+    private inline fun dismissAlertDialogThen(tag: String, crossinline action: BaseFragment.() -> Unit) {
+        executeAfterFragmentResumed { fragment ->
+            val df = fragment.childFragmentManager.findFragmentByTag(tag) as? DialogFragment
+            df?.dismiss()
+            action(fragment)
+        }
     }
 
     class ConversationInfoLoader(
@@ -262,7 +325,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             when (viewType) {
                 VIEW_TYPE_HEADER -> {
                     val view = inflater.inflate(HeaderViewHolder.layoutResource, parent, false)
-                    return HeaderViewHolder(view)
+                    return HeaderViewHolder(view, this)
                 }
                 VIEW_TYPE_USER -> {
                     val view = inflater.inflate(R.layout.list_item_conversation_info_user, parent, false)
@@ -310,6 +373,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         interface Listener {
             fun onUserClick(position: Int) {}
             fun onAddUserClick(position: Int) {}
+            fun onDisableNotificationChanged(disabled: Boolean) {}
         }
 
         companion object {
@@ -359,16 +423,21 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
     }
 
-    internal class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    internal class HeaderViewHolder(itemView: View, adapter: ConversationInfoAdapter) : RecyclerView.ViewHolder(itemView) {
         private val muteSwitch = itemView.muteNotifications
 
+        private val listener = CompoundButton.OnCheckedChangeListener { button, checked ->
+            adapter.listener?.onDisableNotificationChanged(checked)
+        }
+
         fun display(conversation: ParcelableMessageConversation) {
+            muteSwitch.setOnCheckedChangeListener(null)
             muteSwitch.isChecked = conversation.notificationDisabled
+            muteSwitch.setOnCheckedChangeListener(listener)
         }
 
         companion object {
             const val layoutResource = R.layout.header_message_conversation_info
-
         }
     }
 
@@ -383,6 +452,25 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             return super.getDecoratedMeasuredHeight(child)
         }
 
+    }
+
+    class EditInfoDialogFragment : BaseDialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
+                    Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
+            val builder = AlertDialog.Builder(context)
+            builder.setItems(actions.map(Action::title).toTypedArray()) { dialog, which ->
+
+            }
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
+        }
+
+        data class Action(val title: String, val type: String)
     }
 
     class DestroyConversationConfirmDialogFragment : BaseDialogFragment() {
@@ -405,5 +493,6 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     companion object {
         const val RESULT_CLOSE = 101
+        const val REQUEST_CONVERSATION_ADD_USER = 101
     }
 }

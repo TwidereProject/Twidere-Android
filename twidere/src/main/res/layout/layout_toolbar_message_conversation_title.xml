@@ -36,6 +36,7 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/element_spacing_normal"
         android:layout_weight="0"
+        app:sivDrawShadow="false"
         app:sivShape="circle"
         tools:src="@drawable/ic_profile_image_default_group"/>
 
@@ -52,6 +53,8 @@
             android:id="@+id/conversationTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
             tools:text="Conversation name"/>
@@ -60,6 +63,8 @@
             android:id="@+id/conversationSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="?android:textColorSecondary"
             tools:text="Conversation summary"/>

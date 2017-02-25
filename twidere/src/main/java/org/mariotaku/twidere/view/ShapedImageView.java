@@ -300,7 +300,7 @@ public class ShapedImageView extends ImageView {
             final int contentWidth = contentRight - contentLeft,
                     contentHeight = contentBottom - contentTop;
             final int size = Math.min(contentWidth, contentHeight);
-            if (mShadowBitmap != null) {
+            if (mShadowBitmap != null && mDrawShadow) {
                 canvas.drawBitmap(mShadowBitmap, contentLeft + (contentWidth - size) / 2 - mShadowRadius,
                         contentTop + (contentHeight - size) / 2 - mShadowRadius, null);
             }
@@ -468,7 +468,7 @@ public class ShapedImageView extends ImageView {
     }
 
     private void updateShadowBitmap() {
-        if (useOutline()) return;
+        if (useOutline() || !mDrawShadow) return;
         final int width = getWidth(), height = getHeight();
         if (width <= 0 || height <= 0) return;
         final int contentLeft = getPaddingLeft(), contentTop = getPaddingTop(),

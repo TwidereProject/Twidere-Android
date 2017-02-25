@@ -40,6 +40,7 @@ import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
+import org.mariotaku.twidere.model.message.conversation.DefaultConversationExtras
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
@@ -165,13 +166,23 @@ class GetMessagesTask(
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, false,
                     1.0 - (i.toDouble() / received.size))
             insertMessages.add(message)
-            conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
+            val conversation = conversations.addConversation(message.conversation_id, details,
+                    message, setOf(dm.sender, dm.recipient)) ?: return@forEachIndexed
+            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
+            if (conversation.conversation_extras == null) {
+                conversation.conversation_extras = DefaultConversationExtras()
+            }
         }
         sent.forEachIndexed { i, dm ->
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true,
                     1.0 - (i.toDouble() / sent.size))
             insertMessages.add(message)
-            conversations.addConversation(message.conversation_id, details, message, setOf(dm.sender, dm.recipient))
+            val conversation = conversations.addConversation(message.conversation_id, details,
+                    message, setOf(dm.sender, dm.recipient)) ?: return@forEachIndexed
+            conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
+            if (conversation.conversation_extras == null) {
+                conversation.conversation_extras = DefaultConversationExtras()
+            }
         }
         return DatabaseUpdateData(conversations.values, insertMessages)
     }

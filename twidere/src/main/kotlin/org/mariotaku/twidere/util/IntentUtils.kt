@@ -76,7 +76,7 @@ object IntentUtils {
     }
 
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-            @Referral referral: String? = null, profileUrl: String?): Intent {
+            @Referral referral: String? = null, profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         if (referral != null) {

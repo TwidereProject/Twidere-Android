@@ -51,7 +51,7 @@ class ExtensionsListLoader(
                 extensions.add(ExtensionInfo(info, packageManager))
             }
         }
-        extensions.sort(ExtensionInfoComparator(Collator.getInstance()))
+        Collections.sort(extensions, ExtensionInfoComparator(Collator.getInstance()))
         return extensions
     }
 

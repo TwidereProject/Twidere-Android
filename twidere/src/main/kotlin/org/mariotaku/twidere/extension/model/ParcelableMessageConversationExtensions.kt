@@ -9,6 +9,7 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.message.conversation.DefaultConversationExtras
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -86,12 +87,34 @@ val ParcelableMessageConversation.readOnly: Boolean
         return false
     }
 
-val ParcelableMessageConversation.notificationDisabled: Boolean
+var ParcelableMessageConversation.notificationDisabled: Boolean
     get() {
         when (conversation_extras_type) {
             ExtrasType.TWITTER_OFFICIAL -> {
                 return (conversation_extras as? TwitterOfficialConversationExtras)?.notificationsDisabled ?: false
             }
+            else -> {
+                return (conversation_extras as? DefaultConversationExtras)?.notificationsDisabled ?: false
+            }
         }
-        return false
+    }
+    set(value) {
+        when (conversation_extras_type) {
+            ExtrasType.TWITTER_OFFICIAL -> {
+                val extras = conversation_extras as? TwitterOfficialConversationExtras ?: run {
+                    val obj = TwitterOfficialConversationExtras()
+                    conversation_extras = obj
+                    return@run obj
+                }
+                extras.notificationsDisabled = value
+            }
+            else -> {
+                val extras = conversation_extras as? DefaultConversationExtras ?: run {
+                    val obj = DefaultConversationExtras()
+                    conversation_extras = obj
+                    return@run obj
+                }
+                extras.notificationsDisabled = value
+            }
+        }
     }

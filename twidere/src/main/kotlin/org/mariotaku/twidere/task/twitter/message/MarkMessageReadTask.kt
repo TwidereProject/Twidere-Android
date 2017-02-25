@@ -53,7 +53,7 @@ class MarkMessageReadTask(
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        val conversation = findConversation(accountKey, conversationId)
+        val conversation = findConversation(context, accountKey, conversationId)
         val lastReadEvent = conversation?.let {
             return@let performMarkRead(microBlog, account, conversation)
         } ?: return false
@@ -92,22 +92,6 @@ class MarkMessageReadTask(
         return Pair(message.id, message.timestamp)
     }
 
-    private fun findConversation(accountKey: UserKey, conversationId: String): ParcelableMessageConversation? {
-        val deleteWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
-                Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
-        val deleteWhereArgs = arrayOf(accountKey.toString(), conversationId)
-        @SuppressLint("Recycle")
-        val cur = context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
-                deleteWhere, deleteWhereArgs, null) ?: return null
-        try {
-            if (cur.moveToFirst()) {
-                return ParcelableMessageConversationCursorIndices.fromCursor(cur)
-            }
-        } finally {
-            cur.close()
-        }
-        return null
-    }
 
     private fun findRecentMessage(accountKey: UserKey, conversationId: String): ParcelableMessage? {
         val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
@@ -133,5 +117,24 @@ class MarkMessageReadTask(
             return Pair(id, maxEntryTimestamp)
         }
 
+    companion object {
 
+        fun findConversation(context: Context, accountKey: UserKey, conversationId: String):
+                ParcelableMessageConversation? {
+            val deleteWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                    Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
+            val deleteWhereArgs = arrayOf(accountKey.toString(), conversationId)
+            @SuppressLint("Recycle")
+            val cur = context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
+                    deleteWhere, deleteWhereArgs, null) ?: return null
+            try {
+                if (cur.moveToFirst()) {
+                    return ParcelableMessageConversationCursorIndices.fromCursor(cur)
+                }
+            } finally {
+                cur.close()
+            }
+            return null
+        }
+    }
 }

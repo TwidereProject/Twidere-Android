@@ -234,10 +234,10 @@ public class ParcelableMessageConversation implements Parcelable {
         String GROUP = "group";
     }
 
-    @StringDef({ExtrasType.FANFOU, ExtrasType.TWITTER_OFFICIAL})
+    @StringDef({ExtrasType.DEFAULT, ExtrasType.TWITTER_OFFICIAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExtrasType {
-        String FANFOU = "fanfou";
+        String DEFAULT = "default";
         String TWITTER_OFFICIAL = "twitter_official";
     }
 
