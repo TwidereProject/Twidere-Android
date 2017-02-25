@@ -61,9 +61,9 @@ class SetConversationNotificationDisabledTask(
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
                     val response = if (notificationDisabled) {
-                        microBlog.enableDmConversations(conversationId);
+                        microBlog.disableDmConversations(conversationId)
                     } else {
-                        microBlog.disableDmConversations(conversationId);
+                        microBlog.enableDmConversations(conversationId)
                     }
                     val conversation = MarkMessageReadTask.findConversation(context, accountKey,
                             conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
