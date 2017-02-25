@@ -28,6 +28,7 @@ import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.constant.showAbsoluteTimeKey
 import org.mariotaku.twidere.constant.textSizeKey
+import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -45,13 +46,15 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     @Inject
     override final lateinit var userColorNameManager: UserColorNameManager
     @Inject
+    override final lateinit var bidiFormatter: BidiFormatter
+    @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
     lateinit var readStateManager: ReadStateManager
     @Inject
     lateinit var multiSelectManager: MultiSelectManager
     @Inject
-    override final lateinit var bidiFormatter: BidiFormatter
+    lateinit var defaultFeatures: DefaultFeatures
 
     override final val profileImageStyle: Int
     override final val textSize: Float
