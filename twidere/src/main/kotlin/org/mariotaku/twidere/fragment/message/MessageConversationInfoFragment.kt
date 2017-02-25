@@ -208,9 +208,17 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         data.displayAvatarTo(mediaLoader, conversationAvatar)
         data.displayAvatarTo(mediaLoader, appBarIcon)
         appBarTitle.text = name
-        appBarSubtitle.text = summary
         conversationTitle.text = name
-        conversationSubtitle.text = summary
+        if (summary != null) {
+            appBarSubtitle.visibility = View.VISIBLE
+            conversationSubtitle.visibility = View.VISIBLE
+
+            appBarSubtitle.text = summary
+            conversationSubtitle.text = summary
+        } else {
+            appBarSubtitle.visibility = View.GONE
+            conversationSubtitle.visibility = View.GONE
+        }
     }
 
     private fun performDestroyConversation() {
@@ -246,7 +254,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val task = SetConversationNotificationDisabledTask(context, accountKey, conversationId, disabled)
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
-            f.dismissAlertDialogThen("set_notifications_disabled_progress") {}
+            f.dismissAlertDialogThen("set_notifications_disabled_progress") {
+                if (!succeed) {
+                    adapter.notifyDataSetChanged()
+                }
+            }
         }
         TaskStarter.execute(task)
     }

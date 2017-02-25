@@ -31,7 +31,7 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.applyFrom
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -470,7 +470,7 @@ class GetMessagesTask(
             ContentResolverUtils.bulkInsert(resolver, Messages.CONTENT_URI, messagesValues)
             // Notifications will show on conversations inserted
             ContentResolverUtils.bulkInsert(resolver, UriUtils.appendQueryParameters(Conversations.CONTENT_URI,
-                    QUERY_PARAM_NOTIFY, showNotification), conversationsValues)
+                    QUERY_PARAM_SHOW_NOTIFICATION, showNotification), conversationsValues)
 
             if (data.conversationRequestCursor != null) {
                 resolver.update(Conversations.CONTENT_URI, ContentValues().apply {

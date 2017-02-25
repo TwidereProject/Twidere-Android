@@ -33,6 +33,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
+import org.mariotaku.twidere.util.DataStoreUtils
 
 /**
  * Created by mariotaku on 2017/2/14.
@@ -48,8 +49,13 @@ class DestroyConversationTask(
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        if (!performDestroyConversation(microBlog, account)) {
-            return false
+        val conversation = DataStoreUtils.findMessageConversation(context, accountKey, conversationId)
+
+        // Only perform real deletion when it's not temp conversation (stored locally)
+        if (conversation == null || !conversation.is_temp) {
+            if (!performDestroyConversation(microBlog, account)) {
+                return false
+            }
         }
 
         val deleteMessageWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
@@ -64,8 +70,7 @@ class DestroyConversationTask(
     }
 
     override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean?, exception: MicroBlogException?) {
-        val succeed = result ?: false
-        callback?.invoke(succeed)
+        callback?.invoke(result ?: false)
     }
 
     private fun performDestroyConversation(microBlog: MicroBlog, account: AccountDetails): Boolean {

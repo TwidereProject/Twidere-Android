@@ -900,7 +900,7 @@ object DataStoreUtils {
         val whereArgs = arrayOf(accountKey.toString(), conversationId)
         val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
         try {
-            if (cur.count > 0 && cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
                 return ParcelableMessageConversationCursorIndices.fromCursor(cur)
             }
         } finally {

@@ -146,7 +146,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_TYPE = "type";
     String QUERY_PARAM_VALUE_USERS = "users";
     String QUERY_PARAM_VALUE_TWEETS = "tweets";
-    String QUERY_PARAM_NOTIFY = "notify";
+    String QUERY_PARAM_SHOW_NOTIFICATION = "show_notification";
     String QUERY_PARAM_LAT = "lat";
     String QUERY_PARAM_LNG = "lng";
     String QUERY_PARAM_URL = "url";

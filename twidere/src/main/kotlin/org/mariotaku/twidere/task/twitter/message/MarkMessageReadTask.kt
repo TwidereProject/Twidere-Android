@@ -38,6 +38,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
 import org.mariotaku.twidere.task.twitter.message.SendMessageTask.Companion.TEMP_CONVERSATION_ID_PREFIX
+import org.mariotaku.twidere.util.DataStoreUtils
 
 /**
  * Created by mariotaku on 2017/2/16.
@@ -53,7 +54,7 @@ class MarkMessageReadTask(
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        val conversation = findConversation(context, accountKey, conversationId)
+        val conversation = DataStoreUtils.findMessageConversation(context, accountKey, conversationId)
         val lastReadEvent = conversation?.let {
             return@let performMarkRead(microBlog, account, conversation)
         } ?: return false
@@ -117,24 +118,4 @@ class MarkMessageReadTask(
             return Pair(id, maxEntryTimestamp)
         }
 
-    companion object {
-
-        fun findConversation(context: Context, accountKey: UserKey, conversationId: String):
-                ParcelableMessageConversation? {
-            val deleteWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
-                    Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
-            val deleteWhereArgs = arrayOf(accountKey.toString(), conversationId)
-            @SuppressLint("Recycle")
-            val cur = context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS,
-                    deleteWhere, deleteWhereArgs, null) ?: return null
-            try {
-                if (cur.moveToFirst()) {
-                    return ParcelableMessageConversationCursorIndices.fromCursor(cur)
-                }
-            } finally {
-                cur.close()
-            }
-            return null
-        }
-    }
 }

@@ -31,6 +31,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
+import org.mariotaku.twidere.util.DataStoreUtils
 
 /**
  * Created by mariotaku on 2017/2/25.
@@ -65,7 +66,7 @@ class SetConversationNotificationDisabledTask(
                     } else {
                         microBlog.enableDmConversations(conversationId)
                     }
-                    val conversation = MarkMessageReadTask.findConversation(context, accountKey,
+                    val conversation = DataStoreUtils.findMessageConversation(context, accountKey,
                             conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
                     if (response.isSuccessful) {
                         conversation.notificationDisabled = notificationDisabled
@@ -75,7 +76,7 @@ class SetConversationNotificationDisabledTask(
             }
         }
 
-        val conversation = MarkMessageReadTask.findConversation(context, accountKey,
+        val conversation = DataStoreUtils.findMessageConversation(context, accountKey,
                 conversationId) ?: return GetMessagesTask.DatabaseUpdateData(emptyList(), emptyList())
         conversation.notificationDisabled = notificationDisabled
         // Don't finish too fast

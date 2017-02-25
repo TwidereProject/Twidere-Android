@@ -19,7 +19,7 @@ import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -149,7 +149,7 @@ abstract class GetStatusesTask(
                             sinceSortId: Long, maxSortId: Long,
                             loadItemLimit: Int, notify: Boolean): Int {
         val uri = contentUri
-        val writeUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_NOTIFY, notify)
+        val writeUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_SHOW_NOTIFICATION, notify)
         val resolver = context.contentResolver
         val noItemsBefore = DataStoreUtils.getStatusCount(context, uri, accountKey) <= 0
         val values = arrayOfNulls<ContentValues>(statuses.size)

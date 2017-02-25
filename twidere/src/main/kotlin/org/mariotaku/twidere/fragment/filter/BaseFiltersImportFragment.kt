@@ -124,6 +124,12 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             // If first and last data not changed, assume no more data
             return@run previousFirst != data?.firstOrNull() && previousLast != data?.lastOrNull()
         }
+        adapter.clearLockedState()
+        data?.forEach { user ->
+            if (user.is_filtered) {
+                adapter.setLockedState(user.key, true)
+            }
+        }
         adapter.data = data
         if (loader !is IExtendedLoader || loader.fromUser) {
             adapter.loadMoreSupportedPosition = if (hasMoreData) {

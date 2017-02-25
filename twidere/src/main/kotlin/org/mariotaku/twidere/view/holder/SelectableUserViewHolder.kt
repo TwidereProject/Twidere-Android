@@ -45,10 +45,18 @@ class SelectableUserViewHolder(
     override fun displayUser(user: ParcelableUser) {
         super.displayUser(user)
         checkBox.setOnCheckedChangeListener(null)
-        checkBox.isChecked = adapter.isItemChecked(layoutPosition)
+        val key = adapter.getUserKey(layoutPosition)
+        val locked = adapter.isItemLocked(key)
+        if (locked) {
+            itemView.isEnabled = false
+            checkBox.isEnabled = false
+            checkBox.isChecked = adapter.getLockedState(key)
+        } else {
+            itemView.isEnabled = true
+            checkBox.isEnabled = true
+            checkBox.isChecked = adapter.isItemChecked(key)
+        }
         checkBox.setOnCheckedChangeListener(checkChangedListener)
-        itemView.isEnabled = !user.is_filtered
-        checkBox.isEnabled = !user.is_filtered
     }
 
 }

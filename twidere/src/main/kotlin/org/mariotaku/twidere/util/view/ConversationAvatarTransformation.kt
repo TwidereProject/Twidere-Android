@@ -30,11 +30,11 @@ class ConversationAvatarTransformation : AppBarChildBehavior.ScaleTransformation
     override fun onTargetChanged(child: View, frame: Rect, target: View, targetFrame: Rect, percent: Float, offset: Int) {
         super.onTargetChanged(child, frame, target, targetFrame, percent, offset)
         if (percent < 1) {
-            child.visibility = View.VISIBLE
-            target.visibility = View.INVISIBLE
+            child.alpha = 1f
+            target.alpha = 0f
         } else {
-            child.visibility = View.INVISIBLE
-            target.visibility = View.VISIBLE
+            child.alpha = 0f
+            target.alpha = 1f
         }
     }
 }

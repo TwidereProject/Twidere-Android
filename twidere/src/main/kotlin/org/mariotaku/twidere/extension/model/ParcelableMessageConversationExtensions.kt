@@ -46,7 +46,11 @@ fun ParcelableMessageConversation.getTitle(context: Context, manager: UserColorN
     return Pair(participants.joinToString(separator = ", ") { manager.getDisplayName(it, nameFirst) }, null)
 }
 
-fun ParcelableMessageConversation.getSubtitle(context: Context): String {
+fun ParcelableMessageConversation.getSubtitle(context: Context): String? {
+    if (conversation_type == ConversationType.ONE_TO_ONE) {
+        val user = this.user ?: return null
+        return "@${user.screen_name}"
+    }
     val resources = context.resources
     return resources.getQuantityString(R.plurals.N_message_participants, participants.size,
             participants.size)

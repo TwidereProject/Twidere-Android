@@ -244,6 +244,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     private fun updateCheckState() {
         val selected = selectedRecipients
         usersAdapter.clearCheckState()
+        usersAdapter.clearLockedState()
+        usersAdapter.setLockedState(accountKey, true)
         selected.forEach { user ->
             usersAdapter.setCheckState(user.key, true)
         }

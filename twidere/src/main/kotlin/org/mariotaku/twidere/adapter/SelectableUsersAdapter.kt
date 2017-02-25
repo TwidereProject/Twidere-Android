@@ -25,51 +25,90 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.SelectableUserViewHolder
 
-class SelectableUsersAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context) {
+class SelectableUsersAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context),
+        IItemCountsAdapter {
 
     val ITEM_VIEW_TYPE_USER = 2
 
+    override val itemCounts: ItemCounts = ItemCounts(3)
+
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val itemStates: MutableMap<UserKey, Boolean> = ArrayMap()
+    private val checkedState: MutableMap<UserKey, Boolean> = ArrayMap()
+    private val lockedState: MutableMap<UserKey, Boolean> = ArrayMap()
     var itemCheckedListener: ((Int, Boolean) -> Unit)? = null
 
     var data: List<ParcelableUser>? = null
         set(value) {
             field = value
-            value?.forEach { item ->
-                if (item.key !in itemStates && item.is_filtered) {
-                    itemStates[item.key] = true
-                }
-            }
             notifyDataSetChanged()
         }
+
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemCount(): Int {
+        val position = loadMoreIndicatorPosition
+        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START !== 0L) 1 else 0
+        itemCounts[1] = userCount
+        itemCounts[2] = if (position and ILoadMoreSupportAdapter.END !== 0L) 1 else 0
+        return itemCounts.itemCount
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        when (viewType) {
+            ITEM_VIEW_TYPE_USER -> {
+                val view = inflater.inflate(R.layout.list_item_simple_user, parent, false)
+                val holder = SelectableUserViewHolder(view, this)
+                return holder
+            }
+            ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
+                val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
+                return LoadIndicatorViewHolder(view)
+            }
+        }
+        throw IllegalStateException("Unknown view type " + viewType)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            ITEM_VIEW_TYPE_USER -> {
+                bindUser(holder as SelectableUserViewHolder, position)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        when (itemCounts.getItemCountIndex(position)) {
+            0, 2 -> ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
+            1 -> return ITEM_VIEW_TYPE_USER
+        }
+        throw UnsupportedOperationException()
+    }
+
+    override fun getItemId(position: Int): Long {
+        val countIndex = itemCounts.getItemCountIndex(position)
+        when (countIndex) {
+            0, 2 -> return Integer.MAX_VALUE.toLong() + countIndex
+            1 -> return getUser(position)!!.hashCode().toLong()
+        }
+        throw UnsupportedOperationException()
+    }
 
     private fun bindUser(holder: SelectableUserViewHolder, position: Int) {
         holder.displayUser(getUser(position)!!)
     }
 
-    override fun getItemCount(): Int {
-        val position = loadMoreIndicatorPosition
-        var count = userCount
-        if (position and ILoadMoreSupportAdapter.START !== 0L) {
-            count++
-        }
-        if (position and ILoadMoreSupportAdapter.END !== 0L) {
-            count++
-        }
-        return count
-    }
-
     fun getUser(position: Int): ParcelableUser? {
-        val dataPosition = position - userStartIndex
-        if (dataPosition < 0 || dataPosition >= userCount) return null
-        return data!![dataPosition]
+        return data?.getOrNull(position - itemCounts.getItemStartPosition(1))
     }
 
     val userStartIndex: Int
@@ -83,14 +122,11 @@ class SelectableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
         }
 
     fun getUserKey(position: Int): UserKey {
-        return data!![position].key
+        return getUser(position)!!.key
     }
 
     val userCount: Int
-        get() {
-            if (data == null) return 0
-            return data!!.size
-        }
+        get() = data?.size ?: 0
 
     fun removeUserAt(position: Int): Boolean {
         val data = this.data as? MutableList ?: return false
@@ -121,62 +157,62 @@ class SelectableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
         return RecyclerView.NO_POSITION
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        when (viewType) {
-            ITEM_VIEW_TYPE_USER -> {
-                val view = inflater.inflate(R.layout.list_item_simple_user, parent, false)
-                val holder = SelectableUserViewHolder(view, this)
-                return holder
-            }
-            ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR -> {
-                val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
-                return LoadIndicatorViewHolder(view)
-            }
-        }
-        throw IllegalStateException("Unknown view type " + viewType)
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder.itemViewType) {
-            ITEM_VIEW_TYPE_USER -> {
-                bindUser(holder as SelectableUserViewHolder, position)
-            }
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START !== 0L && position == 0) {
-            return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
-        }
-        if (position == userCount) {
-            return ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
-        }
-        return ITEM_VIEW_TYPE_USER
-    }
 
     val checkedCount: Int get() {
-        return data?.count { !it.is_filtered && itemStates[it.key] ?: false } ?: 0
+        return data?.count { it.key !in lockedState && checkedState[it.key] ?: false } ?: 0
     }
 
     fun setItemChecked(position: Int, value: Boolean) {
         val userKey = getUserKey(position)
-        itemStates[userKey] = value
+        setCheckState(userKey, value)
         itemCheckedListener?.invoke(position, value)
     }
 
     fun clearCheckState() {
-        itemStates.clear()
+        checkedState.clear()
     }
 
     fun setCheckState(userKey: UserKey, value: Boolean) {
-        itemStates[userKey] = value
+        checkedState[userKey] = value
+    }
+
+    fun clearLockedState() {
+        lockedState.clear()
+    }
+
+    fun setLockedState(userKey: UserKey, locked: Boolean) {
+        lockedState[userKey] = locked
+    }
+
+    fun removeLockedState(userKey: UserKey) {
+        lockedState.remove(userKey)
     }
 
     fun isItemChecked(position: Int): Boolean {
-        return itemStates[getUserKey(position)] ?: false
+        return checkedState[getUserKey(position)] ?: false
+    }
+
+    fun isItemChecked(userKey: UserKey): Boolean {
+        return checkedState[userKey] ?: false
+    }
+
+    fun getLockedState(position: Int): Boolean {
+        return lockedState[getUserKey(position)] ?: false
+    }
+
+    fun getLockedState(userKey: UserKey): Boolean {
+        return lockedState[userKey] ?: false
+    }
+
+    fun isItemLocked(position: Int): Boolean {
+        return getUserKey(position) in lockedState
+    }
+
+    fun isItemLocked(userKey: UserKey): Boolean {
+        return userKey in lockedState
     }
 
     fun clearSelection() {
-        itemStates.clear()
+        checkedState.clear()
     }
 }
