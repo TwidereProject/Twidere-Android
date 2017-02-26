@@ -21,6 +21,7 @@
 
 package org.mariotaku.twidere.model;
 
+import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
+import org.mariotaku.library.objectcursor.annotation.BeforeWriteContentValues;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.message.MessageExtras;
@@ -42,9 +44,11 @@ import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversat
 import org.mariotaku.twidere.model.util.ConversationExtrasConverter;
 import org.mariotaku.twidere.model.util.MessageExtrasConverter;
 import org.mariotaku.twidere.model.util.UserKeyCursorFieldConverter;
+import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations;
 
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -127,6 +131,13 @@ public class ParcelableMessageConversation implements Parcelable {
     @CursorField(value = Conversations.PARTICIPANTS, converter = LoganSquareCursorFieldConverter.class)
     public ParcelableUser[] participants;
 
+    /**
+     * Keys are sorted for string comparison
+     */
+    @JsonField(name = "participant_keys")
+    @CursorField(value = Conversations.PARTICIPANT_KEYS, converter = UserKeysCursorFieldConverter.class)
+    public UserKey[] participant_keys;
+
     @JsonField(name = "sender_key")
     @CursorField(value = Conversations.SENDER_KEY, converter = UserKeyCursorFieldConverter.class)
     public UserKey sender_key;
@@ -183,6 +194,7 @@ public class ParcelableMessageConversation implements Parcelable {
     void beforeJsonSerialize() {
         internalMessageExtras = ParcelableMessage.InternalExtras.from(message_extras);
         internalConversationExtras = InternalExtras.from(conversation_extras);
+        prepareParticipantKeys();
     }
 
 
@@ -194,6 +206,11 @@ public class ParcelableMessageConversation implements Parcelable {
         if (internalConversationExtras != null) {
             conversation_extras = internalConversationExtras.getExtras();
         }
+    }
+
+    @BeforeWriteContentValues
+    void beforeWriteContentValues(ContentValues values) throws IOException {
+        prepareParticipantKeys();
     }
 
     @Override
@@ -225,6 +242,19 @@ public class ParcelableMessageConversation implements Parcelable {
                 ", internalMessageExtras=" + internalMessageExtras +
                 ", internalConversationExtras=" + internalConversationExtras +
                 '}';
+    }
+
+    private void prepareParticipantKeys() {
+        // Ensure keys are ordered
+        if (participants != null && participant_keys == null) {
+            participant_keys = new UserKey[participants.length];
+            for (int i = 0, j = participants.length; i < j; i++) {
+                participant_keys[i] = participants[i].key;
+            }
+        }
+        if (participant_keys != null) {
+            Arrays.sort(participant_keys);
+        }
     }
 
     @StringDef({ConversationType.ONE_TO_ONE, ConversationType.GROUP})

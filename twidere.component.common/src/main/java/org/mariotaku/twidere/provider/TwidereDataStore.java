@@ -380,6 +380,7 @@ public interface TwidereDataStore {
             String SPANS = "spans";
             String MESSAGE_EXTRAS = "message_extras";
             String PARTICIPANTS = "participants";
+            String PARTICIPANT_KEYS = "participant_keys";
             String SENDER_KEY = "sender_key";
             String RECIPIENT_KEY = "recipient_key";
             String REQUEST_CURSOR = "request_cursor";

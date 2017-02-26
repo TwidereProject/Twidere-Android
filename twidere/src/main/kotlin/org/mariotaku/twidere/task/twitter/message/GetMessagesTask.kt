@@ -523,6 +523,7 @@ class GetMessagesTask(
                     this.participants = participants + ParcelableUserUtils.fromUser(user, accountKey)
                 }
             }
+            this.participant_keys = this.participants.map(ParcelableUser::key).toTypedArray()
             this.participants.sortBy(ParcelableUser::screen_name)
         }
 
