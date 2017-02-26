@@ -242,7 +242,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private fun performAddParticipant(user: ParcelableUser) {
         ProgressDialogFragment.show(childFragmentManager, "add_participant_progress")
         val weakThis = WeakReference(this)
-        val task = AddParticipantsTask(context, accountKey, conversationId, arrayOf(user.key.id))
+        val task = AddParticipantsTask(context, accountKey, conversationId, listOf(user))
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissAlertDialogThen("add_participant_progress") {}
