@@ -40,6 +40,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 
@@ -60,11 +61,25 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         }
         setContentView(R.layout.activity_user_selector)
 
-        editScreenName.addTextChangedListener(object : SimpleTextWatcher {
+        val enterHandler = EditTextEnterHandler.attach(editScreenName, object : EditTextEnterHandler.EnterListener {
+            override fun onHitEnter(): Boolean {
+                val screenName = ParseUtils.parseString(editScreenName.text)
+                searchUser(accountKey, screenName, false)
+                return true
+            }
+
+            override fun shouldCallListener(): Boolean {
+                return true
+            }
+
+        }, true)
+
+        enterHandler.addTextChangedListener(object : SimpleTextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 searchUser(accountKey, s.toString(), true)
             }
         })
+
         screenNameConfirm.setOnClickListener {
             val screenName = ParseUtils.parseString(editScreenName.text)
             searchUser(accountKey, screenName, false)

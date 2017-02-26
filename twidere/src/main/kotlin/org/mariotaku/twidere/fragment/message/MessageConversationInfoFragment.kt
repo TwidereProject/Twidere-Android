@@ -245,7 +245,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val task = AddParticipantsTask(context, accountKey, conversationId, listOf(user))
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
-            f.dismissAlertDialogThen("add_participant_progress") {}
+            f.dismissAlertDialogThen("add_participant_progress") {
+                loaderManager.restartLoader(0, null, this@MessageConversationInfoFragment)
+            }
         }
         TaskStarter.execute(task)
     }
@@ -257,9 +259,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         task.callback = callback@ { succeed ->
             val f = weakThis.get() ?: return@callback
             f.dismissAlertDialogThen("set_notifications_disabled_progress") {
-                if (!succeed) {
-                    adapter.notifyDataSetChanged()
-                }
+                loaderManager.restartLoader(0, null, this@MessageConversationInfoFragment)
             }
         }
         TaskStarter.execute(task)
