@@ -114,6 +114,11 @@ class SendMessageTask(
                 deleteOnSuccess = uploadResult.deleteOnSuccess
             }
             microBlog.sendDm(newDm)
+        } catch (e: UpdateStatusTask.UploadException) {
+            e.deleteAlways?.forEach {
+                it.delete(context)
+            }
+            throw e
         } finally {
             deleteOnSuccess?.forEach { it.delete(context) }
         }

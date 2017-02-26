@@ -46,6 +46,11 @@ public class ParcelableMediaUpdate implements Parcelable {
     @Nullable
     public String alt_text;
 
+    @JsonField(name = "delete_on_success")
+    public boolean delete_on_success;
+    @JsonField(name = "delete_always")
+    public boolean delete_always;
+
     public ParcelableMediaUpdate() {
     }
 
@@ -78,9 +83,10 @@ public class ParcelableMediaUpdate implements Parcelable {
     @Override
     public String toString() {
         return "ParcelableMediaUpdate{" +
-                "uri='" + uri + '\'' +
+                "alt_text='" + alt_text + '\'' +
+                ", uri='" + uri + '\'' +
                 ", type=" + type +
-                ", alt_text='" + alt_text + '\'' +
+                ", delete_on_success=" + delete_on_success +
                 '}';
     }
 
