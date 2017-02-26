@@ -23,6 +23,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
@@ -56,6 +57,7 @@ import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getDirectMessageMaxParticipants
 import org.mariotaku.twidere.extension.model.displayAvatarTo
 import org.mariotaku.twidere.extension.model.getSubtitle
 import org.mariotaku.twidere.extension.model.getTitle
@@ -65,8 +67,8 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.fragment.iface.IToolBarSupportFragment
+import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_BOTTOM_SPACE
 import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_HEADER
-import org.mariotaku.twidere.fragment.message.MessageConversationInfoFragment.ConversationInfoAdapter.Companion.VIEW_TYPE_SPACE
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
@@ -89,6 +91,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     private val conversationId: String get() = arguments.getString(EXTRA_CONVERSATION_ID)
 
     private lateinit var adapter: ConversationInfoAdapter
+    private lateinit var itemDecoration: ConversationInfoDecoration
 
     override val controlBarHeight: Int get() = toolbar.measuredHeight
     override var controlBarOffset: Float = 0f
@@ -126,8 +129,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             }
 
         }
+        itemDecoration = ConversationInfoDecoration(adapter,
+                resources.getDimensionPixelSize(R.dimen.element_spacing_large)
+        )
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LayoutManager(context)
+        recyclerView.addItemDecoration(itemDecoration)
 
 
         val profileImageStyle = preferences[profileImageStyleKey]
@@ -202,7 +210,6 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             activity?.finish()
             return
         }
-        adapter.conversation = data
 
         val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
         val summary = data.getSubtitle(context)
@@ -221,6 +228,16 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             appBarSubtitle.visibility = View.GONE
             conversationSubtitle.visibility = View.GONE
         }
+        if (data.conversation_extras_type == ExtrasType.TWITTER_OFFICIAL
+                && data.conversation_type == ConversationType.GROUP) {
+            editButton.visibility = View.VISIBLE
+            adapter.showButtonSpace = true
+        } else {
+            editButton.visibility = View.GONE
+            adapter.showButtonSpace = false
+        }
+
+        adapter.conversation = data
     }
 
     private fun performDestroyConversation() {
@@ -266,6 +283,20 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
 
+    private fun openEditAction(type: String) {
+        when (type) {
+            "name" -> {
+                executeAfterFragmentResumed { fragment ->
+                    val df = EditNameDialogFragment()
+                    df.show(fragment.childFragmentManager, "edit_name")
+                }
+            }
+            "avatar" -> {
+
+            }
+        }
+    }
+
     private inline fun dismissAlertDialogThen(tag: String, crossinline action: BaseFragment.() -> Unit) {
         executeAfterFragmentResumed { fragment ->
             val df = fragment.childFragmentManager.findFragmentByTag(tag) as? DialogFragment
@@ -278,6 +309,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             context: Context,
             val accountKey: UserKey,
             val conversationId: String) : AsyncTaskLoader<ParcelableMessageConversation?>(context) {
+
         override fun loadInBackground(): ParcelableMessageConversation? {
             val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                     Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
@@ -294,12 +326,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         override fun onStartLoading() {
             forceLoad()
         }
+
     }
 
     class ConversationInfoAdapter(context: Context) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
             IItemCountsAdapter {
         private val inflater = LayoutInflater.from(context)
-        override val itemCounts: ItemCounts = ItemCounts(4)
+
+        override val itemCounts: ItemCounts = ItemCounts(5)
 
         var listener: Listener? = null
 
@@ -309,6 +343,13 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 notifyDataSetChanged()
             }
 
+        var showButtonSpace: Boolean = false
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
+
+
         init {
             setHasStableIds(true)
         }
@@ -316,6 +357,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         override fun getItemCount(): Int {
             val conversation = this.conversation ?: return 0
             val participantsSize = conversation.participants.size
+            itemCounts[ITEM_INDEX_TOP_SPACE] = if (showButtonSpace) 1 else 0
             itemCounts[ITEM_INDEX_HEADER] = 1
             itemCounts[ITEM_INDEX_ITEM] = participantsSize
             when (conversation.conversation_type) {
@@ -350,6 +392,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             when (viewType) {
+                VIEW_TYPE_TOP_SPACE -> {
+                    val view = inflater.inflate(R.layout.header_message_conversation_info_button_space, parent, false)
+                    return SpaceViewHolder(view)
+                }
                 VIEW_TYPE_HEADER -> {
                     val view = inflater.inflate(HeaderViewHolder.layoutResource, parent, false)
                     return HeaderViewHolder(view, this)
@@ -362,7 +408,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                     val view = inflater.inflate(R.layout.list_item_conversation_info_add_user, parent, false)
                     return AddUserViewHolder(view, this)
                 }
-                VIEW_TYPE_SPACE -> {
+                VIEW_TYPE_BOTTOM_SPACE -> {
                     val view = inflater.inflate(R.layout.list_item_conversation_info_space, parent, false)
                     return SpaceViewHolder(view)
                 }
@@ -372,10 +418,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         override fun getItemViewType(position: Int): Int {
             when (itemCounts.getItemCountIndex(position)) {
+                ITEM_INDEX_TOP_SPACE -> return VIEW_TYPE_TOP_SPACE
                 ITEM_INDEX_HEADER -> return VIEW_TYPE_HEADER
                 ITEM_INDEX_ITEM -> return VIEW_TYPE_USER
                 ITEM_INDEX_ADD_USER -> return VIEW_TYPE_ADD_USER
-                ITEM_INDEX_SPACE -> return VIEW_TYPE_SPACE
+                ITEM_INDEX_SPACE -> return VIEW_TYPE_BOTTOM_SPACE
             }
             throw UnsupportedOperationException()
         }
@@ -401,26 +448,29 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             fun onUserClick(position: Int) {}
             fun onAddUserClick(position: Int) {}
             fun onDisableNotificationChanged(disabled: Boolean) {}
+
         }
 
         companion object {
-            private const val ITEM_INDEX_HEADER = 0
-            private const val ITEM_INDEX_ITEM = 1
-            private const val ITEM_INDEX_ADD_USER = 2
-            private const val ITEM_INDEX_SPACE = 3
+            internal const val ITEM_INDEX_TOP_SPACE = 0
+            internal const val ITEM_INDEX_HEADER = 1
+            internal const val ITEM_INDEX_ITEM = 2
+            internal const val ITEM_INDEX_ADD_USER = 3
+            internal const val ITEM_INDEX_SPACE = 4
 
+            internal const val VIEW_TYPE_TOP_SPACE = 0
             internal const val VIEW_TYPE_HEADER = 1
             internal const val VIEW_TYPE_USER = 2
             internal const val VIEW_TYPE_ADD_USER = 3
-            internal const val VIEW_TYPE_SPACE = 4
-        }
+            internal const val VIEW_TYPE_BOTTOM_SPACE = 4
 
+        }
 
     }
 
     internal class SpaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
     internal class AddUserViewHolder(itemView: View, adapter: ConversationInfoAdapter) : RecyclerView.ViewHolder(itemView) {
+
         private val itemContent = itemView.findViewById(R.id.itemContent)
 
         init {
@@ -436,6 +486,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             adapter: ConversationInfoAdapter
     ) : SimpleUserViewHolder<ConversationInfoAdapter>(itemView, adapter) {
         private val headerIcon = itemView.findViewById(R.id.headerIcon)
+
         private val itemContent = itemView.findViewById(R.id.itemContent)
 
         init {
@@ -448,9 +499,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             super.displayUser(user)
             headerIcon.visibility = if (displayHeaderIcon) View.VISIBLE else View.INVISIBLE
         }
+
     }
 
     internal class HeaderViewHolder(itemView: View, adapter: ConversationInfoAdapter) : RecyclerView.ViewHolder(itemView) {
+
         private val muteSwitch = itemView.muteNotifications
 
         private val listener = CompoundButton.OnCheckedChangeListener { button, checked ->
@@ -466,6 +519,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         companion object {
             const val layoutResource = R.layout.header_message_conversation_info
         }
+
     }
 
     internal class LayoutManager(
@@ -473,8 +527,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     ) : FixedLinearLayoutManager(context, LinearLayoutManager.VERTICAL, false) {
 
         override fun getDecoratedMeasuredHeight(child: View): Int {
-            if (getItemViewType(child) == VIEW_TYPE_SPACE) {
-                return calculateSpaceItemHeight(child, VIEW_TYPE_SPACE, VIEW_TYPE_HEADER)
+            if (getItemViewType(child) == VIEW_TYPE_BOTTOM_SPACE) {
+                return calculateSpaceItemHeight(child, VIEW_TYPE_BOTTOM_SPACE, VIEW_TYPE_HEADER)
             }
             return super.getDecoratedMeasuredHeight(child)
         }
@@ -482,12 +536,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     class EditInfoDialogFragment : BaseDialogFragment() {
+
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
                     Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
             val builder = AlertDialog.Builder(context)
             builder.setItems(actions.map(Action::title).toTypedArray()) { dialog, which ->
-
+                val action = actions[which]
+                (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
             }
             val dialog = builder.create()
             dialog.setOnShowListener {
@@ -498,6 +554,24 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         data class Action(val title: String, val type: String)
+
+    }
+
+    class EditNameDialogFragment : BaseDialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            builder.setView(R.layout.dialog_edit_conversation_name)
+            builder.setNegativeButton(android.R.string.cancel, null)
+            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+
+            }
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
+        }
     }
 
     class DestroyConversationConfirmDialogFragment : BaseDialogFragment() {
@@ -518,15 +592,40 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     }
 
+    internal class ConversationInfoDecoration(
+            val adapter: ConversationInfoAdapter,
+            val typeSpacing: Int
+    ) : RecyclerView.ItemDecoration() {
+
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            val position = parent.getChildLayoutPosition(view)
+            if (position < 0) return
+            val itemCounts = adapter.itemCounts
+            val countIndex = itemCounts.getItemCountIndex(position)
+            when (countIndex) {
+                ConversationInfoAdapter.ITEM_INDEX_TOP_SPACE,
+                ConversationInfoAdapter.ITEM_INDEX_SPACE,
+                ConversationInfoAdapter.ITEM_INDEX_ADD_USER -> {
+                    outRect.setEmpty()
+                }
+                else -> {
+                    // Previous item is space or first item
+                    if (position == 0 || itemCounts.getItemCountIndex(position - 1)
+                            == ConversationInfoAdapter.ITEM_INDEX_TOP_SPACE) {
+                        outRect.setEmpty()
+                    } else if (itemCounts.getItemStartPosition(countIndex) == position) {
+                        outRect.set(0, typeSpacing, 0, 0)
+                    } else {
+                        outRect.setEmpty()
+                    }
+                }
+            }
+        }
+    }
+
     companion object {
         const val RESULT_CLOSE = 101
         const val REQUEST_CONVERSATION_ADD_USER = 101
     }
-}
 
-private fun DefaultFeatures.getDirectMessageMaxParticipants(extrasType: String?): Long {
-    when (extrasType) {
-        ExtrasType.TWITTER_OFFICIAL -> return twitterDirectMessageMaxParticipants
-    }
-    return 2
 }

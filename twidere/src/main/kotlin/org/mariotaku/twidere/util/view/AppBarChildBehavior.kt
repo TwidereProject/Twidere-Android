@@ -33,7 +33,6 @@ import android.widget.TextView
 import org.mariotaku.microblog.library.annotation.NoObfuscate
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.*
-import org.mariotaku.twidere.util.DebugLog
 
 /**
  * Created by mariotaku on 2017/2/20.
@@ -59,10 +58,12 @@ class AppBarChildBehavior(
 
     private val dependencyRect = Rect()
 
+    private val layoutRect = Rect()
+
     private val thisRect = Rect()
     private val targetRect = Rect()
 
-    private val tempRect = Rect()
+    private val tempLocation = IntArray(2)
 
 
     init {
@@ -94,7 +95,8 @@ class AppBarChildBehavior(
         val dependency = parent.getDependencies(child).first()
 
         dependency.getFrameRelatedTo(dependencyRect, parent)
-        child.layoutRelatedTo(parent, dependencyRect, layoutDirection)
+        layoutRect.layoutRelatedTo(child, parent, dependencyRect, layoutDirection)
+        child.layout(layoutRect.left, layoutRect.top, layoutRect.right, layoutRect.bottom)
 
         child.getFrameRelatedTo(thisRect, parent)
         target.getFrameRelatedTo(targetRect, parent)
@@ -108,38 +110,38 @@ class AppBarChildBehavior(
         val target = parent.findViewById(targetViewId)
         val toolbar = parent.findViewById(toolbarId)
         val behavior = (appBar.layoutParams as CoordinatorLayout.LayoutParams).behavior as AppBarLayout.Behavior
-        toolbar.getLocationOnScreen(tempRect)
+        toolbar.getLocationOnScreen(tempLocation)
         val offset = behavior.topAndBottomOffset
-        val percent = offset / (tempRect.bottom - appBar.height).toFloat()
+        val percent = offset / (tempLocation[1] + toolbar.height - appBar.height).toFloat()
         transformation.onTargetChanged(child, thisRect, target, targetRect, percent, offset)
         return true
     }
 
-    internal fun View.layoutRelatedTo(parent: CoordinatorLayout, frame: Rect, layoutDirection: Int) {
+    internal fun Rect.layoutRelatedTo(view: View, parent: CoordinatorLayout, frame: Rect, layoutDirection: Int) {
         val verticalRule = alignmentRule and VERTICAL_MASK
         val horizontalRule = alignmentRule and HORIZONTAL_MASK
-        tempRect.set(0, 0, measuredWidth, measuredHeight)
+        set(0, 0, view.measuredWidth, view.measuredHeight)
         when (verticalRule) {
             ALIGNMENT_CENTER_VERTICAL -> {
-                tempRect.offsetTopTo(frame.centerY() - measuredHeight / 2 + marginTop - marginBottom)
+                offsetTopTo(frame.centerY() - view.measuredHeight / 2 + marginTop - marginBottom)
             }
             0, ALIGNMENT_TOP -> {
-                tempRect.offsetTopTo(frame.top + marginTop)
+                offsetTopTo(frame.top + marginTop)
             }
             ALIGNMENT_BOTTOM -> {
-                tempRect.offsetBottomTo(frame.bottom - marginBottom)
+                offsetBottomTo(frame.bottom - marginBottom)
             }
             ALIGNMENT_ABOVE -> {
-                tempRect.offsetBottomTo(frame.top + marginTop - marginBottom)
+                offsetBottomTo(frame.top + marginTop - marginBottom)
             }
             ALIGNMENT_BELOW -> {
-                tempRect.offsetTopTo(frame.bottom + marginTop - marginBottom)
+                offsetTopTo(frame.bottom + marginTop - marginBottom)
             }
             ALIGNMENT_ABOVE_CENTER -> {
-                tempRect.offsetBottomTo(frame.centerY() + marginTop - marginBottom)
+                offsetBottomTo(frame.centerY() + marginTop - marginBottom)
             }
             ALIGNMENT_BELOW_CENTER -> {
-                tempRect.offsetTopTo(frame.centerY() + marginTop - marginBottom)
+                offsetTopTo(frame.centerY() + marginTop - marginBottom)
             }
             else -> {
                 throw IllegalArgumentException("Illegal alignment flag ${Integer.toHexString(alignmentRule)}")
@@ -147,62 +149,65 @@ class AppBarChildBehavior(
         }
         when (horizontalRule) {
             ALIGNMENT_CENTER_HORIZONTAL -> {
-                tempRect.offsetLeftTo(frame.centerX() - measuredWidth / 2
+                offsetLeftTo(frame.centerX() - view.measuredWidth / 2
                         + absoluteMarginLeft(layoutDirection) - absoluteMarginRight(layoutDirection))
             }
             0, ALIGNMENT_LEFT -> {
-                tempRect.offsetLeftTo(frame.left + absoluteMarginLeft(layoutDirection))
+                offsetLeftTo(frame.left + absoluteMarginLeft(layoutDirection))
             }
             ALIGNMENT_RIGHT -> {
-                tempRect.offsetRightTo(frame.right - absoluteMarginRight(layoutDirection))
+                offsetRightTo(frame.right - absoluteMarginRight(layoutDirection))
             }
             ALIGNMENT_TO_LEFT_OF -> {
-                tempRect.offsetRightTo(frame.left + absoluteMarginLeft(layoutDirection)
+                offsetRightTo(frame.left + absoluteMarginLeft(layoutDirection)
                         - absoluteMarginRight(layoutDirection))
             }
             ALIGNMENT_TO_RIGHT_OF -> {
-                tempRect.offsetLeftTo(frame.right + absoluteMarginLeft(layoutDirection)
+                offsetLeftTo(frame.right + absoluteMarginLeft(layoutDirection)
                         - absoluteMarginRight(layoutDirection))
             }
             ALIGNMENT_TO_LEFT_OF_CENTER -> {
-                tempRect.offsetRightTo(frame.centerX() + absoluteMarginLeft(layoutDirection)
+                offsetRightTo(frame.centerX() + absoluteMarginLeft(layoutDirection)
                         - absoluteMarginRight(layoutDirection))
             }
             ALIGNMENT_TO_RIGHT_OF_CENTER -> {
-                tempRect.offsetLeftTo(frame.centerX() + absoluteMarginLeft(layoutDirection)
+                offsetLeftTo(frame.centerX() + absoluteMarginLeft(layoutDirection)
                         - absoluteMarginRight(layoutDirection))
             }
             ALIGNMENT_START -> {
-                tempRect.offsetStartTo(frame.getStart(layoutDirection)
+                offsetStartTo(frame.getStart(layoutDirection)
                         + relativeMarginStart(layoutDirection), layoutDirection)
             }
             ALIGNMENT_END -> {
-                tempRect.offsetEndTo(frame.getEnd(layoutDirection)
+                offsetEndTo(frame.getEnd(layoutDirection)
                         - relativeMarginEnd(layoutDirection), layoutDirection)
             }
             ALIGNMENT_TO_START_OF -> {
-                tempRect.offsetEndTo(frame.getStart(layoutDirection)
+                offsetEndTo(frame.getStart(layoutDirection)
                         + relativeMarginStart(layoutDirection) - relativeMarginEnd(layoutDirection),
                         layoutDirection)
             }
             ALIGNMENT_TO_END_OF -> {
-                tempRect.offsetStartTo(frame.getEnd(layoutDirection)
+                offsetStartTo(frame.getEnd(layoutDirection)
                         + relativeMarginStart(layoutDirection) - relativeMarginEnd(layoutDirection),
                         layoutDirection)
             }
             ALIGNMENT_TO_START_OF_CENTER -> {
-                tempRect.offsetEndTo(frame.centerX() + relativeMarginStart(layoutDirection)
+                offsetEndTo(frame.centerX() + relativeMarginStart(layoutDirection)
                         - relativeMarginEnd(layoutDirection), layoutDirection)
             }
             ALIGNMENT_TO_END_OF_CENTER -> {
-                tempRect.offsetStartTo(frame.centerX() + relativeMarginStart(layoutDirection)
+                offsetStartTo(frame.centerX() + relativeMarginStart(layoutDirection)
                         - relativeMarginEnd(layoutDirection), layoutDirection)
             }
             else -> {
                 throw IllegalArgumentException("Illegal alignment flag ${Integer.toHexString(alignmentRule)}")
             }
         }
-        this.layout(tempRect.left, tempRect.top, tempRect.right, tempRect.bottom)
+        left = left.coerceAtLeast(absoluteMarginLeft(layoutDirection) - frame.left)
+        right = right.coerceAtMost(parent.measuredWidth - absoluteMarginRight(layoutDirection) - frame.left)
+//        tempRect.top = tempRect.top.coerceAtLeast(marginTop - frame.top)
+//        tempRect.bottom = tempRect.bottom.coerceAtLeast(parent.measuredHeight - marginBottom - frame.top)
     }
 
     private fun absoluteMarginLeft(layoutDirection: Int): Int {
@@ -269,7 +274,6 @@ class AppBarChildBehavior(
             child.scaleY = 1 - (frame.height() - targetFrame.height()) * percent / frame.height()
             child.translationX = (targetFrame.right - frame.right) * percent
             child.translationY = -offset - (frame.bottom - offset - targetFrame.bottom) * percent
-            DebugLog.d(msg = "bot:${frame.bottom}")
         }
 
     }
