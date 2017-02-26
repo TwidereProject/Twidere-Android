@@ -229,9 +229,9 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         conversation.id = "${SendMessageTask.TEMP_CONVERSATION_ID_PREFIX}${System.currentTimeMillis()}"
         conversation.local_timestamp = System.currentTimeMillis()
         conversation.conversation_type = if (selected.size > 1) {
-            ConversationType.ONE_TO_ONE
-        } else {
             ConversationType.GROUP
+        } else {
+            ConversationType.ONE_TO_ONE
         }
         conversation.participants = (selected + account.user).toTypedArray()
         conversation.is_temp = true
