@@ -182,9 +182,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
             }
             REQUEST_PICK_MEDIA -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    val uri = MediaPickerActivity.getMediaUris(data).firstOrNull() ?: return
-                    performSetConversationAvatar(uri)
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        val uri = MediaPickerActivity.getMediaUris(data).firstOrNull() ?: return
+                        performSetConversationAvatar(uri)
+                    }
+                    RESULT_CODE_REMOVE_CONVERSATION_AVATAR -> {
+                        performSetConversationAvatar(null)
+                    }
                 }
             }
         }
@@ -314,6 +319,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                         .allowMultiple(false)
                         .aspectRatio(1, 1)
                         .containsVideo(false)
+                        .addEntry(getString(R.string.action_remove_conversation_avatar),
+                                "remove_avatar", RESULT_CODE_REMOVE_CONVERSATION_AVATAR)
                         .build()
                 startActivityForResult(intent, REQUEST_PICK_MEDIA)
             }
@@ -337,7 +344,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         })
     }
 
-    private fun performSetConversationAvatar(uri: Uri) {
+    private fun performSetConversationAvatar(uri: Uri?) {
         val conversationId = this.conversationId
         performUpdateInfo("set_avatar_progress", updateAction = updateAction@ { fragment, account, microBlog ->
             val context = fragment.context
@@ -345,19 +352,31 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 AccountType.TWITTER -> {
                     if (account.isOfficial(context)) {
                         val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
-                        val media = arrayOf(ParcelableMediaUpdate().apply {
-                            this.uri = uri.toString()
-                            this.delete_always = true
-                        })
+                        if (uri == null) {
+                            val result = microBlog.updateDmConversationAvatar(conversationId, null)
+                            if (result.isSuccessful) {
+                                val dmResponse = microBlog.getDmConversation(conversationId, null).conversationTimeline
+                                return@updateAction dmResponse.conversations[conversationId]?.avatarImageHttps
+                            }
+                            throw MicroBlogException("Error ${result.responseCode}")
+                        }
                         var deleteAlways: List<UpdateStatusTask.MediaDeletionItem>? = null
                         try {
+                            val media = arrayOf(ParcelableMediaUpdate().apply {
+                                this.uri = uri.toString()
+                                this.delete_always = true
+                            })
                             val uploadResult = UpdateStatusTask.uploadAllMediaShared(context,
                                     fragment.mediaLoader, upload, account, media, null, true, null)
                             deleteAlways = uploadResult.deleteAlways
                             val avatarId = uploadResult.ids.first()
-                            val result = microBlog.updateDmConversationAvatar(conversationId, avatarId).isSuccessful
-                            uploadResult.deleteOnSuccess.forEach { it.delete(context) }
-                            return@updateAction result
+                            val result = microBlog.updateDmConversationAvatar(conversationId, avatarId)
+                            if (result.isSuccessful) {
+                                uploadResult.deleteOnSuccess.forEach { it.delete(context) }
+                                val dmResponse = microBlog.getDmConversation(conversationId, null).conversationTimeline
+                                return@updateAction dmResponse.conversations[conversationId]?.avatarImageHttps
+                            }
+                            throw MicroBlogException("Error ${result.responseCode}")
                         } catch (e: UpdateStatusTask.UploadException) {
                             e.deleteAlways?.forEach {
                                 it.delete(context)
@@ -370,15 +389,15 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
                 }
             }
             throw UnsupportedOperationException()
-        }, successAction = {
-            putNull(Conversations.CONVERSATION_AVATAR)
+        }, successAction = { uri ->
+            put(Conversations.CONVERSATION_AVATAR, uri)
         })
     }
 
-    private inline fun performUpdateInfo(
+    private inline fun <T> performUpdateInfo(
             tag: String,
-            crossinline updateAction: (MessageConversationInfoFragment, AccountDetails, MicroBlog) -> Boolean,
-            crossinline successAction: ContentValues.() -> Unit
+            crossinline updateAction: (MessageConversationInfoFragment, AccountDetails, MicroBlog) -> T,
+            crossinline successAction: ContentValues.(T) -> Unit
     ) {
         ProgressDialogFragment.show(childFragmentManager, tag)
         val weakThis = WeakReference(this)
@@ -389,10 +408,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val account = AccountUtils.getAccountDetails(AccountManager.get(fragment.context),
                     accountKey, true) ?: throw MicroBlogException("No account")
             val microBlog = account.newMicroBlogInstance(fragment.context, cls = MicroBlog::class.java)
-            if (!updateAction(fragment, account, microBlog)) throw MicroBlogException("Update failed")
-        }.then {
+            return@task updateAction(fragment, account, microBlog)
+        }.then { result ->
             val fragment = weakThis.get() ?: throw InterruptedException()
-            val values = ContentValues().apply(successAction)
+            val values = ContentValues().apply { successAction(result) }
             val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
                     Expression.equalsArgs(Conversations.CONVERSATION_ID)).sql
             val whereArgs = arrayOf(accountKey.toString(), conversationId)
@@ -738,6 +757,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         const val RESULT_CLOSE = 101
         const val REQUEST_CONVERSATION_ADD_USER = 101
         const val REQUEST_PICK_MEDIA = 102
+        const val RESULT_CODE_REMOVE_CONVERSATION_AVATAR = 10
     }
 
 }

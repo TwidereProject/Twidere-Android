@@ -43,6 +43,8 @@
     <string name="action_dont_terminate">Don\'t quit</string>
     <!-- [verb] Edit image/settings etc. -->
     <string name="action_edit">Edit</string>
+    <string name="action_edit_conversation_avatar">Edit icon</string>
+    <string name="action_edit_conversation_name">Edit name</string>
     <string name="action_edit_filter_rule">Edit rule</string>
     <string name="action_favorite">Favorite</string>
     <string name="action_favoriting">favoriting</string>
@@ -79,6 +81,7 @@
     <string name="action_refreshing_direct_messages">refreshing direct messages</string>
     <string name="action_refreshing_home_timeline">refreshing home timeline</string>
     <string name="action_refreshing_mentions">refreshing mentions</string>
+    <string name="action_remove_conversation_avatar">Remove icon</string>
     <string name="action_removing_profile_banner_image">removing profile header image</string>
     <string name="action_reply">Reply</string>
     <string name="action_report_spam">Report spam</string>
@@ -464,6 +467,7 @@
 
     <string name="hint_accounts_dashboard_message">Swipe from screen edge to open accounts dashboard.</string>
     <string name="hint_accounts_dashboard_title">Accounts dashboard</string>
+    <string name="hint_conversation_name">Conversation name</string>
     <string name="hint_empty_filters_subscriptions">No subscriptions</string>
     <string name="hint_error_message_no_content">No content</string>
     <string name="hint_message_select_user">Search users</string>
@@ -588,6 +592,7 @@
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
     <string name="message_conversation_created">Conversation created.</string>
+    <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
@@ -1223,8 +1228,4 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
-    <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
-    <string name="action_edit_conversation_name">Edit name</string>
-    <string name="action_edit_conversation_avatar">Edit icon</string>
-    <string name="hint_conversation_name">Conversation name</string>
 </resources>

@@ -19,12 +19,17 @@
 
 package org.mariotaku.twidere.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import com.soundcloud.android.crop.CropImageActivity
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.activity.iface.IThemedActivity
+import org.mariotaku.twidere.constant.themeKey
 import org.mariotaku.twidere.util.ThemeUtils
+import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
 /**
  * Created by mariotaku on 15/6/16.
@@ -35,16 +40,20 @@ class ImageCropperActivity : CropImageActivity(), IThemedActivity {
     override val currentThemeBackgroundAlpha by lazy { themeBackgroundAlpha }
     override val currentThemeBackgroundOption by lazy { themeBackgroundOption }
 
-    private var mDoneCancelBar: Toolbar? = null
+    private var doneCancelBar: Toolbar? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val prefs = getSharedPreferences(TwidereConstants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        val themeResource = getCurrentThemeResource(this, prefs[themeKey])
+        if (themeResource != 0) {
+            setTheme(themeResource)
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onContentChanged() {
         super.onContentChanged()
-        mDoneCancelBar = findViewById(R.id.done_cancel_bar) as Toolbar
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+        doneCancelBar = findViewById(R.id.done_cancel_bar) as Toolbar
     }
 
     override fun setContentView(layoutResID: Int) {
