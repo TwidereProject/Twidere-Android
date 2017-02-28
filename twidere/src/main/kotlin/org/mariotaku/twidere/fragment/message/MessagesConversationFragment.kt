@@ -23,11 +23,14 @@ import android.accounts.AccountManager
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.Loader
+import android.support.v4.widget.TextViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
@@ -461,6 +464,19 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         } else {
             conversationSubtitle.visibility = View.GONE
         }
+
+
+        val stateIcon = if (conversation.notificationDisabled) {
+            ContextCompat.getDrawable(context, R.drawable.ic_message_type_speaker_muted).apply {
+                mutate()
+                setColorFilter(conversationTitle.currentTextColor, PorterDuff.Mode.SRC_ATOP)
+            }
+        } else {
+            null
+        }
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
+                null, stateIcon, null)
+
         conversation.displayAvatarTo(mediaLoader, conversationAvatar)
     }
 

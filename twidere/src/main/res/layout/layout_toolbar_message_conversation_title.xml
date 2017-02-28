@@ -43,8 +43,6 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/element_spacing_normal"
-        android:layout_marginStart="@dimen/element_spacing_normal"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -57,6 +55,8 @@
             android:maxLines="1"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="?android:textColorPrimary"
+            tools:drawableEnd="@drawable/ic_message_type_speaker_muted"
+            tools:drawableTint="?android:textColorSecondary"
             tools:text="Conversation name"/>
 
         <org.mariotaku.twidere.view.FixedTextView

@@ -43,6 +43,6 @@ public abstract class ConversationExtras implements Parcelable {
                 return LoganSquare.parse(json, TwitterOfficialConversationExtras.class);
             }
         }
-        return null;
+        return LoganSquare.parse(json, DefaultConversationExtras.class);
     }
 }
