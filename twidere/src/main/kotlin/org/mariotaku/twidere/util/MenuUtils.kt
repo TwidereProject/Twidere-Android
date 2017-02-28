@@ -38,6 +38,8 @@ import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.setMenuItemIcon
 import org.mariotaku.sqliteqb.library.Expression
@@ -52,6 +54,8 @@ import org.mariotaku.twidere.fragment.AbsStatusesFragment
 import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
 import org.mariotaku.twidere.fragment.DestroyStatusDialogFragment
 import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
+import org.mariotaku.twidere.fragment.status.BlockStatusUsersDialogFragment
+import org.mariotaku.twidere.fragment.status.MuteStatusUsersDialogFragment
 import org.mariotaku.twidere.graphic.ActionIconDrawable
 import org.mariotaku.twidere.graphic.PaddingDrawable
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -92,7 +96,7 @@ object MenuUtils {
     }
 
     @JvmOverloads fun addIntentToMenu(context: Context?, menu: Menu?, queryIntent: Intent?,
-                                      groupId: Int = Menu.NONE) {
+            groupId: Int = Menu.NONE) {
         if (context == null || menu == null || queryIntent == null) return
         val pm = context.packageManager
         val res = context.resources
@@ -118,11 +122,11 @@ object MenuUtils {
     }
 
     fun setupForStatus(context: Context,
-                       preferences: SharedPreferencesWrapper,
-                       menu: Menu,
-                       status: ParcelableStatus,
-                       twitter: AsyncTwitterWrapper,
-                       manager: UserColorNameManager) {
+            preferences: SharedPreferencesWrapper,
+            menu: Menu,
+            status: ParcelableStatus,
+            twitter: AsyncTwitterWrapper,
+            manager: UserColorNameManager) {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                 status.account_key, true) ?: return
         setupForStatus(context, preferences, menu, status, account, twitter, manager)
@@ -130,12 +134,12 @@ object MenuUtils {
 
     @UiThread
     fun setupForStatus(context: Context,
-                       preferences: SharedPreferencesWrapper,
-                       menu: Menu,
-                       status: ParcelableStatus,
-                       details: AccountDetails,
-                       twitter: AsyncTwitterWrapper,
-                       manager: UserColorNameManager) {
+            preferences: SharedPreferencesWrapper,
+            menu: Menu,
+            status: ParcelableStatus,
+            details: AccountDetails,
+            twitter: AsyncTwitterWrapper,
+            manager: UserColorNameManager) {
         if (menu is ContextMenu) {
             menu.setHeaderTitle(context.getString(R.string.status_menu_title_format,
                     manager.getDisplayName(status.user_key, status.user_name, status.user_screen_name,
@@ -225,12 +229,12 @@ object MenuUtils {
     }
 
     fun handleStatusClick(context: Context,
-                          fragment: Fragment?,
-                          fm: FragmentManager,
-                          colorNameManager: UserColorNameManager,
-                          twitter: AsyncTwitterWrapper,
-                          status: ParcelableStatus,
-                          item: MenuItem): Boolean {
+            fragment: Fragment?,
+            fm: FragmentManager,
+            colorNameManager: UserColorNameManager,
+            twitter: AsyncTwitterWrapper,
+            status: ParcelableStatus,
+            item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.copy -> {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -333,6 +337,20 @@ object MenuUtils {
                 val where = Expression.equalsArgs(Statuses._ID).sql
                 val whereArgs = arrayOf(status._id.toString())
                 resolver.update(Statuses.CONTENT_URI, values, where, whereArgs)
+            }
+            R.id.mute_users -> {
+                val df = MuteStatusUsersDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_STATUS] = status
+                }
+                df.show(fm, "mute_users_selector")
+            }
+            R.id.block_users -> {
+                val df = BlockStatusUsersDialogFragment()
+                df.arguments = Bundle {
+                    this[EXTRA_STATUS] = status
+                }
+                df.show(fm, "block_users_selector")
             }
             else -> {
                 if (item.intent != null) {

@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:id="@+id/contentFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -17,11 +23,19 @@
         app:popupTheme="?actionBarPopupTheme"
         tools:elevation="0dp"/>
 
-    <FrameLayout
-        android:id="@+id/contentFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/actionsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/element_spacing_large"
+        android:clickable="true"
+        android:src="@drawable/ic_action_status_compose"
+        app:backgroundTint="?colorToolbar"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"/>
 
     <View
         android:id="@+id/windowOverlay"
