@@ -10,7 +10,7 @@ inline fun <T> configure(receiver: T, block: T.() -> Unit): T {
 }
 
 fun rangeOfSize(start: Int, size: Int): IntRange {
-    return IntRange(start, start + size)
+    return start until start + size
 }
 
 fun LongArray.toStringArray(): Array<String> {

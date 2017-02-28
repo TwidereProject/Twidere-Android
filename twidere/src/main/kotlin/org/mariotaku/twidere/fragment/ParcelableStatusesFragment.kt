@@ -151,9 +151,9 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         super.onLoadMoreContents(position)
         if (position == 0L) return
         // Load the last item
-        val idx = adapter.statusStartIndex + adapter.rawStatusCount - 1
+        val idx = adapter.rawStatusCount - 1
         if (idx < 0) return
-        val status = adapter.getStatus(idx) ?: return
+        val status = adapter.getData()?.get(idx) ?: return
         val accountKeys = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
         val param = StatusesRefreshTaskParam(accountKeys, maxIds, null, page + pageDelta)

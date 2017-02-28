@@ -102,16 +102,37 @@ abstract class ParcelableStatusesAdapter(
         set(value) {
             field = value
             value?.forEach { it.is_pinned_status = true }
+            updateItemCount()
             notifyDataSetChanged()
         }
 
     private var data: List<ParcelableStatus>? = null
+    private var displayPositions: IntArray? = null
+    private var displayDataCount: Int = 0
+
+
     private var showingActionCardId = RecyclerView.NO_ID
-    private var lastItemFiltered: Boolean = false
 
     override val itemCounts = ItemCounts(4)
 
     protected abstract val progressViewIds: IntArray
+
+    val statusStartIndex: Int
+        get() = getItemStartPosition(ITEM_INDEX_STATUS)
+
+    override var loadMoreIndicatorPosition: Long
+        get() = super.loadMoreIndicatorPosition
+        set(value) {
+            super.loadMoreIndicatorPosition = value
+            updateItemCount()
+        }
+
+    override var loadMoreSupportedPosition: Long
+        get() = super.loadMoreSupportedPosition
+        set(value) {
+            super.loadMoreSupportedPosition = value
+            updateItemCount()
+        }
 
     init {
         mediaLoadingHandler = MediaLoadingHandler(*progressViewIds)
@@ -134,47 +155,78 @@ abstract class ParcelableStatusesAdapter(
             val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
             return cursor.getShort(indices.is_gap).toInt() == 1
         }
-        return data!![dataPosition].is_gap
+        return getStatus(position)!!.is_gap
     }
 
     override fun getStatus(position: Int): ParcelableStatus? {
-        when (getItemCountIndex(position)) {
-            1 -> {
-                return pinnedStatuses!![position - getItemStartPosition(1)]
-            }
-            2 -> {
-                return data!![position - getItemStartPosition(2)]
-            }
-        }
-        return null
+        return getStatus(position, getItemCountIndex(position))
     }
 
     override val statusCount: Int
-        get() {
-            if (data == null) return 0
-            if (lastItemFiltered) return data!!.size - 1
-            return data!!.size
-        }
+        get() = displayDataCount
 
     override val rawStatusCount: Int
         get() = data?.size ?: 0
 
+    override fun setData(data: List<ParcelableStatus>?): Boolean {
+        var changed = true
+        if (data == null) {
+            displayPositions = null
+            displayDataCount = 0
+        } else if (data is ObjectCursor) {
+            displayPositions = null
+            displayDataCount = data.size
+        } else {
+            var filteredCount = 0
+            displayPositions = IntArray(data.size).apply {
+                data.forEachIndexed { i, item ->
+                    if (!item.is_gap && item.is_filtered) {
+                        filteredCount++
+                    } else {
+                        this[i - filteredCount] = i
+                    }
+                }
+            }
+            displayDataCount = data.size - filteredCount
+            changed = data != data
+        }
+        this.data = data
+        gapLoadingIds.clear()
+        updateItemCount()
+        notifyDataSetChanged()
+        return changed
+    }
+
+    fun getData(): List<ParcelableStatus>? {
+        return data
+    }
+
     override fun getItemId(position: Int): Long {
-        return getFieldValue(position, { cursor, indices ->
-            val accountKey = UserKey.valueOf(cursor.getString(indices.account_key))
-            val id = cursor.getString(indices.id)
-            return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id).toLong()
-        }, { status ->
-            return@getFieldValue status.hashCode().toLong()
-        }, -1L)
+        val countIndex = getItemCountIndex(position)
+        when (countIndex) {
+            ITEM_INDEX_PINNED_STATUS -> {
+                val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
+                val mask = ITEM_INDEX_PINNED_STATUS.toLong() shl 32
+                return mask + status.hashCode()
+            }
+            ITEM_INDEX_STATUS -> return getFieldValue(position, { cursor, indices ->
+                val accountKey = UserKey.valueOf(cursor.getString(indices.account_key))
+                val id = cursor.getString(indices.id)
+                return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id).toLong()
+            }, { status ->
+                return@getFieldValue status.hashCode().toLong()
+            }, -1L)
+            else -> return (countIndex.toLong() shl 32) + position
+        }
     }
 
     override fun getStatusId(position: Int): String? {
-        return getFieldValue<String?>(position, { cursor, indices ->
+        val def: String? = null
+        return getFieldValue(position, { cursor, indices ->
             return@getFieldValue cursor.getString(indices.id)
         }, { status ->
             return@getFieldValue status.id
-        }, null)
+        }, def)
     }
 
     fun getStatusSortId(position: Int): Long {
@@ -206,29 +258,12 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getAccountKey(position: Int): UserKey? {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return null
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return null
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
-            return UserKey.valueOf(cursor.getString(indices.account_key))
-        }
-        return data!![dataPosition].account_key
-    }
-
-    override fun setData(data: List<ParcelableStatus>?): Boolean {
-        var changed = true
-        if (data is ObjectCursor || data == null || data.isEmpty()) {
-            lastItemFiltered = false
-        } else {
-            lastItemFiltered = data[data.size - 1].is_filtered
-            changed = data != data
-        }
-        this.data = data
-        gapLoadingIds.clear()
-        notifyDataSetChanged()
-        return changed
+        val def: UserKey? = null
+        return getFieldValue(position, { cursor, indices ->
+            return@getFieldValue UserKey.valueOf(cursor.getString(indices.account_key))
+        }, { status ->
+            return@getFieldValue status.account_key
+        }, def)
     }
 
     override fun isCardActionsShown(position: Int): Boolean {
@@ -252,7 +287,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            ITEM_VIEW_TYPE_STATUS -> {
+            VIEW_TYPE_STATUS -> {
                 return onCreateStatusViewHolder(parent) as RecyclerView.ViewHolder
             }
             ITEM_VIEW_TYPE_GAP -> {
@@ -263,7 +298,7 @@ abstract class ParcelableStatusesAdapter(
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
-            ITEM_VIEW_TYPE_EMPTY -> {
+            VIEW_TYPE_EMPTY -> {
                 return EmptyViewHolder(Space(context))
             }
         }
@@ -271,27 +306,42 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (getItemCountIndex(position)) {
-            1 -> {
-                val status = pinnedStatuses!![position - getItemStartPosition(1)]
-                (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
+        when (holder.itemViewType) {
+            VIEW_TYPE_STATUS -> {
+                val countIdx = getItemCountIndex(position)
+                val status = getStatus(position, countIdx)!!
+                (holder as IStatusViewHolder).displayStatus(status, displayInReplyTo = isShowInReplyTo,
+                        displayPinned = countIdx == ITEM_INDEX_PINNED_STATUS)
             }
-            2 -> {
-                val status = data!![position - getItemStartPosition(2)]
-                when (holder.itemViewType) {
-                    ITEM_VIEW_TYPE_STATUS -> {
-                        (holder as IStatusViewHolder).displayStatus(status, isShowInReplyTo)
-                    }
-                    ITEM_VIEW_TYPE_GAP -> {
-                        val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
-                        (holder as GapViewHolder).display(loading)
-                    }
+            ITEM_VIEW_TYPE_GAP -> {
+                val status = getStatus(position)!!
+                val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
+                (holder as GapViewHolder).display(loading)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
+            return ITEM_VIEW_TYPE_LOAD_INDICATOR
+        }
+        when (getItemCountIndex(position)) {
+            ITEM_INDEX_LOAD_START_INDICATOR, ITEM_INDEX_LOAD_END_INDICATOR -> {
+                return ITEM_VIEW_TYPE_LOAD_INDICATOR
+            }
+            ITEM_INDEX_PINNED_STATUS -> {
+                return VIEW_TYPE_STATUS
+            }
+            ITEM_INDEX_STATUS -> {
+                if (isGapItem(position)) {
+                    return ITEM_VIEW_TYPE_GAP
+                } else {
+                    return VIEW_TYPE_STATUS
                 }
             }
         }
-
+        throw AssertionError()
     }
-
 
     protected abstract fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder
 
@@ -303,47 +353,13 @@ abstract class ParcelableStatusesAdapter(
         gapLoadingIds.remove(id)
     }
 
-    fun getData(): List<ParcelableStatus>? {
-        return data
-    }
-
     fun isStatus(position: Int): Boolean {
         return position < statusCount
     }
 
-    override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
-            return ITEM_VIEW_TYPE_LOAD_INDICATOR
-        }
-        when (getItemCountIndex(position)) {
-            0, 3 -> {
-                return ITEM_VIEW_TYPE_LOAD_INDICATOR
-            }
-            1 -> {
-                return ITEM_VIEW_TYPE_STATUS
-            }
-            2 -> {
-                if (isGapItem(position)) {
-                    return ITEM_VIEW_TYPE_GAP
-                } else if (isFiltered(position)) {
-                    return ITEM_VIEW_TYPE_EMPTY
-                } else {
-                    return ITEM_VIEW_TYPE_STATUS
-                }
-            }
-        }
-        throw AssertionError()
-    }
-
     override fun getItemCount(): Int {
-        val position = loadMoreIndicatorPosition
-        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
-        itemCounts[1] = pinnedStatuses?.size ?: 0
-        itemCounts[2] = statusCount
-        itemCounts[3] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
         return itemCounts.itemCount
     }
-
 
     override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
         for (i in 0 until statusCount) {
@@ -354,43 +370,11 @@ abstract class ParcelableStatusesAdapter(
         return null
     }
 
-
-    val statusStartIndex: Int
-        get() = getItemStartPosition(2)
-
-    private inline fun <T> getFieldValue(
-            position: Int,
-            readCursorValueAction: (cursor: Cursor, indices: ParcelableStatusCursorIndices) -> T,
-            readStatusValueAction: (status: ParcelableStatus) -> T,
-            defValue: T
-    ): T {
-        val dataPosition = position - getItemStartPosition(2)
-        if (dataPosition < 0 || dataPosition >= rawStatusCount) return defValue
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
-            return readCursorValueAction(cursor, indices)
-        }
-        val status = data!![dataPosition]
-        return readStatusValueAction(status)
-    }
-
-    private fun isFiltered(position: Int): Boolean {
-        if (data is ObjectCursor) return false
-        return getStatus(position)!!.is_filtered
-    }
-
-    companion object {
-        const val ITEM_VIEW_TYPE_STATUS = 2
-        const val ITEM_VIEW_TYPE_EMPTY = 3
-    }
-
     fun findPositionByPositionKey(positionKey: Long): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, statusCount - 1)
+        val range = rangeOfSize(statusStartIndex, statusCount)
         if (range.isEmpty()) return RecyclerView.NO_POSITION
         if (positionKey < getStatusPositionKey(range.last)) {
             return range.last
@@ -402,12 +386,66 @@ abstract class ParcelableStatusesAdapter(
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, statusCount - 1)
+        val range = rangeOfSize(statusStartIndex, statusCount)
         if (range.isEmpty()) return RecyclerView.NO_POSITION
         if (sortId < getStatusSortId(range.last)) {
             return range.last
         }
         return range.indexOfFirst { sortId >= getStatusSortId(it) }
+    }
+
+    private inline fun <T> getFieldValue(
+            position: Int,
+            readCursorValueAction: (cursor: Cursor, indices: ParcelableStatusCursorIndices) -> T,
+            readStatusValueAction: (status: ParcelableStatus) -> T,
+            defValue: T
+    ): T {
+        if (data is ObjectCursor) {
+            val dataPosition = position - getItemStartPosition(ITEM_INDEX_STATUS)
+            if (dataPosition < 0 || dataPosition >= rawStatusCount) return defValue
+            val cursor = (data as ObjectCursor).cursor
+            if (!cursor.safeMoveToPosition(dataPosition)) return defValue
+            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
+            return readCursorValueAction(cursor, indices)
+        }
+        return readStatusValueAction(getStatus(position)!!)
+    }
+
+    private fun getStatus(position: Int, countIndex: Int): ParcelableStatus? {
+        when (countIndex) {
+            ITEM_INDEX_PINNED_STATUS -> {
+                return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
+            }
+            ITEM_INDEX_STATUS -> {
+                val data = this.data!!
+                val dataPosition = position - getItemStartPosition(ITEM_INDEX_STATUS)
+                val positions = displayPositions
+                if (positions != null) {
+                    return data[positions[dataPosition]]
+                } else {
+                    return data[dataPosition]
+                }
+            }
+        }
+        return null
+    }
+
+    private fun updateItemCount() {
+        val position = loadMoreIndicatorPosition
+        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
+        itemCounts[ITEM_INDEX_STATUS] = statusCount
+        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+    }
+
+    companion object {
+        const val VIEW_TYPE_STATUS = 2
+        const val VIEW_TYPE_EMPTY = 3
+
+        const val ITEM_INDEX_LOAD_START_INDICATOR = 0
+        const val ITEM_INDEX_PINNED_STATUS = 1
+        const val ITEM_INDEX_STATUS = 2
+        const val ITEM_INDEX_LOAD_END_INDICATOR = 3
     }
 
 

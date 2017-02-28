@@ -131,7 +131,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     }
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
-            shouldDisplayExtraType: Boolean) {
+            displayExtraType: Boolean, displayPinned: Boolean) {
 
         val context = itemView.context
         val loader = adapter.mediaLoader
@@ -150,7 +150,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         val retweetCount: Long
         val favoriteCount: Long
 
-        if (status.is_pinned_status) {
+        if (displayPinned && status.is_pinned_status) {
             statusInfoLabel.setText(R.string.pinned_status)
             statusInfoIcon.setImageResource(R.drawable.ic_activity_action_pinned)
             statusInfoLabel.visibility = View.VISIBLE
@@ -412,7 +412,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             favoriteCountView.text = null
             favoriteCountView.visibility = View.GONE
         }
-        if (shouldDisplayExtraType) {
+        if (displayExtraType) {
             displayExtraTypeIcon(status.card_name, status.media, status.location,
                     status.place_full_name, status.is_possibly_sensitive)
         } else {

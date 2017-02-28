@@ -34,9 +34,8 @@ import org.mariotaku.twidere.view.CardMediaContainer
  */
 interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
-    fun displayStatus(status: ParcelableStatus,
-                      displayInReplyTo: Boolean = true,
-                      shouldDisplayExtraType: Boolean = true)
+    fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean = true,
+            displayExtraType: Boolean = true, displayPinned: Boolean = false)
 
     val profileImageView: ImageView?
 

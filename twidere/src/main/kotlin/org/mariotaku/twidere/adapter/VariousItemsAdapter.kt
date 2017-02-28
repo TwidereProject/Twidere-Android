@@ -56,7 +56,8 @@ class VariousItemsAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerVie
         val obj = getItem(position)
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
-                (holder as StatusViewHolder).displayStatus(obj as ParcelableStatus, true)
+                (holder as StatusViewHolder).displayStatus(obj as ParcelableStatus,
+                        displayInReplyTo = true)
             }
             VIEW_TYPE_USER -> {
                 (holder as UserViewHolder).displayUser(obj as ParcelableUser)

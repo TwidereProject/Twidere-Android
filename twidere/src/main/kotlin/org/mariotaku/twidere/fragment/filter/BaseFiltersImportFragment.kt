@@ -76,13 +76,13 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                 adapter.notifyDataSetChanged()
             }
             R.id.select_all -> {
-                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)) {
+                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount)) {
                     adapter.setItemChecked(idx, true)
                 }
                 adapter.notifyDataSetChanged()
             }
             R.id.invert_selection -> {
-                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)) {
+                for (idx in rangeOfSize(adapter.userStartIndex, adapter.userCount)) {
                     adapter.setItemChecked(idx, !adapter.isItemChecked(idx))
                 }
                 adapter.notifyDataSetChanged()
@@ -184,7 +184,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             Loader<List<ParcelableUser>?>
 
     private fun performImport(filterEverywhere: Boolean) {
-        val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount - 1)
+        val selectedUsers = rangeOfSize(adapter.userStartIndex, adapter.userCount)
                 .filter { adapter.isItemChecked(it) }
                 .mapNotNull {
                     val user = adapter.getUser(it) ?: return@mapNotNull null

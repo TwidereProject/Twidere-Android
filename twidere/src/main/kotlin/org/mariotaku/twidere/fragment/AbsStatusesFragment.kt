@@ -282,7 +282,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             wasAtTop = firstVisibleItemPosition == 0
-            val statusRange = rangeOfSize(adapter.statusStartIndex, adapter.statusCount - 1)
+            val statusRange = rangeOfSize(adapter.statusStartIndex, adapter.statusCount)
             val lastReadPosition = if (loadMore || readFromBottom) {
                 lastVisibleItemPosition
             } else {
@@ -405,9 +405,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 val itemViewType = adapter.getItemViewType(position)
                 var nextItemIsStatus = false
                 if (position < adapter.itemCount - 1) {
-                    nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS
+                    nextItemIsStatus = adapter.getItemViewType(position + 1) == ParcelableStatusesAdapter.VIEW_TYPE_STATUS
                 }
-                if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.ITEM_VIEW_TYPE_STATUS) {
+                if (nextItemIsStatus && itemViewType == ParcelableStatusesAdapter.VIEW_TYPE_STATUS) {
                     rect.left = decorPaddingLeft
                 } else {
                     rect.left = 0

@@ -227,7 +227,8 @@ class ParcelableActivitiesAdapter(
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivity(position)?.getActivityStatus() ?: return
                 val statusViewHolder = holder as IStatusViewHolder
-                statusViewHolder.displayStatus(status, true, true)
+                statusViewHolder.displayStatus(status = status, displayInReplyTo = true,
+                        displayExtraType = true)
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 bindTitleSummaryViewHolder(holder as ActivityTitleSummaryViewHolder, position)
@@ -346,7 +347,7 @@ class ParcelableActivitiesAdapter(
 
     fun findPositionBySortTimestamp(timestamp: Long): Int {
         if (timestamp <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(activityStartIndex, activityCount - 1)
+        val range = rangeOfSize(activityStartIndex, activityCount)
         if (range.isEmpty()) return RecyclerView.NO_POSITION
         if (timestamp < getTimestamp(range.last)) {
             return range.last

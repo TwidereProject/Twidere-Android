@@ -165,14 +165,7 @@ abstract class MicroBlogAPIStatusesLoader(
         val size = array.size
         for (i in (0 until size)) {
             val status = array[i]
-            val filtered = shouldFilterStatus(db, status)
-            if (filtered) {
-                if (!status.is_gap && i != size - 1) {
-                    data.remove(status)
-                } else {
-                    status.is_filtered = true
-                }
-            }
+            status.is_filtered = shouldFilterStatus(db, status)
         }
 
         if (comparator != null) {
@@ -185,9 +178,8 @@ abstract class MicroBlogAPIStatusesLoader(
     }
 
     @Throws(MicroBlogException::class)
-    protected abstract fun getStatuses(microBlog: MicroBlog,
-                                       details: AccountDetails,
-                                       paging: Paging): List<Status>
+    protected abstract fun getStatuses(microBlog: MicroBlog, details: AccountDetails,
+            paging: Paging): List<Status>
 
     @WorkerThread
     protected abstract fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean

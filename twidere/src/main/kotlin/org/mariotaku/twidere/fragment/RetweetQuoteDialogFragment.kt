@@ -93,7 +93,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val adapter = DummyItemAdapter(context)
             adapter.setShouldShowAccountsColor(true)
             val holder = StatusViewHolder(adapter, itemContent)
-            holder.displayStatus(status, false, true)
+            holder.displayStatus(status = status, displayInReplyTo = false, displayExtraType = true)
 
             textCountView.maxLength = TwidereValidator.getTextLimit(details)
 

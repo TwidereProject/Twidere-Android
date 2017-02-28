@@ -72,7 +72,8 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
         }
 
 
-        override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean, shouldDisplayExtraType: Boolean) {
+        override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
+                displayExtraType: Boolean, displayPinned: Boolean) {
             val loader = adapter.mediaLoader
             val media = status.media ?: return
             if (media.isEmpty()) return

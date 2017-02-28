@@ -1738,8 +1738,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     // useful to indicate whether first tweet has reply or not
                     // We only display that indicator for first conversation item
                     val itemType = getItemType(position)
-                    statusHolder.displayStatus(status!!, itemType == ITEM_IDX_CONVERSATION
-                            && position - getItemTypeStart(position) == 0)
+                    val displayInReplyTo = itemType == ITEM_IDX_CONVERSATION && position - getItemTypeStart(position) == 0
+                    statusHolder.displayStatus(status = status!!, displayInReplyTo = displayInReplyTo)
                 }
                 VIEW_TYPE_REPLY_ERROR -> {
                     val errorHolder = holder as StatusErrorItemViewHolder
