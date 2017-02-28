@@ -44,13 +44,13 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
-import org.mariotaku.twidere.util.TwidereValidator
 import org.mariotaku.twidere.util.Utils.isMyRetweet
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
@@ -95,7 +95,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val holder = StatusViewHolder(adapter, itemContent)
             holder.displayStatus(status = status, displayInReplyTo = false, displayExtraType = true)
 
-            textCountView.maxLength = TwidereValidator.getTextLimit(details)
+            textCountView.maxLength = details.textLimit
 
             itemMenu.visibility = View.GONE
             actionButtons.visibility = View.GONE

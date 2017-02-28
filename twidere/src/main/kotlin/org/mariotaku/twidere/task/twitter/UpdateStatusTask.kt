@@ -37,7 +37,8 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.extension.model.size_limit
+import org.mariotaku.twidere.extension.model.mediaSizeLimit
+import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
@@ -213,7 +214,7 @@ class UpdateStatusTask(
         for (i in 0 until pending.length) {
             val account = update.accounts[i]
             val text = pending.overrideTexts[i]
-            val textLimit = TwidereValidator.getTextLimit(account)
+            val textLimit = account.textLimit
             if (textLimit >= 0 && text.length <= textLimit) {
                 continue
             }
@@ -262,7 +263,7 @@ class UpdateStatusTask(
                         if (statusUpdate.media.isNotNullOrEmpty()) {
                             // Fanfou only allow one photo
                             fanfouUpdateStatusWithPhoto(microBlog, statusUpdate, pendingUpdate,
-                                    pendingUpdate.overrideTexts[i], account.size_limit, i)
+                                    pendingUpdate.overrideTexts[i], account.mediaSizeLimit, i)
                         } else {
                             twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate,
                                     pendingUpdate.overrideTexts[i], i)
@@ -647,7 +648,7 @@ class UpdateStatusTask(
                 //noinspection TryWithIdenticalCatches
                 var body: MediaStreamBody? = null
                 try {
-                    val sizeLimit = account.size_limit
+                    val sizeLimit = account.mediaSizeLimit
                     body = getBodyFromMedia(context, mediaLoader, media, sizeLimit,
                             chucked, ContentLengthInputStream.ReadListener { length, position ->
                         callback?.onUploadingProgressChanged(index, position, length)

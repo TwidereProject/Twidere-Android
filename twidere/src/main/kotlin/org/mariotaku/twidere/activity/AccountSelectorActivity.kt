@@ -35,7 +35,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.adapter.AccountDetailsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.extension.model.is_oauth
+import org.mariotaku.twidere.extension.model.isOAuth
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -101,7 +101,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
                 if (extraKeys != null) {
                     return@filter extraKeys.contains(it.key)
                 }
-                if (oauthOnly && !it.is_oauth) {
+                if (oauthOnly && !it.isOAuth) {
                     return@filter false
                 }
                 if (USER_TYPE_TWITTER_COM == accountHost) {

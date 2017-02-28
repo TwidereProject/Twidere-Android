@@ -1,9 +1,11 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import com.twitter.Validator
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.account.AccountExtras
+import org.mariotaku.twidere.model.account.StatusNetAccountExtras
 import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
@@ -45,10 +47,10 @@ fun <T> AccountDetails.newMicroBlogInstance(
     return credentials.newMicroBlogInstance(context, type, extraRequestParams, cls)
 }
 
-val AccountDetails.is_oauth: Boolean
+val AccountDetails.isOAuth: Boolean
     get() = credentials_type == Credentials.Type.OAUTH || credentials_type == Credentials.Type.XAUTH
 
-val AccountDetails.size_limit: UpdateStatusTask.SizeLimit
+val AccountDetails.mediaSizeLimit: UpdateStatusTask.SizeLimit
     get() = when (type) {
         AccountType.TWITTER -> {
             val imageLimit = AccountExtras.ImageLimit.ofSize(2048, 1536)
@@ -56,4 +58,37 @@ val AccountDetails.size_limit: UpdateStatusTask.SizeLimit
             UpdateStatusTask.SizeLimit(imageLimit, videoLimit)
         }
         else -> UpdateStatusTask.SizeLimit(AccountExtras.ImageLimit(), AccountExtras.VideoLimit.unsupported())
+    }
+/**
+ * Text limit when composing a status, 0 for no limit
+ */
+val AccountDetails.textLimit: Int get() {
+    if (type == null) {
+        return Validator.MAX_TWEET_LENGTH
+    }
+    when (type) {
+        AccountType.STATUSNET -> {
+            val extras = this.extras as? StatusNetAccountExtras
+            if (extras != null) {
+                return extras.textLimit
+            }
+        }
+    }
+    return Validator.MAX_TWEET_LENGTH
+}
+
+val Array<AccountDetails>.textLimit: Int
+    get() {
+        var limit = -1
+        forEach { details ->
+            val currentLimit = details.textLimit
+            if (currentLimit != 0) {
+                if (limit <= 0) {
+                    limit = currentLimit
+                } else {
+                    limit = Math.min(limit, currentLimit)
+                }
+            }
+        }
+        return limit
     }

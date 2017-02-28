@@ -2,6 +2,7 @@ package org.mariotaku.twidere.service
 
 import android.app.IntentService
 import com.twitter.Extractor
+import com.twitter.Validator
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
@@ -15,7 +16,7 @@ abstract class BaseIntentService(tag: String) : IntentService(tag) {
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
-    lateinit var validator: TwidereValidator
+    lateinit var validator: Validator
     @Inject
     lateinit var extractor: Extractor
     @Inject

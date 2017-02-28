@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
+import com.twitter.Validator
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
@@ -57,7 +58,7 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var errorInfoStore: ErrorInfoStore
     @Inject
-    lateinit var validator: TwidereValidator
+    lateinit var validator: Validator
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject

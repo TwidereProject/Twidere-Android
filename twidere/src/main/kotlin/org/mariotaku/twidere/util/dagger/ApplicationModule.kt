@@ -36,6 +36,7 @@ import com.nostra13.universalimageloader.utils.L
 import com.squareup.otto.Bus
 import com.squareup.otto.ThreadEnforcer
 import com.twitter.Extractor
+import com.twitter.Validator
 import dagger.Module
 import dagger.Provides
 import edu.tsinghua.hotmobi.HotMobiLogger
@@ -233,8 +234,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun twidereValidator(): TwidereValidator {
-        return TwidereValidator()
+    fun validator(): Validator {
+        return Validator()
     }
 
     @Provides

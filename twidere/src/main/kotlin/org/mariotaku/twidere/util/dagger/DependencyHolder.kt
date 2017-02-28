@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
+import com.twitter.Validator
 import edu.tsinghua.hotmobi.HotMobiLogger
 import okhttp3.ConnectionPool
 import org.mariotaku.kpreferences.KPreferences
@@ -52,7 +53,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var dns: TwidereDns
         internal set
     @Inject
-    lateinit var validator: TwidereValidator
+    lateinit var validator: Validator
         internal set
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
