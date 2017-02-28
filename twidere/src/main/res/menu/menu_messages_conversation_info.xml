@@ -23,8 +23,4 @@
         android:id="@+id/leave_conversation"
         android:icon="@drawable/ic_action_delete"
         android:title="@string/action_leave_conversation"/>
-    <item
-        android:id="@+id/delete_messages"
-        android:icon="@drawable/ic_action_delete"
-        android:title="@string/action_delete_messages"/>
 </menu>

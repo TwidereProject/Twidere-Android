@@ -53,6 +53,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -203,15 +204,20 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         inflater.inflate(R.menu.menu_messages_conversation_info, menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if (adapter.conversation?.conversation_extras_type == ExtrasType.TWITTER_OFFICIAL) {
+            menu.setItemAvailability(R.id.leave_conversation, true)
+        } else {
+            menu.setItemAvailability(R.id.leave_conversation, false)
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.leave_conversation -> {
                 val df = DestroyConversationConfirmDialogFragment()
                 df.show(childFragmentManager, "destroy_conversation_confirm")
                 return true
-            }
-            R.id.delete_messages -> {
-
             }
         }
         return false

@@ -47,7 +47,7 @@ class DestroyMessageTask(
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        if (!performDestroyMessage(microBlog, account)) {
+        if (!performDestroyMessage(context, microBlog, account, messageId)) {
             return false
         }
         val deleteWhere: String
@@ -66,17 +66,20 @@ class DestroyMessageTask(
         return true
     }
 
-    private fun performDestroyMessage(microBlog: MicroBlog, account: AccountDetails): Boolean {
-        when (account.type) {
-            AccountType.TWITTER -> {
-                if (account.isOfficial(context)) {
-                    return microBlog.destroyDm(messageId).isSuccessful
+    companion object {
+
+        private fun performDestroyMessage(context: Context, microBlog: MicroBlog,
+                account: AccountDetails, messageId: String): Boolean {
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    if (account.isOfficial(context)) {
+                        return microBlog.destroyDm(messageId).isSuccessful
+                    }
                 }
             }
+            microBlog.destroyDirectMessage(messageId)
+            return true
         }
-        microBlog.destroyDirectMessage(messageId)
-        return true
+
     }
-
-
 }
