@@ -1,4 +1,23 @@
-package org.mariotaku.twidere.fragment
+/*
+ *             Twidere - Twitter client for Android
+ *
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.mariotaku.twidere.fragment.media
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -24,8 +43,10 @@ import com.commonsware.cwac.layouts.AspectLockedFrameLayout.AspectRatioSource
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaDownloadEvent
 import kotlinx.android.synthetic.main.layout_media_viewer_texture_video_view.*
+import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment
+import org.mariotaku.mediaviewer.library.MediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
@@ -44,18 +65,13 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
         View.OnClickListener, IControlBarActivity.ControlBarOffsetListener {
 
-    private val isLoopEnabled: Boolean get() = arguments.getBoolean(EXTRA_LOOP, false)
-    private val isControlDisabled: Boolean get() = arguments.getBoolean(EXTRA_DISABLE_CONTROL, false)
-    private val isMutedByDefault: Boolean get() = arguments.getBoolean(EXTRA_DEFAULT_MUTE, false)
-    private val media: ParcelableMedia? get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
-    private val accountKey: UserKey get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerError: Int = 0
 
     private var playAudio: Boolean = false
     private var pausedByUser: Boolean = false
     private var positionBackup: Int = -1
+
     private var videoProgressRunnable: VideoPlayProgressRunnable? = null
     private var mediaDownloadEvent: MediaDownloadEvent? = null
 
@@ -69,8 +85,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             handler = Handler(activity.mainLooper)
         }
 
-        val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
 
         videoProgressRunnable = VideoPlayProgressRunnable(handler, videoViewProgress,
                 durationLabel, positionLabel, videoView)
@@ -80,6 +94,7 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
             pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
             playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
         } else {
+            val am = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
             // Play audio by default if ringer mode on
             playAudio = !isMutedByDefault && am.ringerMode == AudioManager.RINGER_MODE_NORMAL
         }
@@ -158,7 +173,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         super.onViewStateRestored(savedInstanceState)
         requestFitSystemWindows()
     }
-
 
     override fun getDownloadExtra(): Any? {
         val extra = MediaExtra()
@@ -328,27 +342,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         // No-op
     }
 
-    @SuppressLint("SwitchIntDef")
-    private fun getBestVideoUrlAndType(media: ParcelableMedia?, supportedTypes: Array<String>): Pair<String, String>? {
-        if (media == null) return null
-        when (media.type) {
-            ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF -> {
-                if (media.video_info == null) {
-                    return Pair.create<String, String>(media.media_url, null)
-                }
-                val firstMatch = media.video_info.variants.filter { variant ->
-                    supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
-                }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
-                return Pair.create(firstMatch.url, firstMatch.content_type)
-            }
-            ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
-                return Pair.create<String, String>(media.media_url, "video/mp4")
-            }
-            else -> {
-                return null
-            }
-        }
-    }
 
     private fun updatePlayerState() {
         val playing = videoView.isPlaying
@@ -426,16 +419,50 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         const val EXTRA_LOOP = "loop"
         const val EXTRA_DISABLE_CONTROL = "disable_control"
         const val EXTRA_DEFAULT_MUTE = "default_mute"
-        private const val EXTRA_PAUSED_BY_USER = "paused_by_user"
-        private const val EXTRA_PLAY_AUDIO = "play_audio"
-        private val SUPPORTED_VIDEO_TYPES: Array<String>
-        private val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
+        internal const val EXTRA_PAUSED_BY_USER = "paused_by_user"
+        internal const val EXTRA_PLAY_AUDIO = "play_audio"
+        internal val SUPPORTED_VIDEO_TYPES: Array<String>
+        internal val FALLBACK_VIDEO_TYPES: Array<String> = arrayOf("video/mp4")
+
+        internal val MediaViewerFragment.isLoopEnabled: Boolean
+            get() = arguments.getBoolean(EXTRA_LOOP, false)
+        internal val MediaViewerFragment.isControlDisabled: Boolean
+            get() = arguments.getBoolean(EXTRA_DISABLE_CONTROL, false)
+        internal val MediaViewerFragment.isMutedByDefault: Boolean
+            get() = arguments.getBoolean(EXTRA_DEFAULT_MUTE, false)
+        internal val MediaViewerFragment.media: ParcelableMedia?
+            get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
+        internal val MediaViewerFragment.accountKey: UserKey
+            get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
         init {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 SUPPORTED_VIDEO_TYPES = arrayOf("video/mp4")
             } else {
                 SUPPORTED_VIDEO_TYPES = arrayOf("video/webm", "video/mp4")
+            }
+        }
+
+
+        @SuppressLint("SwitchIntDef")
+        internal fun getBestVideoUrlAndType(media: ParcelableMedia?, supportedTypes: Array<String>): Pair<String, String>? {
+            if (media == null) return null
+            when (media.type) {
+                ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF -> {
+                    if (media.video_info == null) {
+                        return Pair.create<String, String>(media.media_url, null)
+                    }
+                    val firstMatch = media.video_info.variants.filter { variant ->
+                        supportedTypes.any { it.equals(variant.content_type, ignoreCase = true) }
+                    }.sortedByDescending(ParcelableMedia.VideoInfo.Variant::bitrate).firstOrNull() ?: return null
+                    return Pair.create(firstMatch.url, firstMatch.content_type)
+                }
+                ParcelableMedia.Type.CARD_ANIMATED_GIF -> {
+                    return Pair.create<String, String>(media.media_url, "video/mp4")
+                }
+                else -> {
+                    return null
+                }
             }
         }
     }

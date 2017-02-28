@@ -25,7 +25,6 @@ import org.mariotaku.restfu.http.RestHttpClient;
 import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.oauth.OAuthAuthorization;
 import org.mariotaku.restfu.oauth.OAuthEndpoint;
-import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.extension.model.CredentialsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.CacheMetadata;
@@ -44,10 +43,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_ADDRESS;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_ENABLED;
+import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_SECURITY_KEY;
+
 /**
  * Created by mariotaku on 16/1/28.
  */
-public class TwidereMediaDownloader implements MediaDownloader, Constants {
+public class TwidereMediaDownloader implements MediaDownloader {
 
     private final Context context;
     private final SharedPreferencesWrapper preferences;
@@ -57,7 +60,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
     private Thumbor thumbor;
 
     public TwidereMediaDownloader(final Context context, SharedPreferencesWrapper preferences,
-                                  RestHttpClient client) {
+            RestHttpClient client) {
         this.context = context;
         this.preferences = preferences;
         this.client = client;
@@ -116,7 +119,7 @@ public class TwidereMediaDownloader implements MediaDownloader, Constants {
     }
 
     protected CacheDownloadLoader.DownloadResult getInternal(@NonNull String url,
-                                                             @Nullable Object extra) throws IOException {
+            @Nullable Object extra) throws IOException {
         final Uri uri = Uri.parse(url);
         Authorization auth = null;
         AccountDetails account = null;

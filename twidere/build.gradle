@@ -168,6 +168,8 @@ dependencies {
     compile 'org.attoparser:attoparser:2.0.1.RELEASE'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
     compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
+    compile "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
     compile 'com.github.mariotaku:SQLiteQB:0.9.10'
@@ -180,6 +182,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:$mariotaku_commons_library_version"
     compile 'com.github.mariotaku:KPreferences:0.9.5'
     compile 'com.github.mariotaku:Chameleon:0.9.14'
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'

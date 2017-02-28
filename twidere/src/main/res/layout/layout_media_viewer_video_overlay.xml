@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/videoViewOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    tools:showIn="@layout/layout_media_viewer_texture_video_view">
+
+    <RelativeLayout
+        android:id="@+id/videoControl"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:layout_gravity="bottom"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <ImageButton
+            android:id="@+id/playPauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/play"
+            android:minWidth="@dimen/element_size_normal"
+            android:src="@drawable/ic_action_play_arrow"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/positionLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/videoViewProgress"
+            android:layout_alignStart="@+id/videoViewProgress"
+            android:layout_below="@+id/videoViewProgress"
+            android:gravity="center"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="@dimen/text_size_extra_small"
+            tools:text="--:--"/>
+
+        <SeekBar
+            android:id="@+id/videoViewProgress"
+            style="?android:progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/playPauseButton"
+            android:layout_toLeftOf="@+id/volumeButton"
+            android:layout_toRightOf="@+id/playPauseButton"
+            android:layout_toStartOf="@+id/volumeButton"/>
+
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/durationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/videoViewProgress"
+            android:layout_alignRight="@+id/videoViewProgress"
+            android:layout_below="@+id/videoViewProgress"
+            android:gravity="center"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="@dimen/text_size_extra_small"
+            tools:text="--:--"/>
+
+        <ImageButton
+            android:id="@+id/volumeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:contentDescription="@string/action_mute"
+            android:minWidth="@dimen/element_size_normal"
+            android:src="@drawable/ic_action_speaker_max"/>
+
+    </RelativeLayout>
+</FrameLayout>
