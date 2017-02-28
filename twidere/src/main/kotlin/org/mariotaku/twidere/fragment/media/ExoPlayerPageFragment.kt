@@ -30,12 +30,13 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
@@ -64,7 +65,54 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     private var playAudio: Boolean = false
     private var pausedByUser: Boolean = false
-    private var positionBackup: Int = -1
+    private var playbackCompleted: Boolean = false
+    private var positionBackup: Long = -1L
+
+    private val playerListener = object : ExoPlayer.EventListener {
+        override fun onLoadingChanged(isLoading: Boolean) {
+
+        }
+
+        override fun onPlayerError(error: ExoPlaybackException) {
+        }
+
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+            when (playbackState) {
+                ExoPlayer.STATE_BUFFERING -> {
+                    showProgress(true, 0f)
+                }
+                ExoPlayer.STATE_ENDED -> {
+                    playbackCompleted = true
+                    positionBackup = -1L
+
+                    // Reset position
+                    playerView.player?.let { player ->
+                        player.seekTo(0)
+                        player.playWhenReady = false
+                    }
+
+                    hideProgress()
+                }
+                ExoPlayer.STATE_READY -> {
+                    playbackCompleted = playWhenReady
+                    hideProgress()
+                }
+                else -> {
+                    hideProgress()
+                }
+            }
+        }
+
+        override fun onPositionDiscontinuity() {
+        }
+
+        override fun onTimelineChanged(timeline: Timeline, manifest: Any?) {
+        }
+
+        override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
+        }
+
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -73,7 +121,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
 
         if (savedInstanceState != null) {
-            positionBackup = savedInstanceState.getInt(EXTRA_POSITION)
+            positionBackup = savedInstanceState.getLong(EXTRA_POSITION)
             pausedByUser = savedInstanceState.getBoolean(EXTRA_PAUSED_BY_USER)
             playAudio = savedInstanceState.getBoolean(EXTRA_PLAY_AUDIO)
         } else {
@@ -133,7 +181,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(EXTRA_POSITION, positionBackup)
+        outState.putLong(EXTRA_POSITION, positionBackup)
         outState.putBoolean(EXTRA_PAUSED_BY_USER, pausedByUser)
         outState.putBoolean(EXTRA_PLAY_AUDIO, playAudio)
     }
@@ -151,8 +199,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     }
 
     private fun releasePlayer() {
-        if (playerView.player == null) return
-        playerView.player.release();
+        val player = playerView.player ?: return
+        positionBackup = player.currentPosition
+        pausedByUser = !player.playWhenReady
+        player.removeListener(playerListener)
+        player.release();
         playerView.player = null
     }
 
@@ -163,7 +214,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             val videoTrackSelectionFactory = AdaptiveVideoTrackSelection.Factory(bandwidthMeter)
             val trackSelector = DefaultTrackSelector(videoTrackSelectionFactory)
             val player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, DefaultLoadControl())
-            player.playWhenReady = true
+            if (positionBackup >= 0) {
+                player.seekTo(positionBackup)
+            }
+            player.playWhenReady = !pausedByUser
+            player.addListener(playerListener)
             return@run player
         }
 
