@@ -30,6 +30,7 @@
     <string name="action_center">Center</string>
     <string name="action_clear">Clear</string>
     <string name="action_compose">Compose</string>
+    <string name="action_compose_message_convert_to_status">Convert to tweet</string>
     <string name="action_conversation_info">Conversation info</string>
     <string name="action_create_conversation">Create conversation</string>
     <string name="action_creating_list">creating list</string>
@@ -596,6 +597,7 @@
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
+    <string name="message_format_compose_message_convert_to_status">This tweet will be sent as a message to <xliff:g id="name">%1$s</xliff:g>, continue? Converting to a normal tweet uses an extra character.</string>
     <string name="message_format_conversation_avatar_update">Conversation avatar changed</string>
     <string name="message_format_conversation_avatar_update_by_user"><xliff:g example="User" id="by_user">%1$s</xliff:g> changed conversation avatar</string>
     <string name="message_format_conversation_name_update">Conversation name changed to <xliff:g example="User" id="name">%1$s</xliff:g></string>
