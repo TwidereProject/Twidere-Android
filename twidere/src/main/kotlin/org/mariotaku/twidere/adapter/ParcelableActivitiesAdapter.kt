@@ -435,9 +435,9 @@ class ParcelableActivitiesAdapter(
             adapter.activityAdapterListener?.onQuotedStatusClick(holder, position)
         }
 
-        override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
+        override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
             val adapter = adapterRef.get() ?: return
-            adapter.activityAdapterListener?.onMediaClick(holder, view, media, statusPosition)
+            adapter.activityAdapterListener?.onMediaClick(holder, view, current, statusPosition)
         }
 
         override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {

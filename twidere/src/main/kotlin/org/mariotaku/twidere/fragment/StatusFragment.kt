@@ -298,12 +298,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         loaderManager.initLoader(LOADER_ID_DETAIL_STATUS, arguments, this)
     }
 
-    override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
+    override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
         val status = adapter.getStatus(statusPosition) ?: return
-        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+        IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
 
-        val event = MediaEvent.create(activity, status, media, TimelineType.DETAILS,
+        val event = MediaEvent.create(activity, status, current, TimelineType.DETAILS,
                 adapter.mediaPreviewEnabled)
         HotMobiLogger.getInstance(activity).log(status.account_key, event)
     }

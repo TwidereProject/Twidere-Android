@@ -52,7 +52,9 @@ interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
     interface StatusClickListener : ContentCardClickListener, IGapSupportedAdapter.GapClickListener {
 
-        fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {}
+        fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {}
+
+        fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {}
 
         fun onStatusClick(holder: IStatusViewHolder, position: Int) {}
 

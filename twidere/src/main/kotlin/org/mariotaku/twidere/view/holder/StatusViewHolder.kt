@@ -131,7 +131,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     }
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
-                               shouldDisplayExtraType: Boolean) {
+            shouldDisplayExtraType: Boolean) {
 
         val context = itemView.context
         val loader = adapter.mediaLoader
@@ -441,7 +441,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedMediaLabel.visibility = View.GONE
 
                 quotedMediaPreview.displayMedia(loader = loader, media = status.quoted_media,
-                        accountId = status.account_key)
+                        accountId = status.account_key, mediaClickListener = this,
+                        loadingHandler = adapter.mediaLoadingHandler)
             }
         } else {
             // No media, hide all related views
@@ -451,7 +452,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     }
 
     override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
-        statusClickListener?.onMediaClick(this, view, media, layoutPosition)
+        if (view.parent == quotedMediaPreview) {
+            statusClickListener?.onQuotedMediaClick(this, view, media, layoutPosition)
+        } else {
+            statusClickListener?.onMediaClick(this, view, media, layoutPosition)
+        }
     }
 
     fun setOnClickListeners() {
@@ -564,8 +569,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
     }
 
     private fun displayExtraTypeIcon(cardName: String?, media: Array<ParcelableMedia?>?,
-                                     location: ParcelableLocation?, placeFullName: String?,
-                                     sensitive: Boolean) {
+            location: ParcelableLocation?, placeFullName: String?,
+            sensitive: Boolean) {
         if (TwitterCardUtils.CARD_NAME_AUDIO == cardName) {
             extraTypeView.setImageResource(if (sensitive) R.drawable.ic_action_warning else R.drawable.ic_action_music)
             extraTypeView.visibility = View.VISIBLE

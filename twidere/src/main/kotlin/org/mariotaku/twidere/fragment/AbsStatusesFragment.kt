@@ -361,12 +361,26 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 maxSortIds = maxSortIds, sinceSortIds = null))
     }
 
-    override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, statusPosition: Int) {
+    override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,
+            statusPosition: Int) {
         val status = adapter.getStatus(statusPosition) ?: return
-        IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
+        IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
         // BEGIN HotMobi
-        val event = MediaEvent.create(activity, status, media, timelineType,
+        val event = MediaEvent.create(activity, status, current, timelineType,
+                adapter.mediaPreviewEnabled)
+        HotMobiLogger.getInstance(activity).log(status.account_key, event)
+        // END HotMobi
+    }
+
+    override fun onQuotedMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia,
+            statusPosition: Int) {
+        val status = adapter.getStatus(statusPosition) ?: return
+        val quotedMedia = status.quoted_media ?: return
+        IntentUtils.openMedia(activity, status.account_key, status.is_possibly_sensitive, status,
+                current, quotedMedia, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
+        // BEGIN HotMobi
+        val event = MediaEvent.create(activity, status, current, timelineType,
                 adapter.mediaPreviewEnabled)
         HotMobiLogger.getInstance(activity).log(status.account_key, event)
         // END HotMobi
