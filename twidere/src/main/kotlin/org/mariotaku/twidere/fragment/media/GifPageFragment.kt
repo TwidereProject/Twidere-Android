@@ -80,7 +80,7 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
         return inflater.inflate(R.layout.layout_media_viewer_gif, parent, false)
     }
 
-    override fun recycleMedia() {
+    override fun releaseMediaResources() {
         gifView?.setInputSource(null)
     }
 

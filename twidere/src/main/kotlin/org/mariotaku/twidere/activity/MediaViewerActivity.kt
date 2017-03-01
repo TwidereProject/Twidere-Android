@@ -173,17 +173,11 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (currentItem < 0 || currentItem >= adapter.count) return false
         val obj = adapter.instantiateItem(viewPager, currentItem) as? MediaViewerFragment ?: return false
         if (obj.isDetached || obj.host == null) return false
-        if (obj is CacheDownloadMediaViewerFragment) {
-            val running = obj.loaderManager.hasRunningLoadersSafe()
-            val downloaded = obj.hasDownloadedData()
-            MenuUtils.setItemAvailability(menu, R.id.refresh, !running && !downloaded)
-            MenuUtils.setItemAvailability(menu, R.id.share, !running && downloaded)
-            MenuUtils.setItemAvailability(menu, R.id.save, !running && downloaded)
-        } else {
-            MenuUtils.setItemAvailability(menu, R.id.refresh, false)
-            MenuUtils.setItemAvailability(menu, R.id.share, true)
-            MenuUtils.setItemAvailability(menu, R.id.save, false)
-        }
+        val running = obj.isMediaLoading
+        val downloaded = obj.isMediaLoaded
+        MenuUtils.setItemAvailability(menu, R.id.refresh, !running && !downloaded)
+        MenuUtils.setItemAvailability(menu, R.id.share, !running && downloaded)
+        MenuUtils.setItemAvailability(menu, R.id.save, !running && downloaded)
         return true
     }
 

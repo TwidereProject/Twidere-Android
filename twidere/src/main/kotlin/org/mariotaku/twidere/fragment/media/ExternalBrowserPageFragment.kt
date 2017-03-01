@@ -67,8 +67,12 @@ class ExternalBrowserPageFragment : MediaViewerFragment() {
         super.onDestroy()
     }
 
-    override fun recycleMedia() {
+    override fun isMediaLoaded(): Boolean {
+        return true
+    }
 
+    override fun isMediaLoading(): Boolean {
+        return false
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

@@ -28,6 +28,8 @@ import android.os.Looper
 import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.text.BidiFormatter
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.upstream.DataSource
 import com.nostra13.universalimageloader.cache.disc.DiskCache
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache
@@ -328,6 +330,12 @@ class ApplicationModule(private val application: Application) {
         HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool)
         val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(application)
         return OkHttpDataSourceFactory(builder.build(), userAgent, null)
+    }
+
+    @Provides
+    @Singleton
+    fun extractorsFactory(): ExtractorsFactory {
+        return DefaultExtractorsFactory()
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {

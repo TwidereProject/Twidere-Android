@@ -139,7 +139,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
         additionalHeaders.add("User-Agent", userAgent);
         final String method = GET.METHOD;
         final String requestUri;
-        if (isAuthRequired(uri, account) && auth != null && auth.hasAuthorization()) {
+        if (isAuthRequired(account, uri) && auth != null && auth.hasAuthorization()) {
             final Endpoint endpoint;
             if (auth instanceof OAuthAuthorization) {
                 endpoint = new OAuthEndpoint(getEndpoint(modifiedUri), getEndpoint(uri));
@@ -184,7 +184,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
         return new TwidereDownloadResult(body, metadata);
     }
 
-    private String getEndpoint(Uri uri) {
+    public static String getEndpoint(Uri uri) {
         final StringBuilder sb = new StringBuilder();
         sb.append(uri.getScheme());
         sb.append("://");
@@ -197,7 +197,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
         return sb.toString();
     }
 
-    private boolean isAuthRequired(final Uri uri, @Nullable final AccountDetails details) {
+    public static boolean isAuthRequired(@Nullable final AccountDetails details, @NonNull final Uri uri) {
         if (details == null) return false;
         final String host = uri.getHost();
         if (details.credentials.api_url_format != null && details.credentials.api_url_format.contains(host)) {
@@ -206,11 +206,11 @@ public class TwidereMediaDownloader implements MediaDownloader {
         return "ton.twitter.com".equalsIgnoreCase(host);
     }
 
-    private boolean isTwitterUri(final Uri uri) {
+    private static boolean isTwitterUri(final Uri uri) {
         return uri != null && "ton.twitter.com".equalsIgnoreCase(uri.getHost());
     }
 
-    private Uri getReplacedUri(@NonNull final Uri uri, final String apiUrlFormat) {
+    public static Uri getReplacedUri(@NonNull final Uri uri, final String apiUrlFormat) {
         if (apiUrlFormat == null) return uri;
         if (isTwitterUri(uri)) {
             final StringBuilder sb = new StringBuilder();

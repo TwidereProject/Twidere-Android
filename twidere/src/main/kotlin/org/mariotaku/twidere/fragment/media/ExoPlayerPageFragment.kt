@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.fragment.media
 
+import android.accounts.AccountManager
 import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Rect
@@ -31,7 +32,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -40,20 +41,33 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
+import com.google.android.exoplayer2.upstream.HttpDataSource
 import kotlinx.android.synthetic.main.layout_media_viewer_exo_player_view.*
 import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
+import org.mariotaku.restfu.RestRequest
+import org.mariotaku.restfu.http.Endpoint
+import org.mariotaku.restfu.http.MultiValueMap
+import org.mariotaku.restfu.oauth.OAuthAuthorization
+import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
+import org.mariotaku.twidere.extension.model.getAuthorization
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PAUSED_BY_USER
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PLAY_AUDIO
+import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.SUPPORTED_VIDEO_TYPES
+import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.accountKey
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isControlDisabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isLoopEnabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedByDefault
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import javax.inject.Inject
 
 
@@ -65,7 +79,10 @@ import javax.inject.Inject
 class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPageFragment> {
 
     @Inject
-    lateinit var dataSourceFactory: DataSource.Factory
+    internal lateinit var dataSourceFactory: DataSource.Factory
+
+    @Inject
+    internal lateinit var extractorsFactory: ExtractorsFactory
 
     private lateinit var mainHandler: Handler
 
@@ -80,6 +97,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
 
         override fun onPlayerError(error: ExoPlaybackException) {
+
         }
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -212,11 +230,18 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         requestFitSystemWindows()
     }
 
-    override fun recycleMedia() {
-    }
-
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (ExoPlayerPageFragment) -> Unit) {
         // No-op
+    }
+
+    override fun isMediaLoaded(): Boolean {
+        val player = playerView.player ?: return false
+        return player.playbackState != ExoPlayer.STATE_IDLE
+    }
+
+    override fun isMediaLoading(): Boolean {
+        val player = playerView.player ?: return false
+        return player.isLoading
     }
 
     private fun releasePlayer() {
@@ -243,9 +268,10 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             return@run player
         }
 
-        val uri = getDownloadUri() ?: return
-        val uriSource = ExtractorMediaSource(uri, dataSourceFactory, DefaultExtractorsFactory(),
-                null, null)
+        val uri = media?.getDownloadUri() ?: return
+        val am = AccountManager.get(context)
+        val factory = AuthDelegatingDataSourceFactory(uri, accountKey, am, dataSourceFactory)
+        val uriSource = ExtractorMediaSource(uri, factory, extractorsFactory, null, null)
         if (isLoopEnabled) {
             playerView.player.prepare(LoopingMediaSource(uriSource))
         } else {
@@ -264,11 +290,51 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
     }
 
-    fun getDownloadUri(): Uri? {
-        val bestVideoUrlAndType = VideoPageFragment.getBestVideoUrlAndType(media, VideoPageFragment.SUPPORTED_VIDEO_TYPES)
+    fun ParcelableMedia.getDownloadUri(): Uri? {
+        val bestVideoUrlAndType = VideoPageFragment.getBestVideoUrlAndType(this, SUPPORTED_VIDEO_TYPES)
         if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
             return Uri.parse(bestVideoUrlAndType.first)
         }
         return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
+
+    class AuthDelegatingDataSourceFactory(
+            val uri: Uri,
+            val accountKey: UserKey,
+            val am: AccountManager,
+            val delegate: DataSource.Factory
+    ) : DataSource.Factory {
+        override fun createDataSource(): DataSource {
+            val source = delegate.createDataSource()
+            if (source is HttpDataSource) {
+                setAuthorizationHeader(source)
+            }
+            return source
+        }
+
+        private fun setAuthorizationHeader(dataSource: HttpDataSource) {
+            val account = AccountUtils.getAccountDetails(am, accountKey, true) ?: return
+            val modifiedUri = TwidereMediaDownloader.getReplacedUri(uri, account.credentials.api_url_format) ?: uri
+            if (TwidereMediaDownloader.isAuthRequired(account, uri)) {
+                val auth = account.credentials.getAuthorization()
+                val endpoint: Endpoint
+                if (auth is OAuthAuthorization) {
+                    endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
+                            TwidereMediaDownloader.getEndpoint(uri))
+                } else {
+                    endpoint = Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
+                }
+                val queries = MultiValueMap<String>()
+                for (name in uri.queryParameterNames) {
+                    for (value in uri.getQueryParameters(name)) {
+                        queries.add(name, value)
+                    }
+                }
+                val info = RestRequest("GET", false, uri.path, null, queries, null, null, null, null)
+                dataSource.setRequestProperty("Authorization", auth.getHeader(endpoint, info))
+            }
+
+        }
+    }
+
 }
