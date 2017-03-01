@@ -27,6 +27,8 @@ import android.os.Build
 import android.os.Looper
 import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.text.BidiFormatter
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.DataSource
 import com.nostra13.universalimageloader.cache.disc.DiskCache
 import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache
 import com.nostra13.universalimageloader.core.ImageLoader
@@ -41,6 +43,7 @@ import dagger.Module
 import dagger.Provides
 import edu.tsinghua.hotmobi.HotMobiLogger
 import okhttp3.ConnectionPool
+import okhttp3.OkHttpClient
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
@@ -140,7 +143,7 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun connectionPoll(): ConnectionPool {
+    fun connectionPool(): ConnectionPool {
         return ConnectionPool()
     }
 
@@ -314,6 +317,17 @@ class ApplicationModule(private val application: Application) {
     @Provides
     fun locationManager(): LocationManager {
         return application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
+
+    @Provides
+    @Singleton
+    fun dataSourceFactory(preferences: SharedPreferencesWrapper, dns: TwidereDns,
+            connectionPool: ConnectionPool): DataSource.Factory {
+        val conf = HttpClientFactory.HttpClientConfiguration(preferences)
+        val builder = OkHttpClient.Builder()
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool)
+        val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(application)
+        return OkHttpDataSourceFactory(builder.build(), userAgent, null)
     }
 
     private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {

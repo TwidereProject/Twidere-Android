@@ -40,7 +40,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import kotlinx.android.synthetic.main.layout_media_viewer_exo_player_view.*
 import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
@@ -54,7 +53,8 @@ import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isContro
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isLoopEnabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedByDefault
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
-import org.mariotaku.twidere.util.UserAgentUtils
+import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
+import javax.inject.Inject
 
 
 /**
@@ -63,7 +63,10 @@ import org.mariotaku.twidere.util.UserAgentUtils
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPageFragment> {
-    private lateinit var mediaDataSourceFactory: DataSource.Factory
+
+    @Inject
+    lateinit var dataSourceFactory: DataSource.Factory
+
     private lateinit var mainHandler: Handler
 
     private var playAudio: Boolean = false
@@ -119,7 +122,6 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mediaDataSourceFactory = DefaultHttpDataSourceFactory(UserAgentUtils.getDefaultUserAgentString(context))
         mainHandler = Handler()
 
 
@@ -139,6 +141,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
         playerView.useController = !isControlDisabled
         updateVolume()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        GeneralComponentHelper.build(context).inject(this)
     }
 
     override fun onStart() {
@@ -237,7 +244,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
 
         val uri = getDownloadUri() ?: return
-        val uriSource = ExtractorMediaSource(uri, mediaDataSourceFactory, DefaultExtractorsFactory(),
+        val uriSource = ExtractorMediaSource(uri, dataSourceFactory, DefaultExtractorsFactory(),
                 null, null)
         if (isLoopEnabled) {
             playerView.player.prepare(LoopingMediaSource(uriSource))

@@ -29,6 +29,7 @@ import org.mariotaku.twidere.adapter.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.filter.FilteredUsersFragment
+import org.mariotaku.twidere.fragment.media.ExoPlayerPageFragment
 import org.mariotaku.twidere.loader.*
 import org.mariotaku.twidere.preference.AccountsListPreference
 import org.mariotaku.twidere.preference.KeyboardShortcutPreference
@@ -138,4 +139,6 @@ interface GeneralComponent {
     fun inject(loader: BaseUserListsLoader)
 
     fun inject(controller: PremiumDashboardActivity.ExtraFeatureViewController)
+
+    fun inject(fragment: ExoPlayerPageFragment)
 }

@@ -169,6 +169,7 @@ dependencies {
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
     compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
     compile "com.google.android.exoplayer:exoplayer:$exoplayer_version"
+    compile "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
 
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.17'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.17'
