@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
+import org.mariotaku.twidere.extension.findParent
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -38,6 +39,15 @@ class PremiumEntryPreference(context: Context, attrs: AttributeSet) : Preference
                 return@setOnPreferenceClickListener true
             }
             return@setOnPreferenceClickListener false
+        }
+    }
+
+    override fun onAttached() {
+        super.onAttached()
+        if (!extraFeaturesService.isSupported()) {
+            preferenceManager.preferenceScreen?.let { screen ->
+                findParent(screen)?.removePreference(this)
+            }
         }
     }
 }
