@@ -33,8 +33,10 @@ jdk:
 
 env:
   global:
-    MALLOC_ARENA_MAX=2
-    GRADLE_OPTS=-Xmx2048m -Dorg.gradle.parallel=false
+    - MALLOC_ARENA_MAX=2
+    - GRADLE_OPTS=-Xmx2048m -Dorg.gradle.parallel=false
+    # COMPONENT_GOOGLE_REPO
+    - secure: "OQ/wkORxY2qv4CmAdMxyW4ihRt5GRyxKxQRZpsdjMbwIKf3DlY6vBoNIEQ46sRRLAKOzkQ3LirodbWRCBlDN9WFw4XRsLTveqqtslMGeLf04peazXMIa6rJ22BCDGEmnzRNx6r3JRb9wEK1plNv4u4G9DgQ7ShzbwdZ8A5grlg8="
 
 addons:
   apt:
@@ -42,6 +44,8 @@ addons:
       - tar
       - gzip
       - patch
+      - openssh-client
+      - git
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -53,11 +57,12 @@ cache:
     - $HOME/.m2/
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in travis/configs/twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
+  - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
 
 install:
   # Extracts build configs into source tree
   - tar zxf travis/configs/twidere_private_config.tar.gz
+  - GIT_SSH_COMMAND='ssh -i priv_components_ssh_key' git clone $COMPONENT_GOOGLE_REPO > /dev/null 2>&1
 
 before_script:
   # Validate if patches work
@@ -69,7 +74,7 @@ deploy:
   provider: releases
   prerelease: true
   api_key:
-    secure: WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M=
+    secure: "WKtKwda3hegqO9QVujdonNoL2ESJUR80WHNq/13wDsbCABo/GNnuqHNYZmml3wAifEKKeCEYfNZRUuHQ8eHs54Lj5BlGRX5i+1LrGhhgnVFQgmrhIv4RJuVQ663kDEh+Jwo4vowJ2mxNDvLvOhfZwxjULPDiknqy6u5PyW3id5M="
   file_glob: true
   file: '**/*-release.apk'
   on:
