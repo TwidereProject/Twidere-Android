@@ -62,7 +62,8 @@ before_install:
 install:
   # Extracts build configs into source tree
   - tar zxf travis/configs/twidere_private_config.tar.gz
-  - GIT_SSH_COMMAND='ssh -i private/ssh_id_rsa -o UserKnownHostsFile=private/ssh_known_hosts' git clone $COMPONENT_GOOGLE_REPO twidere/src/google > /dev/null 2>&1
+  # I REALLY don't want to use StrictHostKeyChecking, but SSH don't let me check hostname only
+  - GIT_SSH_COMMAND='ssh -i private/ssh_id_rsa -o StrictHostKeyChecking=no' git clone $COMPONENT_GOOGLE_REPO twidere/src/google > /dev/null 2>&1
 
 before_script:
   # Validate if patches work
