@@ -24,8 +24,7 @@ ehthumbs.db
 Thumbs.db
 
 # Private files
-/signing.properties
-/twidere.jks
-/priv_components_ssh_key
+/private
 
+# Local files
 /captures

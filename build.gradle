@@ -78,7 +78,7 @@ subprojects {
 
                 if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
                     android.buildTypes.each { buildType ->
-                        def file = rootProject.file('signing.properties')
+                        def file = rootProject.file('private/signing.properties')
                         if (file.exists()) {
                             def cfg = signingConfigs.maybeCreate(buildType.name)
                             loadSigningConfig(cfg, file)
