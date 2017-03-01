@@ -44,7 +44,9 @@ import com.twitter.Validator
 import dagger.Module
 import dagger.Provides
 import edu.tsinghua.hotmobi.HotMobiLogger
+import okhttp3.Cache
 import okhttp3.ConnectionPool
+import okhttp3.Dns
 import okhttp3.OkHttpClient
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.mediaviewer.library.FileCache
@@ -71,6 +73,7 @@ import org.mariotaku.twidere.util.sync.JobSchedulerSyncController
 import org.mariotaku.twidere.util.sync.LegacySyncController
 import org.mariotaku.twidere.util.sync.SyncController
 import org.mariotaku.twidere.util.sync.SyncPreferences
+import java.io.File
 import java.io.IOException
 import javax.inject.Singleton
 
@@ -137,10 +140,10 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun restHttpClient(prefs: SharedPreferencesWrapper, dns: TwidereDns,
-            connectionPool: ConnectionPool): RestHttpClient {
+    fun restHttpClient(prefs: SharedPreferencesWrapper, dns: Dns,
+            connectionPool: ConnectionPool, cache: Cache): RestHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(prefs)
-        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool)
+        return HttpClientFactory.createRestHttpClient(conf, dns, connectionPool, cache)
     }
 
     @Provides
@@ -215,7 +218,7 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun dns(preferences: SharedPreferencesWrapper): TwidereDns {
+    fun dns(preferences: SharedPreferencesWrapper): Dns {
         return TwidereDns(application, preferences)
     }
 
@@ -323,13 +326,21 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun dataSourceFactory(preferences: SharedPreferencesWrapper, dns: TwidereDns,
-            connectionPool: ConnectionPool): DataSource.Factory {
+    fun dataSourceFactory(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
+            cache: Cache): DataSource.Factory {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)
         val builder = OkHttpClient.Builder()
-        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool)
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
         val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(application)
         return OkHttpDataSourceFactory(builder.build(), userAgent, null)
+    }
+
+    @Provides
+    @Singleton
+    fun cache(preferences: SharedPreferencesWrapper): Cache {
+        val cacheSizeMB = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
+        // Convert to bytes
+        return Cache(getCacheDir("network"), cacheSizeMB * 1048576L)
     }
 
     @Provides
@@ -351,7 +362,11 @@ class ApplicationModule(private val application: Application) {
         } catch (e: IOException) {
             return ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator)
         }
+    }
 
+    private fun getCacheDir(dirName: String): File {
+        return Utils.getExternalCacheDir(application, dirName) ?:
+                Utils.getInternalCacheDir(application, dirName)
     }
 
     companion object {

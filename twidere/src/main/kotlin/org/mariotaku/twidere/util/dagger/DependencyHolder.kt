@@ -22,12 +22,13 @@ package org.mariotaku.twidere.util.dagger
 import android.content.Context
 import com.twitter.Validator
 import edu.tsinghua.hotmobi.HotMobiLogger
+import okhttp3.Cache
 import okhttp3.ConnectionPool
+import okhttp3.Dns
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.net.TwidereDns
 import javax.inject.Inject
 
 /**
@@ -50,7 +51,7 @@ class DependencyHolder internal constructor(context: Context) {
     lateinit var activityTracker: ActivityTracker
         internal set
     @Inject
-    lateinit var dns: TwidereDns
+    lateinit var dns: Dns
         internal set
     @Inject
     lateinit var validator: Validator
@@ -60,6 +61,9 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var connectionPool: ConnectionPool
+        internal set
+    @Inject
+    lateinit var cache: Cache
         internal set
     @Inject
     lateinit var defaultFeatures: DefaultFeatures

@@ -55,6 +55,8 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Locale;
 
+import okhttp3.Dns;
+
 import static org.mariotaku.twidere.Constants.DEFAULT_TWITTER_API_URL_FORMAT;
 import static org.mariotaku.twidere.Constants.KEY_BUILTIN_DNS_RESOLVER;
 import static org.mariotaku.twidere.Constants.KEY_DNS_SERVER;
@@ -148,7 +150,7 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
                     LogText.State.WARNING));
             publishProgress(LogText.LINEBREAK, LogText.LINEBREAK);
             DependencyHolder holder = DependencyHolder.Companion.get(mContext);
-            final TwidereDns dns = holder.getDns();
+            final Dns dns = holder.getDns();
             final SharedPreferencesWrapper prefs = holder.getPreferences();
             publishProgress(new LogText("Network preferences"), LogText.LINEBREAK);
             publishProgress(new LogText("using_resolver: " + prefs.getBoolean(KEY_BUILTIN_DNS_RESOLVER)), LogText.LINEBREAK);
@@ -286,11 +288,15 @@ public class NetworkDiagnosticsFragment extends BaseFragment {
             return null;
         }
 
-        private void testDns(TwidereDns dns, final String host) {
+        private void testDns(Dns dns, final String host) {
             publishProgress(new LogText(String.format("Lookup %s...", host)));
             try {
                 final long start = SystemClock.uptimeMillis();
-                publishProgress(new LogText(String.valueOf(dns.lookupResolver(host))));
+                if (dns instanceof TwidereDns) {
+                    publishProgress(new LogText(String.valueOf(((TwidereDns) dns).lookupResolver(host))));
+                } else {
+                    publishProgress(new LogText(String.valueOf(dns.lookup(host))));
+                }
                 publishProgress(new LogText(String.format(Locale.US, " OK (%d ms)",
                         SystemClock.uptimeMillis() - start), LogText.State.OK));
             } catch (UnknownHostException e) {

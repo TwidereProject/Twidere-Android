@@ -38,6 +38,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.text.BidiFormatter
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.squareup.otto.Bus
+import okhttp3.Dns
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toNulls
@@ -62,7 +63,6 @@ import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
-import org.mariotaku.twidere.util.net.TwidereDns
 import java.io.IOException
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -80,7 +80,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     @Inject
     lateinit internal var preferences: SharedPreferencesWrapper
     @Inject
-    lateinit internal var dns: TwidereDns
+    lateinit internal var dns: Dns
     @Inject
     lateinit internal var bus: Bus
     @Inject

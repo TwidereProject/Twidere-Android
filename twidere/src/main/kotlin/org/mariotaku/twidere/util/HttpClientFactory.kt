@@ -2,10 +2,7 @@ package org.mariotaku.twidere.util
 
 import android.content.Context
 import android.text.TextUtils.isEmpty
-import okhttp3.ConnectionPool
-import okhttp3.Credentials
-import okhttp3.Dns
-import okhttp3.OkHttpClient
+import okhttp3.*
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
@@ -20,25 +17,25 @@ import java.util.concurrent.TimeUnit
  */
 object HttpClientFactory {
 
-    fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns,
-                             connectionPool: ConnectionPool): RestHttpClient {
+    fun createRestHttpClient(conf: HttpClientConfiguration, dns: Dns, connectionPool: ConnectionPool,
+            cache: Cache): RestHttpClient {
         val builder = OkHttpClient.Builder()
-        initOkHttpClient(conf, builder, dns, connectionPool)
+        initOkHttpClient(conf, builder, dns, connectionPool, cache)
         return OkHttpRestClient(builder.build())
     }
 
-    fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder,
-                         dns: Dns, connectionPool: ConnectionPool) {
-        updateHttpClientConfiguration(builder, conf, dns, connectionPool)
+    fun initOkHttpClient(conf: HttpClientConfiguration, builder: OkHttpClient.Builder, dns: Dns,
+            connectionPool: ConnectionPool, cache: Cache) {
+        updateHttpClientConfiguration(builder, conf, dns, connectionPool, cache)
         DebugModeUtils.initForOkHttpClient(builder)
     }
 
-    internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder,
-                                               conf: HttpClientConfiguration, dns: Dns,
-                                               connectionPool: ConnectionPool) {
+    internal fun updateHttpClientConfiguration(builder: OkHttpClient.Builder, conf: HttpClientConfiguration,
+            dns: Dns, connectionPool: ConnectionPool, cache: Cache) {
         conf.applyTo(builder)
-        builder.connectionPool(connectionPool)
         builder.dns(dns)
+        builder.connectionPool(connectionPool)
+        builder.cache(cache)
     }
 
     private fun getProxyType(proxyType: String?): Proxy.Type {
@@ -59,6 +56,7 @@ object HttpClientFactory {
         var readTimeoutSecs: Long = -1
         var writeTimeoutSecs: Long = -1
         var connectionTimeoutSecs: Long = prefs.getInt(KEY_CONNECTION_TIMEOUT, 10).toLong()
+        var cacheSize: Int = prefs.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
 
         internal fun applyTo(builder: OkHttpClient.Builder) {
             if (connectionTimeoutSecs >= 0) {
@@ -107,7 +105,7 @@ object HttpClientFactory {
         val client = holder.restHttpClient as? OkHttpRestClient ?: return
         val builder = OkHttpClient.Builder()
         initOkHttpClient(HttpClientConfiguration(holder.preferences), builder, holder.dns,
-                holder.connectionPool)
+                holder.connectionPool, holder.cache)
         client.client = builder.build()
     }
 }
