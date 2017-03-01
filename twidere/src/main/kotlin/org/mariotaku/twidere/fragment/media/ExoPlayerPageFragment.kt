@@ -33,6 +33,7 @@ import android.view.ViewGroup
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -49,6 +50,8 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PAUSED_BY_USER
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.EXTRA_PLAY_AUDIO
+import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isControlDisabled
+import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isLoopEnabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedByDefault
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
 import org.mariotaku.twidere.util.UserAgentUtils
@@ -97,7 +100,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                     playbackCompleted = playWhenReady
                     hideProgress()
                 }
-                else -> {
+                ExoPlayer.STATE_IDLE -> {
                     hideProgress()
                 }
             }
@@ -134,6 +137,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
             this.playAudio = !this.playAudio
             updateVolume()
         }
+        playerView.useController = !isControlDisabled
         updateVolume()
     }
 
@@ -158,11 +162,21 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
     }
 
-
     override fun onStop() {
         super.onStop()
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             releasePlayer()
+        }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (activity != null && !isDetached) {
+            if (isVisibleToUser) {
+                initializePlayer()
+            } else {
+                releasePlayer()
+            }
         }
     }
 
@@ -203,7 +217,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         positionBackup = player.currentPosition
         pausedByUser = !player.playWhenReady
         player.removeListener(playerListener)
-        player.release();
+        player.release()
         playerView.player = null
     }
 
@@ -223,9 +237,13 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
 
         val uri = getDownloadUri() ?: return
-        val mediaSource = ExtractorMediaSource(uri, mediaDataSourceFactory, DefaultExtractorsFactory(),
+        val uriSource = ExtractorMediaSource(uri, mediaDataSourceFactory, DefaultExtractorsFactory(),
                 null, null)
-        playerView.player.prepare(mediaSource)
+        if (isLoopEnabled) {
+            playerView.player.prepare(LoopingMediaSource(uriSource))
+        } else {
+            playerView.player.prepare(uriSource)
+        }
         updateVolume()
     }
 

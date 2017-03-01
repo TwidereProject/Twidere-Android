@@ -51,7 +51,7 @@ import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
-import org.mariotaku.twidere.activity.iface.IExtendedActivity
+import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
 import org.mariotaku.twidere.constant.themeColorKey
 import org.mariotaku.twidere.constant.themeKey
@@ -72,7 +72,7 @@ import java.util.*
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, IThemedActivity,
+open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThemedActivity,
         IControlBarActivity, OnFitSystemWindowsListener, SystemWindowsInsetsCallback,
         KeyboardShortcutCallback, OnPreferenceDisplayDialogCallback {
 
@@ -103,7 +103,7 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
     @Inject
     lateinit var restHttpClient: RestHttpClient
 
-    private val actionHelper = IExtendedActivity.ActionHelper(this)
+    private val actionHelper = IBaseActivity.ActionHelper(this)
 
     // Registered listeners
     private val controlBarOffsetListeners = ArrayList<IControlBarActivity.ControlBarOffsetListener>()
@@ -261,8 +261,8 @@ open class BaseActivity : ChameleonActivity(), IExtendedActivity<BaseActivity>, 
         actionHelper.dispatchOnResumeFragments()
     }
 
-    override fun executeAfterFragmentResumed(action: (BaseActivity) -> Unit) {
-        actionHelper.executeAfterFragmentResumed(action)
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit) {
+        actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
     override final val currentThemeBackgroundAlpha by lazy {

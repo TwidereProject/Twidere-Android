@@ -46,8 +46,8 @@ import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
-import org.mariotaku.twidere.activity.iface.IExtendedActivity
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.fragment.PermissionRequestDialog
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -450,7 +450,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             private val PROGRESS_FRAGMENT_TAG = "progress"
 
             override fun dismissProgress() {
-                val activity = context as IExtendedActivity<*>
+                val activity = context as IBaseActivity<*>
                 activity.executeAfterFragmentResumed { activity ->
                     val fm = activity.supportFragmentManager
                     val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
@@ -459,7 +459,7 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
             }
 
             override fun showProgress() {
-                val activity = context as IExtendedActivity<*>
+                val activity = context as IBaseActivity<*>
                 activity.executeAfterFragmentResumed { activity ->
                     val fragment = ProgressDialogFragment()
                     fragment.isCancelable = false

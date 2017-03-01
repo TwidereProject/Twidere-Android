@@ -84,15 +84,18 @@ interface IBaseFragment<out F : Fragment> {
 
         private fun executePending() {
             if (!fragmentResumed) return
-            var info: ExecuteInfo<F>
-            while (true) {
-                info = actionQueue.poll() ?: break
-                if (info.useHandler) {
-                    handler.post { info.action(fragment) }
-                } else {
-                    info.action(fragment)
+            var info: ExecuteInfo<F>?
+            do {
+                val cur = actionQueue.poll()
+                cur?.let { cur ->
+                    if (cur.useHandler) {
+                        handler.post { cur.action(fragment) }
+                    } else {
+                        cur.action(fragment)
+                    }
                 }
-            }
+                info = cur
+            } while (info != null)
         }
 
         fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit) {

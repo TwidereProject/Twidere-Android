@@ -95,7 +95,7 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
-import org.mariotaku.twidere.activity.iface.IExtendedActivity
+import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
@@ -1652,7 +1652,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     val checkedPositions = dialog.listView.checkedItemPositions
                     val weakActivity = WeakReference(activity)
                     promiseOnUi {
-                        val activity = weakActivity.get() as? IExtendedActivity<*> ?: return@promiseOnUi
+                        val activity = weakActivity.get() as? IBaseActivity<*> ?: return@promiseOnUi
                         activity.executeAfterFragmentResumed { activity ->
                             ProgressDialogFragment.show(activity.supportFragmentManager, "update_lists_progress")
                         }
@@ -1677,7 +1677,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                             throw UpdateListsException(successfulStates)
                         }
                     }.alwaysUi {
-                        val activity = weakActivity.get() as? IExtendedActivity<*> ?: return@alwaysUi
+                        val activity = weakActivity.get() as? IBaseActivity<*> ?: return@alwaysUi
                         activity.executeAfterFragmentResumed { activity ->
                             val manager = activity.supportFragmentManager
                             val df = manager.findFragmentByTag("update_lists_progress") as? DialogFragment

@@ -27,14 +27,14 @@ import java.util.*
 /**
  * Created by mariotaku on 15/12/28.
  */
-interface IExtendedActivity<out A : FragmentActivity> {
+interface IBaseActivity<out A : FragmentActivity> {
 
-    fun executeAfterFragmentResumed(action: (A) -> Unit)
+    fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit)
 
     class ActionHelper<out A : FragmentActivity>(private val activity: A) {
 
         private var fragmentResumed: Boolean = false
-        private val actionQueue = LinkedList<(A) -> Unit>()
+        private val actionQueue = LinkedList<ExecuteInfo<A>>()
         private val handler = Handler(Looper.getMainLooper())
 
         fun dispatchOnPause() {
@@ -49,19 +49,25 @@ interface IExtendedActivity<out A : FragmentActivity> {
 
         private fun executePending() {
             if (!fragmentResumed) return
-            var action: ((A) -> Unit)?
+            var info: ExecuteInfo<A>?
             do {
-                action = actionQueue.poll()
-                // Sometimes actions called too fast, so we wait for next loop
-                handler.post {
-                    action?.invoke(activity)
+                val cur = actionQueue.poll()
+                cur?.let { cur ->
+                    if (cur.useHandler) {
+                        handler.post { cur.action(activity) }
+                    } else {
+                        cur.action(activity)
+                    }
                 }
-            } while (action != null)
+                info = cur
+            } while (info != null)
         }
 
-        fun executeAfterFragmentResumed(action: (A) -> Unit) {
-            actionQueue.add(action)
+        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit) {
+            actionQueue.add(ExecuteInfo(action, useHandler))
             executePending()
         }
+
+        private data class ExecuteInfo<in A : FragmentActivity>(val action: (A) -> Unit, val useHandler: Boolean)
     }
 }

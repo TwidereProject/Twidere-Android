@@ -46,7 +46,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.activity.iface.IExtendedActivity
+import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.adapter.DraftsAdapter
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.textSizeKey
@@ -244,7 +244,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun onPreExecute() {
             val activity = activityRef.get() ?: return
-            (activity as IExtendedActivity<*>).executeAfterFragmentResumed { activity ->
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
                 val f = ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG_DELETING_DRAFTS)
                 f.isCancelable = false
             }
@@ -252,7 +252,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
         override fun onPostExecute(result: Unit) {
             val activity = activityRef.get() ?: return
-            (activity as IExtendedActivity<*>).executeAfterFragmentResumed { activity ->
+            (activity as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
                 val fm = activity.supportFragmentManager
                 val f = fm.findFragmentByTag(FRAGMENT_TAG_DELETING_DRAFTS)
                 if (f is DialogFragment) {
