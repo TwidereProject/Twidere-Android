@@ -25,9 +25,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -39,7 +41,10 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 /**
  * Created by mariotaku on 14/11/19.
  */
-class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatusesAdapter(context) {
+class StaggeredGridParcelableStatusesAdapter(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : ParcelableStatusesAdapter(context, getRequestManager) {
 
     override val progressViewIds: IntArray
         get() = intArrayOf(R.id.media_image_progress)
@@ -74,7 +79,6 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
 
         override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
                 displayExtraType: Boolean, displayPinned: Boolean) {
-            val loader = adapter.mediaLoader
             val media = status.media ?: return
             if (media.isEmpty()) return
             val firstMedia = media[0]
@@ -88,9 +92,9 @@ class StaggeredGridParcelableStatusesAdapter(context: Context) : ParcelableStatu
             mediaImageContainer.requestLayout()
 
             mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type))
-            loader.displayProfileImage(profileImageView, status)
-            loader.displayPreviewImageWithCredentials(mediaImageView, firstMedia.preview_url,
-                    status.account_key, adapter.mediaLoadingHandler)
+            adapter.getRequestManager().load(status.getBestProfileImage(itemView.context)).into(profileImageView)
+            // TODO image loaded event and credentials
+            adapter.getRequestManager().load(firstMedia.preview_url).into(mediaImageView)
         }
 
         override val profileTypeView: ImageView?

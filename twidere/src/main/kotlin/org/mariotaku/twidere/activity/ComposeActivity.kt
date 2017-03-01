@@ -55,6 +55,7 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.twitter.Extractor
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.activity_compose.*
@@ -74,6 +75,7 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.getAccountUser
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -465,7 +467,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             accountProfileImage.setBorderColor(account.color)
         } else {
             accountsCount.setText(accounts.size.toString())
-            mediaLoader.cancelDisplayTask(accountProfileImage)
+            //TODO cancel image load
             accountProfileImage.setImageDrawable(null)
             accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
         }
@@ -483,7 +485,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this)
+        mediaPreviewAdapter = MediaPreviewAdapter(this, { Glide.with(this) })
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
@@ -1421,10 +1423,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
             (itemView as CheckableLinearLayout).isChecked = isSelected
-            val loader = adapter.imageLoader
-            if (ObjectUtils.notEqual(account, iconView.tag) || iconView.drawable == null) {
+            if (account != iconView.tag || iconView.drawable == null) {
                 iconView.tag = account
-                loader.displayProfileImage(iconView, account.user)
+                adapter.getRequestManager().load(account.user.getBestProfileImage(adapter.context)).into(iconView)
             }
             iconView.setBorderColor(account.color)
             nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name
@@ -1438,7 +1439,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
-    internal class AccountIconsAdapter(private val activity: ComposeActivity) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity) {
+    internal class AccountIconsAdapter(
+            private val activity: ComposeActivity
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, { Glide.with(activity) }) {
         private val inflater: LayoutInflater = activity.layoutInflater
         private val selection: MutableMap<UserKey, Boolean> = HashMap()
         val isNameFirst: Boolean = preferences[nameFirstKey]
@@ -1448,9 +1451,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         init {
             setHasStableIds(true)
         }
-
-        val imageLoader: MediaLoaderWrapper
-            get() = mediaLoader
 
         override fun getItemId(position: Int): Long {
             return accounts!![position].hashCode().toLong()

@@ -61,7 +61,6 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
 
     fun displayGroup(group: ParcelableGroup) {
         val context = itemView.context
-        val loader = adapter.mediaLoader
         val formatter = adapter.bidiFormatter
 
         nameView.name = group.fullname
@@ -78,10 +77,9 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            loader.displayProfileImage(profileImageView, group.homepage_logo)
+            adapter.getRequestManager().load(group.homepage_logo).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
-            loader.cancelDisplayTask(profileImageView)
         }
         descriptionView.visibility = if (TextUtils.isEmpty(group.description)) View.GONE else View.VISIBLE
         descriptionView.text = formatter.unicodeWrap(group.description)

@@ -79,7 +79,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         } else {
             stateIndicator.visibility = View.GONE
         }
-        conversation.displayAvatarTo(adapter.mediaLoader, profileImage)
+        conversation.displayAvatarTo(adapter.getRequestManager, profileImage)
         if (conversation.unread_count > 0) {
             unreadCount.visibility = View.VISIBLE
             unreadCount.text = conversation.unread_count.toString()

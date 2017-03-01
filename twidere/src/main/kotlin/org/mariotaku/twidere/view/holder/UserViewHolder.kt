@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.list_item_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.Utils
@@ -117,7 +118,6 @@ class UserViewHolder(
 
     fun displayUser(user: ParcelableUser) {
         val context = itemView.context
-        val loader = adapter.mediaLoader
         val manager = adapter.userColorNameManager
         val twitter = adapter.twitterWrapper
 
@@ -135,10 +135,9 @@ class UserViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            loader.displayProfileImage(profileImageView, user)
+            adapter.getRequestManager().load(user.getBestProfileImage(context)).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
-            loader.cancelDisplayTask(profileImageView)
         }
 
         if (twitter.isUpdatingRelationship(user.account_key, user.key)) {
@@ -234,7 +233,7 @@ class UserViewHolder(
     }
 
     private fun setActionClickListeners(requestClickListener: RequestClickListener?,
-                                        friendshipClickListener: FriendshipClickListener?) {
+            friendshipClickListener: FriendshipClickListener?) {
         this.requestClickListener = requestClickListener
         this.friendshipClickListener = friendshipClickListener
         if (requestClickListener != null || friendshipClickListener != null) {

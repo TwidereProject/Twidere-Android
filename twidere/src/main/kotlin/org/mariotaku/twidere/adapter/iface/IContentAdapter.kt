@@ -20,8 +20,8 @@
 package org.mariotaku.twidere.adapter.iface
 
 import android.support.v4.text.BidiFormatter
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
-import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle
 
@@ -43,9 +43,10 @@ interface IContentAdapter {
 
     val twitterWrapper: AsyncTwitterWrapper
 
-    val mediaLoader: MediaLoaderWrapper
+    val getRequestManager: () -> RequestManager
 
     val bidiFormatter: BidiFormatter
 
     val showAbsoluteTime: Boolean
+
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.bluelinelabs.logansquare.LoganSquare
+import com.bumptech.glide.Glide
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.restfu.annotation.method.GET
 import org.mariotaku.restfu.http.HttpRequest
@@ -80,7 +81,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
                 df.show(childFragmentManager, "load_defaults")
             }
 
-            accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(context)
+            accountTypeSpinner.adapter = AccountTypeSpinnerAdapter(this)
 
             editConsumerKey.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_key)))
             editConsumerSecret.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_secret)))
@@ -236,8 +237,10 @@ class APIEditorDialogFragment : BaseDialogFragment() {
         }
     }
 
-    private class AccountTypeSpinnerAdapter(context: Context) : BaseArrayAdapter<String>(context,
-            R.layout.support_simple_spinner_dropdown_item) {
+    private class AccountTypeSpinnerAdapter(
+            fragment: APIEditorDialogFragment
+    ) : BaseArrayAdapter<String>(fragment.context, R.layout.support_simple_spinner_dropdown_item,
+            getRequestManager = { Glide.with(fragment) }) {
         init {
             add(AccountType.TWITTER)
             add(AccountType.FANFOU)

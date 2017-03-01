@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -29,8 +30,9 @@ import org.mariotaku.twidere.view.holder.SimpleUserViewHolder
 
 class SimpleParcelableUsersAdapter(
         context: Context,
-        layoutRes: Int = R.layout.list_item_simple_user
-) : BaseArrayAdapter<ParcelableUser>(context, layoutRes) {
+        layoutRes: Int = R.layout.list_item_simple_user,
+        getRequestManager: () -> RequestManager
+) : BaseArrayAdapter<ParcelableUser>(context, layoutRes, getRequestManager = getRequestManager) {
 
     override fun getItemId(position: Int): Long {
         val item = getItem(position)

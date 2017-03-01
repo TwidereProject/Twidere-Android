@@ -23,12 +23,16 @@ import android.content.Context
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.loader.ExtensionsListLoader.ExtensionInfo
 import org.mariotaku.twidere.util.PermissionsManager
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 
-class ExtensionsAdapter(context: Context) : BaseArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line) {
+class ExtensionsAdapter(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : BaseArrayAdapter<ExtensionInfo>(context, R.layout.list_item_two_line, getRequestManager = getRequestManager) {
 
     override fun getItemId(position: Int): Long {
         return getItem(position).hashCode().toLong()

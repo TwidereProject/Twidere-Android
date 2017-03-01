@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.extension.model
 
+import android.content.Context
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 
@@ -29,3 +30,7 @@ val ParcelableStatus.referenced_users: Array<ParcelableUser>
         }
         return resultList.toTypedArray()
     }
+
+fun ParcelableStatus.getBestProfileImage(context: Context): String? {
+    return user_profile_image_url
+}

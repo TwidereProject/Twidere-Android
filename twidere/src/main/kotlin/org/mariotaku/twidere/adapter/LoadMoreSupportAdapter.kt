@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.RequestManager
 
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
@@ -28,8 +29,10 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
 /**
  * Created by mariotaku on 15/4/16.
  */
-abstract class LoadMoreSupportAdapter<VH : ViewHolder>(context: Context) :
-        BaseRecyclerViewAdapter<VH>(context), ILoadMoreSupportAdapter {
+abstract class LoadMoreSupportAdapter<VH : ViewHolder>(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : BaseRecyclerViewAdapter<VH>(context, getRequestManager), ILoadMoreSupportAdapter {
 
     @IndicatorPosition
     override var loadMoreSupportedPosition: Long = 0

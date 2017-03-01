@@ -22,6 +22,7 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.constant.displayProfileImageKey
@@ -37,12 +38,13 @@ import javax.inject.Inject
  * Created by mariotaku on 15/10/5.
  */
 abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
-        val context: Context
+        val context: Context,
+        override val getRequestManager: () -> RequestManager
 ) : RecyclerView.Adapter<VH>(), IContentAdapter {
+
     @Inject
     override final lateinit var twitterWrapper: AsyncTwitterWrapper
-    @Inject
-    override final lateinit var mediaLoader: MediaLoaderWrapper
+
     @Inject
     override final lateinit var userColorNameManager: UserColorNameManager
     @Inject

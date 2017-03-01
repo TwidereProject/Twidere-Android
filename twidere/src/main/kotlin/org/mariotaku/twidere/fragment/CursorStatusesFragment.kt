@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.content.Loader
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
@@ -164,7 +165,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onCreateAdapter(context: Context): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context)
+        return ListParcelableStatusesAdapter(context, { Glide.with(this) })
     }
 
     override fun onLoaderReset(loader: Loader<List<ParcelableStatus>?>) {

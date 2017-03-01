@@ -36,7 +36,6 @@ import android.os.Process
 import android.provider.BaseColumns
 import android.support.v4.app.NotificationCompat
 import android.support.v4.text.BidiFormatter
-import com.nostra13.universalimageloader.core.ImageLoader
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.apache.commons.lang3.ArrayUtils
@@ -73,8 +72,6 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     lateinit internal var readStateManager: ReadStateManager
     @Inject
     lateinit internal var twitterWrapper: AsyncTwitterWrapper
-    @Inject
-    lateinit internal var mediaLoader: ImageLoader
     @Inject
     lateinit internal var notificationManager: NotificationManagerWrapper
     @Inject

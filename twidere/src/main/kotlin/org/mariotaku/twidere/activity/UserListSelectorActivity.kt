@@ -28,6 +28,7 @@ import android.support.v4.content.Loader
 import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -69,7 +70,7 @@ class UserListSelectorActivity : BaseActivity(),
         }
         setContentView(R.layout.activity_user_list_selector)
 
-        adapter = SimpleParcelableUserListsAdapter(this)
+        adapter = SimpleParcelableUserListsAdapter(this, { Glide.with(this) })
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
                 listView, false).apply {

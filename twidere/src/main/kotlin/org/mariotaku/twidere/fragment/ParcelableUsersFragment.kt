@@ -27,6 +27,7 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.commons.parcel.ParcelUtils
@@ -94,7 +95,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         }
 
     override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
-        val adapter = ParcelableUsersAdapter(context)
+        val adapter = ParcelableUsersAdapter(context, { Glide.with(this) })
         adapter.simpleLayout = simpleLayout
         adapter.friendshipClickListener = this
         return adapter
@@ -116,17 +117,17 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                              event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                              repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                           event: KeyEvent, metaState: Int): Boolean {
+            event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
@@ -181,11 +182,11 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     }
 
     protected abstract fun onCreateUsersLoader(context: Context,
-                                               args: Bundle,
-                                               fromUser: Boolean): Loader<List<ParcelableUser>?>
+            args: Bundle,
+            fromUser: Boolean): Loader<List<ParcelableUser>?>
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
-                                      layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
+            layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
         val itemDecoration = DividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources

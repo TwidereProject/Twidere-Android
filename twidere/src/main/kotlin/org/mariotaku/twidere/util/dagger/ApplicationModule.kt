@@ -31,12 +31,6 @@ import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.upstream.DataSource
-import com.nostra13.universalimageloader.cache.disc.DiskCache
-import com.nostra13.universalimageloader.cache.disc.impl.ext.LruDiskCache
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType
-import com.nostra13.universalimageloader.utils.L
 import com.squareup.otto.Bus
 import com.squareup.otto.ThreadEnforcer
 import com.twitter.Extractor
@@ -52,18 +46,15 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_LIMIT
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.imageloader.ReadOnlyDiskLRUNameCache
-import org.mariotaku.twidere.util.imageloader.TwidereImageDownloader
-import org.mariotaku.twidere.util.imageloader.URLFileNameGenerator
+import org.mariotaku.twidere.util.cache.JsonCache
+import org.mariotaku.twidere.util.cache.NoOpFileCache
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
-import org.mariotaku.twidere.util.media.UILFileCache
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
@@ -74,7 +65,6 @@ import org.mariotaku.twidere.util.sync.LegacySyncController
 import org.mariotaku.twidere.util.sync.SyncController
 import org.mariotaku.twidere.util.sync.SyncPreferences
 import java.io.File
-import java.io.IOException
 import javax.inject.Singleton
 
 /**
@@ -166,22 +156,6 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun imageLoader(preferences: SharedPreferencesWrapper, downloader: MediaDownloader): ImageLoader {
-        val loader = ImageLoader.getInstance()
-        val cb = ImageLoaderConfiguration.Builder(application)
-        cb.threadPriority(Thread.NORM_PRIORITY - 2)
-        cb.denyCacheImageMultipleSizesInMemory()
-        cb.tasksProcessingOrder(QueueProcessingType.LIFO)
-        // cb.memoryCache(new ImageMemoryCache(40));
-        cb.diskCache(createDiskCache("images", preferences))
-        cb.imageDownloader(TwidereImageDownloader(application, downloader))
-        L.writeDebugLogs(BuildConfig.DEBUG)
-        loader.init(cb.build())
-        return loader
-    }
-
-    @Provides
-    @Singleton
     fun activityTracker(): ActivityTracker {
         return ActivityTracker()
     }
@@ -208,8 +182,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun mediaLoaderWrapper(loader: ImageLoader, preferences: SharedPreferencesWrapper): MediaLoaderWrapper {
-        val wrapper = MediaLoaderWrapper(loader)
+    fun mediaLoaderWrapper(preferences: SharedPreferencesWrapper): MediaLoaderWrapper {
+        val wrapper = MediaLoaderWrapper()
         wrapper.reloadOptions(preferences)
         val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         wrapper.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
@@ -220,18 +194,6 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun dns(preferences: SharedPreferencesWrapper): Dns {
         return TwidereDns(application, preferences)
-    }
-
-    @Provides
-    @Singleton
-    fun providesDiskCache(preferences: SharedPreferencesWrapper): DiskCache {
-        return createDiskCache("files", preferences)
-    }
-
-    @Provides
-    @Singleton
-    fun fileCache(cache: DiskCache): FileCache {
-        return UILFileCache(cache)
     }
 
     @Provides
@@ -349,19 +311,16 @@ class ApplicationModule(private val application: Application) {
         return DefaultExtractorsFactory()
     }
 
-    private fun createDiskCache(dirName: String, preferences: SharedPreferencesWrapper): DiskCache {
-        val cacheDir = Utils.getExternalCacheDir(application, dirName)
-        val fallbackCacheDir = Utils.getInternalCacheDir(application, dirName)
-        val fileNameGenerator = URLFileNameGenerator()
-        val cacheSize = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
-        try {
-            val cacheMaxSizeBytes = cacheSize * 1024 * 1024
-            if (cacheDir != null)
-                return LruDiskCache(cacheDir, fallbackCacheDir, fileNameGenerator, cacheMaxSizeBytes.toLong(), 0)
-            return LruDiskCache(fallbackCacheDir, null, fileNameGenerator, cacheMaxSizeBytes.toLong(), 0)
-        } catch (e: IOException) {
-            return ReadOnlyDiskLRUNameCache(cacheDir, fallbackCacheDir, fileNameGenerator)
-        }
+    @Provides
+    @Singleton
+    fun jsonCache(): JsonCache {
+        return JsonCache()
+    }
+
+    @Provides
+    @Singleton
+    fun fileCache(): FileCache {
+        return NoOpFileCache()
     }
 
     private fun getCacheDir(dirName: String): File {

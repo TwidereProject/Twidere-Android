@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -17,7 +18,10 @@ import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
  * Created by mariotaku on 2017/2/9.
  */
 
-class MessagesEntriesAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context),
+class MessagesEntriesAdapter(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager),
         IItemCountsAdapter {
     override val itemCounts: ItemCounts = ItemCounts(2)
 

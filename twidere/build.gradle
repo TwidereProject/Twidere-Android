@@ -138,7 +138,6 @@ dependencies {
     compile "com.android.support:design:$android_support_lib_version"
     compile "com.android.support:percent:$android_support_lib_version"
     compile 'com.twitter:twitter-text:1.14.3'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.7'
@@ -170,6 +169,8 @@ dependencies {
     compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
     compile "com.google.android.exoplayer:exoplayer:$exoplayer_version"
     compile "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
 
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.20'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.20'

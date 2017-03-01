@@ -14,6 +14,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCATION
 import org.mariotaku.twidere.fragment.CustomTabsFragment
+import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.TabConfiguration
 
@@ -41,7 +42,7 @@ open class TrendsLocationExtraConfiguration(
         return LayoutInflater.from(context).inflate(R.layout.layout_extra_config_checkbox, parent, false)
     }
 
-    override fun onViewCreated(context: Context, view: View, fragment: CustomTabsFragment.TabEditorDialogFragment) {
+    override fun onViewCreated(context: Context, view: View, fragment: TabEditorDialogFragment) {
         super.onViewCreated(context, view, fragment)
         val titleView = view.findViewById(android.R.id.title) as TextView
         summaryView = view.findViewById(android.R.id.summary) as TextView
@@ -56,7 +57,7 @@ open class TrendsLocationExtraConfiguration(
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(fragment: TabEditorDialogFragment, requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {

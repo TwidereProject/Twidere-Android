@@ -23,14 +23,19 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.AccountViewHolder
 
-class AccountDetailsAdapter(context: Context) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account) {
+class AccountDetailsAdapter(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account, getRequestManager = getRequestManager) {
 
     private var sortEnabled: Boolean = false
     private var switchEnabled: Boolean = false
@@ -57,9 +62,9 @@ class AccountDetailsAdapter(context: Context) : BaseArrayAdapter<AccountDetails>
         holder.screenName.text = String.format("@%s", details.user.screen_name)
         holder.setAccountColor(details.color)
         if (profileImageEnabled) {
-            mediaLoader.displayProfileImage(holder.profileImage, details.user)
+            getRequestManager().load(details.user.getBestProfileImage(context)).into(holder.profileImage)
         } else {
-            mediaLoader.cancelDisplayTask(holder.profileImage)
+            // TODO: display stub image?
         }
         val accountType = details.type
         holder.accountType.setImageResource(AccountUtils.getAccountTypeIcon(accountType))

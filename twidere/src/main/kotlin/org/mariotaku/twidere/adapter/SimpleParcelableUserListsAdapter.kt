@@ -22,16 +22,19 @@ package org.mariotaku.twidere.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.model.ItemCounts
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 class SimpleParcelableUserListsAdapter(
-        context: Context
-) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list) {
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list,
+        getRequestManager = getRequestManager) {
 
     override val itemCounts: ItemCounts = ItemCounts(2)
 
@@ -57,7 +60,7 @@ class SimpleParcelableUserListsAdapter(
                     return@run h
                 }
                 val userList = getItem(position)
-                holder.display(userList, mediaLoader, userColorNameManager, profileImageEnabled)
+                holder.display(userList, getRequestManager, userColorNameManager, profileImageEnabled)
                 return view
             }
             1 -> {

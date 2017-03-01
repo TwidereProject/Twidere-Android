@@ -2,6 +2,7 @@ package org.mariotaku.twidere.extension.model
 
 import android.content.Context
 import android.widget.ImageView
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
@@ -11,7 +12,6 @@ import org.mariotaku.twidere.model.ParcelableMessageConversation.ExtrasType
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.message.conversation.DefaultConversationExtras
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
-import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import java.util.*
 
@@ -112,16 +112,17 @@ fun ParcelableMessageConversation.getSummaryText(context: Context, manager: User
             text_unescaped, this)
 }
 
-fun ParcelableMessageConversation.displayAvatarTo(mediaLoader: MediaLoaderWrapper, view: ImageView) {
+fun ParcelableMessageConversation.displayAvatarTo(getRequestManager: () -> RequestManager, view: ImageView) {
     if (conversation_type == ConversationType.ONE_TO_ONE) {
         val user = this.user
         if (user != null) {
-            mediaLoader.displayProfileImage(view, user)
+            getRequestManager().load(user.getBestProfileImage(view.context)).into(view)
         } else {
-            mediaLoader.displayProfileImage(view, null)
+            // TODO: show default conversation icon
+            getRequestManager().load(R.drawable.ic_profile_image_default_group).into(view)
         }
     } else {
-        mediaLoader.displayGroupConversationAvatar(view, conversation_avatar)
+        getRequestManager().load(conversation_avatar).placeholder(R.drawable.ic_profile_image_default_group).into(view)
     }
 }
 

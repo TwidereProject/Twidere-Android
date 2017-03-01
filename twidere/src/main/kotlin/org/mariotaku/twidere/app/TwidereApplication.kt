@@ -27,6 +27,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
+import com.bumptech.glide.Glide
 import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
@@ -217,11 +218,12 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     }
 
     override fun onTrimMemory(level: Int) {
+        Glide.with(this).onTrimMemory(level)
         super.onTrimMemory(level)
     }
 
     override fun onLowMemory() {
-        mediaLoader.clearMemoryCache()
+        Glide.with(this).onLowMemory()
         super.onLowMemory()
     }
 

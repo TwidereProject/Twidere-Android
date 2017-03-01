@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.*
@@ -166,7 +167,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     }
 
     override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
-        val adapter = SelectableUsersAdapter(context)
+        val adapter = SelectableUsersAdapter(context, { Glide.with(this) })
         adapter.itemCheckedListener = { position, checked ->
             val count = adapter.checkedCount
             val actionBar = (activity as BaseActivity).supportActionBar

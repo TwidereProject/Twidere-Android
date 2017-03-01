@@ -28,6 +28,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ListView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_account_selector.*
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.twidere.R
@@ -89,7 +90,7 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_selector)
         DataStoreUtils.prepareDatabase(this)
-        adapter = AccountDetailsAdapter(this).apply {
+        adapter = AccountDetailsAdapter(this, { Glide.with(this) }).apply {
             setSwitchEnabled(!isSingleSelection)
             setSortEnabled(false)
             val am = AccountManager.get(context)

@@ -38,7 +38,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.LoaderManager.LoaderCallbacks
-import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
@@ -52,10 +51,14 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.*
+import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.setMenuItemIcon
 import org.mariotaku.twidere.Constants.EXTRA_FEATURES_NOTICE_VERSION
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -75,8 +78,10 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.view.ShapedImageView
 import java.lang.ref.WeakReference
@@ -214,7 +219,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
-                                              keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+            keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
         return false
     }
 
@@ -224,7 +229,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-                                              repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return true
     }
 
@@ -490,10 +495,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerView = accountProfileBanner.nextView as ImageView
         if (bannerView.drawable == null || account != bannerView.tag) {
-            mediaLoader.displayProfileBanner(bannerView, account, width)
+            val url = getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(account.user), width)
+            Glide.with(this).load(url).into(bannerView)
             bannerView.tag = account
         } else {
-            mediaLoader.cancelDisplayTask(bannerView)
+            // TODO cancel loading
         }
     }
 

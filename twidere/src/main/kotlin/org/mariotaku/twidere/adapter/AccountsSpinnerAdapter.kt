@@ -23,21 +23,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 
 class AccountsSpinnerAdapter(
         context: Context,
-        itemViewResource: Int = R.layout.list_item_simple_user
-) : BaseArrayAdapter<AccountDetails>(context, itemViewResource) {
+        itemViewResource: Int = R.layout.list_item_simple_user,
+        accounts: Collection<AccountDetails>? = null,
+        getRequestManager: () -> RequestManager
+) : BaseArrayAdapter<AccountDetails>(context, itemViewResource, accounts, getRequestManager) {
 
     private var dummyItemText: String? = null
-
-    constructor(context: Context, accounts: Collection<AccountDetails>) : this(context) {
-        addAll(accounts)
-    }
 
     override fun getItemId(position: Int): Long {
         return getItem(position).hashCode().toLong()
@@ -69,10 +69,9 @@ class AccountsSpinnerAdapter(
                 if (profileImageEnabled) {
                     icon.visibility = View.VISIBLE
                     icon.style = profileImageStyle
-                    mediaLoader.displayProfileImage(icon, item.user)
+                    getRequestManager().load(item.user.getBestProfileImage(context)).into(icon)
                 } else {
                     icon.visibility = View.GONE
-                    mediaLoader.cancelDisplayTask(icon)
                 }
             }
         } else {

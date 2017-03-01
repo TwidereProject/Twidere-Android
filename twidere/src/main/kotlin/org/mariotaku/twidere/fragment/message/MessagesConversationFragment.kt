@@ -38,6 +38,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation.*
@@ -140,7 +141,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 return recyclerView.showContextMenuForChild(holder.itemView)
             }
         }
-        mediaPreviewAdapter = MediaPreviewAdapter(context)
+        mediaPreviewAdapter = MediaPreviewAdapter(context, { Glide.with(this) })
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -268,7 +269,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateAdapter(context: Context): MessagesConversationAdapter {
-        return MessagesConversationAdapter(context)
+        return MessagesConversationAdapter(context, { Glide.with(this) })
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {
@@ -477,7 +478,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        conversation.displayAvatarTo(mediaLoader, conversationAvatar)
+        conversation.displayAvatarTo({Glide.with(this)}, conversationAvatar)
     }
 
     internal class AddMediaTask(

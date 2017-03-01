@@ -24,6 +24,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toStringArray
@@ -115,7 +116,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onCreateAdapter(context: Context): MessagesEntriesAdapter {
-        return MessagesEntriesAdapter(context)
+        return MessagesEntriesAdapter(context, { Glide.with(this) })
     }
 
     override fun triggerRefresh(): Boolean {

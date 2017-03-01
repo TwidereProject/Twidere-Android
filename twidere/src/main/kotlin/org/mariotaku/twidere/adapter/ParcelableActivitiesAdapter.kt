@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.ktextension.safeMoveToPosition
@@ -55,14 +56,15 @@ import java.util.*
  * Created by mariotaku on 15/1/3.
  */
 class ParcelableActivitiesAdapter(
-        context: Context
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IActivitiesAdapter<List<ParcelableActivity>> {
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IActivitiesAdapter<List<ParcelableActivity>> {
 
     override val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
 
     private val inflater = LayoutInflater.from(context)
-    private val statusAdapterDelegate = DummyItemAdapter(context,
-            TwidereLinkify(OnLinkClickHandler(context, null, preferences)), this)
+    private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
+    private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, getRequestManager)
     private val eventListener: EventListener
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null

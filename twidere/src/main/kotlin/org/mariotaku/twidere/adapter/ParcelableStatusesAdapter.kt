@@ -25,6 +25,7 @@ import android.support.v4.widget.Space
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.ktextension.rangeOfSize
@@ -55,8 +56,9 @@ import java.util.*
  * Created by mariotaku on 15/10/26.
  */
 abstract class ParcelableStatusesAdapter(
-        context: Context
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), IStatusesAdapter<List<ParcelableStatus>>,
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IStatusesAdapter<List<ParcelableStatus>>,
         IItemCountsAdapter {
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)

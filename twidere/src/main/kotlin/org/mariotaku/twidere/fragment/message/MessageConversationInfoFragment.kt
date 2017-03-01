@@ -42,6 +42,8 @@ import android.support.v7.widget.Toolbar
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.EditText
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_home_content.view.*
 import kotlinx.android.synthetic.main.fragment_messages_conversation_info.*
 import kotlinx.android.synthetic.main.header_message_conversation_info.view.*
@@ -122,7 +124,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
         val theme = Chameleon.getOverrideTheme(context, activity)
 
-        adapter = ConversationInfoAdapter(context)
+        adapter = ConversationInfoAdapter(context, { Glide.with(this) })
         adapter.listener = object : ConversationInfoAdapter.Listener {
             override fun onUserClick(position: Int) {
                 val user = adapter.getUser(position) ?: return
@@ -243,8 +245,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
         val summary = data.getSubtitle(context)
 
-        data.displayAvatarTo(mediaLoader, conversationAvatar)
-        data.displayAvatarTo(mediaLoader, appBarIcon)
+        val getRequestManager = { Glide.with(this) }
+        data.displayAvatarTo(getRequestManager, conversationAvatar)
+        data.displayAvatarTo(getRequestManager, appBarIcon)
         appBarTitle.text = name
         conversationTitle.text = name
         if (summary != null) {
@@ -463,7 +466,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     }
 
-    class ConversationInfoAdapter(context: Context) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context),
+    class ConversationInfoAdapter(
+            context: Context,
+            getRequestManager: () -> RequestManager
+    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context, getRequestManager),
             IItemCountsAdapter {
         private val inflater = LayoutInflater.from(context)
 

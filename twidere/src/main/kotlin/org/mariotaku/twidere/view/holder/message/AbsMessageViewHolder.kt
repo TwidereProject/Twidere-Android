@@ -30,6 +30,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesConversationAdapter
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.view.ProfileImageView
@@ -82,10 +83,9 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
             if (adapter.displaySenderProfile && adapter.profileImageEnabled && sender != null
                     && !message.is_outgoing) {
                 this.visibility = View.VISIBLE
-                adapter.mediaLoader.displayProfileImage(this, sender)
+                adapter.getRequestManager().load(sender.getBestProfileImage(context)).into(this)
             } else {
                 this.visibility = View.GONE
-                adapter.mediaLoader.cancelDisplayTask(this)
             }
         }
     }

@@ -23,6 +23,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.view.helper.SimpleItemTouchHelperCallback
@@ -31,8 +32,9 @@ import org.mariotaku.twidere.view.holder.compose.MediaPreviewViewHolder
 import java.util.*
 
 class MediaPreviewAdapter(
-        context: Context
-) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(context) {
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(context, getRequestManager) {
     private val inflater = LayoutInflater.from(context)
 
     val touchAdapter: ItemTouchHelperAdapter = object : ItemTouchHelperAdapter {

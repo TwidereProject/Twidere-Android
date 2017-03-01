@@ -62,7 +62,6 @@ class UserListViewHolder(
 
     fun displayUserList(userList: ParcelableUserList) {
         val context = itemView.context
-        val loader = adapter.mediaLoader
         val manager = adapter.userColorNameManager
 
         itemContent.drawStart(manager.getUserColor(userList.user_key))
@@ -73,10 +72,9 @@ class UserListViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            loader.displayProfileImage(profileImageView, userList.user_profile_image_url)
+            adapter.getRequestManager().load(userList.user_profile_image_url).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
-            loader.cancelDisplayTask(profileImageView)
         }
         descriptionView.visibility = if (TextUtils.isEmpty(userList.description)) View.GONE else View.VISIBLE
         descriptionView.text = userList.description

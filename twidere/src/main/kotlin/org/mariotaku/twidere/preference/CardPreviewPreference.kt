@@ -26,6 +26,7 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceViewHolder
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import com.bumptech.glide.Glide
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.adapter.DummyItemAdapter
@@ -39,7 +40,7 @@ class CardPreviewPreference(
 ) : Preference(context, attrs), OnSharedPreferenceChangeListener {
 
     private var holder: StatusViewHolder? = null
-    private val adapter: DummyItemAdapter = DummyItemAdapter(context)
+    private val adapter: DummyItemAdapter = DummyItemAdapter(context, getRequestManager = { Glide.with(context) })
 
     init {
         val preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME,

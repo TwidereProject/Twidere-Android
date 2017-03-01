@@ -79,7 +79,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
                 val profileImageUrl = cursor.getString(indices.icon)
                 mediaLoader.displayProfileImage(icon, profileImageUrl)
             } else {
-                mediaLoader.cancelDisplayTask(icon)
+                //TODO cancel image load
             }
 
             icon.clearColorFilter()

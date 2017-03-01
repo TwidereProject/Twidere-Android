@@ -12,6 +12,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.isNotNullOrEmpty
@@ -21,6 +22,7 @@ import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
 import org.mariotaku.twidere.extension.model.applyTo
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableLocation
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -134,7 +136,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             displayExtraType: Boolean, displayPinned: Boolean) {
 
         val context = itemView.context
-        val loader = adapter.mediaLoader
+        val getRequestManager = adapter.getRequestManager
         val twitter = adapter.twitterWrapper
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
@@ -239,13 +241,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
                 }
 
-                displayQuotedMedia(loader, status)
+                displayQuotedMedia(getRequestManager, status)
             } else {
                 quotedNameView.visibility = View.GONE
                 quotedTextView.visibility = View.VISIBLE
 
                 if (quoteContentAvailable) {
-                    displayQuotedMedia(loader, status)
+                    displayQuotedMedia(getRequestManager, status)
                 } else {
                     quotedMediaPreview.visibility = View.GONE
                     quotedMediaLabel.visibility = View.GONE
@@ -297,13 +299,12 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            loader.displayProfileImage(profileImageView, status)
+            getRequestManager().load(status.getBestProfileImage(context)).into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
         } else {
             profileImageView.visibility = View.GONE
-            loader.cancelDisplayTask(profileImageView)
 
             profileTypeView.setImageDrawable(null)
             profileTypeView.visibility = View.GONE
@@ -331,9 +332,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 mediaLabel.visibility = View.GONE
                 mediaPreview.visibility = View.VISIBLE
 
-                mediaPreview.displayMedia(loader = loader, media = status.media,
-                        accountId = status.account_key, mediaClickListener = this,
-                        loadingHandler = adapter.mediaLoadingHandler)
+                mediaPreview.displayMedia(getRequestManager = getRequestManager,
+                        media = status.media, accountId = status.account_key,
+                        mediaClickListener = this, loadingHandler = adapter.mediaLoadingHandler)
             }
         } else {
             // No media, hide all related views
@@ -424,7 +425,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     }
 
-    private fun displayQuotedMedia(loader: MediaLoaderWrapper, status: ParcelableStatus) {
+    private fun displayQuotedMedia(getRequestManager: () -> RequestManager, status: ParcelableStatus) {
         if (status.quoted_media?.isNotEmpty() ?: false) {
 
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
@@ -440,9 +441,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedMediaPreview.visibility = View.VISIBLE
                 quotedMediaLabel.visibility = View.GONE
 
-                quotedMediaPreview.displayMedia(loader = loader, media = status.quoted_media,
-                        accountId = status.account_key, mediaClickListener = this,
-                        loadingHandler = adapter.mediaLoadingHandler)
+                quotedMediaPreview.displayMedia(getRequestManager = getRequestManager,
+                        media = status.quoted_media, accountId = status.account_key,
+                        mediaClickListener = this, loadingHandler = adapter.mediaLoadingHandler)
             }
         } else {
             // No media, hide all related views

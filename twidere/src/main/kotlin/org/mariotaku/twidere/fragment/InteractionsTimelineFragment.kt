@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.net.Uri
+import com.bumptech.glide.Glide
 import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
@@ -82,7 +83,7 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
     }
 
     override fun onCreateAdapter(context: Context): ParcelableActivitiesAdapter {
-        val adapter = ParcelableActivitiesAdapter(context)
+        val adapter = ParcelableActivitiesAdapter(context, { Glide.with(this) })
         val arguments = arguments
         if (arguments != null) {
             val extras = arguments.getParcelable<InteractionsTabExtras>(EXTRA_EXTRAS)

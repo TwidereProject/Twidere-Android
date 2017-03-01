@@ -20,21 +20,22 @@
 package org.mariotaku.twidere.extension.view.holder
 
 import android.view.View
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ParcelableUserList
-import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
-fun SimpleUserListViewHolder.display(userList: ParcelableUserList, mediaLoader: MediaLoaderWrapper,
+fun SimpleUserListViewHolder.display(userList: ParcelableUserList, getRequestManager: () -> RequestManager,
         userColorNameManager: UserColorNameManager, displayProfileImage: Boolean) {
     nameView.text = userList.name
     createdByView.text = createdByView.context.getString(R.string.created_by,
             userColorNameManager.getDisplayName(userList, false))
-    profileImageView.visibility = if (displayProfileImage) View.VISIBLE else View.GONE
     if (displayProfileImage) {
-        mediaLoader.displayProfileImage(profileImageView, userList)
+        profileImageView.visibility = View.VISIBLE
+        getRequestManager().load(userList.getBestProfileImage(itemView.context)).into(profileImageView)
     } else {
-        mediaLoader.cancelDisplayTask(profileImageView)
+        profileImageView.visibility = View.GONE
     }
 }

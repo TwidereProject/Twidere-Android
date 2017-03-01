@@ -12,6 +12,7 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import com.bumptech.glide.Glide
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
 import edu.tsinghua.hotmobi.model.TimelineType
@@ -48,7 +49,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
     }
 
     override fun onCreateAdapter(context: Context): VariousItemsAdapter {
-        val adapter = VariousItemsAdapter(context)
+        val adapter = VariousItemsAdapter(context, { Glide.with(this) })
         val dummyItemAdapter = adapter.dummyAdapter
         dummyItemAdapter.statusClickListener = object : IStatusViewHolder.StatusClickListener {
             override fun onStatusClick(holder: IStatusViewHolder, position: Int) {

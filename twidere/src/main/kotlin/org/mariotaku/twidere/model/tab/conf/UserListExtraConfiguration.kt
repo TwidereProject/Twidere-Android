@@ -6,16 +6,17 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_extra_config_user_list.view.*
 import kotlinx.android.synthetic.main.list_item_simple_user_list.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.UserListSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 /**
@@ -56,12 +57,12 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
         hintView.visibility = View.VISIBLE
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(fragment: TabEditorDialogFragment, requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val userList: ParcelableUserList = data!!.getParcelableExtra(EXTRA_USER_LIST)
-                    viewHolder.display(userList, dependencyHolder.mediaLoader,
+                    viewHolder.display(userList, { Glide.with(context) },
                             dependencyHolder.userColorNameManager, true)
                     viewHolder.itemView.visibility = View.VISIBLE
                     hintView.visibility = View.GONE

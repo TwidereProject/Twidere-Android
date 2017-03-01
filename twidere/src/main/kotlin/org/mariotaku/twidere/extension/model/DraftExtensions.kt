@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
 import com.bluelinelabs.logansquare.LoganSquare
-import com.nostra13.universalimageloader.utils.IoUtils
 import org.apache.james.mime4j.dom.Header
 import org.apache.james.mime4j.dom.MessageServiceFactory
 import org.apache.james.mime4j.dom.address.Mailbox
@@ -235,7 +234,7 @@ private class BodyPartHandler(private val context: Context, private val draft: D
                         this.type = contentType?.getParameter("media_type").toInt(ParcelableMedia.Type.UNKNOWN)
                         this.alt_text = contentType?.getParameter("alt_text")
                         FileOutputStream(mediaFile).use {
-                            IoUtils.copyStream(st, it, null)
+                            st.copyTo(it)
                             it.flush()
                         }
                         this.uri = Uri.fromFile(mediaFile).toString()

@@ -2,12 +2,16 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView.ViewHolder
+import com.bumptech.glide.RequestManager
 import java.util.*
 
 /**
  * Created by mariotaku on 14/10/27.
  */
-abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(context: Context) : BaseRecyclerViewAdapter<H>(context) {
+abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : BaseRecyclerViewAdapter<H>(context, getRequestManager) {
 
     protected val data = ArrayList<T>()
 

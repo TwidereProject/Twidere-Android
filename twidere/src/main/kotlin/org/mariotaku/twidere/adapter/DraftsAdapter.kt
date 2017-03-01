@@ -24,6 +24,7 @@ import android.database.Cursor
 import android.support.v4.widget.SimpleCursorAdapter
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
@@ -37,7 +38,10 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.DraftViewHolder
 import javax.inject.Inject
 
-class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.list_item_draft, null, arrayOfNulls<String>(0), IntArray(0), 0) {
+class DraftsAdapter(
+        context: Context,
+        val getRequestManager: () -> RequestManager
+) : SimpleCursorAdapter(context, R.layout.list_item_draft, null, arrayOfNulls<String>(0), IntArray(0), 0) {
 
     @Inject
     lateinit var imageLoader: MediaLoaderWrapper
@@ -73,8 +77,8 @@ class DraftsAdapter(context: Context) : SimpleCursorAdapter(context, R.layout.li
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)
                 holder.mediaPreviewContainer.visibility = View.VISIBLE
-                holder.mediaPreviewContainer.displayMedia(loader = imageLoader, media = media,
-                        loadingHandler = mediaLoadingHandler)
+                holder.mediaPreviewContainer.displayMedia(getRequestManager = getRequestManager,
+                        media = media, loadingHandler = mediaLoadingHandler)
             }
             Draft.Action.FAVORITE, Draft.Action.RETWEET -> {
                 val extras = draft.action_extras as? StatusObjectExtras

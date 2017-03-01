@@ -21,6 +21,7 @@ package org.mariotaku.twidere.adapter
 
 import android.content.Context
 import android.support.v4.text.BidiFormatter
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
@@ -34,15 +35,14 @@ import javax.inject.Inject
 open class BaseArrayAdapter<T>(
         context: Context,
         layoutRes: Int,
-        collection: Collection<T>? = null
+        collection: Collection<T>? = null,
+        override val getRequestManager: () -> RequestManager
 ) : ArrayAdapter<T>(context, layoutRes, collection), IContentAdapter, ILoadMoreSupportAdapter,
         IItemCountsAdapter {
     val linkify: TwidereLinkify
 
     @Inject
     override lateinit var userColorNameManager: UserColorNameManager
-    @Inject
-    override lateinit var mediaLoader: MediaLoaderWrapper
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
     @Inject

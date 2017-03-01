@@ -37,6 +37,7 @@ import android.view.View.OnClickListener
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
+import com.bumptech.glide.Glide
 import jopt.csp.util.SortableIntList
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
@@ -171,7 +172,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         setContentView(R.layout.activity_quick_search_bar)
         val am = AccountManager.get(this)
         val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
-        val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon)
+        val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
+                getRequestManager = { Glide.with(this) })
         accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
         accountsSpinnerAdapter.addAll(accounts)
         accountSpinner.adapter = accountsSpinnerAdapter
@@ -324,7 +326,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text1.text = "@${cursor.getString(indices.title)}"
                     holder.text2.visibility = View.GONE
                     holder.icon.setColorFilter(holder.text1.currentTextColor, Mode.SRC_ATOP)
-                    mediaLoader.cancelDisplayTask(holder.icon)
+                    //TODO cancel image load
                     holder.icon.setImageResource(R.drawable.ic_action_user)
                 }
             }

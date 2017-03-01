@@ -19,22 +19,14 @@
 
 package org.mariotaku.twidere.util;
 
-import android.graphics.Bitmap;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ProgressBar;
 
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-
 import org.mariotaku.twidere.R;
-import org.mariotaku.twidere.util.support.ViewSupport;
-import org.mariotaku.twidere.view.ForegroundImageView;
 
-public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingProgressListener {
+public class MediaLoadingHandler {
 
     private final SparseArray<String> mLoadingUris = new SparseArray<>();
     private final int[] mProgressBarIds;
@@ -49,66 +41,6 @@ public class MediaLoadingHandler implements ImageLoadingListener, ImageLoadingPr
 
     public String getLoadingUri(final View view) {
         return mLoadingUris.get(System.identityHashCode(view));
-    }
-
-    @Override
-    public void onLoadingStarted(final String imageUri, final View view) {
-        final int viewHashCode = System.identityHashCode(view);
-        if (view == null || imageUri == null || imageUri.equals(getLoadingUri(view))) return;
-        ViewGroup parent = (ViewGroup) view.getParent();
-        if (view instanceof ForegroundImageView) {
-            ViewSupport.setForeground(view, null);
-        }
-        mLoadingUris.put(viewHashCode, imageUri);
-        final ProgressBar progress = findProgressBar(parent);
-        if (progress != null) {
-            progress.setVisibility(View.VISIBLE);
-            progress.setIndeterminate(true);
-            progress.setMax(100);
-        }
-    }
-
-    @Override
-    public void onLoadingFailed(final String imageUri, final View view, final FailReason reason) {
-        if (view == null) return;
-        mLoadingUris.remove(System.identityHashCode(view));
-        final ProgressBar progress = findProgressBar(view.getParent());
-        if (progress != null) {
-            progress.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onLoadingComplete(final String imageUri, final View view, final Bitmap bitmap) {
-        if (view == null) return;
-        mLoadingUris.remove(System.identityHashCode(view));
-        final ViewGroup parent = (ViewGroup) view.getParent();
-        final ProgressBar progress = findProgressBar(parent);
-        if (progress != null) {
-            progress.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onLoadingCancelled(final String imageUri, final View view) {
-        final int viewHashCode = System.identityHashCode(view);
-        if (view == null || imageUri == null || imageUri.equals(getLoadingUri(view))) return;
-        mLoadingUris.remove(viewHashCode);
-        final ProgressBar progress = findProgressBar(view.getParent());
-        if (progress != null) {
-            progress.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onProgressUpdate(final String imageUri, final View view, final int current,
-                                 final int total) {
-        if (total == 0 || view == null) return;
-        final ProgressBar progress = findProgressBar(view.getParent());
-        if (progress != null) {
-            progress.setIndeterminate(false);
-            progress.setProgress(100 * current / total);
-        }
     }
 
     private ProgressBar findProgressBar(final ViewParent viewParent) {

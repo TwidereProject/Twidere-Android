@@ -24,8 +24,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
 import android.util.Log
-import com.bluelinelabs.logansquare.LoganSquare
-import com.nostra13.universalimageloader.cache.disc.DiskCache
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -43,7 +41,11 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.util.SharedPreferencesWrapper
+import org.mariotaku.twidere.util.TwidereArrayUtils
+import org.mariotaku.twidere.util.UserColorNameManager
+import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
 import java.util.*
@@ -74,7 +76,7 @@ abstract class MicroBlogAPIStatusesLoader(
             exceptionRef.set(value)
         }
     @Inject
-    lateinit var fileCache: DiskCache
+    lateinit var jsonCache: JsonCache
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
@@ -209,8 +211,7 @@ abstract class MicroBlogAPIStatusesLoader(
     private val cachedData: List<ParcelableStatus>?
         get() {
             val key = serializationKey ?: return null
-            val file = fileCache.get(key) ?: return null
-            return JsonSerializer.parseList(file, ParcelableStatus::class.java)
+            return jsonCache.getList(key, ParcelableStatus::class.java)
         }
 
     private val serializationKey: String?
@@ -225,9 +226,7 @@ abstract class MicroBlogAPIStatusesLoader(
         val databaseItemLimit = preferences[loadItemLimitKey]
         try {
             val statuses = data.subList(0, Math.min(databaseItemLimit, data.size))
-            fileCache.save(key, tempFileInputStream(context) { os ->
-                LoganSquare.serialize(statuses, os, ParcelableStatus::class.java)
-            }) { current, total -> true }
+            jsonCache.saveList(key, statuses, ParcelableStatus::class.java)
         } catch (e: Exception) {
             // Ignore
             if (e !is IOException) {

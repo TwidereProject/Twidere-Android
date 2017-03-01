@@ -17,6 +17,7 @@ import android.view.*
 import android.view.ContextMenu.ContextMenuInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import nl.komponents.kovenant.task
 import org.mariotaku.ktextension.Bundle
@@ -59,7 +60,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
-        adapter = AccountDetailsAdapter(context).apply {
+        adapter = AccountDetailsAdapter(context, { Glide.with(this) }).apply {
             setSortEnabled(true)
             setSwitchEnabled(true)
             accountToggleListener = { pos, checked ->

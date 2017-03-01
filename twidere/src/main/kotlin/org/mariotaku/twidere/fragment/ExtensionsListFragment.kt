@@ -33,6 +33,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.AdapterContextMenuInfo
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.setItemAvailability
@@ -56,7 +57,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
     }
 
     override fun onCreateAdapter(context: Context): ExtensionsAdapter {
-        return ExtensionsAdapter(activity)
+        return ExtensionsAdapter(activity, { Glide.with(this) })
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {

@@ -37,6 +37,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnClickListener
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import org.mariotaku.abstask.library.AbstractTask
@@ -49,6 +50,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
+import org.mariotaku.twidere.extension.model.getBestProfileBanner
+import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -285,10 +288,11 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             editDescription.setText(ParcelableUserUtils.getExpandedDescription(user))
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
-            mediaLoader.displayProfileImage(profileImage, user)
-            val defWidth = resources.displayMetrics.widthPixels
-            mediaLoader.displayProfileBanner(profileBanner, user.profile_banner_url, defWidth)
-            mediaLoader.displayImage(profileBackground, user.profile_background_url)
+
+            Glide.with(this).load(user.getBestProfileImage(context)).into(profileImage)
+            Glide.with(this).load(user.getBestProfileBanner(resources.displayMetrics.widthPixels)).into(profileBanner)
+            Glide.with(this).load(user.profile_background_url).into(profileBackground)
+
             linkColor.color = user.link_color
             backgroundColor.color = user.background_color
             if (USER_TYPE_TWITTER_COM == user.key.host) {

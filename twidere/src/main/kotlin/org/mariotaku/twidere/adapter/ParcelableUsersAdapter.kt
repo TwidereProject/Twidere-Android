@@ -23,7 +23,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import org.mariotaku.twidere.Constants
+import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
@@ -33,8 +33,11 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
-class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context), Constants, IUsersAdapter<List<ParcelableUser>> {
-    private val inflater: LayoutInflater
+class ParcelableUsersAdapter(
+        context: Context,
+        getRequestManager: () -> RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IUsersAdapter<List<ParcelableUser>> {
+    private val inflater = LayoutInflater.from(context)
     private var data: List<ParcelableUser>? = null
 
     override val showAccountsColor: Boolean = false
@@ -42,10 +45,6 @@ class ParcelableUsersAdapter(context: Context) : LoadMoreSupportAdapter<Recycler
     override var requestClickListener: IUsersAdapter.RequestClickListener? = null
     override var friendshipClickListener: IUsersAdapter.FriendshipClickListener? = null
     override var simpleLayout: Boolean = false
-
-    init {
-        inflater = LayoutInflater.from(context)
-    }
 
     fun getData(): List<ParcelableUser>? {
         return data

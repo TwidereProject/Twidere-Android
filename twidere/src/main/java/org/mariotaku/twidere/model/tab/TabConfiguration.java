@@ -244,7 +244,7 @@ public abstract class TabConfiguration {
             this.view = view;
         }
 
-        public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        public void onActivityResult(@NonNull final TabEditorDialogFragment fragment, int requestCode, int resultCode, @Nullable Intent data) {
 
         }
 

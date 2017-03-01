@@ -34,6 +34,7 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
+import com.bumptech.glide.Glide
 import com.twitter.Validator
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
@@ -90,7 +91,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val editComment = it.findViewById(R.id.edit_comment) as ComposeEditText
             val commentMenu = it.findViewById(R.id.comment_menu)!!
 
-            val adapter = DummyItemAdapter(context)
+            val adapter = DummyItemAdapter(context, getRequestManager = { Glide.with(this) })
             adapter.setShouldShowAccountsColor(true)
             val holder = StatusViewHolder(adapter, itemContent)
             holder.displayStatus(status = status, displayInReplyTo = false, displayExtraType = true)
@@ -199,7 +200,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
 
     @CheckResult
     private fun retweetOrQuote(account: AccountDetails, status: ParcelableStatus,
-                               showProtectedConfirmation: Boolean): Boolean {
+            showProtectedConfirmation: Boolean): Boolean {
         val twitter = twitterWrapper
         val dialog = dialog ?: return false
         val editComment = dialog.findViewById(R.id.edit_comment) as EditText
@@ -294,8 +295,8 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         companion object {
 
             fun show(pf: RetweetQuoteDialogFragment,
-                     account: AccountDetails,
-                     status: ParcelableStatus): QuoteProtectedStatusWarnFragment {
+                    account: AccountDetails,
+                    status: ParcelableStatus): QuoteProtectedStatusWarnFragment {
                 val f = QuoteProtectedStatusWarnFragment()
                 val args = Bundle()
                 args.putParcelable(EXTRA_ACCOUNT, account)

@@ -12,6 +12,8 @@ import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.card_item_extra_feature.view.*
 import nl.komponents.kovenant.task
@@ -40,7 +42,7 @@ class PremiumDashboardActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_premium_dashboard)
-        adapter = ControllersAdapter(this)
+        adapter = ControllersAdapter(this, { Glide.with(this) })
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         if (extraFeaturesService.isSupported()) {
@@ -185,7 +187,10 @@ class PremiumDashboardActivity : BaseActivity() {
 
     }
 
-    class ControllersAdapter(context: Context) : BaseRecyclerViewAdapter<ControllerViewHolder>(context) {
+    class ControllersAdapter(
+            context: Context,
+            getRequestManager: () -> RequestManager
+    ) : BaseRecyclerViewAdapter<ControllerViewHolder>(context, getRequestManager) {
 
         var controllers: List<Class<out ContainerView.ViewController>>? = null
             set(value) {

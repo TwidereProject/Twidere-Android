@@ -26,6 +26,7 @@ import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.Loader
 import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -60,7 +61,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         }
 
     override fun onCreateAdapter(context: Context): ParcelableUserListsAdapter {
-        return ParcelableUserListsAdapter(context)
+        return ParcelableUserListsAdapter(context, { Glide.with(this) })
     }
 
     override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

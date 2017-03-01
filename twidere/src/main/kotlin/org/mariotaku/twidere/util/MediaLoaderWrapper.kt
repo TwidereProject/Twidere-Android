@@ -20,28 +20,16 @@
 package org.mariotaku.twidere.util
 
 import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.widget.ImageView
-import com.nostra13.universalimageloader.core.DisplayImageOptions
-import com.nostra13.universalimageloader.core.DisplayImageOptions.Builder
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.assist.ImageSize
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener
 import org.mariotaku.kpreferences.get
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
-import org.mariotaku.twidere.util.media.MediaExtra
-import javax.inject.Singleton
 
-@Singleton
-class MediaLoaderWrapper(val imageLoader: ImageLoader) {
+class MediaLoaderWrapper() {
 
     var isNetworkMetered: Boolean = true
     private var preloadEnabled: Boolean = false
@@ -49,95 +37,6 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
 
     private val shouldPreload: Boolean get() = preloadEnabled && (!preloadOnWifiOnly || !isNetworkMetered)
 
-    private val profileImageDisplayOptions = DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .build()
-
-    private val groupConversationAvatarDisplayOptions = DisplayImageOptions.Builder()
-            .cloneFrom(profileImageDisplayOptions)
-            .showImageForEmptyUri(R.drawable.ic_profile_image_default_group)
-            .build()
-
-    private val dashboardProfileImageDisplayOptions = DisplayImageOptions.Builder()
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .build()
-
-    private val previewDisplayOptions = DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .build()
-
-    private val videoPreviewDisplayOptions = DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .showImageForEmptyUri(R.color.material_grey)
-            .showImageOnFail(R.color.material_grey)
-            .build()
-
-    private val bannerDisplayOptions = DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .showImageOnLoading(android.R.color.transparent)
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.RGB_565)
-            .build()
-
-
-    private val stickerDisplayOptions = DisplayImageOptions.Builder()
-            .resetViewBeforeLoading(true)
-            .showImageOnLoading(android.R.color.transparent)
-            .cacheInMemory(true)
-            .cacheOnDisk(true)
-            .bitmapConfig(Bitmap.Config.ARGB_8888)
-            .build()
-
-    fun displayPreviewImage(view: ImageView, url: String?, video: Boolean = false) {
-        val options = if (video) videoPreviewDisplayOptions else previewDisplayOptions
-        imageLoader.displayImage(url, view, options)
-    }
-
-    fun displayPreviewImage(view: ImageView, url: String?, loadingHandler: MediaLoadingHandler?,
-            video: Boolean = false) {
-        val options = if (video) videoPreviewDisplayOptions else previewDisplayOptions
-        imageLoader.displayImage(url, view, options, loadingHandler, loadingHandler)
-    }
-
-    fun displayPreviewImageWithCredentials(view: ImageView, url: String?, accountKey: UserKey?,
-            loadingHandler: MediaLoadingHandler?, video: Boolean = false) {
-        if (accountKey == null) {
-            displayPreviewImage(view, url, loadingHandler)
-            return
-        }
-        val b = DisplayImageOptions.Builder()
-        b.cloneFrom(if (video) videoPreviewDisplayOptions else previewDisplayOptions)
-        val extra = MediaExtra()
-        extra.accountKey = accountKey
-        b.extraForDownloader(extra)
-        imageLoader.displayImage(url, view, b.build(), loadingHandler, loadingHandler)
-    }
-
-
-    fun displayProfileBanner(view: ImageView, url: String?, listener: ImageLoadingListener? = null) {
-        imageLoader.displayImage(url, view, bannerDisplayOptions, listener)
-    }
-
-
-    fun displayProfileBanner(view: ImageView, baseUrl: String?, width: Int) {
-        displayProfileBanner(view, getBestBannerUrl(baseUrl, width))
-    }
-
-    fun displayProfileBanner(view: ImageView, account: AccountDetails, width: Int) {
-        displayProfileBanner(view, getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(account.user), width))
-    }
 
     fun displayOriginalProfileImage(view: ImageView, user: ParcelableUser) {
         if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_original)) {
@@ -157,36 +56,7 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         }
     }
 
-    fun displayProfileImage(view: ImageView, userList: ParcelableUserList) {
-        displayProfileImage(view, userList.user_profile_image_url)
-    }
-
-    fun displayProfileImage(view: ImageView, account: AccountDetails) {
-        if (account.user.extras != null && !TextUtils.isEmpty(account.user.extras.profile_image_url_profile_size)) {
-            displayProfileImage(view, account.user.extras.profile_image_url_profile_size)
-        } else {
-            displayProfileImage(view, account.user.profile_image_url)
-        }
-    }
-
-    fun displayProfileImage(view: ImageView, status: ParcelableStatus) {
-        if (status.extras != null && !TextUtils.isEmpty(status.extras.user_profile_image_url_profile_size)) {
-            displayProfileImage(view, status.extras.user_profile_image_url_profile_size)
-        } else {
-            displayProfileImage(view, status.user_profile_image_url)
-        }
-    }
-
     fun displayProfileImage(view: ImageView, url: String?) {
-        imageLoader.displayImage(url, view, profileImageDisplayOptions)
-    }
-
-    fun displayGroupConversationAvatar(view: ImageView, url: String?) {
-        imageLoader.displayImage(url, view, groupConversationAvatarDisplayOptions)
-    }
-
-    fun loadImageSync(url: String, targetImageSize: ImageSize, options: DisplayImageOptions): Bitmap? {
-        return imageLoader.loadImageSync(url, targetImageSize, options)
     }
 
     fun displayDashboardProfileImage(view: ImageView, account: AccountDetails, drawableOnLoading: Drawable?) {
@@ -198,23 +68,6 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         }
     }
 
-
-    fun displayImage(view: ImageView, url: String?) {
-        imageLoader.displayImage(url, view)
-    }
-
-
-    fun displayStickerImage(view: ImageView, url: String?) {
-        imageLoader.displayImage(url, view, stickerDisplayOptions)
-    }
-
-    fun displayProfileImage(view: ImageView, url: String?, listener: ImageLoadingListener) {
-        imageLoader.displayImage(url, view, profileImageDisplayOptions, listener)
-    }
-
-    fun cancelDisplayTask(imageView: ImageView) {
-        imageLoader.cancelDisplayTask(imageView)
-    }
 
     fun preloadStatus(status: ParcelableStatus) {
         if (!shouldPreload) return
@@ -229,29 +82,12 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
         activity.getActivityStatus()?.let { preloadStatus(it) }
     }
 
-    fun clearFileCache() {
-        imageLoader.clearDiskCache()
-    }
-
-    fun clearMemoryCache() {
-        imageLoader.clearMemoryCache()
-    }
-
     fun reloadOptions(preferences: SharedPreferences) {
         preloadEnabled = preferences[mediaPreloadKey]
         preloadOnWifiOnly = preferences[mediaPreloadOnWifiOnlyKey]
     }
 
     private fun displayDashboardProfileImage(view: ImageView, url: String?, drawableOnLoading: Drawable?) {
-        if (drawableOnLoading != null) {
-            val builder = Builder()
-            builder.cloneFrom(dashboardProfileImageDisplayOptions)
-            builder.showImageOnLoading(drawableOnLoading)
-            builder.showImageOnFail(drawableOnLoading)
-            imageLoader.displayImage(url, view, builder.build())
-            return
-        }
-        imageLoader.displayImage(url, view, dashboardProfileImageDisplayOptions)
     }
 
     private fun preloadMedia(media: Array<ParcelableMedia>?) {
@@ -262,13 +98,9 @@ class MediaLoaderWrapper(val imageLoader: ImageLoader) {
     }
 
     private fun preloadProfileImage(url: String?) {
-        if (url == null) return
-        imageLoader.loadImage(url, profileImageDisplayOptions, null)
     }
 
     private fun preloadPreviewImage(url: String?) {
-        if (url == null) return
-        imageLoader.loadImage(url, previewDisplayOptions, null)
     }
 
 }
