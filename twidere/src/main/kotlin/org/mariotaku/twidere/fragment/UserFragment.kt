@@ -79,7 +79,6 @@ import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
-import org.apache.commons.lang3.ObjectUtils
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -89,7 +88,6 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -106,6 +104,8 @@ import org.mariotaku.twidere.constant.lightFontKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.loadOriginalProfileImage
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
@@ -126,7 +126,7 @@ import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.*
+import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
 import org.mariotaku.twidere.util.UserColorNameManager.UserColorChangedListener
@@ -511,7 +511,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         listedContainer.visibility = if (user.listed_count < 0) View.GONE else View.VISIBLE
         groupsContainer.visibility = if (groupsCount < 0) View.GONE else View.VISIBLE
 
-        mediaLoader.displayOriginalProfileImage(profileImage, user)
         if (user.color != 0) {
             setUiColor(user.color)
         } else if (user.link_color != 0) {
@@ -523,7 +522,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerUrl = getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(user), width)
-        Glide.with(this).load(bannerUrl).into(profileBanner)
+        val requestManager = Glide.with(this)
+        requestManager.load(bannerUrl).into(profileBanner)
+        requestManager.loadOriginalProfileImage(context, user, profileImage.style).into(profileImage)
         val relationship = relationship
         if (relationship == null) {
             getFriendship()

@@ -23,7 +23,7 @@ import android.support.v4.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.util.AsyncTwitterWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
-import org.mariotaku.twidere.view.ShapedImageView.ShapeStyle
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 
 /**
  * Created by mariotaku on 15/1/3.
@@ -34,7 +34,7 @@ interface IContentAdapter {
 
     fun getItemCount(): Int
 
-    @ShapeStyle
+    @ImageShapeStyle
     val profileImageStyle: Int
 
     val profileImageEnabled: Boolean

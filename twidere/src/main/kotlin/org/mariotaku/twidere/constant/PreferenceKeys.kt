@@ -9,6 +9,7 @@ import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
@@ -82,14 +83,14 @@ object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xF
     }
 }
 
-object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ProfileImageView.SHAPE_CIRCLE) {
+object profileImageStyleKey : KSimpleKey<Int>(KEY_PROFILE_IMAGE_STYLE, ImageShapeStyle.SHAPE_CIRCLE) {
     override fun read(preferences: SharedPreferences): Int {
-        if (preferences.getString(key, null) == VALUE_PROFILE_IMAGE_STYLE_SQUARE) return ProfileImageView.SHAPE_RECTANGLE
-        return ProfileImageView.SHAPE_CIRCLE
+        if (preferences.getString(key, null) == VALUE_PROFILE_IMAGE_STYLE_SQUARE) return ImageShapeStyle.SHAPE_RECTANGLE
+        return ImageShapeStyle.SHAPE_CIRCLE
     }
 
     override fun write(editor: SharedPreferences.Editor, value: Int): Boolean {
-        editor.putString(key, if (value == ProfileImageView.SHAPE_CIRCLE) VALUE_PROFILE_IMAGE_STYLE_ROUND else VALUE_PROFILE_IMAGE_STYLE_SQUARE)
+        editor.putString(key, if (value == ImageShapeStyle.SHAPE_CIRCLE) VALUE_PROFILE_IMAGE_STYLE_ROUND else VALUE_PROFILE_IMAGE_STYLE_SQUARE)
         return true
     }
 

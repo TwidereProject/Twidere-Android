@@ -26,29 +26,33 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import jp.wasabeef.glide.transformations.CropCircleTransformation
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ShapedImageView
 
-fun RequestManager.loadProfileImage(context: Context, url: String?,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
-    val size = context.getString(R.string.profile_image_size)
-    return configureLoadProfileImage(context, shapeStyle) { load(Utils.getTwitterProfileImageOfSize(url, size)) }
+fun RequestManager.loadProfileImage(
+        context: Context,
+        url: String?,
+        @ImageShapeStyle style: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        size: String = context.getString(R.string.profile_image_size)
+): DrawableRequestBuilder<String?> {
+    return configureLoadProfileImage(context, style) { load(Utils.getTwitterProfileImageOfSize(url, size)) }
 }
 
 fun RequestManager.loadProfileImage(context: Context, resourceId: Int,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<Int> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<Int> {
     return configureLoadProfileImage(context, shapeStyle) { load(resourceId) }
 }
 
 fun RequestManager.loadProfileImage(context: Context, account: AccountDetails,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
     return loadProfileImage(context, account.user, shapeStyle)
 }
 
 fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
     if (user.extras != null && user.extras.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
         return loadProfileImage(context, user.profile_image_url)
@@ -57,17 +61,17 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
 }
 
 fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, shapeStyle) { load(userList.user_profile_image_url) }
 }
 
 fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, shapeStyle) { load(group.homepage_logo) }
 }
 
 fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus,
-        @ShapedImageView.ShapeStyle shapeStyle: Int = ShapedImageView.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
     if (status.extras != null && status.extras.user_profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
         return loadProfileImage(context, status.user_profile_image_url)
@@ -89,6 +93,13 @@ fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMe
     }
 }
 
+fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUser,
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String> {
+    val original = user.extras.profile_image_url_original?.takeIf(String::isEmpty)
+            ?: Utils.getOriginalTwitterProfileImage(user.profile_image_url)
+    return configureLoadProfileImage(context, shapeStyle) { load(original) }
+}
+
 internal inline fun <T> configureLoadProfileImage(context: Context, shapeStyle: Int,
         create: () -> DrawableTypeRequest<T>): DrawableRequestBuilder<T> {
     val builder = create()
@@ -96,10 +107,10 @@ internal inline fun <T> configureLoadProfileImage(context: Context, shapeStyle: 
     builder.dontAnimate()
     if (!ShapedImageView.OUTLINE_DRAW) {
         when (shapeStyle) {
-            ShapedImageView.SHAPE_CIRCLE -> {
+            ImageShapeStyle.SHAPE_CIRCLE -> {
                 builder.bitmapTransform(CropCircleTransformation(context))
             }
-            ShapedImageView.SHAPE_RECTANGLE -> {
+            ImageShapeStyle.SHAPE_RECTANGLE -> {
             }
         }
     }
