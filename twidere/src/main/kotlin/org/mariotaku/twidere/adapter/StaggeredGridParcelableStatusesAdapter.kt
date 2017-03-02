@@ -29,6 +29,7 @@ import com.bumptech.glide.RequestManager
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.model.ParcelableMedia
@@ -92,7 +93,8 @@ class StaggeredGridParcelableStatusesAdapter(
             mediaImageContainer.requestLayout()
 
             mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type))
-            adapter.getRequestManager().load(status.getBestProfileImage(itemView.context)).into(profileImageView)
+            val context = itemView.context
+            adapter.getRequestManager().loadProfileImage(context, status.getBestProfileImage(context)).into(profileImageView)
             // TODO image loaded event and credentials
             adapter.getRequestManager().load(firstMedia.preview_url).into(mediaImageView)
         }

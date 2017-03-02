@@ -22,6 +22,7 @@ package org.mariotaku.twidere.extension.view.holder
 import android.view.View
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -34,7 +35,8 @@ fun SimpleUserListViewHolder.display(userList: ParcelableUserList, getRequestMan
             userColorNameManager.getDisplayName(userList, false))
     if (displayProfileImage) {
         profileImageView.visibility = View.VISIBLE
-        getRequestManager().load(userList.getBestProfileImage(itemView.context)).into(profileImageView)
+        val context = itemView.context
+        getRequestManager().loadProfileImage(context, userList.getBestProfileImage(context)).into(profileImageView)
     } else {
         profileImageView.visibility = View.GONE
     }

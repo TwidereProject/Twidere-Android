@@ -26,6 +26,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.list_item_user_list.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.ColorLabelRelativeLayout
@@ -72,7 +73,7 @@ class UserListViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().load(userList.user_profile_image_url).into(profileImageView)
+            adapter.getRequestManager().loadProfileImage(context, userList.user_profile_image_url).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

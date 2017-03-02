@@ -91,6 +91,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.getBestProfileImage
@@ -927,7 +928,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.name.screenName = String.format("@%s", status.user_screen_name)
             itemView.name.updateText(formatter)
 
-            adapter.getRequestManager().load(status.getBestProfileImage(context)).into(itemView.profileImage)
+            adapter.getRequestManager().loadProfileImage(context, status.getBestProfileImage(context)).into(itemView.profileImage)
 
             val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
             val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)
@@ -1373,7 +1374,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 }
 
                 fun displayUser(item: ParcelableUser) {
-                    adapter.getRequestManager().load(item.getBestProfileImage(adapter.context)).into(profileImageView)
+                    val context = adapter.context
+                    adapter.getRequestManager().loadProfileImage(context, item.getBestProfileImage(context)).into(profileImageView)
                 }
 
                 override fun onClick(v: View) {

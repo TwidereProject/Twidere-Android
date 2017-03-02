@@ -523,10 +523,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerUrl = getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(user), width)
-        if (ObjectUtils.notEqual(profileBanner.tag, bannerUrl) || profileBanner.drawable == null) {
-            profileBanner.tag = bannerUrl
-            Glide.with(this).load(bannerUrl).into(profileBanner)
-        }
+        Glide.with(this).load(bannerUrl).into(profileBanner)
         val relationship = relationship
         if (relationship == null) {
             getFriendship()

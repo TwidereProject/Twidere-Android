@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Twidere - Twitter client for Android
   ~
   ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
@@ -27,14 +28,11 @@
     android:padding="@dimen/element_spacing_small"
     tools:layout_height="48dp">
 
-    <org.mariotaku.twidere.view.ProfileImageView
+    <org.mariotaku.twidere.view.ForegroundImageView
         android:id="@android:id/icon"
-        style="?profileImageStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        app:sivBorder="true"
-        app:sivBorderWidth="1.5dp"
         tools:src="@drawable/ic_profile_image_twidere"/>
 
 </FrameLayout>

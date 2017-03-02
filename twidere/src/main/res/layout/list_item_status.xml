@@ -67,7 +67,7 @@
         tools:textSize="@dimen/text_size_extra_small"
         tools:visibility="visible"/>
 
-    <org.mariotaku.twidere.view.ProfileImageView
+    <ImageView
         android:id="@+id/profileImage"
         style="?profileImageStyle"
         android:layout_width="@dimen/icon_size_status_profile_image"

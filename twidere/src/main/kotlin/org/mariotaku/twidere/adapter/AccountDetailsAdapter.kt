@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
@@ -62,7 +63,7 @@ class AccountDetailsAdapter(
         holder.screenName.text = String.format("@%s", details.user.screen_name)
         holder.setAccountColor(details.color)
         if (profileImageEnabled) {
-            getRequestManager().load(details.user.getBestProfileImage(context)).into(holder.profileImage)
+            getRequestManager().loadProfileImage(context, details.user.getBestProfileImage(context)).into(holder.profileImage)
         } else {
             // TODO: display stub image?
         }

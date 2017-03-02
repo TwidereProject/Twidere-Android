@@ -21,6 +21,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
@@ -35,7 +36,6 @@ import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
-import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.lang.ref.WeakReference
 
@@ -47,7 +47,7 @@ import java.lang.ref.WeakReference
  */
 class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
-    override val profileImageView: ProfileImageView by lazy { itemView.profileImage }
+    override val profileImageView: ImageView by lazy { itemView.profileImage }
     override val profileTypeView: ImageView by lazy { itemView.profileType }
 
     private val itemContent by lazy { itemView.itemContent }
@@ -299,7 +299,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            getRequestManager().load(status.getBestProfileImage(context)).into(profileImageView)
+            getRequestManager().loadProfileImage(context, status.getBestProfileImage(context)).into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
@@ -502,7 +502,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     fun setupViewOptions() {
         setTextSize(adapter.textSize)
-        profileImageView.style = adapter.profileImageStyle
 
         mediaPreview.style = adapter.mediaPreviewStyle
         quotedMediaPreview.style = adapter.mediaPreviewStyle

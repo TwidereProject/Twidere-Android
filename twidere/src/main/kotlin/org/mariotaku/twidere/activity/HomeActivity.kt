@@ -891,12 +891,15 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         }
     }
 
-    private class UpdateUnreadCountTask internal constructor(
+    private class UpdateUnreadCountTask(
             private val context: Context,
             private val preferences: SharedPreferences,
             private val readStateManager: ReadStateManager,
             private val indicator: TabPagerIndicator,
-            private val tabs: Array<SupportTabSpec>) : AsyncTask<Any, UpdateUnreadCountTask.TabBadge, SparseIntArray>() {
+            private val tabs: Array<SupportTabSpec>
+    ) : AsyncTask<Any, UpdateUnreadCountTask.TabBadge, SparseIntArray>() {
+
+        private val activatedKeys = DataStoreUtils.getActivatedAccountKeys(context)
 
         override fun doInBackground(vararg params: Any): SparseIntArray {
             val result = SparseIntArray()
@@ -907,8 +910,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 }
                 when (spec.type) {
                     CustomTabType.HOME_TIMELINE -> {
-                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?:
-                                DataStoreUtils.getActivatedAccountKeys(context)
+                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?: activatedKeys
                         val position = accountKeys.map {
                             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, it)
                             readStateManager.getPosition(tag)
@@ -920,8 +922,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                         publishProgress(TabBadge(i, count))
                     }
                     CustomTabType.NOTIFICATIONS_TIMELINE -> {
-                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?:
-                                DataStoreUtils.getActivatedAccountKeys(context)
+                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?: activatedKeys
                         val position = accountKeys.map {
                             val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME, it)
                             readStateManager.getPosition(tag)

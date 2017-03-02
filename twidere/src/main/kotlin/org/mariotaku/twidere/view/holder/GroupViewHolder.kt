@@ -26,6 +26,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.card_item_group_compact.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGroupsAdapter
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableGroup
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.Utils
@@ -77,7 +78,7 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().load(group.homepage_logo).into(profileImageView)
+            adapter.getRequestManager().loadProfileImage(context, group.homepage_logo).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

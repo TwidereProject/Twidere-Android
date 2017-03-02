@@ -29,6 +29,7 @@ import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.iface.IActivitiesAdapter
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.ParcelableActivity
@@ -134,7 +135,8 @@ class ActivityTitleSummaryViewHolder(
             view.setImageDrawable(null)
             if (i < length) {
                 view.visibility = View.VISIBLE
-                adapter.getRequestManager().load(statuses[i].getBestProfileImage(adapter.context)).into(view)
+                val context = adapter.context
+                adapter.getRequestManager().loadProfileImage(context, statuses[i].getBestProfileImage(context)).into(view)
             } else {
                 view.visibility = View.GONE
             }

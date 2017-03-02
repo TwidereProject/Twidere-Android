@@ -26,7 +26,10 @@ import android.widget.ImageView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ParcelableActivity
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.util.getActivityStatus
 
 class MediaLoaderWrapper() {
@@ -57,15 +60,6 @@ class MediaLoaderWrapper() {
     }
 
     fun displayProfileImage(view: ImageView, url: String?) {
-    }
-
-    fun displayDashboardProfileImage(view: ImageView, account: AccountDetails, drawableOnLoading: Drawable?) {
-        if (account.user.extras != null && !TextUtils.isEmpty(account.user.extras.profile_image_url_profile_size)) {
-            displayDashboardProfileImage(view, account.user.extras.profile_image_url_profile_size,
-                    drawableOnLoading)
-        } else {
-            displayDashboardProfileImage(view, account.user.profile_image_url, drawableOnLoading)
-        }
     }
 
 
