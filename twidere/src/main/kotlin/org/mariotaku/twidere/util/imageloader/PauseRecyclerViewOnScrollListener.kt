@@ -20,22 +20,27 @@
 package org.mariotaku.twidere.util.imageloader
 
 import android.support.v7.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 
 class PauseRecyclerViewOnScrollListener(
         private val pauseOnScroll: Boolean,
-        private val pauseOnFling: Boolean
+        private val pauseOnFling: Boolean,
+        private val requestManager: RequestManager
 ) : RecyclerView.OnScrollListener() {
 
     override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
         when (newState) {
             RecyclerView.SCROLL_STATE_IDLE -> {
-                // TODO resume media load
+                if (!requestManager.isPaused) return
+                requestManager.resumeRequests()
             }
             RecyclerView.SCROLL_STATE_DRAGGING -> if (this.pauseOnScroll) {
-                // TODO pause media load
+                if (requestManager.isPaused) return
+                requestManager.pauseRequests()
             }
             RecyclerView.SCROLL_STATE_SETTLING -> if (this.pauseOnFling) {
-                // TODO pause media load
+                if (requestManager.isPaused) return
+                requestManager.pauseRequests()
             }
         }
     }

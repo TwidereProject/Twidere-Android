@@ -344,7 +344,6 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-
         var displayEnd = -1
         if (status.extras.display_text_range != null) {
             displayEnd = status.extras.display_text_range!![1]

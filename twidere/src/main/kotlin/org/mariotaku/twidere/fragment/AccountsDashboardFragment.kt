@@ -71,6 +71,7 @@ import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.setActivated
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment.AccountsInfo
@@ -80,10 +81,8 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
-import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.view.ShapedImageView
 import java.lang.ref.WeakReference
@@ -502,8 +501,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val defWidth = res.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerView = accountProfileBanner.nextView as ImageView
-        val url = getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(account.user), width)
-        Glide.with(this).load(url).into(bannerView)
+
+        Glide.with(this).loadProfileBanner(context, account.user, width).into(bannerView)
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {

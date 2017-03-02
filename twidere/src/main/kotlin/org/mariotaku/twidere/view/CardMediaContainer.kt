@@ -58,15 +58,12 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     fun displayMedia(vararg imageRes: Int) {
         val k = imageRes.size
         for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            val imageView = child.findViewById(R.id.mediaPreview) as ImageView
-            val progress = child.findViewById(R.id.media_preview_progress)
-            progress.visibility = View.GONE
+            val child = getChildAt(i) as ImageView
             if (i < k) {
-                imageView.setImageResource(imageRes[i])
+                child.setImageResource(imageRes[i])
                 child.visibility = View.VISIBLE
             } else {
-                imageView.setImageDrawable(null)
+                child.setImageDrawable(null)
                 child.visibility = View.GONE
             }
         }
@@ -85,17 +82,16 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val clickListener = ImageGridClickListener(mediaClickListener, accountId, extraId)
         val mediaSize = media.size
         for (i in 0 until childCount) {
-            val child = getChildAt(i)
+            val child = getChildAt(i) as ImageView
             if (mediaClickListener != null) {
                 child.setOnClickListener(clickListener)
             }
-            val imageView = child.findViewById(R.id.mediaPreview) as ImageView
             when (style) {
                 PreviewStyle.REAL_SIZE, PreviewStyle.CROP -> {
-                    imageView.scaleType = ScaleType.CENTER_CROP
+                    child.scaleType = ScaleType.CENTER_CROP
                 }
                 PreviewStyle.SCALE -> {
-                    imageView.scaleType = ScaleType.FIT_CENTER
+                    child.scaleType = ScaleType.FIT_CENTER
                 }
             }
             if (i < mediaSize) {
@@ -106,16 +102,16 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                     item.media_url
                 }
                 if (withCredentials) {
-                    requestManager.load(url).into(imageView)
+                    requestManager.load(url).into(child)
                     // TODO handle load progress w/ authentication
                     // loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler, video)
                 } else {
-                    requestManager.load(url).into(imageView)
+                    requestManager.load(url).into(child)
                     // TODO handle load progress
                     // loader.displayPreviewImage(imageView, url, loadingHandler, video)
                 }
-                if (imageView is MediaPreviewImageView) {
-                    imageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
+                if (child is MediaPreviewImageView) {
+                    child.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
                 }
                 if (item.alt_text.isNullOrEmpty()) {
                     child.contentDescription = context.getString(R.string.media)

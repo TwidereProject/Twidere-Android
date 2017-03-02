@@ -31,6 +31,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.view.*
+import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaEvent
@@ -101,7 +102,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, true)
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, true, Glide.with(this))
 
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)

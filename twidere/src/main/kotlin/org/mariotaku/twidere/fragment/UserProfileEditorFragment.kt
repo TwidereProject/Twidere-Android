@@ -50,8 +50,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
+import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -290,7 +290,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
             Glide.with(this).loadProfileImage(context, user).into(profileImage)
-            Glide.with(this).load(user.getBestProfileBanner(resources.displayMetrics.widthPixels)).into(profileBanner)
+            Glide.with(this).loadProfileBanner(context, user, resources.displayMetrics.widthPixels).into(profileBanner)
             Glide.with(this).load(user.profile_background_url).into(profileBackground)
 
             linkColor.color = user.link_color

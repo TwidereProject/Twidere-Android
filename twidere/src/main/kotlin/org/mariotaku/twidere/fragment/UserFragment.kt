@@ -105,7 +105,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
@@ -521,9 +521,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         val defWidth = resources.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
-        val bannerUrl = getBestBannerUrl(ParcelableUserUtils.getProfileBannerUrl(user), width)
         val requestManager = Glide.with(this)
-        requestManager.load(bannerUrl).into(profileBanner)
+        requestManager.loadProfileBanner(context, user, width).into(profileBanner)
         requestManager.loadOriginalProfileImage(context, user, profileImage.style).into(profileImage)
         val relationship = relationship
         if (relationship == null) {

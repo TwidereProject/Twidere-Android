@@ -76,8 +76,10 @@ install:
 before_script:
   # Validate if patches work
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
+  # Validate if Google components fetched successfully
+  - test -f twidere/src/google/AndroidManifest.xml
 
-script: GRADLE_OPTS="-Dkotlin.incremental=false" ./gradlew build --no-daemon --stacktrace
+script: ./gradlew build --no-daemon --stacktrace
 
 deploy:
   provider: releases
