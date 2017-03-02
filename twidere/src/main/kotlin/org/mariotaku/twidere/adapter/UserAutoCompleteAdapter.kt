@@ -27,6 +27,7 @@ import android.support.v4.widget.SimpleCursorAdapter
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
@@ -34,6 +35,7 @@ import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUserCursorIndices
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
@@ -46,9 +48,10 @@ import org.mariotaku.twidere.view.ProfileImageView
 import javax.inject.Inject
 
 
-class UserAutoCompleteAdapter(val context: Context) : SimpleCursorAdapter(context,
-        R.layout.list_item_auto_complete, null, emptyArray(),
-        intArrayOf(), 0) {
+class UserAutoCompleteAdapter(
+        val context: Context,
+        val requestManager: RequestManager
+) : SimpleCursorAdapter(context, R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
     lateinit var profileImageLoader: MediaLoaderWrapper
@@ -70,7 +73,7 @@ class UserAutoCompleteAdapter(val context: Context) : SimpleCursorAdapter(contex
         profileImageStyle = preferences[profileImageStyleKey]
     }
 
-    override fun bindView(view: View, context: Context?, cursor: Cursor) {
+    override fun bindView(view: View, context: Context, cursor: Cursor) {
         val indices = this.indices!!
         val text1 = view.findViewById(android.R.id.text1) as TextView
         val text2 = view.findViewById(android.R.id.text2) as TextView
@@ -83,7 +86,7 @@ class UserAutoCompleteAdapter(val context: Context) : SimpleCursorAdapter(contex
         text2.text = "@${cursor.getString(indices.screen_name)}"
         if (displayProfileImage) {
             val profileImageUrl = cursor.getString(indices.profile_image_url)
-            profileImageLoader.displayProfileImage(icon, profileImageUrl)
+            requestManager.loadProfileImage(context, profileImageUrl, profileImageStyle).into(icon)
         } else {
             //TODO cancel image load
         }

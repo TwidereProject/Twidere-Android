@@ -173,7 +173,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
             nameFirst = preferences[nameFirstKey]
         }
 
-        override fun bindView(view: View, context: Context?, cursor: Cursor) {
+        override fun bindView(view: View, context: Context, cursor: Cursor) {
             super.bindView(view, context, cursor)
             val indices = this.indices!!
             val icon = view.findViewById(android.R.id.icon)

@@ -25,11 +25,13 @@ import android.graphics.PorterDuff.Mode
 import android.support.v4.widget.SimpleCursorAdapter
 import android.view.View
 import android.widget.TextView
+import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
@@ -40,7 +42,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.ProfileImageView
 import javax.inject.Inject
 
-class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context,
+class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestManager) : SimpleCursorAdapter(context,
         R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
@@ -63,7 +65,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
         profileImageStyle = preferences[profileImageStyleKey]
     }
 
-    override fun bindView(view: View, context: Context?, cursor: Cursor) {
+    override fun bindView(view: View, context: Context, cursor: Cursor) {
         val indices = this.indices!!
         val text1 = view.findViewById(android.R.id.text1) as TextView
         val text2 = view.findViewById(android.R.id.text2) as TextView
@@ -77,7 +79,7 @@ class ComposeAutoCompleteAdapter(context: Context) : SimpleCursorAdapter(context
             text2.text = String.format("@%s", cursor.getString(indices.summary))
             if (displayProfileImage) {
                 val profileImageUrl = cursor.getString(indices.icon)
-                mediaLoader.displayProfileImage(icon, profileImageUrl)
+                requestManager.loadProfileImage(context, profileImageUrl).into(icon)
             } else {
                 //TODO cancel image load
             }

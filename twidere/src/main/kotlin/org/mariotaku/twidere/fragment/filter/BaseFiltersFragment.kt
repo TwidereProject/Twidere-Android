@@ -41,6 +41,7 @@ import android.text.TextUtils
 import android.view.*
 import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
 import org.mariotaku.sqliteqb.library.Columns
@@ -300,7 +301,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                     if (autoCompleteType == AUTO_COMPLETE_TYPE_SOURCES) {
                         userAutoCompleteAdapter = SourceAutoCompleteAdapter(activity)
                     } else {
-                        val adapter = ComposeAutoCompleteAdapter(activity)
+                        val adapter = ComposeAutoCompleteAdapter(activity, Glide.with(this))
                         adapter.accountKey = Utils.getDefaultAccountKey(activity)
                         userAutoCompleteAdapter = adapter
                     }

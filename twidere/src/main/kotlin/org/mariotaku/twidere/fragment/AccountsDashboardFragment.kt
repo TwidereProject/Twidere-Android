@@ -147,6 +147,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         hasPrevAccountIndicator.alpha = 0f
         hasNextAccountIndicator.alpha = 0f
 
+        val profileImageStyle = preferences[profileImageStyleKey]
+        floatingProfileImageSnapshot.style = profileImageStyle
+        accountProfileImageView.style = profileImageStyle
+
         val menuInflater = SupportMenuInflater(context)
         menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
         accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->

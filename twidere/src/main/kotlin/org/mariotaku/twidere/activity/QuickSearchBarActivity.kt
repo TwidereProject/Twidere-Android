@@ -50,6 +50,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
@@ -263,10 +264,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             private val activity: QuickSearchBarActivity
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
-        private val inflater: LayoutInflater = LayoutInflater.from(activity)
-        private val mediaLoader: MediaLoaderWrapper = activity.mediaLoader
-        private val userColorNameManager: UserColorNameManager = activity.userColorNameManager
-        private val removedPositions: SortableIntList? = SortableIntList()
+        private val requestManager = Glide.with(activity)
+        private val inflater = LayoutInflater.from(activity)
+        private val mediaLoader = activity.mediaLoader
+        private val userColorNameManager = activity.userColorNameManager
+        private val removedPositions = SortableIntList()
 
         private var indices: SuggestionItem.Indices? = null
 
@@ -319,7 +321,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.text = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
-                    mediaLoader.displayProfileImage(holder.icon, cursor.getString(indices.icon))
+                    requestManager.loadProfileImage(context, cursor.getString(indices.icon)).into(holder.icon)
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
@@ -396,7 +398,6 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         private fun getActualPosition(position: Int): Int {
-            if (removedPositions == null) return position
             var skipped = 0
             for (i in 0 until removedPositions.size()) {
                 if (position + skipped >= removedPositions.get(i)) {
@@ -408,9 +409,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         fun addRemovedPositions(positions: IntArray) {
             for (position in positions) {
-                removedPositions!!.add(getActualPosition(position))
+                removedPositions.add(getActualPosition(position))
             }
-            removedPositions!!.sort()
+            removedPositions.sort()
             notifyDataSetChanged()
         }
 

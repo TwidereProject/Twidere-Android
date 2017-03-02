@@ -174,7 +174,7 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <ImageView
+        <org.mariotaku.twidere.view.ShapedImageView
             android:id="@+id/floatingProfileImageSnapshot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

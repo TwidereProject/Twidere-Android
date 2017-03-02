@@ -20,14 +20,12 @@
 package org.mariotaku.twidere.util
 
 import android.content.SharedPreferences
-import android.widget.ImageView
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.util.getActivityStatus
 
 class MediaLoaderWrapper {
@@ -37,13 +35,6 @@ class MediaLoaderWrapper {
     private var preloadOnWifiOnly: Boolean = true
 
     private val shouldPreload: Boolean get() = preloadEnabled && (!preloadOnWifiOnly || !isNetworkMetered)
-
-
-    fun displayOriginalProfileImage(view: ImageView, user: ParcelableUser) {
-    }
-
-    fun displayProfileImage(view: ImageView, url: String?) {
-    }
 
 
     fun preloadStatus(status: ParcelableStatus) {
