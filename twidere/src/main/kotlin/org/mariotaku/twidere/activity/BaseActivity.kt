@@ -295,7 +295,7 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     override fun onCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet): View? {
         // Fix for https://github.com/afollestad/app-theme-engine/issues/109
-        if (context !== this) {
+        if (context != this) {
             val delegate = delegate
             var view: View? = delegate.createView(parent, name, context, attrs)
             if (view == null) {

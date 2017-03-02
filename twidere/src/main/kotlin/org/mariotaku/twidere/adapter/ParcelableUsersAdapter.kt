@@ -63,10 +63,10 @@ class ParcelableUsersAdapter(
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
         var count = userCount
-        if (position and ILoadMoreSupportAdapter.START !== 0L) {
+        if (position and ILoadMoreSupportAdapter.START != 0L) {
             count++
         }
-        if (position and ILoadMoreSupportAdapter.END !== 0L) {
+        if (position and ILoadMoreSupportAdapter.END != 0L) {
             count++
         }
         return count
@@ -82,7 +82,7 @@ class ParcelableUsersAdapter(
         get() {
             val position = loadMoreIndicatorPosition
             var start = 0
-            if (position and ILoadMoreSupportAdapter.START !== 0L) {
+            if (position and ILoadMoreSupportAdapter.START != 0L) {
                 start += 1
             }
             return start
@@ -150,7 +150,7 @@ class ParcelableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START !== 0L && position == 0) {
+        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         if (position == userCount) {

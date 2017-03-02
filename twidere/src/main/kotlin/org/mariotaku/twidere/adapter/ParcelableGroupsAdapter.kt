@@ -70,10 +70,10 @@ class ParcelableGroupsAdapter(
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
         var count = groupsCount
-        if (position and ILoadMoreSupportAdapter.START !== 0L) {
+        if (position and ILoadMoreSupportAdapter.START != 0L) {
             count++
         }
-        if (position and ILoadMoreSupportAdapter.END !== 0L) {
+        if (position and ILoadMoreSupportAdapter.END != 0L) {
             count++
         }
         return count
@@ -119,7 +119,7 @@ class ParcelableGroupsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START !== 0L && position == 0) {
+        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         if (position == groupsCount) {

@@ -93,7 +93,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START !== 0L) return
+        if (position and ILoadMoreSupportAdapter.START != 0L) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         val loaderArgs = Bundle(arguments)

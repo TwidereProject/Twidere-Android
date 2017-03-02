@@ -77,7 +77,7 @@ before_script:
   # Validate if patches work
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
 
-script: ./gradlew build --no-daemon --stacktrace
+script: GRADLE_OPTS="-Dkotlin.incremental=false" ./gradlew build --no-daemon --stacktrace
 
 deploy:
   provider: releases

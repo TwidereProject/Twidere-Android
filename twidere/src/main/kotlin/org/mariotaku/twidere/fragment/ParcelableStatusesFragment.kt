@@ -148,7 +148,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
     override fun onLoadMoreContents(position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START !== 0L || refreshing) return
+        if (position and ILoadMoreSupportAdapter.START != 0L || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         // Load the last item

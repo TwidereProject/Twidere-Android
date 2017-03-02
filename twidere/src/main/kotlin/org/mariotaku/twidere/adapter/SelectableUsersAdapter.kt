@@ -61,9 +61,9 @@ class SelectableUsersAdapter(
 
     override fun getItemCount(): Int {
         val position = loadMoreIndicatorPosition
-        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START !== 0L) 1 else 0
+        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
         itemCounts[1] = userCount
-        itemCounts[2] = if (position and ILoadMoreSupportAdapter.END !== 0L) 1 else 0
+        itemCounts[2] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
         return itemCounts.itemCount
     }
 
@@ -119,7 +119,7 @@ class SelectableUsersAdapter(
         get() {
             val position = loadMoreIndicatorPosition
             var start = 0
-            if (position and ILoadMoreSupportAdapter.START !== 0L) {
+            if (position and ILoadMoreSupportAdapter.START != 0L) {
                 start += 1
             }
             return start

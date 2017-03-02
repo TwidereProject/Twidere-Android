@@ -140,7 +140,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START !== 0L || refreshing) return
+        if (position and ILoadMoreSupportAdapter.START != 0L || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getActivities(object : SimpleRefreshTaskParam() {
