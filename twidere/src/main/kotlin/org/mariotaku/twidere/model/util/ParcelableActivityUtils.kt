@@ -69,10 +69,10 @@ object ParcelableActivityUtils {
         result.min_position = activity.minPosition
         result.sources = ParcelableUserUtils.fromUsers(activity.sources, accountKey, profileImageSize)
         result.target_users = ParcelableUserUtils.fromUsers(activity.targetUsers, accountKey, profileImageSize)
-        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetUserLists, accountKey)
+        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetUserLists, accountKey, profileImageSize)
         result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.targetStatuses, accountKey, profileImageSize)
         result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.targetObjectStatuses, accountKey, profileImageSize)
-        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetObjectUserLists, accountKey)
+        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetObjectUserLists, accountKey, profileImageSize)
         result.target_object_users = ParcelableUserUtils.fromUsers(activity.targetObjectUsers, accountKey, profileImageSize)
         result.has_following_source = activity.sources.fold(false) { folded, item ->
             if (item.isFollowing) {

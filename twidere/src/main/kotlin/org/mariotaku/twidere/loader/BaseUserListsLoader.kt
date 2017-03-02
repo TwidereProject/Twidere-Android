@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.twitter.model.CursorSupport
 import org.mariotaku.microblog.library.twitter.model.PageableResponseList
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.loader.iface.ICursorSupportLoader
@@ -53,6 +54,8 @@ abstract class BaseUserListsLoader(
     lateinit var preferences: SharedPreferencesWrapper
 
     protected val data = NoDuplicatesArrayList<ParcelableUserList>()
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     override var nextCursor: Long = 0
     override var prevCursor: Long = 0
@@ -89,12 +92,14 @@ abstract class BaseUserListsLoader(
                 val dataSize = data.size
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(list, accountId, (dataSize + i).toLong(), isFollowing(list)))
+                    data.add(ParcelableUserListUtils.from(list, accountId, (dataSize + i).toLong(),
+                            isFollowing(list), profileImageSize))
                 }
             } else {
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(listLoaded[i], accountId, i.toLong(), isFollowing(list)))
+                    data.add(ParcelableUserListUtils.from(listLoaded[i], accountId, i.toLong(),
+                            isFollowing(list), profileImageSize))
                 }
             }
         }
