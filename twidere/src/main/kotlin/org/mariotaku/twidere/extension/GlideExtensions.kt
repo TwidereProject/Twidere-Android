@@ -24,10 +24,15 @@ import android.text.TextUtils
 import com.bumptech.glide.DrawableRequestBuilder
 import com.bumptech.glide.RequestManager
 import jp.wasabeef.glide.transformations.CropCircleTransformation
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.util.Utils
 
 fun RequestManager.loadProfileImage(context: Context, url: String?): DrawableRequestBuilder<String?> {
-    return load(url).bitmapTransform(CropCircleTransformation(context))
+    val size = context.getString(R.string.profile_image_size)
+    return load(Utils.getTwitterProfileImageOfSize(url, size)).bitmapTransform(CropCircleTransformation(context))
 }
 
 fun RequestManager.loadProfileImage(context: Context, resourceId: Int): DrawableRequestBuilder<Int> {
@@ -35,9 +40,22 @@ fun RequestManager.loadProfileImage(context: Context, resourceId: Int): Drawable
 }
 
 fun RequestManager.loadProfileImage(context: Context, account: AccountDetails): DrawableRequestBuilder<String?> {
-    if (account.user.extras != null && !TextUtils.isEmpty(account.user.extras.profile_image_url_profile_size)) {
-        return load(account.user.extras.profile_image_url_profile_size)
+    return loadProfileImage(context, account.user)
+}
+
+fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser): DrawableRequestBuilder<String?> {
+    if (user.extras != null && !TextUtils.isEmpty(user.extras.profile_image_url_profile_size)) {
+        return load(user.extras.profile_image_url_profile_size)
     } else {
-        return load(account.user.profile_image_url)
+        return load(user.profile_image_url)
     }
+}
+
+
+fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus): DrawableRequestBuilder<String?> {
+    if (status.extras != null && status.extras.user_profile_image_url_fallback == null) {
+        // No fallback image, use compatible logic
+        return loadProfileImage(context, status.user_profile_image_url)
+    }
+    return load(status.user_profile_image_url).bitmapTransform(CropCircleTransformation(context))
 }

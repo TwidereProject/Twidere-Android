@@ -50,8 +50,8 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getBestProfileBanner
-import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.ParcelableUserLoader
 import org.mariotaku.twidere.model.AccountDetails
@@ -139,7 +139,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUser>>,
-                                data: SingleResponse<ParcelableUser>) {
+            data: SingleResponse<ParcelableUser>) {
         if (data.data != null && data.data.key != null) {
             displayUser(data.data)
         } else if (user == null) {
@@ -289,7 +289,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
-            Glide.with(this).load(user.getBestProfileImage(context)).into(profileImage)
+            Glide.with(this).loadProfileImage(context, user).into(profileImage)
             Glide.with(this).load(user.getBestProfileBanner(resources.displayMetrics.widthPixels)).into(profileBanner)
             Glide.with(this).load(user.profile_background_url).into(profileBackground)
 
@@ -360,6 +360,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             private val backgroundColor: Int
     ) : AbstractTask<Context, SingleResponse<ParcelableUser>, UserProfileEditorFragment>() {
 
+
         override fun doLongOperation(context: Context): SingleResponse<ParcelableUser> {
             val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return SingleResponse.getInstance()
             val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
@@ -379,8 +380,9 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
                     // User profile unchanged
                     return SingleResponse.Companion.getInstance<ParcelableUser>()
                 }
-                val response = SingleResponse.Companion.getInstance(
-                        ParcelableUserUtils.fromUser(user, accountKey))
+                val profileImageSize = context.getString(R.string.profile_image_size)
+                val response = SingleResponse(ParcelableUserUtils.fromUser(user, accountKey,
+                        profileImageSize = profileImageSize))
                 response.extras.putParcelable(EXTRA_ACCOUNT, details)
                 return response
             } catch (e: MicroBlogException) {
@@ -467,7 +469,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
     }
 
     private inner class UpdateProfileBannerImageTaskInternal(context: Context, accountKey: UserKey,
-                                                             imageUri: Uri, deleteImage: Boolean) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(context, accountKey, imageUri, deleteImage) {
+            imageUri: Uri, deleteImage: Boolean) : UpdateProfileBannerImageTask<UserProfileEditorFragment>(context, accountKey, imageUri, deleteImage) {
 
         override fun afterExecute(handler: UserProfileEditorFragment?, result: SingleResponse<ParcelableUser>?) {
             super.afterExecute(handler, result)

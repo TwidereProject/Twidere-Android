@@ -44,6 +44,8 @@ abstract class GetStatusesTask(
         context: Context
 ) : BaseAbstractTask<RefreshTaskParam, List<TwitterWrapper.StatusListResponse>, (Boolean) -> Unit>(context) {
 
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     @Throws(MicroBlogException::class)
     abstract fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status>
 
@@ -144,10 +146,10 @@ abstract class GetStatusesTask(
     }
 
     private fun storeStatus(accountKey: UserKey, details: AccountDetails,
-                            statuses: List<Status>,
-                            sinceId: String?, maxId: String?,
-                            sinceSortId: Long, maxSortId: Long,
-                            loadItemLimit: Int, notify: Boolean): Int {
+            statuses: List<Status>,
+            sinceId: String?, maxId: String?,
+            sinceSortId: Long, maxSortId: Long,
+            loadItemLimit: Int, notify: Boolean): Int {
         val uri = contentUri
         val writeUri = UriUtils.appendQueryParameters(uri, QUERY_PARAM_SHOW_NOTIFICATION, notify)
         val resolver = context.contentResolver
@@ -165,8 +167,7 @@ abstract class GetStatusesTask(
 
             for (i in 0 until statuses.size) {
                 val item = statuses[i]
-                val status = ParcelableStatusUtils.fromStatus(item, accountKey,
-                        false)
+                val status = ParcelableStatusUtils.fromStatus(item, accountKey, false, profileImageSize)
                 ParcelableStatusUtils.updateExtraInformation(status, details)
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
@@ -244,7 +245,7 @@ abstract class GetStatusesTask(
         const val ERROR_LOAD_GAP = 1
 
         fun getPositionKey(timestamp: Long, sortId: Long, lastSortId: Long, sortDiff: Long,
-                           position: Int, count: Int): Long {
+                position: Int, count: Int): Long {
             if (sortDiff == 0L) return timestamp
             val extraValue: Int
             if (sortDiff > 0) {

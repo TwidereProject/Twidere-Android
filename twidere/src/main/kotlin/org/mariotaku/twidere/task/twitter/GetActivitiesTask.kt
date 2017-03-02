@@ -13,6 +13,7 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.constant.loadItemLimitKey
@@ -36,6 +37,8 @@ import java.util.*
 abstract class GetActivitiesTask(
         context: Context
 ) : BaseAbstractTask<RefreshTaskParam, List<TwitterListResponse<Activity>>, (Boolean) -> Unit>(context) {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     protected abstract val errorInfoKey: String
 
@@ -115,8 +118,8 @@ abstract class GetActivitiesTask(
     }
 
     private fun storeActivities(cr: ContentResolver, loadItemLimit: Int, details: AccountDetails,
-                                noItemsBefore: Boolean, activities: ResponseList<Activity>,
-                                sinceId: String?, maxId: String?, notify: Boolean): Int {
+            noItemsBefore: Boolean, activities: ResponseList<Activity>,
+            sinceId: String?, maxId: String?, notify: Boolean): Int {
         val deleteBound = LongArray(2) { -1 }
         val valuesList = ArrayList<ContentValues>()
         var minIdx = -1
@@ -128,7 +131,8 @@ abstract class GetActivitiesTask(
             val sortDiff = firstSortId - lastSortId
             for (i in activities.indices) {
                 val item = activities[i]
-                val activity = ParcelableActivityUtils.fromActivity(item, details.key, false)
+                val activity = ParcelableActivityUtils.fromActivity(item, details.key, false,
+                        profileImageSize)
                 mediaLoader.preloadActivity(activity)
                 activity.position_key = GetStatusesTask.getPositionKey(activity.timestamp,
                         activity.timestamp, lastSortId, sortDiff, i, activities.size)

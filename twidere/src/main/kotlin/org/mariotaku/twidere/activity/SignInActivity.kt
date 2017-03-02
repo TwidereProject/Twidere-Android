@@ -527,11 +527,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
 
     internal abstract class AbstractSignInTask(activity: SignInActivity) : AsyncTask<Any, Runnable, SingleResponse<SignInResponse>>() {
 
-        protected val activityRef: WeakReference<SignInActivity>
-
-        init {
-            this.activityRef = WeakReference(activity)
-        }
+        protected val activityRef = WeakReference(activity)
+        protected val profileImageSize = activity.getString(R.string.profile_image_size)
 
         override final fun doInBackground(vararg args: Any?): SingleResponse<SignInResponse> {
             try {
@@ -615,7 +612,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id!!
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+                    profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -903,7 +901,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             var color = analyseUserProfileColor(apiUser)
             val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+                    profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -933,7 +932,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             var color = analyseUserProfileColor(apiUser)
             val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+                    profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {
@@ -961,7 +961,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             var color = analyseUserProfileColor(apiUser)
             val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey)
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+                    profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
             if (account != null) {

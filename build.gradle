@@ -32,7 +32,7 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlin_version = '1.0.6'
+            kotlin_version = '1.1.0'
             android_support_lib_version = '25.2.0'
             mariotaku_commons_library_version = '0.9.11'
             mariotaku_restfu_version = '0.9.35'

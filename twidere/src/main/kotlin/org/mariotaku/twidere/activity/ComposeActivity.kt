@@ -75,7 +75,6 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getAccountUser
-import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -1426,7 +1425,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (account != iconView.tag || iconView.drawable == null) {
                 iconView.tag = account
                 val context = adapter.context
-                adapter.getRequestManager().loadProfileImage(context, account.user.getBestProfileImage(context)).into(iconView)
+                adapter.getRequestManager().loadProfileImage(context, account).into(iconView)
             }
             iconView.setBorderColor(account.color)
             nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name

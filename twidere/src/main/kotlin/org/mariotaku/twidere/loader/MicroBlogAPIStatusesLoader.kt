@@ -30,6 +30,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.loadItemLimitKey
@@ -69,6 +70,7 @@ abstract class MicroBlogAPIStatusesLoader(
     // Statuses sorted descending by default
     var comparator: Comparator<ParcelableStatus>? = ParcelableStatus.REVERSE_COMPARATOR
     private val exceptionRef = AtomicReference<MicroBlogException?>()
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     var exception: MicroBlogException?
         get() = exceptionRef.get()
@@ -154,7 +156,8 @@ abstract class MicroBlogAPIStatusesLoader(
             val sortDiff = firstSortId - lastSortId
             for (i in 0 until statuses.size) {
                 val status = statuses[i]
-                val item = ParcelableStatusUtils.fromStatus(status, accountKey, insertGap && isGapEnabled && minIdx == i)
+                val isGap = insertGap && isGapEnabled && minIdx == i
+                val item = ParcelableStatusUtils.fromStatus(status, accountKey, isGap, profileImageSize)
                 item.position_key = GetStatusesTask.getPositionKey(item.timestamp, item.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 ParcelableStatusUtils.updateExtraInformation(item, details)

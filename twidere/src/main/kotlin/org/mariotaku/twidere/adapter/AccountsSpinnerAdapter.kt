@@ -27,7 +27,6 @@ import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 
@@ -70,7 +69,7 @@ class AccountsSpinnerAdapter(
                 if (profileImageEnabled) {
                     icon.visibility = View.VISIBLE
                     icon.style = profileImageStyle
-                    getRequestManager().loadProfileImage(context, item.user.getBestProfileImage(context)).into(icon)
+                    getRequestManager().loadProfileImage(context, item.user).into(icon)
                 } else {
                     icon.visibility = View.GONE
                 }

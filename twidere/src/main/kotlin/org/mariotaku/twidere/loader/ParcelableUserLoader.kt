@@ -32,6 +32,7 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
@@ -57,6 +58,8 @@ class ParcelableUserLoader(
         private val omitIntentExtra: Boolean,
         private val loadFromCache: Boolean
 ) : FixedAsyncTaskLoader<SingleResponse<ParcelableUser>>(context), Constants {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
@@ -149,9 +152,10 @@ class ParcelableUserLoader(
                             details.type)
                 }
             }
-            val cachedUserValues = createCachedUser(twitterUser)
+            val cachedUserValues = createCachedUser(twitterUser, profileImageSize)
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
-            val user = ParcelableUserUtils.fromUser(twitterUser, accountKey)
+            val user = ParcelableUserUtils.fromUser(twitterUser, accountKey,
+                    profileImageSize = profileImageSize)
             ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
             val response = SingleResponse.Companion.getInstance(user)
             response.extras.putParcelable(EXTRA_ACCOUNT, details)

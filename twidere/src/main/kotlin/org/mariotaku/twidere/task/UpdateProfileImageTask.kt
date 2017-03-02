@@ -26,9 +26,12 @@ open class UpdateProfileImageTask<ResultHandler>(
         private val deleteImage: Boolean
 ) : BaseAbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>(context) {
 
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
         try {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)!!
+            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
+                    ?: throw MicroBlogException("No account")
             TwitterWrapper.updateProfileImage(context, microBlog, imageUri, deleteImage)
             // Wait for 5 seconds, see
             // https://dev.twitter.com/rest/reference/post/account/update_profile_image
@@ -39,7 +42,8 @@ open class UpdateProfileImageTask<ResultHandler>(
             }
 
             val user = microBlog.verifyCredentials()
-            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey))
+            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey,
+                    profileImageSize = profileImageSize))
         } catch (e: MicroBlogException) {
             return SingleResponse(exception = e)
         } catch (e: IOException) {

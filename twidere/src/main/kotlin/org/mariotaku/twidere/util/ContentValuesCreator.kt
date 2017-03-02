@@ -32,9 +32,10 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 
 object ContentValuesCreator {
 
-    fun createCachedUser(user: User): ContentValues {
+    fun createCachedUser(user: User, profileImageSize: String = "normal"): ContentValues {
         val values = ContentValues()
-        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, null), values)
+        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, null,
+                profileImageSize = profileImageSize), values)
         return values
     }
 
@@ -76,9 +77,9 @@ object ContentValuesCreator {
         return savedSearches.map { createSavedSearch(it, accountKey) }.toTypedArray()
     }
 
-    fun createStatus(orig: Status, accountKey: UserKey): ContentValues {
+    fun createStatus(orig: Status, accountKey: UserKey, profileImageSize: String): ContentValues {
         return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
-                accountKey, false))
+                accountKey, false, profileImageSize))
     }
 
     fun createActivity(activity: ParcelableActivity, details: AccountDetails): ContentValues {

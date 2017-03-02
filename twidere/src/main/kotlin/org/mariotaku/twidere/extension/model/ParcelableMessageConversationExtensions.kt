@@ -118,7 +118,7 @@ fun ParcelableMessageConversation.displayAvatarTo(getRequestManager: () -> Reque
     if (conversation_type == ConversationType.ONE_TO_ONE) {
         val user = this.user
         if (user != null) {
-            getRequestManager().loadProfileImage(context, user.getBestProfileImage(context)).into(view)
+            getRequestManager().loadProfileImage(context, user).into(view)
         } else {
             // TODO: show default conversation icon
             getRequestManager().loadProfileImage(context, R.drawable.ic_profile_image_default_group).into(view)

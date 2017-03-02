@@ -30,7 +30,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.*
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.util.Utils
@@ -136,7 +135,7 @@ class UserViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().loadProfileImage(context, user.getBestProfileImage(context)).into(profileImageView)
+            adapter.getRequestManager().loadProfileImage(context, user).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

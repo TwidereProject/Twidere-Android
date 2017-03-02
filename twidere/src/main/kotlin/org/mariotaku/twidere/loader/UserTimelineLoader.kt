@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -52,6 +53,7 @@ class UserTimelineLoader(
         tabPosition, fromUser, loadingMore) {
 
     private val pinnedStatusesRef = AtomicReference<List<ParcelableStatus>>()
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     var pinnedStatuses: List<ParcelableStatus>?
         get() = pinnedStatusesRef.get()
@@ -61,17 +63,18 @@ class UserTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             details: AccountDetails,
-                             paging: Paging): ResponseList<Status> {
+            details: AccountDetails,
+            paging: Paging): ResponseList<Status> {
         if (pinnedStatusIds != null) {
-            try {
-                pinnedStatuses = microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = ParcelableStatusUtils.fromStatus(status, details.key, false)
+            pinnedStatuses = try {
+                microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
+                    val created = ParcelableStatusUtils.fromStatus(status, details.key,
+                            profileImageSize = profileImageSize)
                     created.sort_id = idx.toLong()
                     return@mapIndexed created
                 }
             } catch (e: MicroBlogException) {
-                // Ignore
+                null
             }
         }
         if (userId != null) {

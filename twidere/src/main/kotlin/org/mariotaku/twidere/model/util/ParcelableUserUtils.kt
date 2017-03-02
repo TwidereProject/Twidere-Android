@@ -4,12 +4,12 @@ import android.text.TextUtils
 import org.mariotaku.ktextension.isNotNullOrEmpty
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
+import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import org.mariotaku.twidere.util.ParseUtils
-import org.mariotaku.twidere.util.TwitterContentUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 
 /**
@@ -20,7 +20,8 @@ import org.mariotaku.twidere.util.UserColorNameManager
  */
 object ParcelableUserUtils {
 
-    fun fromUser(user: User, accountKey: UserKey?, position: Long = 0): ParcelableUser {
+    fun fromUser(user: User, accountKey: UserKey?, position: Long = 0,
+            profileImageSize: String = "normal"): ParcelableUser {
         val urlEntities = user.urlEntities
         val obj = ParcelableUser()
         obj.position = position
@@ -38,7 +39,7 @@ object ParcelableUserUtils {
             obj.description_spans = userDescription.second
         }
         obj.location = user.location
-        obj.profile_image_url = TwitterContentUtils.getProfileImageUrl(user)
+        obj.profile_image_url = user.getProfileImageOfSize(profileImageSize)
         obj.profile_banner_url = user.profileBannerImageUrl
         obj.profile_background_url = user.profileBackgroundImageUrlHttps
         if (TextUtils.isEmpty(obj.profile_background_url)) {
@@ -81,8 +82,8 @@ object ParcelableUserUtils {
         return obj
     }
 
-    fun fromUsers(users: Array<User>?, accountKey: UserKey?): Array<ParcelableUser>? {
-        return users?.map { fromUser(it, accountKey) }?.toTypedArray()
+    fun fromUsers(users: Array<User>?, accountKey: UserKey?, profileImageSize: String = "normal"): Array<ParcelableUser>? {
+        return users?.map { fromUser(it, accountKey, profileImageSize = profileImageSize) }?.toTypedArray()
     }
 
     fun parseColor(colorString: String?): Int {

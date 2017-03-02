@@ -34,7 +34,8 @@ object ParcelableMessageUtils {
         return result
     }
 
-    fun fromEntry(accountKey: UserKey, entry: DMResponse.Entry, users: Map<String, User>): ParcelableMessage? {
+    fun fromEntry(accountKey: UserKey, entry: DMResponse.Entry, users: Map<String, User>,
+            profileImageSize: String = "normal"): ParcelableMessage? {
         when {
             entry.message != null -> {
                 return ParcelableMessage().apply { applyMessage(accountKey, entry.message) }
@@ -60,13 +61,13 @@ object ParcelableMessageUtils {
             entry.conversationNameUpdate != null -> {
                 return ParcelableMessage().apply {
                     applyInfoUpdatedEvent(accountKey, entry.conversationNameUpdate, users,
-                            MessageType.CONVERSATION_NAME_UPDATE)
+                            MessageType.CONVERSATION_NAME_UPDATE, profileImageSize)
                 }
             }
             entry.conversationAvatarUpdate != null -> {
                 return ParcelableMessage().apply {
                     applyInfoUpdatedEvent(accountKey, entry.conversationAvatarUpdate, users,
-                            MessageType.CONVERSATION_AVATAR_UPDATE)
+                            MessageType.CONVERSATION_AVATAR_UPDATE, profileImageSize)
                 }
             }
         }
@@ -114,13 +115,15 @@ object ParcelableMessageUtils {
     }
 
     private fun ParcelableMessage.applyInfoUpdatedEvent(accountKey: UserKey, message: Message,
-            users: Map<String, User>, @MessageType type: String) {
+            users: Map<String, User>, @MessageType type: String, profileImageSize: String = "normal") {
         this.commonEntry(accountKey, message)
         this.message_type = type
         this.extras = ConversationInfoUpdatedExtras().apply {
             this.name = message.conversationName
             this.avatar = message.conversationAvatarImageHttps
-            this.user = users[message.byUserId]?.let { ParcelableUserUtils.fromUser(it, accountKey) }
+            this.user = users[message.byUserId]?.let {
+                ParcelableUserUtils.fromUser(it, accountKey, profileImageSize = profileImageSize)
+            }
         }
         this.is_outgoing = false
     }

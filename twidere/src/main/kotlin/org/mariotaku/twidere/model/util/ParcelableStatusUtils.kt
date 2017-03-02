@@ -3,11 +3,11 @@ package org.mariotaku.twidere.model.util
 import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.util.HtmlSpanBuilder
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.TwitterContentUtils
 import java.util.*
 
 /**
@@ -26,7 +26,8 @@ object ParcelableStatusUtils {
         status.retweet_id = null
     }
 
-    fun fromStatus(orig: Status, accountKey: UserKey, isGap: Boolean): ParcelableStatus {
+    fun fromStatus(orig: Status, accountKey: UserKey, isGap: Boolean = false,
+            profileImageSize: String = "normal"): ParcelableStatus {
         val result = ParcelableStatus()
         result.is_gap = isGap
         result.account_key = accountKey
@@ -53,7 +54,7 @@ object ParcelableStatusUtils {
             result.retweeted_by_user_key = UserKeyUtils.fromUser(retweetUser)
             result.retweeted_by_user_name = retweetUser.name
             result.retweeted_by_user_screen_name = retweetUser.screenName
-            result.retweeted_by_user_profile_image = TwitterContentUtils.getProfileImageUrl(retweetUser)
+            result.retweeted_by_user_profile_image = retweetUser.getProfileImageOfSize(profileImageSize)
 
             result.extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
 
@@ -104,7 +105,7 @@ object ParcelableStatusUtils {
             result.quoted_user_key = UserKeyUtils.fromUser(quotedUser)
             result.quoted_user_name = quotedUser.name
             result.quoted_user_screen_name = quotedUser.screenName
-            result.quoted_user_profile_image = TwitterContentUtils.getProfileImageUrl(quotedUser)
+            result.quoted_user_profile_image = quotedUser.getProfileImageOfSize(profileImageSize)
             result.quoted_user_is_protected = quotedUser.isProtected
             result.quoted_user_is_verified = quotedUser.isVerified
 
@@ -128,12 +129,13 @@ object ParcelableStatusUtils {
         result.user_key = UserKeyUtils.fromUser(user)
         result.user_name = user.name
         result.user_screen_name = user.screenName
-        result.user_profile_image_url = TwitterContentUtils.getProfileImageUrl(user)
+        result.user_profile_image_url = user.getProfileImageOfSize(profileImageSize)
         result.user_is_protected = user.isProtected
         result.user_is_verified = user.isVerified
         result.user_is_following = user.isFollowing
         result.extras.user_profile_image_url_profile_size = user.profileImageUrlProfileSize
         result.extras.user_statusnet_profile_url = user.statusnetProfileUrl
+        result.extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
         if (result.extras.user_profile_image_url_profile_size == null) {
             result.extras.user_profile_image_url_profile_size = user.profileImageUrlLarge
         }
@@ -208,10 +210,11 @@ object ParcelableStatusUtils {
         return UserKey(inReplyToUserId, accountKey.host)
     }
 
-    fun fromStatuses(statuses: Array<Status>?, accountKey: UserKey): Array<ParcelableStatus>? {
+    fun fromStatuses(statuses: Array<Status>?, accountKey: UserKey,
+            profileImageSize: String = "normal"): Array<ParcelableStatus>? {
         if (statuses == null) return null
         return Array(statuses.size) { i ->
-            fromStatus(statuses[i], accountKey, false)
+            fromStatus(statuses[i], accountKey, false, profileImageSize)
         }
     }
 

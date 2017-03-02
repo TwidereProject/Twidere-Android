@@ -31,6 +31,7 @@ import org.mariotaku.microblog.library.twitter.model.DMResponse
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_SHOW_NOTIFICATION
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.*
@@ -58,6 +59,9 @@ import java.util.*
 class GetMessagesTask(
         context: Context
 ) : BaseAbstractTask<GetMessagesTask.RefreshMessagesTaskParam, Unit, (Boolean) -> Unit>(context) {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     override fun doLongOperation(param: RefreshMessagesTaskParam) {
         val accountKeys = param.accountKeys
         val am = android.accounts.AccountManager.get(context)
@@ -176,7 +180,7 @@ class GetMessagesTask(
         }
 
         val response = microBlog.getDmConversation(conversationId, paging).conversationTimeline
-        return Companion.createDatabaseUpdateData(context, details, response)
+        return createDatabaseUpdateData(context, details, response, profileImageSize)
     }
 
     private fun getTwitterOfficialUserInbox(microBlog: MicroBlog, details: AccountDetails,
@@ -192,7 +196,7 @@ class GetMessagesTask(
                 }
             }).userInbox
         }
-        return Companion.createDatabaseUpdateData(context, details, response)
+        return createDatabaseUpdateData(context, details, response, profileImageSize)
     }
 
 
@@ -338,8 +342,8 @@ class GetMessagesTask(
 
     companion object {
 
-        fun createDatabaseUpdateData(context: Context, account: AccountDetails, response: DMResponse):
-                DatabaseUpdateData {
+        fun createDatabaseUpdateData(context: Context, account: AccountDetails,
+                response: DMResponse, profileImageSize: String = "normal"): DatabaseUpdateData {
             val accountKey = account.key
 
             val respConversations = response.conversations.orEmpty()
@@ -366,7 +370,8 @@ class GetMessagesTask(
                         return@mapNotNullTo null
                     }
                     else -> {
-                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, entry, respUsers)
+                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, entry,
+                                respUsers, profileImageSize)
                     }
                 }
             }

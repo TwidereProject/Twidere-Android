@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.list_item_simple_user.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.getBestProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.view.ProfileImageView
 
@@ -35,7 +34,7 @@ open class SimpleUserViewHolder<out A : IContentAdapter>(
         secondaryNameView.text = "@${user.screen_name}"
         if (adapter.profileImageEnabled) {
             val context = itemView.context
-            adapter.getRequestManager().loadProfileImage(context, user.getBestProfileImage(context)).into(profileImageView)
+            adapter.getRequestManager().loadProfileImage(context, user).into(profileImageView)
             profileImageView.visibility = View.VISIBLE
         } else {
             profileImageView.visibility = View.GONE

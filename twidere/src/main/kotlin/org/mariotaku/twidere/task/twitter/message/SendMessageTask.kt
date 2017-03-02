@@ -27,6 +27,7 @@ import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.NewDm
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -50,6 +51,8 @@ class SendMessageTask(
         context: Context
 ) : ExceptionHandlingAbstractTask<ParcelableNewMessage, SendMessageTask.SendMessageResult,
         MicroBlogException, Unit>(context) {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     override fun onExecute(params: ParcelableNewMessage): SendMessageResult {
         val account = params.account
@@ -128,7 +131,7 @@ class SendMessageTask(
             it.message != null
         }?.message?.conversationId
         val response = microBlog.getDmConversation(conversationId, null).conversationTimeline
-        return GetMessagesTask.createDatabaseUpdateData(context, account, response)
+        return GetMessagesTask.createDatabaseUpdateData(context, account, response, profileImageSize)
     }
 
     private fun sendFanfouDM(microBlog: MicroBlog, account: AccountDetails, message: ParcelableNewMessage): GetMessagesTask.DatabaseUpdateData {
@@ -174,8 +177,10 @@ class SendMessageTask(
         val conversations = hashMapOf<String, ParcelableMessageConversation>()
         conversations.addLocalConversations(context, accountKey, conversationIds)
         val message = ParcelableMessageUtils.fromMessage(accountKey, dm, true)
-        val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey)
-        val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey)
+        val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey,
+                profileImageSize = profileImageSize)
+        val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey,
+                profileImageSize = profileImageSize)
         conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), true)
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }

@@ -26,6 +26,8 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
         private val deleteImage: Boolean
 ) : BaseAbstractTask<Any?, SingleResponse<ParcelableUser>, ResultHandler>(context) {
 
+    private val profileImageSize = context.getString(R.string.profile_image_size)
+
     override fun afterExecute(handler: ResultHandler?, result: SingleResponse<ParcelableUser>?) {
         super.afterExecute(handler, result)
         if (result!!.hasData()) {
@@ -50,7 +52,8 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
             }
 
             val user = twitter.verifyCredentials()
-            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey))
+            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey,
+                    profileImageSize = profileImageSize))
         } catch (e: MicroBlogException) {
             return SingleResponse(exception = e)
         } catch (e: IOException) {

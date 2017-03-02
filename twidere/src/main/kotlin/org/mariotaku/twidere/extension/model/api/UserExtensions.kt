@@ -17,11 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.model
+package org.mariotaku.twidere.extension.model.api
 
-import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.util.InternalTwitterContentUtils
+import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.util.Utils
 
-fun ParcelableUser.getBestProfileBanner(width: Int): String? {
-    return InternalTwitterContentUtils.getBestBannerUrl(profile_banner_url, width)
+fun User.getProfileImageOfSize(size: String): String {
+    val profileImage = profileImageUrlHttps ?: profileImageUrl
+    return Utils.getTwitterProfileImageOfSize(profileImage, size) ?: profileImage
 }
