@@ -71,11 +71,7 @@ object ParcelableUserUtils {
         extras.muting = user.isMuting
         extras.statusnet_profile_url = user.statusnetProfileUrl
         extras.profile_image_url_original = user.profileImageUrlOriginal
-        extras.profile_image_url_profile_size = user.profileImageUrlProfileSize
         extras.pinned_status_ids = user.pinnedTweetIds
-        if (extras.profile_image_url_profile_size == null) {
-            extras.profile_image_url_profile_size = user.profileImageUrlLarge
-        }
         extras.groups_count = user.groupsCount
         extras.unique_id = user.uniqueId
         obj.extras = extras

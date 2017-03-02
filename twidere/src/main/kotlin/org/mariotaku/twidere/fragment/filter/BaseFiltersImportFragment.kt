@@ -167,7 +167,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
     }
 
     override fun onCreateAdapter(context: Context): SelectableUsersAdapter {
-        val adapter = SelectableUsersAdapter(context, { Glide.with(this) })
+        val adapter = SelectableUsersAdapter(context, Glide.with(this))
         adapter.itemCheckedListener = { position, checked ->
             val count = adapter.checkedCount
             val actionBar = (activity as BaseActivity).supportActionBar

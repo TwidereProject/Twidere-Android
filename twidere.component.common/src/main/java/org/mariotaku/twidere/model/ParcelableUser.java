@@ -24,6 +24,7 @@ package org.mariotaku.twidere.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
@@ -217,7 +218,7 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
     }
 
     public ParcelableUser(final UserKey account_key, final UserKey key, final String name,
-                          final String screenName, final String profileImageUrl) {
+            final String screenName, final String profileImageUrl) {
         this.account_key = account_key;
         this.key = key;
         this.name = name;
@@ -332,9 +333,10 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "profile_image_url_original")
         @ParcelableThisPlease
         public String profile_image_url_original;
-        @JsonField(name = "profile_image_url_profile_size")
+        @JsonField(name = "profile_image_url_fallback")
         @ParcelableThisPlease
-        public String profile_image_url_profile_size;
+        @Nullable
+        public String profile_image_url_fallback;
         @JsonField(name = "groups_count")
         @ParcelableThisPlease
         public long groups_count = -1;
@@ -368,22 +370,6 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
             ParcelableUser$ExtrasParcelablePlease.writeToParcel(this, dest, flags);
         }
 
-        @Override
-        public String toString() {
-            return "Extras{" +
-                    "statusnet_profile_url='" + statusnet_profile_url + '\'' +
-                    ", ostatus_uri='" + ostatus_uri + '\'' +
-                    ", profile_image_url_original='" + profile_image_url_original + '\'' +
-                    ", profile_image_url_profile_size='" + profile_image_url_profile_size + '\'' +
-                    ", groups_count=" + groups_count +
-                    ", unique_id='" + unique_id + '\'' +
-                    ", blocking=" + blocking +
-                    ", blocked_by=" + blocked_by +
-                    ", followed_by=" + followed_by +
-                    ", muting=" + muting +
-                    ", pinned_status_ids=" + Arrays.toString(pinned_status_ids) +
-                    '}';
-        }
 
         public static final Creator<Extras> CREATOR = new Creator<Extras>() {
             @Override

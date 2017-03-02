@@ -116,7 +116,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onCreateAdapter(context: Context): MessagesEntriesAdapter {
-        return MessagesEntriesAdapter(context, { Glide.with(this) })
+        return MessagesEntriesAdapter(context, Glide.with(this))
     }
 
     override fun triggerRefresh(): Boolean {

@@ -83,7 +83,7 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
     }
 
     override fun onCreateAdapter(context: Context): ParcelableActivitiesAdapter {
-        val adapter = ParcelableActivitiesAdapter(context, { Glide.with(this) })
+        val adapter = ParcelableActivitiesAdapter(context, Glide.with(this))
         val arguments = arguments
         if (arguments != null) {
             val extras = arguments.getParcelable<InteractionsTabExtras>(EXTRA_EXTRAS)

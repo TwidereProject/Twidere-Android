@@ -59,7 +59,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
         }
 
     override fun onCreateAdapter(context: Context): ParcelableGroupsAdapter {
-        return ParcelableGroupsAdapter(context, { Glide.with(this) })
+        return ParcelableGroupsAdapter(context, Glide.with(this))
     }
 
     override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

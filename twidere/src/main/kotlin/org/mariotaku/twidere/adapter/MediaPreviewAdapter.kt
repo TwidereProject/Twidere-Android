@@ -33,8 +33,8 @@ import java.util.*
 
 class MediaPreviewAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(context, getRequestManager) {
+        requestManager: RequestManager
+) : ArrayRecyclerAdapter<ParcelableMediaUpdate, MediaPreviewViewHolder>(context, requestManager) {
     private val inflater = LayoutInflater.from(context)
 
     val touchAdapter: ItemTouchHelperAdapter = object : ItemTouchHelperAdapter {

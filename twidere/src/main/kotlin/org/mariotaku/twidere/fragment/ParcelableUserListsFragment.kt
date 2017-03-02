@@ -61,7 +61,7 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
         }
 
     override fun onCreateAdapter(context: Context): ParcelableUserListsAdapter {
-        return ParcelableUserListsAdapter(context, { Glide.with(this) })
+        return ParcelableUserListsAdapter(context, Glide.with(this))
     }
 
     override fun setupRecyclerView(context: Context, recyclerView: RecyclerView) {

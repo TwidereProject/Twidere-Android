@@ -42,7 +42,7 @@ class PremiumDashboardActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_premium_dashboard)
-        adapter = ControllersAdapter(this, { Glide.with(this) })
+        adapter = ControllersAdapter(this, Glide.with(this))
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
         if (extraFeaturesService.isSupported()) {
@@ -189,8 +189,8 @@ class PremiumDashboardActivity : BaseActivity() {
 
     class ControllersAdapter(
             context: Context,
-            getRequestManager: () -> RequestManager
-    ) : BaseRecyclerViewAdapter<ControllerViewHolder>(context, getRequestManager) {
+            requestManager: RequestManager
+    ) : BaseRecyclerViewAdapter<ControllerViewHolder>(context, requestManager) {
 
         var controllers: List<Class<out ContainerView.ViewController>>? = null
             set(value) {

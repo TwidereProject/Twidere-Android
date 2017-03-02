@@ -57,14 +57,14 @@ import java.util.*
  */
 class ParcelableActivitiesAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IActivitiesAdapter<List<ParcelableActivity>> {
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IActivitiesAdapter<List<ParcelableActivity>> {
 
     override val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
 
     private val inflater = LayoutInflater.from(context)
     private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
-    private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, getRequestManager)
+    private val statusAdapterDelegate = DummyItemAdapter(context, twidereLinkify, this, requestManager)
     private val eventListener: EventListener
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null

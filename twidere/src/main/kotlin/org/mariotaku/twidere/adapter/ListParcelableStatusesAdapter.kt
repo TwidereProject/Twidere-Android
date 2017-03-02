@@ -14,8 +14,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
  */
 class ListParcelableStatusesAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : ParcelableStatusesAdapter(context, getRequestManager) {
+        requestManager: RequestManager
+) : ParcelableStatusesAdapter(context, requestManager) {
 
     override val progressViewIds: IntArray
         get() = intArrayOf(R.id.media_preview_progress)

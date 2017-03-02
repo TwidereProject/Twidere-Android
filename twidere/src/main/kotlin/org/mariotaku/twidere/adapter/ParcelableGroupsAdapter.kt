@@ -37,8 +37,8 @@ import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 
 class ParcelableGroupsAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IGroupsAdapter<List<ParcelableGroup>> {
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IGroupsAdapter<List<ParcelableGroup>> {
     override val showAccountsColor: Boolean
         get() = false
     override val nameFirst = preferences[nameFirstKey]

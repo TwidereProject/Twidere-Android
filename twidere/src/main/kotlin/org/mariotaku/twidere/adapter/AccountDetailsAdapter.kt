@@ -34,8 +34,8 @@ import org.mariotaku.twidere.view.holder.AccountViewHolder
 
 class AccountDetailsAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account, getRequestManager = getRequestManager) {
+        requestManager: RequestManager
+) : BaseArrayAdapter<AccountDetails>(context, R.layout.list_item_account, requestManager = requestManager) {
 
     private var sortEnabled: Boolean = false
     private var switchEnabled: Boolean = false
@@ -62,7 +62,7 @@ class AccountDetailsAdapter(
         holder.screenName.text = String.format("@%s", details.user.screen_name)
         holder.setAccountColor(details.color)
         if (profileImageEnabled) {
-            getRequestManager().loadProfileImage(context, details).into(holder.profileImage)
+            requestManager.loadProfileImage(context, details).into(holder.profileImage)
         } else {
             // TODO: display stub image?
         }

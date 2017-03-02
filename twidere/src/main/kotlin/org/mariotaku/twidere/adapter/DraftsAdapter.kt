@@ -40,7 +40,7 @@ import javax.inject.Inject
 
 class DraftsAdapter(
         context: Context,
-        val getRequestManager: () -> RequestManager
+        val requestManager: RequestManager
 ) : SimpleCursorAdapter(context, R.layout.list_item_draft, null, arrayOfNulls<String>(0), IntArray(0), 0) {
 
     @Inject
@@ -77,7 +77,7 @@ class DraftsAdapter(
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
                 val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)
                 holder.mediaPreviewContainer.visibility = View.VISIBLE
-                holder.mediaPreviewContainer.displayMedia(getRequestManager = getRequestManager,
+                holder.mediaPreviewContainer.displayMedia(requestManager = requestManager,
                         media = media, loadingHandler = mediaLoadingHandler)
             }
             Draft.Action.FAVORITE, Draft.Action.RETWEET -> {

@@ -133,12 +133,8 @@ object ParcelableStatusUtils {
         result.user_is_protected = user.isProtected
         result.user_is_verified = user.isVerified
         result.user_is_following = user.isFollowing
-        result.extras.user_profile_image_url_profile_size = user.profileImageUrlProfileSize
         result.extras.user_statusnet_profile_url = user.statusnetProfileUrl
         result.extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
-        if (result.extras.user_profile_image_url_profile_size == null) {
-            result.extras.user_profile_image_url_profile_size = user.profileImageUrlLarge
-        }
         val text = status.htmlText
         // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
         // We should treat this as an html

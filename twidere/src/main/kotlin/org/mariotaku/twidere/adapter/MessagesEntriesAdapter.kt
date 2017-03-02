@@ -20,8 +20,8 @@ import org.mariotaku.twidere.view.holder.message.MessageEntryViewHolder
 
 class MessagesEntriesAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager),
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IItemCountsAdapter {
     override val itemCounts: ItemCounts = ItemCounts(2)
 

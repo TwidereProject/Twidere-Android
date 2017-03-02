@@ -40,7 +40,7 @@ class CardPreviewPreference(
 ) : Preference(context, attrs), OnSharedPreferenceChangeListener {
 
     private var holder: StatusViewHolder? = null
-    private val adapter: DummyItemAdapter = DummyItemAdapter(context, getRequestManager = { Glide.with(context) })
+    private val adapter: DummyItemAdapter = DummyItemAdapter(context, requestManager = Glide.with(context))
 
     init {
         val preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME,

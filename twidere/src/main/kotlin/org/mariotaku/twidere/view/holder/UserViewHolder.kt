@@ -135,7 +135,7 @@ class UserViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().loadProfileImage(context, user).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, user).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

@@ -50,7 +50,7 @@ class UserExtraConfiguration(key: String) : TabConfiguration.ExtraConfiguration(
             fragment.startExtraConfigurationActivityForResult(this@UserExtraConfiguration, intent, 1)
         }
         hintView = view.selectUserHint
-        val adapter = DummyItemAdapter(context, getRequestManager = { Glide.with(fragment) })
+        val adapter = DummyItemAdapter(context, requestManager = Glide.with(fragment))
         adapter.updateOptions()
         viewHolder = SimpleUserViewHolder(view.listItem, adapter)
 

@@ -24,7 +24,11 @@ import android.view.View
 import kotlinx.android.synthetic.main.list_item_message_entry.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
-import org.mariotaku.twidere.extension.model.*
+import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.getSummaryText
+import org.mariotaku.twidere.extension.model.getTitle
+import org.mariotaku.twidere.extension.model.notificationDisabled
+import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.ParcelableMessageConversation.ConversationType
 
@@ -79,7 +83,7 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         } else {
             stateIndicator.visibility = View.GONE
         }
-        conversation.displayAvatarTo(adapter.getRequestManager, profileImage)
+        adapter.requestManager.loadProfileImage(adapter.context, conversation).into(profileImage)
         if (conversation.unread_count > 0) {
             unreadCount.visibility = View.VISIBLE
             unreadCount.text = conversation.unread_count.toString()

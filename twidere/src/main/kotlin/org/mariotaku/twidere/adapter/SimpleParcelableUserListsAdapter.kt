@@ -32,9 +32,9 @@ import org.mariotaku.twidere.view.holder.SimpleUserListViewHolder
 
 class SimpleParcelableUserListsAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
+        requestManager: RequestManager
 ) : BaseArrayAdapter<ParcelableUserList>(context, R.layout.list_item_simple_user_list,
-        getRequestManager = getRequestManager) {
+        requestManager = requestManager) {
 
     override val itemCounts: ItemCounts = ItemCounts(2)
 
@@ -60,7 +60,7 @@ class SimpleParcelableUserListsAdapter(
                     return@run h
                 }
                 val userList = getItem(position)
-                holder.display(userList, getRequestManager, userColorNameManager, profileImageEnabled)
+                holder.display(userList, requestManager, userColorNameManager, profileImageEnabled)
                 return view
             }
             1 -> {

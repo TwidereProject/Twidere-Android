@@ -89,7 +89,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         if (savedInstanceState == null) {
             editScreenName.setText(intent.getStringExtra(EXTRA_SCREEN_NAME))
         }
-        adapter = SimpleParcelableUsersAdapter(this, getRequestManager = { Glide.with(this) })
+        adapter = SimpleParcelableUsersAdapter(this, requestManager = Glide.with(this))
         listView.adapter = adapter
         listView.onItemClickListener = this
 

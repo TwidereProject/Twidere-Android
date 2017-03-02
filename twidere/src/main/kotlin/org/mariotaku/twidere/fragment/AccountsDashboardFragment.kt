@@ -85,6 +85,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
+import org.mariotaku.twidere.view.ShapedImageView
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -444,12 +445,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 val profileDrawable = profileImageView.drawable
                 clickedDrawable = clickedImageView.drawable
                 //TODO complete border color
-                //clickedColors = clickedImageView.borderColors
+                clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
                 Glide.with(this@AccountsDashboardFragment).loadProfileImage(context,
                         oldSelectedAccount).into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
-                //clickedImageView.setBorderColors(*profileImageView.borderColors)
+                clickedImageView.setBorderColors(*profileImageView.borderColors)
 
                 displayAccountBanner(account)
 
@@ -505,9 +506,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = "@${account.user.screen_name}"
-        Glide.with(this).loadProfileImage(context, account).into(accountProfileImageView).onLoadStarted(profileImageSnapshot)
+        Glide.with(this).loadProfileImage(context, account).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color
-        //accountProfileImageView.setBorderColors(account.color)
+        accountProfileImageView.setBorderColors(account.color)
         accountProfileBanner.showNext()
     }
 
@@ -598,11 +599,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             itemView: View
     ) : RecyclerPagerAdapter.ViewHolder(itemView), OnClickListener {
 
-        val iconView: ImageView
+        val iconView: ShapedImageView
 
         init {
             itemView.setOnClickListener(this)
-            iconView = itemView.findViewById(android.R.id.icon) as ImageView
+            iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
         }
 
         override fun onClick(v: View) {
@@ -610,8 +611,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
 
         fun display(account: AccountDetails) {
-//            iconView.setBorderColor(account.color)
-            adapter.getRequestManager().loadProfileImage(itemView.context, account).into(iconView)
+            iconView.setBorderColor(account.color)
+            adapter.requestManager.loadProfileImage(itemView.context, account).into(iconView)
         }
 
     }
@@ -621,7 +622,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private val fragment: AccountsDashboardFragment
     ) : RecyclerPagerAdapter() {
 
-        internal var getRequestManager: () -> RequestManager = { Glide.with(fragment) }
+        internal var requestManager: RequestManager = Glide.with(fragment)
 
         internal var profileImageStyle: Int = fragment.preferences[profileImageStyleKey]
         internal var mediaLoader: MediaLoaderWrapper = fragment.mediaLoader

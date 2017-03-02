@@ -57,7 +57,7 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
     }
 
     override fun onCreateAdapter(context: Context): ExtensionsAdapter {
-        return ExtensionsAdapter(activity, { Glide.with(this) })
+        return ExtensionsAdapter(activity, Glide.with(this))
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ExtensionInfo>> {

@@ -65,7 +65,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = DraftsAdapter(activity, { Glide.with(this) }).apply {
+        adapter = DraftsAdapter(activity, Glide.with(this)).apply {
             textSize = preferences[textSizeKey].toFloat()
         }
 

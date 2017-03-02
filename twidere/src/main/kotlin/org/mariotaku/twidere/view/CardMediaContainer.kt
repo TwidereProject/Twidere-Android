@@ -45,8 +45,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     private val verticalSpacing: Int
     private var tempIndices: IntArray? = null
 
-    @PreviewStyle
     var style: Int = PreviewStyle.NONE
+        @PreviewStyle set @PreviewStyle get
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.CardMediaContainer)
@@ -72,7 +72,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         }
     }
 
-    fun displayMedia(getRequestManager: () -> RequestManager, media: Array<ParcelableMedia>?, accountId: UserKey? = null,
+    fun displayMedia(requestManager: RequestManager, media: Array<ParcelableMedia>?, accountId: UserKey? = null,
             extraId: Long = -1, withCredentials: Boolean = false,
             mediaClickListener: OnMediaClickListener? = null, loadingHandler: MediaLoadingHandler? = null) {
         if (media == null || style == PreviewStyle.NONE) {
@@ -106,11 +106,11 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                     item.media_url
                 }
                 if (withCredentials) {
-                    getRequestManager().load(url).into(imageView)
+                    requestManager.load(url).into(imageView)
                     // TODO handle load progress w/ authentication
                     // loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler, video)
                 } else {
-                    getRequestManager().load(url).into(imageView)
+                    requestManager.load(url).into(imageView)
                     // TODO handle load progress
                     // loader.displayPreviewImage(imageView, url, loadingHandler, video)
                 }

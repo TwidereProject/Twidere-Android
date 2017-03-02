@@ -49,8 +49,8 @@ import java.util.*
 
 class MessagesConversationAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager),
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
         IItemCountsAdapter {
     private val calendars = Pair(Calendar.getInstance(), Calendar.getInstance())
     override val itemCounts: ItemCounts = ItemCounts(2)

@@ -54,17 +54,18 @@
             android:paddingBottom="@dimen/element_spacing_normal"
             android:paddingTop="@dimen/element_spacing_normal">
 
-            <org.mariotaku.twidere.view.ForegroundImageView
+            <org.mariotaku.twidere.view.ProfileImageView
                 android:id="@+id/profileImage"
+                style="?profileImageStyle"
                 android:layout_width="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_height="@dimen/icon_size_profile_image_dashboard_current"
                 android:layout_marginBottom="@dimen/element_spacing_mlarge"
                 android:layout_marginLeft="@dimen/element_spacing_large"
                 android:layout_marginStart="@dimen/element_spacing_large"
                 android:layout_marginTop="@dimen/element_spacing_mlarge"
-                android:contentDescription="@string/profile_image"
                 android:focusable="false"
-                android:scaleType="centerCrop"
+                app:sivBorder="true"
+                app:sivBorderWidth="2dp"
                 tools:src="@drawable/ic_profile_image_twidere"/>
 
             <org.mariotaku.twidere.view.ExtendedViewPager

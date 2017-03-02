@@ -65,6 +65,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_CONVERSATION_ID
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
@@ -141,7 +142,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
                 return recyclerView.showContextMenuForChild(holder.itemView)
             }
         }
-        mediaPreviewAdapter = MediaPreviewAdapter(context, { Glide.with(this) })
+        mediaPreviewAdapter = MediaPreviewAdapter(context, Glide.with(this))
 
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onRemoveClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -269,7 +270,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onCreateAdapter(context: Context): MessagesConversationAdapter {
-        return MessagesConversationAdapter(context, { Glide.with(this) })
+        return MessagesConversationAdapter(context, Glide.with(this))
     }
 
     override fun onCreateLayoutManager(context: Context): LinearLayoutManager {
@@ -478,7 +479,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        conversation.displayAvatarTo({Glide.with(this)}, conversationAvatar)
+        Glide.with(this).loadProfileImage(context, conversation).into(conversationAvatar)
     }
 
     internal class AddMediaTask(

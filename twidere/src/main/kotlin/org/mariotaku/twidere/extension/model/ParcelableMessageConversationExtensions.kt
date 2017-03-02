@@ -1,10 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
-import android.widget.ImageView
-import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -111,21 +108,6 @@ fun ParcelableMessageConversation.getSummaryText(context: Context, manager: User
         nameFirst: Boolean): CharSequence? {
     return getSummaryText(context, manager, nameFirst, message_type, message_extras, sender_key,
             text_unescaped, this)
-}
-
-fun ParcelableMessageConversation.displayAvatarTo(getRequestManager: () -> RequestManager, view: ImageView) {
-    val context = view.context
-    if (conversation_type == ConversationType.ONE_TO_ONE) {
-        val user = this.user
-        if (user != null) {
-            getRequestManager().loadProfileImage(context, user).into(view)
-        } else {
-            // TODO: show default conversation icon
-            getRequestManager().loadProfileImage(context, R.drawable.ic_profile_image_default_group).into(view)
-        }
-    } else {
-        getRequestManager().loadProfileImage(context, conversation_avatar).placeholder(R.drawable.ic_profile_image_default_group).into(view)
-    }
 }
 
 

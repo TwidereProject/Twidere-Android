@@ -23,6 +23,10 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.util.Utils
 
 fun User.getProfileImageOfSize(size: String): String {
+    if ("normal" != size) {
+        val larger = profileImageUrlProfileSize ?: profileImageUrlLarge
+        if (larger != null) return larger
+    }
     val profileImage = profileImageUrlHttps ?: profileImageUrl
     return Utils.getTwitterProfileImageOfSize(profileImage, size) ?: profileImage
 }

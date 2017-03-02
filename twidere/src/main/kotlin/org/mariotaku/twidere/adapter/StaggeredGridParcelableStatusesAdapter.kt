@@ -43,8 +43,8 @@ import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
  */
 class StaggeredGridParcelableStatusesAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : ParcelableStatusesAdapter(context, getRequestManager) {
+        requestManager: RequestManager
+) : ParcelableStatusesAdapter(context, requestManager) {
 
     override val progressViewIds: IntArray
         get() = intArrayOf(R.id.media_image_progress)
@@ -93,9 +93,9 @@ class StaggeredGridParcelableStatusesAdapter(
 
             mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type))
             val context = itemView.context
-            adapter.getRequestManager().loadProfileImage(context, status).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, status).into(profileImageView)
             // TODO image loaded event and credentials
-            adapter.getRequestManager().load(firstMedia.preview_url).into(mediaImageView)
+            adapter.requestManager.load(firstMedia.preview_url).into(mediaImageView)
         }
 
         override val profileTypeView: ImageView?

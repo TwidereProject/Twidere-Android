@@ -21,8 +21,8 @@ import org.mariotaku.twidere.view.holder.UserViewHolder
  */
 class VariousItemsAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager) {
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager) {
 
     private val inflater = LayoutInflater.from(context)
     val dummyAdapter: DummyItemAdapter
@@ -32,7 +32,7 @@ class VariousItemsAdapter(
     init {
         val handler = StatusAdapterLinkClickHandler<Any>(context,
                 preferences)
-        dummyAdapter = DummyItemAdapter(context, TwidereLinkify(handler), this, getRequestManager)
+        dummyAdapter = DummyItemAdapter(context, TwidereLinkify(handler), this, requestManager)
         handler.setAdapter(dummyAdapter)
         dummyAdapter.updateOptions()
         loadMoreIndicatorPosition = ILoadMoreSupportAdapter.NONE

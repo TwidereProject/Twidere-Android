@@ -35,8 +35,8 @@ import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.UserListViewHolder
 
 class ParcelableUserListsAdapter(
-        context: Context, getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IUserListsAdapter<List<ParcelableUserList>> {
+        context: Context, requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IUserListsAdapter<List<ParcelableUserList>> {
     override val showAccountsColor: Boolean = false
     override val nameFirst: Boolean = preferences[nameFirstKey]
     override var userListClickListener: IUserListsAdapter.UserListClickListener? = null
@@ -124,8 +124,8 @@ class ParcelableUserListsAdapter(
         val ITEM_VIEW_TYPE_USER_LIST = 2
 
         fun createUserListViewHolder(adapter: IUserListsAdapter<*>,
-                                     inflater: LayoutInflater,
-                                     parent: ViewGroup): UserListViewHolder {
+                inflater: LayoutInflater,
+                parent: ViewGroup): UserListViewHolder {
             val view = inflater.inflate(R.layout.list_item_user_list, parent, false)
             val holder = UserListViewHolder(view, adapter)
             holder.setOnClickListeners()

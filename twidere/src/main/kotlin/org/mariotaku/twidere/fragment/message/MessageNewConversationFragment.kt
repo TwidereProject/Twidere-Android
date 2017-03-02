@@ -82,7 +82,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
-        usersAdapter = SelectableUsersAdapter(context, { Glide.with(this) })
+        usersAdapter = SelectableUsersAdapter(context, Glide.with(this))
         recyclerView.adapter = usersAdapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 

@@ -484,7 +484,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
-        mediaPreviewAdapter = MediaPreviewAdapter(this, { Glide.with(this) })
+        mediaPreviewAdapter = MediaPreviewAdapter(this, Glide.with(this))
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
                 attachedMediaPreview.showContextMenuForChild(holder.itemView)
@@ -1422,11 +1422,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
             (itemView as CheckableLinearLayout).isChecked = isSelected
-            if (account != iconView.tag || iconView.drawable == null) {
-                iconView.tag = account
-                val context = adapter.context
-                adapter.getRequestManager().loadProfileImage(context, account).into(iconView)
-            }
+            val context = adapter.context
+            adapter.requestManager.loadProfileImage(context, account).into(iconView)
             iconView.setBorderColor(account.color)
             nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name
         }
@@ -1441,7 +1438,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class AccountIconsAdapter(
             private val activity: ComposeActivity
-    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, { Glide.with(activity) }) {
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
         private val inflater: LayoutInflater = activity.layoutInflater
         private val selection: MutableMap<UserKey, Boolean> = HashMap()
         val isNameFirst: Boolean = preferences[nameFirstKey]

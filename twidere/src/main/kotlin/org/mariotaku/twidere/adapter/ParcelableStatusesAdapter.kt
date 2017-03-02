@@ -57,8 +57,8 @@ import java.util.*
  */
 abstract class ParcelableStatusesAdapter(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, getRequestManager), IStatusesAdapter<List<ParcelableStatus>>,
+        requestManager: RequestManager
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IStatusesAdapter<List<ParcelableStatus>>,
         IItemCountsAdapter {
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)

@@ -25,7 +25,7 @@ class DummyItemAdapter(
         val context: Context,
         override val twidereLinkify: TwidereLinkify = TwidereLinkify(null),
         private val adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
-        override val getRequestManager: () -> RequestManager
+        override val requestManager: RequestManager
 ) : IStatusesAdapter<Any>, IUsersAdapter<Any>, IUserListsAdapter<Any> {
 
     @Inject

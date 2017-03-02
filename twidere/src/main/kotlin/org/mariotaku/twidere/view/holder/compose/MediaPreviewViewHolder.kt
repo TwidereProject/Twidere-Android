@@ -24,7 +24,6 @@ import android.view.View
 import android.widget.ImageView
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
-import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableMediaUpdate
 
@@ -44,7 +43,7 @@ class MediaPreviewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     }
 
     fun displayMedia(adapter: MediaPreviewAdapter, media: ParcelableMediaUpdate) {
-        adapter.getRequestManager().loadProfileImage(imageView.context, media.uri).into(imageView)
+        adapter.requestManager.load(media.uri).into(imageView)
         videoIndicatorView.visibility = if (media.type == ParcelableMedia.Type.VIDEO) {
             View.VISIBLE
         } else {

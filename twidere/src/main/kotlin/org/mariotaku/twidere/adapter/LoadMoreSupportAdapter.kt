@@ -31,20 +31,18 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosi
  */
 abstract class LoadMoreSupportAdapter<VH : ViewHolder>(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : BaseRecyclerViewAdapter<VH>(context, getRequestManager), ILoadMoreSupportAdapter {
+        requestManager: RequestManager
+) : BaseRecyclerViewAdapter<VH>(context, requestManager), ILoadMoreSupportAdapter {
 
-    @IndicatorPosition
     override var loadMoreSupportedPosition: Long = 0
-        set(value) {
+        set(@IndicatorPosition value) {
             field = value
             loadMoreIndicatorPosition = ILoadMoreSupportAdapter.apply(loadMoreIndicatorPosition, value)
             notifyDataSetChanged()
         }
 
-    @IndicatorPosition
     override var loadMoreIndicatorPosition: Long = 0
-        set(value) {
+        set(@IndicatorPosition value) {
             if (field == value) return
             field = ILoadMoreSupportAdapter.apply(value, loadMoreSupportedPosition)
             notifyDataSetChanged()

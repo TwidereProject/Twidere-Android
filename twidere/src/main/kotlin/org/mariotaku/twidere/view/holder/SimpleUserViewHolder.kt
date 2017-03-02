@@ -34,7 +34,7 @@ open class SimpleUserViewHolder<out A : IContentAdapter>(
         secondaryNameView.text = "@${user.screen_name}"
         if (adapter.profileImageEnabled) {
             val context = itemView.context
-            adapter.getRequestManager().loadProfileImage(context, user).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, user).into(profileImageView)
             profileImageView.visibility = View.VISIBLE
         } else {
             profileImageView.visibility = View.GONE

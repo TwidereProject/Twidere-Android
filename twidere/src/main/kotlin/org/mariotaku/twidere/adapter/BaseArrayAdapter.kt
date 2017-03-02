@@ -36,7 +36,7 @@ open class BaseArrayAdapter<T>(
         context: Context,
         layoutRes: Int,
         collection: Collection<T>? = null,
-        override val getRequestManager: () -> RequestManager
+        override val requestManager: RequestManager
 ) : ArrayAdapter<T>(context, layoutRes, collection), IContentAdapter, ILoadMoreSupportAdapter,
         IItemCountsAdapter {
     val linkify: TwidereLinkify

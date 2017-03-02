@@ -62,7 +62,7 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val userList: ParcelableUserList = data!!.getParcelableExtra(EXTRA_USER_LIST)
-                    viewHolder.display(userList, { Glide.with(context) },
+                    viewHolder.display(userList, Glide.with(context),
                             dependencyHolder.userColorNameManager, true)
                     viewHolder.itemView.visibility = View.VISIBLE
                     hintView.visibility = View.GONE

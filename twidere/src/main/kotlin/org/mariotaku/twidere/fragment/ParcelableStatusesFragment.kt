@@ -124,7 +124,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     }
 
     override fun onCreateAdapter(context: Context): ListParcelableStatusesAdapter {
-        return ListParcelableStatusesAdapter(context, { Glide.with(this) })
+        return ListParcelableStatusesAdapter(context, Glide.with(this))
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

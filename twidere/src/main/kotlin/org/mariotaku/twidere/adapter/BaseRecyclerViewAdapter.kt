@@ -39,7 +39,7 @@ import javax.inject.Inject
  */
 abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
         val context: Context,
-        override val getRequestManager: () -> RequestManager
+        override val requestManager: RequestManager
 ) : RecyclerView.Adapter<VH>(), IContentAdapter {
 
     @Inject

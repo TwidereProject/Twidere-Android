@@ -73,7 +73,7 @@ class UserListViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().loadProfileImage(context, userList.user_profile_image_url).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, userList).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

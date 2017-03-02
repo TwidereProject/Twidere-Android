@@ -240,7 +240,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
     private class AccountTypeSpinnerAdapter(
             fragment: APIEditorDialogFragment
     ) : BaseArrayAdapter<String>(fragment.context, R.layout.support_simple_spinner_dropdown_item,
-            getRequestManager = { Glide.with(fragment) }) {
+            requestManager = Glide.with(fragment)) {
         init {
             add(AccountType.TWITTER)
             add(AccountType.FANFOU)

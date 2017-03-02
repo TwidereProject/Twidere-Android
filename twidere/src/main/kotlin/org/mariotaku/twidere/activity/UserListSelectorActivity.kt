@@ -70,7 +70,7 @@ class UserListSelectorActivity : BaseActivity(),
         }
         setContentView(R.layout.activity_user_list_selector)
 
-        adapter = SimpleParcelableUserListsAdapter(this, { Glide.with(this) })
+        adapter = SimpleParcelableUserListsAdapter(this, Glide.with(this))
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         listView.addFooterView(layoutInflater.inflate(R.layout.simple_list_item_activated_1,
                 listView, false).apply {

@@ -74,6 +74,7 @@ import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.getDirectMessageMaxParticipants
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.BaseDialogFragment
@@ -124,7 +125,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
         val theme = Chameleon.getOverrideTheme(context, activity)
 
-        adapter = ConversationInfoAdapter(context, { Glide.with(this) })
+        adapter = ConversationInfoAdapter(context, Glide.with(this))
         adapter.listener = object : ConversationInfoAdapter.Listener {
             override fun onUserClick(position: Int) {
                 val user = adapter.getUser(position) ?: return
@@ -245,9 +246,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val name = data.getTitle(context, userColorNameManager, preferences[nameFirstKey]).first
         val summary = data.getSubtitle(context)
 
-        val getRequestManager = { Glide.with(this) }
-        data.displayAvatarTo(getRequestManager, conversationAvatar)
-        data.displayAvatarTo(getRequestManager, appBarIcon)
+        val requestManager = Glide.with(this)
+        requestManager.loadProfileImage(context, data).into(conversationAvatar)
+        requestManager.loadProfileImage(context, data).into(appBarIcon)
         appBarTitle.text = name
         conversationTitle.text = name
         if (summary != null) {
@@ -468,8 +469,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
     class ConversationInfoAdapter(
             context: Context,
-            getRequestManager: () -> RequestManager
-    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context, getRequestManager),
+            requestManager: RequestManager
+    ) : BaseRecyclerViewAdapter<RecyclerView.ViewHolder>(context, requestManager),
             IItemCountsAdapter {
         private val inflater = LayoutInflater.from(context)
 

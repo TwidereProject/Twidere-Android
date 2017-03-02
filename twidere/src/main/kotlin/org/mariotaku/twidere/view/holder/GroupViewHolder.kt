@@ -78,7 +78,7 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.getRequestManager().loadProfileImage(context, group.homepage_logo).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, group).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

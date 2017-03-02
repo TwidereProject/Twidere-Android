@@ -45,7 +45,7 @@ class StickerMessageViewHolder(itemView: View, adapter: MessagesConversationAdap
     override fun display(message: ParcelableMessage, showDate: Boolean) {
         super.display(message, showDate)
         val extras = message.extras as StickerExtras
-        adapter.getRequestManager().load(extras.url).into(stickerIcon)
+        adapter.requestManager.load(extras.url).into(stickerIcon)
         stickerIcon.contentDescription = extras.displayName
     }
 

@@ -43,7 +43,7 @@ interface IContentAdapter {
 
     val twitterWrapper: AsyncTwitterWrapper
 
-    val getRequestManager: () -> RequestManager
+    val requestManager: RequestManager
 
     val bidiFormatter: BidiFormatter
 

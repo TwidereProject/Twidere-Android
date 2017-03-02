@@ -91,7 +91,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val editComment = it.findViewById(R.id.edit_comment) as ComposeEditText
             val commentMenu = it.findViewById(R.id.comment_menu)!!
 
-            val adapter = DummyItemAdapter(context, getRequestManager = { Glide.with(this) })
+            val adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
             adapter.setShouldShowAccountsColor(true)
             val holder = StatusViewHolder(adapter, itemContent)
             holder.displayStatus(status = status, displayInReplyTo = false, displayExtraType = true)

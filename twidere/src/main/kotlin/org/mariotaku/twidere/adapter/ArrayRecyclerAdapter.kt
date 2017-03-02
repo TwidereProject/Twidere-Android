@@ -10,8 +10,8 @@ import java.util.*
  */
 abstract class ArrayRecyclerAdapter<T, H : ViewHolder>(
         context: Context,
-        getRequestManager: () -> RequestManager
-) : BaseRecyclerViewAdapter<H>(context, getRequestManager) {
+        requestManager: RequestManager
+) : BaseRecyclerViewAdapter<H>(context, requestManager) {
 
     protected val data = ArrayList<T>()
 

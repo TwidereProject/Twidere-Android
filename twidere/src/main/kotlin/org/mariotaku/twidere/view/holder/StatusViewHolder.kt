@@ -35,6 +35,7 @@ import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.HtmlEscapeHelper.toPlainText
 import org.mariotaku.twidere.util.Utils.getUserTypeIconRes
+import org.mariotaku.twidere.view.ShapedImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.lang.ref.WeakReference
 
@@ -46,7 +47,7 @@ import java.lang.ref.WeakReference
  */
 class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : ViewHolder(itemView), IStatusViewHolder {
 
-    override val profileImageView: ImageView by lazy { itemView.profileImage }
+    override val profileImageView: ShapedImageView by lazy { itemView.profileImage }
     override val profileTypeView: ImageView by lazy { itemView.profileType }
 
     private val itemContent by lazy { itemView.itemContent }
@@ -93,6 +94,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     itemView.quotedMediaPreview)
         }
 
+        profileImageView.style = adapter.profileImageStyle
+
     }
 
 
@@ -135,7 +138,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             displayExtraType: Boolean, displayPinned: Boolean) {
 
         val context = itemView.context
-        val getRequestManager = adapter.getRequestManager
+        val requestManager = adapter.requestManager
         val twitter = adapter.twitterWrapper
         val linkify = adapter.twidereLinkify
         val formatter = adapter.bidiFormatter
@@ -240,13 +243,13 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     quotedView.drawStart(ThemeUtils.getColorFromAttribute(context, R.attr.quoteIndicatorBackgroundColor, 0))
                 }
 
-                displayQuotedMedia(getRequestManager, status)
+                displayQuotedMedia(requestManager, status)
             } else {
                 quotedNameView.visibility = View.GONE
                 quotedTextView.visibility = View.VISIBLE
 
                 if (quoteContentAvailable) {
-                    displayQuotedMedia(getRequestManager, status)
+                    displayQuotedMedia(requestManager, status)
                 } else {
                     quotedMediaPreview.visibility = View.GONE
                     quotedMediaLabel.visibility = View.GONE
@@ -298,7 +301,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            getRequestManager().loadProfileImage(context, status).into(profileImageView)
+            requestManager.loadProfileImage(context, status).into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE
@@ -331,7 +334,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 mediaLabel.visibility = View.GONE
                 mediaPreview.visibility = View.VISIBLE
 
-                mediaPreview.displayMedia(getRequestManager = getRequestManager,
+                mediaPreview.displayMedia(requestManager = requestManager,
                         media = status.media, accountId = status.account_key,
                         mediaClickListener = this, loadingHandler = adapter.mediaLoadingHandler)
             }
@@ -424,7 +427,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     }
 
-    private fun displayQuotedMedia(getRequestManager: () -> RequestManager, status: ParcelableStatus) {
+    private fun displayQuotedMedia(requestManager: RequestManager, status: ParcelableStatus) {
         if (status.quoted_media?.isNotEmpty() ?: false) {
 
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
@@ -440,7 +443,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedMediaPreview.visibility = View.VISIBLE
                 quotedMediaLabel.visibility = View.GONE
 
-                quotedMediaPreview.displayMedia(getRequestManager = getRequestManager,
+                quotedMediaPreview.displayMedia(requestManager = requestManager,
                         media = status.quoted_media, accountId = status.account_key,
                         mediaClickListener = this, loadingHandler = adapter.mediaLoadingHandler)
             }
