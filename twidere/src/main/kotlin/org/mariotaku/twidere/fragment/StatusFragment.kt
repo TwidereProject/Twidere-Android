@@ -1960,8 +1960,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun getDecoratedMeasuredHeight(child: View): Int {
             if (getItemViewType(child) == StatusAdapter.VIEW_TYPE_SPACE) {
-                return calculateSpaceItemHeight(child, StatusAdapter.VIEW_TYPE_SPACE,
+                val height = calculateSpaceItemHeight(child, StatusAdapter.VIEW_TYPE_SPACE,
                         StatusAdapter.VIEW_TYPE_DETAIL_STATUS)
+                if (height >= 0) {
+                    return height
+                }
             }
             return super.getDecoratedMeasuredHeight(child)
         }

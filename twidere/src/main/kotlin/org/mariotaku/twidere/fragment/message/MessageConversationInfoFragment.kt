@@ -668,7 +668,10 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         override fun getDecoratedMeasuredHeight(child: View): Int {
             if (getItemViewType(child) == VIEW_TYPE_BOTTOM_SPACE) {
-                return calculateSpaceItemHeight(child, VIEW_TYPE_BOTTOM_SPACE, VIEW_TYPE_HEADER)
+                val height = calculateSpaceItemHeight(child, VIEW_TYPE_BOTTOM_SPACE, VIEW_TYPE_HEADER)
+                if (height >= 0) {
+                    return height
+                }
             }
             return super.getDecoratedMeasuredHeight(child)
         }

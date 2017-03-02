@@ -32,7 +32,7 @@ fun RecyclerView.LayoutManager.calculateSpaceItemHeight(child: View, spaceViewTy
         if (typeToMeasure == spaceViewType) {
             break
         }
-        if (typeToMeasure == typeStart || heightBeforeSpace != 0) {
+        if (typeToMeasure == typeStart || heightBeforeSpace != 0 && child != childToMeasure) {
             heightBeforeSpace += getDecoratedMeasuredHeight(childToMeasure)
         }
     }
@@ -40,5 +40,5 @@ fun RecyclerView.LayoutManager.calculateSpaceItemHeight(child: View, spaceViewTy
         val spaceHeight = recyclerView.measuredHeight - heightBeforeSpace
         return Math.max(0, spaceHeight)
     }
-    return getDecoratedMeasuredHeight(child)
+    return -1
 }
