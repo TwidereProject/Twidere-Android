@@ -173,8 +173,8 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
 
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.20'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.20'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.22'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.22'
     compile 'com.github.mariotaku:SQLiteQB:0.9.10'
     compile "com.github.mariotaku.ObjectCursor:core:$mariotaku_object_cursor_version"
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'

@@ -11,22 +11,23 @@ import android.webkit.MimeTypeMap
 import okio.ByteString
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.mediaviewer.library.FileCache
-import org.mariotaku.restfu.RestFuUtils
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.BitmapUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import java.io.FileInputStream
+import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by mariotaku on 16/1/1.
  */
 class CacheProvider : ContentProvider() {
+    @Inject
     internal lateinit var fileCache: FileCache
 
     override fun onCreate(): Boolean {
@@ -61,16 +62,10 @@ class CacheProvider : ContentProvider() {
     }
 
     fun getMetadata(uri: Uri): CacheMetadata? {
-        val file = fileCache.get(getMetadataKey(uri)) ?: return null
-        var `is`: FileInputStream? = null
-        try {
+        val bytes = fileCache.getExtra(getCacheKey(uri)) ?: return null
+        return ByteArrayInputStream(bytes).use {
             val mapper = LoganSquareMapperFinder.mapperFor(CacheMetadata::class.java)
-            `is` = FileInputStream(file)
-            return mapper.parse(`is`)
-        } catch (e: IOException) {
-            return null
-        } finally {
-            RestFuUtils.closeSilently(`is`)
+            return mapper.parse(it)
         }
     }
 
@@ -155,18 +150,6 @@ class CacheProvider : ContentProvider() {
             return ByteString.decodeBase64(uri.lastPathSegment).utf8()
         }
 
-
-        fun getMetadataKey(uri: Uri): String {
-            if (ContentResolver.SCHEME_CONTENT != uri.scheme)
-                throw IllegalArgumentException(uri.toString())
-            if (TwidereConstants.AUTHORITY_TWIDERE_CACHE != uri.authority)
-                throw IllegalArgumentException(uri.toString())
-            return getExtraKey(ByteString.decodeBase64(uri.lastPathSegment).utf8())
-        }
-
-        fun getExtraKey(key: String): String {
-            return key + ".extra"
-        }
 
         /**
          * Copied from ContentResolver.java

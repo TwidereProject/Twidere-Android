@@ -52,8 +52,8 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CACHE_SIZE_L
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
-import org.mariotaku.twidere.util.cache.NoOpFileCache
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -320,7 +320,7 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun fileCache(): FileCache {
-        return NoOpFileCache()
+        return DiskLRUFileCache(getCacheDir("media"))
     }
 
     private fun getCacheDir(dirName: String): File {
