@@ -33,8 +33,6 @@ jdk:
 
 env:
   global:
-    - MALLOC_ARENA_MAX=2
-    - GRADLE_OPTS=-Xmx2048m -Dorg.gradle.parallel=false
     # COMPONENT_GOOGLE_REPO
     - secure: "OQ/wkORxY2qv4CmAdMxyW4ihRt5GRyxKxQRZpsdjMbwIKf3DlY6vBoNIEQ46sRRLAKOzkQ3LirodbWRCBlDN9WFw4XRsLTveqqtslMGeLf04peazXMIa6rJ22BCDGEmnzRNx6r3JRb9wEK1plNv4u4G9DgQ7ShzbwdZ8A5grlg8="
 
@@ -81,7 +79,7 @@ before_script:
   # Validate if Google components fetched successfully
   - test -f twidere/src/google/AndroidManifest.xml
 
-script: ./gradlew build --no-daemon --stacktrace
+script: ./gradlew build --info
 
 deploy:
   provider: releases
