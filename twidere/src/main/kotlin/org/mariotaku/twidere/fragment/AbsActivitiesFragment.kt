@@ -102,7 +102,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         registerForContextMenu(recyclerView)
         navigationHelper = RecyclerViewNavigationHelper(recyclerView, layoutManager, adapter,
                 this)
-        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, true, Glide.with(this))
+        pauseOnScrollListener = PauseRecyclerViewOnScrollListener(false, false, Glide.with(this))
 
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
