@@ -160,7 +160,7 @@
   <string name="action_add_tab">Додати вкладку</string>
   <string name="action_add_to_filter">Додати до фільтру</string>
   <string name="action_add_to_list">Додати до списку</string>
-  <string name="added_user_to_list">Додано <xliff:g id="user">%1$s</xliff:g> до списку "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">Додано <xliff:g id="user">%1$s</xliff:g> до списку "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">і ще <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Формат API URL</string>
   <string name="app_description">Свій власний додаток Twitter</string>

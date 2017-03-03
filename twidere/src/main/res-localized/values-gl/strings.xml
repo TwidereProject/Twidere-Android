@@ -157,7 +157,7 @@
   <string name="action_add_tab">Engadir tab.</string>
   <string name="action_add_to_filter">Engadir a filtro</string>
   <string name="action_add_to_list">Engadir á lista</string>
-  <string name="added_user_to_list">Engadiches a <xliff:g id="user">%1$s</xliff:g> á lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">Engadiches a <xliff:g id="user">%1$s</xliff:g> á lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">e <xliff:g id="count">%d</xliff:g> máis</string>
   <string name="api_url_format">Formato URL API</string>
   <string name="app_description">A túa propia aplicación Twitter</string>

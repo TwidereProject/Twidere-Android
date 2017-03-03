@@ -78,8 +78,6 @@ object DataStoreUtils {
                 TABLE_ID_STATUSES)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Activities.AboutMe.CONTENT_PATH,
                 TABLE_ID_ACTIVITIES_ABOUT_ME)
-        CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Activities.ByFriends.CONTENT_PATH,
-                TABLE_ID_ACTIVITIES_BY_FRIENDS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, Drafts.CONTENT_PATH,
                 TABLE_ID_DRAFTS)
         CONTENT_PROVIDER_URI_MATCHER.addURI(TwidereDataStore.AUTHORITY, CachedUsers.CONTENT_PATH,
@@ -389,7 +387,6 @@ object DataStoreUtils {
         when (id) {
             TABLE_ID_STATUSES -> return Statuses.TABLE_NAME
             TABLE_ID_ACTIVITIES_ABOUT_ME -> return Activities.AboutMe.TABLE_NAME
-            TABLE_ID_ACTIVITIES_BY_FRIENDS -> return Activities.ByFriends.TABLE_NAME
             TABLE_ID_DRAFTS -> return Drafts.TABLE_NAME
             TABLE_ID_FILTERED_USERS -> return Filters.Users.TABLE_NAME
             TABLE_ID_FILTERED_KEYWORDS -> return Filters.Keywords.TABLE_NAME

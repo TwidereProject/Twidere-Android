@@ -158,7 +158,7 @@
   <string name="action_add_tab">Voeg een tabblad toe</string>
   <string name="action_add_to_filter">Voeg toe aan filter</string>
   <string name="action_add_to_list">Toevoegen aan lijst</string>
-  <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> toegevoegd aan lijst \'\'<xliff:g id="list">%2$s</xliff:g>\'\'.</string>
+  <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> toegevoegd aan lijst \'\'<xliff:g id="list">%2$s</xliff:g>\'\'.</string>
   <string name="and_N_more">en <xliff:g id="count">%d</xliff:g> meer</string>
   <string name="api_url_format">API URL-formaat</string>
   <string name="app_description">Je eigen Twitter-app</string>

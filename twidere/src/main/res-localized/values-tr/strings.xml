@@ -159,7 +159,7 @@
   <string name="action_add_tab">Sekme ekle</string>
   <string name="action_add_to_filter">Filtre ekle</string>
   <string name="action_add_to_list">Listeye ekle</string>
-  <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> listeye eklendi "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> listeye eklendi "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">ve <xliff:g id="count">%d</xliff:g> daha</string>
   <string name="api_url_format">API URL Format</string>
   <string name="app_description">Senin Twitter uygulaman</string>

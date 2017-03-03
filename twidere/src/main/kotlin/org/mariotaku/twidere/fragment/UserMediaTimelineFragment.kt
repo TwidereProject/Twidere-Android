@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.TextUtils
 import com.bumptech.glide.Glide
+import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -119,7 +120,7 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
 
     override fun onLoadMoreContents(position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START != 0L) return
+        if (ILoadMoreSupportAdapter.START in position) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         val maxId = adapter.getStatusId(adapter.statusCount - 1)

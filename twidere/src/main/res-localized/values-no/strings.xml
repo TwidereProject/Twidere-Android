@@ -143,7 +143,7 @@
   <string name="action_add_tab">Legg til fane</string>
   <string name="action_add_to_filter">Legg til filter</string>
   <string name="action_add_to_list">Legg til listen</string>
-  <string name="added_user_to_list">La <xliff:g id="user">%1$s</xliff:g> til listen «<xliff:g id="list">%2$s</xliff:g>».</string>
+  <string name="message_toast_added_user_to_list">La <xliff:g id="user">%1$s</xliff:g> til listen «<xliff:g id="list">%2$s</xliff:g>».</string>
   <string name="and_N_more">og <xliff:g id="count">%d</xliff:g> flere</string>
   <string name="api_url_format">API-URL-format</string>
   <string name="app_description">Din egen Twitter-app</string>

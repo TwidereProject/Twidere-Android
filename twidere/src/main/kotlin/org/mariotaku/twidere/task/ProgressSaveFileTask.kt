@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import android.net.Uri
 import android.support.v4.app.DialogFragment
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
@@ -31,10 +30,9 @@ import java.io.File
  */
 abstract class ProgressSaveFileTask(
         context: Context,
-        source: Uri,
         destination: File,
-        getMimeType: SaveFileTask.FileInfoCallback
-) : SaveFileTask(context, source, destination, getMimeType) {
+        fileInfo: FileInfo
+) : SaveFileTask(context, destination, fileInfo) {
 
     override fun showProgress() {
         (context as IBaseActivity<*>).executeAfterFragmentResumed { activity ->

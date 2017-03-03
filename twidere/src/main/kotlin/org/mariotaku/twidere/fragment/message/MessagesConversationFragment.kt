@@ -48,6 +48,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.empty
 import org.mariotaku.ktextension.set
 import org.mariotaku.pickncrop.library.MediaPickerActivity
@@ -283,7 +284,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
     }
 
     override fun onLoadMoreContents(position: Long) {
-        if (position and ILoadMoreSupportAdapter.START == 0L) return
+        if (ILoadMoreSupportAdapter.START !in position) return
         val message = adapter.getMessage(adapter.messageRange.endInclusive) ?: return
         setLoadMoreIndicatorPosition(position)
         val param = GetMessagesTask.LoadMoreMessageTaskParam(context, accountKey, conversationId,

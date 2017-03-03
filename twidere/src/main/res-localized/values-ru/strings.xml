@@ -178,7 +178,7 @@
   <string name="action_add_tab">Добавить вкладку</string>
   <string name="action_add_to_filter">Добавить в фильтр</string>
   <string name="action_add_to_list">Добавить в список</string>
-  <string name="added_user_to_list">Добавлен <xliff:g id="user">%1$s</xliff:g> в список "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">Добавлен <xliff:g id="user">%1$s</xliff:g> в список "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">и еще <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">Формат API URL</string>
   <string name="app_description">Ваш собственный Твиттер-клиент</string>

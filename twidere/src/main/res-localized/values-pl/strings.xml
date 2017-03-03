@@ -113,7 +113,7 @@
   <string name="action_add_tab">Dodaj zakładkę</string>
   <string name="action_add_to_filter">Dodaj do filtra</string>
   <string name="action_add_to_list">Dodaj do listy</string>
-  <string name="added_user_to_list">Dodano <xliff:g id="user">%1$s</xliff:g> do listy "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">Dodano <xliff:g id="user">%1$s</xliff:g> do listy "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">oraz <xliff:g id="count">%d</xliff:g> więcej</string>
   <string name="api_url_format">Format API URL</string>
   <!-- App name, normally you don't need to translate this. -->

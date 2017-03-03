@@ -32,3 +32,13 @@ fun Int.coerceInOr(range: ClosedRange<Int>, or: Int): Int {
     if (range.isEmpty()) return or
     return coerceIn(range)
 }
+
+/**
+ * Convenience method checking int flags
+ */
+operator fun Int.contains(i: Int): Boolean = (this and i) == i
+
+/**
+ * Convenience method checking long flags
+ */
+operator fun Long.contains(i: Long): Boolean = (this and i) == i

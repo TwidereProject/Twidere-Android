@@ -44,6 +44,9 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import kotlinx.android.synthetic.main.layout_media_viewer_exo_player_view.*
 import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import org.mariotaku.mediaviewer.library.MediaViewerFragment
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.restfu.RestRequest
@@ -52,6 +55,7 @@ import org.mariotaku.restfu.http.MultiValueMap
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_POSITION
 import org.mariotaku.twidere.extension.model.getAuthorization
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
@@ -63,11 +67,14 @@ import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isContro
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isLoopEnabled
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.isMutedByDefault
 import org.mariotaku.twidere.fragment.media.VideoPageFragment.Companion.media
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.provider.CacheProvider
+import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
+import java.io.InputStream
 import javax.inject.Inject
 
 
@@ -84,12 +91,20 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     @Inject
     internal lateinit var extractorsFactory: ExtractorsFactory
 
+    @Inject
+    internal lateinit var okHttpClient: OkHttpClient
+
     private lateinit var mainHandler: Handler
 
     private var playAudio: Boolean = false
     private var pausedByUser: Boolean = false
     private var playbackCompleted: Boolean = false
     private var positionBackup: Long = -1L
+    private var playerHasError: Boolean = false
+
+    private val account by lazy {
+        AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
+    }
 
     private val playerListener = object : ExoPlayer.EventListener {
         override fun onLoadingChanged(isLoading: Boolean) {
@@ -97,7 +112,8 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
 
         override fun onPlayerError(error: ExoPlaybackException) {
-
+            playerHasError = true
+            hideProgress()
         }
 
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
@@ -119,6 +135,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                 }
                 ExoPlayer.STATE_READY -> {
                     playbackCompleted = playWhenReady
+                    playerHasError = false
                     hideProgress()
                 }
                 ExoPlayer.STATE_IDLE -> {
@@ -235,13 +252,11 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
     }
 
     override fun isMediaLoaded(): Boolean {
-        val player = playerView.player ?: return false
-        return player.playbackState != ExoPlayer.STATE_IDLE
+        return !playerHasError
     }
 
     override fun isMediaLoading(): Boolean {
-        val player = playerView.player ?: return false
-        return player.isLoading
+        return false
     }
 
     private fun releasePlayer() {
@@ -264,13 +279,13 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
                 player.seekTo(positionBackup)
             }
             player.playWhenReady = !pausedByUser
+            playerHasError = false
             player.addListener(playerListener)
             return@run player
         }
 
         val uri = media?.getDownloadUri() ?: return
-        val am = AccountManager.get(context)
-        val factory = AuthDelegatingDataSourceFactory(uri, accountKey, am, dataSourceFactory)
+        val factory = AuthDelegatingDataSourceFactory(uri, account, dataSourceFactory)
         val uriSource = ExtractorMediaSource(uri, factory, extractorsFactory, null, null)
         if (isLoopEnabled) {
             playerView.player.prepare(LoopingMediaSource(uriSource))
@@ -290,7 +305,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
     }
 
-    fun ParcelableMedia.getDownloadUri(): Uri? {
+    private fun ParcelableMedia.getDownloadUri(): Uri? {
         val bestVideoUrlAndType = VideoPageFragment.getBestVideoUrlAndType(this, SUPPORTED_VIDEO_TYPES)
         if (bestVideoUrlAndType != null && bestVideoUrlAndType.first != null) {
             return Uri.parse(bestVideoUrlAndType.first)
@@ -298,12 +313,18 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         return arguments.getParcelable<Uri>(SubsampleImageViewerFragment.EXTRA_MEDIA_URI)
     }
 
+
+    fun getRequestFileInfo(): RequestFileInfo? {
+        val uri = media?.getDownloadUri() ?: return null
+        return RequestFileInfo(uri, account, okHttpClient)
+    }
+
     class AuthDelegatingDataSourceFactory(
             val uri: Uri,
-            val accountKey: UserKey,
-            val am: AccountManager,
+            val account: AccountDetails?,
             val delegate: DataSource.Factory
     ) : DataSource.Factory {
+
         override fun createDataSource(): DataSource {
             val source = delegate.createDataSource()
             if (source is HttpDataSource) {
@@ -313,28 +334,75 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         }
 
         private fun setAuthorizationHeader(dataSource: HttpDataSource) {
-            val account = AccountUtils.getAccountDetails(am, accountKey, true) ?: return
-            val modifiedUri = TwidereMediaDownloader.getReplacedUri(uri, account.credentials.api_url_format) ?: uri
-            if (TwidereMediaDownloader.isAuthRequired(account, uri)) {
-                val auth = account.credentials.getAuthorization()
-                val endpoint: Endpoint
-                if (auth is OAuthAuthorization) {
-                    endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
-                            TwidereMediaDownloader.getEndpoint(uri))
-                } else {
-                    endpoint = Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
-                }
-                val queries = MultiValueMap<String>()
-                for (name in uri.queryParameterNames) {
-                    for (value in uri.getQueryParameters(name)) {
-                        queries.add(name, value)
-                    }
-                }
-                val info = RestRequest("GET", false, uri.path, null, queries, null, null, null, null)
-                dataSource.setRequestProperty("Authorization", auth.getHeader(endpoint, info))
-            }
-
+            val authorizationHeader = account?.authorizationHeader(uri) ?: return
+            dataSource.setRequestProperty("Authorization", authorizationHeader)
         }
+    }
+
+    class RequestFileInfo(
+            val uri: Uri,
+            val account: AccountDetails?,
+            val okHttpClient: OkHttpClient
+    ) : SaveFileTask.FileInfo, CacheProvider.CacheFileTypeSupport {
+
+        private var response: Response? = null
+
+        override val cacheFileType: String? = CacheFileType.VIDEO
+
+        override val fileName: String? = uri.lastPathSegment
+
+        override val mimeType: String?
+            get() = request().body()?.contentType()?.toString()
+
+        override val specialCharacter: Char = '_'
+
+        override fun inputStream(): InputStream {
+            return request().body().byteStream()
+        }
+
+        override fun close() {
+            response?.close()
+        }
+
+        private fun request(): Response {
+            if (response != null) return response!!
+            val builder = Request.Builder()
+            builder.url(uri.toString())
+            val authHeader = account?.authorizationHeader(uri)
+            if (authHeader != null) {
+                builder.addHeader("Authorization", authHeader)
+            }
+            response = okHttpClient.newCall(builder.build()).execute()
+            return response!!
+        }
+
+    }
+
+    companion object {
+
+        internal fun AccountDetails.authorizationHeader(uri: Uri): String? {
+            val modifiedUri = TwidereMediaDownloader.getReplacedUri(uri, credentials.api_url_format) ?: uri
+            if (!TwidereMediaDownloader.isAuthRequired(this, uri)) {
+                return null
+            }
+            val auth = credentials.getAuthorization()
+            val endpoint: Endpoint
+            if (auth is OAuthAuthorization) {
+                endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
+                        TwidereMediaDownloader.getEndpoint(uri))
+            } else {
+                endpoint = Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
+            }
+            val queries = MultiValueMap<String>()
+            for (name in uri.queryParameterNames) {
+                for (value in uri.getQueryParameters(name)) {
+                    queries.add(name, value)
+                }
+            }
+            val info = RestRequest("GET", false, uri.path, null, queries, null, null, null, null)
+            return auth.getHeader(endpoint, info)
+        }
+
     }
 
 }

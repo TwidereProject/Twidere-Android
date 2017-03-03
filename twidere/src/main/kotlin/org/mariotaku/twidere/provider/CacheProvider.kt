@@ -7,11 +7,11 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import android.webkit.MimeTypeMap
 import okio.ByteString
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.mediaviewer.library.FileCache
-import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.TwidereConstants.AUTHORITY_TWIDERE_CACHE
+import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
 import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
@@ -20,7 +20,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.*
+import java.io.InputStream
 import javax.inject.Inject
 
 /**
@@ -45,7 +45,7 @@ class CacheProvider : ContentProvider() {
         if (metadata != null) {
             return metadata.contentType
         }
-        val type = uri.getQueryParameter(TwidereConstants.QUERY_PARAM_TYPE)
+        val type = uri.getQueryParameter(QUERY_PARAM_TYPE)
         when (type) {
             CacheFileType.IMAGE -> {
                 val file = fileCache.get(getCacheKey(uri)) ?: return null
@@ -95,37 +95,43 @@ class CacheProvider : ContentProvider() {
 
     }
 
-    class CacheFileTypeCallback(private val context: Context, @CacheFileType private val type: String?) : SaveFileTask.FileInfoCallback {
-
-        override fun getFilename(source: Uri): String {
-            var cacheKey = getCacheKey(source)
+    class ContentUriFileInfo(
+            private val context: Context,
+            private val uri: Uri,
+            @CacheFileType override val cacheFileType: String?
+    ) : SaveFileTask.FileInfo, CacheFileTypeSupport {
+        override val fileName: String by lazy {
+            var cacheKey = getCacheKey(uri)
             val indexOfSsp = cacheKey.indexOf("://")
             if (indexOfSsp != -1) {
                 cacheKey = cacheKey.substring(indexOfSsp + 3)
             }
-            return cacheKey.replace("[^\\w\\d_]".toRegex(), specialCharacter.toString())
+            return@lazy cacheKey.replace("[^\\w\\d_]".toRegex(), specialCharacter.toString())
         }
 
-        override fun getMimeType(source: Uri): String? {
-            if (type == null || source.getQueryParameter(TwidereConstants.QUERY_PARAM_TYPE) != null) {
-                return context.contentResolver.getType(source)
+        override val mimeType: String? by lazy {
+            if (cacheFileType == null || uri.getQueryParameter(QUERY_PARAM_TYPE) != null) {
+                return@lazy context.contentResolver.getType(uri)
             }
-            val builder = source.buildUpon()
-            builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_TYPE, type)
-            return context.contentResolver.getType(builder.build())
-        }
-
-        override fun getExtension(mimeType: String?): String? {
-            val typeLowered = mimeType?.toLowerCase(Locale.US) ?: return null
-            return when (typeLowered) {
-            // Hack for fanfou image type
-                "image/jpg" -> "jpg"
-                else -> MimeTypeMap.getSingleton().getExtensionFromMimeType(typeLowered)
-            }
+            val builder = uri.buildUpon()
+            builder.appendQueryParameter(QUERY_PARAM_TYPE, cacheFileType)
+            return@lazy context.contentResolver.getType(builder.build())
         }
 
         override val specialCharacter: Char
             get() = '_'
+
+        override fun inputStream(): InputStream {
+            return context.contentResolver.openInputStream(uri)
+        }
+
+        override fun close() {
+            // No-op
+        }
+    }
+
+    interface CacheFileTypeSupport {
+        val cacheFileType: String?
     }
 
 
@@ -134,10 +140,10 @@ class CacheProvider : ContentProvider() {
         fun getCacheUri(key: String, @CacheFileType type: String?): Uri {
             val builder = Uri.Builder()
             builder.scheme(ContentResolver.SCHEME_CONTENT)
-            builder.authority(TwidereConstants.AUTHORITY_TWIDERE_CACHE)
+            builder.authority(AUTHORITY_TWIDERE_CACHE)
             builder.appendPath(ByteString.encodeUtf8(key).base64Url())
             if (type != null) {
-                builder.appendQueryParameter(TwidereConstants.QUERY_PARAM_TYPE, type)
+                builder.appendQueryParameter(QUERY_PARAM_TYPE, type)
             }
             return builder.build()
         }
@@ -145,7 +151,7 @@ class CacheProvider : ContentProvider() {
         fun getCacheKey(uri: Uri): String {
             if (ContentResolver.SCHEME_CONTENT != uri.scheme)
                 throw IllegalArgumentException(uri.toString())
-            if (TwidereConstants.AUTHORITY_TWIDERE_CACHE != uri.authority)
+            if (AUTHORITY_TWIDERE_CACHE != uri.authority)
                 throw IllegalArgumentException(uri.toString())
             return ByteString.decodeBase64(uri.lastPathSegment).utf8()
         }

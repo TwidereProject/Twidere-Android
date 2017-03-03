@@ -156,7 +156,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START != 0L) return
+        if (ILoadMoreSupportAdapter.START in position) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         val loaderArgs = Bundle(arguments)

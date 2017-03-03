@@ -167,10 +167,10 @@
             android:drawableStart="@drawable/ic_label_gallery"
             android:gravity="center_vertical"
             android:minHeight="@dimen/element_size_small"
-            android:text="@string/media"
             android:textAppearance="?android:textAppearanceSmall"
             android:textStyle="bold"
-            app:iabColor="?android:textColorSecondary"/>
+            app:iabColor="?android:textColorSecondary"
+            tools:text="@string/label_media"/>
 
         <org.mariotaku.twidere.view.CardMediaContainer
             android:id="@+id/mediaPreview"
@@ -265,10 +265,10 @@
                 android:drawableLeft="@drawable/ic_label_gallery"
                 android:drawableStart="@drawable/ic_label_gallery"
                 android:gravity="center_vertical"
-                android:text="@string/media"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textStyle="bold"
                 app:iabColor="?android:textColorSecondary"
+                tools:text="@string/label_media"
                 tools:visibility="gone"/>
 
             <org.mariotaku.twidere.view.CardMediaContainer

@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.ktextension.safeMoveToPosition
@@ -319,7 +320,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
+        if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         when (getItemCountIndex(position)) {

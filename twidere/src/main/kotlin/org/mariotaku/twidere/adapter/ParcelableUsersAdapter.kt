@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
+import org.mariotaku.ktextension.contains
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.Companion.ITEM_VIEW_TYPE_LOAD_INDICATOR
@@ -150,7 +151,7 @@ class ParcelableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
+        if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         if (position == userCount) {

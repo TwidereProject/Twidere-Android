@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import org.apache.commons.lang3.ArrayUtils
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -243,7 +244,7 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L && position == 0) {
+        if (position == 0 && ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR
         } else if (position == activityCount) {
             return ITEM_VIEW_TYPE_LOAD_INDICATOR

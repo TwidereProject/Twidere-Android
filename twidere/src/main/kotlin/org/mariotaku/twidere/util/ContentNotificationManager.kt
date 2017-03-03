@@ -41,8 +41,8 @@ import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.getSummaryText
+import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
@@ -158,7 +158,7 @@ class ContentNotificationManager(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
                 Expression.greaterThanArgs(Activities.POSITION_KEY)
         ).sql
-        val whereArgs = arrayOf(accountKey.toString(), position.toString())
+        val whereArgs = arrayOf(accountKey.toString(), "0")
         @SuppressLint("Recycle")
         val c = cr.query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 OrderBy(Activities.TIMESTAMP, false).sql) ?: return
@@ -182,9 +182,10 @@ class ContentNotificationManager(
 
             var timestamp: Long = -1
             val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
+            var consumed = 0
             val remaining = c.forEachRow(5) { cur, idx ->
 
-                val activity = ci.newObject(c)
+                val activity = ci.newObject(cur)
                 if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
@@ -217,14 +218,16 @@ class ContentNotificationManager(
                     pebbleNotificationStringBuilder.append(summary)
                     pebbleNotificationStringBuilder.append("\n")
                 }
+                consumed++
                 return@forEachRow true
             }
             if (remaining < 0) return
             if (remaining > 0) {
-                style.addLine(resources.getString(R.string.and_N_more, count - c.position))
-                pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, count - c.position))
+                style.addLine(resources.getString(R.string.and_N_more, remaining))
+                pebbleNotificationStringBuilder.append(resources.getString(R.string.and_N_more, remaining))
             }
-            val displayCount = 5 + remaining
+            val displayCount = consumed + remaining
+            if (displayCount <= 0) return
             val title = resources.getQuantityString(R.plurals.N_new_interactions,
                     displayCount, displayCount)
             builder.setContentTitle(title)
@@ -325,6 +328,7 @@ class ContentNotificationManager(
         moveToFirst()
         var current = 0
         while (!isAfterLast) {
+            @Suppress("ConvertTwoComparisonsToRangeCheck")
             if (limit >= 0 && current >= limit) break
             if (action(this, current)) {
                 current++

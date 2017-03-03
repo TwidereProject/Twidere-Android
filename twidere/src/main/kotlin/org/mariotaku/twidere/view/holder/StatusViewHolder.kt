@@ -12,6 +12,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.widget.ImageView
+import android.widget.TextView
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_status.view.*
 import org.mariotaku.ktextension.applyFontFamily
@@ -314,6 +315,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
 
         if (status.media.isNotNullOrEmpty()) {
+
+            mediaLabel.displayMediaLabel(status.card_name, status.media, status.location,
+                    status.place_full_name, status.is_possibly_sensitive)
+
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
                 mediaLabel.visibility = View.VISIBLE
@@ -417,6 +422,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     private fun displayQuotedMedia(requestManager: RequestManager, status: ParcelableStatus) {
         if (status.quoted_media?.isNotEmpty() ?: false) {
+
+            quotedMediaLabel.displayMediaLabel(null, status.quoted_media, null, null,
+                    status.is_possibly_sensitive)
 
             if (!adapter.sensitiveContentEnabled && status.is_possibly_sensitive) {
                 // Sensitive content, show label instead of media view
@@ -559,35 +567,47 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         return !adapter.isCardActionsShown(RecyclerView.NO_POSITION)
     }
 
-    private fun displayExtraTypeIcon(cardName: String?, media: Array<ParcelableMedia?>?,
+    private fun TextView.displayMediaLabel(cardName: String?, media: Array<ParcelableMedia?>?,
             location: ParcelableLocation?, placeFullName: String?,
             sensitive: Boolean) {
-        val icon = if (sensitive) {
-            R.drawable.ic_label_warning
+        if (sensitive) {
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_warning, 0, 0, 0)
+            setText(R.string.label_sensitive)
+        } else if (media != null && media.isNotEmpty()) {
+            val type = media.type
+            if (type in videoTypes) {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_video, 0, 0, 0)
+                setText(R.string.label_video)
+            } else if (media.size > 1) {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_gallery, 0, 0, 0)
+                setText(R.string.label_photos)
+            } else {
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_gallery, 0, 0, 0)
+                setText(R.string.label_photo)
+            }
         } else {
-            R.drawable.ic_label_gallery
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_gallery, 0, 0, 0)
+            setText(R.string.label_media)
         }
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(mediaLabel, icon, 0, 0, 0)
-        mediaLabel.refreshDrawableState()
+        refreshDrawableState()
+    }
+
+    private inline val Array<ParcelableMedia?>.type: Int get() {
+        forEach { if (it != null) return it.type }
+        return 0
     }
 
     private fun hasVideo(media: Array<ParcelableMedia?>?): Boolean {
         if (media == null) return false
-        media.filterNotNull().forEach {
-            when (it.type) {
-                ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF, ParcelableMedia.Type.EXTERNAL_PLAYER -> return true
-            }
+        return media.any { item ->
+            if (item == null) return@any false
+            return@any videoTypes.contains(item.type)
         }
-        return false
     }
 
     internal class EventListener(holder: StatusViewHolder) : OnClickListener, OnLongClickListener {
 
-        val holderRef: WeakReference<StatusViewHolder>
-
-        init {
-            this.holderRef = WeakReference(holder)
-        }
+        private val holderRef = WeakReference(holder)
 
         override fun onClick(v: View) {
             val holder = holderRef.get() ?: return
@@ -649,6 +669,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
     companion object {
         const val layoutResource = R.layout.list_item_status
+
+        private val videoTypes = intArrayOf(ParcelableMedia.Type.VIDEO, ParcelableMedia.Type.ANIMATED_GIF,
+                ParcelableMedia.Type.EXTERNAL_PLAYER)
     }
 }
 

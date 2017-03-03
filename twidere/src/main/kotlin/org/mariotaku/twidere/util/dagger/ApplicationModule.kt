@@ -287,6 +287,15 @@ class ApplicationModule(private val application: Application) {
     }
 
     @Provides
+    fun okHttpClient(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
+            cache: Cache): OkHttpClient {
+        val conf = HttpClientFactory.HttpClientConfiguration(preferences)
+        val builder = OkHttpClient.Builder()
+        HttpClientFactory.initOkHttpClient(conf, builder, dns, connectionPool, cache)
+        return builder.build()
+    }
+
+    @Provides
     @Singleton
     fun dataSourceFactory(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): DataSource.Factory {

@@ -45,7 +45,7 @@ class AddUserListMembersTask(
                 val nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
                 val displayName = userColorNameManager.getDisplayName(user.key, user.name,
                         user.screen_name, nameFirst)
-                message = context.getString(R.string.added_user_to_list, displayName, result.data.name)
+                message = context.getString(R.string.message_toast_added_user_to_list, displayName, result.data.name)
             } else {
                 val res = context.resources
                 message = res.getQuantityString(R.plurals.added_N_users_to_list, users.size, users.size,

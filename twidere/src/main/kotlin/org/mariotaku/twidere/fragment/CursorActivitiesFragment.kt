@@ -31,6 +31,7 @@ import android.support.v4.content.Loader
 import android.widget.Toast
 import com.squareup.otto.Subscribe
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -140,7 +141,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START != 0L || refreshing) return
+        if (ILoadMoreSupportAdapter.START in position || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getActivities(object : SimpleRefreshTaskParam() {
@@ -337,8 +338,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     }
 
     class CursorActivitiesLoader(context: Context, uri: Uri, projection: Array<String>,
-                                 selection: String, selectionArgs: Array<String>,
-                                 sortOrder: String, fromUser: Boolean) : ExtendedObjectCursorLoader<ParcelableActivity>(context, ParcelableActivityCursorIndices::class.java, uri, projection, selection, selectionArgs, sortOrder, fromUser) {
+            selection: String, selectionArgs: Array<String>,
+            sortOrder: String, fromUser: Boolean) : ExtendedObjectCursorLoader<ParcelableActivity>(context, ParcelableActivityCursorIndices::class.java, uri, projection, selection, selectionArgs, sortOrder, fromUser) {
 
         override fun createObjectCursor(cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>): ObjectCursor<ParcelableActivity> {
             val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
@@ -346,6 +347,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         }
 
         class ActivityCursor(cursor: Cursor, indies: ObjectCursor.CursorIndices<ParcelableActivity>,
-                             val filteredUserIds: Array<UserKey>) : ObjectCursor<ParcelableActivity>(cursor, indies)
+                val filteredUserIds: Array<UserKey>) : ObjectCursor<ParcelableActivity>(cursor, indies)
     }
 }

@@ -110,7 +110,7 @@
   <string name="action_add_member">הוסף משתמש</string>
   <string name="action_add_tab">הוסף כרטיסייה</string>
   <string name="action_add_to_list">הוסף לרשימה</string>
-  <string name="added_user_to_list">המשתמש <xliff:g id="user">%1$s</xliff:g> נוסף לרשימה "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">המשתמש <xliff:g id="user">%1$s</xliff:g> נוסף לרשימה "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">ועוד <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">פורמט URL של הAPI</string>
   <string name="app_description">אפליקציית טוויטר משלך</string>

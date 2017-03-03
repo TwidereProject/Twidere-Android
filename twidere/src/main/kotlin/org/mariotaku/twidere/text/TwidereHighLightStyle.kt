@@ -21,6 +21,7 @@ package org.mariotaku.twidere.text
 
 import android.text.TextPaint
 import android.text.style.CharacterStyle
+import org.mariotaku.ktextension.contains
 
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE
@@ -28,10 +29,10 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHL
 class TwidereHighLightStyle(private val option: Int) : CharacterStyle() {
 
     override fun updateDrawState(ds: TextPaint) {
-        if (option and VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE != 0) {
+        if (VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE in option) {
             ds.isUnderlineText = true
         }
-        if (option and VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT != 0) {
+        if (VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT in option) {
             ds.color = ds.linkColor
         }
     }

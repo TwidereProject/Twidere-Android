@@ -183,7 +183,7 @@
   <string name="action_add_tab">Tab hinzufügen</string>
   <string name="action_add_to_filter">Zum Filter hinzufügen</string>
   <string name="action_add_to_list">Zur Liste hinzufügen</string>
-  <string name="added_user_to_list"><xliff:g id="user">%1$s</xliff:g> wurde zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</string>
+  <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> wurde zur Liste "<xliff:g id="list">%2$s</xliff:g>\" hinzugefügt.</string>
   <string name="and_N_more">und <xliff:g id="count">%d</xliff:g> weitere</string>
   <string name="api_url_format">API URL Format</string>
   <string name="app_description">Deine eigene Twitter-App</string>

@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -174,7 +175,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
 
     override fun onLoadMoreContents(@IndicatorPosition position: Long) {
         // Only supports load from end, skip START flag
-        if (position and ILoadMoreSupportAdapter.START != 0L) return
+        if (ILoadMoreSupportAdapter.START in position) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
         getStatuses(object : SimpleRefreshTaskParam() {

@@ -24,10 +24,10 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Parcelable
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
-import android.support.v4.app.hasRunningLoadersSafe
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
 import android.support.v4.view.ViewPager
@@ -429,18 +429,10 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (shareMediaPosition == -1) return
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
-        val f = adapter.instantiateItem(viewPager, shareMediaPosition) as? CacheDownloadMediaViewerFragment ?: return
-        val cacheUri = f.downloadResult?.cacheUri ?: return
+        val f = adapter.instantiateItem(viewPager, shareMediaPosition) as? MediaViewerFragment ?: return
+        val fileInfo = f.cacheFileInfo() ?: return
         val destination = ShareProvider.getFilesDir(this) ?: return
-        val type: String
-        when (f) {
-            is VideoPageFragment -> type = CacheFileType.VIDEO
-            is ImagePageFragment -> type = CacheFileType.IMAGE
-            is GifPageFragment -> type = CacheFileType.IMAGE
-            else -> throw UnsupportedOperationException("Unsupported fragment $f")
-        }
-        val task = object : SaveFileTask(this@MediaViewerActivity, cacheUri, destination,
-                CacheProvider.CacheFileTypeCallback(this@MediaViewerActivity, type)) {
+        val task = object : SaveFileTask(this@MediaViewerActivity, destination, fileInfo) {
             private val PROGRESS_FRAGMENT_TAG = "progress"
 
             override fun dismissProgress() {
@@ -491,15 +483,42 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (saveToStoragePosition == -1) return
         val viewPager = findViewPager()
         val adapter = viewPager.adapter
-        val f = adapter.instantiateItem(viewPager, saveToStoragePosition) as? CacheDownloadMediaViewerFragment ?: return
-        val cacheUri = f.downloadResult?.cacheUri ?: return
-        val task: SaveFileTask = when (f) {
-            is ImagePageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.IMAGE)
-            is VideoPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.VIDEO)
-            is GifPageFragment -> SaveMediaToGalleryTask.create(this, cacheUri, CacheFileType.IMAGE)
-            else -> throw UnsupportedOperationException()
+        val f = adapter.instantiateItem(viewPager, saveToStoragePosition) as? MediaViewerFragment ?: return
+        val fileInfo = f.cacheFileInfo() ?: return
+        val type = (fileInfo as? CacheProvider.CacheFileTypeSupport)?.cacheFileType
+        val pubDir = when (type) {
+            CacheFileType.VIDEO -> {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)
+            }
+            CacheFileType.IMAGE -> {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+            }
+            else -> {
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            }
         }
+        val saveDir = File(pubDir, "Twidere")
+        val task = SaveMediaToGalleryTask(this, fileInfo, saveDir)
         AsyncTaskUtils.executeTask(task)
+    }
+
+    private fun MediaViewerFragment.cacheFileInfo(): SaveFileTask.FileInfo? {
+        return when (this) {
+            is CacheDownloadMediaViewerFragment -> {
+                val cacheUri = downloadResult?.cacheUri ?: return null
+                val type = when (this) {
+                    is ImagePageFragment -> CacheFileType.IMAGE
+                    is VideoPageFragment -> CacheFileType.VIDEO
+                    is GifPageFragment -> CacheFileType.IMAGE
+                    else -> return null
+                }
+                CacheProvider.ContentUriFileInfo(activity, cacheUri, type)
+            }
+            is ExoPlayerPageFragment -> {
+                return getRequestFileInfo()
+            }
+            else -> return null
+        }
     }
 
     companion object {

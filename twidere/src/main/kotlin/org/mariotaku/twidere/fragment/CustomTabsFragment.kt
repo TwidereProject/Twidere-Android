@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.layout_draggable_list_with_empty_view.*
 import kotlinx.android.synthetic.main.list_item_section_header.view.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.set
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
@@ -353,8 +354,13 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             positiveButton.setOnClickListener {
                 tab.name = tabName.text.toString()
                 tab.icon = (iconSpinner.selectedItem as DrawableHolder).persistentKey
-                tab.arguments = CustomTabUtils.newTabArguments(tabType)
-                if (hasAccount) {
+                if (tab.arguments == null) {
+                    tab.arguments = CustomTabUtils.newTabArguments(tabType)
+                }
+                if (tab.extras == null) {
+                    tab.extras = CustomTabUtils.newTabExtras(tabType)
+                }
+                if (hasAccount && (!editMode || TabConfiguration.FLAG_ACCOUNT_MUTABLE in conf.accountFlags)) {
                     val account = accountSpinner.selectedItem as? AccountDetails ?: return@setOnClickListener
                     if (!account.dummy) {
                         tab.arguments?.accountKeys = arrayOf(account.key)
@@ -362,7 +368,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                         tab.arguments?.accountKeys = null
                     }
                 }
-                tab.extras = CustomTabUtils.newTabExtras(tabType)
                 extraConfigurations.forEach { extraConf ->
                     // Make sure immutable configuration skipped in edit mode
                     if (editMode && !extraConf.isMutable) return@forEach
@@ -524,3 +529,4 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     }
 
 }
+

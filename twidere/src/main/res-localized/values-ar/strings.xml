@@ -154,7 +154,7 @@
   <string name="action_add_tab">إضافة لسان</string>
   <string name="action_add_to_filter">إضافة إلى لائحة الكتم</string>
   <string name="action_add_to_list">إضافة إلى القائمة</string>
-  <string name="added_user_to_list">أُضيف <xliff:g id="user">%1$s</xliff:g> إلى قائمة "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">أُضيف <xliff:g id="user">%1$s</xliff:g> إلى قائمة "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">و <xliff:g id="count">%d</xliff:g> أخرون</string>
   <string name="api_url_format">صيغة رابط الAPI</string>
   <string name="app_description">برنامجك الخاص لتويتر</string>

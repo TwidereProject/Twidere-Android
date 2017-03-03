@@ -156,7 +156,7 @@
   <string name="action_add_tab">Afegeix una pestanya</string>
   <string name="action_add_to_filter">Afegeix al filtre</string>
   <string name="action_add_to_list">Afegeix a la llista</string>
-  <string name="added_user_to_list">S\'ha afegit l\'usuari <xliff:g id="user">%1$s</xliff:g> a la llista «<xliff:g id="list">%2$s</xliff:g>».</string>
+  <string name="message_toast_added_user_to_list">S\'ha afegit l\'usuari <xliff:g id="user">%1$s</xliff:g> a la llista «<xliff:g id="list">%2$s</xliff:g>».</string>
   <string name="and_N_more">i <xliff:g id="count">%d</xliff:g> més</string>
   <string name="api_url_format">Format de la URL de l\'API</string>
   <string name="app_description">La vostra app de Twitter</string>

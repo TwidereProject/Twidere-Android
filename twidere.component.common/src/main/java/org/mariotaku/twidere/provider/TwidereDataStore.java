@@ -802,13 +802,6 @@ public interface TwidereDataStore {
             Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
         }
 
-        interface ByFriends extends Activities {
-
-            String CONTENT_PATH = "activities_by_friends";
-            String TABLE_NAME = "activities_by_friends";
-
-            Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, CONTENT_PATH);
-        }
     }
 
     interface Tabs extends BaseColumns {

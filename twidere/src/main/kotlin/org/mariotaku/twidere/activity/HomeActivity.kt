@@ -68,6 +68,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.coerceInOr
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -221,7 +222,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             tabDisplayOptionInt = TabPagerIndicator.DisplayOption.ICON
         }
         mainTabs.setTabDisplayOption(tabDisplayOptionInt)
-        mainTabs.setTabExpandEnabled(tabDisplayOptionInt and TabPagerIndicator.DisplayOption.LABEL == 0)
+        mainTabs.setTabExpandEnabled(TabPagerIndicator.DisplayOption.LABEL !in tabDisplayOptionInt)
         mainTabs.setDisplayBadge(preferences[unreadCountKey])
         mainTabs.updateAppearance()
 

@@ -20,35 +20,28 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
-import android.net.Uri
 import android.os.AsyncTask
 import android.text.TextUtils.isEmpty
 import android.util.Log
-import okio.BufferedSink
-import okio.Okio
-import okio.Source
+import android.webkit.MimeTypeMap
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.util.Utils
+import java.io.Closeable
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.lang.ref.WeakReference
+import java.util.*
 
 abstract class SaveFileTask(
         context: Context,
-        private val source: Uri,
         private val destination: File,
-        private val getMimeType: SaveFileTask.FileInfoCallback
+        private val fileInfo: FileInfo
 ) : AsyncTask<Any, Any, SaveFileTask.SaveFileResult>() {
 
-    private val contextRef: WeakReference<Context>
-
-    init {
-        this.contextRef = WeakReference(context)
-    }
+    private val contextRef = WeakReference(context)
 
     override fun doInBackground(vararg args: Any): SaveFileResult? {
-        val context = contextRef.get() ?: return null
-        return saveFile(context, source, getMimeType, destination, requiresValidExtension)
+        return saveFile(fileInfo, destination, requiresValidExtension)
     }
 
     override fun onCancelled() {
@@ -81,14 +74,23 @@ abstract class SaveFileTask(
     protected val context: Context?
         get() = contextRef.get()
 
-    interface FileInfoCallback {
-        fun getFilename(source: Uri): String?
+    interface FileInfo : Closeable {
+        val fileName: String?
 
-        fun getMimeType(source: Uri): String?
+        val mimeType: String?
 
-        fun getExtension(mimeType: String?): String?
+        val fileExtension: String? get() {
+            val typeLowered = mimeType?.toLowerCase(Locale.US) ?: return null
+            return when (typeLowered) {
+            // Hack for fanfou image type
+                "image/jpg" -> "jpg"
+                else -> MimeTypeMap.getSingleton().getExtensionFromMimeType(typeLowered)
+            }
+        }
 
         val specialCharacter: Char
+
+        fun inputStream(): InputStream
     }
 
     class SaveFileResult(savedFile: File, mimeType: String) {
@@ -105,50 +107,42 @@ abstract class SaveFileTask(
 
     companion object {
 
-        fun saveFile(context: Context, source: Uri,
-                     fileInfoCallback: FileInfoCallback,
-                     destinationDir: File, requiresValidExtension: Boolean): SaveFileResult? {
-            val cr = context.contentResolver
-            var ioSrc: Source? = null
-            var sink: BufferedSink? = null
-            try {
-                var name: String = fileInfoCallback.getFilename(source) ?: return null
+        fun saveFile(fileInfo: FileInfo, destinationDir: File, requiresValidExtension: Boolean) = try {
+            fileInfo.use {
+                var name: String = it.fileName ?: return null
                 if (isEmpty(name)) return null
                 if (name.length > 32) {
                     name = name.substring(0, 32)
                 }
-                val mimeType = fileInfoCallback.getMimeType(source) ?: return null
-                val extension = fileInfoCallback.getExtension(mimeType)
+                val mimeType = it.mimeType ?: return null
+                val extension = it.fileExtension
                 if (requiresValidExtension && extension == null) {
                     return null
                 }
                 if (!destinationDir.isDirectory && !destinationDir.mkdirs()) return null
                 var nameToSave = getFileNameWithExtension(name, extension,
-                        fileInfoCallback.specialCharacter, null)
+                        it.specialCharacter, null)
                 var saveFile = File(destinationDir, nameToSave)
                 if (saveFile.exists()) {
                     nameToSave = getFileNameWithExtension(name, extension,
-                            fileInfoCallback.specialCharacter,
+                            it.specialCharacter,
                             System.currentTimeMillis().toString())
                     saveFile = File(destinationDir, nameToSave)
                 }
-                val `in` = cr.openInputStream(source) ?: return null
-                ioSrc = Okio.source(`in`)
-                sink = Okio.buffer(Okio.sink(saveFile))
-                sink!!.writeAll(ioSrc)
-                sink.flush()
-                return SaveFileResult(saveFile, mimeType)
-            } catch (e: IOException) {
-                Log.w(LOGTAG, "Failed to save file", e)
-                return null
-            } finally {
-                Utils.closeSilently(sink)
-                Utils.closeSilently(ioSrc)
+                saveFile.outputStream().use { output ->
+                    it.inputStream().use { input ->
+                        input.copyTo(output)
+                    }
+                }
+                return@use SaveFileResult(saveFile, mimeType)
             }
+        } catch (e: IOException) {
+            Log.w(LOGTAG, "Failed to save file", e)
+            null
         }
 
         internal fun getFileNameWithExtension(name: String, extension: String?,
-                                              specialCharacter: Char, suffix: String?): String {
+                specialCharacter: Char, suffix: String?): String {
             val sb = StringBuilder()
             var end = name.length
             if (extension != null) {

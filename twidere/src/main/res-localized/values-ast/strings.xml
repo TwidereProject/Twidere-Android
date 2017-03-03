@@ -181,7 +181,7 @@
   <string name="action_add_tab">Amestar llingüeta</string>
   <string name="action_add_to_filter">Amestar a Peñeres</string>
   <string name="action_add_to_list">Amestar al llistáu</string>
-  <string name="added_user_to_list">Amestóse a <xliff:g id="user">%1$s</xliff:g> al llistáu «<xliff:g id="list">%2$s</xliff:g>».</string>
+  <string name="message_toast_added_user_to_list">Amestóse a <xliff:g id="user">%1$s</xliff:g> al llistáu «<xliff:g id="list">%2$s</xliff:g>».</string>
   <string name="and_N_more">y <xliff:g id="count">%d</xliff:g> más</string>
   <string name="api_url_format">Formatu d\'URL d\'API</string>
   <string name="app_description">El to veceru propiu de Twitter</string>

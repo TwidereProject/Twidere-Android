@@ -70,6 +70,7 @@ import kotlinx.android.synthetic.main.header_status_common.view.*
 import kotlinx.android.synthetic.main.layout_content_fragment_common.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
+import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.findPositionByItemId
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -1891,7 +1892,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         var isConversationsLoading: Boolean
-            get() = ILoadMoreSupportAdapter.has(loadMoreIndicatorPosition, ILoadMoreSupportAdapter.START)
+            get() = ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition
             set(loading) {
                 if (loading) {
                     loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.START
@@ -1902,7 +1903,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
 
         var isRepliesLoading: Boolean
-            get() = ILoadMoreSupportAdapter.has(loadMoreIndicatorPosition, ILoadMoreSupportAdapter.END)
+            get() = ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition
             set(loading) {
                 if (loading) {
                     loadMoreIndicatorPosition = loadMoreIndicatorPosition or ILoadMoreSupportAdapter.END
@@ -1913,10 +1914,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
 
         class StatusErrorItemViewHolder(itemView: View) : ViewHolder(itemView) {
-            private val textView: TextView
+            private val textView = itemView.findViewById(android.R.id.text1) as TextView
 
             init {
-                textView = itemView.findViewById(android.R.id.text1) as TextView
                 textView.movementMethod = LinkMovementMethod.getInstance()
                 textView.linksClickable = true
             }

@@ -165,13 +165,13 @@ internal object AccountDataQueue {
 
     fun getUserData(manager: AccountManager, account: Account, key: String): String? {
         val future = FutureTask<String?> { manager.getUserData(account, key) }
-        if (Thread.currentThread() == Looper.getMainLooper().thread) {
+        if (Thread.currentThread() === Looper.getMainLooper().thread) {
             future.run()
         } else handler.post {
             future.run()
         }
         try {
-            return future.get(5, TimeUnit.SECONDS)
+            return future.get(1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
             return manager.getUserData(account, key)
         }
@@ -179,13 +179,13 @@ internal object AccountDataQueue {
 
     fun peekAuthToken(manager: AccountManager, account: Account, authTokenType: String): String? {
         val future = FutureTask<String?> { manager.peekAuthToken(account, authTokenType) }
-        if (Thread.currentThread() == Looper.getMainLooper().thread) {
+        if (Thread.currentThread() === Looper.getMainLooper().thread) {
             future.run()
         } else handler.post {
             future.run()
         }
         try {
-            return future.get(5, TimeUnit.SECONDS)
+            return future.get(1, TimeUnit.SECONDS)
         } catch (e: TimeoutException) {
             return manager.peekAuthToken(account, authTokenType)
         }

@@ -150,57 +150,55 @@
     <string name="activities_about_me">Activities about me</string>
     <string name="activities_by_friends">Activities by friends</string>
 
-    <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited your tweet.</string>
-    <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited your tweet.</string>
-    <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favorited a tweet you were tagged in.</string>
-    <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were tagged in.</string>
-    <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favorited a tweet you were mentioned in.</string>
-    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were mentioned in.</string>
-    <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorited your retweet.</string>
-    <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited your retweet.</string>
-    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> is following you.</string>
-    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> are following you.</string>
-    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> liked your tweet.</string>
-    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your tweet.</string>
-    <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> liked a tweet you were tagged in.</string>
-    <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were tagged in.</string>
-    <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> liked a tweet you were mentioned in.</string>
-    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were mentioned in.</string>
-    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> liked your retweet.</string>
-    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your retweet.</string>
-    <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> added you to list.</string>
-    <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists.</string>
-    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list <xliff:g id="list">%2$s</xliff:g>".</string>
-    <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> tagged you.</string>
-    <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> tagged you.</string>
-    <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweeted your tweet.</string>
-    <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your tweet.</string>
-    <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were tagged in.</string>
-    <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were tagged in.</string>
-    <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were mentioned in.</string>
-    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were mentioned in.</string>
-    <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweeted your retweet.</string>
-    <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your retweet.</string>
-    <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
-    <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
-    <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g>.</string>
-    <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>.</string>
-    <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
-    <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
-    <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g>.</string>
-    <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g>.</string>
-    <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> to list.</string>
-    <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list.</string>
-    <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g>\'s tweet.</string>
-    <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet.</string>
-    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> joined Twitter.</string>
-    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> joined Twitter.</string>
+    <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited</string>
+    <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited</string>
+    <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> favorited a tweet you were tagged in</string>
+    <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were tagged in</string>
+    <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> favorited a tweet you were mentioned in</string>
+    <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited a tweet you were mentioned in</string>
+    <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> favorited your retweet</string>
+    <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited your retweet</string>
+    <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> is following you</string>
+    <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> are following you</string>
+    <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> liked</string>
+    <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked</string>
+    <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> liked a tweet you were tagged in</string>
+    <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were tagged in</string>
+    <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> liked a tweet you were mentioned in</string>
+    <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked a tweet you were mentioned in</string>
+    <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> liked your retweet</string>
+    <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your retweet</string>
+    <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> added you to list</string>
+    <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists</string>
+    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list <xliff:g id="list">%2$s</xliff:g>"</string>
+    <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> tagged you</string>
+    <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> tagged you</string>
+    <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweeted</string>
+    <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted</string>
+    <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were tagged in</string>
+    <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were tagged in</string>
+    <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> retweeted a tweet you were mentioned in</string>
+    <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were mentioned in</string>
+    <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweeted your retweet</string>
+    <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your retweet</string>
+    <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
+    <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
+    <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g></string>
+    <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g></string>
+    <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
+    <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
+    <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g></string>
+    <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g></string>
+    <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> to list</string>
+    <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list</string>
+    <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
+    <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
+    <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> joined Twitter</string>
+    <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> joined Twitter</string>
 
     <string name="add_account">Add account</string>
     <string name="add_host_mapping">Add host mapping</string>
     <string name="add_image">Add image</string>
-
-    <string name="added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\".</string>
 
     <string name="and_N_more">and <xliff:g id="count">%d</xliff:g> more</string>
 
@@ -574,6 +572,11 @@
     <string name="mark_as_sensitive">Mark as sensitive</string>
 
     <string name="media">Media</string>
+    <string name="label_media">Media</string>
+    <string name="label_sensitive">Sensitive</string>
+    <string name="label_photo">Photo</string>
+    <string name="label_photos">Photos</string>
+    <string name="label_video">Video</string>
     <string name="media_preload">Media preload</string>
     <string name="media_preview">Media preview</string>
     <string name="media_preview_style">Media preview style</string>
@@ -622,8 +625,9 @@
       ~ periods should be omitted
     -->
     <eat-comment/>
-    <string name="message_toast_accepted_users_follow_request">Accepted <xliff:g id="user">%s</xliff:g>\'s follow request.</string>
+    <string name="message_toast_accepted_users_follow_request">Accepted <xliff:g id="user">%s</xliff:g>\'s follow request</string>
     <string name="message_toast_added_to_filter">Added to filter</string>
+    <string name="message_toast_added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\"</string>
     <string name="message_toast_already_logged_in">You have already logged in</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>

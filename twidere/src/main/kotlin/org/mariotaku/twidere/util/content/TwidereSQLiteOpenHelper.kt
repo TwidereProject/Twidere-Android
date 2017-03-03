@@ -52,7 +52,6 @@ class TwidereSQLiteOpenHelper(
         db.beginTransaction()
         db.execSQL(createTable(Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true))
         db.execSQL(createTable(Activities.AboutMe.TABLE_NAME, Activities.AboutMe.COLUMNS, Activities.AboutMe.TYPES, true))
-        db.execSQL(createTable(Activities.ByFriends.TABLE_NAME, Activities.ByFriends.COLUMNS, Activities.ByFriends.TYPES, true))
         db.execSQL(createTable(Drafts.TABLE_NAME, Drafts.COLUMNS, Drafts.TYPES, true))
         db.setTransactionSuccessful()
         db.endTransaction()
@@ -225,8 +224,6 @@ class TwidereSQLiteOpenHelper(
         safeUpgrade(db, Statuses.TABLE_NAME, Statuses.COLUMNS, Statuses.TYPES, true, null)
         safeUpgrade(db, Activities.AboutMe.TABLE_NAME, Activities.AboutMe.COLUMNS,
                 Activities.AboutMe.TYPES, true, null)
-        safeUpgrade(db, Activities.ByFriends.TABLE_NAME, Activities.ByFriends.COLUMNS,
-                Activities.ByFriends.TYPES, true, null)
         migrateDrafts(db)
         safeUpgrade(db, CachedUsers.TABLE_NAME, CachedUsers.COLUMNS, CachedUsers.TYPES, true, null,
                 createConflictReplaceConstraint(CachedUsers.USER_KEY))
@@ -254,6 +251,7 @@ class TwidereSQLiteOpenHelper(
         db.beginTransaction()
         db.execSQL(SQLQueryBuilder.dropTable(true, "network_usages").sql)
         db.execSQL(SQLQueryBuilder.dropTable(true, "mentions").sql)
+        db.execSQL(SQLQueryBuilder.dropTable(true, "activities_by_friends").sql)
         createTriggers(db)
         createIndices(db)
         db.setTransactionSuccessful()

@@ -26,11 +26,11 @@ import android.support.annotation.IntDef
  */
 interface ILoadMoreSupportAdapter {
 
-    @IndicatorPosition
     var loadMoreIndicatorPosition: Long
+        @IndicatorPosition get @IndicatorPosition set
 
-    @IndicatorPosition
     var loadMoreSupportedPosition: Long
+        @IndicatorPosition get @IndicatorPosition set
 
     @IntDef(flag = true, value = *longArrayOf(NONE, START, END, BOTH))
     annotation class IndicatorPosition
@@ -48,9 +48,5 @@ interface ILoadMoreSupportAdapter {
             return orig and supported
         }
 
-        @IndicatorPosition
-        fun has(@IndicatorPosition flags: Long, @IndicatorPosition compare: Long): Boolean {
-            return flags and compare != 0L
-        }
     }
 }

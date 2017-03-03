@@ -176,7 +176,7 @@
   <string name="action_add_tab">Tambah tab</string>
   <string name="action_add_to_filter">Tambahkan ke penyaringan</string>
   <string name="action_add_to_list">Masukkan ke daftar</string>
-  <string name="added_user_to_list">Menambahkan <xliff:g id="user">%1$s</xliff:g> ke daftar "<xliff:g id="list">%2$s</xliff:g>\".</string>
+  <string name="message_toast_added_user_to_list">Menambahkan <xliff:g id="user">%1$s</xliff:g> ke daftar "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="and_N_more">dan <xliff:g id="count">%d</xliff:g> lebih lagi</string>
   <string name="api_url_format">Format URL API</string>
   <string name="app_description">Aplikasi Twitter anda</string>
