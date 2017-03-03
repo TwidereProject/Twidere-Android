@@ -486,6 +486,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     }
 
     private fun notifyContentObserver(uri: Uri) {
+        if (!uri.getBooleanQueryParameter(QUERY_PARAM_NOTIFY_CHANGE, true)) return
         handler.post {
             context?.contentResolver?.notifyChange(uri, null)
         }
