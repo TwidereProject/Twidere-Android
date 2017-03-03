@@ -13,6 +13,7 @@ local.properties
 # User-specific configurations
 /.idea
 *.iml
+gradle-app.setting
 
 # OS-specific files
 .DS_Store
