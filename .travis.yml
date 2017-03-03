@@ -72,6 +72,8 @@ install:
   - cat private/ssh_known_hosts >> ~/.ssh/known_hosts
   # Checkout Google components
   - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
+  # Remove Google components .git dir
+  - rm -rf twidere/src/google/.git
 
 before_script:
   # Validate if patches work
