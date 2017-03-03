@@ -111,7 +111,7 @@ dependencies {
     }
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.5:release@aar'
+    fdroidCompile 'org.osmdroid:osmdroid-android:5.6.4'
 
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
     debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
@@ -140,15 +140,15 @@ dependencies {
     compile 'com.twitter:twitter-text:1.14.3'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
-    compile 'dnsjava:dnsjava:2.1.7'
+    compile 'dnsjava:dnsjava:2.1.8'
     compile 'com.commonsware.cwac:layouts:0.4.3'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'com.github.mariotaku:MessageBubbleView:1.6'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.15'
-    compile 'com.sprylab.android.texturevideoview:texturevideoview:1.1.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
+    compile 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
     compile 'com.squareup:pollexor:2.0.4'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-primitives:commons-primitives:1.0'
@@ -160,11 +160,11 @@ dependencies {
     compile 'com.github.mariotaku:PickNCrop:0.9.21'
     compile "com.github.mariotaku.RestFu:library:$mariotaku_restfu_version"
     compile "com.github.mariotaku.RestFu:okhttp3:$mariotaku_restfu_version"
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.8'
-    compile 'org.attoparser:attoparser:2.0.1.RELEASE'
-    compile 'com.getkeepsafe.taptargetview:taptargetview:1.6.0'
+    compile 'org.attoparser:attoparser:2.0.3.RELEASE'
+    compile 'com.getkeepsafe.taptargetview:taptargetview:1.8.0'
     compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
     compile "com.google.android.exoplayer:exoplayer:$exoplayer_version"
     compile "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
