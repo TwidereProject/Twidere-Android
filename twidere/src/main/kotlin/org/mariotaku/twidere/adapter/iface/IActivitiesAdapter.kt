@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.adapter.iface
 
 import org.mariotaku.twidere.model.ParcelableActivity
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 
 /**
@@ -31,8 +30,6 @@ interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     val activityCount: Int
 
     val mediaPreviewStyle: Int
-
-    val mediaLoadingHandler: MediaLoadingHandler
 
     val mediaPreviewEnabled: Boolean
 

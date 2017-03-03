@@ -33,9 +33,6 @@ class StaggeredGridParcelableStatusesAdapter(
         requestManager: RequestManager
 ) : ParcelableStatusesAdapter(context, requestManager) {
 
-    override val progressViewIds: IntArray
-        get() = intArrayOf(R.id.mediaImageProgress)
-
     override fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder {
         val view = inflater.inflate(R.layout.adapter_item_media_status, parent, false)
         val holder = MediaStatusViewHolder(this, view)

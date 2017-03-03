@@ -94,7 +94,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             val adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
             adapter.setShouldShowAccountsColor(true)
             val holder = StatusViewHolder(adapter, itemContent)
-            holder.displayStatus(status = status, displayInReplyTo = false, displayExtraType = true)
+            holder.displayStatus(status = status, displayInReplyTo = false)
 
             textCountView.maxLength = details.textLimit
 

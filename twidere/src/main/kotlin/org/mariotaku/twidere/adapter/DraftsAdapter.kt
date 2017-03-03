@@ -48,7 +48,6 @@ class DraftsAdapter(
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
 
-    private val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
     private val mediaPreviewStyle: Int
 
     var textSize: Float = 0f
@@ -78,7 +77,7 @@ class DraftsAdapter(
                 val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)
                 holder.mediaPreviewContainer.visibility = View.VISIBLE
                 holder.mediaPreviewContainer.displayMedia(requestManager = requestManager,
-                        media = media, loadingHandler = mediaLoadingHandler)
+                        media = media)
             }
             Draft.Action.FAVORITE, Draft.Action.RETWEET -> {
                 val extras = draft.action_extras as? StatusObjectExtras

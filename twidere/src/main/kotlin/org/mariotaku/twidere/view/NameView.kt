@@ -70,7 +70,7 @@ class NameView(context: Context, attrs: AttributeSet? = null) : FixedTextView(co
         secondaryTextStyle = StyleSpan(a.getInt(R.styleable.NameView_nv_secondaryTextStyle, 0))
         a.recycle()
         nameFirst = true
-        if (isInEditMode) {
+        if (isInEditMode && text.isNullOrEmpty()) {
             name = "Name"
             screenName = "@screenname"
             updateText()

@@ -54,7 +54,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
     }
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
-            displayExtraType: Boolean, displayPinned: Boolean) {
+            displayPinned: Boolean) {
         val media = status.media ?: return
         if (media.isEmpty()) return
         val firstMedia = media[0]

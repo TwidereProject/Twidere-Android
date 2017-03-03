@@ -42,7 +42,7 @@ public class ThemedListPreferenceDialogFragmentCompat extends ThemedPreferenceDi
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
         super.onPrepareDialogBuilder(builder);
         final ListPreference preference = getListPreference();
-        final String[] entries = TwidereArrayUtils.toStringArray(preference.getEntries());
+        final CharSequence[] entries = preference.getEntries();
         if (entries == null || preference.getEntryValues() == null) {
             throw new IllegalStateException(
                     "ListPreference requires an entries array and an entryValues array.");

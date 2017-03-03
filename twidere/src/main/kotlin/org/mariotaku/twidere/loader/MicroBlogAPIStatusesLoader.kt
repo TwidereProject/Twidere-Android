@@ -44,14 +44,12 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
-import org.mariotaku.twidere.util.TwidereArrayUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.cache.JsonCache
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
@@ -218,10 +216,7 @@ abstract class MicroBlogAPIStatusesLoader(
         }
 
     private val serializationKey: String?
-        get() {
-            if (savedStatusesArgs == null) return null
-            return TwidereArrayUtils.toString(savedStatusesArgs, '_', false)
-        }
+        get() = savedStatusesArgs?.joinToString("_")
 
     private fun saveCachedData(data: List<ParcelableStatus>?) {
         val key = serializationKey
@@ -237,11 +232,6 @@ abstract class MicroBlogAPIStatusesLoader(
             }
         }
 
-    }
-
-    companion object {
-
-        private val pool = Executors.newSingleThreadExecutor()
     }
 
 }

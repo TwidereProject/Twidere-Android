@@ -42,7 +42,6 @@ import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
 import org.mariotaku.twidere.model.*
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
@@ -63,7 +62,6 @@ abstract class ParcelableStatusesAdapter(
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    override final val mediaLoadingHandler: MediaLoadingHandler
     final override val twidereLinkify: TwidereLinkify
     @PreviewStyle
     final override val mediaPreviewStyle: Int = preferences[mediaPreviewStyleKey]
@@ -117,8 +115,6 @@ abstract class ParcelableStatusesAdapter(
 
     override val itemCounts = ItemCounts(4)
 
-    protected abstract val progressViewIds: IntArray
-
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
 
@@ -137,7 +133,6 @@ abstract class ParcelableStatusesAdapter(
         }
 
     init {
-        mediaLoadingHandler = MediaLoadingHandler(*progressViewIds)
         val handler = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
         twidereLinkify = TwidereLinkify(handler)
         handler.setAdapter(this)

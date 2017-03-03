@@ -1020,8 +1020,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.mediaPreview.visibility = View.VISIBLE
                 itemView.mediaPreviewLoad.visibility = View.GONE
                 itemView.mediaPreview.displayMedia(adapter.requestManager, media = media,
-                        accountId = status.account_key, mediaClickListener = adapter.fragment,
-                        loadingHandler = adapter.mediaLoadingHandler)
+                        accountId = status.account_key, mediaClickListener = adapter.fragment)
             } else {
                 itemView.mediaPreviewContainer.visibility = View.VISIBLE
                 itemView.mediaPreview.visibility = View.GONE
@@ -1487,7 +1486,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val fragment: StatusFragment
     ) : LoadMoreSupportAdapter<ViewHolder>(fragment.context, Glide.with(fragment)), IStatusesAdapter<List<ParcelableStatus>> {
         private val inflater: LayoutInflater
-        override val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
         override val twidereLinkify: TwidereLinkify
 
         override var statusClickListener: StatusClickListener? = null

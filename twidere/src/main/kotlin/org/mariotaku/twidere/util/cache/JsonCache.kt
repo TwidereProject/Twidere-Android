@@ -19,18 +19,33 @@
 
 package org.mariotaku.twidere.util.cache
 
-import org.mariotaku.twidere.model.ParcelableStatus
+import com.bluelinelabs.logansquare.LoganSquare
+import com.bumptech.glide.disklrucache.DiskLruCache
+import org.mariotaku.twidere.BuildConfig
+import java.io.File
+import java.io.IOException
 
 /**
  * Created by mariotaku on 2017/3/1.
  */
 
-class JsonCache {
-    fun <T> getList(key: String, cls: Class<T>): List<T>? {
-        return emptyList()
+class JsonCache(val cacheDir: File) {
+
+    private val cache = try {
+        DiskLruCache.open(cacheDir, BuildConfig.VERSION_CODE, 1, 100 * 1048576)
+    } catch (e: IOException) {
+        null
     }
 
-    fun <T> saveList(key: String, list: List<T>, cls: Class<ParcelableStatus>) {
+    fun <T> getList(key: String, cls: Class<T>): List<T>? {
+        return cache?.get(key)?.getFile(0)?.inputStream()?.use {
+            LoganSquare.parseList(it, cls)
+        }
+    }
 
+    fun <T> saveList(key: String, list: List<T>, cls: Class<T>) {
+        cache?.get(key)?.getFile(0)?.outputStream()?.use {
+            LoganSquare.serialize(list, it, cls)
+        }
     }
 }

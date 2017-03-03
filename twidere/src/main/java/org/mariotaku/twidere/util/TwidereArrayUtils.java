@@ -69,19 +69,6 @@ public final class TwidereArrayUtils {
         }
     }
 
-    public static String toString(final long[] array, final char token, final boolean include_space) {
-        final StringBuilder builder = new StringBuilder();
-        final int length = array.length;
-        for (int i = 0; i < length; i++) {
-            final String idString = String.valueOf(array[i]);
-            if (i > 0) {
-                builder.append(include_space ? token + " " : token);
-            }
-            builder.append(idString);
-        }
-        return builder.toString();
-    }
-
     public static String toString(final Object[] array, final char token, final boolean include_space) {
         final StringBuilder builder = new StringBuilder();
         final int length = array.length;
@@ -106,14 +93,4 @@ public final class TwidereArrayUtils {
         return stringArray;
     }
 
-    public static String[] toStringArray(final Object array) {
-        return toStringArray(array, 0, Array.getLength(array));
-    }
-
-
-    public static void offset(long[] array, long offset) {
-        for (int i = 0; i < array.length; i++) {
-            array[i] += offset;
-        }
-    }
 }

@@ -37,7 +37,6 @@ import org.mariotaku.twidere.extension.model.timestamp
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType
 import org.mariotaku.twidere.util.DirectMessageOnLinkClickHandler
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
@@ -60,7 +59,6 @@ class MessagesConversationAdapter(
     val linkHighlightingStyle: Int = preferences[linkHighlightOptionKey]
     val nameFirst: Boolean = preferences[nameFirstKey]
     val linkify: TwidereLinkify = TwidereLinkify(DirectMessageOnLinkClickHandler(context, null, preferences))
-    val mediaLoadingHandler: MediaLoadingHandler = MediaLoadingHandler()
     val mediaClickListener: OnMediaClickListener = object : OnMediaClickListener {
         override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
             listener?.onMediaClick(id.toInt(), media, accountKey)

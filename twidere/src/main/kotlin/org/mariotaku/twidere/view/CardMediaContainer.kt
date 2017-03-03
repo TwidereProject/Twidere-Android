@@ -32,7 +32,6 @@ import org.mariotaku.twidere.extension.model.aspect_ratio
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import java.lang.ref.WeakReference
 
 /**
@@ -71,7 +70,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
 
     fun displayMedia(requestManager: RequestManager, media: Array<ParcelableMedia>?, accountId: UserKey? = null,
             extraId: Long = -1, withCredentials: Boolean = false,
-            mediaClickListener: OnMediaClickListener? = null, loadingHandler: MediaLoadingHandler? = null) {
+            mediaClickListener: OnMediaClickListener? = null) {
         if (media == null || style == PreviewStyle.NONE) {
             for (i in 0 until childCount) {
                 val child = getChildAt(i)

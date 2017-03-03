@@ -109,8 +109,8 @@ class MessageViewHolder(itemView: View, adapter: MessagesConversationAdapter) : 
         } else {
             mediaPreview.visibility = View.VISIBLE
             mediaPreview.displayMedia(adapter.requestManager, message.media, message.account_key,
-                    withCredentials = true, loadingHandler = adapter.mediaLoadingHandler,
-                    mediaClickListener = adapter.mediaClickListener, extraId = layoutPosition.toLong())
+                    extraId = layoutPosition.toLong(), withCredentials = true,
+                    mediaClickListener = adapter.mediaClickListener)
         }
 
     }

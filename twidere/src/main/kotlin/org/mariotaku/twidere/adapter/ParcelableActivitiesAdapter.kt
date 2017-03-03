@@ -44,7 +44,6 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.IntentUtils
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.OnLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.view.holder.*
@@ -59,8 +58,6 @@ class ParcelableActivitiesAdapter(
         context: Context,
         requestManager: RequestManager
 ) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IActivitiesAdapter<List<ParcelableActivity>> {
-
-    override val mediaLoadingHandler = MediaLoadingHandler(R.id.media_preview_progress)
 
     private val inflater = LayoutInflater.from(context)
     private val twidereLinkify = TwidereLinkify(OnLinkClickHandler(context, null, preferences))
@@ -229,8 +226,7 @@ class ParcelableActivitiesAdapter(
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivity(position)?.getActivityStatus() ?: return
                 val statusViewHolder = holder as IStatusViewHolder
-                statusViewHolder.displayStatus(status = status, displayInReplyTo = true,
-                        displayExtraType = true)
+                statusViewHolder.displayStatus(status = status, displayInReplyTo = true)
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
                 bindTitleSummaryViewHolder(holder as ActivityTitleSummaryViewHolder, position)

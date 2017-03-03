@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
@@ -16,9 +15,6 @@ class ListParcelableStatusesAdapter(
         context: Context,
         requestManager: RequestManager
 ) : ParcelableStatusesAdapter(context, requestManager) {
-
-    override val progressViewIds: IntArray
-        get() = intArrayOf(R.id.media_preview_progress)
 
     override fun onCreateStatusViewHolder(parent: ViewGroup): IStatusViewHolder {
         return createStatusViewHolder(this, inflater, parent)

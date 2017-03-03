@@ -3,9 +3,7 @@ package org.mariotaku.twidere.adapter.iface
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.MediaLoadingHandler
 import org.mariotaku.twidere.util.TwidereLinkify
-import org.mariotaku.twidere.view.CardMediaContainer
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 /**
@@ -36,8 +34,6 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     val showAccountsColor: Boolean
 
     val useStarsForLikes: Boolean
-
-    val mediaLoadingHandler: MediaLoadingHandler
 
     val statusClickListener: IStatusViewHolder.StatusClickListener?
 

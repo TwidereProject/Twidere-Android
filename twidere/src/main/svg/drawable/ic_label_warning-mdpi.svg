@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_label_warning-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_label_warning-mdpi">
+            <g id="Group" transform="translate(2.000000, 2.000000)">
+                <polygon id="Shape" points="0 0 20 0 20 20 0 20"></polygon>
+                <path d="M0.833333333,17.5 L19.1666667,17.5 L10,1.66666667 L0.833333333,17.5 Z M10.8333333,15 L9.16666667,15 L9.16666667,13.3333333 L10.8333333,13.3333333 L10.8333333,15 Z M10.8333333,11.6666667 L9.16666667,11.6666667 L9.16666667,8.33333333 L10.8333333,8.33333333 L10.8333333,11.6666667 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>
