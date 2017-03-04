@@ -30,6 +30,7 @@ env:
 addons:
   apt:
     packages:
+      - oracle-java8-installer
       - tar
       - gzip
       - patch
