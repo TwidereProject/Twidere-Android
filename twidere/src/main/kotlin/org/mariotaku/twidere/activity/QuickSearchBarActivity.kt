@@ -370,13 +370,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
 
         override fun swapCursor(newCursor: Cursor?): Cursor? {
-            indices = if (newCursor != null) SuggestionItem.Indices(newCursor) else null
-            removedPositions!!.clear()
+            indices = newCursor?.let(SuggestionItem::Indices)
             return super.swapCursor(newCursor)
         }
 
         override fun getCount(): Int {
-            if (removedPositions == null) return super.getCount()
             return super.getCount() - removedPositions.size()
         }
 
