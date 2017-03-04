@@ -2,6 +2,8 @@ language: android
 
 dist: trusty
 
+sudo: required
+
 android:
   components:
     - tools
@@ -19,8 +21,6 @@ android:
     - 'android-sdk-preview-license-.+'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
-
-sudo: false
 
 env:
   global:
