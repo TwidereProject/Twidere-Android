@@ -74,9 +74,7 @@ before_script:
   - free
 
 script:
-  - ./gradlew clean
-  - ./gradlew twidere:assembleGoogleDebug
-  - ./gradlew twidere:assembleGoogleRelease
+  - ./gradlew clean build
 
 after_failure:
   - travis/scripts/print_error_logs.sh
