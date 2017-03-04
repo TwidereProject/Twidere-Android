@@ -76,6 +76,12 @@ subprojects {
                     exclude 'META-INF/ASL2.0'
                 }
 
+                if (System.getenv('TRAVIS') == 'true') {
+                    compileOptions {
+                        incremental = false
+                    }
+                }
+
                 if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {
                     android.buildTypes.each { buildType ->
                         def file = rootProject.file('private/signing.properties')

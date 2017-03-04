@@ -72,7 +72,7 @@ before_script:
   - test -f twidere/src/google/AndroidManifest.xml
 
 script:
-  - ./gradlew -Pandroid.incrementalJavaCompile=false clean build
+  - ./gradlew clean build
 
 deploy:
   provider: releases
