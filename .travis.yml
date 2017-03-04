@@ -1,15 +1,10 @@
 language: android
+
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    - platform-tools
     - tools
-
-    # The BuildTools version used by your project
+    - platform-tools
     - build-tools-25.0.2
-
-    # The SDK version used to compile your project
     - android-25
 
     # Additional components
@@ -22,10 +17,6 @@ android:
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
 
-    # Specify at least one system image,
-    # if you need to run emulator(s) during your tests
-    # - sys-img-armeabi-v7a-android-19
-    # - sys-img-x86-android-17
 sudo: false
 
 jdk:
@@ -45,14 +36,14 @@ addons:
       - openssh-client
       - git
 
-#before_cache:
-#  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-#  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-#cache:
-#  directories:
-#    - $HOME/.gradle/caches/
-#    - $HOME/.gradle/wrapper/
-#    - $HOME/.m2/
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2/
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_9b8203f9524d_key -iv $encrypted_9b8203f9524d_iv -in travis/configs/twidere_private_config.tar.gz.enc -out travis/configs/twidere_private_config.tar.gz -d
@@ -79,7 +70,8 @@ before_script:
   # Validate if Google components fetched successfully
   - test -f twidere/src/google/AndroidManifest.xml
 
-script: ./gradlew compileGoogleReleaseKotlin
+script:
+  - ./gradlew build
 
 deploy:
   provider: releases
