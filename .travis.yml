@@ -72,7 +72,7 @@ before_script:
   - test -f twidere/src/google/AndroidManifest.xml
 
 script:
-  - ./gradlew clean build
+  - ./gradlew --no-daemon clean build
 
 deploy:
   provider: releases
