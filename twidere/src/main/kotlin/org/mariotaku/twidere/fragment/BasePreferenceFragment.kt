@@ -105,12 +105,9 @@ abstract class BasePreferenceFragment : PreferenceFragmentCompat(), IBaseFragmen
 
             val existingValue = preference.value // TODO
             if (existingValue != null) {
-                if (existingValue.isEmpty()) {
-                    // Select "Silent"
-                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, null as Uri)
-                } else {
-                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(existingValue))
-                }
+                // Empty value means "Silent"
+                val uri = existingValue.takeIf(String::isNotEmpty)?.let(Uri::parse)
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, uri)
             } else {
                 // No ringtone has been selected, set to the default
                 intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Settings.System.DEFAULT_NOTIFICATION_URI)

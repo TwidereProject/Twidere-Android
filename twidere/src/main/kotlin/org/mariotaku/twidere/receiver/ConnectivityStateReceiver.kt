@@ -28,9 +28,7 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.UploadLogsService
 import edu.tsinghua.hotmobi.model.NetworkEvent
 import org.mariotaku.kpreferences.get
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
-import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.constant.usageStatisticsKey
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.Utils
@@ -41,11 +39,7 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         DebugLog.d(RECEIVER_LOGTAG, String.format("Received Broadcast %s", intent), null)
         if (ConnectivityManager.CONNECTIVITY_ACTION != intent.action) return
-        val application = TwidereApplication.getInstance(context)
-        //        application.reloadConnectivitySettings();
-
-        val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME,
-                Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         if (prefs[usageStatisticsKey]) {
             // BEGIN HotMobi
             val event = NetworkEvent.create(context)
@@ -70,6 +64,6 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
 
     companion object {
 
-        private val RECEIVER_LOGTAG = TwidereConstants.LOGTAG + "build/intermediates/exploded-aar/com.lnikkila/extendedtouchview/0.1.0/res" + "Connectivity"
+        private const val RECEIVER_LOGTAG = "TwidereConnectivity"
     }
 }

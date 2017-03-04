@@ -63,9 +63,13 @@ class CacheProvider : ContentProvider() {
 
     fun getMetadata(uri: Uri): CacheMetadata? {
         val bytes = fileCache.getExtra(getCacheKey(uri)) ?: return null
-        return ByteArrayInputStream(bytes).use {
-            val mapper = LoganSquareMapperFinder.mapperFor(CacheMetadata::class.java)
-            return mapper.parse(it)
+        return try {
+            ByteArrayInputStream(bytes).use {
+                val mapper = LoganSquareMapperFinder.mapperFor(CacheMetadata::class.java)
+                return@use mapper.parse(it)
+            }
+        } catch (e: IOException) {
+            null
         }
     }
 
