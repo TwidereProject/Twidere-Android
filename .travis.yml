@@ -71,6 +71,7 @@ before_script:
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
   # Validate if Google components fetched successfully
   - test -f twidere/src/google/AndroidManifest.xml
+  - free
 
 script:
   - ./gradlew clean
