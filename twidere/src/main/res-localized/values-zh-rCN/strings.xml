@@ -146,7 +146,6 @@
   <string name="action_view_map">地图</string>
   <string name="activated_accounts">已启用的帐号</string>
   <string name="activities_about_me">关于我的活动</string>
-  <string name="activities_by_friends">好友的活动</string>
   <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> 收藏了</string>
   <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> 和 <xliff:g id="other">%2$s</xliff:g> 收藏了</string>
   <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> 收藏了一条标出您的推文</string>
@@ -178,18 +177,6 @@
   <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> 和 <xliff:g id="other">%2$s</xliff:g> 转推了一条提及您的推文</string>
   <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> 转推了您的转推</string>
   <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> 和 <xliff:g id="other">%2$s</xliff:g> 转推了您的转推</string>
-  <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> 收藏了 <xliff:g id="target">%2$s</xliff:g> 的推文</string>
-  <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> 收藏了 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%3$s</xliff:g> 的推文</string>
-  <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> 关注了 <xliff:g id="target">%2$s</xliff:g></string>
-  <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> 正在关注 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%3$s</xliff:g></string>
-  <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> 喜欢了 <xliff:g id="target">%2$s</xliff:g> 的推文</string>
-  <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> 喜欢了 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%3$s</xliff:g> 的推文</string>
-  <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> 创建了列表 <xliff:g id="target">%2$s</xliff:g></string>
-  <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> 创建了列表 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%1$s</xliff:g></string>
-  <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> 把 <xliff:g id="target">%2$s</xliff:g> 加入了列表</string>
-  <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> 添加了 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%1$s</xliff:g> 到列表</string>
-  <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> 转推了 <xliff:g id="target">%2$s</xliff:g> 的推文</string>
-  <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> 转推了 <xliff:g id="target">%2$s</xliff:g> 和 <xliff:g id="other">%3$s</xliff:g> 的推文</string>
   <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> 加入了 Twitter</string>
   <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> 和 <xliff:g id="other">%2$s</xliff:g> 加入了 Twitter</string>
   <string name="add_account">添加帐号</string>
@@ -420,15 +407,20 @@
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_filters_subscription">订阅</string>
   <string name="label_location_your_coarse_location">您的大致位置</string>
+  <string name="label_media">媒体</string>
   <string name="label_original_status">原推文</string>
   <string name="label_password_sign_in">密码登录</string>
+  <string name="label_photo">照片</string>
+  <string name="label_photos">照片</string>
   <string name="label_poll">投票</string>
   <string name="label_refresh_and_sync_service">刷新和同步服务</string>
   <string name="label_refresh_service">刷新服务</string>
+  <string name="label_sensitive_content">敏感内容</string>
   <string name="label_status_not_available">推文不可用</string>
   <string name="label_streaming_service">实时流服务</string>
   <string name="label_translate_from_language">从 <xliff:g id="language">%s</xliff:g> 翻译</string>
   <string name="label_translation">翻译</string>
+  <string name="label_video">视频</string>
   <string name="label_your_profile_image">您的头像</string>
   <string name="large">大尺寸</string>
   <string name="leftside_compose_button">左侧撰写按钮</string>

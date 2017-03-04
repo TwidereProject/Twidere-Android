@@ -507,15 +507,20 @@
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_location_your_coarse_location">Your coarse location</string>
+    <string name="label_media">Media</string>
     <string name="label_original_status">Original tweet</string>
     <string name="label_password_sign_in">Password sign in</string>
+    <string name="label_photo">Photo</string>
+    <string name="label_photos">Photos</string>
     <string name="label_poll">Poll</string>
     <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
     <string name="label_refresh_service">Refresh service</string>
+    <string name="label_sensitive_content">Sensitive content</string>
     <string name="label_status_not_available">Tweet not available</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
+    <string name="label_video">Video</string>
     <string name="label_your_profile_image">Your profile image</string>
 
     <string name="large">Large</string>
@@ -559,11 +564,6 @@
     <string name="mark_as_sensitive">Mark as sensitive</string>
 
     <string name="media">Media</string>
-    <string name="label_media">Media</string>
-    <string name="label_sensitive">Sensitive</string>
-    <string name="label_photo">Photo</string>
-    <string name="label_photos">Photos</string>
-    <string name="label_video">Video</string>
     <string name="media_preload">Media preload</string>
     <string name="media_preview">Media preview</string>
     <string name="media_preview_style">Media preview style</string>

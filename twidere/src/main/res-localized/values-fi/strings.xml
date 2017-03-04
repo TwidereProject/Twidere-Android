@@ -113,7 +113,6 @@
   <string name="action_view_map">Kartta</string>
   <string name="activated_accounts">Aktiiviset tilit</string>
   <string name="activities_about_me">Aktiviteettini</string>
-  <string name="activities_by_friends">Ystävieni aktiviteetit</string>
   <string name="add_account">Lisää tili</string>
   <string name="add_host_mapping">Lisää host mapping</string>
   <string name="add_image">Lisää kuva</string>

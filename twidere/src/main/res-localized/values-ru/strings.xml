@@ -128,7 +128,6 @@
   <string name="action_view_map">Карта</string>
   <string name="activated_accounts">Активированные аккаунты</string>
   <string name="activities_about_me">Моя деятельность</string>
-  <string name="activities_by_friends">Деятельность друзей</string>
   <string name="add_account">Добавить учетную запись</string>
   <string name="add_host_mapping">Добавить перенаправление узлов</string>
   <string name="add_image">Добавить изображение</string>

@@ -111,7 +111,6 @@
   <string name="action_view_map">แผนที่</string>
   <string name="activated_accounts">แอคเคาท์ที่เปิดใช้งานอยู่</string>
   <string name="activities_about_me">กิจกรรมที่เกี่ยวกับฉัน</string>
-  <string name="activities_by_friends">กิจกรรมของเพื่อน</string>
   <string name="add_account">เพิ่มบัญชี</string>
   <string name="add_host_mapping">เพิ่มการกำหนดโฮสต์</string>
   <string name="add_image">เพิ่มรูปภาพ</string>

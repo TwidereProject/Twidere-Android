@@ -572,7 +572,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             sensitive: Boolean) {
         if (sensitive) {
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(this, R.drawable.ic_label_warning, 0, 0, 0)
-            setText(R.string.label_sensitive)
+            setText(R.string.label_sensitive_content)
         } else if (media != null && media.isNotEmpty()) {
             val type = media.type
             if (type in videoTypes) {
