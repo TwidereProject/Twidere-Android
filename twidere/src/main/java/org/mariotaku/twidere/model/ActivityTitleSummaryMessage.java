@@ -37,9 +37,9 @@ public class ActivityTitleSummaryMessage {
 
     @Nullable
     public static ActivityTitleSummaryMessage get(Context context, UserColorNameManager manager, ParcelableActivity activity,
-                                                  ParcelableUser[] sources, int defaultColor,
-                                                  boolean shouldUseStarsForLikes,
-                                                  boolean nameFirst) {
+            ParcelableUser[] sources, int defaultColor,
+            boolean shouldUseStarsForLikes,
+            boolean nameFirst) {
         final Resources resources = context.getResources();
         boolean byFriends = false;
         switch (activity.action) {
@@ -136,22 +136,6 @@ public class ActivityTitleSummaryMessage {
                         nameFirst);
                 return new ActivityTitleSummaryMessage(typeIcon, color, title, summary);
             }
-            case Activity.Action.LIST_CREATED: {
-                int typeIcon = R.drawable.ic_activity_action_list_added;
-                CharSequence title = getTitleStringByFriends(resources, manager, R.string.activity_by_friends_list_created,
-                        R.string.activity_by_friends_list_created_multi, sources,
-                        activity.target_object_user_lists, nameFirst);
-                boolean firstLine = true;
-                StringBuilder sb = new StringBuilder();
-                for (ParcelableUserList item : activity.target_object_user_lists) {
-                    if (!firstLine) {
-                        sb.append("\n");
-                    }
-                    sb.append(item.description.replace('\n', ' '));
-                    firstLine = false;
-                }
-                return new ActivityTitleSummaryMessage(typeIcon, defaultColor, title, sb);
-            }
             case Activity.Action.LIST_MEMBER_ADDED: {
                 CharSequence title;
                 int icon = R.drawable.ic_activity_action_list_added;
@@ -234,7 +218,7 @@ public class ActivityTitleSummaryMessage {
     }
 
     public static Spanned generateStatusTextSummary(Context context, UserColorNameManager manager,
-                                                    ParcelableStatus[] statuses, boolean nameFirst) {
+            ParcelableStatus[] statuses, boolean nameFirst) {
         if (statuses == null) return null;
         final SpannableStringBuilder summaryBuilder = new SpannableStringBuilder();
         boolean first = true;
@@ -268,8 +252,8 @@ public class ActivityTitleSummaryMessage {
     }
 
     private static Spanned getTitleStringAboutMe(Resources resources, UserColorNameManager manager,
-                                                 int stringRes, int stringResMulti,
-                                                 ParcelableUser[] sources, boolean nameFirst) {
+            int stringRes, int stringResMulti,
+            ParcelableUser[] sources, boolean nameFirst) {
         if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstDisplayName = new SpannableString(manager.getDisplayName(sources[0],
@@ -294,8 +278,8 @@ public class ActivityTitleSummaryMessage {
     }
 
     private static Spanned getTitleStringByFriends(Resources resources, UserColorNameManager manager,
-                                                   int stringRes, int stringResMulti,
-                                                   ParcelableUser[] sources, Object[] targets, boolean nameFirst) {
+            int stringRes, int stringResMulti,
+            ParcelableUser[] sources, Object[] targets, boolean nameFirst) {
         if (sources == null || sources.length == 0) return null;
         final Configuration configuration = resources.getConfiguration();
         final SpannableString firstSourceName = new SpannableString(manager.getDisplayName(

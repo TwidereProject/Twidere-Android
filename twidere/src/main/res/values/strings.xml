@@ -148,7 +148,6 @@
     <string name="activated_accounts">Activated accounts</string>
 
     <string name="activities_about_me">Activities about me</string>
-    <string name="activities_by_friends">Activities by friends</string>
 
     <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> favorited</string>
     <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> favorited</string>
@@ -181,18 +180,6 @@
     <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted a tweet you were mentioned in</string>
     <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> retweeted your retweet</string>
     <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> retweeted your retweet</string>
-    <string name="activity_by_friends_favorite"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
-    <string name="activity_by_friends_favorite_multi"><xliff:g id="user">%1$s</xliff:g> favorited <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
-    <string name="activity_by_friends_follow"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g></string>
-    <string name="activity_by_friends_follow_multi"><xliff:g id="user">%1$s</xliff:g> is following <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g></string>
-    <string name="activity_by_friends_like"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
-    <string name="activity_by_friends_like_multi"><xliff:g id="user">%1$s</xliff:g> liked <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
-    <string name="activity_by_friends_list_created"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g></string>
-    <string name="activity_by_friends_list_created_multi"><xliff:g id="user">%1$s</xliff:g> created list <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g></string>
-    <string name="activity_by_friends_list_member_added"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> to list</string>
-    <string name="activity_by_friends_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> added <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%1$s</xliff:g> to list</string>
-    <string name="activity_by_friends_retweet"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g>\'s tweet</string>
-    <string name="activity_by_friends_retweet_multi"><xliff:g id="user">%1$s</xliff:g> retweeted <xliff:g id="target">%2$s</xliff:g> and <xliff:g id="other">%3$s</xliff:g>\'s tweet</string>
     <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> joined Twitter</string>
     <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> joined Twitter</string>
 

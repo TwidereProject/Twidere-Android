@@ -79,7 +79,7 @@ before_script:
   # Validate if Google components fetched successfully
   - test -f twidere/src/google/AndroidManifest.xml
 
-script: ./gradlew build --debug
+script: ./gradlew compileGoogleReleaseKotlin
 
 deploy:
   provider: releases
