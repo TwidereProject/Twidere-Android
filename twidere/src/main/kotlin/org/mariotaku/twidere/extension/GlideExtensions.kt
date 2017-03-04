@@ -96,7 +96,7 @@ fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMe
 
 fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUser,
         @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String> {
-    val original = user.extras.profile_image_url_original?.let { if (it.isEmpty()) null else it }
+    val original = user.extras.profile_image_url_original?.takeUnless(String::isEmpty)
             ?: Utils.getOriginalTwitterProfileImage(user.profile_image_url)
     return configureLoadProfileImage(context, shapeStyle) { load(original) }
 }
