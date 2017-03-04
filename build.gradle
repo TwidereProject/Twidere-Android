@@ -32,18 +32,24 @@ allprojects {
 subprojects {
     buildscript {
         ext {
-            kotlin_version = '1.1.0'
-            android_support_lib_version = '25.2.0'
-            mariotaku_commons_library_version = '0.9.11'
-            mariotaku_restfu_version = '0.9.35'
-            mariotaku_object_cursor_version = '0.9.13'
-            play_services_version = '10.2.0'
-            crashlyrics_version = '2.6.6'
-            fabric_plugin_version = '1.22.1'
-            dropbox_core_sdk_version = '2.1.2'
-            google_api_drive_version = 'v3-rev61-1.22.0'
-            exoplayer_version = 'r2.2.0'
-            toro_version = '2.1.0'
+            libVersions = [
+                    Kotlin          : '1.1.0',
+                    SupportLib      : '25.2.0',
+                    MariotakuCommons: '0.9.11',
+                    RestFu          : '0.9.35',
+                    ObjectCursor    : '0.9.13',
+                    PlayServices    : '10.2.0',
+                    MapsUtils       : '0.4.4',
+                    Crashlyrics     : '2.6.6',
+                    FabricPlugin    : '1.22.1',
+                    DropboxCoreSdk  : '2.1.2',
+                    GoogleDriveApi  : 'v3-rev61-1.22.0',
+                    Exoplayer       : 'r2.2.0',
+                    Toro            : '2.1.0',
+                    LoganSquare     : '1.3.7',
+                    IABv3           : '1.0.38',
+                    Mime4J          : '0.7.2'
+            ]
         }
 
     }
@@ -68,12 +74,6 @@ subprojects {
                     exclude 'META-INF/NOTICE.txt'
                     exclude 'META-INF/notice.txt'
                     exclude 'META-INF/ASL2.0'
-                }
-
-                if (System.getenv('TRAVIS') == 'true') {
-                    dexOptions {
-                        preDexLibraries = false;
-                    }
                 }
 
                 if (android.hasProperty('buildTypes') && project.plugins.hasPlugin('com.android.application')) {

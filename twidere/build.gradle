@@ -20,11 +20,11 @@ buildscript {
 
     dependencies {
         // START Non-FOSS component
-        classpath "io.fabric.tools:gradle:$fabric_plugin_version"
+        classpath "io.fabric.tools:gradle:${libVersions["FabricPlugin"]}"
         // END Non-FOSS component
 
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:${libVersions['Kotlin']}"
     }
 }
 
@@ -89,24 +89,24 @@ repositories {
 
 dependencies {
 //    wearApp project(':twidere.wear')
-    kapt 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    kapt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.8'
-    kapt "com.github.mariotaku.ObjectCursor:processor:$mariotaku_object_cursor_version"
+    kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
 
     // START Non-FOSS component
-    googleCompile "com.google.android.gms:play-services-maps:$play_services_version"
-    googleCompile "com.google.android.gms:play-services-auth:$play_services_version"
-    googleCompile 'com.google.maps.android:android-maps-utils:0.4.4'
-    googleCompile("com.crashlytics.sdk.android:crashlytics:$crashlyrics_version@aar") {
+    googleCompile "com.google.android.gms:play-services-maps:${libVersions['PlayServices']}"
+    googleCompile "com.google.android.gms:play-services-auth:${libVersions['PlayServices']}"
+    googleCompile "com.google.maps.android:android-maps-utils:${libVersions['MapsUtils']}"
+    googleCompile("com.crashlytics.sdk.android:crashlytics:${libVersions['Crashlyrics']}@aar") {
         transitive = true
     }
-    googleCompile 'com.anjlab.android.iab.v3:library:1.0.38'
-    googleCompile "com.dropbox.core:dropbox-core-sdk:$dropbox_core_sdk_version"
-    googleCompile("com.google.apis:google-api-services-drive:$google_api_drive_version") {
+    googleCompile "com.anjlab.android.iab.v3:library:${libVersions['IABv3']}"
+    googleCompile "com.dropbox.core:dropbox-core-sdk:${libVersions['DropboxCoreSdk']}"
+    googleCompile("com.google.apis:google-api-services-drive:${libVersions['GoogleDriveApi']}") {
         exclude group: 'org.apache.httpcomponents'
     }
     // END Non-FOSS component
@@ -122,21 +122,20 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
 
-    androidTestCompile "com.android.support:support-annotations:$android_support_lib_version"
+    androidTestCompile "com.android.support:support-annotations:${libVersions['SupportLib']}"
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'commons-io:commons-io:2.5'
 
     compile 'com.android.support:multidex:1.0.1'
-    compile "com.android.support:support-v4:$android_support_lib_version"
-    compile "com.android.support:appcompat-v7:$android_support_lib_version"
-    compile "com.android.support:cardview-v7:$android_support_lib_version"
-    compile "com.android.support:recyclerview-v7:$android_support_lib_version"
-    compile "com.android.support:preference-v7:$android_support_lib_version"
-    compile "com.android.support:preference-v14:$android_support_lib_version"
-    compile "com.android.support:customtabs:$android_support_lib_version"
-    compile "com.android.support:design:$android_support_lib_version"
-    compile "com.android.support:percent:$android_support_lib_version"
+    compile "com.android.support:support-v4:${libVersions['SupportLib']}"
+    compile "com.android.support:appcompat-v7:${libVersions['SupportLib']}"
+    compile "com.android.support:cardview-v7:${libVersions['SupportLib']}"
+    compile "com.android.support:recyclerview-v7:${libVersions['SupportLib']}"
+    compile "com.android.support:preference-v7:${libVersions['SupportLib']}"
+    compile "com.android.support:preference-v14:${libVersions['SupportLib']}"
+    compile "com.android.support:customtabs:${libVersions['SupportLib']}"
+    compile "com.android.support:design:${libVersions['SupportLib']}"
+    compile "com.android.support:percent:${libVersions['SupportLib']}"
     compile 'com.twitter:twitter-text:1.14.3'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
@@ -152,22 +151,22 @@ dependencies {
     compile 'com.squareup:pollexor:2.0.4'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-primitives:commons-primitives:1.0'
-    compile 'org.apache.james:apache-mime4j-core:0.7.2'
-    compile 'org.apache.james:apache-mime4j-storage:0.7.2'
-    compile 'com.bluelinelabs:logansquare:1.3.7'
+    compile "org.apache.james:apache-mime4j-core:${libVersions['Mime4J']}"
+    compile "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
+    compile "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
     compile 'com.github.mariotaku:PickNCrop:0.9.21'
-    compile "com.github.mariotaku.RestFu:library:$mariotaku_restfu_version"
-    compile "com.github.mariotaku.RestFu:okhttp3:$mariotaku_restfu_version"
+    compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
+    compile "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.8'
     compile 'org.attoparser:attoparser:2.0.3.RELEASE'
     compile 'com.getkeepsafe.taptargetview:taptargetview:1.8.0'
     compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
-    compile "com.google.android.exoplayer:exoplayer:$exoplayer_version"
-    compile "com.google.android.exoplayer:extension-okhttp:$exoplayer_version"
+    compile "com.google.android.exoplayer:exoplayer:${libVersions['Exoplayer']}"
+    compile "com.google.android.exoplayer:extension-okhttp:${libVersions['Exoplayer']}"
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
@@ -175,17 +174,17 @@ dependencies {
     compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.22'
     compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.22'
     compile 'com.github.mariotaku:SQLiteQB:0.9.10'
-    compile "com.github.mariotaku.ObjectCursor:core:$mariotaku_object_cursor_version"
+    compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
-    compile "com.github.mariotaku.CommonsLibrary:parcel:$mariotaku_commons_library_version"
-    compile "com.github.mariotaku.CommonsLibrary:io:$mariotaku_commons_library_version"
-    compile "com.github.mariotaku.CommonsLibrary:text:$mariotaku_commons_library_version"
-    compile "com.github.mariotaku.CommonsLibrary:text-kotlin:$mariotaku_commons_library_version"
+    compile "com.github.mariotaku.CommonsLibrary:parcel:${libVersions['MariotakuCommons']}"
+    compile "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
+    compile "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
+    compile "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
     compile 'com.github.mariotaku:KPreferences:0.9.5'
     compile 'com.github.mariotaku:Chameleon:0.9.14'
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
     compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'

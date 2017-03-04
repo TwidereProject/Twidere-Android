@@ -38,16 +38,15 @@ android {
 }
 
 dependencies {
-    apt 'com.bluelinelabs:logansquare-compiler:1.3.7'
+    apt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
     apt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
-    apt "com.github.mariotaku.ObjectCursor:processor:$mariotaku_object_cursor_version"
-    compile "com.android.support:support-annotations:$android_support_lib_version"
-    compile 'com.bluelinelabs:logansquare:1.3.7'
-    compile "com.github.mariotaku.RestFu:library:$mariotaku_restfu_version"
-    compile "com.github.mariotaku.RestFu:oauth:$mariotaku_restfu_version"
+    apt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
+    compile "com.android.support:support-annotations:${libVersions['SupportLib']}"
+    compile "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
+    compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
+    compile "com.github.mariotaku.RestFu:oauth:${libVersions['RestFu']}"
     compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
-    compile "com.github.mariotaku.ObjectCursor:core:$mariotaku_object_cursor_version"
-    compile "com.github.mariotaku.CommonsLibrary:objectcursor:$mariotaku_commons_library_version"
-    compile "com.github.mariotaku.CommonsLibrary:logansquare:$mariotaku_commons_library_version"
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
+    compile "com.github.mariotaku.CommonsLibrary:objectcursor:${libVersions['MariotakuCommons']}"
+    compile "com.github.mariotaku.CommonsLibrary:logansquare:${libVersions['MariotakuCommons']}"
 }
