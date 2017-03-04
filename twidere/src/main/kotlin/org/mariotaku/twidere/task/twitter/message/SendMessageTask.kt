@@ -112,7 +112,7 @@ class SendMessageTask(
             if (message.media.isNotNullOrEmpty()) {
                 val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                 val uploadResult = UpdateStatusTask.uploadAllMediaShared(context,
-                        mediaLoader, upload, account, message.media, null, true, null)
+                        upload, account, message.media, null, true, null)
                 newDm.setMediaId(uploadResult.ids[0])
                 deleteAlways = uploadResult.deleteAlways
                 deleteOnSuccess = uploadResult.deleteOnSuccess
@@ -149,7 +149,7 @@ class SendMessageTask(
             if (message.media.isNotNullOrEmpty()) {
                 val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                 val uploadResult = UpdateStatusTask.uploadAllMediaShared(context,
-                        mediaLoader, upload, account, message.media, null, true, null)
+                        upload, account, message.media, null, true, null)
                 mediaId = uploadResult.ids[0]
                 deleteAlways = uploadResult.deleteAlways
                 deleteOnSuccess = uploadResult.deleteOnSuccess

@@ -625,10 +625,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             private val fragment: AccountsDashboardFragment
     ) : RecyclerPagerAdapter() {
 
-        internal var requestManager: RequestManager = Glide.with(fragment)
-
         internal var profileImageStyle: Int = fragment.preferences[profileImageStyleKey]
-        internal var mediaLoader: MediaLoaderWrapper = fragment.mediaLoader
+        internal var requestManager: RequestManager = Glide.with(fragment)
 
         var accounts: Array<AccountDetails>? = null
             set(value) {

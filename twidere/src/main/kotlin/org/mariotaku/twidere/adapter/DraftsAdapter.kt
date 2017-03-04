@@ -44,8 +44,6 @@ class DraftsAdapter(
 ) : SimpleCursorAdapter(context, R.layout.list_item_draft, null, arrayOfNulls<String>(0), IntArray(0), 0) {
 
     @Inject
-    lateinit var imageLoader: MediaLoaderWrapper
-    @Inject
     lateinit var preferences: SharedPreferencesWrapper
 
     private val mediaPreviewStyle: Int

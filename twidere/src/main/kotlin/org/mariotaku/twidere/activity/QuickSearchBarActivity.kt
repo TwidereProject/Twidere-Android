@@ -266,7 +266,6 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         private val requestManager = Glide.with(activity)
         private val inflater = LayoutInflater.from(activity)
-        private val mediaLoader = activity.mediaLoader
         private val userColorNameManager = activity.userColorNameManager
         private val removedPositions = SortableIntList()
 

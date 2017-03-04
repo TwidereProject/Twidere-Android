@@ -291,10 +291,9 @@ class UpdateStatusTask(
         }
         val media = statusUpdate.media.first()
         try {
-            return getBodyFromMedia(context, mediaLoader, media, sizeLimit, false,
-                    ContentLengthInputStream.ReadListener { length, position ->
-                        stateCallback.onUploadingProgressChanged(-1, position, length)
-                    }).use { mediaBody ->
+            return getBodyFromMedia(context, media, sizeLimit, false, ContentLengthInputStream.ReadListener { length, position ->
+                stateCallback.onUploadingProgressChanged(-1, position, length)
+            }).use { mediaBody ->
                 val photoUpdate = PhotoStatusUpdate(mediaBody.body, pendingUpdate.overrideTexts[updateIndex])
                 return@use microBlog.uploadPhoto(photoUpdate)
             }
@@ -326,8 +325,7 @@ class UpdateStatusTask(
                         mediaIds = pendingUpdate.sharedMediaIds
                     } else {
                         val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(context,
-                                mediaLoader, upload, account, update.media, ownerIds, true,
-                                stateCallback)
+                                upload, account, update.media, ownerIds, true, stateCallback)
                         mediaIds = ids
                         deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                         deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -342,8 +340,7 @@ class UpdateStatusTask(
                     // TODO use their native API
                     val upload = account.newMicroBlogInstance(context, cls = TwitterUpload::class.java)
                     val (ids, deleteOnSuccess, deleteAlways) = uploadAllMediaShared(context,
-                            mediaLoader, upload, account, update.media, ownerIds, false,
-                            stateCallback)
+                            upload, account, update.media, ownerIds, false, stateCallback)
                     mediaIds = ids
                     deleteOnSuccess.addAllTo(pendingUpdate.deleteOnSuccess)
                     deleteAlways.addAllTo(pendingUpdate.deleteAlways)
@@ -632,7 +629,6 @@ class UpdateStatusTask(
         @Throws(UploadException::class)
         fun uploadAllMediaShared(
                 context: Context,
-                mediaLoader: MediaLoaderWrapper,
                 upload: TwitterUpload,
                 account: AccountDetails,
                 media: Array<ParcelableMediaUpdate>,
@@ -648,8 +644,8 @@ class UpdateStatusTask(
                 var body: MediaStreamBody? = null
                 try {
                     val sizeLimit = account.mediaSizeLimit
-                    body = getBodyFromMedia(context, mediaLoader, media, sizeLimit,
-                            chucked, ContentLengthInputStream.ReadListener { length, position ->
+                    body = getBodyFromMedia(context, media, sizeLimit, chucked,
+                            ContentLengthInputStream.ReadListener { length, position ->
                         callback?.onUploadingProgressChanged(index, position, length)
                     })
                     val mediaUploadEvent = MediaUploadEvent.create(context, media)
@@ -692,7 +688,6 @@ class UpdateStatusTask(
         @Throws(IOException::class)
         fun getBodyFromMedia(
                 context: Context,
-                mediaLoader: MediaLoaderWrapper,
                 media: ParcelableMediaUpdate,
                 sizeLimit: SizeLimit? = null,
                 chucked: Boolean,

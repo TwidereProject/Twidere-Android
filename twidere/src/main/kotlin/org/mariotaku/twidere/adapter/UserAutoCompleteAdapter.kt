@@ -54,8 +54,6 @@ class UserAutoCompleteAdapter(
 ) : SimpleCursorAdapter(context, R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
-    lateinit var profileImageLoader: MediaLoaderWrapper
-    @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
     lateinit var userColorNameManager: UserColorNameManager

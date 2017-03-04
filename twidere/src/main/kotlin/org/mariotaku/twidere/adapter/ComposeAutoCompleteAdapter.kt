@@ -46,8 +46,6 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
         R.layout.list_item_auto_complete, null, emptyArray(), intArrayOf(), 0) {
 
     @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-    @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject
     lateinit var userColorNameManager: UserColorNameManager

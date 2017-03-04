@@ -91,8 +91,6 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var notificationManager: NotificationManagerWrapper
     @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
-    @Inject
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var permissionsManager: PermissionsManager
