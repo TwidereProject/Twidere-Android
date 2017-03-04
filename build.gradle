@@ -33,7 +33,7 @@ subprojects {
     buildscript {
         ext {
             libVersions = [
-                    Kotlin          : '1.1.0',
+                    Kotlin          : '1.0.6',
                     SupportLib      : '25.2.0',
                     MariotakuCommons: '0.9.11',
                     RestFu          : '0.9.35',

@@ -592,7 +592,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         refreshDrawableState()
     }
 
-    private inline val Array<ParcelableMedia?>.type: Int get() {
+    private val Array<ParcelableMedia?>.type: Int get() {
         forEach { if (it != null) return it.type }
         return 0
     }

@@ -30,7 +30,7 @@ class SelectableUserViewHolder(
         itemView: View,
         adapter: SelectableUsersAdapter
 ) : SimpleUserViewHolder<SelectableUsersAdapter>(itemView, adapter) {
-    private val checkChangedListener = CompoundButton.OnCheckedChangeListener { _, value ->
+    private val checkChangedListener = CompoundButton.OnCheckedChangeListener { view, value ->
         adapter.setItemChecked(layoutPosition, value)
     }
 

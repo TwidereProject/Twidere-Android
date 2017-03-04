@@ -683,7 +683,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         })
 
 
-        userFragmentView.setWindowInsetsListener { _, top, _, _ ->
+        userFragmentView.setWindowInsetsListener { left, top, right, bottom ->
             profileContentContainer.setPadding(0, top, 0, 0)
             profileBannerSpace.statusBarHeight = top
 
@@ -695,7 +695,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 profileBannerSpace.toolbarHeight = toolbarHeight
             }
         }
-        profileContentContainer.setOnSizeChangedListener { _, _, _, _, _ ->
+        profileContentContainer.setOnSizeChangedListener { view, w, h, oldw, oldh ->
             val toolbarHeight = toolbar.measuredHeight
             userProfileDrawer.setPadding(0, toolbarHeight, 0, 0)
             profileBannerSpace.toolbarHeight = toolbarHeight
