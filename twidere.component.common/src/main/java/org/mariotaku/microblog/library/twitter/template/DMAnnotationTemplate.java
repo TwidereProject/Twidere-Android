@@ -33,7 +33,6 @@ import org.mariotaku.restfu.annotation.param.Queries;
         @KeyValue(key = "include_ext_alt_text", valueKey = "include_ext_alt_text"),
         @KeyValue(key = "tweet_mode", valueKey = "tweet_mode"),
         @KeyValue(key = "include_groups", value = "true"),
-        @KeyValue(key = "dm_users", value = "true"),
         @KeyValue(key = "include_conversation_info", value = "true"),
         @KeyValue(key = "ext", value = "stickerInfo,mediaRestrictions,altText"),
         @KeyValue(key = "include_blocking", value = "true"),
