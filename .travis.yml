@@ -1,8 +1,6 @@
 language: android
 
-dist: trusty
-
-sudo: required
+sudo: false
 
 android:
   components:
@@ -35,8 +33,6 @@ addons:
       - patch
       - openssh-client
       - git
-      - oracle-java8-installer
-      - oracle-java8-set-default
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -62,16 +58,13 @@ install:
   # Append known_hosts
   - cat private/ssh_known_hosts >> ~/.ssh/known_hosts
   # Checkout Google components
-  - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
-  # Remove Google components .git dir
-  - rm -rf twidere/src/google/.git
+#  - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
 
 before_script:
   # Validate if patches work
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
   # Validate if Google components fetched successfully
-  - test -f twidere/src/google/AndroidManifest.xml
-  - free
+#  - test -f twidere/src/google/AndroidManifest.xml
 
 script:
   - ./gradlew clean build
