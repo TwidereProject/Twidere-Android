@@ -73,7 +73,7 @@ script:
   - ./gradlew build
 
 after_failure:
-  - travis/scripts/print_error_logs.sh
+  - ls /tmp
 
 deploy:
   provider: releases
