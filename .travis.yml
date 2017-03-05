@@ -60,13 +60,13 @@ install:
   # Append known_hosts
   - cat private/ssh_known_hosts >> ~/.ssh/known_hosts
   # Checkout Google components
-#  - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
+  - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
 
 before_script:
   # Validate if patches work
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
   # Validate if Google components fetched successfully
-#  - test -f twidere/src/google/AndroidManifest.xml
+  - test -f twidere/src/google/AndroidManifest.xml
 
 script:
   - ./gradlew clean build
