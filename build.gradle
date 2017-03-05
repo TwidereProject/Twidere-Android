@@ -37,7 +37,7 @@ subprojects {
                     SupportLib      : '25.2.0',
                     MariotakuCommons: '0.9.11',
                     RestFu          : '0.9.35',
-                    ObjectCursor    : '0.9.13',
+                    ObjectCursor    : '0.9.16',
                     PlayServices    : '10.2.0',
                     MapsUtils       : '0.4.4',
                     Crashlyrics     : '2.6.6',

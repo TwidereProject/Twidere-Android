@@ -27,6 +27,7 @@ import android.text.TextUtils
 import android.util.Log
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.set
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
@@ -38,13 +39,16 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.SingleResponse
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.model.util.UserKeyUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.task.UpdateAccountInfoTask
-import org.mariotaku.twidere.util.ContentValuesCreator.createCachedUser
+import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -85,7 +89,7 @@ class ParcelableUserLoader(
         if (!omitIntentExtra && extras != null) {
             val user = extras.getParcelable<ParcelableUser>(EXTRA_USER)
             if (user != null) {
-                val values = ParcelableUserValuesCreator.create(user)
+                val values = ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).create(user)
                 resolver.insert(CachedUsers.CONTENT_URI, values)
                 ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
                 return SingleResponse(user).apply {
@@ -118,7 +122,7 @@ class ParcelableUserLoader(
                     whereArgs, null)?.let { cur ->
                 try {
                     cur.moveToFirst()
-                    val indices = ParcelableUserCursorIndices(cur)
+                    val indices = ObjectCursor.indicesFrom(cur, ParcelableUser::class.java)
                     while (!cur.isAfterLast) {
                         val user = indices.newObject(cur)
                         if (TextUtils.equals(UserKeyUtils.getUserHost(user), user.key.host)) {
@@ -152,7 +156,7 @@ class ParcelableUserLoader(
                     twitterUser = TwitterWrapper.tryShowUser(twitter, id, screenName, details.type)
                 }
             }
-            val cachedUserValues = createCachedUser(twitterUser, profileImageSize)
+            val cachedUserValues = ContentValuesCreator.createCachedUser(twitterUser, profileImageSize)
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
             val user = ParcelableUserUtils.fromUser(twitterUser, accountKey,
                     profileImageSize = profileImageSize)

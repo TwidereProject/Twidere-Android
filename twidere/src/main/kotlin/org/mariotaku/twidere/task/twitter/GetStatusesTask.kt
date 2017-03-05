@@ -10,6 +10,7 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -23,7 +24,7 @@ import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_NOTIFY_CHANGE
 import org.mariotaku.twidere.constant.loadItemLimitKey
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
-import org.mariotaku.twidere.model.ParcelableStatusValuesCreator
+import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.RefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetStatusesTaskEvent
@@ -165,6 +166,7 @@ abstract class GetStatusesTask(
             // Get id diff of first and last item
             val sortDiff = firstSortId - lastSortId
 
+            val creator = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
             for (i in 0 until statuses.size) {
                 val item = statuses[i]
                 val status = ParcelableStatusUtils.fromStatus(item, accountKey, false, profileImageSize)
@@ -173,7 +175,7 @@ abstract class GetStatusesTask(
                         sortDiff, i, statuses.size)
                 status.inserted_date = System.currentTimeMillis()
                 mediaLoader.preloadStatus(status)
-                values[i] = ParcelableStatusValuesCreator.create(status)
+                values[i] = creator.create(status)
                 if (minIdx == -1 || item < statuses[minIdx]) {
                     minIdx = i
                     minPositionKey = status.position_key

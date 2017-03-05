@@ -44,7 +44,6 @@ import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
 import org.mariotaku.twidere.loader.ObjectCursorLoader
 import org.mariotaku.twidere.model.ParcelableMessageConversation
-import org.mariotaku.twidere.model.ParcelableMessageConversationCursorIndices
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
@@ -84,7 +83,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<ParcelableMessageConversation>?> {
-        val loader = ObjectCursorLoader(context, ParcelableMessageConversationCursorIndices::class.java)
+        val loader = ObjectCursorLoader(context, ParcelableMessageConversation::class.java)
         val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
             TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()

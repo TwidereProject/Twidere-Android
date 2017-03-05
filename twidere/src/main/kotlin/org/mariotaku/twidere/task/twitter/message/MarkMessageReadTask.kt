@@ -23,6 +23,7 @@ import android.accounts.AccountManager
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
@@ -31,7 +32,10 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.timestamp
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableMessage
+import org.mariotaku.twidere.model.ParcelableMessageConversation
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
@@ -103,7 +107,8 @@ class MarkMessageReadTask(
                 where, whereArgs, OrderBy(Messages.LOCAL_TIMESTAMP, false).sql) ?: return null
         try {
             if (cur.moveToFirst()) {
-                return ParcelableMessageCursorIndices.fromCursor(cur)
+                val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)
+                return indices.newObject(cur)
             }
         } finally {
             cur.close()

@@ -64,6 +64,7 @@ import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
@@ -452,7 +453,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             this.inReplyToStatus = this@ComposeActivity.inReplyToStatus
             this.isPossiblySensitive = this@ComposeActivity.possiblySensitive
         }
-        val values = DraftValuesCreator.create(draft)
+        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
         val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
         displayNewDraftNotification(text, draftUri)
         return draftUri

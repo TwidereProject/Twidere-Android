@@ -47,6 +47,7 @@ import org.mariotaku.ktextension.configure
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.useCursor
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
 import org.mariotaku.microblog.library.twitter.model.MediaUploadResponse
@@ -121,7 +122,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val where = Expression.equals(Drafts._ID, draftId)
         @SuppressLint("Recycle")
         val draft: Draft = contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null)?.useCursor {
-            val i = DraftCursorIndices(it)
+            val i = ObjectCursor.indicesFrom(it, Draft::class.java)
             if (!it.moveToFirst()) return@useCursor null
             return@useCursor i.newObject(it)
         } ?: return

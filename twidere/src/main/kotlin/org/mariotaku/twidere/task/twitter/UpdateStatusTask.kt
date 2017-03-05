@@ -21,6 +21,7 @@ import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.ktextension.*
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.fanfou.model.PhotoStatusUpdate
@@ -646,8 +647,8 @@ class UpdateStatusTask(
                     val sizeLimit = account.mediaSizeLimit
                     body = getBodyFromMedia(context, media, sizeLimit, chucked,
                             ContentLengthInputStream.ReadListener { length, position ->
-                        callback?.onUploadingProgressChanged(index, position, length)
-                    })
+                                callback?.onUploadingProgressChanged(index, position, length)
+                            })
                     val mediaUploadEvent = MediaUploadEvent.create(context, media)
                     mediaUploadEvent.setFileSize(body.body.length())
                     body.geometry?.let { geometry ->
@@ -927,7 +928,8 @@ class UpdateStatusTask(
             draft.timestamp = System.currentTimeMillis()
             config(draft)
             val resolver = context.contentResolver
-            val draftUri = resolver.insert(Drafts.CONTENT_URI, DraftValuesCreator.create(draft)) ?: return -1
+            val creator = ObjectCursor.valuesCreatorFrom(Draft::class.java)
+            val draftUri = resolver.insert(Drafts.CONTENT_URI, creator.create(draft)) ?: return -1
             return NumberUtils.toLong(draftUri.lastPathSegment, -1)
         }
 

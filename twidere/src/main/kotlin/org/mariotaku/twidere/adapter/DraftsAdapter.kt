@@ -26,14 +26,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.mediaPreviewStyleKey
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.model.DraftCursorIndices
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.SharedPreferencesWrapper
+import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.view.holder.DraftViewHolder
 import javax.inject.Inject
@@ -53,7 +55,7 @@ class DraftsAdapter(
             field = value
             notifyDataSetChanged()
         }
-    private var indices: DraftCursorIndices? = null
+    private var indices: ObjectCursor.CursorIndices<Draft>? = null
 
     init {
         GeneralComponentHelper.build(context).inject(this)
@@ -122,9 +124,7 @@ class DraftsAdapter(
 
     override fun swapCursor(c: Cursor?): Cursor? {
         val old = super.swapCursor(c)
-        if (c != null) {
-            indices = DraftCursorIndices(c)
-        }
+        indices = c?.let { ObjectCursor.indicesFrom(it, Draft::class.java) }
         return old
     }
 

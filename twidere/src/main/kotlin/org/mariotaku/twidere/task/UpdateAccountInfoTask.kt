@@ -8,11 +8,15 @@ import android.content.Context
 import android.support.v4.util.LongSparseArray
 import android.text.TextUtils
 import org.mariotaku.abstask.library.AbstractTask
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.ACCOUNT_TYPE
 import org.mariotaku.twidere.extension.model.setAccountKey
 import org.mariotaku.twidere.extension.model.setAccountUser
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.Tab
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import java.io.IOException
 
@@ -57,7 +61,8 @@ class UpdateAccountInfoTask(
     private fun updateTabs(resolver: ContentResolver, accountKey: UserKey) {
         val tabsCursor = resolver.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, null) ?: return
         try {
-            val indices = TabCursorIndices(tabsCursor)
+            val indices = ObjectCursor.indicesFrom(tabsCursor, Tab::class.java)
+            val creator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
             tabsCursor.moveToFirst()
             val values = LongSparseArray<ContentValues>()
             while (!tabsCursor.isAfterLast) {
@@ -68,7 +73,7 @@ class UpdateAccountInfoTask(
                     val keys = arguments.accountKeys
                     if (TextUtils.equals(accountKey.id, accountId) && keys == null) {
                         arguments.accountKeys = arrayOf(accountKey)
-                        values.put(tab.id, TabValuesCreator.create(tab))
+                        values.put(tab.id, creator.create(tab))
                     }
                 }
                 tabsCursor.moveToNext()

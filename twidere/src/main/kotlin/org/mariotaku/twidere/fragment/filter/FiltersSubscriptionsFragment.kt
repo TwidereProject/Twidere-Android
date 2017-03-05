@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.layout_list_with_empty_view.*
 import okhttp3.HttpUrl
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.*
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
@@ -37,8 +38,6 @@ import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.FiltersSubscription
-import org.mariotaku.twidere.model.FiltersSubscriptionCursorIndices
-import org.mariotaku.twidere.model.FiltersSubscriptionValuesCreator
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
@@ -229,7 +228,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         val whereArgs = ids.toStringArray()
         resolver.query(Filters.Subscriptions.CONTENT_URI, Filters.Subscriptions.COLUMNS, where,
                 whereArgs, null)?.useCursor { cursor ->
-            val indices = FiltersSubscriptionCursorIndices(cursor)
+            val indices = ObjectCursor.indicesFrom(cursor, FiltersSubscription::class.java)
             cursor.moveToFirst()
             while (!cursor.isAfterLast) {
                 val subscription = indices.newObject(cursor)
@@ -261,11 +260,11 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
     class FilterSubscriptionsAdapter(context: Context) : SimpleCursorAdapter(context,
             R.layout.list_item_two_line, null, arrayOf(Filters.Subscriptions.NAME),
             intArrayOf(android.R.id.text1), 0) {
-        private var indices: FiltersSubscriptionCursorIndices? = null
+        private var indices: ObjectCursor.CursorIndices<FiltersSubscription>? = null
         private var tempObject: FiltersSubscription = FiltersSubscription()
 
         override fun swapCursor(c: Cursor?): Cursor? {
-            indices = if (c != null) FiltersSubscriptionCursorIndices(c) else null
+            indices = c?.let { ObjectCursor.indicesFrom(it, FiltersSubscription::class.java) }
             return super.swapCursor(c)
         }
 
@@ -295,7 +294,8 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                 subscription.setupUrl(editUrl.text.toString())
                 val component = subscription.instantiateComponent(context) ?: return@setPositiveButton
                 component.firstAdded()
-                context.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, FiltersSubscriptionValuesCreator.create(subscription))
+                val vc = ObjectCursor.valuesCreatorFrom(FiltersSubscription::class.java)
+                context.contentResolver.insert(Filters.Subscriptions.CONTENT_URI, vc.create(subscription))
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()

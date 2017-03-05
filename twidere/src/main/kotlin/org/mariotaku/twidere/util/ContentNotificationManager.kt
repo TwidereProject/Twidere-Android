@@ -30,6 +30,7 @@ import android.net.Uri
 import android.support.v4.app.NotificationCompat
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.isEmpty
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
@@ -99,22 +100,22 @@ class ContentNotificationManager(
             val usersCount = userCursor.count
             val statusesCount = statusCursor.count
             if (statusesCount == 0 || usersCount == 0) return
-            val statusIndices = ParcelableStatusCursorIndices(statusCursor)
-            val userIndices = ParcelableStatusCursorIndices(userCursor)
-            val positionKey = if (statusCursor.moveToFirst()) statusCursor.getLong(statusIndices.position_key) else -1L
+            val statusIndices = ObjectCursor.indicesFrom(statusCursor, ParcelableStatus::class.java)
+            val userIndices = ObjectCursor.indicesFrom(userCursor, ParcelableStatus::class.java)
+            val positionKey = if (statusCursor.moveToFirst()) statusCursor.getLong(statusIndices[Statuses.POSITION_KEY]) else -1L
             val notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
                     statusesCount, statusesCount)
             val notificationContent: String
             userCursor.moveToFirst()
-            val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
-                    userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
+            val displayName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
+                    userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
                     nameFirst)
             if (usersCount == 1) {
                 notificationContent = context.getString(R.string.from_name, displayName)
             } else if (usersCount == 2) {
                 userCursor.moveToPosition(1)
-                val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices.user_key),
-                        userCursor.getString(userIndices.user_name), userCursor.getString(userIndices.user_screen_name),
+                val othersName = userColorNameManager.getDisplayName(userCursor.getString(userIndices[Statuses.USER_KEY]),
+                        userCursor.getString(userIndices[Statuses.USER_NAME]), userCursor.getString(userIndices[Statuses.USER_SCREEN_NAME]),
                         nameFirst)
                 notificationContent = resources.getString(R.string.from_name_and_name, displayName, othersName)
             } else {
@@ -178,7 +179,7 @@ class ContentNotificationManager(
             builder.setStyle(style)
             builder.setAutoCancel(true)
             style.setSummaryText(accountName)
-            val ci = ParcelableActivityCursorIndices(c)
+            val ci = ObjectCursor.indicesFrom(c, ParcelableActivity::class.java)
 
             var timestamp: Long = -1
             val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
@@ -276,11 +277,11 @@ class ContentNotificationManager(
         try {
             if (cur.isEmpty) return
 
-            val indices = ParcelableMessageConversationCursorIndices(cur)
+            val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
 
             var messageSum: Int = 0
             cur.forEachRow { cur, pos ->
-                messageSum += cur.getInt(indices.unread_count)
+                messageSum += cur.getInt(indices[Conversations.UNREAD_COUNT])
                 return@forEachRow true
             }
 

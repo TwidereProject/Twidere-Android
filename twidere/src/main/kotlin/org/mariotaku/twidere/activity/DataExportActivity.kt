@@ -82,16 +82,20 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
     }
 
-    internal class ExportSettingsTask(private val activity: DataExportActivity, private val mPath: String?, private val mFlags: Int) : AsyncTask<Any, Any, Boolean>() {
+    internal class ExportSettingsTask(
+            private val activity: DataExportActivity,
+            private val path: String?,
+            private val flags: Int
+    ) : AsyncTask<Any, Any, Boolean>() {
 
         override fun doInBackground(vararg params: Any): Boolean? {
-            if (mPath == null) return false
+            if (path == null) return false
             val sdf = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US)
             val fileName = String.format("Twidere_Settings_%s.zip", sdf.format(Date()))
-            val file = File(mPath, fileName)
+            val file = File(path, fileName)
             file.delete()
             try {
-                DataImportExportUtils.exportData(activity, file, mFlags)
+                DataImportExportUtils.exportData(activity, file, flags)
                 return true
             } catch (e: IOException) {
                 Log.w(LOGTAG, e)

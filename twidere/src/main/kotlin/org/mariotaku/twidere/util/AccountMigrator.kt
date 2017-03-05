@@ -6,10 +6,10 @@ import android.database.sqlite.SQLiteDatabase
 import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AuthTypeInt
 import org.mariotaku.twidere.model.ParcelableCredentials
-import org.mariotaku.twidere.model.ParcelableCredentialsCursorIndices
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.BasicCredentials
@@ -27,7 +27,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Accounts
 fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
     val cur = db.query(Accounts.TABLE_NAME, Accounts.COLUMNS, null, null, null, null, null) ?: return
     try {
-        val indices = ParcelableCredentialsCursorIndices(cur)
+        val indices = ObjectCursor.indicesFrom(cur, ParcelableCredentials::class.java)
         cur.moveToFirst()
         while (!cur.isAfterLast) {
             val credentials = indices.newObject(cur)

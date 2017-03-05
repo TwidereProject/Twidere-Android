@@ -159,7 +159,8 @@ object DataStoreUtils {
         if (accountKeys.all { it == null }) return arrayOfNulls(accountKeys.size)
         return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
                 OrderBy(SQLFunctions.MIN(Messages.LOCAL_TIMESTAMP)), null, null,
-                ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
+                { ObjectCursor.indicesFrom(it, ParcelableMessageConversation::class.java) },
+                { arrayOfNulls<ParcelableMessageConversation>(it) })
     }
 
     fun getNewestConversations(context: Context, uri: Uri, accountKeys: Array<UserKey?>,
@@ -167,7 +168,8 @@ object DataStoreUtils {
         if (accountKeys.all { it == null }) return arrayOfNulls(accountKeys.size)
         return getObjectFieldArray(context, uri, accountKeys, Conversations.ACCOUNT_KEY, Conversations.COLUMNS,
                 OrderBy(SQLFunctions.MAX(Messages.LOCAL_TIMESTAMP)), extraWhere, extraWhereArgs,
-                ::ParcelableMessageConversationCursorIndices, { arrayOfNulls<ParcelableMessageConversation>(it) })
+                { ObjectCursor.indicesFrom(it, ParcelableMessageConversation::class.java) },
+                { arrayOfNulls<ParcelableMessageConversation>(it) })
     }
 
     fun getNewestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
@@ -800,6 +802,8 @@ object DataStoreUtils {
         val cr = context.contentResolver
 
         try {
+            val baseCreator = ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem::class.java)
+            val userCreator = ObjectCursor.valuesCreatorFrom(FiltersData.UserItem::class.java)
             val userValues = ArrayList<ContentValues>()
             val keywordValues = ArrayList<ContentValues>()
             val linkValues = ArrayList<ContentValues>()
@@ -808,12 +812,12 @@ object DataStoreUtils {
                 userItem.userKey = user.key
                 userItem.screenName = user.screen_name
                 userItem.name = user.name
-                userValues.add(`FiltersData$UserItemValuesCreator`.create(userItem))
+                userValues.add(userCreator.create(userItem))
 
                 val keywordItem = FiltersData.BaseItem()
                 keywordItem.value = "@" + user.screen_name
                 keywordItem.userKey = user.key
-                keywordValues.add(`FiltersData$BaseItemValuesCreator`.create(keywordItem))
+                keywordValues.add(baseCreator.create(keywordItem))
 
                 // Insert user link (without scheme) to links
                 val linkItem = FiltersData.BaseItem()
@@ -821,7 +825,7 @@ object DataStoreUtils {
                 val linkWithoutScheme = userLink.toString().substringAfter("://")
                 linkItem.value = linkWithoutScheme
                 linkItem.userKey = user.key
-                linkValues.add(`FiltersData$BaseItemValuesCreator`.create(linkItem))
+                linkValues.add(baseCreator.create(linkItem))
             }
 
             ContentResolverUtils.bulkInsert(cr, Filters.Users.CONTENT_URI, userValues)
@@ -861,8 +865,9 @@ object DataStoreUtils {
         for (uri in DataStoreUtils.STATUSES_URIS) {
             val cur = resolver.query(uri, Statuses.COLUMNS, where, whereArgs, null) ?: continue
             try {
-                if (cur.count > 0 && cur.moveToFirst()) {
-                    status = ParcelableStatusCursorIndices.fromCursor(cur)
+                if (cur.moveToFirst()) {
+                    val indices = ObjectCursor.indicesFrom(cur, ParcelableStatus::class.java)
+                    status = indices.newObject(cur)
                 }
             } finally {
                 cur.close()
@@ -885,7 +890,7 @@ object DataStoreUtils {
         val resolver = context.contentResolver
         val status = ParcelableStatusUtils.fromStatus(result, accountKey, false)
         resolver.delete(CachedStatuses.CONTENT_URI, where, whereArgs)
-        resolver.insert(CachedStatuses.CONTENT_URI, ParcelableStatusValuesCreator.create(status))
+        resolver.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(status))
         return status
     }
 
@@ -898,7 +903,8 @@ object DataStoreUtils {
         val cur = resolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where, whereArgs, null) ?: return null
         try {
             if (cur.moveToFirst()) {
-                return ParcelableMessageConversationCursorIndices.fromCursor(cur)
+                val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
+                return indices.newObject(cur)
             }
         } finally {
             cur.close()

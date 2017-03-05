@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.content.ContentValues
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.User
@@ -34,7 +35,7 @@ object ContentValuesCreator {
 
     fun createCachedUser(user: User, profileImageSize: String = "normal"): ContentValues {
         val values = ContentValues()
-        ParcelableUserValuesCreator.writeTo(ParcelableUserUtils.fromUser(user, null,
+        ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).writeTo(ParcelableUserUtils.fromUser(user, null,
                 profileImageSize = profileImageSize), values)
         return values
     }
@@ -78,8 +79,8 @@ object ContentValuesCreator {
     }
 
     fun createStatus(orig: Status, accountKey: UserKey, profileImageSize: String): ContentValues {
-        return ParcelableStatusValuesCreator.create(ParcelableStatusUtils.fromStatus(orig,
-                accountKey, false, profileImageSize))
+        return ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
+                .create(ParcelableStatusUtils.fromStatus(orig, accountKey, false, profileImageSize))
     }
 
     fun createActivity(activity: ParcelableActivity, details: AccountDetails): ContentValues {
@@ -109,7 +110,7 @@ object ContentValuesCreator {
             activity.status_text_plain = status.text_plain
             activity.status_source = status.source
         }
-        ParcelableActivityValuesCreator.writeTo(activity, values)
+        ObjectCursor.valuesCreatorFrom(ParcelableActivity::class.java).writeTo(activity, values)
         return values
     }
 

@@ -535,7 +535,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             context: Context,
             val accountKey: UserKey,
             val conversationId: String
-    ) : ObjectCursorLoader<ParcelableMessage>(context, ParcelableMessageCursorIndices::class.java) {
+    ) : ObjectCursorLoader<ParcelableMessage>(context, ParcelableMessage::class.java) {
 
         private val atomicConversation = AtomicReference<ParcelableMessageConversation?>()
         val conversation: ParcelableMessageConversation? get() = atomicConversation.get()

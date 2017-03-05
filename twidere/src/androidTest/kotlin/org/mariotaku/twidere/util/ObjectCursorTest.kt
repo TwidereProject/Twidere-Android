@@ -17,21 +17,31 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.util
 
+import android.database.MatrixCursor
 import android.support.test.runner.AndroidJUnit4
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mariotaku.library.objectcursor.ObjectCursor
+import org.mariotaku.twidere.model.FiltersData
+import org.mariotaku.twidere.model.ParcelableStatus
 
 /**
- * Created by mariotaku on 2017/2/20.
+ * Created by mariotaku on 2017/3/5.
  */
 @RunWith(AndroidJUnit4::class)
-class ViewExtensionsKtTest {
+class ObjectCursorTest {
 
     @Test
-    fun testEmpty() {
-
+    fun testSimple() {
+        val cur = MatrixCursor(emptyArray(), 0)
+        ObjectCursor.indicesFrom(cur, ParcelableStatus::class.java)
     }
 
+    @Test
+    fun testMemberClass() {
+        val cur = MatrixCursor(emptyArray(), 0)
+        ObjectCursor.indicesFrom(cur, FiltersData.BaseItem::class.java)
+    }
 }

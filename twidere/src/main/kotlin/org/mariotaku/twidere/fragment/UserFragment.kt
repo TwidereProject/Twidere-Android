@@ -83,6 +83,7 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.*
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
@@ -325,8 +326,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         val resolver = context.applicationContext.contentResolver
         task {
-            resolver.insert(CachedUsers.CONTENT_URI, ParcelableUserValuesCreator.create(user))
-            resolver.insert(CachedRelationships.CONTENT_URI, ParcelableRelationshipValuesCreator.create(userRelationship))
+            resolver.insert(CachedUsers.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).create(user))
+            resolver.insert(CachedRelationships.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(userRelationship))
         }
         followContainer.follow.visibility = View.VISIBLE
     }
@@ -1599,7 +1600,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val data = ParcelableRelationshipUtils.create(accountKey, userKey, relationship,
                         isFiltering)
                 val resolver = context.contentResolver
-                val values = ParcelableRelationshipValuesCreator.create(data)
+                val values = ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(data)
                 resolver.insert(CachedRelationships.CONTENT_URI, values)
                 return SingleResponse.getInstance(data)
             } catch (e: MicroBlogException) {

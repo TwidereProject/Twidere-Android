@@ -43,13 +43,7 @@ import org.mariotaku.twidere.annotation.Preference;
 import org.mariotaku.twidere.annotation.PreferenceType;
 import org.mariotaku.twidere.constant.SharedPreferenceConstants;
 import org.mariotaku.twidere.model.FiltersData;
-import org.mariotaku.twidere.model.FiltersData$BaseItemCursorIndices;
-import org.mariotaku.twidere.model.FiltersData$BaseItemValuesCreator;
-import org.mariotaku.twidere.model.FiltersData$UserItemCursorIndices;
-import org.mariotaku.twidere.model.FiltersData$UserItemValuesCreator;
 import org.mariotaku.twidere.model.Tab;
-import org.mariotaku.twidere.model.TabCursorIndices;
-import org.mariotaku.twidere.model.TabValuesCreator;
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 import org.mariotaku.twidere.util.content.ContentResolverUtils;
@@ -115,13 +109,13 @@ public class DataImportExportUtils implements Constants {
 
                 final ContentResolver cr = context.getContentResolver();
                 data.setUsers(queryAll(cr, Filters.Users.CONTENT_URI, Filters.Users.COLUMNS,
-                        FiltersData$UserItemCursorIndices.class));
+                        FiltersData.UserItem.class));
                 data.setKeywords(queryAll(cr, Filters.Keywords.CONTENT_URI, Filters.Keywords.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 data.setSources(queryAll(cr, Filters.Sources.CONTENT_URI, Filters.Sources.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 data.setLinks(queryAll(cr, Filters.Links.CONTENT_URI, Filters.Links.COLUMNS,
-                        FiltersData$BaseItemCursorIndices.class));
+                        FiltersData.BaseItem.class));
                 exportItem(zos, ENTRY_FILTERS, FiltersData.class, data);
             }
             if (hasFlag(flags, FLAG_TABS)) {
@@ -131,7 +125,7 @@ public class DataImportExportUtils implements Constants {
                 if (c != null) {
                     final List<Tab> tabs = new ArrayList<>(c.getCount());
                     try {
-                        TabCursorIndices ci = new TabCursorIndices(c);
+                        final ObjectCursor.CursorIndices<Tab> ci = ObjectCursor.indicesFrom(c, Tab.class);
                         c.moveToFirst();
                         while (!c.isAfterLast()) {
                             tabs.add(ci.newObject(c));
@@ -152,16 +146,11 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static <T> List<T> queryAll(ContentResolver cr, Uri uri, String[] projection,
-                                        Class<? extends ObjectCursor.CursorIndices<T>> cls) throws IOException {
+            Class<T> cls) throws IOException {
         Cursor c = cr.query(uri, projection, null, null, null);
         if (c == null) return null;
         try {
-            final ObjectCursor.CursorIndices<T> ci;
-            try {
-                ci = cls.getConstructor(Cursor.class).newInstance(c);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            final ObjectCursor.CursorIndices<T> ci = ObjectCursor.indicesFrom(c, cls);
             List<T> items = new ArrayList<>(c.getCount());
             c.moveToFirst();
             while (!c.isAfterLast()) {
@@ -252,31 +241,36 @@ public class DataImportExportUtils implements Constants {
 
                 void insertBase(ContentResolver cr, Uri uri, List<FiltersData.BaseItem> items) throws IOException {
                     if (items == null) return;
+                    final ObjectCursor.ValuesCreator<FiltersData.BaseItem> baseItemCreator =
+                            ObjectCursor.valuesCreatorFrom(FiltersData.BaseItem.class);
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (FiltersData.BaseItem item : items) {
-                        values.add(FiltersData$BaseItemValuesCreator.create(item));
+                        values.add(baseItemCreator.create(item));
                     }
                     ContentResolverUtils.bulkInsert(cr, uri, values);
                 }
 
                 void insertUser(ContentResolver cr, Uri uri, List<FiltersData.UserItem> items) throws IOException {
                     if (items == null) return;
+                    final ObjectCursor.ValuesCreator<FiltersData.UserItem> userItemCreator =
+                            ObjectCursor.valuesCreatorFrom(FiltersData.UserItem.class);
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (FiltersData.UserItem item : items) {
-                        values.add(FiltersData$UserItemValuesCreator.create(item));
+                        values.add(userItemCreator.create(item));
                     }
                     ContentResolverUtils.bulkInsert(cr, uri, values);
                 }
             });
         }
         if (hasFlag(flags, FLAG_TABS)) {
+            final ObjectCursor.ValuesCreator<Tab> creator = ObjectCursor.valuesCreatorFrom(Tab.class);
             importItemsList(context, zipFile, ENTRY_TABS, Tab.class, new ContentResolverProcessStrategy<List<Tab>>() {
                 @Override
                 public boolean importItem(ContentResolver cr, List<Tab> items) throws IOException {
                     if (items == null) return false;
                     List<ContentValues> values = new ArrayList<>(items.size());
                     for (Tab item : items) {
-                        values.add(TabValuesCreator.create(item));
+                        values.add(creator.create(item));
                     }
                     cr.delete(Tabs.CONTENT_URI, null, null);
                     ContentResolverUtils.bulkInsert(cr, Tabs.CONTENT_URI, values);
@@ -292,8 +286,8 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static void importSharedPreferencesData(@NonNull final ZipFile zipFile, @NonNull final Context context,
-                                                    @NonNull final String preferencesName, @NonNull final String entryName,
-                                                    @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
+            @NonNull final String preferencesName, @NonNull final String entryName,
+            @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
         final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(zipFile.getInputStream(entry));
@@ -314,8 +308,8 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static void exportSharedPreferencesData(@NonNull final ZipOutputStream zos, final Context context,
-                                                    @NonNull final String preferencesName, @NonNull final String entryName,
-                                                    @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
+            @NonNull final String preferencesName, @NonNull final String entryName,
+            @NonNull final SharedPreferencesProcessStrategy strategy) throws IOException {
         final SharedPreferences preferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
         final Map<String, ?> map = preferences.getAll();
         zos.putNextEntry(new ZipEntry(entryName));
@@ -330,10 +324,10 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static <T> void importItemsList(@NonNull final Context context,
-                                            @NonNull final ZipFile zipFile,
-                                            @NonNull final String entryName,
-                                            @NonNull final Class<T> itemCls,
-                                            @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
+            @NonNull final ZipFile zipFile,
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final ContentResolverProcessStrategy<List<T>> strategy)
             throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
@@ -344,9 +338,9 @@ public class DataImportExportUtils implements Constants {
 
 
     private static <T> void exportItemsList(@NonNull final ZipOutputStream zos,
-                                            @NonNull final String entryName,
-                                            @NonNull final Class<T> itemCls,
-                                            @NonNull final List<T> itemList) throws IOException {
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final List<T> itemList) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
         final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
         LoganSquareMapperFinder.mapperFor(itemCls).serialize(itemList, jsonGenerator);
@@ -355,10 +349,10 @@ public class DataImportExportUtils implements Constants {
     }
 
     private static <T> void importItem(@NonNull final Context context,
-                                       @NonNull final ZipFile zipFile,
-                                       @NonNull final String entryName,
-                                       @NonNull final Class<T> itemCls,
-                                       @NonNull final ContentResolverProcessStrategy<T> strategy)
+            @NonNull final ZipFile zipFile,
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final ContentResolverProcessStrategy<T> strategy)
             throws IOException {
         final ZipEntry entry = zipFile.getEntry(entryName);
         if (entry == null) return;
@@ -369,9 +363,9 @@ public class DataImportExportUtils implements Constants {
 
 
     private static <T> void exportItem(@NonNull final ZipOutputStream zos,
-                                       @NonNull final String entryName,
-                                       @NonNull final Class<T> itemCls,
-                                       @NonNull final T item) throws IOException {
+            @NonNull final String entryName,
+            @NonNull final Class<T> itemCls,
+            @NonNull final T item) throws IOException {
         zos.putNextEntry(new ZipEntry(entryName));
         final JsonGenerator jsonGenerator = LoganSquare.JSON_FACTORY.createGenerator(zos);
         LoganSquareMapperFinder.mapperFor(itemCls).serialize(item, jsonGenerator, true);

@@ -4,12 +4,11 @@ import android.content.Context
 import android.support.v4.util.LongSparseArray
 import org.mariotaku.ktextension.map
 import org.mariotaku.ktextension.set
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.extension.model.filename
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.model.Draft
-import org.mariotaku.twidere.model.DraftCursorIndices
-import org.mariotaku.twidere.model.DraftValuesCreator
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.content.ContentResolverUtils
@@ -45,7 +44,8 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
         val localDrafts = run {
             val cur = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null)!!
             try {
-                return@run cur.map(DraftCursorIndices(cur))
+                val indices = ObjectCursor.indicesFrom(cur, Draft::class.java)
+                return@run cur.map(indices)
             } finally {
                 cur.close()
             }
@@ -121,19 +121,20 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
             val fileList = downloadRemoteInfoList.joinToString(",") { it.draftFileName }
             DebugLog.d(LOGTAG_SYNC, "Downloading remote drafts $fileList")
             ContentResolverUtils.bulkInsert(context.contentResolver, Drafts.CONTENT_URI,
-                    downloadDrafts(downloadRemoteInfoList).map { DraftValuesCreator.create(it) })
+                    downloadDrafts(downloadRemoteInfoList).map { ObjectCursor.valuesCreatorFrom(Draft::class.java).create(it) })
         }
 
         // Update local items
         if (updateLocalInfoList.size() > 0) {
             val fileList = (0 until updateLocalInfoList.size()).joinToString(",") { updateLocalInfoList.valueAt(it).draftFileName }
             DebugLog.d(LOGTAG_SYNC, "Updating local drafts $fileList")
+            val creator = ObjectCursor.valuesCreatorFrom(Draft::class.java)
             for (index in 0 until updateLocalInfoList.size()) {
                 val draft = Draft()
                 if (draft.loadFromRemote(updateLocalInfoList.valueAt(index))) {
                     val where = Expression.equalsArgs(Drafts._ID).sql
                     val whereArgs = arrayOf(updateLocalInfoList.keyAt(index).toString())
-                    context.contentResolver.update(Drafts.CONTENT_URI, DraftValuesCreator.create(draft), where, whereArgs)
+                    context.contentResolver.update(Drafts.CONTENT_URI, creator.create(draft), where, whereArgs)
                 }
             }
         }
@@ -156,7 +157,8 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
         snapshotsListFile.writer().use { writer ->
             val cur = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, null, null, null)!!
             try {
-                cur.map(DraftCursorIndices(cur)).map { it.unique_id_non_null }.forEach { line ->
+                val indices = ObjectCursor.indicesFrom(cur, Draft::class.java)
+                cur.map(indices).map { it.unique_id_non_null }.forEach { line ->
                     writer.write(line)
                     writer.write("\n")
                 }

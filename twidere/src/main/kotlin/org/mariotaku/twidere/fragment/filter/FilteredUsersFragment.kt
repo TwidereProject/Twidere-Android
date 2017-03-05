@@ -20,6 +20,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -29,9 +30,9 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
+import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.`FiltersData$UserItemCursorIndices`
 import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
@@ -165,7 +166,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
         private val nameFirst: Boolean
 
-        private var indices: `FiltersData$UserItemCursorIndices`? = null
+        private var indices: ObjectCursor.CursorIndices<FiltersData.UserItem>? = null
         private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
         init {
@@ -182,15 +183,15 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
             icon.visibility = View.GONE
 
-            val userId = UserKey.valueOf(cursor.getString(indices.userKey))
-            val name = cursor.getString(indices.name)
-            val screenName = cursor.getString(indices.screenName)
+            val userId = UserKey.valueOf(cursor.getString(indices[Filters.Users.USER_KEY]))
+            val name = cursor.getString(indices[Filters.Users.NAME])
+            val screenName = cursor.getString(indices[Filters.Users.SCREEN_NAME])
             val displayName = userColorNameManager.getDisplayName(userId, name, screenName,
                     nameFirst)
             text1.text = displayName
 
             val ssb = SpannableStringBuilder(displayName)
-            if (cursor.getLong(indices.source) >= 0) {
+            if (cursor.getLong(indices[Filters.Users.SOURCE]) >= 0) {
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
@@ -203,17 +204,14 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         }
 
         override fun swapCursor(c: Cursor?): Cursor? {
-            val old = super.swapCursor(c)
-            if (c != null) {
-                indices = `FiltersData$UserItemCursorIndices`(c)
-            }
-            return old
+            indices = c?.let { ObjectCursor.indicesFrom(it, FiltersData.UserItem::class.java) }
+            return super.swapCursor(c)
         }
 
         override fun isSelectable(position: Int): Boolean {
             val cursor = this.cursor ?: return false
             if (cursor.moveToPosition(position)) {
-                return cursor.getLong(indices!!.source) < 0
+                return cursor.getLong(indices!![Filters.Users.SOURCE]) < 0
             }
             return false
         }
@@ -221,7 +219,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
         fun getUserKeyString(position: Int): String? {
             val cursor = this.cursor ?: return null
             if (cursor.moveToPosition(position)) {
-                return cursor.getString(indices!!.userKey)
+                return cursor.getString(indices!![Filters.Users.USER_KEY])
             }
             return null
         }

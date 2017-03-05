@@ -25,64 +25,66 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.support.v4.util.ArraySet
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Trends
-import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.Expression.and
+import org.mariotaku.sqliteqb.library.Expression.equalsArgs
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.AccountType.FANFOU
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableTrend
-import org.mariotaku.twidere.model.ParcelableTrendValuesCreator
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
-import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
-import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.task.BaseAbstractTask
+import org.mariotaku.twidere.util.DebugLog.w
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert
 import java.util.*
 
 /**
  * Created by mariotaku on 16/2/24.
  */
 class GetTrendsTask(
-        context: android.content.Context,
-        private val accountKey: org.mariotaku.twidere.model.UserKey,
+        context: Context,
+        private val accountKey: UserKey,
         private val woeId: Int
-) : org.mariotaku.twidere.task.BaseAbstractTask<Any?, Unit, Any?>(context) {
+) : BaseAbstractTask<Any?, Unit, Any?>(context) {
 
     override fun doLongOperation(param: Any?) {
-        val details = org.mariotaku.twidere.model.util.AccountUtils.getAccountDetails(android.accounts.AccountManager.get(context), accountKey, true) ?: return
-        val twitter = details.newMicroBlogInstance(context, cls = org.mariotaku.microblog.library.MicroBlog::class.java)
+        val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
+        val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         try {
             val trends = when {
-                details.type == org.mariotaku.twidere.annotation.AccountType.FANFOU -> twitter.fanfouTrends
+                details.type == FANFOU -> twitter.fanfouTrends
                 else -> twitter.getLocationTrends(woeId).firstOrNull()
             } ?: return
-            storeTrends(context.contentResolver, org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends.Local.CONTENT_URI, trends)
-        } catch (e: org.mariotaku.microblog.library.MicroBlogException) {
-            org.mariotaku.twidere.util.DebugLog.w(LOGTAG, tr = e)
+            storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends)
+        } catch (e: MicroBlogException) {
+            w(LOGTAG, tr = e)
         }
     }
 
     override fun afterExecute(handler: Any?, result: Unit) {
-        bus.post(org.mariotaku.twidere.model.event.TrendsRefreshedEvent())
+        bus.post(TrendsRefreshedEvent())
     }
 
-    private fun storeTrends(cr: android.content.ContentResolver, uri: android.net.Uri, trends: org.mariotaku.microblog.library.twitter.model.Trends) {
-        val hashtags = android.support.v4.util.ArraySet<String>()
-        val deleteWhere = org.mariotaku.sqliteqb.library.Expression.and(org.mariotaku.sqliteqb.library.Expression.equalsArgs(org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends.ACCOUNT_KEY),
-                org.mariotaku.sqliteqb.library.Expression.equalsArgs(org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends.WOEID)).sql
+    private fun storeTrends(cr: ContentResolver, uri: Uri, trends: Trends) {
+        val hashtags = ArraySet<String>()
+        val deleteWhere = and(equalsArgs(CachedTrends.ACCOUNT_KEY), equalsArgs(CachedTrends.WOEID)).sql
         val deleteWhereArgs = arrayOf(accountKey.toString(), woeId.toString())
-        cr.delete(org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends.Local.CONTENT_URI, deleteWhere, deleteWhereArgs)
+        cr.delete(CachedTrends.Local.CONTENT_URI, deleteWhere, deleteWhereArgs)
 
-        val allTrends = java.util.ArrayList<org.mariotaku.twidere.model.ParcelableTrend>()
+        val allTrends = ArrayList<ParcelableTrend>()
 
         trends.trends.forEachIndexed { idx, trend ->
             val hashtag = trend.name.replaceFirst("#", "")
             hashtags.add(hashtag)
-            allTrends.add(org.mariotaku.twidere.model.ParcelableTrend().apply {
+            allTrends.add(ParcelableTrend().apply {
                 this.account_key = accountKey
                 this.woe_id = woeId
                 this.name = trend.name
@@ -90,10 +92,11 @@ class GetTrendsTask(
                 this.trend_order = idx
             })
         }
-        org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert(cr, uri, allTrends.map(org.mariotaku.twidere.model.ParcelableTrendValuesCreator::create))
+        val creator = ObjectCursor.valuesCreatorFrom(ParcelableTrend::class.java)
+        bulkInsert(cr, uri, allTrends.map(creator::create))
         ContentResolverUtils.bulkDelete(cr, CachedHashtags.CONTENT_URI, CachedHashtags.NAME, false,
                 hashtags, null, null)
-        ContentResolverUtils.bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtags.map {
+        bulkInsert(cr, CachedHashtags.CONTENT_URI, hashtags.map {
             val values = ContentValues()
             values.put(CachedHashtags.NAME, it)
             return@map values

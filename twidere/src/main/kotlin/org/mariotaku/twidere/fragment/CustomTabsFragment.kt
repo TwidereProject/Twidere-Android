@@ -47,6 +47,7 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.set
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
@@ -60,8 +61,6 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.Tab
-import org.mariotaku.twidere.model.TabCursorIndices
-import org.mariotaku.twidere.model.TabValuesCreator
 import org.mariotaku.twidere.model.tab.DrawableHolder
 import org.mariotaku.twidere.model.tab.TabConfiguration
 import org.mariotaku.twidere.model.tab.iface.AccountCallback
@@ -378,14 +377,15 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                         return@setOnClickListener
                     }
                 }
+                val valuesCreator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
                 when (tag) {
                     TAG_EDIT_TAB -> {
                         val where = Expression.equalsArgs(Tabs._ID).sql
                         val whereArgs = arrayOf(tab.id.toString())
-                        context.contentResolver.update(Tabs.CONTENT_URI, TabValuesCreator.create(tab), where, whereArgs)
+                        context.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab), where, whereArgs)
                     }
                     TAG_ADD_TAB -> {
-                        context.contentResolver.insert(Tabs.CONTENT_URI, TabValuesCreator.create(tab))
+                        context.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))
                     }
                 }
                 SettingsActivity.setShouldRestart(activity)
@@ -473,7 +473,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
         private val iconColor: Int = ThemeUtils.getThemeForegroundColor(context)
         private val tempTab: Tab = Tab()
-        private var indices: TabCursorIndices? = null
+        private var indices: ObjectCursor.CursorIndices<Tab>? = null
 
         override fun bindView(view: View, context: Context?, cursor: Cursor) {
             super.bindView(view, context, cursor)
@@ -504,9 +504,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         }
 
         override fun changeCursor(cursor: Cursor?) {
-            if (cursor != null) {
-                indices = TabCursorIndices(cursor)
-            }
+            indices = cursor?.let { ObjectCursor.indicesFrom(it, Tab::class.java) }
             super.changeCursor(cursor)
         }
 

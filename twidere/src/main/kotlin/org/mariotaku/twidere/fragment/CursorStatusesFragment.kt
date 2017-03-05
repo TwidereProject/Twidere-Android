@@ -43,7 +43,10 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.loader.ExtendedObjectCursorLoader
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ParameterizedExpression
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.SimpleRefreshTaskParam
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
@@ -98,8 +101,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
             accountKeys[it].toString()
         }
         val expression = processWhere(where, selectionArgs)
-        return ExtendedObjectCursorLoader(context, ParcelableStatusCursorIndices::class.java, uri,
-                projection, expression.sql, expression.parameters, sortOrder, fromUser)
+        return ExtendedObjectCursorLoader(context, ParcelableStatus::class.java, uri, projection,
+                expression.sql, expression.parameters, sortOrder, fromUser)
     }
 
     override fun createMessageBusCallback(): Any {

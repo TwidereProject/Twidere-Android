@@ -44,6 +44,7 @@ import android.widget.AbsListView.MultiChoiceModeListener
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.ktextension.setGroupAvailability
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -56,7 +57,6 @@ import org.mariotaku.twidere.extension.*
 import org.mariotaku.twidere.fragment.AbsContentListViewFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.model.FiltersData
-import org.mariotaku.twidere.model.`FiltersData$BaseItemCursorIndices`
 import org.mariotaku.twidere.provider.TwidereDataStore.Filters
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -331,15 +331,12 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
     ) : SimpleCursorAdapter(context, R.layout.simple_list_item_activated_1, null,
             emptyArray(), intArrayOf(), 0), SelectableItemAdapter {
 
-        private var indices: `FiltersData$BaseItemCursorIndices`? = null
+        private var indices: ObjectCursor.CursorIndices<FiltersData.BaseItem>? = null
         private val secondaryTextColor = ThemeUtils.getTextColorSecondary(context)
 
         override fun swapCursor(c: Cursor?): Cursor? {
-            val old = super.swapCursor(c)
-            if (c != null) {
-                indices = `FiltersData$BaseItemCursorIndices`(c)
-            }
-            return old
+            indices = c?.let { ObjectCursor.indicesFrom(it, FiltersData.BaseItem::class.java) }
+            return super.swapCursor(c)
         }
 
         override fun bindView(view: View, context: Context, cursor: Cursor) {
@@ -347,8 +344,8 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
             val indices = this.indices!!
             val text1 = view.findViewById(android.R.id.text1) as TextView
 
-            val ssb = SpannableStringBuilder(cursor.getString(indices.value))
-            if (cursor.getLong(indices.source) >= 0) {
+            val ssb = SpannableStringBuilder(cursor.getString(indices[Filters.VALUE]))
+            if (cursor.getLong(indices[Filters.SOURCE]) >= 0) {
                 val start = ssb.length
                 ssb.append("*")
                 val end = start + 1
@@ -363,7 +360,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         override fun isSelectable(position: Int): Boolean {
             val cursor = this.cursor ?: return false
             if (cursor.moveToPosition(position)) {
-                return cursor.getLong(indices!!.source) < 0
+                return cursor.getLong(indices!![Filters.SOURCE]) < 0
             }
             return false
         }

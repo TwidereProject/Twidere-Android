@@ -30,7 +30,6 @@ import org.mariotaku.library.objectcursor.ObjectCursor;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +39,7 @@ import java.util.List;
 public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
 
     final ForceLoadContentObserver mObserver;
-    final Class<? extends ObjectCursor.CursorIndices<T>> mIndicesClass;
+    final Class<T> mObjectClass;
 
     Uri mUri;
     String[] mProjection;
@@ -71,17 +70,7 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
     @SuppressWarnings("TryWithIdenticalCatches")
     @NonNull
     private ObjectCursor.CursorIndices<T> createIndices(final Cursor cursor) {
-        try {
-            return mIndicesClass.getConstructor(Cursor.class).newInstance(cursor);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return ObjectCursor.indicesFrom(cursor, mObjectClass);
     }
 
     /* Runs on the UI thread */
@@ -112,9 +101,9 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
      * calls to {@link #setUri(Uri)}, {@link #setSelection(String)}, etc
      * to specify the query to perform.
      */
-    public ObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<T>> indicesClass) {
+    public ObjectCursorLoader(Context context, Class<T> objectClass) {
         super(context);
-        mIndicesClass = indicesClass;
+        mObjectClass = objectClass;
         mObserver = new ForceLoadContentObserver();
     }
 
@@ -124,11 +113,10 @@ public class ObjectCursorLoader<T> extends FixedAsyncTaskLoader<List<T>> {
      * ContentResolver.query()} for documentation on the meaning of the
      * parameters.  These will be passed as-is to that call.
      */
-    public ObjectCursorLoader(Context context, Class<? extends ObjectCursor.CursorIndices<T>> indicesClass,
-                              Uri uri, String[] projection, String selection,
-                              String[] selectionArgs, String sortOrder) {
+    public ObjectCursorLoader(Context context, Class<T> objectClass, Uri uri, String[] projection,
+            String selection, String[] selectionArgs, String sortOrder) {
         super(context);
-        mIndicesClass = indicesClass;
+        mObjectClass = objectClass;
         mObserver = new ForceLoadContentObserver();
         mUri = uri;
         mProjection = projection;

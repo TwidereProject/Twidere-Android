@@ -1,13 +1,13 @@
 package org.mariotaku.twidere.loader
 
 import android.content.Context
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.sqliteqb.library.Columns
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
-import org.mariotaku.twidere.model.ParcelableUserCursorIndices
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
 import org.mariotaku.twidere.util.UserColorNameManager
@@ -47,10 +47,10 @@ class CacheUserSearchLoader(
         val selectionArgs = arrayOf(queryEscaped, queryEscaped, *nicknameKeys)
         val c = context.contentResolver.query(CachedUsers.CONTENT_URI, CachedUsers.BASIC_COLUMNS,
                 selection.sql, selectionArgs, null)!!
-        val i = ParcelableUserCursorIndices(c)
+        val i = ObjectCursor.indicesFrom(c, ParcelableUser::class.java)
         c.moveToFirst()
         while (!c.isAfterLast) {
-            if (list.none { it.key.toString() == c.getString(i.key) }) {
+            if (list.none { it.key.toString() == c.getString(i[CachedUsers.USER_KEY]) }) {
                 list.add(i.newObject(c))
             }
             c.moveToNext()

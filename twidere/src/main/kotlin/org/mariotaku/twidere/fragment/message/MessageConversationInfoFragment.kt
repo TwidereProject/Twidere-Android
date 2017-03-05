@@ -57,6 +57,7 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.useCursor
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUpload
@@ -455,7 +456,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             context.contentResolver.query(Conversations.CONTENT_URI, Conversations.COLUMNS, where,
                     whereArgs, null).useCursor { cur ->
                 if (cur.moveToFirst()) {
-                    return ParcelableMessageConversationCursorIndices.fromCursor(cur)
+                    val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
+                    return indices.newObject(cur)
                 }
             }
             return null
