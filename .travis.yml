@@ -69,7 +69,8 @@ before_script:
   - test -f twidere/src/google/AndroidManifest.xml
 
 script:
-  - ./gradlew clean build
+  - ./gradlew clean
+  - ./gradlew build
 
 after_failure:
   - travis/scripts/print_error_logs.sh
