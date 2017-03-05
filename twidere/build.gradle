@@ -92,7 +92,6 @@ dependencies {
     kapt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
     kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.8'
-    kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
 
     compile project(':twidere.component.common')
     compile project(':twidere.component.nyan')
