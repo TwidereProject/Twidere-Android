@@ -30,6 +30,7 @@ env:
 addons:
   apt:
     packages:
+      - curl
       - tar
       - gzip
       - patch
@@ -61,6 +62,8 @@ install:
   - cat private/ssh_known_hosts >> ~/.ssh/known_hosts
   # Checkout Google components
   - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
+  # Dropbox accessToken for uploading logs
+  - cat private/dropbox_uploader >> ~/.dropbox_loader
 
 before_script:
   # Validate if patches work
@@ -73,7 +76,9 @@ script:
   - ./gradlew build
 
 after_failure:
-  - ls /tmp
+  - curl "https://raw.githubusercontent.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh" -o travis/scripts/dropbox_uploader.sh
+  - chmod +x travis/scripts/dropbox_uploader.sh
+  - find /tmp -maxdepth 1 -name 'kotlin-daemon.*.log' -exec sh -c 'travis/scripts/dropbox_uploader.sh $1 $TRAVIS_BUILD_ID/$(basename $1)' find-sh {} \;
 
 deploy:
   provider: releases
