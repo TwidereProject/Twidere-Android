@@ -63,7 +63,7 @@ install:
   # Checkout Google components
   - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
   # Dropbox accessToken for uploading logs
-  - cat private/dropbox_uploader >> ~/.dropbox_loader
+  - cat private/dropbox_uploader >> ~/.dropbox_uploader
 
 before_script:
   # Validate if patches work
