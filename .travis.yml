@@ -70,8 +70,6 @@ before_script:
   - patch --dry-run -d twidere < twidere/patches/remove_closed_source_dependencies.patch
   # Validate if Google components fetched successfully
   - test -f twidere/src/google/AndroidManifest.xml
-  # Remove gradle daemon log generated last time
-  - find ~/.gradle/daemon/ -name 'daemon-*.log' -exec rm {} \;
 
 script:
   - ./gradlew clean
