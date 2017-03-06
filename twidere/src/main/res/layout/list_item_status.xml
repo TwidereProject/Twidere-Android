@@ -27,8 +27,10 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:focusable="true"
+    android:paddingEnd="@dimen/element_spacing_normal"
     android:paddingLeft="@dimen/element_spacing_normal"
     android:paddingRight="@dimen/element_spacing_normal"
+    android:paddingStart="@dimen/element_spacing_normal"
     app:ignorePadding="true">
 
     <org.mariotaku.twidere.view.IconActionView
