@@ -57,27 +57,32 @@ class DiskLRUFileCache(val cacheDir: File) : FileCache {
         cache?.remove(hash(key))
     }
 
+    @Throws(IOException::class)
     override fun save(key: String, stream: InputStream, extra: ByteArray?, listener: FileCache.CopyListener?) {
-        val editor = cache?.edit(hash(key)) ?: return
+        val hashedKey = hash(key)
+        val editor = cache?.edit(hashedKey) ?: throw IOException("Unable to open cache for $key")
 
-        editor.getFile(0).outputStream().use {
-            var bytesCopied: Int = 0
-            val buffer = ByteArray(8192)
-            var bytes = stream.read(buffer)
-            while (bytes >= 0) {
-                it.write(buffer, 0, bytes)
-                bytesCopied += bytes
-                if (listener != null && !listener.onCopied(bytesCopied)) {
-                    editor.abort()
-                    return
+        try {
+            editor.getFile(0).outputStream().use {
+                var bytesCopied: Int = 0
+                val buffer = ByteArray(8192)
+                var bytes = stream.read(buffer)
+                while (bytes >= 0) {
+                    it.write(buffer, 0, bytes)
+                    bytesCopied += bytes
+                    if (listener != null && !listener.onCopied(bytesCopied)) {
+                        return
+                    }
+                    bytes = stream.read(buffer)
                 }
-                bytes = stream.read(buffer)
             }
+            if (extra != null) {
+                editor.getFile(1).writeBytes(extra)
+            }
+            editor.commit()
+        } finally {
+            editor.abortUnlessCommitted()
         }
-        if (extra != null) {
-            editor.getFile(1).writeBytes(extra)
-        }
-        editor.commit()
     }
 
     private fun hash(key: String): String {

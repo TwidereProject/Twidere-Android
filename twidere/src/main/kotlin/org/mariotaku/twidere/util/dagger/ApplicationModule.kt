@@ -311,7 +311,7 @@ class ApplicationModule(private val application: Application) {
     fun cache(preferences: SharedPreferencesWrapper): Cache {
         val cacheSizeMB = preferences.getInt(KEY_CACHE_SIZE_LIMIT, 300).coerceIn(100..500)
         // Convert to bytes
-        return Cache(getCacheDir("network"), cacheSizeMB * 1048576L)
+        return Cache(getCacheDir("network", cacheSizeMB * 1048576L), cacheSizeMB * 1048576L)
     }
 
     @Provides
@@ -323,17 +323,17 @@ class ApplicationModule(private val application: Application) {
     @Provides
     @Singleton
     fun jsonCache(): JsonCache {
-        return JsonCache(getCacheDir("json"))
+        return JsonCache(getCacheDir("json", 100 * 1048576L))
     }
 
     @Provides
     @Singleton
     fun fileCache(): FileCache {
-        return DiskLRUFileCache(getCacheDir("media"))
+        return DiskLRUFileCache(getCacheDir("media", 100 * 1048576L))
     }
 
-    private fun getCacheDir(dirName: String): File {
-        return Utils.getExternalCacheDir(application, dirName) ?:
+    private fun getCacheDir(dirName: String, sizeInBytes: Long): File {
+        return Utils.getExternalCacheDir(application, dirName, sizeInBytes) ?:
                 Utils.getInternalCacheDir(application, dirName)
     }
 

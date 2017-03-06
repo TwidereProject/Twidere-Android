@@ -171,8 +171,8 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
 
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.22'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.22'
+    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.23'
+    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.23'
     compile 'com.github.mariotaku:SQLiteQB:0.9.10'
     compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
@@ -182,7 +182,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
     compile 'com.github.mariotaku:KPreferences:0.9.5'
-    compile 'com.github.mariotaku:Chameleon:0.9.15'
+    compile 'com.github.mariotaku:Chameleon:0.9.16'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
     compile 'nl.komponents.kovenant:kovenant:3.3.0'

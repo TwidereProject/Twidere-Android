@@ -462,13 +462,18 @@ public final class Utils implements Constants {
     }
 
     @Nullable
-    public static File getExternalCacheDir(final Context context, final String cacheDirName) {
+    public static File getExternalCacheDir(final Context context, final String cacheDirName,
+            final long sizeInBytes) {
         if (context == null) throw new NullPointerException();
         final File externalCacheDir = context.getExternalCacheDir();
         if (externalCacheDir == null) return null;
         final File cacheDir = new File(externalCacheDir, cacheDirName);
+        if (sizeInBytes > 0 && externalCacheDir.getFreeSpace() < sizeInBytes / 10) {
+            // Less then 10% space available
+            return null;
+        }
         if (cacheDir.isDirectory() || cacheDir.mkdirs()) return cacheDir;
-        return new File(context.getCacheDir(), cacheDirName);
+        return null;
     }
 
     public static String getLocalizedNumber(final Locale locale, final Number number) {
@@ -491,14 +496,6 @@ public final class Utils implements Constants {
             }
         }
         return list.toArray(new String[list.size()]);
-    }
-
-    public static String getNormalTwitterProfileImage(final String url) {
-        return getTwitterProfileImageOfSize(url, "normal");
-    }
-
-    public static Uri getNotificationUri(final int tableId, final Uri def) {
-        return def;
     }
 
     public static String getOriginalTwitterProfileImage(final String url) {
@@ -613,8 +610,7 @@ public final class Utils implements Constants {
     }
 
 
-    public static String getTwitterProfileImageOfSize(final String url, final String size) {
-        if (url == null) return null;
+    public static String getTwitterProfileImageOfSize(@NonNull final String url, @NonNull final String size) {
         final Matcher matcher = PATTERN_TWITTER_PROFILE_IMAGES.matcher(url);
         if (matcher.matches()) {
             return matcher.replaceFirst("$1$2/profile_images/$3/$4_" + size + "$6");

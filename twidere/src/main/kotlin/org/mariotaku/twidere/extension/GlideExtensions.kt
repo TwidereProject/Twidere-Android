@@ -39,7 +39,13 @@ fun RequestManager.loadProfileImage(
         @ImageShapeStyle style: Int = ImageShapeStyle.SHAPE_CIRCLE,
         size: String? = null
 ): DrawableRequestBuilder<String?> {
-    return configureLoadProfileImage(context, style) { load(Utils.getTwitterProfileImageOfSize(url, size)) }
+    return configureLoadProfileImage(context, style) {
+        if (url == null || size == null) {
+            return@configureLoadProfileImage load(url)
+        } else {
+            return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(url, size))
+        }
+    }
 }
 
 fun RequestManager.loadProfileImage(context: Context, resourceId: Int,
