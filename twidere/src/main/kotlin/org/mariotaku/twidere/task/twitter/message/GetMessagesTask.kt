@@ -164,10 +164,12 @@ class GetMessagesTask(
         conversations.addLocalConversations(context, accountKey, conversationIds)
 
         received.forEachIndexed { i, dm ->
-            addConversationMessage(insertMessages, conversations, details, dm, i, received.size, false)
+            addConversationMessage(insertMessages, conversations, details, dm, i, received.size,
+                    false, profileImageSize)
         }
         sent.forEachIndexed { i, dm ->
-            addConversationMessage(insertMessages, conversations, details, dm, i, sent.size, true)
+            addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
+                    true, profileImageSize)
         }
         return DatabaseUpdateData(conversations.values, insertMessages)
     }
@@ -385,7 +387,7 @@ class GetMessagesTask(
                 val recentMessage = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp)
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
-                }.values.map { ParcelableUserUtils.fromUser(it, accountKey) }
+                }.values.map { ParcelableUserUtils.fromUser(it, accountKey, profileImageSize = profileImageSize) }
                 val conversationType = when (v.type?.toUpperCase(Locale.US)) {
                     DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
                     DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
@@ -543,13 +545,16 @@ class GetMessagesTask(
 
         internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
                 conversations: MutableMap<String, ParcelableMessageConversation>,
-                details: AccountDetails, dm: DirectMessage, index: Int, size: Int, outgoing: Boolean) {
+                details: AccountDetails, dm: DirectMessage, index: Int, size: Int,
+                outgoing: Boolean, profileImageSize: String = "normal") {
             val accountKey = details.key
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
                     1.0 - (index.toDouble() / size))
             messages.add(message)
-            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey)
-            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey)
+            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey,
+                    profileImageSize = profileImageSize)
+            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey,
+                    profileImageSize = profileImageSize)
             val conversation = conversations.addConversation(message.conversation_id, details,
                     message, setOf(sender, recipient)) ?: return
             conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT

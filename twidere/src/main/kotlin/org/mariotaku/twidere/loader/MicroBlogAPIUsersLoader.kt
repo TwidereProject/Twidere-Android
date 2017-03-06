@@ -25,6 +25,7 @@ import android.util.Log
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.AccountDetails
@@ -41,6 +42,8 @@ abstract class MicroBlogAPIUsersLoader(
         data: List<ParcelableUser>?,
         fromUser: Boolean
 ) : ParcelableUsersLoader(context, data, fromUser) {
+
+    private val profileImageSize = context.getString(R.string.profile_image_size)
 
     override fun loadInBackground(): List<ParcelableUser> {
         if (accountKey == null) {
@@ -64,7 +67,8 @@ abstract class MicroBlogAPIUsersLoader(
             if (hasId(user.id)) {
                 continue
             }
-            val item = ParcelableUserUtils.fromUser(user, accountKey, pos.toLong())
+            val item = ParcelableUserUtils.fromUser(user, accountKey, pos.toLong(),
+                    profileImageSize = profileImageSize)
             processUser(item)
             data.add(item)
             pos++

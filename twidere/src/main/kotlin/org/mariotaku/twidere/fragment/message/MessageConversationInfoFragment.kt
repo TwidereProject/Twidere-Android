@@ -69,6 +69,7 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
@@ -160,11 +161,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         conversationAvatar.style = profileImageStyle
 
         val avatarBackground = ChameleonUtils.getColorDependent(theme.colorToolbar)
-        appBarIcon.setBackgroundColor(avatarBackground)
+        appBarIcon.setShapeBackground(avatarBackground)
         appBarTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
         appBarSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
-        conversationAvatar.setBackgroundColor(avatarBackground)
+        conversationAvatar.setShapeBackground(avatarBackground)
         conversationTitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
         conversationSubtitle.setTextColor(ChameleonUtils.getColorDependent(theme.colorToolbar))
 
@@ -249,7 +250,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         val requestManager = Glide.with(this)
         requestManager.loadProfileImage(context, data).into(conversationAvatar)
-        requestManager.loadProfileImage(context, data).into(appBarIcon)
+        requestManager.loadProfileImage(context, data, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.text = name
         conversationTitle.text = name
         if (summary != null) {
