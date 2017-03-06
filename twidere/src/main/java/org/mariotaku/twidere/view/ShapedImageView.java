@@ -35,9 +35,9 @@ import android.graphics.SweepGradient;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.ImageShapeStyle;
@@ -49,14 +49,14 @@ import org.mariotaku.twidere.util.support.view.ViewOutlineProviderCompat;
  * An ImageView class with a circle mask so that all images are drawn in a
  * circle instead of a square.
  */
-public class ShapedImageView extends ImageView {
+public class ShapedImageView extends AppCompatImageView {
 
     private static final int SHADOW_START_COLOR = 0x37000000;
 
     public static final boolean OUTLINE_DRAW = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 
     private final RectF mDestination;
-    private final Paint mBorderPaint;
+    private final Paint mBackgroundPaint, mBorderPaint;
     private boolean mBorderEnabled;
     private Bitmap mShadowBitmap;
     private float mShadowRadius;
@@ -81,6 +81,9 @@ public class ShapedImageView extends ImageView {
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ShapedImageView, defStyle, 0);
 
         mDestination = new RectF();
+
+        mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBackgroundPaint.setStyle(Paint.Style.FILL);
 
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setStyle(Paint.Style.STROKE);
@@ -108,10 +111,18 @@ public class ShapedImageView extends ImageView {
         } else {
             mShadowRadius = a.getDimensionPixelSize(R.styleable.ShapedImageView_sivElevation, 0);
         }
-        setBackgroundColor(a.getColor(R.styleable.ShapedImageView_sivBackgroundColor, 0));
+        setShapeBackground(a.getColor(R.styleable.ShapedImageView_sivBackgroundColor, 0));
         a.recycle();
 
         initOutlineProvider();
+    }
+
+    public void setShapeBackground(final int color) {
+        if (OUTLINE_DRAW) {
+            setBackgroundColor(color);
+        } else {
+            mBackgroundPaint.setColor(color);
+        }
     }
 
     public int[] getBorderColors() {
@@ -168,6 +179,10 @@ public class ShapedImageView extends ImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+
+        mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
+                getHeight() - getPaddingBottom());
+
         if (OUTLINE_DRAW) {
             super.onDraw(canvas);
         } else {
@@ -181,11 +196,9 @@ public class ShapedImageView extends ImageView {
                 canvas.drawBitmap(mShadowBitmap, contentLeft + (contentWidth - size) / 2 - mShadowRadius,
                         contentTop + (contentHeight - size) / 2 - mShadowRadius, null);
             }
+            drawShape(canvas, mDestination, 0, mBackgroundPaint);
             super.onDraw(canvas);
         }
-
-        mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
-                getHeight() - getPaddingBottom());
         // Then draw the border.
         if (mBorderEnabled) {
             drawBorder(canvas, mDestination);
@@ -237,14 +250,18 @@ public class ShapedImageView extends ImageView {
             ViewCompat.setTranslationZ(this, 0);
         }
         mBorderPaint.setStrokeWidth(strokeWidth);
+        drawShape(canvas, dest, strokeWidth, mBorderPaint);
+    }
+
+    private void drawShape(@NonNull final Canvas canvas, @NonNull final RectF dest, final float strokeWidth, final Paint paint) {
         if (getStyle() == ImageShapeStyle.SHAPE_CIRCLE) {
             final float circleRadius = Math.min(dest.width(), dest.height()) / 2f - strokeWidth / 2;
-            canvas.drawCircle(dest.centerX(), dest.centerY(), circleRadius, mBorderPaint);
+            canvas.drawCircle(dest.centerX(), dest.centerY(), circleRadius, paint);
         } else {
             final float radius = getCalculatedCornerRadius();
             final float inset = mStrokeWidth / 2;
             dest.inset(inset, inset);
-            canvas.drawRoundRect(dest, radius, radius, mBorderPaint);
+            canvas.drawRoundRect(dest, radius, radius, paint);
             dest.inset(-inset, -inset);
         }
     }

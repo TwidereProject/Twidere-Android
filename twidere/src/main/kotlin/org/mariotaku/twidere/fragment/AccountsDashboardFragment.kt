@@ -67,6 +67,7 @@ import org.mariotaku.twidere.activity.*
 import org.mariotaku.twidere.adapter.RecyclerPagerAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.CustomTabType
+import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.annotation.Referral
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.extraFeaturesNoticeVersionKey
@@ -450,8 +451,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 //TODO complete border color
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
-                Glide.with(this@AccountsDashboardFragment).loadProfileImage(context,
-                        oldSelectedAccount).into(clickedImageView).onLoadStarted(profileDrawable)
+                Glide.with(this@AccountsDashboardFragment).loadProfileImage(context, oldSelectedAccount)
+                        .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
 
@@ -509,7 +510,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = "@${account.user.screen_name}"
-        Glide.with(this).loadProfileImage(context, account).placeholder(profileImageSnapshot).into(accountProfileImageView)
+        Glide.with(this).loadProfileImage(context, account, size = ProfileImageSize.REASONABLY_SMALL)
+                .placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color
         accountProfileImageView.setBorderColors(account.color)
         accountProfileBanner.showNext()

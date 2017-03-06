@@ -37,7 +37,7 @@ fun RequestManager.loadProfileImage(
         context: Context,
         url: String?,
         @ImageShapeStyle style: Int = ImageShapeStyle.SHAPE_CIRCLE,
-        size: String = context.getString(R.string.profile_image_size)
+        size: String? = null
 ): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, style) { load(Utils.getTwitterProfileImageOfSize(url, size)) }
 }
@@ -48,17 +48,25 @@ fun RequestManager.loadProfileImage(context: Context, resourceId: Int,
 }
 
 fun RequestManager.loadProfileImage(context: Context, account: AccountDetails,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
-    return loadProfileImage(context, account.user, shapeStyle)
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        size: String? = null): DrawableRequestBuilder<String?> {
+    return loadProfileImage(context, account.user, shapeStyle, size)
 }
 
 fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        size: String? = null): DrawableRequestBuilder<String?> {
     if (user.extras != null && user.extras.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, user.profile_image_url)
+        return loadProfileImage(context, user.profile_image_url, shapeStyle, size)
     }
-    return configureLoadProfileImage(context, shapeStyle) { load(user.profile_image_url) }
+    return configureLoadProfileImage(context, shapeStyle) {
+        if (size != null) {
+            return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(user.profile_image_url, size))
+        } else {
+            return@configureLoadProfileImage load(user.profile_image_url)
+        }
+    }
 }
 
 fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
@@ -72,25 +80,29 @@ fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
 }
 
 fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        size: String? = null): DrawableRequestBuilder<String?> {
     if (status.extras != null && status.extras.user_profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, status.user_profile_image_url)
+        return loadProfileImage(context, status.user_profile_image_url, shapeStyle, size)
     }
     return configureLoadProfileImage(context, shapeStyle) { load(status.user_profile_image_url) }
 }
 
-fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMessageConversation): DrawableRequestBuilder<*> {
+fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMessageConversation,
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        size: String? = null): DrawableRequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user
         if (user != null) {
-            return loadProfileImage(context, user)
+            return loadProfileImage(context, user, shapeStyle, size)
         } else {
             // TODO: show default conversation icon
             return loadProfileImage(context, org.mariotaku.twidere.R.drawable.ic_profile_image_default_group)
         }
     } else {
-        return loadProfileImage(context, conversation.conversation_avatar).placeholder(R.drawable.ic_profile_image_default_group)
+        return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, size)
+                .placeholder(R.drawable.ic_profile_image_default_group)
     }
 }
 
