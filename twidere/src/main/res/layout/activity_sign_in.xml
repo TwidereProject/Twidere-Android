@@ -17,10 +17,11 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="300dp"
@@ -68,20 +69,19 @@
             android:text="@string/sign_in"
             app:backgroundTint="@color/material_light_green"/>
 
-
         <Button
             android:id="@+id/signUp"
-            style="?android:borderlessButtonStyle"
+            style="?borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
-            android:minHeight="@dimen/element_size_xsmall"
+            android:minHeight="@dimen/element_spacing_xsmall"
             android:text="@string/register"
             android:textAppearance="?android:textAppearanceSmall"/>
 
         <Button
             android:id="@+id/passwordSignIn"
-            style="?android:borderlessButtonStyle"
+            style="?borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
