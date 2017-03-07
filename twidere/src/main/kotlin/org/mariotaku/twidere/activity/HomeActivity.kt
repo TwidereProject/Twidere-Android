@@ -319,7 +319,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
         val context = applicationContext
         TaskStarter.execute(object : AbstractTask<Any?, Any?, Any?>() {
-            override fun doLongOperation(o: Any?): Any? {
+            override fun doLongOperation(params: Any?): Any? {
                 DataStoreUtils.cleanDatabasesByItemLimit(context)
                 return null
             }

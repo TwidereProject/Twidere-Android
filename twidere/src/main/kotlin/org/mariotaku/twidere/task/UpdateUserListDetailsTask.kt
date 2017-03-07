@@ -39,9 +39,9 @@ class UpdateUserListDetailsTask(
         private val accountKey: UserKey,
         private val listId: String,
         private val update: UserListUpdate
-) : BaseAbstractTask<Any, SingleResponse<ParcelableUserList>, Any>(context) {
+) : BaseAbstractTask<Any?, SingleResponse<ParcelableUserList>, Any>(context) {
 
-    override fun doLongOperation(o: Any): SingleResponse<ParcelableUserList> {
+    override fun doLongOperation(params: Any?): SingleResponse<ParcelableUserList> {
         val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
         if (microBlog != null) {
             try {

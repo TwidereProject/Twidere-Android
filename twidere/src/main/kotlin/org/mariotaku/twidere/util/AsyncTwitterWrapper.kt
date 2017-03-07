@@ -326,7 +326,7 @@ class AsyncTwitterWrapper(
     }
 
     fun updateFriendship(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate) {
-        TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any, Relationship, MicroBlogException, Any>(context) {
+        TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any, Relationship, Exception, Any>(context) {
             override fun onExecute(params: Any): Relationship {
                 val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
                         ?: throw MicroBlogException("No account")
@@ -347,7 +347,11 @@ class AsyncTwitterWrapper(
                 bus.post(FriendshipUpdatedEvent(accountKey, userKey, result))
             }
 
-            override fun onException(callback: Any?, exception: MicroBlogException) {
+            override fun onException(callback: Any?, exception: Exception) {
+                if (exception !is MicroBlogException) {
+                    Analyzer.logException(exception)
+                    return
+                }
                 DebugLog.w(TwidereConstants.LOGTAG, "Unable to update friendship", exception)
             }
 
