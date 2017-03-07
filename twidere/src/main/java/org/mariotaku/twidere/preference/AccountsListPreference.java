@@ -40,7 +40,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.util.MediaLoaderWrapper;
+import org.mariotaku.twidere.util.MediaPreloader;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;
@@ -94,10 +94,10 @@ public abstract class AccountsListPreference extends TintedPreferenceCategory im
         private final SharedPreferences mSwitchPreference;
 
         @Inject
-        MediaLoaderWrapper mImageLoader;
+        MediaPreloader mediaPreloader;
 
         public AccountItemPreference(final Context context, final AccountDetails account,
-                                     @Nullable final String switchKey, final boolean switchDefault) {
+                @Nullable final String switchKey, final boolean switchDefault) {
             super(context);
             GeneralComponentHelper.build(context).inject(this);
             final String switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.key;
@@ -122,7 +122,7 @@ public abstract class AccountsListPreference extends TintedPreferenceCategory im
             super.onBindViewHolder(holder);
             final View iconView = holder.findViewById(android.R.id.icon);
             if (iconView instanceof PreferenceImageView) {
-                final PreferenceImageView imageView = (PreferenceImageView) iconView;
+                final ImageView imageView = (ImageView) iconView;
                 final int maxSize = getContext().getResources().getDimensionPixelSize(R.dimen.element_size_normal);
                 imageView.setMinimumWidth(maxSize);
                 imageView.setMinimumHeight(maxSize);

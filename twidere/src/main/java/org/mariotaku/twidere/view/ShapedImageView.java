@@ -163,8 +163,16 @@ public class ShapedImageView extends AppCompatImageView {
         mCornerRadius = radius;
     }
 
+    public float getCornerRadius() {
+        return mCornerRadius;
+    }
+
     public void setCornerRadiusRatio(float ratio) {
         mCornerRadiusRatio = ratio;
+    }
+
+    public float getCornerRadiusRatio() {
+        return mCornerRadiusRatio;
     }
 
     public void setDrawShadow(final boolean drawShadow) {

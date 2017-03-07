@@ -49,7 +49,20 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
     private val unreadCount by lazy { itemView.unreadCount }
 
     init {
-        setup()
+        val textSize = adapter.textSize
+        name.setPrimaryTextSize(textSize * 1.05f)
+        name.setSecondaryTextSize(textSize * 0.95f)
+        text.textSize = textSize
+        time.textSize = textSize * 0.85f
+
+        profileImage.style = adapter.profileImageStyle
+
+        itemView.setOnClickListener {
+            adapter.listener?.onConversationClick(layoutPosition)
+        }
+        profileImage.setOnClickListener {
+            adapter.listener?.onProfileImageClick(layoutPosition)
+        }
     }
 
     fun display(conversation: ParcelableMessageConversation) {
@@ -83,27 +96,14 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         } else {
             stateIndicator.visibility = View.GONE
         }
-        adapter.requestManager.loadProfileImage(adapter.context, conversation).into(profileImage)
+        adapter.requestManager.loadProfileImage(adapter.context, conversation,
+                adapter.profileImageStyle, profileImage.cornerRadius,
+                profileImage.cornerRadiusRatio).into(profileImage)
         if (conversation.unread_count > 0) {
             unreadCount.visibility = View.VISIBLE
             unreadCount.text = conversation.unread_count.toString()
         } else {
             unreadCount.visibility = View.GONE
-        }
-    }
-
-    private fun setup() {
-        val textSize = adapter.textSize
-        name.setPrimaryTextSize(textSize * 1.05f)
-        name.setSecondaryTextSize(textSize * 0.95f)
-        text.textSize = textSize
-        time.textSize = textSize * 0.85f
-
-        itemView.setOnClickListener {
-            adapter.listener?.onConversationClick(layoutPosition)
-        }
-        profileImage.setOnClickListener {
-            adapter.listener?.onProfileImageClick(layoutPosition)
         }
     }
 

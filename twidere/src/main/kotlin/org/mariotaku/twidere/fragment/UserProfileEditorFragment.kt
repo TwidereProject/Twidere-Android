@@ -42,6 +42,7 @@ import com.twitter.Validator
 import kotlinx.android.synthetic.main.fragment_user_profile_editor.*
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.ProfileUpdate
@@ -50,6 +51,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.activity.ThemedMediaPickerActivity
+import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
@@ -289,7 +291,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             editLocation.setText(user.location)
             editUrl.setText(if (isEmpty(user.url_expanded)) user.url else user.url_expanded)
 
-            Glide.with(this).loadProfileImage(context, user).into(profileImage)
+            Glide.with(this).loadProfileImage(context, user, 0).into(profileImage)
             Glide.with(this).loadProfileBanner(context, user, resources.displayMetrics.widthPixels).into(profileBanner)
             Glide.with(this).load(user.profile_background_url).into(profileBackground)
 

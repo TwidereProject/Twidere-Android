@@ -83,7 +83,8 @@ abstract class AbsMessageViewHolder(itemView: View, val adapter: MessagesConvers
             if (adapter.displaySenderProfile && adapter.profileImageEnabled && sender != null
                     && !message.is_outgoing) {
                 this.visibility = View.VISIBLE
-                adapter.requestManager.loadProfileImage(context, sender).into(this)
+                adapter.requestManager.loadProfileImage(context, sender,
+                        adapter.profileImageStyle).into(this)
             } else {
                 this.visibility = View.GONE
             }

@@ -451,7 +451,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 //TODO complete border color
                 clickedColors = clickedImageView.borderColors
                 val oldSelectedAccount = accountsAdapter.selectedAccount ?: return
-                Glide.with(this@AccountsDashboardFragment).loadProfileImage(context, oldSelectedAccount)
+                val profileImageStyle = preferences[profileImageStyleKey]
+                Glide.with(this@AccountsDashboardFragment).loadProfileImage(context, oldSelectedAccount,
+                        profileImageStyle, clickedImageView.cornerRadius, clickedImageView.cornerRadiusRatio)
                         .into(clickedImageView).onLoadStarted(profileDrawable)
                 //TODO complete border color
                 clickedImageView.setBorderColors(*profileImageView.borderColors)
@@ -510,8 +512,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val account = accountsAdapter.selectedAccount ?: return
         accountProfileNameView.text = account.user.name
         accountProfileScreenNameView.text = "@${account.user.screen_name}"
-        Glide.with(this).loadProfileImage(context, account, size = ProfileImageSize.REASONABLY_SMALL)
-                .placeholder(profileImageSnapshot).into(accountProfileImageView)
+        Glide.with(this).loadProfileImage(context, account, preferences[profileImageStyleKey],
+                accountProfileImageView.cornerRadius, accountProfileImageView.cornerRadiusRatio,
+                ProfileImageSize.REASONABLY_SMALL).placeholder(profileImageSnapshot).into(accountProfileImageView)
         //TODO complete border color
         accountProfileImageView.setBorderColors(account.color)
         accountProfileBanner.showNext()
@@ -609,6 +612,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         init {
             itemView.setOnClickListener(this)
             iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
+            iconView.style = adapter.profileImageStyle
         }
 
         override fun onClick(v: View) {
@@ -617,7 +621,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
         fun display(account: AccountDetails) {
             iconView.setBorderColor(account.color)
-            adapter.requestManager.loadProfileImage(itemView.context, account).into(iconView)
+            adapter.requestManager.loadProfileImage(itemView.context, account,
+                    adapter.profileImageStyle, iconView.cornerRadius,
+                    iconView.cornerRadiusRatio).into(iconView)
         }
 
     }

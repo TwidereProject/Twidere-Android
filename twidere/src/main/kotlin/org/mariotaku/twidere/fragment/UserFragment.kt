@@ -525,7 +525,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val requestManager = Glide.with(this)
         requestManager.loadProfileBanner(context, user, width).into(profileBanner)
-        requestManager.loadOriginalProfileImage(context, user, profileImage.style).into(profileImage)
+        requestManager.loadOriginalProfileImage(context, user, profileImage.style,
+                profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
         val relationship = relationship
         if (relationship == null) {
             getFriendship()

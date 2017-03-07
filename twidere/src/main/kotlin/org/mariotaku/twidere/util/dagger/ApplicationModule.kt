@@ -182,12 +182,12 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun mediaLoaderWrapper(preferences: SharedPreferencesWrapper): MediaLoaderWrapper {
-        val wrapper = MediaLoaderWrapper()
-        wrapper.reloadOptions(preferences)
+    fun mediaLoaderWrapper(preferences: SharedPreferencesWrapper): MediaPreloader {
+        val preloader = MediaPreloader(application)
+        preloader.reloadOptions(preferences)
         val cm = application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        wrapper.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
-        return wrapper
+        preloader.isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
+        return preloader
     }
 
     @Provides

@@ -31,15 +31,17 @@ import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.glide.RoundedRectTransformation
 import org.mariotaku.twidere.view.ShapedImageView
 
 fun RequestManager.loadProfileImage(
         context: Context,
         url: String?,
-        @ImageShapeStyle style: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle style: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null
 ): DrawableRequestBuilder<String?> {
-    return configureLoadProfileImage(context, style) {
+    return configureLoadProfileImage(context, style, cornerRadius, cornerRadiusRatio) {
         if (url == null || size == null) {
             return@configureLoadProfileImage load(url)
         } else {
@@ -49,24 +51,28 @@ fun RequestManager.loadProfileImage(
 }
 
 fun RequestManager.loadProfileImage(context: Context, resourceId: Int,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<Int> {
-    return configureLoadProfileImage(context, shapeStyle) { load(resourceId) }
+        @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<Int> {
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) { load(resourceId) }
 }
 
 fun RequestManager.loadProfileImage(context: Context, account: AccountDetails,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null): DrawableRequestBuilder<String?> {
-    return loadProfileImage(context, account.user, shapeStyle, size)
+    return loadProfileImage(context, account.user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
 }
 
 fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null): DrawableRequestBuilder<String?> {
     if (user.extras != null && user.extras.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, user.profile_image_url, shapeStyle, size)
+        return loadProfileImage(context, user.profile_image_url, shapeStyle, cornerRadius,
+                cornerRadiusRatio, size)
     }
-    return configureLoadProfileImage(context, shapeStyle) {
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
         if (size != null) {
             return@configureLoadProfileImage load(Utils.getTwitterProfileImageOfSize(user.profile_image_url, size))
         } else {
@@ -76,55 +82,70 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
 }
 
 fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
-    return configureLoadProfileImage(context, shapeStyle) { load(userList.user_profile_image_url) }
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<String?> {
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
+        load(userList.user_profile_image_url)
+    }
 }
 
 fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String?> {
-    return configureLoadProfileImage(context, shapeStyle) { load(group.homepage_logo) }
+        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<String?> {
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
+        load(group.homepage_logo)
+    }
 }
 
 fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null): DrawableRequestBuilder<String?> {
     if (status.extras != null && status.extras.user_profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
-        return loadProfileImage(context, status.user_profile_image_url, shapeStyle, size)
+        return loadProfileImage(context, status.user_profile_image_url, shapeStyle, cornerRadius,
+                cornerRadiusRatio, size)
     }
-    return configureLoadProfileImage(context, shapeStyle) { load(status.user_profile_image_url) }
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
+        load(status.user_profile_image_url)
+    }
 }
 
 fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMessageConversation,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null): DrawableRequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user
         if (user != null) {
-            return loadProfileImage(context, user, shapeStyle, size)
+            return loadProfileImage(context, user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
         } else {
             // TODO: show default conversation icon
-            return loadProfileImage(context, org.mariotaku.twidere.R.drawable.ic_profile_image_default_group)
+            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle)
         }
     } else {
-        return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, size)
-                .placeholder(R.drawable.ic_profile_image_default_group)
+        return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
+                cornerRadiusRatio, size).placeholder(R.drawable.ic_profile_image_default_group)
     }
 }
 
 fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUser,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE): DrawableRequestBuilder<String> {
+        @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f
+): DrawableRequestBuilder<String> {
     val original = user.extras.profile_image_url_original?.takeUnless(String::isEmpty)
             ?: Utils.getOriginalTwitterProfileImage(user.profile_image_url)
-    return configureLoadProfileImage(context, shapeStyle) { load(original) }
+    return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
+        load(original)
+    }
 }
 
 fun RequestManager.loadProfileBanner(context: Context, user: ParcelableUser, width: Int): DrawableTypeRequest<String?> {
     return load(user.getBestProfileBanner(width))
 }
 
-internal inline fun <T> configureLoadProfileImage(context: Context, shapeStyle: Int,
-        create: () -> DrawableTypeRequest<T>): DrawableRequestBuilder<T> {
+internal inline fun <T> configureLoadProfileImage(context: Context, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, create: () -> DrawableTypeRequest<T>
+): DrawableRequestBuilder<T> {
     val builder = create()
     builder.diskCacheStrategy(DiskCacheStrategy.RESULT)
     builder.dontAnimate()
@@ -134,6 +155,8 @@ internal inline fun <T> configureLoadProfileImage(context: Context, shapeStyle: 
                 builder.bitmapTransform(CropCircleTransformation(context))
             }
             ImageShapeStyle.SHAPE_RECTANGLE -> {
+                builder.bitmapTransform(RoundedRectTransformation(context, cornerRadius,
+                        cornerRadiusRatio))
             }
         }
     }

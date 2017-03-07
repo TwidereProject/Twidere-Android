@@ -101,7 +101,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         profileImageView.visibility = if (profileImageEnabled) View.VISIBLE else View.GONE
         statusContentUpperSpace.visibility = View.VISIBLE
 
-        profileImageView.setImageResource(R.drawable.ic_profile_image_twidere)
+        adapter.requestManager.loadProfileImage(itemView.context, R.drawable.ic_profile_image_twidere,
+                adapter.profileImageStyle, profileImageView.cornerRadius,
+                profileImageView.cornerRadiusRatio).into(profileImageView)
         nameView.name = TWIDERE_PREVIEW_NAME
         nameView.screenName = "@" + TWIDERE_PREVIEW_SCREEN_NAME
         nameView.updateText(adapter.bidiFormatter)
@@ -297,7 +299,9 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            requestManager.loadProfileImage(context, status).into(profileImageView)
+            requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
+                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio)
+                    .into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE

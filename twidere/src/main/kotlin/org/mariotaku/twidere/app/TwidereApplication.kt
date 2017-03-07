@@ -84,7 +84,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     @Inject
     lateinit internal var extraFeaturesService: ExtraFeaturesService
     @Inject
-    lateinit internal var mediaLoader: MediaLoaderWrapper
+    lateinit internal var mediaPreloader: MediaPreloader
     @Inject
     lateinit internal var contentNotificationManager: ContentNotificationManager
 
@@ -250,7 +250,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()
             }
             KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
-                mediaLoader.reloadOptions(preferences)
+                mediaPreloader.reloadOptions(preferences)
             }
             KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
                 contentNotificationManager.updatePreferences()

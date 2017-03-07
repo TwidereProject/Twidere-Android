@@ -91,8 +91,8 @@ class AccountSelectorActivity : BaseActivity(), OnItemClickListener {
         setContentView(R.layout.activity_account_selector)
         DataStoreUtils.prepareDatabase(this)
         adapter = AccountDetailsAdapter(this, Glide.with(this)).apply {
-            setSwitchEnabled(!isSingleSelection)
-            setSortEnabled(false)
+            switchEnabled = !isSingleSelection
+            sortEnabled = false
             val am = AccountManager.get(context)
             val allAccountDetails = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), false)
             val extraKeys = onlyIncludeKeys

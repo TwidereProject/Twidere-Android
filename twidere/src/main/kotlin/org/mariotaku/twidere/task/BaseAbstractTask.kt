@@ -22,7 +22,7 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     @Inject
     lateinit var microBlogWrapper: AsyncTwitterWrapper
     @Inject
-    lateinit var mediaLoader: MediaLoaderWrapper
+    lateinit var mediaPreloader: MediaPreloader
     @Inject
     lateinit var preferences: SharedPreferencesWrapper
     @Inject

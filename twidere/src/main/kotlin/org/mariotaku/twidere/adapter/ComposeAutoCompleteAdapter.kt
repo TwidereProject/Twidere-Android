@@ -35,7 +35,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.SuggestionItem
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
-import org.mariotaku.twidere.util.MediaLoaderWrapper
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -77,7 +76,7 @@ class ComposeAutoCompleteAdapter(context: Context, val requestManager: RequestMa
             text2.text = String.format("@%s", cursor.getString(indices.summary))
             if (displayProfileImage) {
                 val profileImageUrl = cursor.getString(indices.icon)
-                requestManager.loadProfileImage(context, profileImageUrl).into(icon)
+                requestManager.loadProfileImage(context, profileImageUrl, profileImageStyle).into(icon)
             } else {
                 //TODO cancel image load
             }

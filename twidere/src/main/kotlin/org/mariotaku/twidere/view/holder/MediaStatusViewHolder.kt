@@ -32,6 +32,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View) : RecyclerView.ViewHolder(itemView), IStatusViewHolder, View.OnClickListener, View.OnLongClickListener {
@@ -41,7 +42,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
 
     private val mediaImageContainer = itemView.mediaImageContainer
     private val mediaImageView = itemView.mediaImage
-    override val profileImageView: ImageView = itemView.mediaProfileImage
+    override val profileImageView: ProfileImageView = itemView.mediaProfileImage
     private val mediaTextView = itemView.mediaText
     private var listener: IStatusViewHolder.StatusClickListener? = null
 
@@ -80,7 +81,9 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
 
         mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type))
         val context = itemView.context
-        adapter.requestManager.loadProfileImage(context, status).into(profileImageView)
+        adapter.requestManager.loadProfileImage(context, status,
+                adapter.profileImageStyle, profileImageView.cornerRadius,
+                profileImageView.cornerRadiusRatio).into(profileImageView)
         // TODO image loaded event and credentials
         adapter.requestManager.load(firstMedia.preview_url).into(mediaImageView)
     }

@@ -174,7 +174,7 @@ abstract class GetStatusesTask(
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 status.inserted_date = System.currentTimeMillis()
-                mediaLoader.preloadStatus(status)
+                mediaPreloader.preloadStatus(status)
                 values[i] = creator.create(status)
                 if (minIdx == -1 || item < statuses[minIdx]) {
                     minIdx = i

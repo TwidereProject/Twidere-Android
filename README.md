@@ -62,11 +62,11 @@ Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
 **Donators**
 
-[@TwidereProject/donators](https://twitter.com/TwidereProject/lists/donators), if you haven't find your name, please contact @TwidereProject :)
+Checkout enhanced features on Google Play!
 
-Buy me a ~~bread~~ [game](http://steamcommunity.com/id/mariotaku/wishlist) or anything you want :)
+**Sponsors**
 
-[帮我支付宝账户里随便加点钱](https://twitter.com/xmxsuperstar/status/724094631621750785)
+<a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png'/></a>
 
 ---
 

@@ -480,7 +480,8 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(conversationTitle, null,
                 null, stateIcon, null)
 
-        Glide.with(this).loadProfileImage(context, conversation).into(conversationAvatar)
+        Glide.with(this).loadProfileImage(context, conversation, preferences[profileImageStyleKey])
+                .into(conversationAvatar)
     }
 
     internal class AddMediaTask(

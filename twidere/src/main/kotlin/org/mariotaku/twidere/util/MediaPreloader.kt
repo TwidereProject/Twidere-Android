@@ -19,16 +19,19 @@
 
 package org.mariotaku.twidere.util
 
+import android.content.Context
 import android.content.SharedPreferences
+import com.bumptech.glide.Glide
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.constant.mediaPreloadKey
 import org.mariotaku.twidere.constant.mediaPreloadOnWifiOnlyKey
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableActivity
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.getActivityStatus
 
-class MediaLoaderWrapper {
+class MediaPreloader(val context: Context) {
 
     var isNetworkMetered: Boolean = true
     private var preloadEnabled: Boolean = false
@@ -39,8 +42,7 @@ class MediaLoaderWrapper {
 
     fun preloadStatus(status: ParcelableStatus) {
         if (!shouldPreload) return
-        preloadProfileImage(status.user_profile_image_url)
-        preloadProfileImage(status.quoted_user_profile_image)
+        Glide.with(context).loadProfileImage(context, status, 0).preload()
         preloadMedia(status.media)
         preloadMedia(status.quoted_media)
     }
@@ -57,15 +59,16 @@ class MediaLoaderWrapper {
 
     private fun preloadMedia(media: Array<ParcelableMedia>?) {
         media?.forEach { item ->
-            val url = item.preview_url ?: item.media_url ?: return@forEach
+            val url = item.preview_url ?: run {
+                if (item.type != ParcelableMedia.Type.IMAGE) return@run null
+                return@run item.media_url
+            } ?: return@forEach
             preloadPreviewImage(url)
         }
     }
 
-    private fun preloadProfileImage(url: String?) {
-    }
-
     private fun preloadPreviewImage(url: String?) {
+        Glide.with(context).load(url).preload()
     }
 
 }

@@ -249,8 +249,9 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         val summary = data.getSubtitle(context)
 
         val requestManager = Glide.with(this)
-        requestManager.loadProfileImage(context, data).into(conversationAvatar)
-        requestManager.loadProfileImage(context, data, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
+        val profileImageStyle = preferences[profileImageStyleKey]
+        requestManager.loadProfileImage(context, data, profileImageStyle).into(conversationAvatar)
+        requestManager.loadProfileImage(context, data, profileImageStyle, size = ProfileImageSize.REASONABLY_SMALL).into(appBarIcon)
         appBarTitle.text = name
         conversationTitle.text = name
         if (summary != null) {

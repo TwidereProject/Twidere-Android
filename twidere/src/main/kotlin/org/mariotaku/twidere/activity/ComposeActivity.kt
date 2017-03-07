@@ -463,7 +463,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (accounts.size == 1) {
             accountsCount.setText(null)
             val account = accounts[0]
-            Glide.with(this).loadProfileImage(this, account).into(accountProfileImage)
+            val profileImageStyle = preferences[profileImageStyleKey]
+            Glide.with(this).loadProfileImage(this, account, profileImageStyle).into(accountProfileImage)
             accountProfileImage.setBorderColor(account.color)
         } else {
             accountsCount.setText(accounts.size.toString())
@@ -1424,7 +1425,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             itemView.alpha = if (isSelected) 1f else 0.33f
             (itemView as CheckableLinearLayout).isChecked = isSelected
             val context = adapter.context
-            adapter.requestManager.loadProfileImage(context, account).into(iconView)
+            adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
             iconView.setBorderColor(account.color)
             nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name
         }

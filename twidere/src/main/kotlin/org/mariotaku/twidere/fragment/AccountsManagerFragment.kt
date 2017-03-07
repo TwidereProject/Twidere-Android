@@ -61,8 +61,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
         setHasOptionsMenu(true)
         val am = AccountManager.get(context)
         adapter = AccountDetailsAdapter(context, Glide.with(this)).apply {
-            setSortEnabled(true)
-            setSwitchEnabled(true)
+            sortEnabled = true
+            switchEnabled = true
             accountToggleListener = { pos, checked ->
                 val item = getItem(pos)
                 item.activated = checked

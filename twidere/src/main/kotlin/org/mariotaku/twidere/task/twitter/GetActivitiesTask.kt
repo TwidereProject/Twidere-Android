@@ -133,7 +133,7 @@ abstract class GetActivitiesTask(
                 val item = activities[i]
                 val activity = ParcelableActivityUtils.fromActivity(item, details.key, false,
                         profileImageSize)
-                mediaLoader.preloadActivity(activity)
+                mediaPreloader.preloadActivity(activity)
                 activity.position_key = GetStatusesTask.getPositionKey(activity.timestamp,
                         activity.timestamp, lastSortId, sortDiff, i, activities.size)
                 if (deleteBound[0] < 0) {

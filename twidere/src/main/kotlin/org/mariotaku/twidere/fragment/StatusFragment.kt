@@ -929,7 +929,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.name.screenName = String.format("@%s", status.user_screen_name)
             itemView.name.updateText(formatter)
 
-            adapter.requestManager.loadProfileImage(context, status).into(itemView.profileImage)
+            adapter.requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
+                    itemView.profileImage.cornerRadius, itemView.profileImage.cornerRadiusRatio)
+                    .into(itemView.profileImage)
 
             val typeIconRes = Utils.getUserTypeIconRes(status.user_is_verified, status.user_is_protected)
             val typeDescriptionRes = Utils.getUserTypeDescriptionRes(status.user_is_verified, status.user_is_protected)
@@ -1375,7 +1377,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
                 fun displayUser(item: ParcelableUser) {
                     val context = adapter.context
-                    adapter.requestManager.loadProfileImage(context, item).into(profileImageView)
+                    adapter.requestManager.loadProfileImage(context, item, adapter.profileImageStyle).into(profileImageView)
                 }
 
                 override fun onClick(v: View) {

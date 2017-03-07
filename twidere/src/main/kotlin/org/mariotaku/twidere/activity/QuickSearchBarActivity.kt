@@ -50,6 +50,7 @@ import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.ACTION_NAVIGATION_BACK
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.SuggestionItem
@@ -264,6 +265,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
             private val activity: QuickSearchBarActivity
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
+        private val profileImageStyle = activity.preferences[profileImageStyleKey]
         private val requestManager = Glide.with(activity)
         private val inflater = LayoutInflater.from(activity)
         private val userColorNameManager = activity.userColorNameManager
@@ -320,7 +322,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text2.visibility = View.VISIBLE
                     holder.text2.text = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
-                    requestManager.loadProfileImage(context, cursor.getString(indices.icon)).into(holder.icon)
+                    requestManager.loadProfileImage(context, cursor.getString(indices.icon),
+                            profileImageStyle).into(holder.icon)
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
