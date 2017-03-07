@@ -34,3 +34,9 @@ fun <E> Collection<E>.contentEquals(other: Collection<E>): Boolean {
     if (this.size != other.size) return false
     return this.containsAll(other) && other.containsAll(this)
 }
+
+inline fun <reified T> List<T>.subArray(range: IntRange): Array<T> {
+    return Array(range.count()) {
+        this[range.start + it]
+    }
+}

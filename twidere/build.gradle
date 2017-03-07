@@ -113,9 +113,9 @@ dependencies {
 
     fdroidCompile 'org.osmdroid:osmdroid-android:5.6.4'
 
-    debugCompile 'com.facebook.stetho:stetho:1.4.2'
-    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
-    debugCompile 'com.facebook.stetho:stetho-js-rhino:1.4.2'
+    debugCompile "com.facebook.stetho:stetho:${libVersions['Stetho']}"
+    debugCompile "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
+    debugCompile "com.facebook.stetho:stetho-js-rhino:${libVersions['Stetho']}"
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
 
     provided 'javax.annotation:jsr250-api:1.0'

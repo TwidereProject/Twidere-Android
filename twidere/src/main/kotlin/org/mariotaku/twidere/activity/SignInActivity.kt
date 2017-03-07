@@ -797,7 +797,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                 AccountUtils.getAccounts(am).mapTo(usedNames, Account::name)
                 do {
                     accountName = UUID.randomUUID().toString()
-                } while (usedNames.contains(accountName))
+                } while (accountName in usedNames)
             } else {
                 accountName = generateAccountName(user.screen_name, user.key.host)
             }

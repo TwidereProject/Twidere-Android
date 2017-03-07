@@ -21,13 +21,16 @@ package org.mariotaku.twidere.util;
 
 import android.app.Application;
 
+import com.facebook.stetho.DumperPluginsProvider;
 import com.facebook.stetho.Stetho;
+import com.facebook.stetho.dumpapp.DumperPlugin;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.net.NoIntercept;
+import org.mariotaku.twidere.util.stetho.AccountsDumper;
 
 import java.io.IOException;
 
@@ -61,7 +64,14 @@ public class DebugModeUtils {
 
     public static void initForApplication(final Application application) {
         Stetho.initialize(Stetho.newInitializerBuilder(application)
-                .enableDumpapp(Stetho.defaultDumperPluginsProvider(application))
+                .enableDumpapp(new DumperPluginsProvider() {
+                    @Override
+                    public Iterable<DumperPlugin> get() {
+                        return new Stetho.DefaultDumperPluginsBuilder(application)
+                                .provide(new AccountsDumper(application))
+                                .finish();
+                    }
+                })
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(application))
                 .build());
         initLeakCanary(application);
