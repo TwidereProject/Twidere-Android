@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.util.glide
 
 import android.content.Context
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
@@ -29,7 +28,7 @@ import com.bumptech.glide.module.GlideModule
 import okhttp3.OkHttpClient
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-
+import org.mariotaku.twidere.util.media.ThumborInterceptor
 import java.io.InputStream
 
 class OkHttpGlideModule : GlideModule {
@@ -43,15 +42,8 @@ class OkHttpGlideModule : GlideModule {
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
         val thumbor = holder.thumbor
         HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.connectionPool, holder.cache)
-        builder.addInterceptor { chain ->
-            val request = chain.request()
-            if (!thumbor.available) {
-                return@addInterceptor chain.proceed(request)
-            }
-            val rb = request.newBuilder()
-            rb.url(thumbor.buildUri(request.url().toString()))
-            return@addInterceptor chain.proceed(rb.build())
-        }
+        builder.addInterceptor(ThumborInterceptor(thumbor))
         glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(builder.build()))
     }
+
 }
