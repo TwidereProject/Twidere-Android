@@ -60,7 +60,7 @@ class AccountDetailsAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = super.getView(position, convertView, parent)
         val holder = view.tag as? AccountViewHolder ?: run {
-            val h = AccountViewHolder(view, this)
+            val h = AccountViewHolder(this, view)
             view.tag = h
             return@run h
         }

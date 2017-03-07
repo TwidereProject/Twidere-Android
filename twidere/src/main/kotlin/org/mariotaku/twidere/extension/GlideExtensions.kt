@@ -121,11 +121,17 @@ fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMe
             return loadProfileImage(context, user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
         } else {
             // TODO: show default conversation icon
-            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle)
+            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
+                    cornerRadius, cornerRadiusRatio)
         }
     } else {
-        return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
-                cornerRadiusRatio, size).placeholder(R.drawable.ic_profile_image_default_group)
+        if (conversation.conversation_avatar != null) {
+            return loadProfileImage(context, conversation.conversation_avatar, shapeStyle, cornerRadius,
+                    cornerRadiusRatio, size)
+        } else {
+            return loadProfileImage(context, R.drawable.ic_profile_image_default_group, shapeStyle,
+                    cornerRadius, cornerRadiusRatio)
+        }
     }
 }
 

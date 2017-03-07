@@ -23,6 +23,7 @@ import android.content.Context
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.view.holder.MediaStatusViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 
 /**
