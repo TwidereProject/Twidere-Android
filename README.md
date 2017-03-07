@@ -19,6 +19,12 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Custom API settings
 * Free, open source, NO ads, forever!
 
+## Enhanced Features (Available on Google Play) ##
+
+* Data sync with your cloud drive (Dropbox, Google Drive)
+* Filters subscription
+* Filters import
+
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
 
@@ -56,17 +62,17 @@ I started a crowdin project, so anyone can do something for Twidere. Visit this 
 
 **Donation methods**
 
+Enhanced features on Google Play
+
 PayPal & AliPay: `String.format("%s@%s", "mariotaku.lee", "gmail.com");`
 
 Bitcoin: `1FHAVAzge7cj1LfCTMfnLL49DgA3mVUCuW`
 
-**Donators**
-
-Checkout enhanced features on Google Play!
-
 **Sponsors**
 
 <a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
+
+If you donate on behalf of an organization or company, feel free to contact me. I'll add your logo to this list. 
 
 ---
 
