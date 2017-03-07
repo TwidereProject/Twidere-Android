@@ -66,7 +66,7 @@ Checkout enhanced features on Google Play!
 
 **Sponsors**
 
-<a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png'/></a>
+<a href='http://www.sujitech.com/'><img src='resources/logos/sujitech_logo.png' width='160'/></a>
 
 ---
 
