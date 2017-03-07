@@ -59,6 +59,8 @@ class UserListViewHolder(
         descriptionView = itemView.description
         membersCountView = itemView.membersCount
         subscribersCountView = itemView.subscribersCount
+
+        profileImageView.style = adapter.profileImageStyle
     }
 
     fun displayUserList(userList: ParcelableUserList) {
@@ -73,7 +75,8 @@ class UserListViewHolder(
 
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.requestManager.loadProfileImage(context, userList).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, userList, adapter.profileImageStyle,
+                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio).into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }

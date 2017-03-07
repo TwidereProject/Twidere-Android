@@ -58,6 +58,8 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         descriptionView = itemView.description
         membersCountView = itemView.membersCount
         adminsCountView = itemView.adminsCount
+
+        profileImageView.style = adapter.profileImageStyle
     }
 
     fun displayGroup(group: ParcelableGroup) {
@@ -78,7 +80,9 @@ class GroupViewHolder(private val adapter: IGroupsAdapter<*>, itemView: View) : 
         }
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
-            adapter.requestManager.loadProfileImage(context, group).into(profileImageView)
+            adapter.requestManager.loadProfileImage(context, group, adapter.profileImageStyle,
+                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio)
+                    .into(profileImageView)
         } else {
             profileImageView.visibility = View.GONE
         }
