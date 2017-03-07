@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.layout_extra_config_user_list.view.*
 import kotlinx.android.synthetic.main.list_item_simple_user_list.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.UserListSelectorActivity
+import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.extension.view.holder.display
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.tab.TabConfiguration
@@ -51,7 +51,8 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
             fragment.startExtraConfigurationActivityForResult(this@UserListExtraConfiguration, intent, 1)
         }
         hintView = view.selectUserListHint
-        viewHolder = SimpleUserListViewHolder(view.listItem)
+        val adapter = DummyItemAdapter(context, requestManager = Glide.with(context))
+        viewHolder = SimpleUserListViewHolder(adapter, view.listItem)
 
         viewHolder.itemView.visibility = View.GONE
         hintView.visibility = View.VISIBLE
@@ -62,8 +63,7 @@ class UserListExtraConfiguration(key: String) : TabConfiguration.ExtraConfigurat
             1 -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val userList: ParcelableUserList = data!!.getParcelableExtra(EXTRA_USER_LIST)
-                    viewHolder.display(userList, Glide.with(context),
-                            dependencyHolder.userColorNameManager, true)
+                    viewHolder.display(userList)
                     viewHolder.itemView.visibility = View.VISIBLE
                     hintView.visibility = View.GONE
 

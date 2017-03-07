@@ -82,7 +82,7 @@ fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
 }
 
 fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserList,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
         load(userList.user_profile_image_url)
@@ -90,7 +90,7 @@ fun RequestManager.loadProfileImage(context: Context, userList: ParcelableUserLi
 }
 
 fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
-        @ImageShapeStyle shapeStyle: Int = ImageShapeStyle.SHAPE_CIRCLE,
+        @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
         load(group.homepage_logo)
