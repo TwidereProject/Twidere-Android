@@ -38,7 +38,7 @@ import org.mariotaku.twidere.util.TwitterWrapper
 
 class MediaTimelineLoader(
         context: Context,
-        accountKey: UserKey,
+        accountKey: UserKey?,
         private val userKey: UserKey?,
         private val screenName: String?,
         sinceId: String?,
