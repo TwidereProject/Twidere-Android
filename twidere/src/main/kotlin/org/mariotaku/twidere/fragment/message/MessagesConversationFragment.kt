@@ -385,7 +385,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
             } else {
                 editText.error = null
             }
-        } else {
+        } else if (mediaPreviewAdapter.itemCount > 0) {
             editText.error = getString(R.string.error_message_media_message_attachment_not_supported)
             return
         }
