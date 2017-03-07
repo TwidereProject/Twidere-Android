@@ -1014,9 +1014,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accountUser = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountUser(am) ?: return false
         var selectionStart = 0
         val mentions = TreeSet(String.CASE_INSENSITIVE_ORDER)
-        editText.append("@" + status.user_screen_name + " ")
         // If replying status from current user, just exclude it's screen name from selection.
-        if (status.account_key != status.user_key) {
+        if (accountUser.key != status.user_key) {
+            editText.append("@${status.user_screen_name} ")
             selectionStart = editText.length()
         }
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
@@ -1045,8 +1045,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         mentions.filterNot {
             it.equals(status.user_screen_name, ignoreCase = true)
                     || it.equals(accountUser.screen_name, ignoreCase = true)
+        }.forEach { editText.append("@$it ") }
+
+        // Put current user mention at last
+        if (accountUser.key == status.user_key) {
+            selectionStart = editText.length()
+            editText.append("@${status.user_screen_name} ")
         }
-                .forEach { editText.append("@$it ") }
+
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
         accountsAdapter.setSelectedAccountIds(status.account_key)
