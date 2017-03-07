@@ -40,7 +40,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.util.AccountUtils;
-import org.mariotaku.twidere.util.MediaPreloader;
+import org.mariotaku.twidere.util.media.MediaPreloader;
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper;
 
 import javax.inject.Inject;

@@ -52,7 +52,8 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import org.mariotaku.twidere.util.media.TwidereMediaDownloader
+import org.mariotaku.twidere.util.media.MediaPreloader
+import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
@@ -87,6 +88,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     lateinit internal var mediaPreloader: MediaPreloader
     @Inject
     lateinit internal var contentNotificationManager: ContentNotificationManager
+    @Inject
+    lateinit internal var thumbor: ThumborWrapper
 
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -247,7 +250,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 externalThemeManager.reloadEmojiPreferences()
             }
             KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
-                (mediaDownloader as TwidereMediaDownloader).reloadConnectivitySettings()
+                thumbor.reloadSettings(preferences)
             }
             KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
                 mediaPreloader.reloadOptions(preferences)

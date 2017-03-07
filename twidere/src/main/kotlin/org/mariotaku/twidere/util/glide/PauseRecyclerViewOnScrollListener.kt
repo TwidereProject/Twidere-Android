@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.imageloader
+package org.mariotaku.twidere.util.glide
 
 import android.support.v7.widget.RecyclerView
 import com.bumptech.glide.RequestManager

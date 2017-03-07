@@ -58,7 +58,7 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener
+import org.mariotaku.twidere.util.glide.PauseRecyclerViewOnScrollListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder

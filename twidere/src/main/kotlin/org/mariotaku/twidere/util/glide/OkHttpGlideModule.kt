@@ -41,7 +41,17 @@ class OkHttpGlideModule : GlideModule {
         val holder = DependencyHolder.get(context)
         val builder = OkHttpClient.Builder()
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
+        val thumbor = holder.thumbor
         HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.connectionPool, holder.cache)
+        builder.addInterceptor { chain ->
+            val request = chain.request()
+            if (!thumbor.available) {
+                return@addInterceptor chain.proceed(request)
+            }
+            val rb = request.newBuilder()
+            rb.url(thumbor.buildUri(request.url().toString()))
+            return@addInterceptor chain.proceed(rb.build())
+        }
         glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(builder.build()))
     }
 }

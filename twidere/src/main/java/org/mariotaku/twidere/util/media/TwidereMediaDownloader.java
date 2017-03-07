@@ -7,10 +7,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.webkit.URLUtil;
-
-import com.squareup.pollexor.Thumbor;
-import com.squareup.pollexor.ThumborUrlBuilder;
 
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader;
 import org.mariotaku.mediaviewer.library.MediaDownloader;
@@ -33,7 +29,6 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.MicroBlogAPIFactory;
-import org.mariotaku.twidere.util.SharedPreferencesWrapper;
 import org.mariotaku.twidere.util.UserAgentUtils;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.media.preview.PreviewMediaExtractor;
@@ -43,47 +38,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_ADDRESS;
-import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_ENABLED;
-import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_THUMBOR_SECURITY_KEY;
-
 /**
  * Created by mariotaku on 16/1/28.
  */
 public class TwidereMediaDownloader implements MediaDownloader {
 
     private final Context context;
-    private final SharedPreferencesWrapper preferences;
     private final RestHttpClient client;
     private final String userAgent;
+    private final ThumborWrapper thumbor;
 
-    private Thumbor thumbor;
-
-    public TwidereMediaDownloader(final Context context, SharedPreferencesWrapper preferences,
-            RestHttpClient client) {
+    public TwidereMediaDownloader(final Context context, final RestHttpClient client,
+            final ThumborWrapper thumbor) {
         this.context = context;
-        this.preferences = preferences;
         this.client = client;
+        this.thumbor = thumbor;
         userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context);
-        reloadConnectivitySettings();
-    }
-
-    public void reloadConnectivitySettings() {
-        if (preferences.getBoolean(KEY_THUMBOR_ENABLED)) {
-            final String address = preferences.getString(KEY_THUMBOR_ADDRESS, null);
-            final String securityKey = preferences.getString(KEY_THUMBOR_SECURITY_KEY, null);
-            if (address != null && URLUtil.isValidUrl(address)) {
-                if (TextUtils.isEmpty(securityKey)) {
-                    thumbor = Thumbor.create(address);
-                } else {
-                    thumbor = Thumbor.create(address, securityKey);
-                }
-            } else {
-                thumbor = null;
-            }
-        } else {
-            thumbor = null;
-        }
     }
 
     @NonNull
@@ -157,7 +127,7 @@ public class TwidereMediaDownloader implements MediaDownloader {
             additionalHeaders.add("Authorization", auth.getHeader(endpoint, info));
             requestUri = modifiedUri.toString();
         } else if (thumbor != null && useThumbor) {
-            requestUri = thumbor.buildImage(Uri.encode(modifiedUri.toString())).filter(ThumborUrlBuilder.quality(85)).toUrl();
+            requestUri = thumbor.buildUri(modifiedUri.toString());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 additionalHeaders.add("Accept", "image/webp, */*");
             }

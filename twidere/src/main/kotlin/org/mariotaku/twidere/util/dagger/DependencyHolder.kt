@@ -29,6 +29,8 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.media.MediaPreloader
+import org.mariotaku.twidere.util.media.ThumborWrapper
 import javax.inject.Inject
 
 /**
@@ -76,6 +78,9 @@ class DependencyHolder internal constructor(context: Context) {
         internal set
     @Inject
     lateinit var kPreferences: KPreferences
+        internal set
+    @Inject
+    lateinit var thumbor: ThumborWrapper
         internal set
 
     init {

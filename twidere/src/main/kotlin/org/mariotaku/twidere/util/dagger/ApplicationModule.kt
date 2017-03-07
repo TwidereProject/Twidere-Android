@@ -54,6 +54,8 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
+import org.mariotaku.twidere.util.media.MediaPreloader
+import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
@@ -198,8 +200,9 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun mediaDownloader(preferences: SharedPreferencesWrapper, client: RestHttpClient): MediaDownloader {
-        return TwidereMediaDownloader(application, preferences, client)
+    fun mediaDownloader(preferences: SharedPreferencesWrapper, client: RestHttpClient,
+            thumbor: ThumborWrapper): MediaDownloader {
+        return TwidereMediaDownloader(application, client, thumbor)
     }
 
     @Provides
@@ -218,6 +221,14 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun errorInfoStore(): ErrorInfoStore {
         return ErrorInfoStore(application)
+    }
+
+    @Provides
+    @Singleton
+    fun thumborWrapper(preferences: SharedPreferencesWrapper): ThumborWrapper {
+        val thumbor = ThumborWrapper()
+        thumbor.reloadSettings(preferences)
+        return thumbor
     }
 
     @Provides

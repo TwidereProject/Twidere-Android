@@ -66,7 +66,7 @@ import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
-import org.mariotaku.twidere.util.imageloader.PauseRecyclerViewOnScrollListener
+import org.mariotaku.twidere.util.glide.PauseRecyclerViewOnScrollListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
