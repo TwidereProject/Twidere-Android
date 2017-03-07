@@ -34,13 +34,8 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.glide.RoundedRectTransformation
 import org.mariotaku.twidere.view.ShapedImageView
 
-fun RequestManager.loadProfileImage(
-        context: Context,
-        url: String?,
-        @ImageShapeStyle style: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
-        size: String? = null
-): DrawableRequestBuilder<String?> {
+fun RequestManager.loadProfileImage(context: Context, url: String?, @ImageShapeStyle style: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
     return configureLoadProfileImage(context, style, cornerRadius, cornerRadiusRatio) {
         if (url == null || size == null) {
             return@configureLoadProfileImage load(url)
@@ -50,23 +45,18 @@ fun RequestManager.loadProfileImage(
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, resourceId: Int,
-        @ImageShapeStyle shapeStyle: Int,
+fun RequestManager.loadProfileImage(context: Context, resourceId: Int, @ImageShapeStyle shapeStyle: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f): DrawableRequestBuilder<Int> {
     return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) { load(resourceId) }
 }
 
-fun RequestManager.loadProfileImage(context: Context, account: AccountDetails,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
-        size: String? = null): DrawableRequestBuilder<String?> {
+fun RequestManager.loadProfileImage(context: Context, account: AccountDetails, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
     return loadProfileImage(context, account.user, shapeStyle, cornerRadius, cornerRadiusRatio, size)
 }
 
-fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
-        size: String? = null): DrawableRequestBuilder<String?> {
+fun RequestManager.loadProfileImage(context: Context, user: ParcelableUser, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
     if (user.extras != null && user.extras.profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
         return loadProfileImage(context, user.profile_image_url, shapeStyle, cornerRadius,
@@ -97,10 +87,8 @@ fun RequestManager.loadProfileImage(context: Context, group: ParcelableGroup,
     }
 }
 
-fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
-        size: String? = null): DrawableRequestBuilder<String?> {
+fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus, @ImageShapeStyle shapeStyle: Int,
+        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
     if (status.extras != null && status.extras.user_profile_image_url_fallback == null) {
         // No fallback image, use compatible logic
         return loadProfileImage(context, status.user_profile_image_url, shapeStyle, cornerRadius,
@@ -112,8 +100,7 @@ fun RequestManager.loadProfileImage(context: Context, status: ParcelableStatus,
 }
 
 fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMessageConversation,
-        @ImageShapeStyle shapeStyle: Int,
-        cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
+        @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f,
         size: String? = null): DrawableRequestBuilder<*> {
     if (conversation.conversation_type == ParcelableMessageConversation.ConversationType.ONE_TO_ONE) {
         val user = conversation.user

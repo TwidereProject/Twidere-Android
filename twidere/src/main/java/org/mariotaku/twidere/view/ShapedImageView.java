@@ -138,6 +138,7 @@ public class ShapedImageView extends AppCompatImageView {
 
     public void setStyle(@ImageShapeStyle final int style) {
         mStyle = style;
+        initOutlineProvider();
     }
 
     public void setBorderColor(int color) {
