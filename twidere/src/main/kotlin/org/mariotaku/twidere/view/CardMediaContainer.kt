@@ -45,7 +45,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
 
     private val horizontalSpacing: Int
     private val verticalSpacing: Int
-    private var tempIndices: IntArray? = null
+    private var childIndices: IntArray = IntArray(0)
+    private var videoViewIds: IntArray = IntArray(0)
 
     var style: Int = PreviewStyle.NONE
         @PreviewStyle set @PreviewStyle get
@@ -60,8 +61,10 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     fun displayMedia(vararg imageRes: Int) {
         val k = imageRes.size
         for (i in 0 until childCount) {
-            val child = getChildAt(i) as ImageView
-            if (i < k) {
+            val child = getChildAt(i)
+            if (child !is ImageView) {
+                child.visibility = View.GONE
+            } else if (i < k) {
                 child.setImageResource(imageRes[i])
                 child.visibility = View.VISIBLE
             } else {
@@ -81,54 +84,65 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             return
         }
-        val clickListener = ImageGridClickListener(mediaClickListener, accountKey, extraId)
-        val mediaSize = media.size
+        val clickListener = MediaItemViewClickListener(mediaClickListener, accountKey, extraId)
+        var displayChildIndex = 0
         for (i in 0 until childCount) {
-            val child = getChildAt(i) as ImageView
+            val child = getChildAt(i)
+            val lp = child.layoutParams as MediaLayoutParams
             if (mediaClickListener != null) {
                 child.setOnClickListener(clickListener)
             }
-            when (style) {
-                PreviewStyle.REAL_SIZE, PreviewStyle.CROP -> {
-                    child.scaleType = ScaleType.CENTER_CROP
-                }
-                PreviewStyle.SCALE -> {
-                    child.scaleType = ScaleType.FIT_CENTER
-                }
+            if (!lp.isMediaItemView) continue
+            (child as ImageView).displayImage(displayChildIndex, media, requestManager, accountKey,
+                    withCredentials)
+            displayChildIndex++
+        }
+    }
+
+    private fun ImageView.displayImage(displayChildIndex: Int, media: Array<ParcelableMedia>,
+            requestManager: RequestManager, accountKey: UserKey?, withCredentials: Boolean) {
+        when (style) {
+            PreviewStyle.REAL_SIZE, PreviewStyle.CROP -> {
+                this.scaleType = ScaleType.CENTER_CROP
             }
-            if (i < mediaSize) {
-                val item = media[i]
-                val video = item.type == ParcelableMedia.Type.VIDEO
-                val url = item.preview_url ?: run {
-                    if (video) return@run null
-                    item.media_url
-                }
-                if (withCredentials) {
-                    val uri = Uri.parse(url)
-                    requestManager.load(AuthenticatedUri(uri, accountKey)).into(child)
-                } else {
-                    requestManager.load(url).into(child)
-                }
-                if (child is MediaPreviewImageView) {
-                    child.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
-                }
-                if (item.alt_text.isNullOrEmpty()) {
-                    child.contentDescription = context.getString(R.string.media)
-                } else {
-                    child.contentDescription = item.alt_text
-                }
-                (child.layoutParams as MediaLayoutParams).media = item
-                child.visibility = View.VISIBLE
+            PreviewStyle.SCALE -> {
+                this.scaleType = ScaleType.FIT_CENTER
+            }
+        }
+        val lp = this.layoutParams as MediaLayoutParams
+        if (displayChildIndex < media.size) {
+            val item = media[displayChildIndex]
+            val video = item.type == ParcelableMedia.Type.VIDEO
+            val url = item.preview_url ?: this@CardMediaContainer.run {
+                if (video) return@run null
+                item.media_url
+            }
+            if (withCredentials) {
+                val uri = Uri.parse(url)
+                requestManager.load(AuthenticatedUri(uri, accountKey)).into(this)
             } else {
-                Glide.clear(child)
-                child.visibility = View.GONE
+                requestManager.load(url).into(this)
             }
+            if (this is MediaPreviewImageView) {
+                setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
+            }
+            if (item.alt_text.isNullOrEmpty()) {
+                this.contentDescription = context.getString(R.string.media)
+            } else {
+                this.contentDescription = item.alt_text
+            }
+            (this.layoutParams as MediaLayoutParams).media = item
+            this.visibility = View.VISIBLE
+            findViewById(lp.videoViewId)?.visibility = View.VISIBLE
+        } else {
+            Glide.clear(this)
+            this.visibility = View.GONE
+            findViewById(lp.videoViewId)?.visibility = View.GONE
         }
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val childIndices = createChildIndices()
-        val childCount = getChildIndicesInLayout(this, childIndices)
+        val childCount = rebuildChildInfo()
         if (childCount > 0) {
             if (childCount == 1) {
                 layout1Media(childIndices)
@@ -150,8 +164,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             ratioMultiplier = if (contentWidth > 0) measuredHeight / (contentWidth * WIDTH_HEIGHT_RATIO) else 1f
             contentHeight = contentWidth
         }
-        val childIndices = createChildIndices()
-        val childCount = getChildIndicesInLayout(this, childIndices)
+        val childCount = rebuildChildInfo()
         var heightSum = 0
         if (childCount > 0) {
             if (childCount == 1) {
@@ -195,7 +208,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val child = getChildAt(childIndices[0])
         var childHeight = Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
         if (style == PreviewStyle.REAL_SIZE) {
-            val media = (child.layoutParams as? MediaLayoutParams)?.media
+            val media = (child.layoutParams as MediaLayoutParams).media
             if (media != null) {
                 val aspectRatio = media.aspect_ratio
                 if (!aspectRatio.isNaN()) {
@@ -206,6 +219,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val widthSpec = View.MeasureSpec.makeMeasureSpec(contentWidth, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
         child.measure(widthSpec, heightSpec)
+        findViewById(videoViewIds[0])?.measure(widthSpec, heightSpec)
         return childHeight
     }
 
@@ -216,6 +230,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val right = left + child.measuredWidth
         val bottom = top + child.measuredHeight
         child.layout(left, top, right, bottom)
+        findViewById(videoViewIds[0])?.layout(left, top, right, bottom)
     }
 
     private fun measureGridMedia(childCount: Int, columnCount: Int, contentWidth: Int,
@@ -227,6 +242,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val heightSpec = View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
         for (i in 0 until childCount) {
             getChildAt(childIndices[i]).measure(widthSpec, heightSpec)
+            findViewById(videoViewIds[i])?.measure(widthSpec, heightSpec)
         }
         val rowsCount = Math.ceil(childCount / columnCount.toDouble()).toInt()
         return rowsCount * childHeight + (rowsCount - 1) * verticalSpacing
@@ -241,6 +257,8 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             val colIdx = i % columnCount
             val child = getChildAt(childIndices[i])
             child.layout(left, top, left + child.measuredWidth, top + child.measuredHeight)
+            findViewById(videoViewIds[i])?.layout(left, top, left + child.measuredWidth,
+                    top + child.measuredHeight)
             if (colIdx == columnCount - 1) {
                 // Last item in this row, set top of next row to last view bottom + verticalSpacing
                 top = child.bottom + verticalSpacing
@@ -262,10 +280,15 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val childLeftHeightSpec = View.MeasureSpec.makeMeasureSpec(Math.round(childWidth * ratioMultiplier), View.MeasureSpec.EXACTLY)
         val widthSpec = View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY)
         child0.measure(widthSpec, childLeftHeightSpec)
+
         val childRightHeight = Math.round((childWidth - horizontalSpacing) / 2 * ratioMultiplier)
         val childRightHeightSpec = View.MeasureSpec.makeMeasureSpec(childRightHeight, View.MeasureSpec.EXACTLY)
         child1.measure(widthSpec, childRightHeightSpec)
         child2.measure(widthSpec, childRightHeightSpec)
+
+        findViewById(videoViewIds[0])?.measure(widthSpec, childLeftHeightSpec)
+        findViewById(videoViewIds[1])?.measure(widthSpec, childRightHeightSpec)
+        findViewById(videoViewIds[2])?.measure(widthSpec, childRightHeightSpec)
         return Math.round(contentWidth.toFloat() * WIDTH_HEIGHT_RATIO * ratioMultiplier)
     }
 
@@ -282,28 +305,58 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         val child2Top = child1.bottom + verticalSpacing
         child2.layout(rightColLeft, child2Top, rightColLeft + child2.measuredWidth,
                 child2Top + child2.measuredHeight)
+
+        findViewById(videoViewIds[0])?.layout(left, top, left + child0.measuredWidth,
+                top + child0.measuredHeight)
+        findViewById(videoViewIds[1])?.layout(rightColLeft, top,
+                rightColLeft + child1.measuredWidth, top + child1.measuredHeight)
+        findViewById(videoViewIds[2])?.layout(rightColLeft, child2Top,
+                rightColLeft + child2.measuredWidth, child2Top + child2.measuredHeight)
     }
 
-    private fun createChildIndices(): IntArray {
-        if (tempIndices == null || tempIndices!!.size < childCount) {
-            tempIndices = IntArray(childCount)
+    private fun rebuildChildInfo(): Int {
+        val childCount = this.childCount
+        if (childIndices.size < childCount) {
+            childIndices = IntArray(childCount)
+            videoViewIds = IntArray(childCount)
         }
-        return tempIndices!!
+        var indicesCount = 0
+        for (childIndex in 0 until childCount) {
+            val child = getChildAt(childIndex)
+            val lp = child.layoutParams as MediaLayoutParams
+            if (lp.isMediaItemView && child.visibility != View.GONE) {
+                childIndices[indicesCount] = childIndex
+                videoViewIds[indicesCount] = lp.videoViewId
+                indicesCount++
+            }
+        }
+        return indicesCount
     }
 
     class MediaLayoutParams : ViewGroup.LayoutParams {
 
+        val isMediaItemView: Boolean
+        val videoViewId: Int
         var media: ParcelableMedia? = null
 
-        constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-        constructor(width: Int, height: Int) : super(width, height)
+        constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+            val a = context.obtainStyledAttributes(attrs, R.styleable.MediaLayoutParams)
+            isMediaItemView = a.getBoolean(R.styleable.MediaLayoutParams_layout_isMediaItemView, false)
+            videoViewId = a.getResourceId(R.styleable.MediaLayoutParams_layout_videoViewId, 0)
+            a.recycle()
+        }
+
+        constructor(width: Int, height: Int) : super(width, height) {
+            videoViewId = 0
+            isMediaItemView = true
+        }
     }
 
     interface OnMediaClickListener {
         fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long)
     }
 
-    private class ImageGridClickListener(
+    private class MediaItemViewClickListener(
             listener: OnMediaClickListener?,
             private val accountKey: UserKey?,
             private val extraId: Long
@@ -323,16 +376,6 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
 
         private const val WIDTH_HEIGHT_RATIO = 0.5f
 
-        private fun getChildIndicesInLayout(viewGroup: ViewGroup, indices: IntArray): Int {
-            val childCount = viewGroup.childCount
-            var indicesCount = 0
-            for (i in 0 until childCount) {
-                if (viewGroup.getChildAt(i).visibility != View.GONE) {
-                    indices[indicesCount++] = i
-                }
-            }
-            return indicesCount
-        }
     }
 
 }

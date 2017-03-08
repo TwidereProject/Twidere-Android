@@ -47,6 +47,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.*
 import android.text.style.ImageSpan
+import android.text.style.MetricAffectingSpan
 import android.text.style.SuggestionSpan
 import android.text.style.UpdateAppearance
 import android.util.Log
@@ -741,7 +742,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             private fun trimSpans(s: Editable, span: Any) {
                 if (span is EmojiSpan) return
                 if (span is SuggestionSpan) return
-                s.removeSpan(span)
+                if (span is MetricAffectingSpan) {
+                    s.removeSpan(span)
+                }
             }
         })
         editText.customSelectionActionModeCallback = this

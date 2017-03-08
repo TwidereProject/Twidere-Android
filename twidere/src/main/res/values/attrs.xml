@@ -171,6 +171,10 @@
         <attr name="android:paddingEnd"/>
         <attr name="android:padding"/>
     </declare-styleable>
+    <declare-styleable name="MediaLayoutParams">
+        <attr name="layout_isMediaItemView" format="boolean"/>
+        <attr name="layout_videoViewId" format="reference"/>
+    </declare-styleable>
     <attr name="behavior_alignmentRule">
         <flag name="left" value="0x00000001"/>
         <flag name="right" value="0x00000002"/>
