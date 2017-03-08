@@ -20,17 +20,20 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.extension.model.aspect_ratio
 import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import java.lang.ref.WeakReference
 
@@ -68,7 +71,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
         }
     }
 
-    fun displayMedia(requestManager: RequestManager, media: Array<ParcelableMedia>?, accountId: UserKey? = null,
+    fun displayMedia(requestManager: RequestManager, media: Array<ParcelableMedia>?, accountKey: UserKey? = null,
             extraId: Long = -1, withCredentials: Boolean = false,
             mediaClickListener: OnMediaClickListener? = null) {
         if (media == null || style == PreviewStyle.NONE) {
@@ -78,7 +81,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
             }
             return
         }
-        val clickListener = ImageGridClickListener(mediaClickListener, accountId, extraId)
+        val clickListener = ImageGridClickListener(mediaClickListener, accountKey, extraId)
         val mediaSize = media.size
         for (i in 0 until childCount) {
             val child = getChildAt(i) as ImageView
@@ -101,13 +104,10 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                     item.media_url
                 }
                 if (withCredentials) {
-                    requestManager.load(url).into(child)
-                    // TODO handle load progress w/ authentication
-                    // loader.displayPreviewImageWithCredentials(imageView, url, accountId, loadingHandler, video)
+                    val uri = Uri.parse(url)
+                    requestManager.load(AuthenticatedUri(uri, accountKey)).into(child)
                 } else {
                     requestManager.load(url).into(child)
-                    // TODO handle load progress
-                    // loader.displayPreviewImage(imageView, url, loadingHandler, video)
                 }
                 if (child is MediaPreviewImageView) {
                     child.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(item.type))
@@ -120,7 +120,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
                 (child.layoutParams as MediaLayoutParams).media = item
                 child.visibility = View.VISIBLE
             } else {
-                // TODO cancel image load task
+                Glide.clear(child)
                 child.visibility = View.GONE
             }
         }

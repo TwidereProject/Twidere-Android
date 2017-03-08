@@ -20,18 +20,23 @@
 package org.mariotaku.twidere.util.glide
 
 import android.content.Context
+import android.os.Build
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.module.GlideModule
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.mariotaku.twidere.model.media.AuthenticatedUri
 import org.mariotaku.twidere.util.HttpClientFactory
+import org.mariotaku.twidere.util.UserAgentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.media.ThumborInterceptor
+import org.mariotaku.twidere.util.media.ThumborWrapper
+import org.mariotaku.twidere.util.okhttp.ModifyRequestInterceptor
 import java.io.InputStream
 
-class OkHttpGlideModule : GlideModule {
+class TwidereGlideModule : GlideModule {
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         // Do nothing.
     }
@@ -42,8 +47,35 @@ class OkHttpGlideModule : GlideModule {
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
         val thumbor = holder.thumbor
         HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.connectionPool, holder.cache)
-        builder.addInterceptor(ThumborInterceptor(thumbor))
-        glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(builder.build()))
+        val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context) ?: ""
+        builder.addInterceptor(ModifyRequestInterceptor(ThumborModifier(thumbor), UserAgentModifier(userAgent)))
+        val client = builder.build()
+        glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(client))
+        glide.register(AuthenticatedUri::class.java, InputStream::class.java, AuthenticatedUrlLoader.Factory(client))
     }
 
+    class ThumborModifier(val thumbor: ThumborWrapper) : ModifyRequestInterceptor.RequestModifier {
+        override fun modify(original: Request, builder: Request.Builder): Boolean {
+            if (!thumbor.available) return false
+            // Since Thumbor doesn't support Authorization header, disable for requests with authorization
+            if (original.header("Authorization") != null) {
+                return false
+            }
+            builder.url(thumbor.buildUri(original.url().toString()))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                builder.header("Accept", "image/webp, */*")
+            }
+            return true
+        }
+
+    }
+
+    class UserAgentModifier(val userAgent: String) : ModifyRequestInterceptor.RequestModifier {
+        override fun modify(original: Request, builder: Request.Builder): Boolean {
+            builder.header("User-Agent", userAgent)
+            return true
+        }
+
+    }
 }
+

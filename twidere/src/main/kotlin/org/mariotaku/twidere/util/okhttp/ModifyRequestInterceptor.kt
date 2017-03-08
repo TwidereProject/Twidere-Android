@@ -17,24 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.media
+package org.mariotaku.twidere.util.okhttp
 
-import android.os.Build
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 
-class ThumborInterceptor(val thumbor: ThumborWrapper) : Interceptor {
+class ModifyRequestInterceptor(vararg val modifiers: RequestModifier) : Interceptor {
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        if (!thumbor.available) {
-            return chain.proceed(request)
-        }
         val rb = request.newBuilder()
-        rb.url(thumbor.buildUri(request.url().toString()))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            rb.header("Accept", "image/webp, */*")
-        }
+        modifiers.forEach { it.modify(request, rb) }
         return chain.proceed(rb.build())
     }
 
+    interface RequestModifier {
+        fun modify(original: Request, builder: Request.Builder): Boolean
+    }
 }

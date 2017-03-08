@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import android.net.Uri
 import android.text.TextUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -9,8 +10,10 @@ import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
 import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory
 import org.mariotaku.restfu.RestAPIFactory
+import org.mariotaku.restfu.RestRequest
 import org.mariotaku.restfu.http.Authorization
 import org.mariotaku.restfu.http.Endpoint
+import org.mariotaku.restfu.http.MultiValueMap
 import org.mariotaku.restfu.oauth.OAuthAuthorization
 import org.mariotaku.restfu.oauth.OAuthEndpoint
 import org.mariotaku.restfu.oauth.OAuthToken
@@ -27,6 +30,7 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.TwitterContentUtils
 import org.mariotaku.twidere.util.api.UserAgentExtraHeaders
 import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 
 /**
  * Created by mariotaku on 2016/12/3.
@@ -150,4 +154,26 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
     factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(extraHeaders))
     factory.setExceptionFactory(MicroBlogAPIFactory.TwidereExceptionFactory(converterFactory))
     return factory.build<T>(cls)
+}
+
+internal fun Credentials.authorizationHeader(
+        uri: Uri,
+        modifiedUri: Uri = TwidereMediaDownloader.getReplacedUri(uri, api_url_format) ?: uri
+): String {
+    val auth = getAuthorization()
+    val endpoint: Endpoint
+    if (auth is OAuthAuthorization) {
+        endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),
+                TwidereMediaDownloader.getEndpoint(uri))
+    } else {
+        endpoint = Endpoint(TwidereMediaDownloader.getEndpoint(modifiedUri))
+    }
+    val queries = MultiValueMap<String>()
+    for (name in uri.queryParameterNames) {
+        for (value in uri.getQueryParameters(name)) {
+            queries.add(name, value)
+        }
+    }
+    val info = RestRequest("GET", false, uri.path, null, queries, null, null, null, null)
+    return auth.getHeader(endpoint, info)
 }

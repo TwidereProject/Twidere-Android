@@ -337,7 +337,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 mediaPreview.visibility = View.VISIBLE
 
                 mediaPreview.displayMedia(requestManager = requestManager,
-                        media = status.media, accountId = status.account_key,
+                        media = status.media, accountKey = status.account_key,
                         mediaClickListener = this)
             }
         } else {
@@ -442,7 +442,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 quotedMediaLabel.visibility = View.GONE
 
                 quotedMediaPreview.displayMedia(requestManager = requestManager,
-                        media = status.quoted_media, accountId = status.account_key,
+                        media = status.quoted_media, accountKey = status.account_key,
                         mediaClickListener = this)
             }
         } else {
