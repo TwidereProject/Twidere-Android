@@ -46,14 +46,14 @@ import java.io.InputStreamReader;
 /**
  * Created by mariotaku on 15/5/26.
  */
-public abstract class UserStreamCallback implements RawCallback {
+public abstract class UserStreamCallback implements RawCallback<MicroBlogException> {
 
     private boolean connected;
 
     private boolean disconnected;
 
     @Override
-    public final void result(final HttpResponse response) throws IOException {
+    public final void result(final HttpResponse response) throws MicroBlogException, IOException {
         if (!response.isSuccessful()) {
             final MicroBlogException cause = new MicroBlogException();
             cause.setHttpResponse(response);
@@ -153,7 +153,7 @@ public abstract class UserStreamCallback implements RawCallback {
 
 
     @Override
-    public final void error(final Exception cause) {
+    public final void error(final MicroBlogException cause) {
         onException(cause);
     }
 
@@ -165,7 +165,7 @@ public abstract class UserStreamCallback implements RawCallback {
 
     public abstract void onStatus(Status status) throws IOException;
 
-    public abstract void onDirectMessage(@NonNull  DirectMessage directMessage) throws IOException;
+    public abstract void onDirectMessage(@NonNull DirectMessage directMessage) throws IOException;
 
     public abstract void onBlock(User source, User blockedUser);
 

@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,21 +17,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.microblog.library.twitter;
+package org.mariotaku.twidere.util.stetho
 
-import org.mariotaku.microblog.library.MicroBlogException;
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.callback.RawCallback;
+import org.apache.commons.cli.Option
+import org.apache.commons.cli.Options
 
 /**
- * Created by mariotaku on 15/5/26.
+ * Created by mariotaku on 2017/3/9.
  */
-public interface TwitterUserStream {
 
-    @GET("/user.json")
-    void getUserStream(UserStreamCallback callback);
-
-    @GET("/user.json")
-    void getUserStreamRaw(RawCallback<MicroBlogException> callback);
-
+internal fun Options.addRequiredOption(opt: String, longOpt: String? = null, hasArg: Boolean = false,
+        description: String) {
+    val option = Option(opt, longOpt, hasArg, description)
+    option.isRequired = true
+    addOption(option)
 }

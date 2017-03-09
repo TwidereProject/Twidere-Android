@@ -28,7 +28,6 @@ import com.bluelinelabs.logansquare.LoganSquare
 import com.facebook.stetho.dumpapp.DumperContext
 import com.facebook.stetho.dumpapp.DumperPlugin
 import org.apache.commons.cli.GnuParser
-import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.subArray
@@ -70,8 +69,8 @@ class AccountsDumper(val context: Context) : DumperPlugin {
             "import" -> {
                 val subCommandArgs = argsAsList.subArray(1..argsAsList.lastIndex)
                 val options = Options().apply {
-                    addRequiredOption(Option("p", "password", true, "Account encryption password"))
-                    addRequiredOption(Option("i", "input", true, "Accounts data file"))
+                    addRequiredOption("p", "password", true, "Account encryption password")
+                    addRequiredOption("i", "input", true, "Accounts data file")
                 }
                 val commandLine = parser.parse(options, subCommandArgs)
                 try {
@@ -86,8 +85,8 @@ class AccountsDumper(val context: Context) : DumperPlugin {
             "export" -> {
                 val subCommandArgs = argsAsList.subArray(1..argsAsList.lastIndex)
                 val options = Options().apply {
-                    addRequiredOption(Option("p", "password", true, "Account encryption password"))
-                    addRequiredOption(Option("o", "output", true, "Accounts data file"))
+                    addRequiredOption("p", "password", true, "Account encryption password")
+                    addRequiredOption("o", "output", true, "Accounts data file")
                 }
                 val commandLine = parser.parse(options, subCommandArgs)
                 try {
@@ -97,6 +96,13 @@ class AccountsDumper(val context: Context) : DumperPlugin {
                     }
                 } catch (e: Exception) {
                     e.printStackTrace(dumpContext.stderr)
+                }
+            }
+            "list" -> {
+                val am = AccountManager.get(context)
+                val accounts = AccountUtils.getAllAccountDetails(am, true)
+                accounts.forEach {
+                    dumpContext.stdout.println(it.key)
                 }
             }
             else -> {
@@ -170,11 +176,6 @@ class AccountsDumper(val context: Context) : DumperPlugin {
         bb.order(ByteOrder.LITTLE_ENDIAN)
         bb.putInt(this)
         return bb.array()
-    }
-
-    private fun Options.addRequiredOption(option: Option) {
-        option.isRequired = true
-        addOption(option)
     }
 
     private fun generateSecret(password: String): SecretKeySpec {
