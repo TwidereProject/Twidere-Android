@@ -43,9 +43,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
     private val mediaImageView = itemView.mediaImage
     private val mediaTextView = itemView.mediaText
 
-    private val aspectRatioSource = SimpleAspectRatioSource().apply {
-        setSize(100, 100)
-    }
+    private val aspectRatioSource = SimpleAspectRatioSource()
 
     private var listener: IStatusViewHolder.StatusClickListener? = null
 
@@ -74,11 +72,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
             mediaTextView.text = status.text_unescaped
         }
 
-        if (firstMedia.width > 0 && firstMedia.height > 0) {
-            aspectRatioSource.setSize(firstMedia.width, firstMedia.height)
-        } else {
-            aspectRatioSource.setSize(100, 100)
-        }
+        aspectRatioSource.setSize(firstMedia.width, firstMedia.height)
         mediaImageContainer.tag = firstMedia
         mediaImageContainer.requestLayout()
 
@@ -133,10 +127,12 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
         private var height: Int = 0
 
         override fun getWidth(): Int {
+            if (width <= 0 || height <= 0) return 100
             return width
         }
 
         override fun getHeight(): Int {
+            if (width <= 0 || height <= 0) return 100
             return height
         }
 

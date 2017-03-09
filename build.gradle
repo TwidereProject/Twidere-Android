@@ -40,7 +40,7 @@ subprojects {
                     ObjectCursor    : '0.9.16',
                     PlayServices    : '10.2.0',
                     MapsUtils       : '0.4.4',
-                    Crashlyrics     : '2.6.6',
+                    Crashlyrics     : '2.6.7',
                     FabricPlugin    : '1.22.1',
                     DropboxCoreSdk  : '2.1.2',
                     GoogleDriveApi  : 'v3-rev61-1.22.0',
