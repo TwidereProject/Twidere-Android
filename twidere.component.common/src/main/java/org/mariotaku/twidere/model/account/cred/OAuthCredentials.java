@@ -58,6 +58,17 @@ public class OAuthCredentials extends Credentials implements Parcelable {
         OAuthCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "OAuthCredentials{" +
+                "consumer_key='" + consumer_key + '\'' +
+                ", consumer_secret='" + consumer_secret + '\'' +
+                ", access_token='" + access_token + '\'' +
+                ", access_token_secret='" + access_token_secret + '\'' +
+                ", same_oauth_signing_url=" + same_oauth_signing_url +
+                "} " + super.toString();
+    }
+
     public static final Creator<OAuthCredentials> CREATOR = new Creator<OAuthCredentials>() {
         public OAuthCredentials createFromParcel(Parcel source) {
             OAuthCredentials target = new OAuthCredentials();

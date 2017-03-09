@@ -71,4 +71,11 @@ public class TwitterAccountExtras implements Parcelable, AccountExtras {
     public void writeToParcel(Parcel dest, int flags) {
         TwitterAccountExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
+
+    @Override
+    public String toString() {
+        return "TwitterAccountExtras{" +
+                "officialCredentials=" + officialCredentials +
+                '}';
+    }
 }

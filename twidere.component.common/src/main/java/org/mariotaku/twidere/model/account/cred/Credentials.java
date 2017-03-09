@@ -65,6 +65,14 @@ public class Credentials implements Parcelable {
         CredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "Credentials{" +
+                "api_url_format='" + api_url_format + '\'' +
+                ", no_version_suffix=" + no_version_suffix +
+                '}';
+    }
+
     public static final Creator<Credentials> CREATOR = new Creator<Credentials>() {
         public Credentials createFromParcel(Parcel source) {
             Credentials target = new Credentials();

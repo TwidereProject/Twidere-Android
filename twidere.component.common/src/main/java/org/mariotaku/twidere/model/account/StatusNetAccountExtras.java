@@ -71,4 +71,11 @@ public class StatusNetAccountExtras implements Parcelable, AccountExtras {
     public void writeToParcel(Parcel dest, int flags) {
         StatusNetAccountExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
+
+    @Override
+    public String toString() {
+        return "StatusNetAccountExtras{" +
+                "textLimit=" + textLimit +
+                '}';
+    }
 }

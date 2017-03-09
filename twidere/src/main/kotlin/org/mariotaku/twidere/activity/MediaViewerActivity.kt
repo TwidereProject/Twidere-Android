@@ -197,7 +197,8 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
                 return true
             }
             R.id.share -> {
-                if (obj is CacheDownloadMediaViewerFragment) {
+                val fileInfo = obj.cacheFileInfo()
+                if (fileInfo != null) {
                     requestAndShareMedia(currentItem)
                 } else {
                     val media = media[currentItem]

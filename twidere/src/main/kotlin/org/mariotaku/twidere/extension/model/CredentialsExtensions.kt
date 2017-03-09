@@ -134,6 +134,14 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
                     holder.connectionPool, holder.cache)
             factory.setHttpClient(uploadHttpClient)
         }
+        TwitterUserStream::class -> {
+            val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
+            // Use longer read timeout for streaming
+            conf.readTimeoutSecs = 300
+            val uploadHttpClient = HttpClientFactory.createRestHttpClient(conf, holder.dns,
+                    holder.connectionPool, holder.cache)
+            factory.setHttpClient(uploadHttpClient)
+        }
         else -> {
             factory.setHttpClient(holder.restHttpClient)
         }

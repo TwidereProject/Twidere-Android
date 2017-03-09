@@ -34,8 +34,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 297
-        versionName '3.4.35'
+        versionCode 298
+        versionName '3.4.36'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
@@ -117,6 +117,7 @@ dependencies {
     debugCompile "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
     debugCompile "com.facebook.stetho:stetho-js-rhino:${libVersions['Stetho']}"
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    debugCompile 'com.jayway.jsonpath:json-path:2.2.0'
 
     provided 'javax.annotation:jsr250-api:1.0'
 

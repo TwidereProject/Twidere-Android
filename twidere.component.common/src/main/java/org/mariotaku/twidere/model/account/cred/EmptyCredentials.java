@@ -44,6 +44,11 @@ public class EmptyCredentials extends Credentials implements Parcelable {
         EmptyCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "EmptyCredentials{} " + super.toString();
+    }
+
     public static final Creator<EmptyCredentials> CREATOR = new Creator<EmptyCredentials>() {
         public EmptyCredentials createFromParcel(Parcel source) {
             EmptyCredentials target = new EmptyCredentials();

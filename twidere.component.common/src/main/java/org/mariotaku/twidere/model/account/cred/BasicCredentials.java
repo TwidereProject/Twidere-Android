@@ -50,6 +50,14 @@ public class BasicCredentials extends Credentials implements Parcelable {
         BasicCredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "BasicCredentials{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                "} " + super.toString();
+    }
+
     public static final Creator<BasicCredentials> CREATOR = new Creator<BasicCredentials>() {
         public BasicCredentials createFromParcel(Parcel source) {
             BasicCredentials target = new BasicCredentials();

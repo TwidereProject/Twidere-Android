@@ -44,6 +44,11 @@ public class OAuth2Credentials extends Credentials implements Parcelable {
         OAuth2CredentialsParcelablePlease.writeToParcel(this, dest, flags);
     }
 
+    @Override
+    public String toString() {
+        return "OAuth2Credentials{} " + super.toString();
+    }
+
     public static final Creator<OAuth2Credentials> CREATOR = new Creator<OAuth2Credentials>() {
         public OAuth2Credentials createFromParcel(Parcel source) {
             OAuth2Credentials target = new OAuth2Credentials();

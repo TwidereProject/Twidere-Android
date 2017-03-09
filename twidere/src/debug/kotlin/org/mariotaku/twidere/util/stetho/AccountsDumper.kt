@@ -19,22 +19,35 @@
 
 package org.mariotaku.twidere.util.stetho
 
+import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.Context
 import android.util.Base64
 import android.util.Base64InputStream
 import android.util.Base64OutputStream
 import com.bluelinelabs.logansquare.LoganSquare
+import com.facebook.stetho.dumpapp.DumpException
 import com.facebook.stetho.dumpapp.DumperContext
 import com.facebook.stetho.dumpapp.DumperPlugin
+import com.jayway.jsonpath.Configuration
+import com.jayway.jsonpath.DocumentContext
+import com.jayway.jsonpath.JsonPath
+import com.jayway.jsonpath.TypeRef
+import com.jayway.jsonpath.spi.json.JsonOrgJsonProvider
+import com.jayway.jsonpath.spi.mapper.MappingProvider
 import org.apache.commons.cli.GnuParser
 import org.apache.commons.cli.Options
+import org.json.JSONArray
+import org.json.JSONObject
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.subArray
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.Utils
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -99,17 +112,73 @@ class AccountsDumper(val context: Context) : DumperPlugin {
                 }
             }
             "list" -> {
-                val am = AccountManager.get(context)
-                val accounts = AccountUtils.getAllAccountDetails(am, true)
-                accounts.forEach {
-                    dumpContext.stdout.println(it.key)
+                val keys = DataStoreUtils.getAccountKeys(context)
+                keys.forEach {
+                    dumpContext.stdout.println(it)
                 }
+            }
+            "get" -> {
+                val subCommandArgs = argsAsList.subArray(1..argsAsList.lastIndex)
+                if (subCommandArgs.isEmpty()) {
+                    throw DumpException("Account key required")
+                }
+                val docContext = try {
+                    accountDocContext(subCommandArgs[0])
+                } catch (e: Utils.NoAccountException) {
+                    throw DumpException("Account not found")
+                }
+                if (subCommandArgs.size == 1) {
+                    val result = docContext.read("$", Object::class.java)
+                    dumpContext.stdout.println(result?.prettyPrint())
+                } else for (i in 1..subCommandArgs.lastIndex) {
+                    val result = docContext.read(subCommandArgs[i], Object::class.java)
+                    dumpContext.stdout.println(result?.prettyPrint())
+                }
+            }
+            "set" -> {
+                val subCommandArgs = argsAsList.subArray(1..argsAsList.lastIndex)
+                if (subCommandArgs.size != 3) {
+                    throw DumpException("Usage: accounts set <account_key> <field> <value>")
+                }
+                val docContext = try {
+                    accountDocContext(subCommandArgs[0])
+                } catch (e: Utils.NoAccountException) {
+                    throw DumpException("Account not found")
+                }
+                val value = subCommandArgs[2]
+                val path = subCommandArgs[1]
+                docContext.set(path, value)
+                val details = docContext.read("$", Object::class.java)?.let {
+                    LoganSquare.parse(it.toString(), AccountDetails::class.java)
+                } ?: return
+                val am = AccountManager.get(context)
+                details.account.updateDetails(am, details)
+                dumpContext.stdout.println("$path = ${docContext.read(path, Object::class.java)?.prettyPrint()}")
             }
             else -> {
                 dumpContext.stderr.println("Usage: accounts [import|export] -p <password>")
             }
         }
 
+    }
+
+    private fun accountDocContext(forKey: String): DocumentContext {
+        val accountKey = UserKey.valueOf(forKey)
+        val am = AccountManager.get(context)
+        val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: throw Utils.NoAccountException()
+        val configuration = Configuration.builder()
+                .jsonProvider(JsonOrgJsonProvider())
+                .mappingProvider(AsIsMappingProvider())
+                .build()
+        return JsonPath.parse(LoganSquare.serialize(details), configuration)
+    }
+
+    private fun Any.prettyPrint() = if (this is JSONObject) {
+        toString(4)
+    } else if (this is JSONArray) {
+        toString(4)
+    } else {
+        toString()
     }
 
     private fun exportAccounts(password: String, output: OutputStream) {
@@ -151,18 +220,22 @@ class AccountsDumper(val context: Context) : DumperPlugin {
             if (account !in usedAccounts) {
                 am.addAccountExplicitly(account, null, null)
             }
-            am.setUserData(account, ACCOUNT_USER_DATA_KEY, details.key.toString())
-            am.setUserData(account, ACCOUNT_USER_DATA_TYPE, details.type)
-            am.setUserData(account, ACCOUNT_USER_DATA_CREDS_TYPE, details.credentials_type)
-
-            am.setUserData(account, ACCOUNT_USER_DATA_ACTIVATED, true.toString())
-            am.setUserData(account, ACCOUNT_USER_DATA_COLOR, toHexColor(details.color, format = HexColorFormat.RGB))
-
-            am.setUserData(account, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(details.user))
-            am.setUserData(account, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { LoganSquare.serialize(it) })
-            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(details.credentials))
+            account.updateDetails(am, details)
         }
         output.println("Done.")
+    }
+
+    private fun Account.updateDetails(am: AccountManager, details: AccountDetails) {
+        am.setUserData(this, ACCOUNT_USER_DATA_KEY, details.key.toString())
+        am.setUserData(this, ACCOUNT_USER_DATA_TYPE, details.type)
+        am.setUserData(this, ACCOUNT_USER_DATA_CREDS_TYPE, details.credentials_type)
+
+        am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, true.toString())
+        am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(details.color, format = HexColorFormat.RGB))
+
+        am.setUserData(this, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(details.user))
+        am.setUserData(this, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { LoganSquare.serialize(it) })
+        am.setAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(details.credentials))
     }
 
     fun ByteArray.toInt(): Int {
@@ -181,6 +254,19 @@ class AccountsDumper(val context: Context) : DumperPlugin {
     private fun generateSecret(password: String): SecretKeySpec {
         val spec = PBEKeySpec(password.toCharArray(), salt, 65536, 256)
         return SecretKeySpec(factory.generateSecret(spec).encoded, "AES")
+    }
+
+    internal class AsIsMappingProvider : MappingProvider {
+        override fun <T : Any?> map(source: Any?, type: Class<T>, configuration: Configuration): T {
+            @Suppress("UNCHECKED_CAST")
+            return source as T
+        }
+
+        override fun <T : Any?> map(source: Any?, type: TypeRef<T>, configuration: Configuration): T {
+            @Suppress("UNCHECKED_CAST")
+            return source as T
+        }
+
     }
 
 }

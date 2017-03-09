@@ -60,7 +60,11 @@ class RawStreamDumper(val context: Context) : DumperPlugin {
         userStream.getUserStreamRaw(object : RawCallback<MicroBlogException> {
             override fun result(result: HttpResponse) {
                 dumpContext.stdout.println("Response: ${result.status}")
-                dumpContext.stdout.println("Headers: ${result.headers}")
+                dumpContext.stdout.println("Headers:")
+                result.headers.toList().forEach {
+                    dumpContext.stdout.println("${it.first}: ${it.second}")
+                }
+                dumpContext.stdout.println()
                 result.body.writeTo(dumpContext.stdout)
             }
 
