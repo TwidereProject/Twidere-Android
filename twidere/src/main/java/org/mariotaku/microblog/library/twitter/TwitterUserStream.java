@@ -19,9 +19,7 @@
 
 package org.mariotaku.microblog.library.twitter;
 
-import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.callback.RawCallback;
 
 /**
  * Created by mariotaku on 15/5/26.
@@ -29,6 +27,6 @@ import org.mariotaku.restfu.callback.RawCallback;
 public interface TwitterUserStream {
 
     @GET("/user.json")
-    void getUserStream(UserStreamCallback callback);
+    void getUserStream(String with, UserStreamCallback callback);
 
 }

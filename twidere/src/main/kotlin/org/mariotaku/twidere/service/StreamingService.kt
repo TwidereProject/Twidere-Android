@@ -5,7 +5,6 @@ import android.accounts.OnAccountsUpdateListener
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
@@ -16,11 +15,6 @@ import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
 import org.mariotaku.microblog.library.twitter.UserStreamCallback
-import org.mariotaku.microblog.library.twitter.model.DeletionEvent
-import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.microblog.library.twitter.model.User
-import org.mariotaku.microblog.library.twitter.model.Warning
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -31,11 +25,9 @@ import org.mariotaku.twidere.model.AccountPreferences
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.TwidereArrayUtils
-import java.io.IOException
 
 class StreamingService : Service() {
 
@@ -105,7 +97,7 @@ class StreamingService : Service() {
             callbacks.put(account.key, callback)
             object : Thread() {
                 override fun run() {
-                    twitter.getUserStream(callback)
+                    twitter.getUserStream("user", callback)
                     Log.d(LOGTAG, String.format("Stream %s disconnected", account.key))
                     callbacks.remove(account.key)
                     updateStreamState()
@@ -152,83 +144,6 @@ class StreamingService : Service() {
 
         private var statusStreamStarted: Boolean = false
         private val mentionsStreamStarted: Boolean = false
-
-        override fun onConnected() = true
-
-        override fun onBlock(source: User, blockedUser: User): Boolean {
-            val message = String.format("%s blocked %s", source.screenName, blockedUser.screenName)
-            Log.d(LOGTAG, message)
-            return true
-        }
-
-        override fun onDirectMessageDeleted(event: DeletionEvent): Boolean {
-            val where = Expression.equalsArgs(Messages.MESSAGE_ID).sql
-            val whereArgs = arrayOf(event.id)
-            context.contentResolver.delete(Messages.CONTENT_URI, where, whereArgs)
-            return true
-        }
-
-        override fun onStatusDeleted(event: DeletionEvent): Boolean {
-            val statusId = event.id
-            context.contentResolver.delete(Statuses.CONTENT_URI, Expression.equalsArgs(Statuses.STATUS_ID).sql,
-                    arrayOf(statusId))
-            context.contentResolver.delete(Activities.AboutMe.CONTENT_URI, Expression.equalsArgs(Activities.STATUS_ID).sql,
-                    arrayOf(statusId))
-            return true
-        }
-
-        override fun onFavorite(source: User, target: User, targetStatus: Status): Boolean {
-            val message = String.format("%s favorited %s's tweet: %s", source.screenName,
-                    target.screenName, targetStatus.extendedText)
-            Log.d(LOGTAG, message)
-            return true
-        }
-
-        override fun onFollow(source: User, followedUser: User): Boolean {
-            val message = String
-                    .format("%s followed %s", source.screenName, followedUser.screenName)
-            Log.d(LOGTAG, message)
-            return true
-        }
-
-        override fun onFriendList(friendIds: Array<String>): Boolean {
-            return true
-        }
-
-        override fun onScrubGeo(userId: String, upToStatusId: String): Boolean {
-            val resolver = context.contentResolver
-
-            val where = Expression.and(Expression.equalsArgs(Statuses.USER_KEY),
-                    Expression.greaterEqualsArgs(Statuses.SORT_ID)).sql
-            val whereArgs = arrayOf(userId, upToStatusId)
-            val values = ContentValues()
-            values.putNull(Statuses.LOCATION)
-            resolver.update(Statuses.CONTENT_URI, values, where, whereArgs)
-            return true
-        }
-
-        override fun onStallWarning(warn: Warning): Boolean {
-            return true
-        }
-
-        @Throws(IOException::class)
-        override fun onStatus(status: Status): Boolean {
-            return true
-        }
-
-        override fun onUnblock(source: User, unblockedUser: User): Boolean {
-            val message = String.format("%s unblocked %s", source.screenName,
-                    unblockedUser.screenName)
-            Log.d(LOGTAG, message)
-            return true
-        }
-
-        override fun onUnfavorite(source: User, target: User, targetStatus: Status): Boolean {
-            val message = String.format("%s unfavorited %s's tweet: %s", source.screenName,
-                    target.screenName, targetStatus.extendedText)
-            Log.d(LOGTAG, message)
-            return true
-        }
 
     }
 

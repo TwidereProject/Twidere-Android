@@ -27,10 +27,10 @@ public class TwitterStreamObject {
     @JsonField(name = "limit")
     Limit limit;
     @JsonField(name = "warning")
-    EmptyObject warning;
+    Warning warning;
     @JsonField(name = "scrub_geo")
     ScrubGeo scrubGeo;
-    @JsonField(name = "friends")
+    @JsonField(name = {"friends", "friends_str"})
     String[] friends;
 
     @Type
@@ -38,9 +38,7 @@ public class TwitterStreamObject {
         // This code originally lived in AbstractStreamImplementation.
         // I've moved it in here to expose it as a public encapsulation of
         // the object type determination logic.
-        if (sender != null) {
-            return Type.SENDER;
-        } else if (text != null) {
+        if (sender == null && text != null) {
             return Type.STATUS;
         } else if (directMessage != null) {
             return Type.DIRECT_MESSAGE;
@@ -82,14 +80,16 @@ public class TwitterStreamObject {
                     return Type.USER_LIST_DESTROYED;
                 case "user_update":
                     return Type.USER_UPDATE;
-                case "user_delete":
-                    return Type.USER_DELETE;
-                case "user_suspend":
-                    return Type.USER_SUSPEND;
                 case "block":
                     return Type.BLOCK;
                 case "unblock":
                     return Type.UNBLOCK;
+                case "quoted_tweet":
+                    return Type.QUOTED_TWEET;
+                case "favorited_retweet":
+                    return Type.FAVORITED_RETWEET;
+                case "retweeted_retweet":
+                    return Type.RETWEETED_RETWEET;
             }
         }
         return Type.UNKNOWN;
@@ -119,14 +119,18 @@ public class TwitterStreamObject {
         return friends;
     }
 
-    @StringDef({Type.SENDER, Type.STATUS, Type.DIRECT_MESSAGE, Type.DELETE, Type.LIMIT,
+    public Warning getWarning() {
+        return warning;
+    }
+
+    @StringDef({Type.STATUS, Type.DIRECT_MESSAGE, Type.DELETE, Type.LIMIT,
             Type.STALL_WARNING, Type.SCRUB_GEO, Type.FRIENDS, Type.FAVORITE, Type.UNFAVORITE,
             Type.FOLLOW, Type.UNFOLLOW, Type.USER_LIST_MEMBER_ADDED, Type.USER_LIST_MEMBER_DELETED,
             Type.USER_LIST_SUBSCRIBED, Type.USER_LIST_UNSUBSCRIBED, Type.USER_LIST_CREATED,
-            Type.USER_LIST_UPDATED, Type.USER_LIST_DESTROYED, Type.USER_UPDATE, Type.USER_DELETE,
-            Type.USER_SUSPEND, Type.BLOCK, Type.UNBLOCK, Type.DISCONNECTION, Type.UNKNOWN})
+            Type.USER_LIST_UPDATED, Type.USER_LIST_DESTROYED, Type.USER_UPDATE, Type.BLOCK,
+            Type.UNBLOCK, Type.DISCONNECTION, Type.QUOTED_TWEET, Type.FAVORITED_RETWEET,
+            Type.RETWEETED_RETWEET, Type.UNKNOWN})
     public @interface Type {
-        String SENDER = "sender";
         String STATUS = "status";
         String DIRECT_MESSAGE = "direct_message";
         String DELETE = "delete";
@@ -146,11 +150,12 @@ public class TwitterStreamObject {
         String USER_LIST_UPDATED = "user_list_updated";
         String USER_LIST_DESTROYED = "user_list_destroyed";
         String USER_UPDATE = "user_update";
-        String USER_DELETE = "user_delete";
-        String USER_SUSPEND = "user_suspend";
         String BLOCK = "block";
         String UNBLOCK = "unblock";
         String DISCONNECTION = "disconnection";
+        String QUOTED_TWEET = "quoted_tweet";
+        String FAVORITED_RETWEET = "favorited_retweet";
+        String RETWEETED_RETWEET = "retweeted_retweet";
         String UNKNOWN = "unknown";
     }
 

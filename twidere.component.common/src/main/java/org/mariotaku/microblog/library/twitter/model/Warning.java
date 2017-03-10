@@ -21,6 +21,7 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 /**
@@ -28,4 +29,31 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  */
 @JsonObject
 public class Warning {
+    @JsonField(name = "code")
+    String code;
+    @JsonField(name = "message")
+    String message;
+    @JsonField(name = "percent_full")
+    int percentFull;
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getPercentFull() {
+        return percentFull;
+    }
+
+    @Override
+    public String toString() {
+        return "Warning{" +
+                "code='" + code + '\'' +
+                ", message='" + message + '\'' +
+                ", percentFull=" + percentFull +
+                '}';
+    }
 }

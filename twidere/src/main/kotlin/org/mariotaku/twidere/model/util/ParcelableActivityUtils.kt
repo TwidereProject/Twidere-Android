@@ -57,7 +57,7 @@ object ParcelableActivityUtils {
         return result
     }
 
-    fun fromActivity(activity: Activity, accountKey: UserKey, isGap: Boolean,
+    fun fromActivity(activity: Activity, accountKey: UserKey, isGap: Boolean = false,
             profileImageSize: String = "normal"): ParcelableActivity {
         val result = ParcelableActivity()
         result.account_key = accountKey

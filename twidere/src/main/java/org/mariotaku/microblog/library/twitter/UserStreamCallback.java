@@ -29,11 +29,13 @@ import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.Status;
-import org.mariotaku.microblog.library.twitter.model.StatusFavoriteEvent;
+import org.mariotaku.microblog.library.twitter.model.StatusTargetObjectEvent;
+import org.mariotaku.microblog.library.twitter.model.StreamEvent;
 import org.mariotaku.microblog.library.twitter.model.TwitterStreamObject;
 import org.mariotaku.microblog.library.twitter.model.TwitterStreamObject.Type;
 import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
+import org.mariotaku.microblog.library.twitter.model.UserListTargetObjectEvent;
 import org.mariotaku.microblog.library.twitter.model.Warning;
 import org.mariotaku.microblog.library.twitter.util.CRLFLineReader;
 import org.mariotaku.restfu.callback.RawCallback;
@@ -41,6 +43,7 @@ import org.mariotaku.restfu.http.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 /**
  * Created by mariotaku on 15/5/26.
@@ -83,8 +86,8 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
 
     private boolean handleEvent(final TwitterStreamObject object, final String json) throws IOException {
         switch (object.determine()) {
-            case Type.SENDER: {
-                break;
+            case Type.FRIENDS: {
+                return onFriendList(object.getFriends());
             }
             case Type.STATUS: {
                 return onStatus(LoganSquare.parse(json, Status.class));
@@ -104,56 +107,95 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
             case Type.LIMIT: {
                 return onTrackLimitationNotice(object.getLimit().getTrack());
             }
-            case Type.STALL_WARNING:
-                break;
+            case Type.STALL_WARNING: {
+                return onStallWarning(object.getWarning());
+            }
             case Type.SCRUB_GEO: {
                 TwitterStreamObject.ScrubGeo scrubGeo = object.getScrubGeo();
                 return onScrubGeo(scrubGeo.getUserId(), scrubGeo.getUpToStatusId());
             }
-            case Type.FRIENDS: {
-                return onFriendList(object.getFriends());
-            }
             case Type.FAVORITE: {
-                StatusFavoriteEvent event = LoganSquare.parse(json, StatusFavoriteEvent.class);
-                return onFavorite(event.getSource(), event.getTarget(), event.getTargetObject());
+                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                return onFavorite(event.getCreatedAt(), event.getSource(), event.getTarget(),
+                        event.getTargetObject());
             }
             case Type.UNFAVORITE: {
-                StatusFavoriteEvent event = LoganSquare.parse(json, StatusFavoriteEvent.class);
+                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
                 return onUnfavorite(event.getSource(), event.getTarget(), event.getTargetObject());
             }
-            case Type.FOLLOW:
-                break;
-            case Type.UNFOLLOW:
-                break;
-            case Type.USER_LIST_MEMBER_ADDED:
-                break;
-            case Type.USER_LIST_MEMBER_DELETED:
-                break;
-            case Type.USER_LIST_SUBSCRIBED:
-                break;
-            case Type.USER_LIST_UNSUBSCRIBED:
-                break;
-            case Type.USER_LIST_CREATED:
-                break;
-            case Type.USER_LIST_UPDATED:
-                break;
-            case Type.USER_LIST_DESTROYED:
-                break;
-            case Type.USER_UPDATE:
-                break;
-            case Type.USER_DELETE:
-                break;
-            case Type.USER_SUSPEND:
-                break;
-            case Type.BLOCK:
-                break;
-            case Type.UNBLOCK:
-                break;
+            case Type.QUOTED_TWEET: {
+                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                return onQuotedTweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
+                        event.getTargetObject());
+            }
+            case Type.RETWEETED_RETWEET: {
+                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                return onRetweetedRetweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
+                        event.getTargetObject());
+            }
+            case Type.FAVORITED_RETWEET: {
+                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                return onFavoritedRetweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
+                        event.getTargetObject());
+            }
+            case Type.FOLLOW: {
+                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                return onFollow(event.getCreatedAt(), event.getSource(), event.getTarget());
+            }
+            case Type.UNFOLLOW: {
+                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                return onUnfollow(event.getCreatedAt(), event.getSource(), event.getTarget());
+            }
+            case Type.USER_LIST_MEMBER_ADDED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListMemberAddition(event.getCreatedAt(), event.getSource(),
+                        event.getTarget(), event.getTargetObject());
+            }
+            case Type.USER_LIST_MEMBER_DELETED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListMemberDeletion(event.getCreatedAt(), event.getSource(),
+                        event.getTarget(), event.getTargetObject());
+            }
+            case Type.USER_LIST_SUBSCRIBED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListSubscription(event.getCreatedAt(), event.getSource(),
+                        event.getTarget(), event.getTargetObject());
+            }
+            case Type.USER_LIST_UNSUBSCRIBED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListUnsubscription(event.getCreatedAt(), event.getSource(),
+                        event.getTarget(), event.getTargetObject());
+            }
+            case Type.USER_LIST_CREATED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListCreation(event.getCreatedAt(), event.getSource(),
+                        event.getTargetObject());
+            }
+            case Type.USER_LIST_UPDATED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListUpdate(event.getCreatedAt(), event.getSource(),
+                        event.getTargetObject());
+            }
+            case Type.USER_LIST_DESTROYED: {
+                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                return onUserListDeletion(event.getCreatedAt(), event.getSource(),
+                        event.getTargetObject());
+            }
+            case Type.USER_UPDATE: {
+                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                return onUserProfileUpdate(event.getCreatedAt(), event.getSource());
+            }
+            case Type.BLOCK: {
+                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                return onBlock(event.getCreatedAt(), event.getSource(), event.getTarget());
+            }
+            case Type.UNBLOCK: {
+                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                return onUnblock(event.getCreatedAt(), event.getSource(), event.getTarget());
+            }
             case Type.DISCONNECTION:
                 TwitterStreamObject.Disconnect disconnect = object.getDisconnect();
                 return onDisconnect(disconnect.getCode(), disconnect.getReason());
-            case Type.UNKNOWN:
-                break;
         }
         return false;
     }
@@ -184,7 +226,7 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         return false;
     }
 
-    protected boolean onBlock(User source, User blockedUser) {
+    protected boolean onBlock(final Date createdAt, User source, User blockedUser) {
         return false;
     }
 
@@ -200,11 +242,16 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         return false;
     }
 
-    protected boolean onFavorite(@NonNull User source, @NonNull User target, @NonNull Status targetStatus) {
+    protected boolean onFavorite(@NonNull Date createdAt, @NonNull User source, @NonNull User target,
+            @NonNull Status targetObject) {
         return false;
     }
 
-    protected boolean onFollow(User source, User followedUser) {
+    protected boolean onFollow(@NonNull Date createdAt, @NonNull User source, @NonNull User target) {
+        return false;
+    }
+
+    protected boolean onUnfollow(@NonNull Date createdAt, @NonNull User source, @NonNull User target) {
         return false;
     }
 
@@ -224,43 +271,65 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         return false;
     }
 
-    protected boolean onUnblock(User source, User unblockedUser) {
+    protected boolean onUnblock(final Date createdAt, User source, User unblockedUser) {
         return false;
     }
 
-    protected boolean onUnfavorite(User source, User target, Status targetStatus) {
+    protected boolean onUnfavorite(@NonNull User source, @NonNull User target, @NonNull Status targetStatus) {
         return false;
     }
 
-    protected boolean onUserListCreation(User listOwner, UserList list) {
+    protected boolean onUserListCreation(@NonNull Date createdAt, @NonNull User source,
+            @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListDeletion(User listOwner, UserList list) {
+    protected boolean onUserListDeletion(@NonNull Date createdAt, @NonNull User source,
+            @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListMemberAddition(User addedMember, User listOwner, UserList list) {
+    protected boolean onUserListMemberAddition(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListMemberDeletion(User deletedMember, User listOwner, UserList list) {
+    protected boolean onUserListMemberDeletion(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListSubscription(User subscriber, User listOwner, UserList list) {
+    protected boolean onUserListSubscription(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListUnsubscription(User subscriber, User listOwner, UserList list) {
+    protected boolean onUserListUnsubscription(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserListUpdate(User listOwner, UserList list) {
+    protected boolean onUserListUpdate(@NonNull Date createdAt, @NonNull User source, @NonNull UserList targetObject) {
         return false;
     }
 
-    protected boolean onUserProfileUpdate(User updatedUser) {
+    protected boolean onUserProfileUpdate(@NonNull Date createdAt, @NonNull User updatedUser) {
+        return false;
+    }
+
+
+    protected boolean onQuotedTweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject) {
+        return false;
+    }
+
+    protected boolean onFavoritedRetweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject) {
+        return false;
+    }
+
+    protected boolean onRetweetedRetweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject) {
         return false;
     }
 

@@ -28,12 +28,17 @@ import org.apache.commons.cli.GnuParser
 import org.apache.commons.cli.Options
 import org.apache.commons.cli.ParseException
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
-import org.mariotaku.microblog.library.twitter.UserStreamCallback
-import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.twitter.model.DirectMessage
+import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.getCredentials
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.model.util.ParcelableActivityUtils
+import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.streaming.TimelineStreamCallback
 
 /**
  * Created by mariotaku on 2017/3/9.
@@ -44,12 +49,16 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
         val parser = GnuParser()
         val options = Options()
         options.addRequiredOption("a", "account", true, "Account key")
+        options.addOption("t", "timeline", false, "Include timeline")
+        options.addOption("i", "interactions", false, "Include interactions")
         val cmdLine = try {
             parser.parse(options, dumpContext.argsAsList.toTypedArray())
         } catch (e: ParseException) {
             throw DumpException(e.message)
         }
-
+        val manager = DependencyHolder.get(context).userColorNameManager
+        val includeTimeline = cmdLine.hasOption("timeline")
+        val includeInteractions = cmdLine.hasOption("interactions")
         val accountKey = UserKey.valueOf(cmdLine.getOptionValue("account"))
         val am = AccountManager.get(context)
         val account = AccountUtils.findByAccountKey(am, accountKey) ?: return
@@ -58,17 +67,30 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
                 cls = TwitterUserStream::class.java)
         dumpContext.stdout.println("Beginning user stream...")
         dumpContext.stdout.flush()
-        val callback = object : UserStreamCallback() {
+        val callback = object : TimelineStreamCallback(accountKey.id) {
             override fun onException(ex: Throwable): Boolean {
                 ex.printStackTrace(dumpContext.stderr)
                 dumpContext.stderr.flush()
                 return true
             }
 
-            override fun onStatus(status: Status): Boolean {
-                dumpContext.stdout.println("Status: @${status.user.screenName}: ${status.text.trim('\n')}")
+            override fun onHomeTimeline(status: Status) {
+                if (!includeTimeline && includeInteractions) return
+                dumpContext.stdout.println("Home: @${status.user.screenName}: ${status.text.trim('\n')}")
                 dumpContext.stdout.flush()
-                return true
+            }
+
+            override fun onActivityAboutMe(activity: Activity) {
+                if (!includeInteractions && includeTimeline) return
+                val pActivity = ParcelableActivityUtils.fromActivity(activity, accountKey)
+                val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
+                        true, true)
+                if (message != null) {
+                    dumpContext.stdout.println("Activity: ${message.title}: ${message.summary}")
+                } else {
+                    dumpContext.stdout.println("Activity unsupported: ${activity.action}")
+                }
+                dumpContext.stdout.flush()
             }
 
             override fun onDirectMessage(directMessage: DirectMessage): Boolean {
@@ -76,38 +98,9 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
                 dumpContext.stdout.flush()
                 return true
             }
-
-            override fun onStatusDeleted(event: DeletionEvent): Boolean {
-                dumpContext.stdout.println("Status deleted: ${event.id}")
-                dumpContext.stdout.flush()
-                return true
-            }
-
-            override fun onDirectMessageDeleted(event: DeletionEvent): Boolean {
-                dumpContext.stdout.println("Message deleted: ${event.id}")
-                dumpContext.stdout.flush()
-                return true
-            }
-
-            override fun onFriendList(friendIds: Array<String>): Boolean {
-                dumpContext.stdout.println("Friends list: ${friendIds.size} in total")
-                dumpContext.stdout.flush()
-                return true
-            }
-
-            override fun onFavorite(source: User, target: User, targetStatus: Status): Boolean {
-                dumpContext.stdout.println("Favorited: @${source.screenName} -> ${targetStatus.text.trim('\n')}")
-                dumpContext.stdout.flush()
-                return true
-            }
-
-            override fun onUnhandledEvent(obj: TwitterStreamObject, json: String) {
-                dumpContext.stdout.println("Unhandled: ${obj.determine()} = $json")
-                dumpContext.stdout.flush()
-            }
         }
         try {
-            userStream.getUserStream(callback)
+            userStream.getUserStream("user", callback)
         } catch (e: Exception) {
             e.printStackTrace(dumpContext.stderr)
         }

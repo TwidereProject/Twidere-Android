@@ -23,10 +23,7 @@ import android.content.Context
 import android.net.Uri
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
-import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.microblog.library.twitter.model.Paging
-import org.mariotaku.microblog.library.twitter.model.ResponseList
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -73,7 +70,7 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
                 statuses = twitter.getMentionsTimeline(paging)
             }
         }
-        statuses.mapTo(activities) { Activity.fromMention(details.key.id, it) }
+        statuses.mapTo(activities) { InternalActivityCreator.status(details.key.id, it) }
         return activities
     }
 

@@ -43,7 +43,7 @@ public class DefaultFeatures {
     long twitterDirectMessageMediaLimit = 1;
 
     @JsonField(name = "twitter_direct_message_max_participants")
-    long twitterDirectMessageMaxParticipants = 20;
+    long twitterDirectMessageMaxParticipants = 50;
 
     public boolean isMediaLinkCountsInStatus() {
         return mediaLinkCountsInStatus;

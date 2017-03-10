@@ -25,7 +25,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
-import android.text.TextUtils;
 
 import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -246,34 +245,6 @@ public class Activity extends TwitterResponseObject implements TwitterResponse, 
             maxSortPosition = time;
             minSortPosition = time;
         }
-    }
-
-    public static Activity fromMention(@NonNull String accountId, @NonNull Status status) {
-        final Activity activity = new Activity();
-
-        activity.maxPosition = activity.minPosition = status.getId();
-        activity.maxSortPosition = activity.minSortPosition = status.getSortId();
-        activity.createdAt = status.getCreatedAt();
-
-        if (TextUtils.equals(status.getInReplyToUserId(), accountId)) {
-            activity.action = Action.REPLY;
-            activity.targetStatuses = new Status[]{status};
-
-            //TODO set target statuses (in reply to status)
-            activity.targetObjectStatuses = new Status[0];
-        } else if (status.quotedStatus != null && TextUtils.equals(status.quotedStatus.user.getId(),
-                accountId)) {
-            activity.action = Action.QUOTE;
-            activity.targetStatuses = new Status[]{status};
-            activity.targetObjectStatuses = new Status[0];
-        } else {
-            activity.action = Action.MENTION;
-            activity.targetUsers = new User[0];
-            activity.targetObjectStatuses = new Status[]{status};
-        }
-        activity.sourcesSize = 1;
-        activity.sources = new User[]{status.getUser()};
-        return activity;
     }
 
     @StringDef({Action.FAVORITE, Action.FOLLOW, Action.MENTION, Action.REPLY, Action.RETWEET,
