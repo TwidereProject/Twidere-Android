@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.jetbrains.annotations.NotNull;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.fragment.InteractionsTimelineFragment;
@@ -103,7 +102,7 @@ public class InteractionsTabConfiguration extends TabConfiguration {
 
         private boolean valueBackup;
 
-        MentionsOnlyExtraConfiguration(@NotNull String key) {
+        MentionsOnlyExtraConfiguration(@NonNull String key) {
             super(key, new HasOfficialBooleanHolder());
         }
 

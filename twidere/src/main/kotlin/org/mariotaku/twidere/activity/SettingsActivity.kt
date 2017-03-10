@@ -209,6 +209,8 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                 ExtensionsListFragment::class.java)
         entriesAdapter.addPreference("refresh", R.drawable.ic_action_refresh, getString(R.string.action_refresh),
                 R.xml.preferences_refresh)
+        entriesAdapter.addPreference("streaming", R.drawable.ic_action_streaming, getString(R.string.settings_streaming),
+                R.xml.preferences_streaming)
         entriesAdapter.addPreference("notifications", R.drawable.ic_action_notification, getString(R.string.settings_notifications),
                 R.xml.preferences_notifications)
         entriesAdapter.addPreference("network", R.drawable.ic_action_web, getString(R.string.network),
@@ -277,7 +279,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
 
 
         fun addPreference(tag: String, @DrawableRes icon: Int, title: String, cls: Class<out Fragment>,
-                          args: Bundle? = null) {
+                args: Bundle? = null) {
             entries.add(PreferenceEntry(tag, icon, title, 0, cls.name, args))
             notifyDataSetChanged()
         }

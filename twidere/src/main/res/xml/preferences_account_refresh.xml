@@ -25,15 +25,4 @@
             android:title="@string/refresh_type_trends"/>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
-    <!--<org.mariotaku.twidere.preference.TintedPreferenceCategory-->
-    <!--android:enabled="false"-->
-    <!--android:key="cat_streaming"-->
-    <!--android:title="@string/streaming">-->
-
-    <!--<SwitchPreference-->
-    <!--android:key="enable_streaming"-->
-    <!--android:title="@string/enable_streaming"/>-->
-
-    <!--</org.mariotaku.twidere.preference.TintedPreferenceCategory>-->
-
 </PreferenceScreen>

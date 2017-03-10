@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_streaming-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_streaming-mdpi">
+            <rect id="Rectangle-2" x="4" y="4" width="24" height="24"></rect>
+            <path d="M17.873855,14.2816795 L22,5 L10,17.7183205 L14.126145,17.7183205 L10,27 L22,14.2816795 L17.873855,14.2816795 Z" id="Triangle" fill="#FFFFFF"></path>
+            <path d="M15,3 L17,3 L17,8 L15,8 L15,3 Z M29,15 L29,17 L24,17 L24,15 L29,15 Z M17,29 L15,29 L15,24 L17,24 L17,29 Z M3,17 L3,15 L8,15 L8,17 L3,17 Z" id="Rectangle" fill="#FFFFFF"></path>
+            <path d="M23.7781746,6.80761184 L25.1923882,8.22182541 L22.363961,11.0502525 L20.9497475,9.63603897 L23.7781746,6.80761184 Z M25.1923882,23.7781746 L23.7781746,25.1923882 L20.9497475,22.363961 L22.363961,20.9497475 L25.1923882,23.7781746 Z M8.22182541,25.1923882 L6.80761184,23.7781746 L9.63603897,20.9497475 L11.0502525,22.363961 L8.22182541,25.1923882 Z M6.80761184,8.22182541 L8.22182541,6.80761184 L11.0502525,9.63603897 L9.63603897,11.0502525 L6.80761184,8.22182541 Z" id="Rectangle-3" fill="#FFFFFF"></path>
+        </g>
+    </g>
+</svg>

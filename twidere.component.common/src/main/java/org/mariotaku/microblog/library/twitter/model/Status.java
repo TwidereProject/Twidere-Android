@@ -134,20 +134,20 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "retweeted_status")
     Status retweetedStatus;
 
-    @JsonField(name = "quoted_status")
+    /**
+     * <code>repost_status</code> is for Fanfou, <code>quoted_status</code> is for twitter
+     */
+    @JsonField(name = {"quoted_status", "repost_status"})
     Status quotedStatus;
+
+    /**
+     * <code>repost_status_id</code> is for Fanfou, <code>quoted_status_id_str</code> is for twitter
+     */
+    @JsonField(name = {"quoted_status_id_str", "repost_status_id"})
+    String quotedStatusId;
 
     @JsonField(name = "is_quote_status")
     boolean isQuoteStatus;
-
-    @JsonField(name = "quoted_status_id_str")
-    String quotedStatusId;
-
-    @JsonField(name = "repost_status")
-    Status repostStatus;
-
-    @JsonField(name = "repost_status_id")
-    String repostStatusId;
 
     @JsonField(name = "card")
     CardEntity card;
@@ -503,7 +503,6 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
                 ", descendentReplyCount=" + descendentReplyCount +
                 ", retweetedStatus=" + retweetedStatus +
                 ", quotedStatus=" + quotedStatus +
-                ", repostStatus=" + repostStatus +
                 ", card=" + card +
                 ", possiblySensitive=" + possiblySensitive +
                 ", attachments=" + Arrays.toString(attachments) +
@@ -548,13 +547,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
             inReplyToUserId = null;
             inReplyToScreenName = null;
         }
-        if (quotedStatus == null && repostStatus != null) {
-            quotedStatus = repostStatus;
-            quotedStatusId = repostStatusId;
+        if (quotedStatus != null) {
             isQuoteStatus = true;
-
             // Set repost media to null if identical to original
-            if (photo != null && photo.equals(repostStatus.photo)) {
+            if (photo != null && photo.equals(quotedStatus.photo)) {
                 photo = null;
             }
         }

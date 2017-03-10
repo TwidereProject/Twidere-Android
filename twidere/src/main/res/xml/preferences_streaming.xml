@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidElementNotAllowed -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:title="@string/settings_streaming">
+
+    <org.mariotaku.twidere.preference.StreamingAccountsListPreference
+        android:key="cat_accounts"
+        android:title="@string/preference_title_accounts"
+        app:switchDefault="false"
+        app:switchKey="streaming"/>
+
+</PreferenceScreen>

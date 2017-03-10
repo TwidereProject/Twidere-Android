@@ -54,7 +54,7 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onFollow(createdAt: Date, source: User, target: User): Boolean {
+    override final fun onFollow(createdAt: Date, source: User, target: User): Boolean {
         if (source.id == accountId) {
             friends.add(target.id)
         } else if (target.id == accountId) {
@@ -64,7 +64,7 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onFavorite(createdAt: Date, source: User, target: User,
+    override final fun onFavorite(createdAt: Date, source: User, target: User,
             targetObject: Status): Boolean {
         if (source.id == accountId) {
             // Update my favorite status
@@ -76,14 +76,14 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onUnfollow(createdAt: Date, source: User, followedUser: User): Boolean {
+    override final fun onUnfollow(createdAt: Date, source: User, followedUser: User): Boolean {
         if (source.id == accountId) {
             friends.remove(followedUser.id)
         }
         return true
     }
 
-    override fun onQuotedTweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    override final fun onQuotedTweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
         } else if (target.id == accountId) {
             // Dispatch activity
@@ -93,7 +93,7 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onFavoritedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    override final fun onFavoritedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
         } else if (target.id == accountId) {
             // Dispatch activity
@@ -103,7 +103,7 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onRetweetedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
+    override final fun onRetweetedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
         } else if (target.id == accountId) {
             // Dispatch activity
@@ -113,7 +113,7 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
         return true
     }
 
-    override fun onUserListMemberAddition(createdAt: Date, source: User, target: User, targetObject: UserList): Boolean {
+    override final fun onUserListMemberAddition(createdAt: Date, source: User, target: User, targetObject: UserList): Boolean {
         if (source.id == accountId) {
         } else if (target.id == accountId) {
             // Dispatch activity
