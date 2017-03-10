@@ -23,15 +23,15 @@ public class TwitterStreamObject {
     @JsonField(name = "delete")
     Delete delete;
     @JsonField(name = "disconnect")
-    EmptyObject disconnect;
+    Disconnect disconnect;
     @JsonField(name = "limit")
-    EmptyObject limit;
+    Limit limit;
     @JsonField(name = "warning")
     EmptyObject warning;
     @JsonField(name = "scrub_geo")
-    EmptyObject scrubGeo;
+    ScrubGeo scrubGeo;
     @JsonField(name = "friends")
-    EmptyObject friends;
+    String[] friends;
 
     @Type
     public String determine() {
@@ -103,6 +103,22 @@ public class TwitterStreamObject {
         return delete;
     }
 
+    public ScrubGeo getScrubGeo() {
+        return scrubGeo;
+    }
+
+    public Limit getLimit() {
+        return limit;
+    }
+
+    public Disconnect getDisconnect() {
+        return disconnect;
+    }
+
+    public String[] getFriends() {
+        return friends;
+    }
+
     @StringDef({Type.SENDER, Type.STATUS, Type.DIRECT_MESSAGE, Type.DELETE, Type.LIMIT,
             Type.STALL_WARNING, Type.SCRUB_GEO, Type.FRIENDS, Type.FAVORITE, Type.UNFAVORITE,
             Type.FOLLOW, Type.UNFOLLOW, Type.USER_LIST_MEMBER_ADDED, Type.USER_LIST_MEMBER_DELETED,
@@ -156,6 +172,55 @@ public class TwitterStreamObject {
 
         public DeletionEvent getDirectMessage() {
             return directMessage;
+        }
+    }
+
+    @JsonObject
+    public static class ScrubGeo {
+        @JsonField(name = "user_id")
+        String userId;
+
+        @JsonField(name = "up_to_status_id")
+        String upToStatusId;
+
+        public String getUserId() {
+            return userId;
+        }
+
+        public String getUpToStatusId() {
+            return upToStatusId;
+        }
+    }
+
+    @JsonObject
+    public static class Limit {
+        @JsonField(name = "track")
+        int track;
+
+        public int getTrack() {
+            return track;
+        }
+    }
+
+    @JsonObject
+    public static class Disconnect {
+        @JsonField(name = "code")
+        int code;
+        @JsonField(name = "stream_name")
+        String streamName;
+        @JsonField(name = "reason")
+        String reason;
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getStreamName() {
+            return streamName;
+        }
+
+        public String getReason() {
+            return reason;
         }
     }
 }

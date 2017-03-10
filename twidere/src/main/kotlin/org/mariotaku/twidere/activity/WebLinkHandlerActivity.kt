@@ -149,21 +149,21 @@ class WebLinkHandlerActivity : Activity() {
                     val builder = Uri.Builder()
                     builder.scheme(SCHEME_TWIDERE)
                     builder.authority(AUTHORITY_USER_FRIENDS)
-                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF_REFERENCE.toString())
+                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF.toString())
                     return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                 }
                 "followers" -> {
                     val builder = Uri.Builder()
                     builder.scheme(SCHEME_TWIDERE)
                     builder.authority(AUTHORITY_USER_FOLLOWERS)
-                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF_REFERENCE.toString())
+                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF.toString())
                     return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                 }
                 "favorites" -> {
                     val builder = Uri.Builder()
                     builder.scheme(SCHEME_TWIDERE)
                     builder.authority(AUTHORITY_USER_FAVORITES)
-                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF_REFERENCE.toString())
+                    builder.appendQueryParameter(QUERY_PARAM_USER_KEY, UserKey.SELF.toString())
                     return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
                 }
                 else -> {

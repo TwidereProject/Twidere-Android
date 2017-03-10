@@ -85,6 +85,7 @@ import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
+import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
@@ -303,7 +304,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
-        val status = adapter.getStatus(statusPosition) ?: return
+        val status = adapter.getStatus(statusPosition)
         IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey])
 
@@ -317,23 +318,23 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
-        val status = adapter.getStatus(position) ?: return
+        val status = adapter.getStatus(position)
         handleActionClick(holder as StatusViewHolder, status, id)
     }
 
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
-        val status = adapter.getStatus(position) ?: return false
+        val status = adapter.getStatus(position)
         return AbsStatusesFragment.handleActionLongClick(this, status, adapter.getItemId(position), id)
     }
 
     override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-        val status = adapter.getStatus(position) ?: return
+        val status = adapter.getStatus(position)
         IntentUtils.openStatus(activity, status)
     }
 
     override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
-        val status = adapter.getStatus(position) ?: return
+        val status = adapter.getStatus(position)
         val quotedId = status.quoted_id ?: return
         IntentUtils.openStatus(activity, status.account_key, quotedId)
     }
@@ -349,7 +350,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
-        val status = adapter.getStatus(position)!!
+        val status = adapter.getStatus(position)
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                 status.user_screen_name, preferences[newDocumentApiKey], Referral.TIMELINE_STATUS,
                 null)
@@ -378,7 +379,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return false
         }
         if (position == -1) return false
-        val status = adapter.getStatus(position) ?: return false
+        val status = adapter.getStatus(position)
         val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
         when (action) {
             ACTION_STATUS_REPLY -> {
@@ -520,11 +521,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (position and ILoadMoreSupportAdapter.START != 0L) {
             val start = adapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION)
             val status = adapter.getStatus(start)
-            if (status == null || status.in_reply_to_status_id == null) return
+            if (status.in_reply_to_status_id == null) return
             loadConversation(status, null, status.id)
         } else if (position and ILoadMoreSupportAdapter.END != 0L) {
             val start = adapter.getIndexStart(StatusAdapter.ITEM_IDX_CONVERSATION)
-            val status = adapter.getStatus(start + adapter.statusCount - 1) ?: return
+            val status = adapter.getStatus(start + adapter.getStatusCount(true) - 1)
             loadConversation(status, status.id, null)
         }
         adapter.loadMoreIndicatorPosition = position
@@ -663,7 +664,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint) return
         val contextMenuInfo = menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return
-        val status = adapter.getStatus(contextMenuInfo.position) ?: return
+        val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
         MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper,
@@ -673,7 +674,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
         val contextMenuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
-        val status = adapter.getStatus(contextMenuInfo.position) ?: return false
+        val status = adapter.getStatus(contextMenuInfo.position)
         if (item.itemId == R.id.share) {
             val shareIntent = Utils.createStatusShareIntent(activity, status)
             val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
@@ -1084,7 +1085,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         override fun onClick(v: View) {
-            val status = adapter.getStatus(layoutPosition) ?: return
+            val status = adapter.getStatus(layoutPosition)
             val fragment = adapter.fragment
             val preferences = fragment.preferences
             when (v) {
@@ -1129,7 +1130,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val layoutPosition = layoutPosition
             if (layoutPosition < 0) return false
             val fragment = adapter.fragment
-            val status = adapter.getStatus(layoutPosition) ?: return false
+            val status = adapter.getStatus(layoutPosition)
             val twitter = fragment.twitterWrapper
             val manager = fragment.userColorNameManager
             val activity = fragment.activity
@@ -1488,7 +1489,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     class StatusAdapter(
             val fragment: StatusFragment
-    ) : LoadMoreSupportAdapter<ViewHolder>(fragment.context, Glide.with(fragment)), IStatusesAdapter<List<ParcelableStatus>> {
+    ) : LoadMoreSupportAdapter<ViewHolder>(fragment.context, Glide.with(fragment)),
+            IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
         private val inflater: LayoutInflater
         override val twidereLinkify: TwidereLinkify
 
@@ -1496,7 +1498,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         private var recyclerView: RecyclerView? = null
         private var statusViewHolder: DetailStatusViewHolder? = null
 
-        private val itemCounts = ItemCounts(ITEM_TYPES_SUM)
+        override val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
         private val cardBackgroundColor: Int
         override val nameFirst = preferences[nameFirstKey]
@@ -1555,22 +1557,19 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             twidereLinkify = TwidereLinkify(listener)
         }
 
-        override fun getStatus(position: Int): ParcelableStatus? {
-            val itemType = getItemType(position)
-            when (itemType) {
+        override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
+            when (getItemCountIndex(position, raw)) {
                 ITEM_IDX_CONVERSATION -> {
-                    return data?.get(position - getIndexStart(ITEM_IDX_CONVERSATION))
+                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION)]
                 }
                 ITEM_IDX_REPLY -> {
-                    if (replyStart < 0) return null
-                    return data?.get(position - getIndexStart(ITEM_IDX_CONVERSATION)
-                            - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart)
+                    return data!![position - getIndexStart(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_CONVERSATION) - getTypeCount(ITEM_IDX_STATUS) + replyStart]
                 }
                 ITEM_IDX_STATUS -> {
-                    return status
+                    return status!!
                 }
             }
-            return null
+            throw IndexOutOfBoundsException("index: $position")
         }
 
         fun getIndexStart(index: Int): Int {
@@ -1578,25 +1577,20 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return itemCounts.getItemStartPosition(index)
         }
 
-        override fun getStatusId(position: Int): String? {
-            val status = getStatus(position)
-            return status?.id
+        override fun getStatusId(position: Int, raw: Boolean): String {
+            return getStatus(position, raw).id
         }
 
-        override fun getStatusTimestamp(position: Int): Long {
-            val status = getStatus(position)
-            return status?.timestamp ?: -1
+        override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
+            return getStatus(position, raw).timestamp
         }
 
-        override fun getStatusPositionKey(position: Int): Long {
-            val status = getStatus(position) ?: return -1
-            return if (status.position_key > 0) status.timestamp else getStatusTimestamp(position)
+        override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
+            val status = getStatus(position, raw)
+            return if (status.position_key > 0) status.timestamp else getStatusTimestamp(position, raw)
         }
 
-        override fun getAccountKey(position: Int): UserKey? {
-            val status = getStatus(position)
-            return status?.account_key
-        }
+        override fun getAccountKey(position: Int, raw: Boolean) = getStatus(position, raw).account_key
 
         override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
             if (status != null && accountKey == status!!.account_key && TextUtils.equals(statusId, status!!.id)) {
@@ -1605,13 +1599,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return data?.firstOrNull { accountKey == it.account_key && TextUtils.equals(it.id, statusId) }
         }
 
-        override val statusCount: Int
-            get() = rawStatusCount
-
-        override val rawStatusCount: Int
-            get() {
-                return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS) + getTypeCount(ITEM_IDX_REPLY)
-            }
+        override fun getStatusCount(raw: Boolean): Int {
+            return getTypeCount(ITEM_IDX_CONVERSATION) + getTypeCount(ITEM_IDX_STATUS) + getTypeCount(ITEM_IDX_REPLY)
+        }
 
         override fun isCardActionsShown(position: Int): Boolean {
             if (position == RecyclerView.NO_POSITION) return showCardActions
@@ -1732,8 +1722,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 VIEW_TYPE_DETAIL_STATUS -> {
                     val status = getStatus(position)
                     val detailHolder = holder as DetailStatusViewHolder
-                    detailHolder.displayStatus(statusAccount, status, statusActivity,
-                            translationResult)
+                    detailHolder.displayStatus(statusAccount, status, statusActivity, translationResult)
                 }
                 VIEW_TYPE_LIST_STATUS -> {
                     val status = getStatus(position)
@@ -1743,7 +1732,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     // We only display that indicator for first conversation item
                     val itemType = getItemType(position)
                     val displayInReplyTo = itemType == ITEM_IDX_CONVERSATION && position - getItemTypeStart(position) == 0
-                    statusHolder.displayStatus(status = status!!, displayInReplyTo = displayInReplyTo)
+                    statusHolder.displayStatus(status = status, displayInReplyTo = displayInReplyTo)
                 }
                 VIEW_TYPE_REPLY_ERROR -> {
                     val errorHolder = holder as StatusErrorItemViewHolder
@@ -1803,12 +1792,16 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             throw IllegalStateException()
         }
 
+        private fun getItemCountIndex(position: Int, raw: Boolean): Int {
+            return itemCounts.getItemCountIndex(position)
+        }
+
         fun getItemType(position: Int): Int {
             var typeStart = 0
             for (type in 0..ITEM_TYPES_SUM - 1) {
                 val typeCount = getTypeCount(type)
                 val typeEnd = typeStart + typeCount
-                if (position >= typeStart && position < typeEnd) return type
+                if (position in typeStart until typeEnd) return type
                 typeStart = typeEnd
             }
             throw IllegalStateException("Unknown position " + position)
@@ -1819,15 +1812,18 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             for (type in 0..ITEM_TYPES_SUM - 1) {
                 val typeCount = getTypeCount(type)
                 val typeEnd = typeStart + typeCount
-                if (position >= typeStart && position < typeEnd) return typeStart
+                if (position in typeStart until typeEnd) return typeStart
                 typeStart = typeEnd
             }
             throw IllegalStateException()
         }
 
         override fun getItemId(position: Int): Long {
-            val status = getStatus(position)
-            if (status != null) return status.hashCode().toLong()
+            when (getItemCountIndex(position)) {
+                ITEM_IDX_CONVERSATION, ITEM_IDX_STATUS, ITEM_IDX_REPLY -> {
+                    return getStatus(position).hashCode().toLong()
+                }
+            }
             return getItemType(position).toLong()
         }
 

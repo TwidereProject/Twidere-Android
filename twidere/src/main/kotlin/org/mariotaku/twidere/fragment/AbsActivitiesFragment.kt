@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -40,6 +41,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_GAP
@@ -64,6 +66,7 @@ import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
 import org.mariotaku.twidere.model.util.getActivityStatus
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.glide.PauseRecyclerViewOnScrollListener
@@ -134,7 +137,7 @@ abstract class AbsActivitiesFragment protected constructor() :
             position = recyclerView.getChildLayoutPosition(focusedChild)
         }
         if (position != RecyclerView.NO_POSITION) {
-            val activity = adapter.getActivity(position) ?: return false
+            val activity = adapter.getActivity(position)
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 openActivity(activity)
                 return true
@@ -239,7 +242,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             wasAtTop = firstVisibleItemPosition == 0
-            val activityRange = rangeOfSize(adapter.activityStartIndex, Math.max(0, adapter.activityCount))
+            // Get display range of activities
+            val activityRange = rangeOfSize(adapter.activityStartIndex, adapter.getActivityCount(raw = false))
             val lastReadPosition = if (loadMore || readFromBottom) {
                 lastVisibleItemPosition
             } else {
@@ -247,7 +251,7 @@ abstract class AbsActivitiesFragment protected constructor() :
             }.coerceInOr(activityRange, -1)
             lastReadId = adapter.getTimestamp(lastReadPosition)
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
-            loadMore = activityRange.endInclusive >= 0 && lastVisibleItemPosition >= activityRange.endInclusive
+            loadMore = activityRange.endInclusive in 0..lastVisibleItemPosition
         } else if (rememberPosition && readPositionTag != null) {
             lastReadId = readStateManager.getPosition(readPositionTag)
             lastReadViewTop = 0
@@ -304,17 +308,19 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun onGapClick(holder: GapViewHolder, position: Int) {
-        val activity = adapter.getActivity(position) ?: return
+        val activity = adapter.getActivity(position)
         DebugLog.v(msg = "Load activity gap $activity")
         val accountIds = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)
         getActivities(BaseRefreshTaskParam(accountKeys = accountIds, maxIds = maxIds,
-                sinceIds = null, maxSortIds = maxSortIds, sinceSortIds = null))
+                sinceIds = null, maxSortIds = maxSortIds, sinceSortIds = null).also {
+            it.extraId = activity._id
+        })
     }
 
     override fun onMediaClick(holder: IStatusViewHolder, view: View, media: ParcelableMedia, position: Int) {
-        val status = adapter.getActivity(position)?.getActivityStatus() ?: return
+        val status = adapter.getActivity(position).getActivityStatus() ?: return
         IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey],
                 null)
@@ -355,7 +361,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     override fun onActivityClick(holder: ActivityTitleSummaryViewHolder, position: Int) {
-        val activity = adapter.getActivity(position) ?: return
+        val activity = adapter.getActivity(position)
         val list = ArrayList<Parcelable>()
         if (activity.target_object_statuses?.isNotEmpty() ?: false) {
             list.addAll(activity.target_object_statuses)
@@ -387,7 +393,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     }
 
     private fun getActivityStatus(position: Int): ParcelableStatus? {
-        return adapter.getActivity(position)?.getActivityStatus()
+        return adapter.getActivity(position).getActivityStatus()
     }
 
     override fun onStart() {
@@ -458,7 +464,7 @@ abstract class AbsActivitiesFragment protected constructor() :
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION) return
-        val item = adapter.getActivity(position) ?: return
+        val item = adapter.getActivity(position)
         var positionUpdated = false
         readPositionTag?.let {
             for (accountKey in accountKeys) {
@@ -502,22 +508,33 @@ abstract class AbsActivitiesFragment protected constructor() :
         if (!userVisibleHint) return false
         val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
-
         when (adapter.getItemViewType(position)) {
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return false
-                if (item.itemId == R.id.share) {
-                    val shareIntent = Utils.createStatusShareIntent(activity, status)
-                    val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
-                    startActivity(chooser)
+                when (item.itemId) {
+                    R.id.share -> {
+                        val shareIntent = Utils.createStatusShareIntent(activity, status)
+                        val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))
+                        startActivity(chooser)
 
-                    val am = AccountManager.get(context)
-                    val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
-                    Analyzer.log(Share.status(accountType, status))
-                    return true
+                        val am = AccountManager.get(context)
+                        val accountType = AccountUtils.findByAccountKey(am, status.account_key)?.getAccountType(am)
+                        Analyzer.log(Share.status(accountType, status))
+                        return true
+                    }
+                    R.id.make_gap -> {
+                        if (this !is CursorActivitiesFragment) return true
+                        val resolver = context.contentResolver
+                        val values = ContentValues()
+                        values.put(Activities.IS_GAP, 1)
+                        val where = Expression.equalsArgs(Activities._ID).sql
+                        val whereArgs = arrayOf(adapter.getActivity(position)._id.toString())
+                        resolver.update(contentUri, values, where, whereArgs)
+                        return true
+                    }
+                    else -> MenuUtils.handleStatusClick(activity, this, fragmentManager,
+                            userColorNameManager, twitterWrapper, status, item)
                 }
-                return MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                        userColorNameManager, twitterWrapper, status, item)
             }
         }
         return false

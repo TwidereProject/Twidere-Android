@@ -27,8 +27,6 @@ import org.mariotaku.twidere.view.holder.ActivityTitleSummaryViewHolder
  */
 interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
-    val activityCount: Int
-
     val mediaPreviewStyle: Int
 
     val mediaPreviewEnabled: Boolean
@@ -41,7 +39,9 @@ interface IActivitiesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     val lightFont: Boolean
 
-    fun getActivity(position: Int): ParcelableActivity?
+    fun getActivityCount(raw: Boolean = false): Int
+
+    fun getActivity(position: Int, raw: Boolean = false): ParcelableActivity
 
     fun setData(data: Data?)
 

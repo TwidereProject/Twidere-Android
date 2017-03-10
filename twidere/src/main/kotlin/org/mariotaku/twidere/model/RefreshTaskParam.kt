@@ -25,6 +25,8 @@ interface RefreshTaskParam {
     val hasCursors: Boolean
         get() = cursors != null
 
+    val extraId: Long
+
     val isLoadingMore: Boolean
 
     val shouldAbort: Boolean

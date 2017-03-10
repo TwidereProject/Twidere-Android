@@ -152,9 +152,11 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         super.onLoadMoreContents(position)
         if (position == 0L) return
         // Load the last item
-        val idx = adapter.rawStatusCount - 1
-        if (idx < 0) return
-        val status = adapter.getData()?.get(idx) ?: return
+        val startIdx = adapter.statusStartIndex
+        if (startIdx < 0) return
+        val statusCount = adapter.getStatusCount(true)
+        if (statusCount <= 0) return
+        val status = adapter.getStatus(startIdx + statusCount - 1, true)
         val accountKeys = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
         val param = StatusesRefreshTaskParam(accountKeys, maxIds, null, page + pageDelta)
@@ -166,9 +168,9 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (status == null) return
         val lm = layoutManager
         val rangeStart = Math.max(adapter.statusStartIndex, lm.findFirstVisibleItemPosition())
-        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.statusCount - 1)
+        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.statusStartIndex + adapter.getStatusCount(false) - 1)
         for (i in rangeStart..rangeEnd) {
-            val item = adapter.getStatus(i)
+            val item = adapter.getStatus(i, false)
             if (status == item) {
                 item.favorite_count = status.favorite_count
                 item.retweet_count = status.retweet_count
@@ -183,8 +185,8 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
     override fun triggerRefresh(): Boolean {
         super.triggerRefresh()
         val accountKeys = accountKeys
-        if (adapter.statusCount > 0) {
-            val firstStatus = adapter.getStatus(0)!!
+        if (adapter.getStatusCount(true) > 0) {
+            val firstStatus = adapter.getStatus(0, true)
             val sinceIds = Array(accountKeys.size) {
                 return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null
             }

@@ -269,10 +269,10 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
         if (result == null) return
         val lm = layoutManager
         val rangeStart = Math.max(adapter.activityStartIndex, lm.findFirstVisibleItemPosition())
-        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.activityCount - 1)
+        val rangeEnd = Math.min(lm.findLastVisibleItemPosition(), adapter.activityStartIndex + adapter.getActivityCount(false) - 1)
         loop@ for (i in rangeStart..rangeEnd) {
-            val activity = adapter.getActivity(i)
-            if (result.account_key == activity!!.account_key && result.id == activity.status_id) {
+            val activity = adapter.getActivity(i, false)
+            if (result.account_key == activity.account_key && result.id == activity.status_id) {
                 if (result.id != activity.status_id) {
                     continue@loop
                 }

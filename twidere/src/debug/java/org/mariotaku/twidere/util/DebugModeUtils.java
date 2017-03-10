@@ -31,7 +31,7 @@ import com.squareup.leakcanary.RefWatcher;
 import org.mariotaku.twidere.BuildConfig;
 import org.mariotaku.twidere.util.net.NoIntercept;
 import org.mariotaku.twidere.util.stetho.AccountsDumper;
-import org.mariotaku.twidere.util.stetho.RawStreamDumper;
+import org.mariotaku.twidere.util.stetho.UserStreamDumper;
 
 import java.io.IOException;
 
@@ -70,7 +70,7 @@ public class DebugModeUtils {
                     public Iterable<DumperPlugin> get() {
                         return new Stetho.DefaultDumperPluginsBuilder(application)
                                 .provide(new AccountsDumper(application))
-                                .provide(new RawStreamDumper(application))
+                                .provide(new UserStreamDumper(application))
                                 .finish();
                     }
                 })

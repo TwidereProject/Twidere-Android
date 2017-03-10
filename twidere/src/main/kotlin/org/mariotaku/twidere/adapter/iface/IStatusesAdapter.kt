@@ -19,10 +19,6 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
     @PreviewStyle
     val mediaPreviewStyle: Int
 
-    val statusCount: Int
-
-    val rawStatusCount: Int
-
     val twidereLinkify: TwidereLinkify
 
     val mediaPreviewEnabled: Boolean
@@ -43,15 +39,20 @@ interface IStatusesAdapter<in Data> : IContentAdapter, IGapSupportedAdapter {
 
     fun setData(data: Data?): Boolean
 
-    fun getStatus(position: Int): ParcelableStatus?
+    /**
+     * @param raw Count hidden (filtered) item if `true `
+     */
+    fun getStatusCount(raw: Boolean = false): Int
 
-    fun getStatusId(position: Int): String?
+    fun getStatus(position: Int, raw: Boolean = false): ParcelableStatus
 
-    fun getStatusTimestamp(position: Int): Long
+    fun getStatusId(position: Int, raw: Boolean = false): String
 
-    fun getStatusPositionKey(position: Int): Long
+    fun getStatusTimestamp(position: Int, raw: Boolean = false): Long
 
-    fun getAccountKey(position: Int): UserKey?
+    fun getStatusPositionKey(position: Int, raw: Boolean = false): Long
+
+    fun getAccountKey(position: Int, raw: Boolean = false): UserKey
 
     fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus?
 

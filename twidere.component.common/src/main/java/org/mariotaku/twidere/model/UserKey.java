@@ -41,7 +41,8 @@ import java.util.List;
 @ParcelablePlease
 public class UserKey implements Comparable<UserKey>, Parcelable {
 
-    public static final UserKey SELF_REFERENCE = new UserKey("#self#", "#self#");
+    public static final UserKey SELF = new UserKey("#self#", "#self#");
+    public static final UserKey INVALID = new UserKey("#invalid#", "#invalid#");
 
     public static final Creator<UserKey> CREATOR = new Creator<UserKey>() {
         @Override
@@ -75,8 +76,12 @@ public class UserKey implements Comparable<UserKey>, Parcelable {
 
     }
 
-    public boolean isSelfReference() {
-        return equals(SELF_REFERENCE);
+    public boolean isSelf() {
+        return equals(SELF);
+    }
+
+    public boolean isValid() {
+        return !equals(INVALID);
     }
 
     @NonNull

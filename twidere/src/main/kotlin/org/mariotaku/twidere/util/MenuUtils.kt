@@ -95,7 +95,7 @@ object MenuUtils {
         item.setTitle(icon)
     }
 
-    @JvmOverloads fun addIntentToMenu(context: Context?, menu: Menu?, queryIntent: Intent?,
+    fun addIntentToMenu(context: Context?, menu: Menu?, queryIntent: Intent?,
             groupId: Int = Menu.NONE) {
         if (context == null || menu == null || queryIntent == null) return
         val pm = context.packageManager
@@ -329,14 +329,6 @@ object MenuUtils {
                 val uri = LinkCreator.getStatusWebLink(status)
                 ClipboardUtils.setText(context, uri.toString())
                 Utils.showOkMessage(context, R.string.message_toast_link_copied_to_clipboard, false)
-            }
-            R.id.make_gap -> {
-                val resolver = context.contentResolver
-                val values = ContentValues()
-                values.put(Statuses.IS_GAP, 1)
-                val where = Expression.equalsArgs(Statuses._ID).sql
-                val whereArgs = arrayOf(status._id.toString())
-                resolver.update(Statuses.CONTENT_URI, values, where, whereArgs)
             }
             R.id.mute_users -> {
                 val df = MuteStatusUsersDialogFragment()

@@ -143,7 +143,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun isGapItem(position: Int): Boolean {
         val dataPosition = position - statusStartIndex
-        val statusCount = statusCount
+        val statusCount = getStatusCount(false)
         if (dataPosition < 0 || dataPosition >= statusCount) return false
         // Don't show gap if it's last item
         if (dataPosition == statusCount - 1) return false
@@ -153,18 +153,17 @@ abstract class ParcelableStatusesAdapter(
             val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
             return cursor.getShort(indices.is_gap).toInt() == 1
         }
-        return getStatus(position)!!.is_gap
+        return getStatus(position).is_gap
     }
 
-    override fun getStatus(position: Int): ParcelableStatus? {
-        return getStatus(position, getItemCountIndex(position))
+    override fun getStatus(position: Int, raw: Boolean): ParcelableStatus {
+        return getStatus(position, getItemCountIndex(position, raw), raw)
     }
 
-    override val statusCount: Int
-        get() = displayDataCount
-
-    override val rawStatusCount: Int
-        get() = data?.size ?: 0
+    override fun getStatusCount(raw: Boolean): Int {
+        if (raw) return data?.size ?: 0
+        return displayDataCount
+    }
 
     override fun setData(data: List<ParcelableStatus>?): Boolean {
         var changed = true
@@ -186,7 +185,7 @@ abstract class ParcelableStatusesAdapter(
                 }
             }
             displayDataCount = data.size - filteredCount
-            changed = data != data
+            changed = this.data != data
         }
         this.data = data
         gapLoadingIds.clear()
@@ -218,13 +217,12 @@ abstract class ParcelableStatusesAdapter(
         }
     }
 
-    override fun getStatusId(position: Int): String? {
-        val def: String? = null
+    override fun getStatusId(position: Int, raw: Boolean): String {
         return getFieldValue(position, { cursor, indices ->
             return@getFieldValue cursor.getString(indices.id)
         }, { status ->
             return@getFieldValue status.id
-        }, def)
+        }, "")
     }
 
     fun getStatusSortId(position: Int): Long {
@@ -235,7 +233,7 @@ abstract class ParcelableStatusesAdapter(
         }, -1L)
     }
 
-    override fun getStatusTimestamp(position: Int): Long {
+    override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
             return@getFieldValue cursor.getLong(indices.timestamp)
         }, { status ->
@@ -243,7 +241,7 @@ abstract class ParcelableStatusesAdapter(
         }, -1L)
     }
 
-    override fun getStatusPositionKey(position: Int): Long {
+    override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
             val positionKey = cursor.getLong(indices.position_key)
             if (positionKey > 0) return@getFieldValue positionKey
@@ -255,13 +253,13 @@ abstract class ParcelableStatusesAdapter(
         }, -1L)
     }
 
-    override fun getAccountKey(position: Int): UserKey? {
+    override fun getAccountKey(position: Int, raw: Boolean): UserKey {
         val def: UserKey? = null
         return getFieldValue(position, { cursor, indices ->
             return@getFieldValue UserKey.valueOf(cursor.getString(indices.account_key))
         }, { status ->
             return@getFieldValue status.account_key
-        }, def)
+        }, def, raw)!!
     }
 
     override fun isCardActionsShown(position: Int): Boolean {
@@ -307,12 +305,12 @@ abstract class ParcelableStatusesAdapter(
         when (holder.itemViewType) {
             VIEW_TYPE_STATUS -> {
                 val countIdx = getItemCountIndex(position)
-                val status = getStatus(position, countIdx)!!
+                val status = getStatus(position, countIdx)
                 (holder as IStatusViewHolder).displayStatus(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIdx == ITEM_INDEX_PINNED_STATUS)
             }
             ITEM_VIEW_TYPE_GAP -> {
-                val status = getStatus(position)!!
+                val status = getStatus(position)
                 val loading = gapLoadingIds.any { it.accountKey == status.account_key && it.id == status.id }
                 (holder as GapViewHolder).display(loading)
             }
@@ -351,8 +349,8 @@ abstract class ParcelableStatusesAdapter(
         gapLoadingIds.remove(id)
     }
 
-    fun isStatus(position: Int): Boolean {
-        return position < statusCount
+    fun isStatus(position: Int, raw: Boolean = false): Boolean {
+        return position < getStatusCount(raw)
     }
 
     override fun getItemCount(): Int {
@@ -360,19 +358,19 @@ abstract class ParcelableStatusesAdapter(
     }
 
     override fun findStatusById(accountKey: UserKey, statusId: String): ParcelableStatus? {
-        for (i in 0 until statusCount) {
-            if (accountKey == getAccountKey(i) && statusId == getStatusId(i)) {
-                return getStatus(i)
+        for (i in 0 until getStatusCount(true)) {
+            if (accountKey == getAccountKey(i, true) && statusId == getStatusId(i, true)) {
+                return getStatus(i, true)
             }
         }
         return null
     }
 
-    fun findPositionByPositionKey(positionKey: Long): Int {
+    fun findPositionByPositionKey(positionKey: Long, raw: Boolean = false): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, statusCount)
+        val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
         if (range.isEmpty()) return RecyclerView.NO_POSITION
         if (positionKey < getStatusPositionKey(range.last)) {
             return range.last
@@ -380,11 +378,11 @@ abstract class ParcelableStatusesAdapter(
         return range.indexOfFirst { positionKey >= getStatusPositionKey(it) }
     }
 
-    fun findPositionBySortId(sortId: Long): Int {
+    fun findPositionBySortId(sortId: Long, raw: Boolean = false): Int {
         // Assume statuses are descend sorted by id, so break at first status with id
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
-        val range = rangeOfSize(statusStartIndex, statusCount)
+        val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
         if (range.isEmpty()) return RecyclerView.NO_POSITION
         if (sortId < getStatusSortId(range.last)) {
             return range.last
@@ -392,48 +390,62 @@ abstract class ParcelableStatusesAdapter(
         return range.indexOfFirst { sortId >= getStatusSortId(it) }
     }
 
-    private inline fun <T> getFieldValue(
-            position: Int,
+    private fun getItemCountIndex(position: Int, raw: Boolean): Int {
+        if (!raw) return itemCounts.getItemCountIndex(position)
+        var sum = 0
+        for (i in 0 until itemCounts.size) {
+            sum += when (i) {
+                ITEM_INDEX_STATUS -> data!!.size
+                else -> itemCounts[i]
+            }
+            if (position < sum) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    private inline fun <T> getFieldValue(position: Int,
             readCursorValueAction: (cursor: Cursor, indices: ParcelableStatusCursorIndices) -> T,
             readStatusValueAction: (status: ParcelableStatus) -> T,
-            defValue: T
-    ): T {
+            defValue: T, raw: Boolean = false): T {
         if (data is ObjectCursor) {
-            val dataPosition = position - getItemStartPosition(ITEM_INDEX_STATUS)
-            if (dataPosition < 0 || dataPosition >= rawStatusCount) return defValue
+            val dataPosition = position - statusStartIndex
+            if (dataPosition < 0 || dataPosition >= getStatusCount(true)) return defValue
             val cursor = (data as ObjectCursor).cursor
             if (!cursor.safeMoveToPosition(dataPosition)) return defValue
             val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
             return readCursorValueAction(cursor, indices)
         }
-        return readStatusValueAction(getStatus(position)!!)
+        return readStatusValueAction(getStatus(position))
     }
 
-    private fun getStatus(position: Int, countIndex: Int): ParcelableStatus? {
+    private fun getStatus(position: Int, countIndex: Int, raw: Boolean = false): ParcelableStatus {
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 return pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
             }
             ITEM_INDEX_STATUS -> {
                 val data = this.data!!
-                val dataPosition = position - getItemStartPosition(ITEM_INDEX_STATUS)
+                val dataPosition = position - statusStartIndex
                 val positions = displayPositions
-                if (positions != null) {
+                if (positions != null && !raw) {
                     return data[positions[dataPosition]]
                 } else {
                     return data[dataPosition]
                 }
             }
         }
-        return null
+        val validStart = getItemStartPosition(ITEM_INDEX_PINNED_STATUS)
+        val validEnd = getItemStartPosition(ITEM_INDEX_STATUS) + getStatusCount(raw) - 1
+        throw IndexOutOfBoundsException("index: $position, valid range is $validStart..$validEnd")
     }
 
     private fun updateItemCount() {
-        val position = loadMoreIndicatorPosition
-        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
-        itemCounts[ITEM_INDEX_STATUS] = statusCount
-        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
+        itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
+        itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
     }
 
     companion object {

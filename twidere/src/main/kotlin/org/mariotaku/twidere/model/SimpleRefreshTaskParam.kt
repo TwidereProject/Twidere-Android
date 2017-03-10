@@ -22,6 +22,9 @@ abstract class SimpleRefreshTaskParam : RefreshTaskParam {
     override val maxSortIds: LongArray?
         get() = null
 
+    override val extraId: Long
+        get() = -1
+
     override val isLoadingMore: Boolean
         get() = false
 

@@ -168,7 +168,9 @@ abstract class GetActivitiesTask(
                     Expression.greaterEqualsArgs(Activities.MIN_SORT_POSITION),
                     Expression.lesserEqualsArgs(Activities.MAX_SORT_POSITION))
             val whereArgs = arrayOf(details.key.toString(), deleteBound[0].toString(), deleteBound[1].toString())
-            val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs)
+            // First item after gap doesn't count
+            val localDeleted = if (maxId != null && sinceId == null) 1 else 0
+            val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs) - localDeleted
             // Why loadItemLimit / 2? because it will not acting strange in most cases
             val insertGap = !noItemsBefore && olderCount > 0 && rowsDeleted <= 0 && activities.size > loadItemLimit / 2
             if (insertGap && !valuesList.isEmpty()) {
@@ -182,13 +184,13 @@ abstract class GetActivitiesTask(
         if (maxId != null && sinceId == null) {
             if (activities.isNotEmpty()) {
                 // Only remove when actual result returned, otherwise it seems that gap is too old to load
-                val noGapValues = ContentValues()
-                noGapValues.put(Activities.IS_GAP, false)
-                val noGapWhere = Expression.and(Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                        Expression.equalsArgs(Activities.MIN_REQUEST_POSITION),
-                        Expression.equalsArgs(Activities.MAX_REQUEST_POSITION)).sql
-                val noGapWhereArgs = arrayOf(details.key.toString(), maxId, maxId)
-                cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
+                if (params.extraId != -1L) {
+                    val noGapValues = ContentValues()
+                    noGapValues.put(Activities.IS_GAP, false)
+                    val noGapWhere = Expression.equalsArgs(Activities._ID).sql
+                    val noGapWhereArgs = arrayOf(params.extraId.toString())
+                    cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
+                }
             } else {
                 return GetStatusesTask.ERROR_LOAD_GAP
             }

@@ -11,6 +11,7 @@ open class BaseRefreshTaskParam(
         override val maxSortIds: LongArray? = null,
         override val sinceSortIds: LongArray? = null
 ) : RefreshTaskParam {
+    override var extraId: Long = -1L
     override var isLoadingMore: Boolean = false
     override var shouldAbort: Boolean = false
 

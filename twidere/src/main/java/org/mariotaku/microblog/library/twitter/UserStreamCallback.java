@@ -25,7 +25,6 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
@@ -46,6 +45,7 @@ import java.io.InputStreamReader;
 /**
  * Created by mariotaku on 15/5/26.
  */
+@SuppressWarnings({"WeakerAccess"})
 public abstract class UserStreamCallback implements RawCallback<MicroBlogException> {
 
     private boolean connected;
@@ -53,7 +53,7 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
     private boolean disconnected;
 
     @Override
-    public final void result(final HttpResponse response) throws MicroBlogException, IOException {
+    public final void result(@NonNull final HttpResponse response) throws MicroBlogException, IOException {
         if (!response.isSuccessful()) {
             final MicroBlogException cause = new MicroBlogException();
             cause.setHttpResponse(response);
@@ -69,77 +69,8 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
                 }
                 if (TextUtils.isEmpty(line)) continue;
                 final TwitterStreamObject object = LoganSquare.parse(line, TwitterStreamObject.class);
-                switch (object.determine()) {
-                    case Type.SENDER: {
-                        break;
-                    }
-                    case Type.STATUS: {
-                        onStatus(LoganSquareMapperFinder.mapperFor(Status.class).parse(line));
-                        break;
-                    }
-                    case Type.DIRECT_MESSAGE: {
-                        onDirectMessage(object.getDirectMessage());
-                        break;
-                    }
-                    case Type.DELETE: {
-                        final TwitterStreamObject.Delete delete = object.getDelete();
-                        if (delete.getStatus() != null) {
-                            onStatusDeleted(delete.getStatus());
-                        } else if (delete.getDirectMessage() != null) {
-                            onDirectMessageDeleted(delete.getDirectMessage());
-                        }
-                        break;
-                    }
-                    case Type.LIMIT:
-                        break;
-                    case Type.STALL_WARNING:
-                        break;
-                    case Type.SCRUB_GEO:
-                        break;
-                    case Type.FRIENDS:
-                        break;
-                    case Type.FAVORITE: {
-                        StatusFavoriteEvent event = LoganSquareMapperFinder.mapperFor(StatusFavoriteEvent.class).parse(line);
-                        onFavorite(event.getSource(), event.getTarget(), event.getTargetObject());
-                        break;
-                    }
-                    case Type.UNFAVORITE: {
-                        StatusFavoriteEvent event = LoganSquareMapperFinder.mapperFor(StatusFavoriteEvent.class).parse(line);
-                        onUnfavorite(event.getSource(), event.getTarget(), event.getTargetObject());
-                        break;
-                    }
-                    case Type.FOLLOW:
-                        break;
-                    case Type.UNFOLLOW:
-                        break;
-                    case Type.USER_LIST_MEMBER_ADDED:
-                        break;
-                    case Type.USER_LIST_MEMBER_DELETED:
-                        break;
-                    case Type.USER_LIST_SUBSCRIBED:
-                        break;
-                    case Type.USER_LIST_UNSUBSCRIBED:
-                        break;
-                    case Type.USER_LIST_CREATED:
-                        break;
-                    case Type.USER_LIST_UPDATED:
-                        break;
-                    case Type.USER_LIST_DESTROYED:
-                        break;
-                    case Type.USER_UPDATE:
-                        break;
-                    case Type.USER_DELETE:
-                        break;
-                    case Type.USER_SUSPEND:
-                        break;
-                    case Type.BLOCK:
-                        break;
-                    case Type.UNBLOCK:
-                        break;
-                    case Type.DISCONNECTION:
-                        break;
-                    case Type.UNKNOWN:
-                        break;
+                if (!handleEvent(object, line)) {
+                    onUnhandledEvent(object, line);
                 }
             }
         } catch (IOException e) {
@@ -147,13 +78,89 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         } finally {
             Log.d("Twidere.Stream", "Cleaning up...");
             reader.close();
-            response.close();
         }
+    }
+
+    private boolean handleEvent(final TwitterStreamObject object, final String json) throws IOException {
+        switch (object.determine()) {
+            case Type.SENDER: {
+                break;
+            }
+            case Type.STATUS: {
+                return onStatus(LoganSquare.parse(json, Status.class));
+            }
+            case Type.DIRECT_MESSAGE: {
+                return onDirectMessage(object.getDirectMessage());
+            }
+            case Type.DELETE: {
+                final TwitterStreamObject.Delete delete = object.getDelete();
+                if (delete.getStatus() != null) {
+                    return onStatusDeleted(delete.getStatus());
+                } else if (delete.getDirectMessage() != null) {
+                    return onDirectMessageDeleted(delete.getDirectMessage());
+                }
+                break;
+            }
+            case Type.LIMIT: {
+                return onTrackLimitationNotice(object.getLimit().getTrack());
+            }
+            case Type.STALL_WARNING:
+                break;
+            case Type.SCRUB_GEO: {
+                TwitterStreamObject.ScrubGeo scrubGeo = object.getScrubGeo();
+                return onScrubGeo(scrubGeo.getUserId(), scrubGeo.getUpToStatusId());
+            }
+            case Type.FRIENDS: {
+                return onFriendList(object.getFriends());
+            }
+            case Type.FAVORITE: {
+                StatusFavoriteEvent event = LoganSquare.parse(json, StatusFavoriteEvent.class);
+                return onFavorite(event.getSource(), event.getTarget(), event.getTargetObject());
+            }
+            case Type.UNFAVORITE: {
+                StatusFavoriteEvent event = LoganSquare.parse(json, StatusFavoriteEvent.class);
+                return onUnfavorite(event.getSource(), event.getTarget(), event.getTargetObject());
+            }
+            case Type.FOLLOW:
+                break;
+            case Type.UNFOLLOW:
+                break;
+            case Type.USER_LIST_MEMBER_ADDED:
+                break;
+            case Type.USER_LIST_MEMBER_DELETED:
+                break;
+            case Type.USER_LIST_SUBSCRIBED:
+                break;
+            case Type.USER_LIST_UNSUBSCRIBED:
+                break;
+            case Type.USER_LIST_CREATED:
+                break;
+            case Type.USER_LIST_UPDATED:
+                break;
+            case Type.USER_LIST_DESTROYED:
+                break;
+            case Type.USER_UPDATE:
+                break;
+            case Type.USER_DELETE:
+                break;
+            case Type.USER_SUSPEND:
+                break;
+            case Type.BLOCK:
+                break;
+            case Type.UNBLOCK:
+                break;
+            case Type.DISCONNECTION:
+                TwitterStreamObject.Disconnect disconnect = object.getDisconnect();
+                return onDisconnect(disconnect.getCode(), disconnect.getReason());
+            case Type.UNKNOWN:
+                break;
+        }
+        return false;
     }
 
 
     @Override
-    public final void error(final MicroBlogException cause) {
+    public final void error(@NonNull final MicroBlogException cause) {
         onException(cause);
     }
 
@@ -161,49 +168,102 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         disconnected = true;
     }
 
-    public abstract void onConnected();
+    protected boolean onConnected() {
+        return false;
+    }
 
-    public abstract void onStatus(Status status) throws IOException;
+    protected boolean onDisconnect(int code, String reason) {
+        return false;
+    }
 
-    public abstract void onDirectMessage(@NonNull DirectMessage directMessage) throws IOException;
+    protected boolean onStatus(@NonNull Status status) {
+        return false;
+    }
 
-    public abstract void onBlock(User source, User blockedUser);
+    protected boolean onDirectMessage(@NonNull DirectMessage directMessage) {
+        return false;
+    }
 
-    public abstract void onDirectMessageDeleted(DeletionEvent event);
+    protected boolean onBlock(User source, User blockedUser) {
+        return false;
+    }
 
-    public abstract void onStatusDeleted(DeletionEvent event);
+    protected boolean onDirectMessageDeleted(@NonNull DeletionEvent event) {
+        return false;
+    }
 
-    public abstract void onException(Throwable ex);
+    protected boolean onStatusDeleted(@NonNull DeletionEvent event) {
+        return false;
+    }
 
-    public abstract void onFavorite(User source, User target, Status targetStatus);
+    protected boolean onException(@NonNull Throwable ex) {
+        return false;
+    }
 
-    public abstract void onFollow(User source, User followedUser);
+    protected boolean onFavorite(@NonNull User source, @NonNull User target, @NonNull Status targetStatus) {
+        return false;
+    }
 
-    public abstract void onFriendList(long[] friendIds);
+    protected boolean onFollow(User source, User followedUser) {
+        return false;
+    }
 
-    public abstract void onScrubGeo(long userId, long upToStatusId);
+    protected boolean onFriendList(@NonNull String[] friendIds) {
+        return false;
+    }
 
-    public abstract void onStallWarning(Warning warn);
+    protected boolean onScrubGeo(String userId, String upToStatusId) {
+        return false;
+    }
 
-    public abstract void onTrackLimitationNotice(int numberOfLimitedStatuses);
+    protected boolean onStallWarning(Warning warn) {
+        return false;
+    }
 
-    public abstract void onUnblock(User source, User unblockedUser);
+    protected boolean onTrackLimitationNotice(int numberOfLimitedStatuses) {
+        return false;
+    }
 
-    public abstract void onUnfavorite(User source, User target, Status targetStatus);
+    protected boolean onUnblock(User source, User unblockedUser) {
+        return false;
+    }
 
-    public abstract void onUserListCreation(User listOwner, UserList list);
+    protected boolean onUnfavorite(User source, User target, Status targetStatus) {
+        return false;
+    }
 
-    public abstract void onUserListDeletion(User listOwner, UserList list);
+    protected boolean onUserListCreation(User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserListMemberAddition(User addedMember, User listOwner, UserList list);
+    protected boolean onUserListDeletion(User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserListMemberDeletion(User deletedMember, User listOwner, UserList list);
+    protected boolean onUserListMemberAddition(User addedMember, User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserListSubscription(User subscriber, User listOwner, UserList list);
+    protected boolean onUserListMemberDeletion(User deletedMember, User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserListUnsubscription(User subscriber, User listOwner, UserList list);
+    protected boolean onUserListSubscription(User subscriber, User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserListUpdate(User listOwner, UserList list);
+    protected boolean onUserListUnsubscription(User subscriber, User listOwner, UserList list) {
+        return false;
+    }
 
-    public abstract void onUserProfileUpdate(User updatedUser);
+    protected boolean onUserListUpdate(User listOwner, UserList list) {
+        return false;
+    }
+
+    protected boolean onUserProfileUpdate(User updatedUser) {
+        return false;
+    }
+
+    protected void onUnhandledEvent(@NonNull final TwitterStreamObject obj, @NonNull final String json) throws IOException {
+    }
 }
