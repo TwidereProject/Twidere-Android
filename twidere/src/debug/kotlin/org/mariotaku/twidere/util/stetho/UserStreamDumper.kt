@@ -136,6 +136,10 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
         val userStream = account.newMicroBlogInstance(context, cls = FanfouStream::class.java)
         dumpContext.stdout.println("Beginning user stream...")
         dumpContext.stdout.flush()
+        if (includeTimeline) {
+            dumpContext.stderr.println("Timeline only is effectively useless for Fanfou")
+            dumpContext.stderr.flush()
+        }
         val callback = object : FanfouTimelineStreamCallback(account.key.id) {
 
             override fun onException(ex: Throwable): Boolean {
@@ -145,10 +149,7 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
             }
 
             override fun onHomeTimeline(status: Status): Boolean {
-                if (!includeTimeline && includeInteractions) return true
-                dumpContext.stdout.println("Home: @${status.user.screenName}: ${status.text.trim('\n')}")
-                dumpContext.stdout.flush()
-                return true
+                return false
             }
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
