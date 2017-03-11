@@ -61,6 +61,9 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     // Data fields
     private val systemWindowsInsets = Rect()
 
+    private val refreshCompleteListener: RefreshCompleteListener?
+        get() = parentFragment as? RefreshCompleteListener
+
     override fun canScroll(dy: Float): Boolean {
         return drawerCallback.canScroll(dy)
     }
@@ -139,6 +142,9 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
             val currentRefreshing = swipeLayout.isRefreshing
             if (!currentRefreshing) {
                 updateRefreshProgressOffset()
+            }
+            if (!value) {
+                refreshCompleteListener?.onRefreshComplete(this)
             }
             if (value == currentRefreshing) return
             val layoutRefreshing = value && adapter.loadMoreIndicatorPosition != ILoadMoreSupportAdapter.NONE
@@ -264,9 +270,8 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
     protected abstract fun onCreateAdapter(context: Context): A
 
 
-    protected open fun createItemDecoration(context: Context,
-                                            recyclerView: RecyclerView,
-                                            layoutManager: L): ItemDecoration? {
+    protected open fun createItemDecoration(context: Context, recyclerView: RecyclerView,
+            layoutManager: L): ItemDecoration? {
         return null
     }
 
@@ -312,5 +317,9 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         // 64: SwipeRefreshLayout.DEFAULT_CIRCLE_TARGET
         val swipeDistance = Math.round(64 * density)
         swipeLayout.setProgressViewOffset(false, swipeStart, swipeStart + swipeDistance)
+    }
+
+    interface RefreshCompleteListener {
+        fun onRefreshComplete(fragment: AbsContentRecyclerViewFragment<*, *>)
     }
 }

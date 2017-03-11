@@ -19,8 +19,11 @@
 
 package org.mariotaku.twidere.util.stetho
 
+import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
+import java.io.OutputStream
+import java.io.PrintWriter
 
 /**
  * Created by mariotaku on 2017/3/9.
@@ -31,4 +34,12 @@ internal fun Options.addRequiredOption(opt: String, longOpt: String? = null, has
     val option = Option(opt, longOpt, hasArg, description)
     option.isRequired = true
     addOption(option)
+}
+
+internal fun HelpFormatter.printHelp(output: OutputStream, syntax: String, options: Options,
+        header: String? = null, footer: String? = null, autoUsage: Boolean = false) {
+    val writer = PrintWriter(output)
+    printHelp(writer, width, syntax, header, options, leftPadding, descPadding, footer,
+            autoUsage)
+    writer.flush()
 }

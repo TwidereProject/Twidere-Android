@@ -1,7 +1,7 @@
 /*
- *                 Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,16 +17,17 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.microblog.library.twitter;
+package org.mariotaku.twidere.fragment
 
-import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.twidere.R
 
-/**
- * Created by mariotaku on 15/5/26.
- */
-public interface TwitterUserStream {
+class AccountStreamingSettingsFragment : BaseAccountPreferenceFragment() {
 
-    @GET("/user.json")
-    void getUserStream(String with, UserStreamCallback callback);
+    override val preferencesResource: Int
+        get() = R.xml.preferences_account_streaming
+
+    override val switchPreferenceDefault: Boolean = false
+
+    override val switchPreferenceKey: String? = "streaming"
 
 }

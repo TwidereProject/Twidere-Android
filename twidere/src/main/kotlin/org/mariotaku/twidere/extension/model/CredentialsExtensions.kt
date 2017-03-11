@@ -5,6 +5,7 @@ import android.net.Uri
 import android.text.TextUtils
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.microblog.library.fanfou.FanfouStream
 import org.mariotaku.microblog.library.twitter.*
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
@@ -90,6 +91,10 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
             domain = "caps"
             versionSuffix = null
         }
+        FanfouStream::class.java.isAssignableFrom(cls) -> {
+            domain = "stream"
+            versionSuffix = null
+        }
         else -> throw TwitterConverterFactory.UnsupportedTypeException(cls)
     }
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
@@ -106,14 +111,13 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
 }
 
 fun <T> Credentials.newMicroBlogInstance(context: Context, @AccountType accountType: String? = null,
-        extraRequestParams: Map<String, String>? = null, cls: Class<T>): T {
+        cls: Class<T>): T {
     return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(), accountType,
-            extraRequestParams, cls)
+            cls)
 }
 
 fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authorization,
-        @AccountType accountType: String? = null, extraRequestParams: Map<String, String>? = null,
-        cls: Class<T>): T {
+        @AccountType accountType: String? = null, cls: Class<T>): T {
     val factory = RestAPIFactory<MicroBlogException>()
     val extraHeaders = if (auth is OAuthAuthorization) {
         val officialKeyType = TwitterContentUtils.getOfficialKeyType(context,
@@ -134,7 +138,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
                     holder.connectionPool, holder.cache)
             factory.setHttpClient(uploadHttpClient)
         }
-        TwitterUserStream::class.java -> {
+        TwitterUserStream::class.java, FanfouStream::class.java -> {
             val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
             // Use longer read timeout for streaming
             conf.readTimeoutSecs = 300
@@ -158,7 +162,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
     }
     val converterFactory = TwitterConverterFactory()
     factory.setRestConverterFactory(converterFactory)
-    factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(extraRequestParams))
+    factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(null))
     factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(extraHeaders))
     factory.setExceptionFactory(MicroBlogAPIFactory.TwidereExceptionFactory(converterFactory))
     return factory.build<T>(cls)

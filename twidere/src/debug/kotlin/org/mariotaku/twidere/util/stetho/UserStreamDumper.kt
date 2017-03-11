@@ -21,68 +21,92 @@ package org.mariotaku.twidere.util.stetho
 
 import android.accounts.AccountManager
 import android.content.Context
-import com.facebook.stetho.dumpapp.DumpException
 import com.facebook.stetho.dumpapp.DumperContext
 import com.facebook.stetho.dumpapp.DumperPlugin
 import org.apache.commons.cli.GnuParser
+import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
-import org.apache.commons.cli.ParseException
+import org.mariotaku.ktextension.subArray
+import org.mariotaku.microblog.library.fanfou.FanfouStream
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
+import org.mariotaku.microblog.library.twitter.annotation.StreamWith
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.extension.model.getCredentials
+import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ActivityTitleSummaryMessage
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.DependencyHolder
-import org.mariotaku.twidere.util.streaming.TimelineStreamCallback
+import org.mariotaku.twidere.util.streaming.FanfouTimelineStreamCallback
+import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 
 /**
  * Created by mariotaku on 2017/3/9.
  */
 class UserStreamDumper(val context: Context) : DumperPlugin {
 
+    private val syntax = "$name <account_key> [-ti]"
+
     override fun dump(dumpContext: DumperContext) {
         val parser = GnuParser()
         val options = Options()
-        options.addRequiredOption("a", "account", true, "Account key")
         options.addOption("t", "timeline", false, "Include timeline")
         options.addOption("i", "interactions", false, "Include interactions")
-        val cmdLine = try {
-            parser.parse(options, dumpContext.argsAsList.toTypedArray())
-        } catch (e: ParseException) {
-            throw DumpException(e.message)
+        val argsList = dumpContext.argsAsList
+        val formatter = HelpFormatter()
+        if (argsList.isEmpty()) {
+            formatter.printHelp(dumpContext.stderr, syntax, options)
+            return
         }
+        val cmdLine = parser.parse(options, argsList.subArray(1..argsList.lastIndex))
         val manager = DependencyHolder.get(context).userColorNameManager
         val includeTimeline = cmdLine.hasOption("timeline")
         val includeInteractions = cmdLine.hasOption("interactions")
-        val accountKey = UserKey.valueOf(cmdLine.getOptionValue("account"))
+        val accountKey = UserKey.valueOf(argsList[0])
         val am = AccountManager.get(context)
-        val account = AccountUtils.findByAccountKey(am, accountKey) ?: return
-        val credentials = account.getCredentials(am)
-        val userStream = credentials.newMicroBlogInstance(context, account.type,
-                cls = TwitterUserStream::class.java)
+        val account = AccountUtils.getAccountDetails(am, accountKey, true) ?: return
+        when (account.type) {
+            AccountType.TWITTER -> {
+                beginTwitterStream(account, dumpContext, includeInteractions, includeTimeline, manager)
+            }
+            AccountType.FANFOU -> {
+                beginFanfouStream(account, dumpContext, includeInteractions, includeTimeline, manager)
+            }
+            else -> {
+                dumpContext.stderr.println("Unsupported account type ${account.type}")
+                dumpContext.stderr.flush()
+            }
+        }
+
+    }
+
+    private fun beginTwitterStream(account: AccountDetails, dumpContext: DumperContext, includeInteractions: Boolean,
+            includeTimeline: Boolean, manager: UserColorNameManager) {
+        val userStream = account.newMicroBlogInstance(context, cls = TwitterUserStream::class.java)
         dumpContext.stdout.println("Beginning user stream...")
         dumpContext.stdout.flush()
-        val callback = object : TimelineStreamCallback(accountKey.id) {
+        val callback = object : TwitterTimelineStreamCallback(account.key.id) {
             override fun onException(ex: Throwable): Boolean {
                 ex.printStackTrace(dumpContext.stderr)
                 dumpContext.stderr.flush()
                 return true
             }
 
-            override fun onHomeTimeline(status: Status) {
-                if (!includeTimeline && includeInteractions) return
+            override fun onHomeTimeline(status: Status): Boolean {
+                if (!includeTimeline && includeInteractions) return true
                 dumpContext.stdout.println("Home: @${status.user.screenName}: ${status.text.trim('\n')}")
                 dumpContext.stdout.flush()
+                return true
             }
 
-            override fun onActivityAboutMe(activity: Activity) {
-                if (!includeInteractions && includeTimeline) return
-                val pActivity = ParcelableActivityUtils.fromActivity(activity, accountKey)
+            override fun onActivityAboutMe(activity: Activity): Boolean {
+                if (!includeInteractions && includeTimeline) return true
+                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key)
                 val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
                         true, true)
                 if (message != null) {
@@ -91,6 +115,7 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
                     dumpContext.stdout.println("Activity unsupported: ${activity.action}")
                 }
                 dumpContext.stdout.flush()
+                return true
             }
 
             override fun onDirectMessage(directMessage: DirectMessage): Boolean {
@@ -100,12 +125,58 @@ class UserStreamDumper(val context: Context) : DumperPlugin {
             }
         }
         try {
-            userStream.getUserStream("user", callback)
+            userStream.getUserStream(StreamWith.USER, callback)
         } catch (e: Exception) {
             e.printStackTrace(dumpContext.stderr)
         }
     }
 
-    override fun getName() = "user_stream"
+    private fun beginFanfouStream(account: AccountDetails, dumpContext: DumperContext, includeInteractions: Boolean,
+            includeTimeline: Boolean, manager: UserColorNameManager) {
+        val userStream = account.newMicroBlogInstance(context, cls = FanfouStream::class.java)
+        dumpContext.stdout.println("Beginning user stream...")
+        dumpContext.stdout.flush()
+        val callback = object : FanfouTimelineStreamCallback(account.key.id) {
+
+            override fun onException(ex: Throwable): Boolean {
+                ex.printStackTrace(dumpContext.stderr)
+                dumpContext.stderr.flush()
+                return true
+            }
+
+            override fun onHomeTimeline(status: Status): Boolean {
+                if (!includeTimeline && includeInteractions) return true
+                dumpContext.stdout.println("Home: @${status.user.screenName}: ${status.text.trim('\n')}")
+                dumpContext.stdout.flush()
+                return true
+            }
+
+            override fun onActivityAboutMe(activity: Activity): Boolean {
+                if (!includeInteractions && includeTimeline) return true
+                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key)
+                val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
+                        true, true)
+                if (message != null) {
+                    dumpContext.stdout.println("Activity: ${message.title}: ${message.summary}")
+                } else {
+                    dumpContext.stdout.println("Activity unsupported: ${activity.action}")
+                }
+                dumpContext.stdout.flush()
+                return true
+            }
+
+            override fun onUnhandledEvent(event: String, json: String) {
+                dumpContext.stdout.println("Unhandled: $event: $json")
+                dumpContext.stdout.flush()
+            }
+        }
+        try {
+            userStream.getUserStream(callback)
+        } catch (e: Exception) {
+            e.printStackTrace(dumpContext.stderr)
+        }
+    }
+
+    override fun getName() = "userstream"
 
 }

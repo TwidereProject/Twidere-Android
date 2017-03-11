@@ -147,7 +147,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         OnSizeChangedListener, OnTouchListener, DrawerCallback, SupportFragmentCallback,
         SystemWindowsInsetsCallback, RefreshScrollTopInterface, OnPageChangeListener,
         KeyboardShortcutCallback, UserColorChangedListener, UserNicknameChangedListener,
-        IToolBarSupportFragment, StatusesFragmentDelegate, UserTimelineFragmentDelegate {
+        IToolBarSupportFragment, StatusesFragmentDelegate, UserTimelineFragmentDelegate,
+        AbsContentRecyclerViewFragment.RefreshCompleteListener {
 
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
@@ -724,6 +725,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         profileBanner.setOnSizeChangedListener(this)
         profileBannerSpace.setOnTouchListener(this)
 
+        userProfileSwipeLayout.setOnRefreshListener {
+            if (!triggerRefresh()) {
+                userProfileSwipeLayout.isRefreshing = false
+            }
+        }
 
         profileNameBackground.setBackgroundColor(cardBackgroundColor)
         profileDetailsContainer.setBackgroundColor(cardBackgroundColor)
@@ -1292,6 +1298,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val fragment = currentVisibleFragment as? RefreshScrollTopInterface ?: return false
         fragment.triggerRefresh()
         return true
+    }
+
+    override fun onRefreshComplete(fragment: AbsContentRecyclerViewFragment<*, *>) {
+        userProfileSwipeLayout.isRefreshing = false
     }
 
     private fun getFriendship() {

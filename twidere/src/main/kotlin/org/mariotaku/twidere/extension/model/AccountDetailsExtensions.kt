@@ -10,7 +10,6 @@ import org.mariotaku.twidere.model.account.TwitterAccountExtras
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.account.cred.OAuthCredentials
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterContentUtils
 
 fun AccountDetails.isOfficial(context: Context): Boolean {
@@ -40,11 +39,9 @@ fun <T> AccountDetails.newMicroBlogInstance(
         context: Context,
         includeEntities: Boolean = true,
         includeRetweets: Boolean = true,
-        extraRequestParams: Map<String, String>? = MicroBlogAPIFactory.getExtraParams(type,
-                includeEntities, includeRetweets),
         cls: Class<T>
 ): T {
-    return credentials.newMicroBlogInstance(context, type, extraRequestParams, cls)
+    return credentials.newMicroBlogInstance(context, type, cls)
 }
 
 val AccountDetails.isOAuth: Boolean

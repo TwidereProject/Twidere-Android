@@ -14,7 +14,11 @@ import android.util.Log
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
-import org.mariotaku.microblog.library.twitter.UserStreamCallback
+import org.mariotaku.microblog.library.twitter.annotation.StreamWith
+import org.mariotaku.microblog.library.twitter.callback.UserStreamCallback
+import org.mariotaku.microblog.library.twitter.model.Activity
+import org.mariotaku.microblog.library.twitter.model.DirectMessage
+import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
@@ -28,6 +32,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.TwidereArrayUtils
+import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 
 class StreamingService : Service() {
 
@@ -97,7 +102,7 @@ class StreamingService : Service() {
             callbacks.put(account.key, callback)
             object : Thread() {
                 override fun run() {
-                    twitter.getUserStream("user", callback)
+                    twitter.getUserStream(StreamWith.USER, callback)
                     Log.d(LOGTAG, String.format("Stream %s disconnected", account.key))
                     callbacks.remove(account.key)
                     updateStreamState()
@@ -140,7 +145,12 @@ class StreamingService : Service() {
     internal class TwidereUserStreamCallback(
             private val context: Context,
             private val account: AccountDetails
-    ) : UserStreamCallback() {
+    ) : TwitterTimelineStreamCallback(account.key.id) {
+        override fun onHomeTimeline(status: Status): Boolean = true
+
+        override fun onActivityAboutMe(activity: Activity): Boolean = true
+
+        override fun onDirectMessage(directMessage: DirectMessage): Boolean = true
 
         private var statusStreamStarted: Boolean = false
         private val mentionsStreamStarted: Boolean = false

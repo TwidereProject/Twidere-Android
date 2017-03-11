@@ -19,7 +19,7 @@
 
 package org.mariotaku.twidere.util.streaming
 
-import org.mariotaku.microblog.library.twitter.UserStreamCallback
+import org.mariotaku.microblog.library.twitter.callback.SimpleUserStreamCallback
 import org.mariotaku.microblog.library.twitter.model.*
 import java.util.*
 
@@ -27,7 +27,7 @@ import java.util.*
  * Created by mariotaku on 2017/3/10.
  */
 
-abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallback() {
+abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUserStreamCallback() {
 
     private val friends = mutableSetOf<String>()
 
@@ -38,39 +38,41 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
 
     override final fun onStatus(status: Status): Boolean {
         val userId = status.user.id
+        var handled = false
         if (accountId == userId || userId in friends) {
-            onHomeTimeline(status)
+            handled = handled or onHomeTimeline(status)
         }
         if (status.inReplyToUserId == accountId) {
             // Reply
-            onActivityAboutMe(InternalActivityCreator.status(accountId, status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
         } else if (userId != accountId && status.retweetedStatus?.user?.id == accountId) {
             // Retweet
-            onActivityAboutMe(InternalActivityCreator.retweet(status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.retweet(status))
         } else if (status.userMentionEntities?.find { it.id == accountId } != null) {
             // Mention
-            onActivityAboutMe(InternalActivityCreator.status(accountId, status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
         }
-        return true
+        return handled
     }
 
     override final fun onFollow(createdAt: Date, source: User, target: User): Boolean {
         if (source.id == accountId) {
             friends.add(target.id)
+            return true
         } else if (target.id == accountId) {
             // Dispatch follow activity
-            onActivityAboutMe(InternalActivityCreator.follow(createdAt, source, target))
+            return onActivityAboutMe(InternalActivityCreator.follow(createdAt, source, target))
         }
-        return true
+        return false
     }
 
     override final fun onFavorite(createdAt: Date, source: User, target: User,
             targetObject: Status): Boolean {
         if (source.id == accountId) {
-            // Update my favorite status
+            // TODO Update my favorite status
         } else if (target.id == accountId) {
             // Dispatch favorite activity
-            onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.FAVORITE,
+            return onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.FAVORITE,
                     createdAt, source, targetObject))
         }
         return true
@@ -79,15 +81,17 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
     override final fun onUnfollow(createdAt: Date, source: User, followedUser: User): Boolean {
         if (source.id == accountId) {
             friends.remove(followedUser.id)
+            return true
         }
-        return true
+        return false
     }
 
     override final fun onQuotedTweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
+            return false
         } else if (target.id == accountId) {
             // Dispatch activity
-            onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.QUOTE,
+            return onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.QUOTE,
                     createdAt, source, targetObject))
         }
         return true
@@ -95,9 +99,10 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
 
     override final fun onFavoritedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
+            return false
         } else if (target.id == accountId) {
             // Dispatch activity
-            onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.FAVORITED_RETWEET,
+            return onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.FAVORITED_RETWEET,
                     createdAt, source, targetObject))
         }
         return true
@@ -105,25 +110,29 @@ abstract class TimelineStreamCallback(val accountId: String) : UserStreamCallbac
 
     override final fun onRetweetedRetweet(createdAt: Date, source: User, target: User, targetObject: Status): Boolean {
         if (source.id == accountId) {
+            return false
         } else if (target.id == accountId) {
             // Dispatch activity
-            onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.RETWEETED_RETWEET,
+            return onActivityAboutMe(InternalActivityCreator.targetStatus(Activity.Action.RETWEETED_RETWEET,
                     createdAt, source, targetObject))
         }
-        return true
+        return false
     }
 
     override final fun onUserListMemberAddition(createdAt: Date, source: User, target: User, targetObject: UserList): Boolean {
         if (source.id == accountId) {
+            return false
         } else if (target.id == accountId) {
             // Dispatch activity
-            onActivityAboutMe(InternalActivityCreator.targetObject(Activity.Action.LIST_MEMBER_ADDED,
+            return onActivityAboutMe(InternalActivityCreator.targetObject(Activity.Action.LIST_MEMBER_ADDED,
                     createdAt, source, target, targetObject))
         }
-        return true
+        return false
     }
 
-    protected abstract fun onHomeTimeline(status: Status)
+    override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
 
-    protected abstract fun onActivityAboutMe(activity: Activity)
+    protected abstract fun onHomeTimeline(status: Status): Boolean
+
+    protected abstract fun onActivityAboutMe(activity: Activity): Boolean
 }

@@ -43,6 +43,7 @@ import org.mariotaku.commons.logansquare.JsonStringConverter;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.model.account.AccountExtras;
 import org.mariotaku.twidere.model.account.cred.Credentials;
+import org.mariotaku.twidere.model.util.RGBHexColorConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
 import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 
@@ -74,7 +75,7 @@ public class AccountDetails implements Parcelable, Comparable<AccountDetails> {
     public ParcelableUser user;
 
     @ColorInt
-    @JsonField(name = "color")
+    @JsonField(name = "color", typeConverter = RGBHexColorConverter.class)
     public int color;
 
     @JsonField(name = "position")

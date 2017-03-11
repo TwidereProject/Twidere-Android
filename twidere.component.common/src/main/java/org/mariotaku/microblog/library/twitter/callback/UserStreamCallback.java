@@ -17,7 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.microblog.library.twitter;
+package org.mariotaku.microblog.library.twitter.callback;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -37,7 +37,7 @@ import org.mariotaku.microblog.library.twitter.model.User;
 import org.mariotaku.microblog.library.twitter.model.UserList;
 import org.mariotaku.microblog.library.twitter.model.UserListTargetObjectEvent;
 import org.mariotaku.microblog.library.twitter.model.Warning;
-import org.mariotaku.microblog.library.twitter.util.CRLFLineReader;
+import org.mariotaku.microblog.library.util.CRLFLineReader;
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.HttpResponse;
 
@@ -79,9 +79,17 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         } catch (IOException e) {
             onException(e);
         } finally {
-            Log.d("Twidere.Stream", "Cleaning up...");
             reader.close();
         }
+    }
+
+    @Override
+    public final void error(@NonNull final MicroBlogException cause) {
+        onException(cause);
+    }
+
+    public final void disconnect() {
+        disconnected = true;
     }
 
     private boolean handleEvent(final TwitterStreamObject object, final String json) throws IOException {
@@ -200,139 +208,78 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         return false;
     }
 
+    protected abstract boolean onConnected();
 
-    @Override
-    public final void error(@NonNull final MicroBlogException cause) {
-        onException(cause);
-    }
+    protected abstract boolean onDisconnect(int code, String reason);
 
-    public void disconnect() {
-        disconnected = true;
-    }
+    protected abstract boolean onException(@NonNull Throwable ex);
 
-    protected boolean onConnected() {
-        return false;
-    }
+    protected abstract boolean onStatus(@NonNull Status status);
 
-    protected boolean onDisconnect(int code, String reason) {
-        return false;
-    }
+    protected abstract boolean onDirectMessage(@NonNull DirectMessage directMessage);
 
-    protected boolean onStatus(@NonNull Status status) {
-        return false;
-    }
+    protected abstract boolean onBlock(Date createdAt, User source, User blockedUser);
 
-    protected boolean onDirectMessage(@NonNull DirectMessage directMessage) {
-        return false;
-    }
+    protected abstract boolean onDirectMessageDeleted(@NonNull DeletionEvent event);
 
-    protected boolean onBlock(final Date createdAt, User source, User blockedUser) {
-        return false;
-    }
+    protected abstract boolean onStatusDeleted(@NonNull DeletionEvent event);
 
-    protected boolean onDirectMessageDeleted(@NonNull DeletionEvent event) {
-        return false;
-    }
+    protected abstract boolean onFavorite(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject);
 
-    protected boolean onStatusDeleted(@NonNull DeletionEvent event) {
-        return false;
-    }
+    protected abstract boolean onFollow(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target);
 
-    protected boolean onException(@NonNull Throwable ex) {
-        return false;
-    }
+    protected abstract boolean onUnfollow(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target);
 
-    protected boolean onFavorite(@NonNull Date createdAt, @NonNull User source, @NonNull User target,
-            @NonNull Status targetObject) {
-        return false;
-    }
+    protected abstract boolean onFriendList(@NonNull String[] friendIds);
 
-    protected boolean onFollow(@NonNull Date createdAt, @NonNull User source, @NonNull User target) {
-        return false;
-    }
+    protected abstract boolean onScrubGeo(String userId, String upToStatusId);
 
-    protected boolean onUnfollow(@NonNull Date createdAt, @NonNull User source, @NonNull User target) {
-        return false;
-    }
+    protected abstract boolean onStallWarning(Warning warn);
 
-    protected boolean onFriendList(@NonNull String[] friendIds) {
-        return false;
-    }
+    protected abstract boolean onTrackLimitationNotice(int numberOfLimitedStatuses);
 
-    protected boolean onScrubGeo(String userId, String upToStatusId) {
-        return false;
-    }
+    protected abstract boolean onUnblock(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User unblockedUser);
 
-    protected boolean onStallWarning(Warning warn) {
-        return false;
-    }
+    protected abstract boolean onUnfavorite(@NonNull User source, @NonNull User target,
+            @NonNull Status targetStatus);
 
-    protected boolean onTrackLimitationNotice(int numberOfLimitedStatuses) {
-        return false;
-    }
+    protected abstract boolean onUserListCreation(@NonNull Date createdAt, @NonNull User source,
+            @NonNull UserList targetObject);
 
-    protected boolean onUnblock(final Date createdAt, User source, User unblockedUser) {
-        return false;
-    }
+    protected abstract boolean onUserListDeletion(@NonNull Date createdAt, @NonNull User source,
+            @NonNull UserList targetObject);
 
-    protected boolean onUnfavorite(@NonNull User source, @NonNull User target, @NonNull Status targetStatus) {
-        return false;
-    }
+    protected abstract boolean onUserListMemberAddition(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject);
 
-    protected boolean onUserListCreation(@NonNull Date createdAt, @NonNull User source,
-            @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onUserListMemberDeletion(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject);
 
-    protected boolean onUserListDeletion(@NonNull Date createdAt, @NonNull User source,
-            @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onUserListSubscription(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject);
 
-    protected boolean onUserListMemberAddition(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onUserListUnsubscription(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull UserList targetObject);
 
-    protected boolean onUserListMemberDeletion(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onUserListUpdate(@NonNull Date createdAt, @NonNull User source,
+            @NonNull UserList targetObject);
 
-    protected boolean onUserListSubscription(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onUserProfileUpdate(@NonNull Date createdAt,
+            @NonNull User updatedUser);
 
-    protected boolean onUserListUnsubscription(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onQuotedTweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject);
 
-    protected boolean onUserListUpdate(@NonNull Date createdAt, @NonNull User source, @NonNull UserList targetObject) {
-        return false;
-    }
+    protected abstract boolean onFavoritedRetweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject);
 
-    protected boolean onUserProfileUpdate(@NonNull Date createdAt, @NonNull User updatedUser) {
-        return false;
-    }
+    protected abstract boolean onRetweetedRetweet(@NonNull Date createdAt, @NonNull User source,
+            @NonNull User target, @NonNull Status targetObject);
 
-
-    protected boolean onQuotedTweet(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull Status targetObject) {
-        return false;
-    }
-
-    protected boolean onFavoritedRetweet(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull Status targetObject) {
-        return false;
-    }
-
-    protected boolean onRetweetedRetweet(@NonNull Date createdAt, @NonNull User source,
-            @NonNull User target, @NonNull Status targetObject) {
-        return false;
-    }
-
-    protected void onUnhandledEvent(@NonNull final TwitterStreamObject obj, @NonNull final String json) throws IOException {
-    }
+    protected abstract void onUnhandledEvent(@NonNull TwitterStreamObject obj, @NonNull String json)
+            throws IOException;
 }
