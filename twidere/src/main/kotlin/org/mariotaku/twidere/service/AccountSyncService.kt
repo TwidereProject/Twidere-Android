@@ -10,7 +10,7 @@ import android.os.IBinder
 /**
  * Created by mariotaku on 2016/12/3.
  */
-class AccountSyncService : Service() {
+class AccountSyncService : BaseService() {
 
     override fun onCreate() {
         /*

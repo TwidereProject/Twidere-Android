@@ -38,10 +38,7 @@ import org.mariotaku.twidere.preference.PremiumEntryPreferenceCategory
 import org.mariotaku.twidere.preference.sync.SyncItemPreference
 import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.TwidereDataProvider
-import org.mariotaku.twidere.service.BaseIntentService
-import org.mariotaku.twidere.service.JobTaskService
-import org.mariotaku.twidere.service.LegacyTaskService
-import org.mariotaku.twidere.service.StreamingService
+import org.mariotaku.twidere.service.*
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.task.ManagedAsyncTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
@@ -144,4 +141,6 @@ interface GeneralComponent {
     fun inject(fragment: ExoPlayerPageFragment)
 
     fun inject(service: StreamingService)
+
+    fun inject(service: BaseService)
 }

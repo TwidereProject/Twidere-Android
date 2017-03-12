@@ -298,6 +298,11 @@ class ApplicationModule(private val application: Application) {
     }
 
     @Provides
+    fun connectivityManager(): ConnectivityManager {
+        return application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @Provides
     fun okHttpClient(preferences: SharedPreferencesWrapper, dns: Dns, connectionPool: ConnectionPool,
             cache: Cache): OkHttpClient {
         val conf = HttpClientFactory.HttpClientConfiguration(preferences)

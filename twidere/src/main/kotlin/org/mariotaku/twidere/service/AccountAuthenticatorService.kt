@@ -16,7 +16,7 @@ import org.mariotaku.twidere.activity.SignInActivity
 /**
  * Created by mariotaku on 2016/12/2.
  */
-class AccountAuthenticatorService : Service() {
+class AccountAuthenticatorService : BaseService() {
 
     private lateinit var authenticator: TwidereAccountAuthenticator
 
