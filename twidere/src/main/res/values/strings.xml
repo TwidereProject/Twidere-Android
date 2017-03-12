@@ -780,14 +780,18 @@
     <string name="preference_randomize_account_rename_accounts_confirm">Rename existing accounts?</string>
     <string name="preference_summary_auto_refresh_compatibility_mode">Enable for faster refresh interval, increases power usage on Android 5.0+</string>
     <string name="preference_summary_auto_refresh_power_saving">Stop auto refresh when battery is low</string>
+    <string name="preference_summary_background_streaming">Press HOME instead of BACK to keep streaming open</string>
     <string name="preference_summary_chrome_custom_tab">Open links with in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
+    <string name="preference_summary_streaming_non_metered_network">Streaming only on free networks like Wi-Fi</string>
+    <string name="preference_summary_streaming_power_saving">Streaming only when charging</string>
     <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
     <string name="preference_title_auto_refresh_power_saving">Power saving mode</string>
+    <string name="preference_title_background_streaming">Background streaming</string>
     <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
@@ -800,6 +804,8 @@
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
+    <string name="preference_title_streaming_non_metered_network">Streaming on free network</string>
+    <string name="preference_title_streaming_power_saving">Power saving mode</string>
     <string name="preference_title_tablet_mode">Tablet mode</string>
     <string name="preference_title_text_size">Text size</string>
     <string name="preference_title_translate">Translate</string>

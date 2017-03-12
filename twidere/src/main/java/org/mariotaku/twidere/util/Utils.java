@@ -634,11 +634,6 @@ public final class Utils implements Constants {
         return 0;
     }
 
-    public static boolean hasAutoRefreshAccounts(final Context context) {
-        final UserKey[] accountKeys = DataStoreUtils.INSTANCE.getAccountKeys(context);
-        return !ArrayUtils.isEmpty(AccountPreferences.getAutoRefreshEnabledAccountIds(context, accountKeys));
-    }
-
     public static boolean isBatteryOkay(final Context context) {
         if (context == null) return false;
         final Context app = context.getApplicationContext();

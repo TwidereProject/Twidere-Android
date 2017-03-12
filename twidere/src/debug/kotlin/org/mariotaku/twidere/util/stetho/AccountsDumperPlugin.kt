@@ -65,7 +65,7 @@ import javax.crypto.spec.SecretKeySpec
  * Created by mariotaku on 2017/3/6.
  */
 
-class AccountsDumper(val context: Context) : DumperPlugin {
+class AccountsDumperPlugin(val context: Context) : DumperPlugin {
 
     override fun getName() = "accounts"
 

@@ -9,24 +9,28 @@
         android:key="cat_accounts"
         android:title="@string/preference_title_accounts"
         app:switchDefault="false"
-        app:switchKey="streaming"/>
+        app:switchKey="enable_streaming"/>
 
     <org.mariotaku.twidere.preference.TintedPreferenceCategory
         android:key="cat_general"
         android:title="@string/general">
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="combined_notifications"
-            android:summaryOff="@string/combined_notifications_summary_off"
-            android:summaryOn="@string/combined_notifications_summary_on"
-            android:title="@string/combined_notifications"/>
+            android:defaultValue="true"
+            android:key="streaming_power_saving"
+            android:summary="@string/preference_summary_streaming_power_saving"
+            android:title="@string/preference_title_streaming_power_saving"/>
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="pebble_notifications"
-            android:summary="@string/pebble_notifications_summary"
-            android:title="@string/pebble_notifications"/>
+            android:defaultValue="true"
+            android:key="streaming_non_metered_network"
+            android:summary="@string/preference_summary_streaming_non_metered_network"
+            android:title="@string/preference_title_streaming_non_metered_network"/>
+
+        <Preference
+            android:key="background_streaming_hint"
+            android:summary="@string/preference_summary_background_streaming"
+            android:title="@string/preference_title_background_streaming"/>
     </org.mariotaku.twidere.preference.TintedPreferenceCategory>
 
 </PreferenceScreen>

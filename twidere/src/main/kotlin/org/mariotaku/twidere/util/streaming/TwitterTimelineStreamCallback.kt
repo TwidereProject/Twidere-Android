@@ -130,9 +130,9 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return false
     }
 
-    override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
-
     protected abstract fun onHomeTimeline(status: Status): Boolean
 
     protected abstract fun onActivityAboutMe(activity: Activity): Boolean
+
+    override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
 }

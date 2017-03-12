@@ -41,6 +41,7 @@ import org.mariotaku.twidere.provider.TwidereDataProvider
 import org.mariotaku.twidere.service.BaseIntentService
 import org.mariotaku.twidere.service.JobTaskService
 import org.mariotaku.twidere.service.LegacyTaskService
+import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.task.ManagedAsyncTask
 import org.mariotaku.twidere.text.util.EmojiEditableFactory
@@ -141,4 +142,6 @@ interface GeneralComponent {
     fun inject(controller: PremiumDashboardActivity.ExtraFeatureViewController)
 
     fun inject(fragment: ExoPlayerPageFragment)
+
+    fun inject(service: StreamingService)
 }

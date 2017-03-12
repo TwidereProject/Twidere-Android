@@ -32,7 +32,6 @@ import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.glide.RoundedRectTransformation
-import org.mariotaku.twidere.view.ShapedImageView
 
 fun RequestManager.loadProfileImage(context: Context, url: String?, @ImageShapeStyle style: Int,
         cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f, size: String? = null): DrawableRequestBuilder<String?> {
@@ -142,15 +141,13 @@ internal inline fun <T> configureLoadProfileImage(context: Context, @ImageShapeS
     val builder = create()
     builder.diskCacheStrategy(DiskCacheStrategy.RESULT)
     builder.dontAnimate()
-    if (!ShapedImageView.OUTLINE_DRAW) {
-        when (shapeStyle) {
-            ImageShapeStyle.SHAPE_CIRCLE -> {
-                builder.bitmapTransform(CropCircleTransformation(context))
-            }
-            ImageShapeStyle.SHAPE_RECTANGLE -> {
-                builder.bitmapTransform(RoundedRectTransformation(context, cornerRadius,
-                        cornerRadiusRatio))
-            }
+    when (shapeStyle) {
+        ImageShapeStyle.SHAPE_CIRCLE -> {
+            builder.bitmapTransform(CropCircleTransformation(context))
+        }
+        ImageShapeStyle.SHAPE_RECTANGLE -> {
+            builder.bitmapTransform(RoundedRectTransformation(context, cornerRadius,
+                    cornerRadiusRatio))
         }
     }
     return builder

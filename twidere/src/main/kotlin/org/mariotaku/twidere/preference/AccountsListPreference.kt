@@ -89,7 +89,7 @@ abstract class AccountsListPreference(context: Context, attrs: AttributeSet? = n
 
         init {
             GeneralComponentHelper.build(context).inject(this)
-            val switchPreferenceName = ACCOUNT_PREFERENCES_NAME_PREFIX + account.key
+            val switchPreferenceName = "$ACCOUNT_PREFERENCES_NAME_PREFIX${account.key}"
             switchPreference = context.getSharedPreferences(switchPreferenceName, Context.MODE_PRIVATE)
             switchPreference.registerOnSharedPreferenceChangeListener(this)
             title = account.user.name

@@ -48,7 +48,7 @@ import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 /**
  * Created by mariotaku on 2017/3/9.
  */
-class UserStreamDumper(val context: Context) : DumperPlugin {
+class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
 
     private val syntax = "$name <account_key> [-ti]"
 

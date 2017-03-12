@@ -21,16 +21,18 @@ package org.mariotaku.twidere.preference
 
 import android.content.Context
 import android.util.AttributeSet
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT
+import org.mariotaku.twidere.extension.model.isStreamingSupported
 import org.mariotaku.twidere.fragment.AccountStreamingSettingsFragment
 import org.mariotaku.twidere.model.AccountDetails
 
 class StreamingAccountsListPreference(context: Context, attrs: AttributeSet? = null) : AccountsListPreference(context, attrs) {
 
     override fun setupPreference(preference: AccountsListPreference.AccountItemPreference, account: AccountDetails) {
+        preference.isEnabled = account.isStreamingSupported
         preference.fragment = AccountStreamingSettingsFragment::class.java.name
-        val args = preference.extras
-        args.putParcelable(EXTRA_ACCOUNT, account)
+        preference.extras[EXTRA_ACCOUNT] = account
     }
 
 }

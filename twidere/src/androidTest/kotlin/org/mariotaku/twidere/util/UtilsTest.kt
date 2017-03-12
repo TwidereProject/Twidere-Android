@@ -13,6 +13,5 @@ class UtilsTest {
     @Test
     fun testHasAutoRefreshAccounts() {
         val context = InstrumentationRegistry.getTargetContext()
-        Utils.hasAutoRefreshAccounts(context)
     }
 }

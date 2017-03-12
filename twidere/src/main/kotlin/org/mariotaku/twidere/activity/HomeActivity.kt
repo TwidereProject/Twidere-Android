@@ -271,9 +271,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val initialTabPosition = handleIntent(intent, savedInstanceState == null)
         setTabPosition(initialTabPosition)
 
-        if (Utils.isStreamingEnabled()) {
-            startService(Intent(this, StreamingService::class.java))
-        }
+        startService(Intent(this, StreamingService::class.java))
 
         if (!showDrawerTutorial() && !kPreferences[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
@@ -313,10 +311,12 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     }
 
     override fun onDestroy() {
-        stopService(Intent(this, StreamingService::class.java))
+        if (isFinishing) {
+            // Stop only when exiting explicitly
+            stopService(Intent(this, StreamingService::class.java))
+        }
 
         // Delete unused items in databases.
-
         val context = applicationContext
         TaskStarter.execute(object : AbstractTask<Any?, Any?, Any?>() {
             override fun doLongOperation(params: Any?): Any? {

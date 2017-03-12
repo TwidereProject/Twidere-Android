@@ -508,9 +508,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             TABLE_ID_STATUSES -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
-                    val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                            DataStoreUtils.getAccountKeys(context))
-                    prefs.filter(AccountPreferences::isHomeTimelineNotificationEnabled).forEach {
+                    val prefs = AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context))
+                    prefs.filter { it.isNotificationEnabled && it.isHomeTimelineNotificationEnabled }.forEach {
                         val positionTag = getPositionTag(CustomTabType.HOME_TIMELINE, it.accountKey)
                         contentNotificationManager.showTimeline(it, positionTag)
                     }
@@ -520,9 +519,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             TABLE_ID_ACTIVITIES_ABOUT_ME -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
-                    val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                            DataStoreUtils.getAccountKeys(context))
-                    prefs.filter(AccountPreferences::isInteractionsNotificationEnabled).forEach {
+                    val prefs = AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context))
+                    prefs.filter { it.isNotificationEnabled && it.isInteractionsNotificationEnabled }.forEach {
                         val positionTag = getPositionTag(ReadPositionTag.ACTIVITIES_ABOUT_ME, it.accountKey)
                         contentNotificationManager.showInteractions(it, positionTag)
                     }
@@ -532,9 +530,8 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
             TABLE_ID_MESSAGES_CONVERSATIONS -> {
                 if (!uri.getBooleanQueryParameter(QUERY_PARAM_SHOW_NOTIFICATION, true)) return
                 backgroundExecutor.execute {
-                    val prefs = AccountPreferences.getNotificationEnabledPreferences(context,
-                            DataStoreUtils.getAccountKeys(context))
-                    prefs.filter(AccountPreferences::isDirectMessagesNotificationEnabled).forEach {
+                    val prefs = AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context))
+                    prefs.filter { it.isNotificationEnabled && it.isDirectMessagesNotificationEnabled }.forEach {
                         contentNotificationManager.showMessages(it)
                     }
                     notifyUnreadCountChanged(NOTIFICATION_ID_DIRECT_MESSAGES)

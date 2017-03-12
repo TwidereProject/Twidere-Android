@@ -58,6 +58,9 @@ public abstract class FanfouUserStreamCallback implements RawCallback<MicroBlogE
         final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
         try {
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
                 if (!connected) {
                     onConnected();
                     connected = true;

@@ -21,7 +21,6 @@ package org.mariotaku.microblog.library.twitter.callback;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 
@@ -66,6 +65,9 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
         final CRLFLineReader reader = new CRLFLineReader(new InputStreamReader(response.getBody().stream(), "UTF-8"));
         try {
             for (String line; (line = reader.readLine()) != null && !disconnected; ) {
+                if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
                 if (!connected) {
                     onConnected();
                     connected = true;

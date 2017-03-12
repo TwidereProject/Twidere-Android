@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ENABLE_STREAMING
 
 class AccountStreamingSettingsFragment : BaseAccountPreferenceFragment() {
 
@@ -28,6 +29,6 @@ class AccountStreamingSettingsFragment : BaseAccountPreferenceFragment() {
 
     override val switchPreferenceDefault: Boolean = false
 
-    override val switchPreferenceKey: String? = "streaming"
+    override val switchPreferenceKey: String? = KEY_ENABLE_STREAMING
 
 }

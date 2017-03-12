@@ -15,10 +15,10 @@ import org.mariotaku.twidere.model.SimpleRefreshTaskParam
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.GetHomeTimelineTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
-import org.mariotaku.twidere.task.filter.RefreshFiltersSubscriptionsTask
 
 /**
  * Created by mariotaku on 2017/1/6.
@@ -74,7 +74,7 @@ class TaskServiceRunner(
                     override val accountKeys: Array<UserKey> by lazy {
                         AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context)).filter {
                             it.isAutoRefreshEnabled && it.isAutoRefreshDirectMessagesEnabled
-                        }.map(AccountPreferences::getAccountKey).toTypedArray()
+                        }.map(AccountPreferences::accountKey).toTypedArray()
                     }
                 }
                 return task
@@ -100,7 +100,7 @@ class TaskServiceRunner(
         override val accountKeys: Array<UserKey> by lazy {
             return@lazy AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context)).filter {
                 it.isAutoRefreshEnabled && refreshable(it)
-            }.map(AccountPreferences::getAccountKey).toTypedArray()
+            }.map(AccountPreferences::accountKey).toTypedArray()
         }
 
         override val sinceIds: Array<String?>?
