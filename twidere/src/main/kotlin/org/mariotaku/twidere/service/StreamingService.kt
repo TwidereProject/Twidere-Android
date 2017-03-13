@@ -329,7 +329,7 @@ class StreamingService : BaseService() {
             }
 
             override fun onStatusDeleted(event: DeletionEvent): Boolean {
-                val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "%@||?"),
+                val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Columns.Column(Statuses.STATUS_ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)
                 context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
@@ -337,7 +337,7 @@ class StreamingService : BaseService() {
             }
 
             override fun onUnhandledEvent(obj: TwitterStreamObject, json: String) {
-                DebugLog.w(LOGTAG, msg = "Unhandled event ${obj.determine()} for ${account.key}: $json")
+                DebugLog.d(LOGTAG, msg = "Unhandled event ${obj.determine()} for ${account.key}: $json")
             }
 
             @UiThread
