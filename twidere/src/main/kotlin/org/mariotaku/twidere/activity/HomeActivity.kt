@@ -35,7 +35,6 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
-import android.preference.PreferenceActivity
 import android.support.annotation.StringRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.NotificationCompat
@@ -66,10 +65,9 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
-import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
-import org.mariotaku.ktextension.coerceInOr
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
+import org.mariotaku.ktextension.*
+import org.mariotaku.sqliteqb.library.Columns
+import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
@@ -80,7 +78,6 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
 import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.fragment.CustomTabsFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
 import org.mariotaku.twidere.fragment.iface.RefreshScrollTopInterface
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -90,8 +87,10 @@ import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
+import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
+import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -342,10 +341,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 triggerActionsClick()
             }
             emptyTabHint -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, CustomTabsFragment::class.java.name)
-                intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT_TITLE, R.string.tabs)
-                startActivityForResult(intent, REQUEST_SETTINGS)
+                startActivityForResult(IntentUtils.settings("tabs"), REQUEST_SETTINGS)
             }
             drawerToggleButton -> {
                 if (homeMenu.isDrawerOpen(GravityCompat.START) || homeMenu.isDrawerOpen(GravityCompat.END)) {
@@ -930,6 +926,18 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                         }.fold(0L, Math::max)
                         val count = DataStoreUtils.getInteractionsCount(context, spec.args,
                                 accountKeys, position, Activities.TIMESTAMP)
+                        publishProgress(TabBadge(i, count))
+                        result.put(i, count)
+                    }
+                    CustomTabType.DIRECT_MESSAGES -> {
+                        val accountKeys = Utils.getAccountKeys(context, spec.args) ?: activatedKeys
+                        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
+                            TwidereQueryBuilder.mapConversationsProjection(it)
+                        }.toTypedArray()
+                        val count = context.contentResolver.getUnreadMessagesEntriesCursor(projection,
+                                accountKeys)?.useCursor { cur ->
+                            return@useCursor cur.count
+                        } ?: -1
                         publishProgress(TabBadge(i, count))
                         result.put(i, count)
                     }

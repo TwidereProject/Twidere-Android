@@ -581,7 +581,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 closeAccountsDrawer()
             }
             R.id.settings -> {
-                val intent = Intent(activity, SettingsActivity::class.java)
+                val intent = IntentUtils.settings()
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
                 startActivityForResult(intent, REQUEST_SETTINGS)
                 closeAccountsDrawer()

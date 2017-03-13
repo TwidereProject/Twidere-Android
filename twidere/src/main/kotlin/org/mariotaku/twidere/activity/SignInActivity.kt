@@ -254,8 +254,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             R.id.settings -> {
                 if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)
                     return false
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
+                startActivity(IntentUtils.settings())
             }
             R.id.edit_api -> {
                 if (signInTask != null && signInTask!!.status == AsyncTask.Status.RUNNING)

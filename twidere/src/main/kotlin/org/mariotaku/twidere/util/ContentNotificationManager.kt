@@ -48,8 +48,9 @@ import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Activities
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
 import org.mariotaku.twidere.util.database.FilterQueryBuilder
 import org.oshkimaadziig.george.androidutils.SpanFormatter
@@ -257,30 +258,14 @@ class ContentNotificationManager(
         val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
             TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()
-        val qb = SQLQueryBuilder.select(Columns(*projection))
-        qb.from(Table(Conversations.TABLE_NAME))
-        qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-                Expression.equals(
-                        Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
-                        Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
-                )
-        ))
-        qb.where(Expression.and(
-                Expression.equalsArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY)),
-                Expression.lesserThan(Column(Table(Conversations.TABLE_NAME), Conversations.LAST_READ_TIMESTAMP),
-                        Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP))
-        ))
-        qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
-        qb.orderBy(OrderBy(arrayOf(Conversations.LOCAL_TIMESTAMP, Conversations.SORT_ID), booleanArrayOf(false, false)))
-        val selectionArgs = arrayOf(accountKey.toString())
-        val cur = cr.rawQuery(qb.buildSQL(), selectionArgs) ?: return
+        val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey)) ?: return
         try {
             if (cur.isEmpty) return
 
             val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
 
             var messageSum: Int = 0
-            cur.forEachRow { cur, pos ->
+            cur.forEachRow { cur, _ ->
                 messageSum += cur.getInt(indices[Conversations.UNREAD_COUNT])
                 return@forEachRow true
             }
@@ -320,6 +305,7 @@ class ContentNotificationManager(
             cur.close()
         }
     }
+
 
     /**
      * @param limit -1 for no limit

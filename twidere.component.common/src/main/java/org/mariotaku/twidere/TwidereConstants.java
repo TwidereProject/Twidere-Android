@@ -73,6 +73,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String SCHEME_HTTPS = "https";
     String SCHEME_CONTENT = ContentResolver.SCHEME_CONTENT;
     String SCHEME_TWIDERE = "twidere";
+    String SCHEME_TWIDERE_SETTINGS = "twidere.settings";
     String SCHEME_DATA = "data";
 
     String PROTOCOL_HTTP = SCHEME_HTTP + "://";

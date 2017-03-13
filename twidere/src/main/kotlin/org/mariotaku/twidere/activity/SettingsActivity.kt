@@ -32,7 +32,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback
-import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -90,7 +89,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         entriesList.onItemClickListener = this
 
         if (savedInstanceState == null) {
-            val initialTag = intent.getStringExtra(EXTRA_INITIAL_TAG)
+            val initialTag = intent.data?.path
             var initialItem = -1
             var firstEntry = -1
             for (i in 0 until entriesAdapter.count) {
@@ -99,7 +98,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
                     if (firstEntry == -1) {
                         firstEntry = i
                     }
-                    if (TextUtils.equals(initialTag, entry.tag)) {
+                    if (initialTag == entry.tag) {
                         initialItem = i
                         break
                     }
@@ -414,8 +413,6 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     }
 
     companion object {
-
-        val EXTRA_INITIAL_TAG = "initial_tag"
 
         private val RESULT_SETTINGS_CHANGED = 10
 

@@ -23,7 +23,6 @@ import org.mariotaku.microblog.library.twitter.model.DirectMessage
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
-import org.mariotaku.twidere.activity.SettingsActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
@@ -40,6 +39,7 @@ import org.mariotaku.twidere.task.twitter.GetActivitiesAboutMeTask
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
@@ -140,7 +140,7 @@ class StreamingService : BaseService() {
     }
 
     private fun showNotification() {
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = IntentUtils.settings("streaming")
         val contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         val contentTitle = getString(R.string.app_name)
         val contentText = getString(R.string.timeline_streaming_running)

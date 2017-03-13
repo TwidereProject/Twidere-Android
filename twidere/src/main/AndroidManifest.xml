@@ -296,9 +296,16 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MANAGE_NETWORK_USAGE"/>
-                <action android:name="org.mariotaku.twidere.SETTINGS"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="org.mariotaku.twidere.SETTINGS"/>
+                <action android:name="org.mariotaku.twidere.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="twidere.settings"/>
             </intent-filter>
 
             <meta-data
