@@ -141,7 +141,7 @@ public class HotMobiLogger implements HotMobiConstants {
         log(event, null);
     }
 
-    public void log(final LogModel event, final PreProcessing preProcessing) {
+    public <T extends LogModel> void log(final T event, final PreProcessing<T> preProcessing) {
         log(null, event, preProcessing);
     }
 

@@ -30,6 +30,7 @@ import edu.tsinghua.hotmobi.model.NetworkEvent
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.usageStatisticsKey
+import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
@@ -50,7 +51,8 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
         val appContext = context.applicationContext
         val cm = appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(cm)
-        DependencyHolder.get(context).mediaPreloader.isNetworkMetered = isNetworkMetered
+        val holder = DependencyHolder.get(context)
+        holder.mediaPreloader.isNetworkMetered = isNetworkMetered
         val isCharging = Utils.isCharging(appContext)
         if (!isNetworkMetered && isCharging) {
             val currentTime = System.currentTimeMillis()
@@ -59,7 +61,7 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
                 appContext.startService(Intent(appContext, UploadLogsService::class.java))
             }
         }
-
+        StreamingService.startOrStopService(context)
     }
 
     companion object {

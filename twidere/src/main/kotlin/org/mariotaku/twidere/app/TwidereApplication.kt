@@ -45,10 +45,9 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AssistLauncherActivity
 import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
-import org.mariotaku.twidere.constant.apiLastChangeKey
-import org.mariotaku.twidere.constant.bugReportsKey
-import org.mariotaku.twidere.constant.defaultFeatureLastUpdated
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -257,6 +256,14 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             }
             KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
                 contentNotificationManager.updatePreferences()
+            }
+            streamingPowerSavingKey.key, streamingNonMeteredNetworkKey.key -> {
+                val streamingIntent = Intent(this, StreamingService::class.java)
+                if (activityTracker.isHomeActivityLaunched) {
+                    startService(streamingIntent)
+                } else {
+                    stopService(streamingIntent)
+                }
             }
         }
     }

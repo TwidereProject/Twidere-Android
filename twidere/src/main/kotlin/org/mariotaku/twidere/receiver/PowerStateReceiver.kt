@@ -17,23 +17,27 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.fragment
+package org.mariotaku.twidere.receiver
 
-import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_ENABLE_STREAMING
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import org.mariotaku.twidere.service.StreamingService
 
-class AccountStreamingSettingsFragment : BaseAccountPreferenceFragment() {
+/**
+ * Created by mariotaku on 2017/3/13.
+ */
 
-    override val preferencesResource: Int
-        get() = R.xml.preferences_account_streaming
-
-    override val switchPreferenceDefault: Boolean = false
-
-    override val switchPreferenceKey: String? = KEY_ENABLE_STREAMING
-
-    override fun onSwitchPreferenceChanged(isChecked: Boolean) {
-        super.onSwitchPreferenceChanged(isChecked)
-        StreamingService.startOrStopService(context)
+class PowerStateReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        when (intent.action) {
+            Intent.ACTION_POWER_CONNECTED -> {
+                StreamingService.startOrStopService(context)
+            }
+            Intent.ACTION_POWER_DISCONNECTED -> {
+                StreamingService.startOrStopService(context)
+            }
+        }
     }
+
 }

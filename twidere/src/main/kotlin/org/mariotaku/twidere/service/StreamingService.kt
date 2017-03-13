@@ -41,6 +41,7 @@ import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.streaming.TwitterTimelineStreamCallback
 import java.util.*
@@ -56,7 +57,9 @@ class StreamingService : BaseService() {
     private val submittedTasks = WeakHashMap<UserKey, StreamingRunnable<*>>()
 
     private val accountChangeObserver = OnAccountsUpdateListener {
-        setupStreaming()
+        if (!setupStreaming()) {
+            stopSelf()
+        }
     }
 
     override fun onCreate() {
@@ -84,27 +87,31 @@ class StreamingService : BaseService() {
         if (setupStreaming()) {
             return START_STICKY
         }
+        stopSelf()
         return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent) = throw UnsupportedOperationException()
 
+    /**
+     * @return True if there're enabled accounts, false if request not met and service should be stopped
+     */
     private fun setupStreaming(): Boolean {
+        if (!activityTracker.isHomeActivityLaunched) {
+            return false
+        }
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(connectivityManager)
         if (preferences[streamingNonMeteredNetworkKey] && isNetworkMetered) {
-            stopSelf()
             return false
         }
         val isCharging = Utils.isCharging(this)
         if (preferences[streamingPowerSavingKey] && !isCharging) {
-            stopSelf()
             return false
         }
         if (updateStreamingInstances()) {
             showNotification()
             return true
         } else {
-            stopSelf()
             return false
         }
     }
@@ -339,6 +346,15 @@ class StreamingService : BaseService() {
 
         private val NOTIFICATION_SERVICE_STARTED = 1
 
+        fun startOrStopService(context: Context) {
+            val streamingIntent = Intent(context, StreamingService::class.java)
+            val holder = DependencyHolder.get(context)
+            if (holder.activityTracker.isHomeActivityLaunched) {
+                context.startService(streamingIntent)
+            } else {
+                context.stopService(streamingIntent)
+            }
+        }
     }
 
 }

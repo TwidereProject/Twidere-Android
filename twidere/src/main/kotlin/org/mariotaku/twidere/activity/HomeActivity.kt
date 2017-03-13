@@ -66,8 +66,6 @@ import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.*
-import org.mariotaku.sqliteqb.library.Columns
-import org.mariotaku.sqliteqb.library.SQLFunctions
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarShowHideHelper
@@ -87,10 +85,9 @@ import org.mariotaku.twidere.model.SupportTabSpec
 import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
-import org.mariotaku.twidere.provider.TwidereDataStore
 import org.mariotaku.twidere.provider.TwidereDataStore.Activities
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -270,7 +267,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         val initialTabPosition = handleIntent(intent, savedInstanceState == null)
         setTabPosition(initialTabPosition)
 
-        startService(Intent(this, StreamingService::class.java))
+        StreamingService.startOrStopService(this)
 
         if (!showDrawerTutorial() && !kPreferences[defaultAutoRefreshAskedKey]) {
             showAutoRefreshConfirm()
@@ -312,7 +309,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     override fun onDestroy() {
         if (isFinishing) {
             // Stop only when exiting explicitly
-            stopService(Intent(this, StreamingService::class.java))
+            StreamingService.startOrStopService(this)
         }
 
         // Delete unused items in databases.
