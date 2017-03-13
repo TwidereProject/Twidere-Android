@@ -48,7 +48,7 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STATUS
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_STUB
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_VIEW_TYPE_TITLE_SUMMARY
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
+import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -543,9 +543,10 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val itemDecoration = object : DividerItemDecoration(context,
+        val itemDecoration = object : ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation) {
             override fun isDividerEnabled(childPos: Int): Boolean {
+                if (childPos >= layoutManager.itemCount || childPos < 0) return false
                 when (adapter.getItemViewType(childPos)) {
                     ITEM_VIEW_TYPE_STATUS, ITEM_VIEW_TYPE_TITLE_SUMMARY, ITEM_VIEW_TYPE_GAP,
                     ITEM_VIEW_TYPE_STUB -> {

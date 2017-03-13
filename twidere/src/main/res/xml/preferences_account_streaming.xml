@@ -17,9 +17,21 @@
   ~  You should have received a copy of the GNU General Public License
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
+<!--suppress AndroidElementNotAllowed -->
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/title_streaming">
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="stream_home_timeline"
+        android:title="@string/stream_type_home"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="stream_interactions"
+        android:title="@string/stream_type_interactions"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="stream_direct_messages"
+        android:title="@string/stream_type_messages"/>
 </PreferenceScreen>

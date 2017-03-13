@@ -9,7 +9,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class DeletionEvent {
 
-    @JsonField(name = "id")
+    @JsonField(name = {"id", "id_str"})
     String id;
     @JsonField(name = "user_id")
     String userId;

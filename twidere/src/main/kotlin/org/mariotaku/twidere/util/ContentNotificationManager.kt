@@ -160,7 +160,7 @@ class ContentNotificationManager(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
                 Expression.greaterThanArgs(Activities.POSITION_KEY)
         ).sql
-        val whereArgs = arrayOf(accountKey.toString(), "0")
+        val whereArgs = arrayOf(accountKey.toString(), position.toString())
         @SuppressLint("Recycle")
         val c = cr.query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 OrderBy(Activities.TIMESTAMP, false).sql) ?: return

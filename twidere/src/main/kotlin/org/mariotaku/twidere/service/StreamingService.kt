@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.UiThread
+import android.support.annotation.WorkerThread
 import android.support.v4.app.NotificationCompat
 import android.support.v4.net.ConnectivityManagerCompat
 import org.apache.commons.lang3.concurrent.BasicThreadFactory
@@ -18,9 +20,9 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterUserStream
 import org.mariotaku.microblog.library.twitter.annotation.StreamWith
-import org.mariotaku.microblog.library.twitter.model.Activity
-import org.mariotaku.microblog.library.twitter.model.DirectMessage
-import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.*
+import org.mariotaku.sqliteqb.library.Columns
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType
@@ -100,28 +102,34 @@ class StreamingService : BaseService() {
         if (!activityTracker.isHomeActivityLaunched) {
             return false
         }
+        // Quit if no connection
+        if (connectivityManager.activeNetworkInfo?.isAvailable != true) {
+            return false
+        }
+        // Quit if connection metered (with preference)
         val isNetworkMetered = ConnectivityManagerCompat.isActiveNetworkMetered(connectivityManager)
         if (preferences[streamingNonMeteredNetworkKey] && isNetworkMetered) {
             return false
         }
+        // Quit if not charging (with preference)
         val isCharging = Utils.isCharging(this)
         if (preferences[streamingPowerSavingKey] && !isCharging) {
             return false
         }
-        if (updateStreamingInstances()) {
-            showNotification()
-            return true
-        } else {
+        // Quit if no streaming instance available
+        if (!updateStreamingInstances()) {
             return false
         }
+        showNotification()
+        return true
     }
 
     private fun updateStreamingInstances(): Boolean {
         val am = AccountManager.get(this)
         val supportedAccounts = AccountUtils.getAllAccountDetails(am, true).filter { it.isStreamingSupported }
-        val enabledPrefs = supportedAccounts.map { AccountPreferences(this, it.key) }
+        val supportedPrefs = supportedAccounts.map { AccountPreferences(this, it.key) }
         val enabledAccounts = supportedAccounts.filter { account ->
-            return@filter enabledPrefs.any {
+            return@filter supportedPrefs.any {
                 account.key == it.accountKey && it.isStreamingEnabled
             }
         }
@@ -138,7 +146,9 @@ class StreamingService : BaseService() {
         enabledAccounts.forEach { account ->
             val existing = submittedTasks[account.key]
             if (existing == null || existing.cancelled) {
-                val runnable = account.newStreamingRunnable() ?: return@forEach
+                val runnable = newStreamingRunnable(account, supportedPrefs.first {
+                    it.accountKey == account.key
+                }) ?: return@forEach
                 threadPoolExecutor.submit(runnable)
                 submittedTasks[account.key] = runnable
             }
@@ -170,16 +180,20 @@ class StreamingService : BaseService() {
 
     }
 
-    private fun AccountDetails.newStreamingRunnable(): StreamingRunnable<*>? {
-        when (type) {
+    private fun newStreamingRunnable(account: AccountDetails, preferences: AccountPreferences): StreamingRunnable<*>? {
+        when (account.type) {
             AccountType.TWITTER -> {
-                return TwitterStreamingRunnable(this@StreamingService, handler, this)
+                return TwitterStreamingRunnable(this, handler, account, preferences)
             }
         }
         return null
     }
 
-    internal abstract class StreamingRunnable<T>(val context: Context, val account: AccountDetails) : Runnable {
+    internal abstract class StreamingRunnable<T>(
+            val context: Context,
+            val account: AccountDetails,
+            val preferences: AccountPreferences
+    ) : Runnable {
 
         var cancelled: Boolean = false
             private set
@@ -210,8 +224,12 @@ class StreamingService : BaseService() {
         abstract fun onCancelled()
     }
 
-    internal class TwitterStreamingRunnable(context: Context, val handler: Handler, account: AccountDetails) :
-            StreamingRunnable<TwitterUserStream>(context, account) {
+    internal class TwitterStreamingRunnable(
+            context: Context,
+            val handler: Handler,
+            account: AccountDetails,
+            preferences: AccountPreferences
+    ) : StreamingRunnable<TwitterUserStream>(context, account, preferences) {
 
         private val profileImageSize = context.getString(R.string.profile_image_size)
         private val isOfficial = account.isOfficial(context)
@@ -241,6 +259,10 @@ class StreamingService : BaseService() {
             }
 
             override fun onHomeTimeline(status: Status): Boolean {
+                if (!preferences.isStreamHomeTimelineEnabled) {
+                    homeInsertGap = true
+                    return false
+                }
                 val parcelableStatus = ParcelableStatusUtils.fromStatus(status, account.key,
                         homeInsertGap, profileImageSize)
 
@@ -264,10 +286,14 @@ class StreamingService : BaseService() {
             }
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
+                if (!preferences.isStreamInteractionsEnabled) {
+                    interactionsInsertGap = true
+                    return false
+                }
                 if (isOfficial) {
                     // Wait for 30 seconds to avoid rate limit
                     if (canGetInteractions) {
-                        getInteractions()
+                        handler.post { getInteractions() }
                         canGetInteractions = false
                         handler.postDelayed(interactionsTimeoutRunnable, TimeUnit.SECONDS.toMillis(30))
                     }
@@ -283,9 +309,13 @@ class StreamingService : BaseService() {
                 return true
             }
 
+            @WorkerThread
             override fun onDirectMessage(directMessage: DirectMessage): Boolean {
+                if (!preferences.isStreamDirectMessagesEnabled) {
+                    return false
+                }
                 if (canGetMessages) {
-                    getMessages()
+                    handler.post { getMessages() }
                     canGetMessages = false
                     val timeout = TimeUnit.SECONDS.toMillis(if (isOfficial) 30 else 90)
                     handler.postDelayed(messagesTimeoutRunnable, timeout)
@@ -298,6 +328,19 @@ class StreamingService : BaseService() {
                 return true
             }
 
+            override fun onStatusDeleted(event: DeletionEvent): Boolean {
+                val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "%@||?"),
+                        Expression.equalsArgs(Columns.Column(Statuses.STATUS_ID))).sql
+                val deleteWhereArgs = arrayOf(account.key.host, event.id)
+                context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
+                return true
+            }
+
+            override fun onUnhandledEvent(obj: TwitterStreamObject, json: String) {
+                DebugLog.w(LOGTAG, msg = "Unhandled event ${obj.determine()} for ${account.key}: $json")
+            }
+
+            @UiThread
             private fun getInteractions() {
                 val task = GetActivitiesAboutMeTask(context)
                 task.params = object : SimpleRefreshTaskParam() {
@@ -317,6 +360,7 @@ class StreamingService : BaseService() {
                 TaskStarter.execute(task)
             }
 
+            @UiThread
             private fun getMessages() {
                 val task = GetMessagesTask(context)
                 task.params = object : GetMessagesTask.RefreshMessagesTaskParam(context) {

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.IntRange;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +29,7 @@ import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.TintTypedArray;
 import android.view.View;
 
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class ExtendedDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
@@ -45,7 +46,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private Padding mPadding;
     private int mDecorationStart = -1, mDecorationEnd = -1, mDecorationEndOffset;
 
-    public DividerItemDecoration(Context context, int orientation) {
+    @SuppressWarnings("RestrictedApi")
+    public ExtendedDividerItemDecoration(Context context, int orientation) {
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context, null, ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
@@ -106,7 +108,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int childPos = parent.getChildAdapterPosition(child);
-            if (!isDividerEnabled(childPos)) continue;
+            if (childPos < 0 || !isDividerEnabled(childPos)) continue;
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
             if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
@@ -137,8 +139,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
             final int childPos = parent.getChildAdapterPosition(child);
+            if (childPos < 0 || !isDividerEnabled(childPos)) continue;
             final int start = getDecorationStart(), end = getDecorationEnd(parent);
-            if (!isDividerEnabled(childPos)) continue;
             if (start >= 0 && childPos < start || end >= 0 && childPos > end) continue;
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
@@ -156,7 +158,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
         if (mDivider == null) return;
         final int childPos = parent.getChildAdapterPosition(view);
-        if (!isDividerEnabled(childPos)) return;
+        if (childPos < 0 || !isDividerEnabled(childPos)) return;
         final int start = getDecorationStart(), end = getDecorationEnd(parent);
         if (start >= 0 && childPos < start || end >= 0 && childPos > end) {
             outRect.setEmpty();

@@ -8,6 +8,7 @@ class ItemCounts(counts: Int) {
     private val data: IntArray = IntArray(counts)
 
     fun getItemCountIndex(itemPosition: Int): Int {
+        if (itemPosition < 0) return -1
         var sum = 0
         data.forEachIndexed { i, num ->
             sum += num

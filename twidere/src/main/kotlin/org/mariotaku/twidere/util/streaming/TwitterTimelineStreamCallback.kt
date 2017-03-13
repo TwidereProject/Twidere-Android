@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.util.streaming
 
+import android.support.annotation.WorkerThread
 import org.mariotaku.microblog.library.twitter.callback.SimpleUserStreamCallback
 import org.mariotaku.microblog.library.twitter.model.*
 import java.util.*
@@ -26,7 +27,7 @@ import java.util.*
 /**
  * Created by mariotaku on 2017/3/10.
  */
-
+@WorkerThread
 abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUserStreamCallback() {
 
     private val friends = mutableSetOf<String>()
@@ -130,9 +131,12 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         return false
     }
 
+    @WorkerThread
     protected abstract fun onHomeTimeline(status: Status): Boolean
 
+    @WorkerThread
     protected abstract fun onActivityAboutMe(activity: Activity): Boolean
 
+    @WorkerThread
     override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
 }

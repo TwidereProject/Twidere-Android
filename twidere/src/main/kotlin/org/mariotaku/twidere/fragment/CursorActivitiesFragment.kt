@@ -175,14 +175,12 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             }
 
             override val sinceIds: Array<String?>?
-                get() = getNewestActivityIds(accountKeys)
+                get() = DataStoreUtils.getNewestActivityMaxPositions(context, contentUri,
+                        accountKeys.toNulls())
 
             override val sinceSortIds: LongArray?
-                get() {
-                    val context = context ?: return null
-                    return DataStoreUtils.getNewestActivityMaxSortPositions(context,
-                            contentUri, accountKeys.toNulls())
-                }
+                get() = DataStoreUtils.getNewestActivityMaxSortPositions(context, contentUri,
+                        accountKeys.toNulls())
 
             override val hasSinceIds: Boolean
                 get() = true
@@ -196,11 +194,6 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
     protected fun getFiltersWhere(table: String): Expression? {
         if (!isFilterEnabled) return null
         return DataStoreUtils.buildActivityFilterWhereClause(table, null)
-    }
-
-    protected fun getNewestActivityIds(accountKeys: Array<UserKey>): Array<String?>? {
-        val context = context ?: return null
-        return DataStoreUtils.getNewestActivityMaxPositions(context, contentUri, accountKeys.toNulls())
     }
 
     protected abstract val notificationType: Int

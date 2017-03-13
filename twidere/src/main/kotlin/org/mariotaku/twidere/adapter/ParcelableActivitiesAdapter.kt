@@ -258,7 +258,7 @@ class ParcelableActivitiesAdapter(
                 if (isGapItem(position)) {
                     return ITEM_VIEW_TYPE_GAP
                 }
-                val activity = getActivity(position)
+                val activity = getActivity(position, false)
                 when (activity.action) {
                     Activity.Action.MENTION -> {
                         if (ArrayUtils.isEmpty(activity.target_object_statuses)) {

@@ -83,7 +83,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.ListParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.LoadMoreSupportAdapter
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
+import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -131,7 +131,7 @@ import java.util.*
 class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<ParcelableStatus>>,
         OnMediaClickListener, StatusClickListener, KeyboardShortcutCallback,
         ContentListSupport<StatusFragment.StatusAdapter> {
-    private var mItemDecoration: DividerItemDecoration? = null
+    private var mItemDecoration: ExtendedDividerItemDecoration? = null
 
     override lateinit var adapter: StatusAdapter
 
@@ -2187,7 +2187,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             context: Context,
             private val statusAdapter: StatusAdapter,
             orientation: Int
-    ) : DividerItemDecoration(context, orientation) {
+    ) : ExtendedDividerItemDecoration(context, orientation) {
 
         override fun isDividerEnabled(childPos: Int): Boolean {
             if (childPos >= statusAdapter.itemCount || childPos < 0) return false

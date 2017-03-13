@@ -61,7 +61,7 @@ class ConnectivityStateReceiver : BroadcastReceiver() {
                 appContext.startService(Intent(appContext, UploadLogsService::class.java))
             }
         }
-        StreamingService.startOrStopService(context)
+        StreamingService.startOrStopService(appContext)
     }
 
     companion object {

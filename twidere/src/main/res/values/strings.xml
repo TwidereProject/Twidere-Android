@@ -1039,6 +1039,10 @@
     <!-- [noun] Accessibility label for retweet icon -->
     <string name="status_type_retweet">Retweet</string>
 
+    <string name="stream_type_home">Home</string>
+    <string name="stream_type_interactions">Interactions</string>
+    <string name="stream_type_messages">Messages</string>
+
     <string name="streaming">Streaming</string>
 
     <string name="style">Style</string>

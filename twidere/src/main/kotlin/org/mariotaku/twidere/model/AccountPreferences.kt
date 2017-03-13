@@ -66,9 +66,6 @@ class AccountPreferences(private val context: Context, val accountKey: UserKey) 
             }
         }
 
-    val isAutoRefreshDirectMessagesEnabled: Boolean
-        get() = preferences.getBoolean(KEY_AUTO_REFRESH_DIRECT_MESSAGES, DEFAULT_AUTO_REFRESH_DIRECT_MESSAGES)
-
     val isAutoRefreshEnabled: Boolean
         get() = preferences.getBoolean(KEY_AUTO_REFRESH, preferences.getBoolean(KEY_DEFAULT_AUTO_REFRESH, false))
 
@@ -78,11 +75,23 @@ class AccountPreferences(private val context: Context, val accountKey: UserKey) 
     val isAutoRefreshMentionsEnabled: Boolean
         get() = preferences.getBoolean(KEY_AUTO_REFRESH_MENTIONS, DEFAULT_AUTO_REFRESH_MENTIONS)
 
+    val isAutoRefreshDirectMessagesEnabled: Boolean
+        get() = preferences.getBoolean(KEY_AUTO_REFRESH_DIRECT_MESSAGES, DEFAULT_AUTO_REFRESH_DIRECT_MESSAGES)
+
     val isAutoRefreshTrendsEnabled: Boolean
         get() = preferences.getBoolean(KEY_AUTO_REFRESH_TRENDS, DEFAULT_AUTO_REFRESH_TRENDS)
 
     val isStreamingEnabled: Boolean
         get() = preferences.getBoolean(KEY_ENABLE_STREAMING, false)
+
+    val isStreamHomeTimelineEnabled: Boolean
+        get() = preferences.getBoolean("stream_home_timeline", true)
+
+    val isStreamInteractionsEnabled: Boolean
+        get() = preferences.getBoolean("stream_interactions", true)
+
+    val isStreamDirectMessagesEnabled: Boolean
+        get() = preferences.getBoolean("stream_direct_messages", true)
 
     val isDirectMessagesNotificationEnabled: Boolean
         get() = preferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION, DEFAULT_DIRECT_MESSAGES_NOTIFICATION)

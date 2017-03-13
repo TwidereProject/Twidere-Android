@@ -44,7 +44,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.adapter.ParcelableStatusesAdapter
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
+import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.Referral
@@ -402,7 +402,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     }
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView, layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val itemDecoration = DividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
+        val itemDecoration = ExtendedDividerItemDecoration(context, (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
         if (adapter.profileImageEnabled) {
             val decorPaddingLeft = res.getDimensionPixelSize(R.dimen.element_spacing_normal) * 2 + res.getDimensionPixelSize(R.dimen.icon_size_status_profile_image)

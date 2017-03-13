@@ -34,7 +34,7 @@ import org.mariotaku.commons.parcel.ParcelUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableUsersAdapter
-import org.mariotaku.twidere.adapter.decorator.DividerItemDecoration
+import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter
 import org.mariotaku.twidere.adapter.iface.IUsersAdapter.UserClickListener
@@ -187,7 +187,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
 
     override fun createItemDecoration(context: Context, recyclerView: RecyclerView,
             layoutManager: LinearLayoutManager): RecyclerView.ItemDecoration? {
-        val itemDecoration = DividerItemDecoration(context,
+        val itemDecoration = ExtendedDividerItemDecoration(context,
                 (recyclerView.layoutManager as LinearLayoutManager).orientation)
         val res = context.resources
         if (adapter.profileImageEnabled) {
