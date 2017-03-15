@@ -8,6 +8,7 @@ apply plugin: 'androidsvgdrawable'
 
 // START Non-FOSS component
 apply plugin: 'io.fabric'
+apply plugin: 'com.github.triplet.play'
 // END Non-FOSS component
 
 buildscript {
@@ -20,7 +21,8 @@ buildscript {
 
     dependencies {
         // START Non-FOSS component
-        classpath "io.fabric.tools:gradle:${libVersions["FabricPlugin"]}"
+        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
+        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
         // END Non-FOSS component
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
@@ -225,6 +227,13 @@ task svgToMipmap(type: SvgDrawableTask) {
 
     outputType = 'mipmap'
 }
+
+// START Non-FOSS component
+play {
+    jsonFile = rootProject.file('private/google_play_publish.json')
+    track = 'beta'
+}
+// END Non-FOSS component
 
 // START Non-FOSS component
 apply plugin: 'com.google.gms.google-services'

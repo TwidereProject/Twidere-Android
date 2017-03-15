@@ -42,6 +42,7 @@ subprojects {
                     MapsUtils       : '0.4.4',
                     Crashlyrics     : '2.6.7',
                     FabricPlugin    : '1.22.1',
+                    PlayPublisher   : '1.1.5',
                     DropboxCoreSdk  : '2.1.2',
                     GoogleDriveApi  : 'v3-rev61-1.22.0',
                     Exoplayer       : 'r2.2.0',
