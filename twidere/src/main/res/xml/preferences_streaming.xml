@@ -6,6 +6,7 @@
     android:title="@string/settings_streaming">
 
     <org.mariotaku.twidere.preference.StreamingAccountsListPreference
+        android:dependency="streaming_enabled"
         android:key="cat_accounts"
         android:title="@string/preference_title_accounts"
         app:switchDefault="false"
@@ -16,18 +17,25 @@
         android:title="@string/general">
 
         <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="streaming_enabled"
+            android:title="@string/preference_title_streaming_enabled"/>
+        <SwitchPreferenceCompat
             android:defaultValue="true"
+            android:dependency="streaming_enabled"
             android:key="streaming_power_saving"
             android:summary="@string/preference_summary_streaming_power_saving"
             android:title="@string/preference_title_streaming_power_saving"/>
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
+            android:dependency="streaming_enabled"
             android:key="streaming_non_metered_network"
             android:summary="@string/preference_summary_streaming_non_metered_network"
             android:title="@string/preference_title_streaming_non_metered_network"/>
 
         <Preference
+            android:dependency="streaming_enabled"
             android:key="background_streaming_hint"
             android:summary="@string/preference_summary_background_streaming"
             android:title="@string/preference_title_background_streaming"/>

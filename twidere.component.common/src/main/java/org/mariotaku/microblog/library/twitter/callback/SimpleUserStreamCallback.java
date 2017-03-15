@@ -43,7 +43,7 @@ public abstract class SimpleUserStreamCallback extends UserStreamCallback {
     }
 
     @Override
-    protected boolean onDisconnect(final int code, final String reason) {
+    protected boolean onDisconnectNotice(final int code, final String reason) {
         return false;
     }
 

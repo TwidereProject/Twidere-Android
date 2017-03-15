@@ -26,6 +26,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AccountType
+import org.mariotaku.twidere.constant.streamingEnabledKey
 import org.mariotaku.twidere.constant.streamingNonMeteredNetworkKey
 import org.mariotaku.twidere.constant.streamingPowerSavingKey
 import org.mariotaku.twidere.extension.model.isOfficial
@@ -99,6 +100,9 @@ class StreamingService : BaseService() {
      * @return True if there're enabled accounts, false if request not met and service should be stopped
      */
     private fun setupStreaming(): Boolean {
+        if (!preferences[streamingEnabledKey]) {
+            return false
+        }
         if (!activityTracker.isHomeActivityLaunched) {
             return false
         }
@@ -329,6 +333,11 @@ class StreamingService : BaseService() {
                         Expression.equalsArgs(Columns.Column(Statuses.STATUS_ID))).sql
                 val deleteWhereArgs = arrayOf(account.key.host, event.id)
                 context.contentResolver.delete(Statuses.CONTENT_URI, deleteWhere, deleteWhereArgs)
+                return true
+            }
+
+            override fun onDisconnectNotice(code: Int, reason: String?): Boolean {
+                disconnect();
                 return true
             }
 

@@ -257,7 +257,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
                 contentNotificationManager.updatePreferences()
             }
-            streamingPowerSavingKey.key, streamingNonMeteredNetworkKey.key -> {
+            streamingEnabledKey.key, streamingPowerSavingKey.key,
+            streamingNonMeteredNetworkKey.key -> {
                 val streamingIntent = Intent(this, StreamingService::class.java)
                 if (activityTracker.isHomeActivityLaunched) {
                     startService(streamingIntent)

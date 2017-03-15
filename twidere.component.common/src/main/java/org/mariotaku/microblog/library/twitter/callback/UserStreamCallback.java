@@ -205,14 +205,14 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
             }
             case Type.DISCONNECTION:
                 TwitterStreamObject.Disconnect disconnect = object.getDisconnect();
-                return onDisconnect(disconnect.getCode(), disconnect.getReason());
+                return onDisconnectNotice(disconnect.getCode(), disconnect.getReason());
         }
         return false;
     }
 
     protected abstract boolean onConnected();
 
-    protected abstract boolean onDisconnect(int code, String reason);
+    protected abstract boolean onDisconnectNotice(int code, String reason);
 
     protected abstract boolean onException(@NonNull Throwable ex);
 

@@ -69,6 +69,7 @@ val floatingDetailedContentsKey = KBooleanKey("floating_detailed_contents", true
 val localTrendsWoeIdKey = KIntKey(KEY_LOCAL_TRENDS_WOEID, 1)
 val phishingLinksWaringKey = KBooleanKey(KEY_PHISHING_LINK_WARNING, true)
 val multiColumnWidthKey = KStringKey("multi_column_tab_width", "normal")
+val streamingEnabledKey = KBooleanKey("streaming_enabled", false)
 val streamingNonMeteredNetworkKey = KBooleanKey("streaming_non_metered_network", true)
 val streamingPowerSavingKey = KBooleanKey("streaming_power_saving", true)
 

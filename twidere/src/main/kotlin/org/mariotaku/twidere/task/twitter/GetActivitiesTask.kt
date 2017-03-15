@@ -45,7 +45,7 @@ abstract class GetActivitiesTask(
     protected abstract val contentUri: Uri
 
     override fun doLongOperation(param: RefreshTaskParam): List<TwitterListResponse<Activity>> {
-        if (!initialized || param.shouldAbort) return emptyList()
+        if (param.shouldAbort) return emptyList()
         val accountIds = param.accountKeys
         val maxIds = param.maxIds
         val maxSortIds = param.maxSortIds
@@ -110,7 +110,6 @@ abstract class GetActivitiesTask(
     }
 
     override fun afterExecute(handler: ((Boolean) -> Unit)?, result: List<TwitterListResponse<Activity>>) {
-        if (!initialized) return
         context.contentResolver.notifyChange(contentUri, null)
         val exception = AsyncTwitterWrapper.getException(result)
         bus.post(GetActivitiesTaskEvent(contentUri, false, exception))
@@ -200,7 +199,6 @@ abstract class GetActivitiesTask(
 
     @UiThread
     override fun beforeExecute() {
-        if (!initialized) return
         bus.post(GetActivitiesTaskEvent(contentUri, true, null))
     }
 
