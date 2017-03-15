@@ -297,8 +297,9 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
                 refreshEnabled = true
                 showContentOrError()
 
-                if (event.exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
-                    Toast.makeText(context, event.exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
+                val exception = event.exception
+                if (exception is GetStatusesTask.GetTimelineException && userVisibleHint) {
+                    Toast.makeText(context, exception.getToastMessage(context), Toast.LENGTH_SHORT).show()
                 }
             }
         }

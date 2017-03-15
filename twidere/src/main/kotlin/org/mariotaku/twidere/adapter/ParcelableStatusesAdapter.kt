@@ -417,7 +417,7 @@ abstract class ParcelableStatusesAdapter(
             val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
             return readCursorValueAction(cursor, indices)
         }
-        return readStatusValueAction(getStatus(position))
+        return readStatusValueAction(getStatus(position, raw))
     }
 
     private fun getStatus(position: Int, countIndex: Int, raw: Boolean = false): ParcelableStatus {
