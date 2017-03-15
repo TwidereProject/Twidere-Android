@@ -3,14 +3,16 @@ IDEA additional info:
 Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
---- twidere/build.gradle	(date 1488603761000)
+--- twidere/build.gradle	(date 1489569483000)
 +++ twidere/build.gradle	(revision )
-@@ -7,20 +7,20 @@
+@@ -7,22 +7,22 @@
  apply plugin: 'androidsvgdrawable'
  
  // START Non-FOSS component
 -apply plugin: 'io.fabric'
+-apply plugin: 'com.github.triplet.play'
 +//apply plugin: 'io.fabric'
++//apply plugin: 'com.github.triplet.play'
  // END Non-FOSS component
  
  buildscript {
@@ -24,12 +26,14 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
  
      dependencies {
          // START Non-FOSS component
--        classpath "io.fabric.tools:gradle:${libVersions["FabricPlugin"]}"
-+//        classpath "io.fabric.tools:gradle:${libVersions["FabricPlugin"]}"
+-        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
+-        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
++//        classpath "io.fabric.tools:gradle:${libVersions['FabricPlugin']}"
++//        classpath "com.github.triplet.gradle:play-publisher:${libVersions['PlayPublisher']}"
          // END Non-FOSS component
  
          classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libVersions['Kotlin']}"
-@@ -50,7 +50,7 @@
+@@ -52,7 +52,7 @@
  
      productFlavors {
          // START Non-FOSS component
@@ -38,7 +42,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
          // END Non-FOSS component
          fdroid {}
      }
-@@ -82,7 +82,7 @@
+@@ -84,7 +84,7 @@
      mavenLocal()
      maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
      // START Non-FOSS component
@@ -47,7 +51,7 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
      flatDir { dirs "$projectDir/lib" }
  }
-@@ -98,17 +98,17 @@
+@@ -100,17 +100,17 @@
      compile project(':twidere.component.nyan')
  
      // START Non-FOSS component
@@ -76,8 +80,19 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
      // END Non-FOSS component
  
      fdroidCompile 'org.osmdroid:osmdroid-android:5.6.4'
-@@ -224,5 +224,5 @@
+@@ -229,12 +229,12 @@
  }
+ 
+ // START Non-FOSS component
+-play {
+-    jsonFile = rootProject.file('private/google_play_publish.json')
+-    track = 'beta'
+-}
++//play {
++//    jsonFile = rootProject.file('private/google_play_publish.json')
++//    track = 'beta'
++//}
+ // END Non-FOSS component
  
  // START Non-FOSS component
 -apply plugin: 'com.google.gms.google-services'
