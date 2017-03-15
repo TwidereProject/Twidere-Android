@@ -76,9 +76,7 @@ class StreamingService : BaseService() {
     }
 
     override fun onDestroy() {
-        submittedTasks.forEach { _, future ->
-            future.cancel()
-        }
+        submittedTasks.values.forEach { it.cancel() }
         threadPoolExecutor.shutdown()
         submittedTasks.clear()
         removeNotification()

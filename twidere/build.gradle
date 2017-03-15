@@ -36,8 +36,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 300
-        versionName '3.4.38'
+        versionCode 301
+        versionName '3.4.39'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
@@ -113,12 +113,12 @@ dependencies {
     }
     // END Non-FOSS component
 
-    fdroidCompile 'org.osmdroid:osmdroid-android:5.6.4'
+    fdroidCompile "org.osmdroid:osmdroid-android:${libVersions['OSMDroid']}"
 
     debugCompile "com.facebook.stetho:stetho:${libVersions['Stetho']}"
     debugCompile "com.facebook.stetho:stetho-okhttp3:${libVersions['Stetho']}"
     debugCompile "com.facebook.stetho:stetho-js-rhino:${libVersions['Stetho']}"
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${libVersions['LeakCanary']}"
     debugCompile('com.jayway.jsonpath:json-path:2.2.0') {
         exclude group: 'net.minidev', module: 'json-smart'
     }
@@ -141,7 +141,7 @@ dependencies {
     compile "com.android.support:customtabs:${libVersions['SupportLib']}"
     compile "com.android.support:design:${libVersions['SupportLib']}"
     compile "com.android.support:percent:${libVersions['SupportLib']}"
-    compile 'com.twitter:twitter-text:1.14.3'
+    compile "com.twitter:twitter-text:${libVersions['TwitterText']}"
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'
     compile 'dnsjava:dnsjava:2.1.8'
@@ -176,8 +176,8 @@ dependencies {
     compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
 
-    compile 'com.github.mariotaku.MediaViewerLibrary:base:0.9.23'
-    compile 'com.github.mariotaku.MediaViewerLibrary:subsample-image-view:0.9.23'
+    compile "com.github.mariotaku.MediaViewerLibrary:base:${libVersions['MediaViewerLibrary']}"
+    compile "com.github.mariotaku.MediaViewerLibrary:subsample-image-view:${libVersions['MediaViewerLibrary']}"
     compile 'com.github.mariotaku:SQLiteQB:0.9.12'
     compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
     compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
