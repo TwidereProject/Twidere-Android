@@ -321,11 +321,6 @@ class StreamingService : BaseService() {
                 return true
             }
 
-            override fun onException(ex: Throwable): Boolean {
-                DebugLog.w(LOGTAG, msg = "Exception for ${account.key}", tr = ex)
-                return true
-            }
-
             override fun onStatusDeleted(event: DeletionEvent): Boolean {
                 val deleteWhere = Expression.and(Expression.likeRaw(Columns.Column(Statuses.ACCOUNT_KEY), "'%@'||?"),
                         Expression.equalsArgs(Columns.Column(Statuses.STATUS_ID))).sql
@@ -336,6 +331,11 @@ class StreamingService : BaseService() {
 
             override fun onDisconnectNotice(code: Int, reason: String?): Boolean {
                 disconnect();
+                return true
+            }
+
+            override fun onException(ex: Throwable): Boolean {
+                DebugLog.w(LOGTAG, msg = "Exception for ${account.key}", tr = ex)
                 return true
             }
 

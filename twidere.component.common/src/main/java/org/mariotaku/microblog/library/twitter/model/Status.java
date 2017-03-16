@@ -205,6 +205,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "uri")
     String uri;
 
+    @JsonField(name = "timestamp_ms")
+    long timestampMs = -1;
+
     @ParcelableNoThanks
     private transient long sortId = -1;
 
@@ -265,6 +268,9 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
      * UTC time when this Tweet was created.
      */
     public Date getCreatedAt() {
+        if (timestampMs != -1) {
+            return new Date(timestampMs);
+        }
         return createdAt;
     }
 
