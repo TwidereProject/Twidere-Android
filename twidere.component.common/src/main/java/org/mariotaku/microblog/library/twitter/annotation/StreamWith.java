@@ -23,9 +23,13 @@ package org.mariotaku.microblog.library.twitter.annotation;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by mariotaku on 2017/3/11.
  */
+@Retention(RetentionPolicy.SOURCE)
 @StringDef({StreamWith.USER, StreamWith.FOLLOWING})
 public @interface StreamWith {
     String USER = "user";
