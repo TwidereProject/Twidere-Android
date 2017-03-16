@@ -26,6 +26,7 @@ public class ParcelableRelationshipUtils {
             obj.blocked_by = relationship.isSourceBlockedByTarget();
             obj.muting = relationship.isSourceMutingTarget();
             obj.retweet_enabled = relationship.isSourceWantRetweetsFromTarget();
+            obj.notifications_enabled = relationship.isSourceNotificationsEnabledForTarget();
             obj.can_dm = relationship.canSourceDMTarget();
         }
         obj.filtering = filtering;

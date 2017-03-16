@@ -45,10 +45,6 @@ public class Relationship extends TwitterResponseObject implements TwitterRespon
         return object.target.followedBy;
     }
 
-    public boolean isSourceNotificationsEnabled() {
-        return object.source.notificationsEnabled;
-    }
-
     public boolean isSourceMutingTarget() {
         return object.source.muting;
     }

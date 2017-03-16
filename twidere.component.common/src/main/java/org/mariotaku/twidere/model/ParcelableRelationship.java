@@ -63,6 +63,9 @@ public class ParcelableRelationship implements Parcelable {
     @CursorField(CachedRelationships.RETWEET_ENABLED)
     public boolean retweet_enabled;
 
+    @CursorField(CachedRelationships.NOTIFICATIONS_ENABLED)
+    public boolean notifications_enabled;
+
     @CursorField(value = CachedRelationships._ID, excludeWrite = true, type = TwidereDataStore.TYPE_PRIMARY_KEY)
     public long _id;
 
