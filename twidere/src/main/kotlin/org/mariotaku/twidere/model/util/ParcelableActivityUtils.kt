@@ -75,7 +75,7 @@ object ParcelableActivityUtils {
         result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetObjectUserLists, accountKey, profileImageSize)
         result.target_object_users = ParcelableUserUtils.fromUsers(activity.targetObjectUsers, accountKey, profileImageSize)
         result.has_following_source = activity.sources.fold(false) { folded, item ->
-            if (item.isFollowing) {
+            if (item.isFollowing == true) {
                 return@fold true
             }
             return@fold folded

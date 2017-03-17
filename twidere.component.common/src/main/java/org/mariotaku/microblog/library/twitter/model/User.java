@@ -35,6 +35,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 import org.mariotaku.microblog.library.twitter.util.TwitterDateConverter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -43,6 +44,8 @@ import java.util.Date;
 @ParcelablePlease
 @JsonObject
 public class User extends TwitterResponseObject implements Comparable<User>, Parcelable {
+
+    // BEGIN Basic information
 
     @JsonField(name = "id")
     String id;
@@ -53,23 +56,25 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "unique_id")
     String uniqueId;
 
+    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
+    Date createdAt;
+
     @JsonField(name = "name")
     String name;
 
     @JsonField(name = "screen_name")
     String screenName;
 
-    @JsonField(name = "location")
+    @JsonField(name = {"location", "profile_location"})
     String location;
-
-    @JsonField(name = "profile_location")
-    String profileLocation;
 
     @JsonField(name = "description")
     String description;
 
     @JsonField(name = "url")
     String url;
+
+    // END Basic information
 
     @JsonField(name = "entities")
     UserEntities entities;
@@ -89,9 +94,6 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "groups_count")
     long groupsCount = -1;
 
-    @JsonField(name = "created_at", typeConverter = TwitterDateConverter.class)
-    Date createdAt;
-
     @JsonField(name = "favourites_count")
     long favouritesCount = -1;
 
@@ -110,11 +112,11 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "statuses_count")
     long statusesCount = -1;
 
-    @JsonField(name = "media_count")
+    /**
+     * <code>photo_count</code> is for Fanfou compatibility
+     */
+    @JsonField(name = {"media_count", "photo_count"})
     long mediaCount = -1;
-
-    @JsonField(name = "photo_count")
-    long photoCount = -1;
 
     @JsonField(name = "lang")
     String lang;
@@ -131,13 +133,11 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "is_translation_enabled")
     boolean isTranslationEnabled;
 
-    @JsonField(name = "profile_background_color")
-    String profileBackgroundColor;
     /**
-     * For GNU social compatibility
+     * <code>backgroundcolor</code> is for GNU social compatibility
      */
-    @JsonField(name = "backgroundcolor")
-    String backgroundcolor;
+    @JsonField(name = {"profile_background_color", "backgroundcolor"})
+    String profileBackgroundColor;
 
     @JsonField(name = "profile_background_image_url")
     String profileBackgroundImageUrl;
@@ -160,23 +160,13 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "profile_image_url_large")
     String profileImageUrlLarge;
 
-    @JsonField(name = "profile_banner_url")
+    @JsonField(name = {"profile_banner_url", "cover_photo"})
     String profileBannerUrl;
-
     /**
-     * For GNU social compatibility
+     * <code>backgroundcolor</code> is for GNU social compatibility
      */
-    @JsonField(name = "cover_photo")
-    String coverPhoto;
-
-    @JsonField(name = "profile_link_color")
+    @JsonField(name = {"profile_link_color", "linkcolor"})
     String profileLinkColor;
-
-    /**
-     * For GNU social compatibility
-     */
-    @JsonField(name = "linkcolor")
-    String linkcolor;
 
     @JsonField(name = "profile_sidebar_border_color")
     String profileSidebarBorderColor;
@@ -199,21 +189,6 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "has_custom_timelines")
     boolean hasCustomTimelines;
 
-    @JsonField(name = "can_media_tag")
-    boolean canMediaTag;
-
-    @JsonField(name = "followed_by")
-    boolean followedBy;
-
-    @JsonField(name = "following")
-    boolean following = true;
-
-    @JsonField(name = "follow_request_sent")
-    boolean followRequestSent;
-
-    @JsonField(name = "notifications")
-    boolean notifications;
-
     @JsonField(name = "suspended")
     boolean isSuspended;
 
@@ -232,114 +207,105 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     @JsonField(name = "profile_image_url_profile_size")
     String profileImageUrlProfileSize;
 
-    @JsonField(name = "follows_you")
-    boolean followsYou;
-
-    @JsonField(name = "blocks_you")
-    boolean blocksYou;
-
-    @JsonField(name = "blocked_by")
-    boolean blockedBy;
-
-    @JsonField(name = "statusnet_blocking")
-    boolean statusnetBlocking;
-
-    @JsonField(name = "blocking")
-    boolean blocking;
-    @JsonField(name = "muting")
-    boolean muting;
+    // BEGIN Twitter fields
 
     @JsonField(name = "pinned_tweet_ids")
     String[] pinnedTweetIds;
 
-    public boolean canMediaTag() {
-        return canMediaTag;
-    }
+    // END Twitter fields
 
+    // BEGIN Relationship fields
 
-    public boolean isContributorsEnabled() {
-        return contributorsEnabled;
-    }
+    /**
+     * <code>follows_you</code> is for GNU social compatibility
+     */
+    @JsonField(name = {"followed_by", "follows_you"})
+    @Nullable
+    Boolean followedBy;
 
+    @JsonField(name = "following")
+    @Nullable
+    Boolean following;
 
-    public boolean isDefaultProfile() {
-        return defaultProfile;
-    }
+    /**
+     * <code>blocks_you</code> is for GNU social compatibility
+     */
+    @JsonField(name = {"blocked_by", "blocks_you"})
+    @Nullable
+    Boolean blockedBy;
 
+    /**
+     * <code>statusnet_blocking</code> is for GNU social compatibility
+     */
+    @JsonField(name = {"blocking", "statusnet_blocking"})
+    @Nullable
+    Boolean blocking;
 
-    public String getDescription() {
-        return description;
-    }
+    @JsonField(name = "muting")
+    @Nullable
+    Boolean muting;
 
+    @JsonField(name = "follow_request_sent")
+    @Nullable
+    Boolean followRequestSent;
 
-    public UrlEntity[] getDescriptionEntities() {
-        if (entities == null) return null;
-        return entities.getDescriptionEntities();
-    }
+    @JsonField(name = "notifications")
+    @Nullable
+    Boolean notificationsEnabled;
 
+    @JsonField(name = "can_media_tag")
+    @Nullable
+    Boolean canMediaTag;
 
-    public long getFavouritesCount() {
-        return favouritesCount;
-    }
-
-
-    public boolean isFollowRequestSent() {
-        return followRequestSent;
-    }
-
-
-    public boolean isFollowedBy() {
-        return followedBy || followsYou;
-    }
-
-
-    public long getFollowersCount() {
-        return followersCount;
-    }
-
-    public boolean isFollowing() {
-        return following;
-    }
-
-    public long getFriendsCount() {
-        return friendsCount;
-    }
-
-
-    public boolean isGeoEnabled() {
-        return geoEnabled;
-    }
-
-
-    public boolean isProfileBackgroundTiled() {
-        return profileBackgroundTile;
-    }
-
-
-    public boolean hasCustomTimelines() {
-        return hasCustomTimelines;
-    }
-
+    // END Relationship fields
 
     public String getId() {
         return id;
     }
 
-
-    public boolean isTranslationEnabled() {
-        return isTranslationEnabled;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-
-    public boolean isTranslator() {
-        return isTranslator;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-
-    public String getLang() {
-        return lang;
+    public String getName() {
+        return name;
     }
 
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public UserEntities getEntities() {
+        return entities;
+    }
+
+    public boolean isProtected() {
+        return isProtected;
+    }
+
+    public long getFollowersCount() {
+        return followersCount;
+    }
+
+    public long getFriendsCount() {
+        return friendsCount;
+    }
 
     public long getListedCount() {
         return listedCount;
@@ -349,53 +315,69 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
         return groupsCount;
     }
 
-    public String getLocation() {
-        return location;
+    public long getFavouritesCount() {
+        return favouritesCount;
     }
 
+    public int getUtcOffset() {
+        return utcOffset;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public boolean isGeoEnabled() {
+        return geoEnabled;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public long getStatusesCount() {
+        return statusesCount;
+    }
 
     public long getMediaCount() {
-        if (mediaCount != -1) return mediaCount;
-        return photoCount;
+        return mediaCount;
     }
 
-
-    public String getName() {
-        return name;
+    public String getLang() {
+        return lang;
     }
 
-
-    public boolean isNeedsPhoneVerification() {
-        return needsPhoneVerification;
+    public Status getStatus() {
+        return status;
     }
 
-
-    public boolean isNotifications() {
-        return notifications;
+    public boolean isContributorsEnabled() {
+        return contributorsEnabled;
     }
 
+    public boolean isTranslator() {
+        return isTranslator;
+    }
+
+    public boolean isTranslationEnabled() {
+        return isTranslationEnabled;
+    }
 
     public String getProfileBackgroundColor() {
-        if (profileBackgroundColor != null) return profileBackgroundColor;
-        return backgroundcolor;
+        return profileBackgroundColor;
     }
-
 
     public String getProfileBackgroundImageUrl() {
         return profileBackgroundImageUrl;
     }
 
-
     public String getProfileBackgroundImageUrlHttps() {
         return profileBackgroundImageUrlHttps;
     }
 
-
-    public String getProfileBannerImageUrl() {
-        if (profileBannerUrl != null) return profileBannerUrl;
-        return coverPhoto;
+    public boolean isProfileBackgroundTile() {
+        return profileBackgroundTile;
     }
-
 
     public String getProfileImageUrl() {
         return profileImageUrl;
@@ -409,64 +391,113 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
         return profileImageUrlLarge;
     }
 
+    public String getProfileBannerUrl() {
+        return profileBannerUrl;
+    }
+
     public String getProfileLinkColor() {
-        if (profileLinkColor != null) return profileLinkColor;
-        return linkcolor;
+        return profileLinkColor;
     }
-
-
-    public String getProfileLocation() {
-        return profileLocation;
-    }
-
 
     public String getProfileSidebarBorderColor() {
         return profileSidebarBorderColor;
     }
 
-
     public String getProfileSidebarFillColor() {
         return profileSidebarFillColor;
     }
 
+    public String getProfileTextColor() {
+        return profileTextColor;
+    }
 
     public boolean isProfileUseBackgroundImage() {
         return profileUseBackgroundImage;
     }
 
-
-    public boolean isProtected() {
-        return isProtected;
+    public boolean isDefaultProfile() {
+        return defaultProfile;
     }
 
-
-    public String getScreenName() {
-        return screenName;
+    public boolean isDefaultProfileImage() {
+        return defaultProfileImage;
     }
 
-
-    public Status getStatus() {
-        return status;
+    public boolean hasCustomTimelines() {
+        return hasCustomTimelines;
     }
-
-
-    public long getStatusesCount() {
-        return statusesCount;
-    }
-
 
     public boolean isSuspended() {
         return isSuspended;
     }
 
-
-    public String getTimeZone() {
-        return timeZone;
+    public boolean isNeedsPhoneVerification() {
+        return needsPhoneVerification;
     }
 
+    public String getStatusnetProfileUrl() {
+        return statusnetProfileUrl;
+    }
 
-    public String getUrl() {
-        return url;
+    public String getOstatusUri() {
+        return ostatusUri;
+    }
+
+    public String getProfileImageUrlOriginal() {
+        return profileImageUrlOriginal;
+    }
+
+    public String getProfileImageUrlProfileSize() {
+        return profileImageUrlProfileSize;
+    }
+
+    public String[] getPinnedTweetIds() {
+        return pinnedTweetIds;
+    }
+
+    @Nullable
+    public Boolean isFollowedBy() {
+        return followedBy;
+    }
+
+    @Nullable
+    public Boolean isFollowing() {
+        return following;
+    }
+
+    @Nullable
+    public Boolean isBlockedBy() {
+        return blockedBy;
+    }
+
+    @Nullable
+    public Boolean isBlocking() {
+        return blocking;
+    }
+
+    @Nullable
+    public Boolean isMuting() {
+        return muting;
+    }
+
+    @Nullable
+    public Boolean isFollowRequestSent() {
+        return followRequestSent;
+    }
+
+    @Nullable
+    public Boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+
+    @Nullable
+    public Boolean canMediaTag() {
+        return canMediaTag;
+    }
+
+    public UrlEntity[] getDescriptionEntities() {
+        if (entities == null) return null;
+        return entities.getDescriptionEntities();
     }
 
 
@@ -476,74 +507,6 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
     }
 
 
-    public int getUtcOffset() {
-        return utcOffset;
-    }
-
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-
-    public String getProfileTextColor() {
-        return profileTextColor;
-    }
-
-
-    public boolean isDefaultProfileImage() {
-        return defaultProfileImage;
-    }
-
-    @Nullable
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getOstatusUri() {
-        return ostatusUri;
-    }
-
-    public String getStatusnetProfileUrl() {
-        return statusnetProfileUrl;
-    }
-
-    public boolean isCanMediaTag() {
-        return canMediaTag;
-    }
-
-    public boolean isHasCustomTimelines() {
-        return hasCustomTimelines;
-    }
-
-    public String getProfileImageUrlProfileSize() {
-        return profileImageUrlProfileSize;
-    }
-
-    public String getProfileImageUrlOriginal() {
-        return profileImageUrlOriginal;
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public boolean isBlocking() {
-        return blocking || statusnetBlocking;
-    }
-
-    public boolean isBlockedBy() {
-        return blockedBy || blocksYou;
-    }
-
-    public boolean isMuting() {
-        return muting;
-    }
-
-    public String[] getPinnedTweetIds() {
-        return pinnedTweetIds;
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -552,16 +515,15 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
                 ", name='" + name + '\'' +
                 ", screenName='" + screenName + '\'' +
                 ", location='" + location + '\'' +
-                ", profileLocation='" + profileLocation + '\'' +
                 ", description='" + description + '\'' +
                 ", url='" + url + '\'' +
+                ", createdAt=" + createdAt +
                 ", entities=" + entities +
                 ", isProtected=" + isProtected +
                 ", followersCount=" + followersCount +
                 ", friendsCount=" + friendsCount +
                 ", listedCount=" + listedCount +
                 ", groupsCount=" + groupsCount +
-                ", createdAt=" + createdAt +
                 ", favouritesCount=" + favouritesCount +
                 ", utcOffset=" + utcOffset +
                 ", timeZone='" + timeZone + '\'' +
@@ -569,14 +531,12 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
                 ", isVerified=" + isVerified +
                 ", statusesCount=" + statusesCount +
                 ", mediaCount=" + mediaCount +
-                ", photoCount=" + photoCount +
                 ", lang='" + lang + '\'' +
                 ", status=" + status +
                 ", contributorsEnabled=" + contributorsEnabled +
                 ", isTranslator=" + isTranslator +
                 ", isTranslationEnabled=" + isTranslationEnabled +
                 ", profileBackgroundColor='" + profileBackgroundColor + '\'' +
-                ", backgroundcolor='" + backgroundcolor + '\'' +
                 ", profileBackgroundImageUrl='" + profileBackgroundImageUrl + '\'' +
                 ", profileBackgroundImageUrlHttps='" + profileBackgroundImageUrlHttps + '\'' +
                 ", profileBackgroundTile=" + profileBackgroundTile +
@@ -584,9 +544,7 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
                 ", profileImageUrlHttps='" + profileImageUrlHttps + '\'' +
                 ", profileImageUrlLarge='" + profileImageUrlLarge + '\'' +
                 ", profileBannerUrl='" + profileBannerUrl + '\'' +
-                ", coverPhoto='" + coverPhoto + '\'' +
                 ", profileLinkColor='" + profileLinkColor + '\'' +
-                ", linkcolor='" + linkcolor + '\'' +
                 ", profileSidebarBorderColor='" + profileSidebarBorderColor + '\'' +
                 ", profileSidebarFillColor='" + profileSidebarFillColor + '\'' +
                 ", profileTextColor='" + profileTextColor + '\'' +
@@ -598,22 +556,23 @@ public class User extends TwitterResponseObject implements Comparable<User>, Par
                 ", followedBy=" + followedBy +
                 ", following=" + following +
                 ", followRequestSent=" + followRequestSent +
-                ", notifications=" + notifications +
+                ", notifications=" + notificationsEnabled +
                 ", isSuspended=" + isSuspended +
                 ", needsPhoneVerification=" + needsPhoneVerification +
                 ", statusnetProfileUrl='" + statusnetProfileUrl + '\'' +
                 ", ostatusUri='" + ostatusUri + '\'' +
                 ", profileImageUrlOriginal='" + profileImageUrlOriginal + '\'' +
                 ", profileImageUrlProfileSize='" + profileImageUrlProfileSize + '\'' +
-                ", followsYou=" + followsYou +
-                ", blocksYou=" + blocksYou +
-                ", statusnetBlocking=" + statusnetBlocking +
+                ", blockedBy=" + blockedBy +
+                ", blocking=" + blocking +
+                ", muting=" + muting +
+                ", pinnedTweetIds=" + Arrays.toString(pinnedTweetIds) +
                 "} " + super.toString();
     }
 
     @Override
     public int compareTo(@NonNull final User that) {
-        return id.compareTo(that.getId());
+        return id.compareTo(that.id);
     }
 
     @OnJsonParseComplete

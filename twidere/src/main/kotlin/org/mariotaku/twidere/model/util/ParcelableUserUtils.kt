@@ -40,7 +40,7 @@ object ParcelableUserUtils {
         }
         obj.location = user.location
         obj.profile_image_url = user.getProfileImageOfSize(profileImageSize)
-        obj.profile_banner_url = user.profileBannerImageUrl
+        obj.profile_banner_url = user.profileBannerUrl
         obj.profile_background_url = user.profileBackgroundImageUrlHttps
         if (TextUtils.isEmpty(obj.profile_background_url)) {
             obj.profile_background_url = user.profileBackgroundImageUrl
@@ -49,14 +49,14 @@ object ParcelableUserUtils {
         if (obj.url != null && urlEntities.isNotNullOrEmpty()) {
             obj.url_expanded = urlEntities[0].expandedUrl
         }
-        obj.is_follow_request_sent = user.isFollowRequestSent
+        obj.is_follow_request_sent = user.isFollowRequestSent == true
         obj.followers_count = user.followersCount
         obj.friends_count = user.friendsCount
         obj.statuses_count = user.statusesCount
         obj.favorites_count = user.favouritesCount
         obj.listed_count = user.listedCount
         obj.media_count = user.mediaCount
-        obj.is_following = user.isFollowing
+        obj.is_following = user.isFollowing == true
         obj.background_color = parseColor(user.profileBackgroundColor)
         obj.link_color = parseColor(user.profileLinkColor)
         obj.text_color = parseColor(user.profileTextColor)
@@ -65,10 +65,10 @@ object ParcelableUserUtils {
 
         val extras = ParcelableUser.Extras()
         extras.ostatus_uri = user.ostatusUri
-        extras.blocking = user.isBlocking
-        extras.blocked_by = user.isBlockedBy
-        extras.followed_by = user.isFollowedBy
-        extras.muting = user.isMuting
+        extras.blocking = user.isBlocking == true
+        extras.blocked_by = user.isBlockedBy == true
+        extras.followed_by = user.isFollowedBy == true
+        extras.muting = user.isMuting == true
         extras.statusnet_profile_url = user.statusnetProfileUrl
         extras.profile_image_url_original = user.profileImageUrlOriginal
         extras.pinned_status_ids = user.pinnedTweetIds

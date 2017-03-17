@@ -356,6 +356,9 @@ public class ParcelableUser implements Parcelable, Comparable<ParcelableUser> {
         @JsonField(name = "muting")
         @ParcelableThisPlease
         public boolean muting;
+        @JsonField(name = "notifications_enabled")
+        @ParcelableThisPlease
+        public boolean notifications_enabled;
         @JsonField(name = "pinned_status_ids")
         @ParcelableThisPlease
         public String[] pinned_status_ids;

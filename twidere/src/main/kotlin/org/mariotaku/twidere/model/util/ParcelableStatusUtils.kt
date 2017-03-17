@@ -58,10 +58,10 @@ object ParcelableStatusUtils {
 
             result.extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
 
-            if (retweetUser.isBlocking) {
+            if (retweetUser.isBlocking == true) {
                 result.addFilterFlag(FilterFlags.BLOCKING_USER)
             }
-            if (retweetUser.isBlockedBy) {
+            if (retweetUser.isBlockedBy == true) {
                 result.addFilterFlag(FilterFlags.BLOCKED_BY_USER)
             }
             if (retweetedStatus.isPossiblySensitive) {
@@ -132,7 +132,7 @@ object ParcelableStatusUtils {
         result.user_profile_image_url = user.getProfileImageOfSize(profileImageSize)
         result.user_is_protected = user.isProtected
         result.user_is_verified = user.isVerified
-        result.user_is_following = user.isFollowing
+        result.user_is_following = user.isFollowing == true
         result.extras.user_statusnet_profile_url = user.statusnetProfileUrl
         result.extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
         val text = status.htmlText
