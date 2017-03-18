@@ -343,8 +343,13 @@ class StreamingService : BaseService() {
                 builder.setWhen(status.createdAt?.time ?: 0)
                 builder.setSmallIcon(R.drawable.ic_stat_twitter)
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                builder.setContentTitle(context.getString(R.string.notification_title_new_status_by_user, userDisplayName))
-                builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status).text)
+                if (status.isRetweetedByMe) {
+                    builder.setContentTitle(context.getString(R.string.notification_title_new_retweet_by_user, userDisplayName))
+                    builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status.retweetedStatus).text)
+                } else {
+                    builder.setContentTitle(context.getString(R.string.notification_title_new_status_by_user, userDisplayName))
+                    builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status).text)
+                }
                 builder.setContentIntent(PendingIntent.getActivity(context, 0, Intent(Intent.ACTION_VIEW, statusUri).apply {
                     setClass(context, LinkHandlerActivity::class.java)
                 }, PendingIntent.FLAG_UPDATE_CURRENT))
