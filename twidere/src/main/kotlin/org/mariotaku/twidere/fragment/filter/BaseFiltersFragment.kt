@@ -260,7 +260,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
                         val valueWhereArgs = arrayOf(text)
                         val idWhere = Expression.equalsArgs(Filters._ID).sql
                         val idWhereArgs = arrayOf(id.toString())
-                        if (DataStoreUtils.queryCount(context, uri, valueWhere, valueWhereArgs) == 0) {
+                        if (DataStoreUtils.queryCount(resolver, uri, valueWhere, valueWhereArgs) == 0) {
                             resolver.update(uri, values, idWhere, idWhereArgs)
                         } else {
                             Toast.makeText(context, R.string.message_toast_duplicate_filter_rule,

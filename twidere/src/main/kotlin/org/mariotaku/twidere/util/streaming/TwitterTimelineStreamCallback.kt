@@ -53,6 +53,7 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
             // Mention
             handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
         }
+        onAllStatus(status)
         return handled
     }
 
@@ -139,4 +140,8 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
 
     @WorkerThread
     override abstract fun onDirectMessage(directMessage: DirectMessage): Boolean
+
+    @WorkerThread
+    protected open fun onAllStatus(status: Status) {
+    }
 }

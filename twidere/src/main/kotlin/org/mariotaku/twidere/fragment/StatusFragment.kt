@@ -1628,13 +1628,11 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 replyStart = -1
             } else {
                 var sortId = status.sort_id
+
                 if (status.is_retweet) {
-                    for (item in data) {
-                        if (TextUtils.equals(status.retweet_id, item.id)) {
-                            sortId = item.sort_id
-                            break
-                        }
-                    }
+                    sortId = data.find {
+                        it.id == status.retweet_id
+                    }?.sort_id ?: status.retweet_timestamp
                 }
                 var conversationCount = 0
                 var replyCount = 0

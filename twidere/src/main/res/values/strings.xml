@@ -713,6 +713,8 @@
     <string name="notification_ringtone">Ringtone</string>
     <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g></string>
     <string name="notification_status_multiple">New Tweet by <xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
+    <string name="notification_title_new_status_by_user">New tweet by <xliff:g id="user">%1$s</xliff:g></string>
+    <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retweeted</string>
     <string name="notification_type_home">Home</string>
     <string name="notification_type_interactions">Interactions</string>
     <string name="notification_type_messages">Messages</string>
@@ -1040,9 +1042,11 @@
     <!-- [noun] Accessibility label for retweet icon -->
     <string name="status_type_retweet">Retweet</string>
 
+    <string name="stream_summary_notification_users">Users turned "Notifications" on, not 100% reliable.</string>
     <string name="stream_type_home">Home</string>
     <string name="stream_type_interactions">Interactions</string>
     <string name="stream_type_messages">Messages</string>
+    <string name="stream_type_notification_users">Notification enabled users</string>
 
     <string name="streaming">Streaming</string>
 

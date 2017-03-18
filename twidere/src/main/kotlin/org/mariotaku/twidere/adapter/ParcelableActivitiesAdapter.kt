@@ -151,7 +151,8 @@ class ParcelableActivitiesAdapter(
 
     override fun getActivity(position: Int, raw: Boolean): ParcelableActivity {
         val dataPosition = position - activityStartIndex
-        if (dataPosition < 0 || dataPosition >= data!!.size) {
+        val activityCount = getActivityCount(raw)
+        if (dataPosition < 0 || dataPosition >= activityCount) {
             val validRange = rangeOfSize(activityStartIndex, getActivityCount(raw))
             throw IndexOutOfBoundsException("index: $position, valid range is $validRange")
         }

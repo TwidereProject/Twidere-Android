@@ -93,6 +93,9 @@ class AccountPreferences(private val context: Context, val accountKey: UserKey) 
     val isStreamDirectMessagesEnabled: Boolean
         get() = preferences.getBoolean("stream_direct_messages", true)
 
+    val isStreamNotificationUsersEnabled: Boolean
+        get() = preferences.getBoolean("stream_notification_users", true)
+
     val isDirectMessagesNotificationEnabled: Boolean
         get() = preferences.getBoolean(KEY_DIRECT_MESSAGES_NOTIFICATION, DEFAULT_DIRECT_MESSAGES_NOTIFICATION)
 

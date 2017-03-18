@@ -29,6 +29,7 @@ import org.mariotaku.sqliteqb.library.Tables;
 import org.mariotaku.sqliteqb.library.query.SQLSelectQuery;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore;
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships;
 import org.mariotaku.twidere.util.TwidereArrayUtils;
 import org.mariotaku.twidere.util.Utils;
 
@@ -60,17 +61,17 @@ public final class CachedUsersQueryBuilder {
             final UserKey accountKey) {
         final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
         qb.select(select).from(new Tables(TwidereDataStore.CachedUsers.TABLE_NAME));
-        final Columns.Column relationshipsUserId = new Columns.Column(new Table(TwidereDataStore.CachedRelationships.TABLE_NAME),
-                TwidereDataStore.CachedRelationships.USER_KEY);
+        final Columns.Column relationshipsUserId = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
+                CachedRelationships.USER_KEY);
         final Columns.Column usersUserId = new Columns.Column(new Table(TwidereDataStore.CachedUsers.TABLE_NAME),
-                TwidereDataStore.CachedRelationships.USER_KEY);
-        final Columns.Column relationshipsAccountId = new Columns.Column(new Table(TwidereDataStore.CachedRelationships.TABLE_NAME),
-                TwidereDataStore.CachedRelationships.ACCOUNT_KEY);
+                CachedRelationships.USER_KEY);
+        final Columns.Column relationshipsAccountId = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
+                CachedRelationships.ACCOUNT_KEY);
         final Expression on = Expression.and(
                 Expression.equals(relationshipsUserId, usersUserId),
                 Expression.equalsArgs(relationshipsAccountId.getSQL())
         );
-        qb.join(new Join(false, Join.Operation.LEFT, new Table(TwidereDataStore.CachedRelationships.TABLE_NAME), on));
+        qb.join(new Join(false, Join.Operation.LEFT, new Table(CachedRelationships.TABLE_NAME), on));
         final Expression userTypeExpression;
         final String host = accountKey.getHost();
         final String[] accountKeyArgs;
@@ -113,10 +114,10 @@ public final class CachedUsersQueryBuilder {
                 columns[i] = new Columns.Column(column);
             }
         }
-        final String expr = String.format(Locale.ROOT, "%s * 100 + %s * 50 - %s * 100 - %s * 100 - %s * 100",
-                valueOrZero(TwidereDataStore.CachedRelationships.FOLLOWING, TwidereDataStore.CachedRelationships.FOLLOWED_BY,
-                        TwidereDataStore.CachedRelationships.BLOCKING, TwidereDataStore.CachedRelationships.BLOCKED_BY,
-                        TwidereDataStore.CachedRelationships.MUTING));
+        final String expr = String.format(Locale.ROOT, "%s * 100 + %s * 50 + %s * 50 - %s * 100 - %s * 100 - %s * 100",
+                valueOrZero(CachedRelationships.FOLLOWING, CachedRelationships.NOTIFICATIONS_ENABLED,
+                        CachedRelationships.FOLLOWED_BY, CachedRelationships.BLOCKING,
+                        CachedRelationships.BLOCKED_BY, CachedRelationships.MUTING));
         columns[columns.length - 1] = new Columns.Column(expr, "score");
         qb.select(select);
         final Pair<SQLSelectQuery, String[]> pair = withRelationship(new Columns(columns), null,

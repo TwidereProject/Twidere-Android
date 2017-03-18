@@ -58,8 +58,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.glide.PauseRecyclerViewOnScrollListener
@@ -485,7 +484,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
-        if (position == RecyclerView.NO_POSITION) return
+        if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
         val status = adapter.getStatus(position)
         val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
         readPositionTagWithArguments?.let {

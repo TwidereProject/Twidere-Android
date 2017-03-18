@@ -231,6 +231,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     int NOTIFICATION_ID_DIRECT_MESSAGES = 3;
     int NOTIFICATION_ID_DRAFTS = 4;
     int NOTIFICATION_ID_DATA_PROFILING = 5;
+    int NOTIFICATION_ID_USER_NOTIFICATION = 10;
     int NOTIFICATION_ID_UPDATE_STATUS = 101;
     int NOTIFICATION_ID_SEND_DIRECT_MESSAGE = 102;
 

@@ -463,7 +463,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
-        if (position == RecyclerView.NO_POSITION) return
+        if (position == RecyclerView.NO_POSITION || adapter.getActivityCount(false) <= 0) return
         val item = adapter.getActivity(position)
         var positionUpdated = false
         readPositionTag?.let {

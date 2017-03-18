@@ -835,7 +835,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
         private fun loadAccountsInfo(): AccountsInfo {
             val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
-            val draftsCount = DataStoreUtils.queryCount(context, Drafts.CONTENT_URI_UNSENT, null, null)
+            val draftsCount = DataStoreUtils.queryCount(context.contentResolver, Drafts.CONTENT_URI_UNSENT, null, null)
             return AccountsInfo(accounts, draftsCount)
         }
     }

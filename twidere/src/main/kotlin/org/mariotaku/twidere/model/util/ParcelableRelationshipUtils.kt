@@ -28,7 +28,7 @@ import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 object ParcelableRelationshipUtils {

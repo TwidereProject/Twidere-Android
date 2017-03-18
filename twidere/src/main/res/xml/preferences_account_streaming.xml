@@ -34,4 +34,9 @@
         android:defaultValue="true"
         android:key="stream_direct_messages"
         android:title="@string/stream_type_messages"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="stream_notification_users"
+        android:summary="@string/stream_summary_notification_users"
+        android:title="@string/stream_type_notification_users"/>
 </PreferenceScreen>

@@ -285,6 +285,7 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
                 if (status == null || data == null || data.isEmpty()) return
                 val firstVisiblePosition = layoutManager.findFirstVisibleItemPosition()
                 val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+                if (firstVisiblePosition < 0 || lastVisiblePosition < 0) return
                 val startIndex = adapter.statusStartIndex
                 for (i in firstVisiblePosition..lastVisiblePosition) {
                     if (status.account_key == adapter.getAccountKey(i) && status.id == adapter.getStatusId(i)) {

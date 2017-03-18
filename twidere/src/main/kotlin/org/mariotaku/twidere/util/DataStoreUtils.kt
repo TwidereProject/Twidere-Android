@@ -185,9 +185,8 @@ object DataStoreUtils {
 
 
     fun getOldestStatusSortIds(context: Context, uri: Uri, accountKeys: Array<UserKey?>): LongArray {
-        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY,
-                Statuses.SORT_ID, OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)), null,
-                null)
+        return getLongFieldArray(context, uri, accountKeys, Statuses.ACCOUNT_KEY, Statuses.SORT_ID,
+                OrderBy(SQLFunctions.MIN(Statuses.STATUS_TIMESTAMP)), null, null)
     }
 
     fun getNewestActivityMaxPositions(context: Context, uri: Uri, accountKeys: Array<UserKey?>): Array<String?> {
@@ -217,13 +216,13 @@ object DataStoreUtils {
     fun getStatusCount(context: Context, uri: Uri, accountId: UserKey): Int {
         val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
         val whereArgs = arrayOf(accountId.toString())
-        return queryCount(context, uri, where, whereArgs)
+        return queryCount(context.contentResolver, uri, where, whereArgs)
     }
 
     fun getActivitiesCount(context: Context, uri: Uri,
             accountKey: UserKey): Int {
         val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
-        return queryCount(context, uri, where, arrayOf(accountKey.toString()))
+        return queryCount(context.contentResolver, uri, where, arrayOf(accountKey.toString()))
     }
 
 
@@ -307,7 +306,7 @@ object DataStoreUtils {
         }
 
         val selection = Expression.and(*expressions.toTypedArray())
-        return queryCount(context, uri, selection.sql, expressionArgs.toTypedArray())
+        return queryCount(context.contentResolver, uri, selection.sql, expressionArgs.toTypedArray())
     }
 
     fun getActivitiesCount(context: Context, uri: Uri, compare: Long,
@@ -321,7 +320,7 @@ object DataStoreUtils {
         val whereArgs = arrayListOf<String>()
         keys.mapTo(whereArgs) { it.toString() }
         whereArgs.add(compare.toString())
-        return queryCount(context, uri, selection.sql, whereArgs.toTypedArray())
+        return queryCount(context.contentResolver, uri, selection.sql, whereArgs.toTypedArray())
     }
 
     fun getActivitiesCount(context: Context, uri: Uri,
@@ -344,8 +343,8 @@ object DataStoreUtils {
             selectionArgs = keys + since.toString()
         }
         // If followingOnly option is on, we have to iterate over items
+        val resolver = context.contentResolver
         if (followingOnly) {
-            val resolver = context.contentResolver
             val projection = arrayOf(Activities.SOURCES)
             val cur = resolver.query(uri, projection, selection.sql, selectionArgs, null) ?: return -1
             try {
@@ -377,7 +376,7 @@ object DataStoreUtils {
                 cur.close()
             }
         }
-        return queryCount(context, uri, selection.sql, selectionArgs)
+        return queryCount(resolver, uri, selection.sql, selectionArgs)
     }
 
     fun getTableId(uri: Uri?): Int {
@@ -763,10 +762,9 @@ object DataStoreUtils {
         fun assign(array: T, arrayIdx: Int, cur: Cursor, colIdx: I)
     }
 
-    fun queryCount(context: Context, uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        val resolver = context.contentResolver
+    fun queryCount(cr: ContentResolver, uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val projection = arrayOf(SQLFunctions.COUNT())
-        val cur = resolver.query(uri, projection, selection, selectionArgs, null) ?: return -1
+        val cur = cr.query(uri, projection, selection, selectionArgs, null) ?: return -1
         try {
             if (cur.moveToFirst()) {
                 return cur.getInt(0)
@@ -911,7 +909,6 @@ object DataStoreUtils {
         }
         return null
     }
-
 
 
 }
