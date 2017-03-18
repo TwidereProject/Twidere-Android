@@ -39,6 +39,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
+import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.task.*
@@ -326,11 +327,12 @@ class AsyncTwitterWrapper(
     }
 
     fun updateFriendship(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate) {
-        TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any, Relationship, Exception, Any>(context) {
-            override fun onExecute(params: Any): Relationship {
+        TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any?, Relationship, Exception, Any>(context) {
+            override fun onExecute(params: Any?): Relationship {
                 val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
                         ?: throw MicroBlogException("No account")
                 val relationship = microBlog.updateFriendship(userKey.id, update)
+                val cr = context.contentResolver
                 if (!relationship.isSourceWantRetweetsFromTarget) {
                     // TODO remove cached retweets
                     val where = Expression.and(
@@ -338,8 +340,11 @@ class AsyncTwitterWrapper(
                             Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)
                     )
                     val selectionArgs = arrayOf(accountKey.toString(), userKey.toString())
-                    context.contentResolver.delete(Statuses.CONTENT_URI, where.sql, selectionArgs)
+                    cr.delete(Statuses.CONTENT_URI, where.sql, selectionArgs)
                 }
+
+                ParcelableRelationshipUtils.insert(cr, listOf(ParcelableRelationshipUtils
+                        .create(accountKey, userKey, relationship)))
                 return relationship
             }
 

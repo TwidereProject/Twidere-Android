@@ -43,6 +43,12 @@
         android:title="@string/scheduled_statuses"
         android:visible="false"/>
     <item
+        android:id="@+id/enable_notifications"
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/ic_action_notification"
+        android:title="@string/enable_notifications"/>
+    <item
         android:id="@id/enable_retweets"
         android:checkable="true"
         android:icon="@drawable/ic_action_retweet"

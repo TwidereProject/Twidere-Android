@@ -63,6 +63,7 @@ import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
 import edu.tsinghua.hotmobi.HotMobiLogger
@@ -828,6 +829,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself && isTwitter)
+        MenuUtils.setItemAvailability(menu, R.id.enable_notifications, !isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself && isTwitter)
 
         val userRelationship = relationship
@@ -847,14 +849,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     ActionIconDrawable.setMenuHighlight(blockItem, TwidereMenuInfo(userRelationship.blocking))
                     blockItem.setTitle(if (userRelationship.blocking) R.string.action_unblock else R.string.action_block)
                 }
-                val muteItem = menu.findItem(R.id.mute_user)
-                if (muteItem != null) {
-                    muteItem.isChecked = userRelationship.muting
-                }
-                val wantRetweetsItem = menu.findItem(R.id.enable_retweets)
-                if (wantRetweetsItem != null) {
-                    wantRetweetsItem.isChecked = userRelationship.retweet_enabled
-                }
+                menu.findItem(R.id.mute_user)?.isChecked = userRelationship.muting
+                menu.findItem(R.id.enable_retweets)?.isChecked = userRelationship.retweet_enabled
+                menu.findItem(R.id.enable_notifications)?.isChecked = userRelationship.notifications_enabled
             }
         } else {
             MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
@@ -1024,6 +1021,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val newState = !item.isChecked
                 val update = FriendshipUpdate()
                 update.retweets(newState)
+                twitter.updateFriendship(user.account_key, user.key, update)
+                item.isChecked = newState
+                return true
+            }
+            R.id.enable_notifications -> {
+                val newState = !item.isChecked
+                if (newState) {
+                    Toast.makeText(context, R.string.message_toast_notification_enabled_hint,
+                            Toast.LENGTH_SHORT).show()
+                }
+                val update = FriendshipUpdate()
+                update.deviceNotifications(newState)
                 twitter.updateFriendship(user.account_key, user.key, update)
                 item.isChecked = newState
                 return true

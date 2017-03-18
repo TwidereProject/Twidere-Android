@@ -342,6 +342,7 @@
 
     <string name="empty_content">Empty content</string>
 
+    <string name="enable_notifications">Enable notifications</string>
     <string name="enable_retweets">Enable retweets</string>
     <string name="enable_streaming">Enable streaming</string>
 
@@ -632,6 +633,7 @@
     <string name="message_toast_no_account_permission">Account permission is required</string>
     <string name="message_toast_no_account_selected">No account selected</string>
     <string name="message_toast_no_user_selected">No user selected</string>
+    <string name="message_toast_notification_enabled_hint">Only available when streaming is on, and not 100% reliable.</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
@@ -713,8 +715,8 @@
     <string name="notification_ringtone">Ringtone</string>
     <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g></string>
     <string name="notification_status_multiple">New Tweet by <xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
-    <string name="notification_title_new_status_by_user">New tweet by <xliff:g id="user">%1$s</xliff:g></string>
     <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retweeted</string>
+    <string name="notification_title_new_status_by_user">New tweet by <xliff:g id="user">%1$s</xliff:g></string>
     <string name="notification_type_home">Home</string>
     <string name="notification_type_interactions">Interactions</string>
     <string name="notification_type_messages">Messages</string>
