@@ -74,6 +74,25 @@ public class ParcelableRelationship implements Parcelable {
     public boolean filtering;
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ParcelableRelationship that = (ParcelableRelationship) o;
+
+        if (!account_key.equals(that.account_key)) return false;
+        return user_key.equals(that.user_key);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = account_key.hashCode();
+        result = 31 * result + user_key.hashCode();
+        return result;
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }

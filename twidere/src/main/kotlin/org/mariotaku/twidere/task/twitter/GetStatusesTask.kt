@@ -33,7 +33,7 @@ import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.AccountSupportColumns
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.BaseAbstractTask
-import org.mariotaku.twidere.task.CacheUsersStatusesTask
+import org.mariotaku.twidere.task.cache.CacheUsersStatusesTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
@@ -109,12 +109,10 @@ abstract class GetStatusesTask(
                 val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId, sinceSortId,
                         maxSortId, loadItemLimit, false)
                 // TODO cache related data and preload
-                val cacheTask = CacheUsersStatusesTask(context)
-                val response = TwitterWrapper.StatusListResponse(accountKey, statuses)
-                cacheTask.params = response
+                val cacheTask = CacheUsersStatusesTask(context, accountKey, statuses)
                 TaskStarter.execute(cacheTask)
                 errorInfoStore.remove(errorInfoKey, accountKey.id)
-                result.add(response)
+                result.add(TwitterWrapper.StatusListResponse(accountKey, statuses))
                 if (storeResult != 0) {
                     throw GetTimelineException(storeResult)
                 }

@@ -29,6 +29,7 @@ Thumbs.db
 
 # Local files
 /captures
+/reports
 
 # JRE error dumps
 hs_err_*.log

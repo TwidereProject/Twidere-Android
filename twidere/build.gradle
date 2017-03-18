@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId "org.mariotaku.twidere"
-        minSdkVersion 14
+        minSdkVersion project.properties['overrideMinSdkVersion'] ?: 14
         targetSdkVersion 25
         versionCode 301
         versionName '3.4.39'

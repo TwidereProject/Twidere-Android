@@ -35,7 +35,7 @@ class DestroyFriendshipTask(context: Context) : AbsFriendshipOperationTask(conte
         val where = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
                 Expression.or(Expression.equalsArgs(Statuses.USER_KEY),
                         Expression.equalsArgs(Statuses.RETWEETED_BY_USER_KEY)))
-        val whereArgs = arrayOf(args.userKey.toString(), args.userKey.toString(), args.userKey.toString())
+        val whereArgs = arrayOf(args.accountKey.toString(), args.userKey.toString(), args.userKey.toString())
         val resolver = context.contentResolver
         resolver.delete(Statuses.CONTENT_URI, where.sql, whereArgs)
     }

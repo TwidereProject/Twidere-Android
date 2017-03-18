@@ -34,10 +34,8 @@ import org.mariotaku.twidere.provider.TwidereDataStore.SavedSearches
 object ContentValuesCreator {
 
     fun createCachedUser(user: User, profileImageSize: String = "normal"): ContentValues {
-        val values = ContentValues()
-        ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).writeTo(ParcelableUserUtils.fromUser(user, null,
-                profileImageSize = profileImageSize), values)
-        return values
+        return ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
+                .create(ParcelableUserUtils.fromUser(user, null, profileImageSize = profileImageSize))
     }
 
     fun createFilteredUser(status: ParcelableStatus): ContentValues {

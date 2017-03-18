@@ -19,16 +19,22 @@
 
 package org.mariotaku.twidere.model.util
 
+import android.content.ContentResolver
+import android.support.v4.util.ArraySet
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Relationship
 import org.mariotaku.microblog.library.twitter.model.User
+import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.model.ParcelableRelationship
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 object ParcelableRelationshipUtils {
 
     fun create(accountKey: UserKey, userKey: UserKey, relationship: Relationship?,
-            filtering: Boolean): ParcelableRelationship {
+               filtering: Boolean): ParcelableRelationship {
         val obj = ParcelableRelationship()
         obj.account_key = accountKey
         obj.user_key = userKey
@@ -63,7 +69,7 @@ object ParcelableRelationshipUtils {
     }
 
     fun create(accountKey: UserKey, userKey: UserKey, user: User,
-            filtering: Boolean): ParcelableRelationship {
+               filtering: Boolean = false): ParcelableRelationship {
         val obj = ParcelableRelationship()
         obj.account_key = accountKey
         obj.user_key = userKey
@@ -75,5 +81,26 @@ object ParcelableRelationshipUtils {
         obj.can_dm = user.isFollowedBy == true
         obj.notifications_enabled = user.isNotificationsEnabled == true
         return obj
+    }
+
+    /**
+     * @param relationships Relationships to update, if an item has _id, then we will call
+     * `ContentResolver.update`, `ContentResolver.bulkInsert` otherwise.
+     */
+    fun insert(cr: ContentResolver, relationships: Collection<ParcelableRelationship>) {
+        val insertItems = ArraySet<ParcelableRelationship>()
+        val valuesCreator = ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java)
+        relationships.forEach {
+            if (it._id > 0) {
+                val values = valuesCreator.create(it)
+                val where = Expression.equalsArgs(CachedRelationships._ID).sql
+                val whereArgs = arrayOf(it._id.toString())
+                cr.update(CachedRelationships.CONTENT_URI, values, where, whereArgs)
+            } else {
+                insertItems.add(it)
+            }
+        }
+        ContentResolverUtils.bulkInsert(cr, CachedRelationships.CONTENT_URI,
+                insertItems.map(valuesCreator::create))
     }
 }

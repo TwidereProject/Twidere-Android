@@ -40,3 +40,7 @@ inline fun <reified T> List<T>.subArray(range: IntRange): Array<T> {
         this[range.start + it]
     }
 }
+
+fun <T> T.addTo(collection: MutableCollection<T>): Boolean {
+    return collection.add(this)
+}
