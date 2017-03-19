@@ -799,8 +799,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     @UiThread
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val user = user ?: return
+        val user = this.user ?: return
         val account = this.account
+        val relationship = this.relationship
 
         val isMyself = user.account_key.maybeEquals(user.key)
         val mentionItem = menu.findItem(R.id.mention)
@@ -829,32 +830,39 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself && isTwitter)
-        MenuUtils.setItemAvailability(menu, R.id.enable_notifications, !isMyself && isTwitter)
         MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself && isTwitter)
 
-        val userRelationship = relationship
-        if (userRelationship != null) {
-
-            val filterItem = menu.findItem(R.id.add_to_filter)
-            if (filterItem != null) {
-                filterItem.isChecked = userRelationship.filtering
+        if (relationship != null) {
+            menu.findItem(R.id.add_to_filter)?.apply {
+                isChecked = relationship.filtering
             }
+
             if (isMyself) {
                 MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
+                MenuUtils.setItemAvailability(menu, R.id.enable_notifications, false)
             } else {
-                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, userRelationship.can_dm)
+                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, relationship.can_dm)
                 MenuUtils.setItemAvailability(menu, R.id.block, true)
-                val blockItem = menu.findItem(R.id.block)
-                if (blockItem != null) {
-                    ActionIconDrawable.setMenuHighlight(blockItem, TwidereMenuInfo(userRelationship.blocking))
-                    blockItem.setTitle(if (userRelationship.blocking) R.string.action_unblock else R.string.action_block)
+                MenuUtils.setItemAvailability(menu, R.id.enable_notifications, isTwitter && relationship.following)
+
+                menu.findItem(R.id.block)?.apply {
+                    ActionIconDrawable.setMenuHighlight(this, TwidereMenuInfo(relationship.blocking))
+                    this.setTitle(if (relationship.blocking) R.string.action_unblock else R.string.action_block)
                 }
-                menu.findItem(R.id.mute_user)?.isChecked = userRelationship.muting
-                menu.findItem(R.id.enable_retweets)?.isChecked = userRelationship.retweet_enabled
-                menu.findItem(R.id.enable_notifications)?.isChecked = userRelationship.notifications_enabled
+                menu.findItem(R.id.mute_user)?.apply {
+                    isChecked = relationship.muting
+                }
+                menu.findItem(R.id.enable_retweets)?.apply {
+                    isChecked = relationship.retweet_enabled
+                }
+                menu.findItem(R.id.enable_notifications)?.apply {
+                    isChecked = relationship.notifications_enabled
+                }
             }
+
         } else {
             MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
+            MenuUtils.setItemAvailability(menu, R.id.enable_notifications, false)
         }
         val intent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER)
         val extras = Bundle()
