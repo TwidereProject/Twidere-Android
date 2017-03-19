@@ -35,6 +35,7 @@ abstract class ProgressSaveFileTask(
 ) : SaveFileTask(context, destination, fileInfo) {
 
     override fun showProgress() {
+        val context = this.context ?: return
         (context as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
             val fragment = ProgressDialogFragment()
             fragment.isCancelable = false
@@ -43,6 +44,7 @@ abstract class ProgressSaveFileTask(
     }
 
     override fun dismissProgress() {
+        val context = this.context ?: return
         (context as IBaseActivity<*>).executeAfterFragmentResumed { activity ->
             val fm = activity.supportFragmentManager
             val fragment = fm.findFragmentByTag(PROGRESS_FRAGMENT_TAG) as? DialogFragment
