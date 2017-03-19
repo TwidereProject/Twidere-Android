@@ -124,7 +124,7 @@ fun RequestManager.loadProfileImage(context: Context, conversation: ParcelableMe
 fun RequestManager.loadOriginalProfileImage(context: Context, user: ParcelableUser,
         @ImageShapeStyle shapeStyle: Int, cornerRadius: Float = 0f, cornerRadiusRatio: Float = 0f
 ): DrawableRequestBuilder<String> {
-    val original = user.extras.profile_image_url_original?.takeUnless(String::isEmpty)
+    val original = user.extras?.profile_image_url_original?.takeUnless(String::isEmpty)
             ?: Utils.getOriginalTwitterProfileImage(user.profile_image_url)
     return configureLoadProfileImage(context, shapeStyle, cornerRadius, cornerRadiusRatio) {
         load(original)
