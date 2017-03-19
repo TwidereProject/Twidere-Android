@@ -67,6 +67,7 @@
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="action_like">Like</string>
     <string name="action_liking">liking</string>
+    <string name="action_mark_as_read">Mark as read</string>
     <string name="action_modifying_lists">modifying lists</string>
     <string name="action_mute">Mute</string>
     <string name="action_mute_notifications">Mute notifications</string>

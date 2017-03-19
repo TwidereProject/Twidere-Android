@@ -24,8 +24,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.Loader
+import android.view.ContextMenu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.activity_premium_dashboard.*
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.sqliteqb.library.*
@@ -37,7 +43,9 @@ import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter
 import org.mariotaku.twidere.adapter.MessagesEntriesAdapter.MessageConversationClickListener
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
+import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
+import org.mariotaku.twidere.extension.model.getTitle
 import org.mariotaku.twidere.extension.model.user
 import org.mariotaku.twidere.fragment.AbsContentListRecyclerViewFragment
 import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
@@ -49,8 +57,10 @@ import org.mariotaku.twidere.model.event.GetMessagesTaskEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.message.GetMessagesTask
+import org.mariotaku.twidere.task.twitter.message.MarkMessageReadTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.view.ExtendedRecyclerView
 
 /**
  * Created by mariotaku on 16/3/28.
@@ -70,6 +80,7 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         adapter.listener = this
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
         loaderManager.initLoader(0, null, this)
+        registerForContextMenu(recyclerView)
     }
 
     override fun onStart() {
@@ -141,6 +152,12 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         IntentUtils.openMessageConversation(context, conversation.account_key, conversation.id)
     }
 
+    override fun onConversationLongClick(position: Int): Boolean {
+        val view = recyclerView.layoutManager.findViewByPosition(position) ?: return false
+        recyclerView.showContextMenuForChild(view)
+        return true
+    }
+
     override fun onProfileImageClick(position: Int) {
         val conversation = adapter.getConversation(position) ?: return
         val user = conversation.user ?: return
@@ -160,6 +177,30 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         }
         startActivity(IntentUtils.newMessageConversation(accountKey))
         return true
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        if (!userVisibleHint || menuInfo == null) return
+        val info = menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return
+        val conversation = adapter.getConversation(info.position) ?: return
+        val inflater = MenuInflater(context)
+        inflater.inflate(R.menu.context_message_entry, menu)
+        menu.setHeaderTitle(conversation.getTitle(context, userColorNameManager,
+                preferences[nameFirstKey]).first)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        if (!userVisibleHint) return false
+        val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: return false
+        when (item.itemId) {
+            R.id.mark_read -> {
+                val conversation = adapter.getConversation(menuInfo.position) ?: return true
+                TaskStarter.execute(MarkMessageReadTask(context, conversation.account_key,
+                        conversation.id))
+                return true
+            }
+        }
+        return super.onContextItemSelected(item)
     }
 
     @Subscribe

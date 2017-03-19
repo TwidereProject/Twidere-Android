@@ -60,6 +60,9 @@ class MessageEntryViewHolder(itemView: View, val adapter: MessagesEntriesAdapter
         itemView.setOnClickListener {
             adapter.listener?.onConversationClick(layoutPosition)
         }
+        itemView.setOnLongClickListener {
+            adapter.listener?.onConversationLongClick(layoutPosition) ?: false
+        }
         profileImage.setOnClickListener {
             adapter.listener?.onProfileImageClick(layoutPosition)
         }
