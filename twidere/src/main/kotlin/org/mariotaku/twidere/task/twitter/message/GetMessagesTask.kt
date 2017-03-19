@@ -128,7 +128,7 @@ class GetMessagesTask(
         val updateLastRead = maxIds != null
 
         val received = microBlog.getDirectMessages(Paging().apply {
-            count(10)
+            count(100)
             val maxId = maxIds?.get(index)
             val sinceId = sinceIds?.get(index)
             if (maxId != null) {
@@ -139,7 +139,7 @@ class GetMessagesTask(
             }
         })
         val sent = microBlog.getSentDirectMessages(Paging().apply {
-            count(10)
+            count(100)
             val accountsCount = param.accountKeys.size
             val maxId = maxIds?.get(accountsCount + index)
             val sinceId = sinceIds?.get(accountsCount + index)
@@ -530,20 +530,27 @@ class GetMessagesTask(
                 appendUsers: Boolean = false,
                 updateLastRead: Boolean = false
         ): ParcelableMessageConversation? {
+            fun ParcelableMessageConversation.applyLastRead(message: ParcelableMessage) {
+                last_read_id = message.id
+                last_read_timestamp = message.timestamp
+            }
+
             val conversation = this[conversationId] ?: run {
                 if (message == null) return null
                 val obj = ParcelableMessageConversation()
                 obj.id = conversationId
                 obj.conversation_type = conversationType
                 obj.applyFrom(message, details)
+                if (updateLastRead) {
+                    obj.applyLastRead(message)
+                }
                 this[conversationId] = obj
                 return@run obj
             }
             if (message != null && message.timestamp > conversation.timestamp) {
                 conversation.applyFrom(message, details)
                 if (updateLastRead) {
-                    conversation.last_read_id = message.id
-                    conversation.last_read_timestamp = message.timestamp
+                    conversation.applyLastRead(message)
                 }
             }
             if (appendUsers) {
