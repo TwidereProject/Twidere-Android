@@ -181,7 +181,7 @@ class SendMessageTask(
                 profileImageSize = profileImageSize)
         val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey,
                 profileImageSize = profileImageSize)
-        conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), true)
+        conversations.addConversation(message.conversation_id, details, message, setOf(sender, recipient), appendUsers = true)
         return GetMessagesTask.DatabaseUpdateData(conversations.values, listOf(message))
     }
 

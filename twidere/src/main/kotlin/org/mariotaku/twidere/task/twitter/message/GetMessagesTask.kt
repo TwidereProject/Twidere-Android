@@ -119,14 +119,16 @@ class GetMessagesTask(
         }
     }
 
-    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getDefaultMessages(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
         val maxIds = if (param.hasMaxIds) param.maxIds else null
+        val updateLastRead = maxIds != null
 
         val received = microBlog.getDirectMessages(Paging().apply {
-            count(100)
+            count(10)
             val maxId = maxIds?.get(index)
             val sinceId = sinceIds?.get(index)
             if (maxId != null) {
@@ -137,7 +139,7 @@ class GetMessagesTask(
             }
         })
         val sent = microBlog.getSentDirectMessages(Paging().apply {
-            count(100)
+            count(10)
             val accountsCount = param.accountKeys.size
             val maxId = maxIds?.get(accountsCount + index)
             val sinceId = sinceIds?.get(accountsCount + index)
@@ -165,11 +167,11 @@ class GetMessagesTask(
 
         received.forEachIndexed { i, dm ->
             addConversationMessage(insertMessages, conversations, details, dm, i, received.size,
-                    false, profileImageSize)
+                    false, profileImageSize, updateLastRead)
         }
         sent.forEachIndexed { i, dm ->
             addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
-                    true, profileImageSize)
+                    true, profileImageSize, updateLastRead)
         }
         return DatabaseUpdateData(conversations.values, insertMessages)
     }
@@ -203,7 +205,8 @@ class GetMessagesTask(
     }
 
 
-    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails, param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
+    private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails,
+            param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
         val cursor = param.cursors?.get(index)
         val page = cursor?.substringAfter("page:").toInt(-1)
@@ -321,10 +324,10 @@ class GetMessagesTask(
             AccountUtils.getAllAccountDetails(android.accounts.AccountManager.get(context), accountKeys, false)
         }
 
-        protected val defaultKeys: Array<UserKey?>by lazy {
+        protected val defaultKeys: Array<UserKey?> by lazy {
             return@lazy accounts.map { account ->
                 account ?: return@map null
-                if (account.isOfficial(context) || account.type == AccountType.FANFOU) {
+                if (account.isOfficial(context)) {
                     return@map null
                 }
                 return@map account.key
@@ -394,7 +397,7 @@ class GetMessagesTask(
                     else -> ConversationType.ONE_TO_ONE
                 }
                 val conversation = conversations.addConversation(k, account, recentMessage, participants,
-                        false, conversationType) ?: continue
+                        conversationType, appendUsers = false) ?: continue
                 if (conversation.id in conversationDeletions) continue
                 conversation.conversation_name = v.name
                 conversation.conversation_avatar = v.avatarImageHttps
@@ -514,13 +517,18 @@ class GetMessagesTask(
             }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
         }
 
+        /**
+         * @param appendUsers True to append users, false to overwrite
+         * @param updateLastRead True to set `lastRead` values to newest message
+         */
         fun MutableMap<String, ParcelableMessageConversation>.addConversation(
                 conversationId: String,
                 details: AccountDetails,
                 message: ParcelableMessage?,
                 users: Collection<ParcelableUser>,
-                addUsers: Boolean = false,
-                conversationType: String = ConversationType.ONE_TO_ONE
+                conversationType: String = ConversationType.ONE_TO_ONE,
+                appendUsers: Boolean = false,
+                updateLastRead: Boolean = false
         ): ParcelableMessageConversation? {
             val conversation = this[conversationId] ?: run {
                 if (message == null) return null
@@ -533,8 +541,12 @@ class GetMessagesTask(
             }
             if (message != null && message.timestamp > conversation.timestamp) {
                 conversation.applyFrom(message, details)
+                if (updateLastRead) {
+                    conversation.last_read_id = message.id
+                    conversation.last_read_timestamp = message.timestamp
+                }
             }
-            if (addUsers) {
+            if (appendUsers) {
                 conversation.addParticipants(users)
             } else {
                 conversation.participants = users.toTypedArray()
@@ -546,7 +558,7 @@ class GetMessagesTask(
         internal fun addConversationMessage(messages: MutableCollection<ParcelableMessage>,
                 conversations: MutableMap<String, ParcelableMessageConversation>,
                 details: AccountDetails, dm: DirectMessage, index: Int, size: Int,
-                outgoing: Boolean, profileImageSize: String = "normal") {
+                outgoing: Boolean, profileImageSize: String = "normal", updateLastRead: Boolean) {
             val accountKey = details.key
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
                     1.0 - (index.toDouble() / size))
@@ -556,7 +568,7 @@ class GetMessagesTask(
             val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey,
                     profileImageSize = profileImageSize)
             val conversation = conversations.addConversation(message.conversation_id, details,
-                    message, setOf(sender, recipient)) ?: return
+                    message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return
             conversation.conversation_extras_type = ParcelableMessageConversation.ExtrasType.DEFAULT
             if (conversation.conversation_extras == null) {
                 conversation.conversation_extras = DefaultConversationExtras()
