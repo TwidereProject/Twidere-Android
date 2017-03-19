@@ -282,6 +282,8 @@ class ContentNotificationManager(
                     messageSum)
             builder.setTicker(notificationTitle)
             builder.setContentTitle(notificationTitle)
+            builder.setContentIntent(getContentIntent(context, CustomTabType.DIRECT_MESSAGES,
+                    NotificationType.DIRECT_MESSAGES, accountKey, 0))
             val remaining = cur.forEachRow(5) { cur, pos ->
                 val conversation = indices.newObject(cur)
                 if (conversation.notificationDisabled) return@forEachRow false
