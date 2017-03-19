@@ -125,7 +125,16 @@ class GetMessagesTask(
 
         val sinceIds = if (param.hasSinceIds) param.sinceIds else null
         val maxIds = if (param.hasMaxIds) param.maxIds else null
-        val updateLastRead = maxIds != null
+
+        val firstFetch by lazy {
+            val firstFetchPref = preferences.getBoolean(KEY_FIRST_FETCH, true)
+            val noConversationsBefore = DataStoreUtils.queryCount(context.contentResolver,
+                    Conversations.CONTENT_URI, Expression.equalsArgs(Conversations.ACCOUNT_KEY).sql,
+                    arrayOf(accountKey.toString())) <= 0
+            return@lazy noConversationsBefore && firstFetchPref
+        }
+
+        val updateLastRead = maxIds != null || firstFetch
 
         val received = microBlog.getDirectMessages(Paging().apply {
             count(100)
@@ -173,6 +182,11 @@ class GetMessagesTask(
             addConversationMessage(insertMessages, conversations, details, dm, i, sent.size,
                     true, profileImageSize, updateLastRead)
         }
+
+        if (firstFetch) {
+            preferences.edit().putBoolean(KEY_FIRST_FETCH, false).apply()
+        }
+
         return DatabaseUpdateData(conversations.values, insertMessages)
     }
 
@@ -347,6 +361,8 @@ class GetMessagesTask(
     }
 
     companion object {
+
+        private const val KEY_FIRST_FETCH = "state_first_fetch_direct_messages"
 
         fun createDatabaseUpdateData(context: Context, account: AccountDetails,
                 response: DMResponse, profileImageSize: String = "normal"): DatabaseUpdateData {
