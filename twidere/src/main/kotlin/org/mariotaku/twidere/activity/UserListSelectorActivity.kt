@@ -87,6 +87,7 @@ class UserListSelectorActivity : BaseActivity(),
                 is ParcelableUserList -> {
                     val data = Intent()
                     data.putExtra(EXTRA_USER_LIST, item)
+                    data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
                     setResult(Activity.RESULT_OK, data)
                     finish()
                 }

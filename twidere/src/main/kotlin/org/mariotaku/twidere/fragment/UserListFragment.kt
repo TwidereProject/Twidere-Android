@@ -64,7 +64,9 @@ import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.text.validator.UserListNameValidator
 import org.mariotaku.twidere.util.*
 
-class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener, LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback, SupportFragmentCallback {
+class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
+        LoaderCallbacks<SingleResponse<ParcelableUserList>>, SystemWindowsInsetsCallback,
+        SupportFragmentCallback {
 
     private var userListLoaderInitialized: Boolean = false
 

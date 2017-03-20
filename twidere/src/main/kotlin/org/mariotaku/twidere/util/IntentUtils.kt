@@ -21,6 +21,7 @@ import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
+import org.mariotaku.twidere.util.LinkCreator.getTwidereUserListRelatedLink
 import java.util.*
 
 /**
@@ -78,6 +79,30 @@ object IntentUtils {
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
             @Referral referral: String? = null, profileUrl: String? = null): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        if (referral != null) {
+            intent.putExtra(EXTRA_REFERRAL, referral)
+        }
+        intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
+        return intent
+    }
+
+    fun userTimeline(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
+            @Referral referral: String? = null, profileUrl: String? = null): Intent {
+        val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_TIMELINE, accountKey,
+                userKey, screenName)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        if (referral != null) {
+            intent.putExtra(EXTRA_REFERRAL, referral)
+        }
+        intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
+        return intent
+    }
+
+    fun userFavorites(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
+            @Referral referral: String? = null, profileUrl: String? = null): Intent {
+        val uri = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_FAVORITES, accountKey,
+                userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         if (referral != null) {
             intent.putExtra(EXTRA_REFERRAL, referral)
@@ -439,24 +464,11 @@ object IntentUtils {
 
     }
 
-    fun openUserFollowers(context: Context,
-            accountKey: UserKey?,
-            userKey: UserKey?,
+    fun openUserFollowers(context: Context, accountKey: UserKey?, userKey: UserKey?,
             screenName: String?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_FOLLOWERS)
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        }
-        if (userKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
-        }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+        val intent = LinkCreator.getTwidereUserRelatedLink(AUTHORITY_USER_FOLLOWERS,
+                accountKey, userKey, screenName)
+        context.startActivity(Intent(Intent.ACTION_VIEW, intent))
     }
 
     fun openUserFriends(context: Context,
@@ -480,35 +492,28 @@ object IntentUtils {
 
     }
 
-    fun openUserListDetails(context: Context,
-            accountKey: UserKey?,
-            listId: String?,
-            userId: UserKey?,
-            screenName: String?, listName: String?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_USER_LIST)
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        }
-        if (listId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId)
-        }
-        if (userId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userId.toString())
-        }
-        if (screenName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
-        }
-        if (listName != null) {
-            builder.appendQueryParameter(QUERY_PARAM_LIST_NAME, listName)
-        }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        context.startActivity(intent)
+    fun openUserListDetails(context: Context, accountKey: UserKey?, listId: String?,
+            userId: UserKey?, screenName: String?, listName: String?) {
+        context.startActivity(userListDetails(accountKey, listId, userId, screenName, listName))
     }
 
-    fun openUserListDetails(context: Context,
-            userList: ParcelableUserList) {
+    fun userListDetails(accountKey: UserKey?, listId: String?, userId: UserKey?, screenName: String?,
+            listName: String?): Intent {
+        return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST,
+                accountKey, listId, userId, screenName, listName))
+    }
+
+    fun userListTimeline(accountKey: UserKey?, listId: String?, userId: UserKey?, screenName: String?,
+            listName: String?): Intent {
+        return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST_TIMELINE,
+                accountKey, listId, userId, screenName, listName))
+    }
+
+    fun openUserListDetails(context: Context, userList: ParcelableUserList) {
+        context.startActivity(userListDetails(context, userList))
+    }
+
+    fun userListDetails(context: Context, userList: ParcelableUserList): Intent {
         val userKey = userList.user_key
         val listId = userList.id
         val extras = Bundle()
@@ -522,7 +527,7 @@ object IntentUtils {
         val intent = Intent(Intent.ACTION_VIEW, builder.build())
         intent.setExtrasClassLoader(context.classLoader)
         intent.putExtras(extras)
-        context.startActivity(intent)
+        return intent
     }
 
     fun openGroupDetails(context: Context, group: ParcelableGroup) {

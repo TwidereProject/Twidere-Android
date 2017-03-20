@@ -513,7 +513,7 @@ public final class Utils implements Constants {
         if (TextUtils.isEmpty(quoteFormat)) {
             quoteFormat = DEFAULT_QUOTE_FORMAT;
         }
-        String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.getStatusWebLink(status).toString());
+        String result = quoteFormat.replace(FORMAT_PATTERN_LINK, LinkCreator.INSTANCE.getStatusWebLink(status).toString());
         result = result.replace(FORMAT_PATTERN_NAME, status.user_screen_name);
         result = result.replace(FORMAT_PATTERN_TEXT, status.text_plain);
         return result;

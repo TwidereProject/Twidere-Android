@@ -102,6 +102,7 @@ class UserSelectorActivity : BaseActivity(), OnItemClickListener, LoaderManager.
         val data = Intent()
         data.setExtrasClassLoader(classLoader)
         data.putExtra(EXTRA_USER, user)
+        data.putExtra(EXTRA_EXTRAS, intent.getBundleExtra(EXTRA_EXTRAS))
         setResult(Activity.RESULT_OK, data)
         finish()
     }
