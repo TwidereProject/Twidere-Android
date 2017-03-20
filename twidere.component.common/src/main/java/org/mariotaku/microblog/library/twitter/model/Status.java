@@ -112,10 +112,10 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
     @JsonField(name = "contributors")
     Contributor[] contributors;
 
-    @JsonField(name = "retweet_count")
+    @JsonField(name = {"retweet_count", "repeat_num"})
     long retweetCount = -1;
 
-    @JsonField(name = "favorite_count")
+    @JsonField(name = {"favorite_count", "fave_num"})
     long favoriteCount = -1;
 
     @JsonField(name = "reply_count")
@@ -123,7 +123,7 @@ public class Status extends TwitterResponseObject implements Comparable<Status>,
 
     @JsonField(name = "favorited")
     boolean favorited;
-    @JsonField(name = "retweeted")
+    @JsonField(name = {"retweeted", "repeated"})
     boolean retweeted;
     @JsonField(name = "lang")
     String lang;

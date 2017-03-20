@@ -139,6 +139,10 @@ public class ParcelableMediaUtils {
                 media.type = ParcelableMedia.Type.IMAGE;
             } else if (mimeType.startsWith("video/")) {
                 media.type = ParcelableMedia.Type.VIDEO;
+            } else {
+                // https://github.com/TwidereProject/Twidere-Android/issues/729
+                // Skip unsupported attachment
+                continue;
             }
             media.width = attachment.getWidth();
             media.height = attachment.getHeight();

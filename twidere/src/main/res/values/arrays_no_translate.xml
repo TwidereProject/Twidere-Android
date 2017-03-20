@@ -96,5 +96,10 @@
         <item>normal</item>
         <item>wide</item>
     </string-array>
-
+    <string-array name="values_quick_access_shortcut_types">
+        <item>user</item>
+        <item>list</item>
+        <item>user_timeline</item>
+        <item>favorite</item>
+    </string-array>
 </resources>

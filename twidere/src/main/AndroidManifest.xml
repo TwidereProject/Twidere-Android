@@ -392,8 +392,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.CreateComposeShortcutActivity"
+            android:name=".activity.shortcut.CreateComposeShortcutActivity"
             android:label="@string/title_compose"
+            android:theme="@style/Theme.Twidere.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.shortcut.CreateQuickAccessShortcutActivity"
+            android:label="@string/title_quick_action"
             android:theme="@style/Theme.Twidere.NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
