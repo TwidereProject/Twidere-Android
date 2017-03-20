@@ -274,6 +274,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         adapter.conversation = data
+
+        activity?.supportInvalidateOptionsMenu()
     }
 
     private fun performDestroyConversation() {
