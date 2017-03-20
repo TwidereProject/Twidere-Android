@@ -76,7 +76,12 @@ class StreamingService : BaseService() {
     }
 
     override fun onDestroy() {
-        submittedTasks.values.forEach { it.cancel() }
+        submittedTasks.forEach {
+            // NOTE: IMPORTANT!!! Before Nougat, forEach { k, v -> } will crash because referenced
+            // BiConsumer, which is introduced in Java 8
+            val (_, v) = it
+            v.cancel()
+        }
         threadPoolExecutor.shutdown()
         submittedTasks.clear()
         removeNotification()
@@ -139,7 +144,10 @@ class StreamingService : BaseService() {
         if (enabledAccounts.isEmpty()) return false
 
         // Remove all disabled instances
-        submittedTasks.forEach { k, v ->
+        submittedTasks.forEach {
+            // NOTE: IMPORTANT!!! Before Nougat, forEach { k, v -> } will crash because referenced
+            // BiConsumer, which is introduced in Java 8
+            val (k, v) = it
             if (enabledAccounts.none { k == it.key } && !v.cancelled) {
                 v.cancel()
             }
