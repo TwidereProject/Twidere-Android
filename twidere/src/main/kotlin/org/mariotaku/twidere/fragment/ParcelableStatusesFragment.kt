@@ -151,7 +151,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         if (position and ILoadMoreSupportAdapter.START != 0L || refreshing) return
         super.onLoadMoreContents(position)
         if (position == 0L) return
-        // Load the last item
+        // Get last raw status
         val startIdx = adapter.statusStartIndex
         if (startIdx < 0) return
         val statusCount = adapter.getStatusCount(true)
