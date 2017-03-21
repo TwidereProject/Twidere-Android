@@ -23,19 +23,23 @@ import android.graphics.drawable.Drawable
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import nl.komponents.kovenant.Deferred
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.deferred
 
 /**
  * Created by mariotaku on 2017/3/21.
  */
 
-class DeferredTarget<R>(val deferred: Deferred<R, Exception>) : SimpleTarget<R>() {
+class DeferredTarget<R>(private val deferredInstance: Deferred<R, Exception> = deferred()) : SimpleTarget<R>() {
+
+    val promise: Promise<R, Exception> get() = deferredInstance.promise
 
     override fun onLoadFailed(e: Exception, errorDrawable: Drawable?) {
-        deferred.reject(e)
+        deferredInstance.reject(e)
     }
 
     override fun onResourceReady(resource: R, glideAnimation: GlideAnimation<in R>) {
-        deferred.resolve(resource)
+        deferredInstance.resolve(resource)
     }
 
 }

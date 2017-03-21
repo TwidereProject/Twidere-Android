@@ -28,8 +28,6 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.GlideDrawable
-import nl.komponents.kovenant.deferred
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
@@ -46,11 +44,13 @@ import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.fragment.BaseDialogFragment
+import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.glide.DeferredTarget
+import java.lang.ref.WeakReference
 
 class CreateQuickAccessShortcutActivity : BaseActivity() {
 
@@ -112,57 +112,7 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                 val extras = data.getBundleExtra(EXTRA_EXTRAS)
                 val accountKey = extras.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
                 val actionType = extras.getString(EXTRA_TYPE)
-                when (actionType) {
-                    "user_timeline" -> {
-                        val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
-                                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
-                        val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
-                        setResult(Activity.RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                            putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-                            putExtra(Intent.EXTRA_SHORTCUT_NAME, userColorNameManager.getDisplayName(user,
-                                    preferences[nameFirstKey]))
-                        })
-                        finish()
-                    }
-                    "user_favorites" -> {
-                        val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
-                                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
-                        val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
-                        setResult(Activity.RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                            putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-                            putExtra(Intent.EXTRA_SHORTCUT_NAME, userColorNameManager.getDisplayName(user,
-                                    preferences[nameFirstKey]))
-                        })
-                        finish()
-                    }
-                    else -> {
-                        val launchIntent = IntentUtils.userProfile(accountKey, user.key,
-                                user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
-                        val requestBuilder = Glide.with(this).loadProfileImage(this, user, shapeStyle = preferences[profileImageStyleKey],
-                                cornerRadiusRatio = 0.1f, size = getString(R.string.profile_image_size))
-                        val deferred = deferred<GlideDrawable, Exception>()
-                        requestBuilder.into(DeferredTarget(deferred))
-                        deferred.promise.successUi { drawable ->
-                            val icon = Bitmap.createBitmap(drawable.intrinsicWidth,
-                                    drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-                            val canvas = Canvas(icon)
-                            drawable.setBounds(0, 0, icon.width, icon.height)
-                            drawable.draw(canvas)
-                            setResult(Activity.RESULT_OK, Intent().apply {
-                                putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                                putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
-                                putExtra(Intent.EXTRA_SHORTCUT_NAME, userColorNameManager.getDisplayName(user,
-                                        preferences[nameFirstKey]))
-                            })
-                            finish()
-                        }.failUi {
-                            setResult(Activity.RESULT_CANCELED)
-                            finish()
-                        }
-                    }
-                }
+                addUserRelatedShortcut(actionType, accountKey, user)
             }
             REQUEST_SELECT_USER_LIST -> {
                 if (resultCode != Activity.RESULT_OK || data == null) {
@@ -174,31 +124,92 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                 val extras = data.getBundleExtra(EXTRA_EXTRAS)
                 val accountKey = extras.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
                 val actionType = extras.getString(EXTRA_TYPE)
-                when (actionType) {
-                    "list_timeline" -> {
-                        val launchIntent = IntentUtils.userListTimeline(accountKey, list.id,
-                                list.user_key, list.user_screen_name, list.name)
-                        val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
-                        setResult(Activity.RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                            putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-                            putExtra(Intent.EXTRA_SHORTCUT_NAME, list.name)
-                        })
-                    }
-                    else -> {
-                        val launchIntent = IntentUtils.userListDetails(accountKey, list.id,
-                                list.user_key, list.user_screen_name, list.name)
-                        val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
-                        setResult(Activity.RESULT_OK, Intent().apply {
-                            putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                            putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
-                            putExtra(Intent.EXTRA_SHORTCUT_NAME, list.name)
-                        })
-                    }
-                }
-                finish()
+                addUserListRelatedShortcut(actionType, accountKey, list)
             }
         }
+    }
+
+    private fun addUserRelatedShortcut(actionType: String?, accountKey: UserKey?, user: ParcelableUser) {
+        when (actionType) {
+            "user_timeline" -> {
+                val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
+                        user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+                val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                    putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
+                    putExtra(Intent.EXTRA_SHORTCUT_NAME, userColorNameManager.getDisplayName(user,
+                            preferences[nameFirstKey]))
+                })
+                finish()
+            }
+            "user_favorites" -> {
+                val launchIntent = IntentUtils.userTimeline(accountKey, user.key,
+                        user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+                val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                    putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
+                    putExtra(Intent.EXTRA_SHORTCUT_NAME, userColorNameManager.getDisplayName(user,
+                            preferences[nameFirstKey]))
+                })
+                finish()
+            }
+            else -> {
+                val displayName = userColorNameManager.getDisplayName(user, preferences[nameFirstKey])
+                val deferred = Glide.with(this).loadProfileImage(this, user,
+                        shapeStyle = preferences[profileImageStyleKey], cornerRadiusRatio = 0.1f,
+                        size = getString(R.string.profile_image_size)).into(DeferredTarget())
+                val weakThis = WeakReference(this)
+                ProgressDialogFragment.show(supportFragmentManager, TAG_LOAD_ICON_PROGRESS)
+                deferred.promise.successUi { drawable ->
+                    val activity = weakThis.get() ?: return@successUi
+                    val launchIntent = IntentUtils.userProfile(accountKey, user.key,
+                            user.screen_name, profileUrl = user.extras?.statusnet_profile_url)
+                    val icon = Bitmap.createBitmap(drawable.intrinsicWidth,
+                            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(icon)
+                    drawable.setBounds(0, 0, icon.width, icon.height)
+                    drawable.draw(canvas)
+                    activity.setResult(Activity.RESULT_OK, Intent().apply {
+                        putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                        putExtra(Intent.EXTRA_SHORTCUT_ICON, icon)
+                        putExtra(Intent.EXTRA_SHORTCUT_NAME, displayName)
+                    })
+                    activity.finish()
+                }.failUi {
+                    val activity = weakThis.get() ?: return@failUi
+                    activity.setResult(Activity.RESULT_CANCELED)
+                    activity.finish()
+                }
+            }
+        }
+    }
+
+    private fun addUserListRelatedShortcut(actionType: String?, accountKey: UserKey?, list: ParcelableUserList) {
+        when (actionType) {
+            "list_timeline" -> {
+                val launchIntent = IntentUtils.userListTimeline(accountKey, list.id,
+                        list.user_key, list.user_screen_name, list.name)
+                val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                    putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
+                    putExtra(Intent.EXTRA_SHORTCUT_NAME, list.name)
+                })
+            }
+            else -> {
+                val launchIntent = IntentUtils.userListDetails(accountKey, list.id,
+                        list.user_key, list.user_screen_name, list.name)
+                val icon = Intent.ShortcutIconResource.fromContext(this, R.mipmap.ic_launcher)
+                setResult(Activity.RESULT_OK, Intent().apply {
+                    putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                    putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, icon)
+                    putExtra(Intent.EXTRA_SHORTCUT_NAME, list.name)
+                })
+            }
+        }
+        finish()
     }
 
     private fun onItemSelected(which: Int) {
@@ -230,5 +241,9 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
         override fun onCancel(dialog: DialogInterface?) {
             activity?.finish()
         }
+    }
+
+    companion object {
+        private const val TAG_LOAD_ICON_PROGRESS = "load_icon_progress"
     }
 }
