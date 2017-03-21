@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Прийняти</string>
   <string name="action_accepting_follow_request">прийняття запиту на читання</string>
   <string name="action_add">Додати</string>
+  <string name="action_add_conversation_participant">Додати користувача</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Додати правило</string>
   <string name="action_add_member">Додати користувача</string>
@@ -70,6 +71,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Зберегти</string>
   <string name="action_saving_search">збереження пошуку</string>
+  <string name="action_search">Пошук</string>
   <string name="action_select_user">Вибрати користувача</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Надіслати</string>
@@ -311,7 +313,9 @@
   <string name="label_background_operation_service">Сервіс фонових операцій</string>
   <string name="label_data_provider">Постачальник бази даних Твіттера</string>
   <string name="label_location_your_coarse_location">Грубе місцезнаходження</string>
+  <string name="label_media">Медіафайл</string>
   <string name="label_original_status">Первісний твіт</string>
+  <string name="label_photo">Світлина</string>
   <string name="label_poll">Опитування</string>
   <string name="label_refresh_service">Сервіс оновлення</string>
   <string name="label_status_not_available">Твіт недоступний</string>
@@ -481,6 +485,7 @@
   <string name="preference_title_landscape">Ландшафтний</string>
   <string name="preference_title_portrait">Портретний</string>
   <string name="preference_title_storage">Пам\'ять</string>
+  <string name="preference_title_streaming_enabled">Увімкнути стримінг</string>
   <string name="preference_title_text_size">Розмір тексту</string>
   <string name="preference_title_translate">Перекласти</string>
   <string name="preference_title_trends_location">Місцерозташування тенденцій</string>
@@ -605,6 +610,7 @@
   <string name="settings_interface">Інтерфейс</string>
   <string name="settings_notifications">Сповіщення</string>
   <string name="settings_refresh">Оновлення</string>
+  <string name="settings_streaming">Стримінг</string>
   <string name="share_format">Формат поширення</string>
   <string name="share_format_summary">\"[TITLE]\" = назва вмісту\n\"[TEXT]\" = текст вмісту</string>
   <string name="share_link">Поділитися посиланням</string>
@@ -643,6 +649,9 @@
   <string name="status_shortener_default">Нічого(Відміна надсилання)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ретвіт</string>
+  <string name="stream_type_home">Головна</string>
+  <string name="stream_type_interactions">Сповіщення</string>
+  <string name="stream_type_messages">Повідомлення</string>
   <string name="streaming">Стримінг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Підписано на список \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -681,6 +690,7 @@
   <string name="title_blocked_users">Заблоковані користувачі</string>
   <string name="title_browser_sign_in">Увійти через переглядач</string>
   <string name="title_compose">Написати</string>
+  <string name="title_conversation">Діалог</string>
   <string name="title_direct_messages">Повідомлення</string>
   <string name="title_drafts">Чернетки</string>
   <string name="title_edit_details">Змінити дані</string>
@@ -699,9 +709,11 @@
   <string name="title_nicknames">Псевдо</string>
   <string name="title_open_source_license">Ліцензія відкритого вихідного коду</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Пошук</string>
   <string name="title_set_nickname">Задати псевдо</string>
   <string name="title_status">Твіт</string>
   <string name="title_statuses">Твіти</string>
+  <string name="title_streaming">Стримінг</string>
   <string name="title_subscription_name">Ім\'я</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

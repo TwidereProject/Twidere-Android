@@ -33,4 +33,11 @@
     <item>Pure white/black</item>
     <item>Transparent</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Pengguna</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>Senarai</item>
+    <item>Senarai garis masa</item>
+  </string-array>
 </resources>

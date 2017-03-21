@@ -519,7 +519,7 @@ class MessagesConversationFragment : AbsContentListRecyclerViewFragment<Messages
         override fun afterExecute(callback: MessagesConversationFragment?, result: BooleanArray?) {
             if (callback == null || result == null) return
             callback.setProgressVisible(false)
-            callback.removeMedia(media.filterIndexed { i, media -> result[i] })
+            callback.removeMedia(media.filterIndexed { i, _ -> result[i] })
             if (result.any { false }) {
                 Toast.makeText(callback.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
             }

@@ -52,4 +52,11 @@
     <item>כהה</item>
     <item>אוטומטי</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>משתמש</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>רשימה</item>
+    <item>List timeline</item>
+  </string-array>
 </resources>

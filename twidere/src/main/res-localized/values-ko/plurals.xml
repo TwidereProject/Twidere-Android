@@ -30,10 +30,10 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g>개의 미디어</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
-    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (하루에 평균 <xliff:g id="daily_tweet">%2$d</xliff:g>트윗)</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (하루에 <xliff:g id="daily_tweet">%2$d</xliff:g> 트윗)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g>명</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> others</item>
   </plurals>
   <plurals name="N_statuses">
     <item quantity="other"><xliff:g id="count">%d</xliff:g>개의 트윗</item>

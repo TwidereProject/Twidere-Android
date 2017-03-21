@@ -86,7 +86,7 @@ class SyncSettingsFragment : BasePreferenceFragment() {
             val providerInfo = kPreferences[dataSyncProviderInfoKey]!!
             val entry = SyncProviderInfoFactory.getProviderEntry(context, providerInfo.type)!!
             builder.setMessage(getString(R.string.message_sync_disconnect_from_name_confirm, entry.name))
-            builder.setPositiveButton(R.string.action_sync_disconnect) { dialog, which ->
+            builder.setPositiveButton(R.string.action_sync_disconnect) { _, _ ->
                 (parentFragment as SyncSettingsFragment).cleanupAndDisconnect()
             }
             builder.setNegativeButton(android.R.string.cancel, null)

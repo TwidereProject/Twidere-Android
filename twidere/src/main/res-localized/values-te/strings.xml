@@ -67,6 +67,7 @@
   <string name="notification_type_messages">సందేశాలు</string>
   <string name="other_settings">ఇతర అమరికలు</string>
   <string name="password">సంకేతపదం</string>
+  <string name="preference_title_accounts">ఖాతాలు</string>
   <string name="preview">మునుజూపు</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="profile_link_color_main_color">లంకె రంగు (ముఖ్య రంగు)</string>
@@ -87,6 +88,8 @@
   <string name="small">చిన్న</string>
   <string name="status_hint">ఏం జరుగుతోంది?</string>
   <!-- [noun] Accessibility label for retweet icon -->
+  <string name="stream_type_home">ముంగిలి</string>
+  <string name="stream_type_messages">సందేశాలు</string>
   <string name="tab_editor_hint_name">పేరు</string>
   <string name="tabs">ట్యాబులు</string>
   <string name="theme">అలంకారం</string>
@@ -102,6 +105,8 @@
   <string name="title_followers">అనుచరులు</string>
   <string name="title_home">ముంగిలి</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+  <string name="title_search">వెతుకు</string>
+  <string name="title_statuses">ట్వీట్లు</string>
   <string name="title_subscription_name">పేరు</string>
   <string name="title_user">వాడుకరి</string>
   <string name="title_user_colors">వాడుకరి రంగులు</string>
@@ -115,6 +120,8 @@
   <!-- User list description -->
   <!-- User list is public -->
   <!-- User list name -->
+  <string name="user_list_details_name">పేరు</string>
+  <string name="user_lists">జాబితాలు</string>
   <string name="user_profile_name">పేరు</string>
   <string name="username">వాడుకరి పేరు</string>
 </resources>

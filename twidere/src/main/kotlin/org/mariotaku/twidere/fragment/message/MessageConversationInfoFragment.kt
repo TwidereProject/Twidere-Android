@@ -311,7 +311,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         ProgressDialogFragment.show(childFragmentManager, "set_notifications_disabled_progress")
         val weakThis = WeakReference(this)
         val task = SetConversationNotificationDisabledTask(context, accountKey, conversationId, disabled)
-        task.callback = callback@ { succeed ->
+        task.callback = callback@ { _ ->
             val f = weakThis.get() ?: return@callback
             f.dismissDialogThen("set_notifications_disabled_progress") {
                 loaderManager.restartLoader(0, null, this)
@@ -653,7 +653,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
 
         private val muteSwitch = itemView.muteNotifications
 
-        private val listener = CompoundButton.OnCheckedChangeListener { button, checked ->
+        private val listener = CompoundButton.OnCheckedChangeListener { _, checked ->
             adapter.listener?.onDisableNotificationChanged(checked)
         }
 
@@ -691,7 +691,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
                     Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
             val builder = AlertDialog.Builder(context)
-            builder.setItems(actions.map(Action::title).toTypedArray()) { dialog, which ->
+            builder.setItems(actions.map(Action::title).toTypedArray()) { _, which ->
                 val action = actions[which]
                 (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
             }
@@ -712,7 +712,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_edit_conversation_name)
             builder.setNegativeButton(android.R.string.cancel, null)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+            builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
                 val editName = (dialog as Dialog).findViewById(R.id.editName) as EditText
                 (parentFragment as MessageConversationInfoFragment).performSetConversationName(editName.text.toString())
             }
@@ -730,7 +730,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.message_destroy_conversation_confirm)
-            builder.setPositiveButton(R.string.action_leave_conversation) { dialog, which ->
+            builder.setPositiveButton(R.string.action_leave_conversation) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performDestroyConversation()
             }
             builder.setNegativeButton(android.R.string.cancel, null)

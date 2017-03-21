@@ -809,6 +809,7 @@
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
+    <string name="preference_title_streaming_content">Streaming content</string>
     <string name="preference_title_streaming_enabled">Enable streaming</string>
     <string name="preference_title_streaming_non_metered_network">Streaming on free network</string>
     <string name="preference_title_streaming_power_saving">Power saving mode</string>

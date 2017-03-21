@@ -60,7 +60,7 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
 
     private var contentObserver: ContentObserver? = null
 
-    private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener { accounts ->
+    private val accountListener: OnAccountsUpdateListener = OnAccountsUpdateListener {
         reloadActivities()
     }
 

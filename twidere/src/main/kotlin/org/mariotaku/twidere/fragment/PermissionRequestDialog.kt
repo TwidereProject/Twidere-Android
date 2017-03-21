@@ -20,10 +20,10 @@ class PermissionRequestDialog : BaseDialogFragment() {
         val permissions = arguments.getStringArray(EXTRA_PERMISSIONS)
         val requestCode = arguments.getInt(EXTRA_REQUEST_CODE)
         builder.setMessage(arguments.getString(EXTRA_MESSAGE))
-        builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
             ActivityCompat.requestPermissions(activity, permissions, requestCode)
         }
-        builder.setNegativeButton(R.string.action_later) { dialog, which ->
+        builder.setNegativeButton(R.string.action_later) { _, _ ->
             val callback = parentFragment as? PermissionRequestCancelCallback ?: activity as?
                     PermissionRequestCancelCallback ?: return@setNegativeButton
             callback.onPermissionRequestCancelled(requestCode)

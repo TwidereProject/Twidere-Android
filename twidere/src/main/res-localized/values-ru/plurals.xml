@@ -53,14 +53,14 @@
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> твитов в день)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="one">другой</item>
+    <item quantity="one">другое</item>
     <item quantity="few"><xliff:g id="count">%d</xliff:g> других</item>
     <item quantity="other"><xliff:g id="count">%d</xliff:g> других</item>
   </plurals>
   <plurals name="N_statuses">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> твит</item>
-    <item quantity="few"><xliff:g id="count">%d</xliff:g> твитов</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> твитов</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> твита</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> твита</item>
   </plurals>
   <plurals name="N_favorites">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> избранное</item>
@@ -68,9 +68,9 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> избранных</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> лайк</item>
-    <item quantity="few"><xliff:g id="count">%d</xliff:g> лайков</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> лайков</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> Мне нравится</item>
+    <item quantity="few"><xliff:g id="count">%d</xliff:g> Мне нравятся</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> Мне нравятся</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> голос</item>

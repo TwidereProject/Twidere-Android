@@ -67,6 +67,7 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">喜欢</string>
   <string name="action_liking">喜欢</string>
+  <string name="action_mark_as_read">标为已读</string>
   <string name="action_modifying_lists">修改列表</string>
   <string name="action_mute">隐藏</string>
   <string name="action_mute_notifications">隐藏通知</string>
@@ -285,6 +286,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Emoji支持</string>
   <string name="empty_content">空内容</string>
+  <string name="enable_notifications">启用通知</string>
   <string name="enable_retweets">启用转推</string>
   <string name="enable_streaming">启用实时流</string>
   <string name="error_info_oauth_timestamp_error">请检查您的系统日期和时间设置</string>
@@ -514,6 +516,7 @@
   <string name="message_toast_no_account_permission">需要帐号权限</string>
   <string name="message_toast_no_account_selected">没有选择帐号</string>
   <string name="message_toast_no_user_selected">没有选择用户</string>
+  <string name="message_toast_notification_enabled_hint">仅在实时流开启时可用，且不是 100% 可靠</string>
   <string name="message_toast_press_again_to_close">再次按下以关闭</string>
   <string name="message_toast_profile_banner_image_updated">个人资料横幅图片已更新</string>
   <string name="message_toast_retweet_cancelled">转推已取消</string>
@@ -584,6 +587,8 @@
   <string name="notification_ringtone">铃声</string>
   <string name="notification_status"><xliff:g id="user">%s</xliff:g> 发送了新推文</string>
   <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g> 和其他 <xliff:g id="count">%2$d</xliff:g> 人发送了新推文</string>
+  <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> 转推了</string>
+  <string name="notification_title_new_status_by_user"><xliff:g id="user">%1$s</xliff:g> 发送了新推文</string>
   <string name="notification_type_home">主页</string>
   <string name="notification_type_interactions">互动</string>
   <string name="notification_type_messages">私信</string>
@@ -634,14 +639,18 @@
   <string name="preference_randomize_account_rename_accounts_confirm">重命名已有的帐号吗？</string>
   <string name="preference_summary_auto_refresh_compatibility_mode">启用以获得更快的刷新间隔，在 Android 5.0 以上会增加电量消耗。</string>
   <string name="preference_summary_auto_refresh_power_saving">电量低时停止自动刷新</string>
+  <string name="preference_summary_background_streaming">按 HOME 键而不是 BACK 键使实时流保持开启</string>
   <string name="preference_summary_chrome_custom_tab">在内置浏览器中打开链接（由 Chrome 提供技术支持）</string>
   <string name="preference_summary_database_item_limit">每个帐号在数据库中保存的推文/信息条目上限，降低数值可以节省更多存储空间以及加快载入的速度</string>
   <string name="preference_summary_media_preload_non_metered_network">只在使用免费网络（比如Wi-Fi）时预加载媒体</string>
+  <string name="preference_summary_streaming_non_metered_network">只在使用免费网络（比如 Wi-Fi ）时开启实时流</string>
+  <string name="preference_summary_streaming_power_saving">仅在充电的时候使用实时流</string>
   <string name="preference_summary_trends_location">现在您可以在标签页设置中分别设置位置了。</string>
   <string name="preference_title_accounts">帐号</string>
   <string name="preference_title_advanced">高级</string>
   <string name="preference_title_auto_refresh_compatibility_mode">兼容模式</string>
   <string name="preference_title_auto_refresh_power_saving">节能模式</string>
+  <string name="preference_title_background_streaming">后台实时流</string>
   <string name="preference_title_chrome_custom_tab">内置浏览器</string>
   <string name="preference_title_database_item_limit">数据库条目上限</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
@@ -654,6 +663,9 @@
   <string name="preference_title_multi_column_tabs">多栏标签页</string>
   <string name="preference_title_portrait">纵向模式</string>
   <string name="preference_title_storage">存储</string>
+  <string name="preference_title_streaming_enabled">启用实时流</string>
+  <string name="preference_title_streaming_non_metered_network">在免费网络下使用实时流</string>
+  <string name="preference_title_streaming_power_saving">节能模式</string>
   <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_text_size">文字尺寸</string>
   <string name="preference_title_translate">翻译</string>
@@ -781,6 +793,7 @@
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">刷新</string>
+  <string name="settings_streaming">实时流</string>
   <string name="share_format">分享格式</string>
   <string name="share_format_summary">\"[TITLE]\" = 分享内容的标题\n\"[TEXT]\" = 分享内容的正文</string>
   <string name="share_link">分享链接</string>
@@ -821,6 +834,11 @@
   <string name="status_shortener_default">无（不发送过长推文）</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">转推</string>
+  <string name="stream_summary_notification_users">打开“通知”的用户，不是100%可靠</string>
+  <string name="stream_type_home">主页</string>
+  <string name="stream_type_interactions">互动</string>
+  <string name="stream_type_messages">私信</string>
+  <string name="stream_type_notification_users">启用通知的用户</string>
   <string name="streaming">实时流</string>
   <string name="style">风格</string>
   <string name="subscribed_to_list">订阅了列表 “<xliff:g id="list">%s</xliff:g>”</string>
@@ -894,6 +912,7 @@
   <string name="title_set_nickname">设置昵称</string>
   <string name="title_status">推文</string>
   <string name="title_statuses">推文</string>
+  <string name="title_streaming">实时流</string>
   <string name="title_subscription_name">名称</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

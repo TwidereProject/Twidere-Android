@@ -7,3 +7,4 @@ fun <T> Array<Parcelable>.toTypedArray(creator: Parcelable.Creator<T>): Array<T>
     System.arraycopy(this, 0, result, 0, size)
     return result
 }
+

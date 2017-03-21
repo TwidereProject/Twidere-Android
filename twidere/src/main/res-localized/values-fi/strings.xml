@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Hyväksy</string>
   <string name="action_accepting_follow_request">hyväksytään seurauspyyntöä</string>
   <string name="action_add">Lisää</string>
+  <string name="action_add_conversation_participant">Lisää jäsen</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Lisää sääntö</string>
   <string name="action_add_member">Lisää jäsen</string>
@@ -72,6 +73,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Tallenna</string>
   <string name="action_saving_search">tallennetaan haku</string>
+  <string name="action_search">Hae</string>
   <string name="action_select_user">Valitse käyttäjä</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Lähetä</string>
@@ -304,7 +306,9 @@
   <string name="label_auth_type">Varmennuslaji</string>
   <string name="label_background_operation_service">Taustatoimintojen palvelu</string>
   <string name="label_data_provider">Twideren tietokannan tarjoaja</string>
+  <string name="label_media">Media</string>
   <string name="label_original_status">Alkuperäinen twiitti</string>
+  <string name="label_photo">Valokuva</string>
   <string name="label_poll">Äänestys</string>
   <string name="label_refresh_service">Päivitä palvelu</string>
   <string name="label_streaming_service">Streamaus palvelu</string>
@@ -467,6 +471,7 @@
   <string name="preference_title_landscape">Vaakakuva</string>
   <string name="preference_title_portrait">Pystykuva</string>
   <string name="preference_title_storage">Säilytys</string>
+  <string name="preference_title_streaming_enabled">Ota striimaus käyttöön</string>
   <string name="preference_title_text_size">Tekstin koko</string>
   <string name="preference_title_translate">Käännä</string>
   <string name="preference_title_trends_location">Trendien sijainti</string>
@@ -586,6 +591,7 @@
   <string name="settings_interface">Käyttöliittymä</string>
   <string name="settings_notifications">Ilmoitukset</string>
   <string name="settings_refresh">Päivitys</string>
+  <string name="settings_streaming">Striimaus</string>
   <string name="share_format">Jakamismuoto</string>
   <string name="share_format_summary">\"[TITLE]\" = Sisällön otsikko\n\"[TEXT]\" = Sisällön teksti</string>
   <string name="share_status">Jaa twiitti</string>
@@ -621,6 +627,9 @@
   <string name="status_shortener_default">Älä lyhennä (keskeytä lähetys)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Uudelleentwiittaa</string>
+  <string name="stream_type_home">Koti</string>
+  <string name="stream_type_interactions">Vuorovaikutukset</string>
+  <string name="stream_type_messages">Viestit</string>
   <string name="streaming">Striimaus</string>
   <string name="style">Tyyli</string>
   <string name="subscribed_to_list">Tilattiin lista \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -676,9 +685,11 @@
   <string name="title_nicknames">Kutsumanimet</string>
   <string name="title_open_source_license">Avoimen lähdekoodin lisenssi</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Hae</string>
   <string name="title_set_nickname">Aseta kutsumanimi</string>
   <string name="title_status">Twiitti</string>
   <string name="title_statuses">Twiitit</string>
+  <string name="title_streaming">Striimaus</string>
   <string name="title_subscription_name">Nimi</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

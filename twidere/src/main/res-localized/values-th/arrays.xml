@@ -3,17 +3,17 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>หน้าหลัก</item>
-    <item>ปฏิสัมพันธ์</item>
+    <item>การโต้ตอบ</item>
     <item>ข้อความส่วนตัว</item>
     <item>เทรนด์</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>เขียน</item>
     <item>ถ่ายรูป</item>
-    <item>Add media</item>
+    <item>เพิ่มรูปภาพ</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
-    <item>ปฏิสัมพันธ์</item>
+    <item>การโต้ตอบ</item>
     <item>ข้อความส่วนตัว</item>
     <item>เทรนด์</item>
     <item>คำค้นที่บันทึกไว้</item>
@@ -23,19 +23,26 @@
     <item>คลังภาพ</item>
     <item>คลิปบอร์ด</item>
   </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
+  </string-array>
   <string-array name="entries_media_preview_style">
     <item>ตัด</item>
     <item>สเกล</item>
-    <item>Real size</item>
+    <item>ขนาดจริง</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>หน้าหลัก</item>
-    <item>ปฏิสัมพันธ์</item>
+    <item>การโต้ตอบ</item>
     <item>ข้อความส่วนตัว</item>
   </string-array>
   <string-array name="entries_profile_image_style">
     <item>กลม</item>
     <item>สี่เหลี่ยม</item>
+  </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 นาที</item>
@@ -46,6 +53,11 @@
     <item>1 ชั่วโมง</item>
     <item>2 ชั่วโมง</item>
     <item>4 ชั่วโมง</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>แคบ</item>
+    <item>ปกติ</item>
+    <item>กว้าง</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>ไอคอน</item>
@@ -61,5 +73,12 @@
     <item>ค่าเริ่มต้น</item>
     <item>ขาว/ดำ บริสุทธิ์</item>
     <item>โปร่งใส</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>ผู้ใช้</item>
+    <item>ไทม์ไลน์ผู้ใช้</item>
+    <item>User Favorites</item>
+    <item>รายการ</item>
+    <item>ไทม์ไลน์ของรายการ</item>
   </string-array>
 </resources>

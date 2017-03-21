@@ -172,7 +172,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             }
             return@task data
         }.successUi { uri ->
-            notificationManager.cancel(data.toString(), NOTIFICATION_ID_DRAFTS)
+            notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
         }
     }
 

@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">موافق</string>
   <string name="action_accepting_follow_request">جارِ قبول طلب التتبع</string>
   <string name="action_add">اضافة</string>
+  <string name="action_add_conversation_participant">إضافة عضو</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_member">إضافة عضو</string>
   <string name="action_add_tab">إضافة لسان</string>
@@ -255,6 +256,7 @@
   <string name="label_background_operation_service">خدمة التشغيل في الخلفية</string>
   <string name="label_data_provider">مزود قاعدة بيانات Twidere</string>
   <string name="label_original_status">التغريدة الأصلية</string>
+  <string name="label_photo">صورة</string>
   <string name="label_poll">استطلاع الرأي</string>
   <string name="label_refresh_service">تحديث الخدمة</string>
   <string name="label_streaming_service">خدمة البث المتواصل</string>
@@ -503,6 +505,8 @@
   <string name="status_shortener">مقصِّر التغريدة</string>
   <string name="status_shortener_default">لايوجد (ألغي الارسال)</string>
   <!-- [noun] Accessibility label for retweet icon -->
+  <string name="stream_type_home">الرئيسية</string>
+  <string name="stream_type_messages">الرسائل</string>
   <string name="subscribed_to_list">تم الإنخراط في القائمة \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="subscribers">المشتركون</string>
   <string name="system_default">الوضع الافتراضي للنظام</string>
@@ -534,6 +538,7 @@
   <string name="title_blocked_users">المستخدمين المحظورين</string>
   <string name="title_browser_sign_in">دخول من المتصفح</string>
   <string name="title_compose">كتابة</string>
+  <string name="title_conversation">المحادثة</string>
   <string name="title_direct_messages">الرسائل</string>
   <string name="title_drafts">المسودات</string>
   <string name="title_edit_details">تعديل التفاصيل</string>

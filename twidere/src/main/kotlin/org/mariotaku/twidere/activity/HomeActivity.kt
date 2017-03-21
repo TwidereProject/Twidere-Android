@@ -108,7 +108,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private var propertiesInitialized = false
 
     private var updateUnreadCountTask: UpdateUnreadCountTask? = null
-    private val readStateChangeListener = OnSharedPreferenceChangeListener { sharedPreferences, key -> updateUnreadCount() }
+    private val readStateChangeListener = OnSharedPreferenceChangeListener { _, _ -> updateUnreadCount() }
     private val controlBarShowHideHelper = ControlBarShowHideHelper(this)
 
     private val homeDrawerToggleDelegate = object : ActionBarDrawerToggle.Delegate {
@@ -234,7 +234,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             actionsButton.visibility = View.GONE
         }
 
-        homeContent.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        homeContent.addOnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
             if (top != oldTop) {
                 val fragment = leftDrawerFragment
                 if (fragment is AccountsDashboardFragment) {
@@ -971,10 +971,10 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.auto_refresh)
             builder.setMessage(R.string.message_auto_refresh_confirm)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+            builder.setPositiveButton(android.R.string.ok) { _, _ ->
                 kPreferences[defaultAutoRefreshKey] = true
             }
-            builder.setNegativeButton(R.string.no_thanks) { dialog, which ->
+            builder.setNegativeButton(R.string.no_thanks) { _, _ ->
                 kPreferences[defaultAutoRefreshKey] = false
             }
             val dialog = builder.create()

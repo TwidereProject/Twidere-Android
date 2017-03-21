@@ -51,7 +51,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
         builder.setView(R.layout.dialog_api_editor)
-        builder.setPositiveButton(R.string.action_save) { dialog, which ->
+        builder.setPositiveButton(R.string.action_save) { _, _ ->
             val targetFragment = this.targetFragment
             val parentFragment = this.parentFragment
             val host = this.host
@@ -86,8 +86,8 @@ class APIEditorDialogFragment : BaseDialogFragment() {
             editConsumerKey.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_key)))
             editConsumerSecret.addValidator(ConsumerKeySecretValidator(context.getString(R.string.invalid_consumer_secret)))
 
-            editNoVersionSuffix.setOnCheckedChangeListener { buttonView, isChecked -> editNoVersionSuffixChanged = true }
-            editAuthType.setOnCheckedChangeListener { group, checkedId ->
+            editNoVersionSuffix.setOnCheckedChangeListener { _, _ -> editNoVersionSuffixChanged = true }
+            editAuthType.setOnCheckedChangeListener { _, checkedId ->
                 val authType = getCheckedAuthType(checkedId)
                 val isOAuth = Credentials.Type.OAUTH == authType || Credentials.Type.XAUTH == authType
                 editSameOAuthSigningUrl.visibility = if (isOAuth) View.VISIBLE else View.GONE

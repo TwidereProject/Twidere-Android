@@ -53,7 +53,7 @@ abstract class AbsToolbarTabPagesFragment : BaseFragment(), RefreshScrollTopInte
 
 
         addTabs(pagerAdapter)
-        toolbarContainer.setOnSizeChangedListener { view, w, h, oldw, oldh ->
+        toolbarContainer.setOnSizeChangedListener { _, _, _, _, _ ->
             val pageLimit = viewPager.offscreenPageLimit
             val currentItem = viewPager.currentItem
             val count = pagerAdapter.count

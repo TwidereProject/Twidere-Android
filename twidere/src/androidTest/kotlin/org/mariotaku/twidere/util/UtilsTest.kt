@@ -12,6 +12,5 @@ import org.junit.runner.RunWith
 class UtilsTest {
     @Test
     fun testHasAutoRefreshAccounts() {
-        val context = InstrumentationRegistry.getTargetContext()
     }
 }

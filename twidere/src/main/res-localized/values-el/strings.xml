@@ -25,6 +25,7 @@
   <string name="action_retweet">Ρετουϊτ</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Αποθήκευση</string>
+  <string name="action_search">Αναζήτηση</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Αποστολή</string>
   <string name="action_set_color">Ορισμός χρώματος</string>
@@ -128,6 +129,7 @@
   <string name="title_following">Ακολουθεί</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_open_source_license">Άδεια ελεύθερου λογισμικού</string>
+  <string name="title_search">Αναζήτηση</string>
   <string name="title_set_nickname">Ορισμός παρατσουκλιού</string>
   <string name="title_statuses">Tweets</string>
   <string name="title_user">Χρήστης</string>

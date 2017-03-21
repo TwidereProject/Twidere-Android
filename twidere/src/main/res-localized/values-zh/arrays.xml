@@ -69,4 +69,11 @@
     <item>純白/純黑</item>
     <item>透明</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>使用者</item>
+    <item>時間軸</item>
+    <item>User Favorites</item>
+    <item>列表</item>
+    <item>列表時間軸</item>
+  </string-array>
 </resources>

@@ -9,6 +9,7 @@
   <string name="action_accept_permission_request">Prihvati</string>
   <string name="action_accepting_follow_request">prihvaćama zahtjev za slijeđenjem</string>
   <string name="action_add">Dodaj</string>
+  <string name="action_add_conversation_participant">Dodaj člana</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Dodaj pravilo</string>
   <string name="action_add_member">Dodaj člana</string>
@@ -65,6 +66,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spremi</string>
   <string name="action_saving_search">spremam pretragu</string>
+  <string name="action_search">Pretraži</string>
   <string name="action_select_user">Odaberite korisnika</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Pošalji</string>
@@ -263,7 +265,9 @@
   <string name="label_auth_type">Vrsta autentikacije</string>
   <string name="label_background_operation_service">Servis za pozadinske radnje</string>
   <string name="label_data_provider">Pružatelj baze podataka za Twidere</string>
+  <string name="label_media">Medijska datoteka</string>
   <string name="label_original_status">Originalni tweet</string>
+  <string name="label_photo">Fotografija</string>
   <string name="label_refresh_service">Osvježi uslugu</string>
   <string name="label_streaming_service">Streaming servis</string>
   <string name="label_your_profile_image">Vaša slika profila</string>
@@ -403,6 +407,7 @@
   <string name="preference_title_advanced">Napredno</string>
   <string name="preference_title_database_item_limit">Limit veličine baze podataka</string>
   <string name="preference_title_storage">Pohrana</string>
+  <string name="preference_title_streaming_enabled">Omogući streaming</string>
   <string name="preference_title_text_size">Veličina teksta</string>
   <string name="preference_title_translate">Prevedi</string>
   <string name="preference_title_trends_location">Lokacija trendova</string>
@@ -507,6 +512,7 @@
   <string name="settings_interface">Sučelje</string>
   <string name="settings_notifications">Obavijesti</string>
   <string name="settings_refresh">Osvježi</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Format dijeljenja</string>
   <string name="share_format_summary">\"[TITLE]\" = Naslov sadržaja\n\"[TEXT]\" = Tekst sadržaja</string>
   <string name="share_status">Podijeli tweet</string>
@@ -538,6 +544,8 @@
   <string name="status_shortener_default">Ništa (Prekini slanje)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Polazno</string>
+  <string name="stream_type_messages">Poruke</string>
   <string name="streaming">Streaming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Pretplaćeni ste na listu \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -588,9 +596,11 @@
   <string name="title_mentions">Spominjanja</string>
   <string name="title_nicknames">Nadimci</string>
   <string name="title_open_source_license">Licence Otvorenog Koda</string>
+  <string name="title_search">Pretraži</string>
   <string name="title_set_nickname">Postavi nadimak</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweetovi</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Ime</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_user">Korisnik</string>

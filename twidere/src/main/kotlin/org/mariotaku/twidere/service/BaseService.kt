@@ -47,6 +47,8 @@ abstract class BaseService : Service() {
     lateinit var connectivityManager: ConnectivityManager
     @Inject
     lateinit var activityTracker: ActivityTracker
+    @Inject
+    lateinit var contentNotificationManager: ContentNotificationManager
 
     override fun onCreate() {
         super.onCreate()

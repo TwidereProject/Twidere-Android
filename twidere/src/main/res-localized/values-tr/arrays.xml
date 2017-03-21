@@ -67,4 +67,11 @@
     <item>Tamamen beyaz/siyah</item>
     <item>Transparan</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Kullanıcı</item>
+    <item>Kullanıcı zaman akışı</item>
+    <item>User Favorites</item>
+    <item>Liste</item>
+    <item>Zaman akışını listele</item>
+  </string-array>
 </resources>

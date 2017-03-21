@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Accepteer</string>
   <string name="action_accepting_follow_request">accepteer volg verzoek</string>
   <string name="action_add">Toevoegen</string>
+  <string name="action_add_conversation_participant">Voeg lid toe</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Regel toevoegen</string>
   <string name="action_add_member">Voeg lid toe</string>
@@ -68,6 +69,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Bewaar</string>
   <string name="action_saving_search">Bezig met opslaan van zoekopdracht</string>
+  <string name="action_search">Zoeken</string>
   <string name="action_select_user">Selecteer gebruiker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Verzenden</string>
@@ -310,7 +312,9 @@
   <string name="label_background_operation_service">Achtergrond activiteiten service.</string>
   <string name="label_data_provider">Citeer</string>
   <string name="label_location_your_coarse_location">Je grove locatie</string>
+  <string name="label_media">Media</string>
   <string name="label_original_status">Originele tweet</string>
+  <string name="label_photo">Foto</string>
   <string name="label_poll">Stemming</string>
   <string name="label_refresh_and_sync_service">Vernieuwen &amp; Sync-dienst</string>
   <string name="label_refresh_service">Vernieuw dienst</string>
@@ -479,6 +483,7 @@
   <string name="preference_title_landscape">Landschap</string>
   <string name="preference_title_portrait">Portret</string>
   <string name="preference_title_storage">Opslag</string>
+  <string name="preference_title_streaming_enabled">Streaming inschakelen</string>
   <string name="preference_title_text_size">lettergrootte</string>
   <string name="preference_title_translate">Vertalen</string>
   <string name="preference_title_trends_location">Trends locatie</string>
@@ -602,6 +607,7 @@
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificaties</string>
   <string name="settings_refresh">Vernieuwen</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Deel formaat</string>
   <string name="share_format_summary">\"[TITLE]\" = Inhoud titel\n\"[TEXT]\" = Inhoud tekst</string>
   <string name="share_link">Link delen</string>
@@ -639,6 +645,9 @@
   <string name="status_shortener">Tweet verkorter</string>
   <string name="status_shortener_default">Niets (Verzending afbreken)</string>
   <!-- [noun] Accessibility label for retweet icon -->
+  <string name="stream_type_home">Thuis</string>
+  <string name="stream_type_interactions">Interacties</string>
+  <string name="stream_type_messages">Berichten</string>
   <string name="streaming">Streaming</string>
   <string name="style">Stijl</string>
   <string name="subscribed_to_list">Geabonneerd op lijst \'\'<xliff:g id="list">%s</xliff:g>\'\'.</string>
@@ -676,6 +685,7 @@
   <string name="title_blocked_users">Geblokkeerde gebruikers</string>
   <string name="title_browser_sign_in">Aanmelden met de browser</string>
   <string name="title_compose">Opstellen</string>
+  <string name="title_conversation">Conversatie</string>
   <string name="title_direct_messages">Berichten</string>
   <string name="title_drafts">Concepten</string>
   <string name="title_edit_details">Bewerk details</string>
@@ -693,9 +703,11 @@
   <string name="title_nicknames">Bijnamen</string>
   <string name="title_open_source_license">Open source licentie</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Zoeken</string>
   <string name="title_set_nickname">Stel bijnaam in</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Naam</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
   <string name="title_user">Gebruiker</string>

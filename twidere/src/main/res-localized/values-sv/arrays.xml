@@ -38,4 +38,11 @@
     <item>Mörk</item>
     <item>Automatisk</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Användare</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Lista tidslinjen</item>
+  </string-array>
 </resources>

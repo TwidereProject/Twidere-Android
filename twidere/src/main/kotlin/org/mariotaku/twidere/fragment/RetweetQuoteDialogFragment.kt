@@ -70,7 +70,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         builder.setTitle(R.string.retweet_quote_confirm_title)
         builder.setPositiveButton(R.string.action_retweet, null)
         builder.setNegativeButton(android.R.string.cancel, null)
-        builder.setNeutralButton(R.string.action_quote) { dialog, which ->
+        builder.setNeutralButton(R.string.action_quote) { _, _ ->
             val intent = Intent(INTENT_ACTION_QUOTE)
             val menu = popupMenu!!.menu
             val quoteOriginalStatus = menu.findItem(R.id.quote_original_status)

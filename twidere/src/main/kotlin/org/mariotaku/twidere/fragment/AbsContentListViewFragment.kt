@@ -123,7 +123,7 @@ abstract class AbsContentListViewFragment<A : ListAdapter> : BaseFragment(),
         swipeLayout.setOnRefreshListener(this)
         swipeLayout.setProgressBackgroundColorSchemeResource(colorRes)
         adapter = onCreateAdapter(context)
-        listView.setOnTouchListener { v, event ->
+        listView.setOnTouchListener { _, event ->
             if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                 updateRefreshProgressOffset()
             }

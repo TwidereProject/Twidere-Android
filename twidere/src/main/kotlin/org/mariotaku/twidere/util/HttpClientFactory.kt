@@ -86,7 +86,7 @@ object HttpClientFactory {
             }
             val username = prefs.getString(KEY_PROXY_USERNAME, null)
             val password = prefs.getString(KEY_PROXY_PASSWORD, null)
-            builder.authenticator { route, response ->
+            builder.authenticator { _, response ->
                 val b = response.request().newBuilder()
                 if (response.code() == 407) {
                     if (!isEmpty(username) && !isEmpty(password)) {

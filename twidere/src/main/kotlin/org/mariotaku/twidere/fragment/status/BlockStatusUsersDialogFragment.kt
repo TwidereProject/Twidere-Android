@@ -48,7 +48,7 @@ class BlockStatusUsersDialogFragment : BaseDialogFragment() {
             userColorNameManager.getDisplayName(it, nameFirst)
         }.toTypedArray()
         builder.setTitle(R.string.action_status_block_users)
-        builder.setItems(displayNames) { dialog, which ->
+        builder.setItems(displayNames) { _, which ->
             CreateUserBlockDialogFragment.show(fragmentManager, referencedUsers[which])
         }
         val dialog = builder.create()

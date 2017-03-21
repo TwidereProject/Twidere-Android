@@ -8,6 +8,7 @@
   <string name="action_accept_friend_request">קבל</string>
   <string name="action_accept_permission_request">קבל</string>
   <string name="action_add">הוסף</string>
+  <string name="action_add_conversation_participant">הוסף משתמש</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">הוסף כלל</string>
   <string name="action_add_member">הוסף משתמש</string>
@@ -368,6 +369,8 @@
   <string name="status_shortener_default">ללא (בטל שליחה)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">ציוץ מחדש</string>
+  <string name="stream_type_home">בית</string>
+  <string name="stream_type_messages">הודעות</string>
   <string name="system_default">ברירת המחדל של המערכת</string>
   <string name="tab_display_option_icon">סמל</string>
   <string name="tab_display_option_icon_and_label">סמל ותווית</string>

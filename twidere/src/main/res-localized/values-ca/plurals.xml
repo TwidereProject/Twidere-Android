@@ -43,7 +43,7 @@
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> (<xliff:g id="daily_tweet">%2$d</xliff:g> piulades per dia)</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="one">un més</item>
+    <item quantity="one">Altre</item>
     <item quantity="other"><xliff:g id="count">%d</xliff:g> més</item>
   </plurals>
   <plurals name="N_statuses">

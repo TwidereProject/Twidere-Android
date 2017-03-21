@@ -62,4 +62,11 @@
     <item>Čisto bijela/crna</item>
     <item>Prozirno</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Korisnik</item>
+    <item>Timeline korisnika</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Timeline lista</item>
+  </string-array>
 </resources>

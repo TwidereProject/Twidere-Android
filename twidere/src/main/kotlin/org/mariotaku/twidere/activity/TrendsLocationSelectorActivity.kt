@@ -100,7 +100,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                 val adapter = ExpandableTrendLocationsListAdapter(context)
                 adapter.data = list
                 listView.setAdapter(adapter)
-                listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { parent, v, groupPosition, id ->
+                listView.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { _, _, groupPosition, _ ->
                     val group = adapter.getGroup(groupPosition)
                     if (group.woeid.toLong() == WORLDWIDE) {
                         setActivityResult(group)
@@ -109,7 +109,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
                     }
                     false
                 })
-                listView.setOnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                listView.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
                     val child = adapter.getChild(groupPosition, childPosition)
                     setActivityResult(child)
                     dismiss()

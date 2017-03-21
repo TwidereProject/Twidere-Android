@@ -62,4 +62,11 @@
     <item>Ren hvit eller svart</item>
     <item>Gjennomsiktig</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Bruker</item>
+    <item>Tidslinje</item>
+    <item>User Favorites</item>
+    <item>Liste</item>
+    <item>List tidslinje</item>
+  </string-array>
 </resources>

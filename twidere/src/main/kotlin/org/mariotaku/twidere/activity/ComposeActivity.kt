@@ -1560,7 +1560,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         override fun afterExecute(callback: ComposeActivity?, result: BooleanArray?) {
             if (callback == null || result == null) return
             callback.setProgressVisible(false)
-            callback.removeAllMedia(media.filterIndexed { i, media -> result[i] })
+            callback.removeAllMedia(media.filterIndexed { i, _ -> result[i] })
             callback.setMenu()
             if (result.any { false }) {
                 Toast.makeText(callback, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()

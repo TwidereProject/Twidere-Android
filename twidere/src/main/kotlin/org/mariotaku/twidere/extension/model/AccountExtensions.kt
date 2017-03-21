@@ -133,6 +133,7 @@ fun AccountManager.renameTwidereAccount(oldAccount: Account, newName: String): A
         }
         setAuthToken(newAccount, ACCOUNT_AUTH_TOKEN_TYPE,
                 peekAuthToken(oldAccount, ACCOUNT_AUTH_TOKEN_TYPE))
+        @Suppress("DEPRECATION")
         val booleanFuture = removeAccount(oldAccount, null, null)
         return AccountFuture(newAccount, booleanFuture)
     }

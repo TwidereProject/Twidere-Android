@@ -95,7 +95,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
         adapter = CustomTabsAdapter(context)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
         listView.setMultiChoiceModeListener(this)
-        listView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+        listView.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             val tab = adapter.getTab(position)
             val df = TabEditorDialogFragment()
             df.arguments = Bundle {
@@ -153,7 +153,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 icon.mutate().setColorFilter(theme.textColorPrimary, Mode.SRC_ATOP)
                 subItem.icon = icon
                 val weakFragment = WeakReference(this)
-                subItem.setOnMenuItemClickListener { item ->
+                subItem.setOnMenuItemClickListener {
                     val fragment = weakFragment.get() ?: return@setOnMenuItemClickListener false
                     val adapter = fragment.adapter
                     val fm = fragment.childFragmentManager

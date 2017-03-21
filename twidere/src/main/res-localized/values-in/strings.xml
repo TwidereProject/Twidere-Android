@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">同意並授權</string>
   <string name="action_accepting_follow_request">menyetujui permintaa mengikuti</string>
   <string name="action_add">Tambahkan</string>
+  <string name="action_add_conversation_participant">Tambah Anggota</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Tambah aturan</string>
   <string name="action_add_member">Tambah Anggota</string>
@@ -80,6 +81,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Simpan</string>
   <string name="action_saving_search">menyimpan pencarian</string>
+  <string name="action_search">搜尋</string>
   <string name="action_select_all">Pilih semua</string>
   <string name="action_select_none">Tidak memilih</string>
   <string name="action_select_user">選擇使用者</string>
@@ -341,7 +343,9 @@
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
   <string name="label_data_provider">Penyedia database Twidere</string>
   <string name="label_location_your_coarse_location">Lokasi anda secara kasar</string>
+  <string name="label_media">媒體</string>
   <string name="label_original_status">Cuit asli</string>
+  <string name="label_photo">照片</string>
   <string name="label_poll">Pemungutan suara</string>
   <string name="label_refresh_and_sync_service">Muat ulang &amp; Menyinkronisasikan layanan</string>
   <string name="label_refresh_service">Segarkan layanan</string>
@@ -547,6 +551,7 @@
   <string name="preference_title_landscape">Lanskap</string>
   <string name="preference_title_portrait">Layar Tegak</string>
   <string name="preference_title_storage">Penyimpanan</string>
+  <string name="preference_title_streaming_enabled">啟用實時流</string>
   <string name="preference_title_text_size">Ukuran teks</string>
   <string name="preference_title_translate">翻譯</string>
   <string name="preference_title_trends_location">Lokasi tren</string>
@@ -671,6 +676,7 @@
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
   <string name="settings_refresh">更新</string>
+  <string name="settings_streaming">實時流</string>
   <string name="share_format">Bagikan format</string>
   <string name="share_format_summary">\"[TITLE]\" = Konten title\n\"[TEXT]\" = Teks konten</string>
   <string name="share_link">Bagikan tautan</string>
@@ -711,6 +717,9 @@
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">轉推</string>
+  <string name="stream_type_home">首頁</string>
+  <string name="stream_type_interactions">互動</string>
+  <string name="stream_type_messages">Pesan</string>
   <string name="streaming">Streaming</string>
   <string name="style">Gaya</string>
   <string name="subscribed_to_list">Berlangganan ke daftar \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -750,6 +759,7 @@
   <string name="title_blocked_users">Pengguna diblokir</string>
   <string name="title_browser_sign_in">Masuk melalui browser</string>
   <string name="title_compose">撰寫</string>
+  <string name="title_conversation">Percakapan</string>
   <string name="title_dialog_sync_connect_to">Menghubungkan ke&#8230;</string>
   <string name="title_direct_messages">Pesan</string>
   <string name="title_drafts">Konsep</string>
@@ -772,10 +782,12 @@
   <string name="title_nicknames">Nama panggilan</string>
   <string name="title_open_source_license">Lisensi Open Source</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">搜尋</string>
   <string name="title_select_users">Pilih pengguna</string>
   <string name="title_set_nickname">設定暱稱</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">推文</string>
+  <string name="title_streaming">實時流</string>
   <string name="title_subscription_name">名稱</string>
   <string name="title_subscription_url">網址</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s </xliff:g>: <xliff:g id="summary">%2$s </xliff:g></string>

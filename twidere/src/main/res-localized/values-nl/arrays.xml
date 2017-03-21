@@ -62,4 +62,11 @@
     <item>Zuiver wit/zwart</item>
     <item>Transparant</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Gebruiker</item>
+    <item>Gebruiker tijdlijn</item>
+    <item>User Favorites</item>
+    <item>Lijst</item>
+    <item>Lijst tijdlijn</item>
+  </string-array>
 </resources>

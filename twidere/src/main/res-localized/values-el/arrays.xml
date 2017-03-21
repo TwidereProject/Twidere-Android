@@ -11,4 +11,11 @@
     <item>Κανονική</item>
     <item>Wide</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Χρήστης</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>List</item>
+    <item>List timeline</item>
+  </string-array>
 </resources>

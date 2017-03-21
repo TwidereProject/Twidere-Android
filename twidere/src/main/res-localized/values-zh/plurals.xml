@@ -30,19 +30,19 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> 媒體</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
-    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> （每天 <xliff:g id="daily_tweet">%2$d</xliff:g> 推）</item>
+    <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> （每天<xliff:g id="daily_tweet">%2$d</xliff:g>推）</item>
   </plurals>
   <plurals name="N_others">
-    <item quantity="other">其他 <xliff:g id="retweet_count">%d</xliff:g> 人</item>
+    <item quantity="other">其他<xliff:g id="retweet_count">%d</xliff:g></item>
   </plurals>
   <plurals name="N_statuses">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> 推文</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g>推文</item>
   </plurals>
   <plurals name="N_favorites">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> 收藏</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g>收藏</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> 喜歡</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g>喜歡</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="other"><xliff:g id="count">%d</xliff:g> 投票</item>

@@ -74,4 +74,11 @@
     <item>하양/검정</item>
     <item>투명</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>사용자</item>
+    <item>사용자 타임라인</item>
+    <item>User Favorites</item>
+    <item>리스트</item>
+    <item>타임라인</item>
+  </string-array>
 </resources>

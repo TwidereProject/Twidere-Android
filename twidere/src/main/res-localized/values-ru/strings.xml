@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Принять</string>
   <string name="action_accepting_follow_request">принять запрос на подписку</string>
   <string name="action_add">Добавить</string>
+  <string name="action_add_conversation_participant">Добавить пользователя</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Добавить правило</string>
   <string name="action_add_filters_subscription">Добавить описание</string>
@@ -81,6 +82,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Сохранить</string>
   <string name="action_saving_search">сохранение поиска</string>
+  <string name="action_search">Поиск</string>
   <string name="action_select_all">Выбрать все</string>
   <string name="action_select_none">Ничего не выбирать</string>
   <string name="action_select_user">Выбрать пользователя</string>
@@ -342,7 +344,9 @@
   <string name="label_background_operation_service">Служба фоновой деятельности</string>
   <string name="label_data_provider">Провайдер базы данных Twidere</string>
   <string name="label_location_your_coarse_location">Ваше фиксированное расположение</string>
+  <string name="label_media">Медиа</string>
   <string name="label_original_status">Исходный твит</string>
+  <string name="label_photo">Фотография</string>
   <string name="label_poll">Опрос</string>
   <string name="label_refresh_and_sync_service">Сервис обновления и синхронизации</string>
   <string name="label_refresh_service">Сервис обновления</string>
@@ -549,12 +553,14 @@
   <string name="preference_title_landscape">Ландшафтный</string>
   <string name="preference_title_portrait">Портретный</string>
   <string name="preference_title_storage">Хранилище</string>
+  <string name="preference_title_streaming_enabled">Включить стриминг</string>
   <string name="preference_title_text_size">Размер текста</string>
   <string name="preference_title_translate">Перевести</string>
   <string name="preload_wifi_only">Предзагружать только по Wi-Fi</string>
   <string name="preview">Предпросмотр</string>
   <string name="preview_images">Предпросмотр изображений</string>
   <string name="preview_style_crop">Адаптировать</string>
+  <string name="preview_style_real_size">Реальный размер</string>
   <string name="preview_style_scale">Масштабировать</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Предыдущий</string>
@@ -611,6 +617,7 @@
   <string name="refresh_type_home">Лента</string>
   <string name="refresh_type_interactions">Взаимодействия</string>
   <string name="refresh_type_messages">Сообщения</string>
+  <string name="refresh_type_trends">Тренды</string>
   <string name="register">Регистрация</string>
   <string name="remember_position">Запомнить положение</string>
   <string name="remember_position_summary">Запомнить позицию списка/вкладки перед выходом из Twidere</string>
@@ -671,6 +678,7 @@
   <string name="settings_interface">Интерфейс</string>
   <string name="settings_notifications">Уведомления</string>
   <string name="settings_refresh">Обновления</string>
+  <string name="settings_streaming">Стриминг</string>
   <string name="share_format">Формат шаринга</string>
   <string name="share_format_summary">\"[TITLE]\" = Заголовок\n\"[TEXT]\" = Сообщение</string>
   <string name="share_link">Поделиться</string>
@@ -711,6 +719,9 @@
   <string name="status_shortener_default">Ничего (Отмена отправки)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ретвит</string>
+  <string name="stream_type_home">Лента</string>
+  <string name="stream_type_interactions">Взаимодействия</string>
+  <string name="stream_type_messages">Сообщения</string>
   <string name="streaming">Стриминг</string>
   <string name="style">Стиль</string>
   <string name="subscribed_to_list">Подписанные на \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -772,10 +783,12 @@
   <string name="title_nicknames">Имена</string>
   <string name="title_open_source_license">Лицензия открытого исходного кода</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Поиск</string>
   <string name="title_select_users">Выбор пользователей</string>
   <string name="title_set_nickname">Задать никнейм</string>
   <string name="title_status">Твит</string>
   <string name="title_statuses">Твиты</string>
+  <string name="title_streaming">Стриминг</string>
   <string name="title_subscription_name">Имя</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

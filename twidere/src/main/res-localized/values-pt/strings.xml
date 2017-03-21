@@ -6,13 +6,16 @@
   <string name="account_delete_confirm_title">Excluir conta</string>
   <string name="account_options">Opções de conta</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">Twitter</string>
   <string name="action_accept_friend_request">Aceitar</string>
   <string name="action_accept_permission_request">Aceitar</string>
   <string name="action_accepting_follow_request">aceitando solicitação de seguidor</string>
   <string name="action_add">Adicionar</string>
+  <string name="action_add_conversation_participant">Adicionar membro</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Adicionar regra</string>
+  <string name="action_add_filters_subscription">Adicionar assinatura</string>
   <string name="action_add_member">Adicionar membro</string>
   <string name="action_add_tab">Adicionar aba</string>
   <string name="action_add_to_filter">Adicionar filtro</string>
@@ -27,34 +30,52 @@
   <string name="action_center">Centro</string>
   <string name="action_clear">Limpar</string>
   <string name="action_compose">Escrever</string>
+  <string name="action_compose_message_convert_to_status">Converter para Tweet</string>
+  <string name="action_conversation_info">Informação de conversa</string>
+  <string name="action_create_conversation">Criar conversa</string>
   <string name="action_creating_list">criando lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">Excluir</string>
+  <string name="action_delete_messages">Excluir mensagens</string>
   <string name="action_deleting">excluindo</string>
   <string name="action_deleting_search">descartando pesquisa</string>
   <string name="action_denying_follow_request">recusando solicitação de seguidor</string>
   <string name="action_dont_restart">Não reiniciar</string>
+  <string name="action_dont_terminate">Não saia</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Editar</string>
+  <string name="action_edit_conversation_avatar">Editar o ícone</string>
+  <string name="action_edit_conversation_name">Editar o nome</string>
+  <string name="action_edit_filter_rule">Editar regra</string>
   <string name="action_favorite">Favoritar</string>
   <string name="action_favoriting">ao favoritar</string>
+  <string name="action_filter_import_from_blocked_users">Importar de usuários bloqueados</string>
+  <string name="action_filter_import_from_muted_users">Importar de usuários silenciados</string>
+  <string name="action_filter_subscriptions_card_manage">Gerenciar assinaturas</string>
   <string name="action_finish">Terminar</string>
   <string name="action_follow">Seguir</string>
   <string name="action_following">ao seguir</string>
   <string name="action_getting_status">obtendo tweet</string>
   <string name="action_getting_user_lists">obtendo listas de usuários</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">Importar</string>
   <string name="action_import_from">Importar de...</string>
+  <string name="action_invert_selection">Inverter seleção</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">Mais tarde</string>
+  <string name="action_leave_conversation">Sair da conversa</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Curtir</string>
   <string name="action_liking">curtindo</string>
   <string name="action_modifying_lists">modificando listas</string>
   <string name="action_mute">Silenciar</string>
+  <string name="action_mute_notifications">Silenciar notificações</string>
   <string name="action_muting">silenciando</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, salvo em <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">Abrir no navegador</string>
   <string name="action_pick_color">Escolher cor</string>
+  <string name="action_purchase">Comprar</string>
+  <string name="action_purchase_features_pack">Comprar pacotes de recursos</string>
   <string name="action_quote">Citar</string>
   <string name="action_refresh">Atualizar</string>
   <string name="action_refreshing_direct_messages">atualizando mensagens diretas</string>
@@ -73,6 +94,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salvar</string>
   <string name="action_saving_search">salvando pesquisa</string>
+  <string name="action_search">Procurar</string>
   <string name="action_select_user">Selecionar usuário</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Enviar</string>
@@ -245,10 +267,22 @@
   <string name="external_group_host_format">Grupo externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="external_user_host_format">Usuário externo em <xliff:g id="host">%s </xliff:g></string>
   <string name="extra_configurations">Configurações extras</string>
+  <string name="extra_feature_description_filters_subscription">Inscreva-se para silenciar os filtros e sincronizar automaticamente</string>
+  <string name="extra_feature_description_schedule_status">Agendar Tweet(enviar depois)</string>
+  <string name="extra_feature_description_sync_data">Dados de sincronização com o Dropbox, Google Drive etc</string>
+  <string name="extra_feature_title_filters_import">Importar Filtros</string>
+  <string name="extra_feature_title_filters_subscription">Assinatura de filtros</string>
   <!-- Enhanced (paid) features description -->
+  <string name="extra_features_description">Suporte Twidere e obter recursos avançados</string>
+  <string name="extra_features_pack_description">Ou comprar o pacote de recursos para obter todos os recursos (incluindo recursos em versões futuras)</string>
   <!-- Enhanced (paid) features title -->
+  <string name="extra_features_restore_purchase_hint">Se você já comprou recursos avançados, você pode usar \'Restaurar\' para restaurar a compra.</string>
+  <string name="fab_visible">Botão de ação flutuante</string>
+  <string name="fab_visible_summary">Mostrar o botão de ação flutuante</string>
   <string name="fast_image_loading">Carregamento rápido de imagens</string>
   <string name="fast_image_loading_summary">Ative para fazer as imagens carregarem mais rápido, desative se alguma apresentar problemas ao carregar.</string>
+  <string name="filter_everywhere">Filtrar por todo o lado</string>
+  <string name="filter_everywhere_description">Estas serão filtradas em Twidere:\n · Tweets\n · do usuário Tweets mencionando este user\n · Retweets/citações deste usuário</string>
   <string name="filter_type_keywords">Palavras-Chave</string>
   <string name="filter_type_links">Links</string>
   <string name="filter_type_sources">Fontes</string>
@@ -315,7 +349,9 @@
   <string name="label_background_operation_service">Serviço de operação em segundo plano</string>
   <string name="label_data_provider">Provedor de banco de dados do Twidere</string>
   <string name="label_location_your_coarse_location">Sua localização grosseira</string>
+  <string name="label_media">Mídia</string>
   <string name="label_original_status">Tweet original</string>
+  <string name="label_photo">Foto</string>
   <string name="label_poll">Enquete</string>
   <string name="label_refresh_service">Atualizar serviço</string>
   <string name="label_status_not_available">Tweet não disponível</string>
@@ -485,6 +521,7 @@
   <string name="preference_title_landscape">Paisagem</string>
   <string name="preference_title_portrait">Retrato</string>
   <string name="preference_title_storage">Armazenamento</string>
+  <string name="preference_title_streaming_enabled">Habilitar atualização em tempo real</string>
   <string name="preference_title_text_size">Tamanho do texto</string>
   <string name="preference_title_translate">Traduzir</string>
   <string name="preference_title_trends_location">Localização de tópicos</string>
@@ -492,6 +529,7 @@
   <string name="preview">Visualizar</string>
   <string name="preview_images">Visualização de imagens</string>
   <string name="preview_style_crop">Recortar</string>
+  <string name="preview_style_real_size">Tamanho real</string>
   <string name="preview_style_scale">Escala</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Anterior</string>
@@ -609,6 +647,7 @@
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificações</string>
   <string name="settings_refresh">Atualizar</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Formato de compartilhamento</string>
   <string name="share_format_summary">\"[TITLE]\" = Título\n\"[TEXT]\" = Conteúdo</string>
   <string name="share_link">Compartilhar link</string>
@@ -647,6 +686,9 @@
   <string name="status_shortener_default">Nada (cancelar envio)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweetar</string>
+  <string name="stream_type_home">Início</string>
+  <string name="stream_type_interactions">Interações</string>
+  <string name="stream_type_messages">Mensagens</string>
   <string name="streaming">Streaming</string>
   <string name="style">Estilo</string>
   <string name="subscribed_to_list">Inscrito na lista \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -685,6 +727,7 @@
   <string name="title_browser_sign_in">Autenticação via navegador</string>
   <string name="title_compose">Escrever</string>
   <string name="title_direct_messages">Mensagens</string>
+  <string name="title_direct_messages_conversation_info">Informação de conversa</string>
   <string name="title_drafts">Rascunhos</string>
   <string name="title_edit_details">Editar detalhes</string>
   <string name="title_edit_profile">Editar perfil</string>
@@ -699,12 +742,15 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Curtidas</string>
   <string name="title_mentions">Menções</string>
+  <string name="title_message_conversation_info">Informação de conversa</string>
   <string name="title_nicknames">Apelidos</string>
   <string name="title_open_source_license">Licença de código aberto</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Procurar</string>
   <string name="title_set_nickname">Definir apelido</string>
   <string name="title_status">Tweetar</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

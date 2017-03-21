@@ -7,6 +7,7 @@
   <string name="action_accept_friend_request">Acceptera</string>
   <string name="action_accept_permission_request">Acceptera</string>
   <string name="action_accepting_follow_request">Accepterar följarförfrågan</string>
+  <string name="action_add_conversation_participant">Lägg till medlem</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Lägg till regel</string>
   <string name="action_add_member">Lägg till medlem</string>
@@ -61,6 +62,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Spara</string>
   <string name="action_saving_search">Sparar sök</string>
+  <string name="action_search">Sök</string>
   <string name="action_select_user">Välj användare</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Skicka</string>
@@ -362,6 +364,8 @@
   <string name="status_shortener_default">Ingen (Avbryt sändning)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Hem</string>
+  <string name="stream_type_messages">Meddelande</string>
   <string name="tab_display_option_icon">Ikon</string>
   <string name="tab_editor_hint_name">Namn</string>
   <string name="tabs">Flikar</string>
@@ -398,6 +402,7 @@
   <string name="title_mentions">Omnämningar</string>
   <string name="title_nicknames">Användarnamn</string>
   <string name="title_open_source_license">Öppen källkods-licens</string>
+  <string name="title_search">Sök</string>
   <string name="title_set_nickname">Ange smeknamn</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>

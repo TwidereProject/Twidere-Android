@@ -3,6 +3,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account">Bruger</string>
   <string name="action_accepting_follow_request">accepterer følgeanmodning</string>
+  <string name="action_add_conversation_participant">Tilføj medlem</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Tilføj regel</string>
   <string name="action_add_member">Tilføj medlem</string>
@@ -49,6 +50,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Gem</string>
   <string name="action_saving_search">gemmer søgning</string>
+  <string name="action_search">Søg</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
   <string name="action_sending_direct_message">send direkte besked</string>
@@ -240,6 +242,8 @@
   <string name="status_shortener_default">Ingen (Annuller afsendelse)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Hjem</string>
+  <string name="stream_type_messages">Beskeder</string>
   <string name="tab_display_option_icon">Ikon</string>
   <string name="tab_editor_hint_name">Navn</string>
   <string name="tabs">Faner</string>
@@ -268,6 +272,7 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_mentions">Nævnelser</string>
   <string name="title_open_source_license">Open source licens</string>
+  <string name="title_search">Søg</string>
   <string name="title_set_nickname">Giv kælenavn</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>

@@ -116,6 +116,7 @@
   <string name="status_hint">What\'s happening?</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Home</string>
   <string name="tab_editor_hint_name">Name</string>
   <string name="theme_color">Theme colour</string>
   <string name="title_about">About</string>

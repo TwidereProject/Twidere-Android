@@ -62,4 +62,11 @@
     <item>Tiszta fehér/fekete</item>
     <item>Átlátszó</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Felhasználó</item>
+    <item>Felhasználó idővonala</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Tweetek listázása</item>
+  </string-array>
 </resources>

@@ -9,6 +9,7 @@
   <string name="action_accept_permission_request">Godta</string>
   <string name="action_accepting_follow_request">godtar følgeforespørsel</string>
   <string name="action_add">Legg til</string>
+  <string name="action_add_conversation_participant">Legg til medlem</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Legg til regel</string>
   <string name="action_add_member">Legg til medlem</string>
@@ -66,6 +67,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Lagre</string>
   <string name="action_saving_search">lagrer søk</string>
+  <string name="action_search">Søk</string>
   <string name="action_select_user">Velg bruker</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Send</string>
@@ -276,7 +278,9 @@
   <string name="label_auth_type">Autentiseringstype</string>
   <string name="label_background_operation_service">Bakgrunnstjeneste</string>
   <string name="label_data_provider">Twidere database leverandør</string>
+  <string name="label_media">Media</string>
   <string name="label_original_status">Opprinnelig tweet</string>
+  <string name="label_photo">Bilde</string>
   <string name="label_refresh_service">Oppdateringstjeneste</string>
   <string name="label_streaming_service">Strømmetjeneste</string>
   <string name="label_your_profile_image">Ditt profilbilde</string>
@@ -422,6 +426,7 @@
   <string name="preference_title_landscape">Landskap</string>
   <string name="preference_title_portrait">Portrett</string>
   <string name="preference_title_storage">Lagring</string>
+  <string name="preference_title_streaming_enabled">Aktiver strømming</string>
   <string name="preference_title_text_size">Tekststørrelse</string>
   <string name="preference_title_translate">Oversett</string>
   <string name="preference_title_trends_location">Posisjon for trender</string>
@@ -527,6 +532,7 @@
   <string name="settings_interface">Grensesnitt</string>
   <string name="settings_notifications">Varsler</string>
   <string name="settings_refresh">Oppdater</string>
+  <string name="settings_streaming">Strømming</string>
   <string name="share_format">Delingsformat</string>
   <string name="share_format_summary">\"[TITLE]\" = Innholdstittel\n\"[TEXT]\" = Innholdstekst</string>
   <string name="share_status">Del tweet</string>
@@ -558,6 +564,8 @@
   <string name="status_shortener_default">Ingen (avbryt sending)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Hjem</string>
+  <string name="stream_type_messages">Meldinger</string>
   <string name="streaming">Strømming</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">Abonnerer på listen «<xliff:g id="list">%s</xliff:g>».</string>
@@ -609,9 +617,11 @@
   <string name="title_mentions">Omtalelser</string>
   <string name="title_nicknames">Kallenavn</string>
   <string name="title_open_source_license">Åpen kildekode-lisens</string>
+  <string name="title_search">Søk</string>
   <string name="title_set_nickname">Velg kallenavn</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_streaming">Strømming</string>
   <string name="title_subscription_name">Navn</string>
   <string name="title_subscription_url">Nettadresse</string>
   <string name="title_user">Bruker</string>

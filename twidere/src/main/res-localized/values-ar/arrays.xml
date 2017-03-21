@@ -57,4 +57,11 @@
     <item>أبيض وأسود خالصين</item>
     <item>شفاف</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>مستخدم</item>
+    <item>الخط الزمني للمستخدم</item>
+    <item>User Favorites</item>
+    <item>لائحة</item>
+    <item>الخط الزمني للقائمة</item>
+  </string-array>
 </resources>

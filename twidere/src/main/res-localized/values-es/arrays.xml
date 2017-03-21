@@ -74,4 +74,11 @@
     <item>Blanco/Negro puro</item>
     <item>Transparente</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Usuario</item>
+    <item>Cronología del usuario</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Lista de inicio</item>
+  </string-array>
 </resources>

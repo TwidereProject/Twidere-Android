@@ -62,4 +62,11 @@
     <item>Blanc i negre pur</item>
     <item>Transparent</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Usuari</item>
+    <item>Cronologia de l\'usuari</item>
+    <item>User Favorites</item>
+    <item>Llista</item>
+    <item>Cronologia</item>
+  </string-array>
 </resources>

@@ -22,9 +22,9 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 
 /**
+ * Show extra features introduction
  * Created by mariotaku on 2016/12/25.
  */
-
 class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
 
     val feature: String get() = arguments.getString(EXTRA_FEATURE)
@@ -35,16 +35,16 @@ class ExtraFeaturesIntroductionDialogFragment : BaseDialogFragment() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.title_extra_features)
         builder.setView(R.layout.dialog_extra_features_introduction)
-        builder.setPositiveButton(R.string.action_purchase) { dialog, which ->
+        builder.setPositiveButton(R.string.action_purchase) { _, _ ->
             startPurchase(feature)
             Analyzer.log(PurchaseConfirm(PurchaseFinished.NAME_EXTRA_FEATURES))
         }
-        builder.setNegativeButton(R.string.action_later) { dialog, which ->
+        builder.setNegativeButton(R.string.action_later) { _, _ ->
             onDialogCancelled()
         }
         val restorePurchaseIntent = extraFeaturesService.createRestorePurchaseIntent(context, feature)
         if (restorePurchaseIntent != null) {
-            builder.setNeutralButton(R.string.action_restore_purchase) { dialog, which ->
+            builder.setNeutralButton(R.string.action_restore_purchase) { _, _ ->
                 startActivityForResultOnTarget(restorePurchaseIntent)
             }
         }

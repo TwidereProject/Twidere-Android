@@ -21,7 +21,7 @@ class RefreshIntervalPreference(
     private val entriesBackup = entries
     private val valuesBackup = entryValues
 
-    private val changeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+    private val changeListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
         if (key == autoRefreshCompatibilityModeKey.key) {
             updateEntries()
         }

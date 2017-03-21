@@ -12,6 +12,7 @@
   <string name="action_accept_permission_request">許可</string>
   <string name="action_accepting_follow_request">フォローリクエスト許可</string>
   <string name="action_add">追加</string>
+  <string name="action_add_conversation_participant">ユーザーを追加</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">ルールを追加</string>
   <string name="action_add_filters_subscription">購読を追加</string>
@@ -89,6 +90,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">保存</string>
   <string name="action_saving_search">検索の保存</string>
+  <string name="action_search">検索</string>
   <string name="action_select_all">すべて選択</string>
   <string name="action_select_none">選択しない</string>
   <string name="action_select_user">ユーザーの選択</string>
@@ -365,8 +367,10 @@
   <string name="label_data_provider">Twidere データベースプロバイダ</string>
   <string name="label_filters_subscription">購読</string>
   <string name="label_location_your_coarse_location">位置情報が不正確です</string>
+  <string name="label_media">メディア</string>
   <string name="label_original_status">元のツイート</string>
   <string name="label_password_sign_in">パスワードでサインイン</string>
+  <string name="label_photo">写真</string>
   <string name="label_poll">投票</string>
   <string name="label_refresh_and_sync_service">更新＆同期サービス</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
@@ -611,6 +615,8 @@
   <string name="preference_title_multi_column_tabs">多列タブ</string>
   <string name="preference_title_portrait">ポートレイト</string>
   <string name="preference_title_storage">ストレージ</string>
+  <string name="preference_title_streaming_enabled">ストリーミングを使用</string>
+  <string name="preference_title_streaming_power_saving">省電力モード</string>
   <string name="preference_title_tablet_mode">タブレットモード</string>
   <string name="preference_title_text_size">フォントサイズ</string>
   <string name="preference_title_translate">翻訳する</string>
@@ -738,6 +744,7 @@
   <string name="settings_interface">インターフェース</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>
+  <string name="settings_streaming">ストリーミング</string>
   <string name="share_format">共有形式</string>
   <string name="share_format_summary">\"[TITLE]\" = タイトル\n\"[TEXT]\" = ツイート内容</string>
   <string name="share_link">共有リンク</string>
@@ -778,6 +785,9 @@
   <string name="status_shortener_default">なし (送信を取り消す)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">リツイート</string>
+  <string name="stream_type_home">ホーム</string>
+  <string name="stream_type_interactions">みんなの反応</string>
+  <string name="stream_type_messages">メッセージ</string>
   <string name="streaming">ストリーミング</string>
   <string name="style">スタイル</string>
   <string name="subscribed_to_list">リスト\"<xliff:g id="list">%s</xliff:g>\"を保存しました。</string>
@@ -842,10 +852,12 @@
   <string name="title_nicknames">ニックネーム</string>
   <string name="title_open_source_license">オープンソースライセンス</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">検索</string>
   <string name="title_select_users">ユーザーを選択</string>
   <string name="title_set_nickname">ニックネームの設定</string>
   <string name="title_status">ツイート</string>
   <string name="title_statuses">ツイート</string>
+  <string name="title_streaming">ストリーミング</string>
   <string name="title_subscription_name">名前</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

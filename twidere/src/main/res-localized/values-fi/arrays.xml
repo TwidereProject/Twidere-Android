@@ -62,4 +62,11 @@
     <item>Pelkkä valkoinen/musta</item>
     <item>Läpinäkyvä</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Käyttäjä</item>
+    <item>Käyttäjän aikajana</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Listan aikajana</item>
+  </string-array>
 </resources>

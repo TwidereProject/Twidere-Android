@@ -10,7 +10,7 @@
   <string-array name="entries_compose_now_action">
     <item>Escrever</item>
     <item>Tirar uma foto</item>
-    <item>Add media</item>
+    <item>Adicionar mídia</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
     <item>Interações</item>
@@ -23,10 +23,13 @@
     <item>Galeria</item>
     <item>Área de transferência</item>
   </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
+  </string-array>
   <string-array name="entries_media_preview_style">
     <item>Recortar</item>
     <item>Escala</item>
-    <item>Real size</item>
+    <item>Tamanho real</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>Início</item>
@@ -37,6 +40,10 @@
     <item>Arredondado</item>
     <item>Quadrado</item>
   </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <!--<item>SOCKS</item>-->
+  </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 minutos</item>
     <item>5 minutos</item>
@@ -46,6 +53,11 @@
     <item>1 hora</item>
     <item>2 horas</item>
     <item>4 horas</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>Limitar</item>
+    <item>Normal</item>
+    <item>Ampla</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Ícone</item>
@@ -61,5 +73,12 @@
     <item>Padrão</item>
     <item>Branco/Preto puro</item>
     <item>Transparente</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Usuários</item>
+    <item>Linha do tempo</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Listar timeline</item>
   </string-array>
 </resources>

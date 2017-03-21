@@ -74,4 +74,11 @@
     <item>سیاه و سفید خالص</item>
     <item>شفّاف</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>کاربر</item>
+    <item>خط‌زمان کاربر</item>
+    <item>User Favorites</item>
+    <item>فهرست</item>
+    <item>خط زمانی فهرست</item>
+  </string-array>
 </resources>

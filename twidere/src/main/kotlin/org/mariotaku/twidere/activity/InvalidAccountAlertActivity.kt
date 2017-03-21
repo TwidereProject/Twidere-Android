@@ -32,7 +32,7 @@ class InvalidAccountAlertActivity : FragmentActivity() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.title_error_invalid_account)
             builder.setMessage(R.string.message_error_invalid_account)
-            builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+            builder.setPositiveButton(android.R.string.ok) { _, _ ->
                 val am = AccountManager.get(context)
                 AccountUtils.getAccounts(am).filter { !am.isAccountValid(it) }.forEach { account ->
                     am.removeAccountSupport(account)
@@ -42,7 +42,7 @@ class InvalidAccountAlertActivity : FragmentActivity() {
                     activity.startActivity(intent)
                 }
             }
-            builder.setNegativeButton(android.R.string.cancel) { dialog, which ->
+            builder.setNegativeButton(android.R.string.cancel) { _, _ ->
 
             }
             val dialog = builder.create()

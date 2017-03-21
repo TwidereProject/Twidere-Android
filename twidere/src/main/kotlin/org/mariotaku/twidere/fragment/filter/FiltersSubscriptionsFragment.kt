@@ -285,7 +285,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_add_filters_subscription)
-            builder.setPositiveButton(R.string.action_add_filters_subscription) { dialog, which ->
+            builder.setPositiveButton(R.string.action_add_filters_subscription) { dialog, _ ->
                 dialog as AlertDialog
                 val editName = dialog.findViewById(R.id.name) as MaterialEditText
                 val editUrl = dialog.findViewById(R.id.url) as MaterialEditText

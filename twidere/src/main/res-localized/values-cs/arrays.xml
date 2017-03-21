@@ -62,4 +62,11 @@
     <item>Čistě bílá/černá</item>
     <item>Transparent</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Uživatel</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>Seznam</item>
+    <item>List timeline</item>
+  </string-array>
 </resources>

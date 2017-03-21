@@ -89,7 +89,7 @@ abstract class BaseFiltersFragment : AbsContentListViewFragment<SimpleCursorAdap
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
         listView.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        listView.setOnItemClickListener { view, child, pos, id ->
+        listView.setOnItemClickListener { _, _, pos, _ ->
             if (!supportsEdit) return@setOnItemClickListener
             val adapter = this.adapter as FilterListAdapter
             val item = adapter.getFilterItem(pos) ?: return@setOnItemClickListener

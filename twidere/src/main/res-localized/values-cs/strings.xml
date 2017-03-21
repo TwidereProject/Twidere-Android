@@ -10,6 +10,7 @@
   <string name="action_accept_friend_request">Přijmout</string>
   <string name="action_accept_permission_request">Přijmout</string>
   <string name="action_add">Přidat</string>
+  <string name="action_add_conversation_participant">Přidat člena</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Přidat pravidlo</string>
   <string name="action_add_member">Přidat člena</string>
@@ -50,6 +51,7 @@
   <string name="action_retweet">Retweetovat</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Uložit</string>
+  <string name="action_search">Hledat</string>
   <string name="action_select_user">Vybrat uživatele</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Poslat</string>
@@ -339,6 +341,9 @@
   <string name="status_not_updated">Tweet nebyl odeslán.</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweetovat</string>
+  <string name="stream_type_home">Domů</string>
+  <string name="stream_type_interactions">Interakce</string>
+  <string name="stream_type_messages">Zprávy</string>
   <string name="subscribers">Odběratel</string>
   <string name="system_default">Výchozí systémové nastavení</string>
   <string name="tab_display_option_icon">Ikona</string>
@@ -377,6 +382,7 @@
   <string name="title_nicknames">Přezdívky</string>
   <string name="title_open_source_license">Licence otevřeného kódu</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Hledat</string>
   <string name="title_set_nickname">Nastavit přezdívku</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweety</string>

@@ -48,4 +48,11 @@
     <item>Dark</item>
     <item>Auto</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Bruger</item>
+    <item>Brugertidslinje</item>
+    <item>User Favorites</item>
+    <item>Liste</item>
+    <item>Listetidslinje</item>
+  </string-array>
 </resources>

@@ -52,11 +52,11 @@
   </plurals>
   <plurals name="N_favorites">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> favorito</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> favoritos</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> favoritou</item>
   </plurals>
   <plurals name="N_likes">
-    <item quantity="one"><xliff:g id="count">%d</xliff:g> curtir</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> curtir</item>
+    <item quantity="one"><xliff:g id="count">%d</xliff:g> curtida</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> curtidas</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> voto</item>

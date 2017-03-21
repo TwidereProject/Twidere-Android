@@ -12,6 +12,7 @@
   <string name="action_accept_permission_request">Elfogadás</string>
   <string name="action_accepting_follow_request">követési kérés elfogadása</string>
   <string name="action_add">Jozzáadás</string>
+  <string name="action_add_conversation_participant">Tag hozzáadása</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Szabály hozzáadása</string>
   <string name="action_add_filters_subscription">Feliratkozás hozzáadása</string>
@@ -82,6 +83,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Ment</string>
   <string name="action_saving_search">keresés mentése</string>
+  <string name="action_search">Keresés</string>
   <string name="action_select_user">Felhasználó kiválasztása</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Elküld</string>
@@ -315,7 +317,9 @@
   <string name="label_auth_type">Hitelesítés típus</string>
   <string name="label_background_operation_service">Háttér szolgáltatás</string>
   <string name="label_data_provider">Twidere adatbázis szolgáltató</string>
+  <string name="label_media">Média</string>
   <string name="label_original_status">Fiók törlése</string>
+  <string name="label_photo">Fotó</string>
   <string name="label_poll">Szavazás</string>
   <string name="label_refresh_service">Frissítő szolgáltatás</string>
   <string name="label_streaming_service">Közvetítő szolgáltatás</string>
@@ -479,6 +483,7 @@
   <string name="preference_title_landscape">Fekvő</string>
   <string name="preference_title_portrait">Álló</string>
   <string name="preference_title_storage">Tárhely</string>
+  <string name="preference_title_streaming_enabled">Közvetítés bekapcsolása</string>
   <string name="preference_title_text_size">Szövegméret</string>
   <string name="preference_title_translate">Fordítás</string>
   <string name="preference_title_trends_location">Trendek helye</string>
@@ -601,6 +606,7 @@
   <string name="settings_interface">Felhasználói felület</string>
   <string name="settings_notifications">Értesítések</string>
   <string name="settings_refresh">Frissít</string>
+  <string name="settings_streaming">Közvetítés</string>
   <string name="share_format">Megosztás formátuma</string>
   <string name="share_format_summary">\"[TITLE]\" = Tartalom címe\n\"[TEXT]\" = Tartalom szövege</string>
   <string name="share_status">Tweet megosztása</string>
@@ -636,6 +642,9 @@
   <string name="status_shortener_default">Egyik sem (Küldés megszakítása)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Haza</string>
+  <string name="stream_type_interactions">Interakciók</string>
+  <string name="stream_type_messages">Üzenetek</string>
   <string name="streaming">Közvetítés</string>
   <string name="style">Stílus</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listára feliratkozva.</string>
@@ -673,6 +682,7 @@
   <string name="title_blocked_users">Blokkolt felhasználók</string>
   <string name="title_browser_sign_in">Bejelentkezés böngészőben</string>
   <string name="title_compose">Létrehoz</string>
+  <string name="title_conversation">Párbeszéd</string>
   <string name="title_direct_messages">Üzenetek</string>
   <string name="title_drafts">Piszkozatok</string>
   <string name="title_edit_details">Részletek szerkesztése</string>
@@ -691,10 +701,12 @@
   <string name="title_mentions">Említések</string>
   <string name="title_nicknames">Becenevek</string>
   <string name="title_open_source_license">Nyílt forrású licenc</string>
+  <string name="title_search">Keresés</string>
   <string name="title_select_users">Felhasználók kiválasztása</string>
   <string name="title_set_nickname">Becenév beállítása</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweet</string>
+  <string name="title_streaming">Közvetítés</string>
   <string name="title_subscription_name">Név</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

@@ -49,7 +49,7 @@ class RetweetStatusTask(
         val details = AccountUtils.getAccountDetails(AccountManager.get(context),
                 accountKey, true) ?: return SingleResponse.getInstance<ParcelableStatus>(MicroBlogException("No account"))
         val microBlog = details.newMicroBlogInstance(
-                context, false, false, MicroBlog::class.java)
+                context, MicroBlog::class.java)
         try {
             val result = ParcelableStatusUtils.fromStatus(microBlog.retweetStatus(statusId),
                     accountKey, false)

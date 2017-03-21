@@ -82,7 +82,7 @@ class DummyItemAdapter(
         } else if (adapter is VariousItemsAdapter) {
             return adapter.getItem(position) as ParcelableStatus
         } else if (adapter is ParcelableActivitiesAdapter) {
-            return adapter.getActivity(position)?.getActivityStatus()!!
+            return adapter.getActivity(position).getActivityStatus()!!
         }
         throw IndexOutOfBoundsException()
     }

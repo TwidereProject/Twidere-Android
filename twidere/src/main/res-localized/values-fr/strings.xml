@@ -373,8 +373,10 @@
   <string name="label_data_provider">Fournisseur de base de donnée pour Twidere</string>
   <string name="label_filters_subscription">Abonnement</string>
   <string name="label_location_your_coarse_location">Votre emplacement approximatif</string>
+  <string name="label_media">Média</string>
   <string name="label_original_status">Tweet original</string>
   <string name="label_password_sign_in">Mot de passe de connection</string>
+  <string name="label_photo">Photo</string>
   <string name="label_poll">Sondage</string>
   <string name="label_refresh_and_sync_service">Service de Rafraichissement &amp; Synchronisation</string>
   <string name="label_refresh_service">Refraîcher le service</string>
@@ -599,6 +601,8 @@
   <string name="preference_title_media_preload_non_metered_network">Précharger sur les réseaux sans surcoût</string>
   <string name="preference_title_portrait">Potrait</string>
   <string name="preference_title_storage">Stockage</string>
+  <string name="preference_title_streaming_enabled">Activer le streaming</string>
+  <string name="preference_title_streaming_power_saving">Mode économie d\'énergie</string>
   <string name="preference_title_tablet_mode">Mode tablette</string>
   <string name="preference_title_text_size">Taille du texte</string>
   <string name="preference_title_translate">Traduire</string>
@@ -726,6 +730,7 @@
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notifications</string>
   <string name="settings_refresh">Rafraîchir</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Format de partage</string>
   <string name="share_format_summary">\"[TITLE]\" = Titre du contenu\n\"[TEXT]\" = Texte du contenu</string>
   <string name="share_link">Partager le lien</string>
@@ -766,6 +771,9 @@
   <string name="status_shortener_default">Aucun (Annuler l\'envoi)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweeter</string>
+  <string name="stream_type_home">Accueil</string>
+  <string name="stream_type_interactions">Interactions</string>
+  <string name="stream_type_messages">Messages</string>
   <string name="streaming">Streaming</string>
   <string name="style">Style</string>
   <string name="subscribed_to_list">Abonné à la liste \"<xliff:g id="list">%s</xliff:g>\".</string>
@@ -810,6 +818,7 @@
   <string name="title_conversation">Conversation</string>
   <string name="title_dialog_sync_connect_to">Se connecter à&#8230;</string>
   <string name="title_direct_messages">Messages</string>
+  <string name="title_direct_messages_conversation_info">Informations de conversation</string>
   <string name="title_direct_messages_conversation_new">Nouvelle conversation</string>
   <string name="title_drafts">Brouillons</string>
   <string name="title_edit_details">Editer les détails</string>
@@ -829,6 +838,7 @@
   <string name="title_likes">J\'aime</string>
   <string name="title_manage_filter_subscriptions">Filtrer les abonnements</string>
   <string name="title_mentions">Mentions</string>
+  <string name="title_message_conversation_info">Informations de conversation</string>
   <string name="title_nicknames">Surnoms</string>
   <string name="title_open_source_license">Licence open source</string>
   <string name="title_premium_features_name">Twidere ∞</string>
@@ -837,6 +847,7 @@
   <string name="title_set_nickname">Définir le pseudo</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nom</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g> : <xliff:g id="summary">%2$s</xliff:g></string>

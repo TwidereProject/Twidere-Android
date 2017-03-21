@@ -53,22 +53,22 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         val dummyItemAdapter = adapter.dummyAdapter
         dummyItemAdapter.statusClickListener = object : IStatusViewHolder.StatusClickListener {
             override fun onStatusClick(holder: IStatusViewHolder, position: Int) {
-                val status = dummyItemAdapter.getStatus(position) ?: return
+                val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openStatus(getContext(), status, null)
             }
 
             override fun onQuotedStatusClick(holder: IStatusViewHolder, position: Int) {
-                val status = dummyItemAdapter.getStatus(position) ?: return
+                val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openStatus(getContext(), status.account_key, status.quoted_id)
             }
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
-                val status = dummyItemAdapter.getStatus(position) ?: return
+                val status = dummyItemAdapter.getStatus(position)
                 handleActionClick(holder as StatusViewHolder, status, id)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
-                val status = dummyItemAdapter.getStatus(position) ?: return false
+                val status = dummyItemAdapter.getStatus(position)
                 return AbsStatusesFragment.handleActionLongClick(this@ItemsListFragment, status,
                         adapter.getItemId(position), id)
             }
@@ -80,7 +80,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
             }
 
             override fun onMediaClick(holder: IStatusViewHolder, view: View, current: ParcelableMedia, statusPosition: Int) {
-                val status = dummyItemAdapter.getStatus(statusPosition) ?: return
+                val status = dummyItemAdapter.getStatus(statusPosition)
                 IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
                         null)
                 // BEGIN HotMobi
@@ -92,7 +92,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
 
             override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
                 val activity = activity
-                val status = dummyItemAdapter.getStatus(position) ?: return
+                val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
                         status.user_screen_name, preferences[newDocumentApiKey])
             }
@@ -142,7 +142,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
-                val status = dummyAdapter.getStatus(contextMenuInfo.position) ?: return
+                val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
                 MenuUtils.setupForStatus(context, preferences, menu, status,
                         twitterWrapper, userColorNameManager)
@@ -157,7 +157,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
         when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
                 val dummyAdapter = adapter.dummyAdapter
-                val status = dummyAdapter.getStatus(position) ?: return false
+                val status = dummyAdapter.getStatus(position)
                 if (item.itemId == R.id.share) {
                     val shareIntent = Utils.createStatusShareIntent(activity, status)
                     val chooser = Intent.createChooser(shareIntent, getString(R.string.share_status))

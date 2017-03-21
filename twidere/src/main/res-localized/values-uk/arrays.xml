@@ -67,4 +67,11 @@
     <item>Суцільно білий/чорний</item>
     <item>Прозорий</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Користувач</item>
+    <item>Стрічка користувача</item>
+    <item>User Favorites</item>
+    <item>Список</item>
+    <item>Список стрічки</item>
+  </string-array>
 </resources>

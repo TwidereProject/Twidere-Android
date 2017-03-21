@@ -68,7 +68,7 @@ class GetMessagesTask(
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
             val details = getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
-            val microBlog = details.newMicroBlogInstance(context, true, cls = MicroBlog::class.java)
+            val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
                 getMessages(microBlog, details, param, i)
             } catch (e: MicroBlogException) {

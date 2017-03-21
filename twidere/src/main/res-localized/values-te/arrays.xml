@@ -7,4 +7,27 @@
     <item>Direct messages</item>
     <item>పోకడలు</item>
   </string-array>
+  <string-array name="entries_home_refresh_content">
+    <item>Interactions</item>
+    <item>Direct messages</item>
+    <item>పోకడలు</item>
+    <item>Saved searches</item>
+  </string-array>
+  <string-array name="entries_notification_content">
+    <item>ముంగిలి</item>
+    <item>Interactions</item>
+    <item>Direct messages</item>
+  </string-array>
+  <string-array name="entries_theme_background">
+    <item>అప్రమేయం</item>
+    <item>Pure white/black</item>
+    <item>Transparent</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>వాడుకరి</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>జాబితా</item>
+    <item>List timeline</item>
+  </string-array>
 </resources>

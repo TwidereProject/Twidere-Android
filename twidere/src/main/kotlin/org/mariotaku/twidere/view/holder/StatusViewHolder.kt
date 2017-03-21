@@ -436,6 +436,10 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                 // Media preview disabled, just show label
                 quotedMediaPreview.visibility = View.GONE
                 quotedMediaLabel.visibility = View.VISIBLE
+            } else if (status.media.isNotNullOrEmpty()) {
+                // Already displaying media, show label only
+                quotedMediaPreview.visibility = View.GONE
+                quotedMediaLabel.visibility = View.VISIBLE
             } else {
                 // Show media
                 quotedMediaPreview.visibility = View.VISIBLE
@@ -640,7 +644,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                     listener.onItemActionClick(holder, R.id.favorite, position)
                 }
                 holder.mediaLabel -> {
-                    val firstMedia = holder.adapter.getStatus(position)?.media?.firstOrNull() ?: return
+                    val firstMedia = holder.adapter.getStatus(position).media?.firstOrNull() ?: return
                     listener.onMediaClick(holder, v, firstMedia, position)
                 }
             }

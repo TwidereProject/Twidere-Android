@@ -479,9 +479,7 @@ class UpdateStatusTask(
         var sharedMediaIds: Array<String>? = null
         var sharedMediaOwners: Array<UserKey>? = null
 
-        val overrideTexts: Array<String> = Array(length) { idx ->
-            defaultText
-        }
+        val overrideTexts: Array<String> = Array(length) { defaultText }
         val mediaIds: Array<Array<String>?> = arrayOfNulls(length)
 
         val mediaUploadResults: Array<MediaUploadResult?> = arrayOfNulls(length)

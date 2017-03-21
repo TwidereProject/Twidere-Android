@@ -3,35 +3,46 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>Strona główna</item>
-    <item>Interactions</item>
+    <item>Interakcje</item>
     <item>Wiadomości bezpośrednie</item>
     <item>Trendy</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>Tweetnij</item>
     <item>Zrób zdjęcie</item>
-    <item>Add media</item>
+    <item>Dodaj media</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
-    <item>Interactions</item>
+    <item>Interakcje</item>
     <item>Wiadomości bezpośrednie</item>
     <item>Trendy</item>
     <item>Zapisane wyniki wyszukiwania</item>
   </string-array>
   <string-array name="entries_image_sources">
-    <item>Camera</item>
+    <item>Aparat</item>
     <item>Galeria</item>
-    <item>Clipboard</item>
+    <item>Schowek</item>
+  </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
   </string-array>
   <string-array name="entries_media_preview_style">
     <item>Przytnij</item>
     <item>Skaluj</item>
-    <item>Real size</item>
+    <item>Rzeczywisty rozmiar</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>Strona główna</item>
-    <item>Interactions</item>
+    <item>Interakcje</item>
     <item>Wiadomości bezpośrednie</item>
+  </string-array>
+  <string-array name="entries_profile_image_style">
+    <item>Koło</item>
+    <item>Kwadrat</item>
+  </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 minuty</item>
@@ -44,9 +55,9 @@
     <item>4 godziny</item>
   </string-array>
   <string-array name="entries_tab_column_width">
-    <item>Narrow</item>
+    <item>Wąska</item>
     <item>Normalny</item>
-    <item>Wide</item>
+    <item>Szeroka</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Ikona</item>
@@ -56,11 +67,18 @@
   <string-array name="entries_theme">
     <item>Jasny</item>
     <item>Ciemny</item>
-    <item>Auto</item>
+    <item>Automatycznie</item>
   </string-array>
   <string-array name="entries_theme_background">
     <item>Domyślne</item>
     <item>Czyste biało-czarne</item>
     <item>Przezroczyste</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Użytkownik</item>
+    <item>Strumień użytkownika</item>
+    <item>User Favorites</item>
+    <item>Lista</item>
+    <item>Strumień listy</item>
   </string-array>
 </resources>

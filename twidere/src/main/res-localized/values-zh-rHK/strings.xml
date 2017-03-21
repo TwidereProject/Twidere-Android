@@ -12,6 +12,7 @@
   <string name="action_accept_permission_request">接受</string>
   <string name="action_accepting_follow_request">同意關注請求</string>
   <string name="action_add">新增</string>
+  <string name="action_add_conversation_participant">新增成員</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">新增規則</string>
   <string name="action_add_filters_subscription">添加訂閱</string>
@@ -85,6 +86,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">保存</string>
   <string name="action_saving_search">保存搜索</string>
+  <string name="action_search">搜尋</string>
   <string name="action_select_all">全選</string>
   <string name="action_select_none">全不選擇</string>
   <string name="action_select_user">選擇使用者</string>
@@ -354,8 +356,10 @@
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_filters_subscription">訂閱</string>
   <string name="label_location_your_coarse_location">您的大致位置</string>
+  <string name="label_media">媒體</string>
   <string name="label_original_status">原推文</string>
   <string name="label_password_sign_in">使用密碼登入</string>
+  <string name="label_photo">照片</string>
   <string name="label_poll">投票</string>
   <string name="label_refresh_and_sync_service">刷新和同步服務</string>
   <string name="label_refresh_service">刷新服務</string>
@@ -575,6 +579,8 @@
   <string name="preference_title_light_font">輕量級字體</string>
   <string name="preference_title_portrait">縱向模式</string>
   <string name="preference_title_storage">儲存</string>
+  <string name="preference_title_streaming_enabled">啟用實時流</string>
+  <string name="preference_title_streaming_power_saving">省電模式</string>
   <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_text_size">文字尺寸</string>
   <string name="preference_title_translate">翻譯</string>
@@ -702,6 +708,7 @@
   <string name="settings_interface">界面</string>
   <string name="settings_notifications">通知</string>
   <string name="settings_refresh">更新</string>
+  <string name="settings_streaming">實時流</string>
   <string name="share_format">分享格式</string>
   <string name="share_format_summary">\"[TITLE]\" = 分享內容的標題\n\"[TEXT]\" = 分享內容的正文</string>
   <string name="share_link">分享連結</string>
@@ -742,6 +749,9 @@
   <string name="status_shortener_default">無（不發送過長推文）</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">轉推</string>
+  <string name="stream_type_home">首頁</string>
+  <string name="stream_type_interactions">互動</string>
+  <string name="stream_type_messages">私信</string>
   <string name="streaming">實時流</string>
   <string name="style">風格</string>
   <string name="subscribed_to_list">訂閲了列表\"<xliff:g id="list">%s</xliff:g>\"</string>
@@ -783,6 +793,7 @@
   <string name="title_blocked_users">已封鎖的使用者</string>
   <string name="title_browser_sign_in">瀏覽器登入</string>
   <string name="title_compose">撰寫</string>
+  <string name="title_conversation">對話</string>
   <string name="title_dialog_sync_connect_to">連接到...</string>
   <string name="title_direct_messages">私信</string>
   <string name="title_drafts">草稿</string>
@@ -806,10 +817,12 @@
   <string name="title_nicknames">暱稱</string>
   <string name="title_open_source_license">開放原始碼許可</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">搜尋</string>
   <string name="title_select_users">選擇使用者</string>
   <string name="title_set_nickname">設定暱稱</string>
   <string name="title_status">推文</string>
   <string name="title_statuses">推文</string>
+  <string name="title_streaming">實時流</string>
   <string name="title_subscription_name">名字</string>
   <string name="title_subscription_url">網址</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

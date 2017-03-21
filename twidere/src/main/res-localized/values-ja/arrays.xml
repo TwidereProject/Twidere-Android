@@ -69,4 +69,11 @@
     <item>白/黒一色</item>
     <item>背景透過</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>ユーザー</item>
+    <item>ユーザータイムライン</item>
+    <item>User Favorites</item>
+    <item>リスト</item>
+    <item>リストタイムライン</item>
+  </string-array>
 </resources>

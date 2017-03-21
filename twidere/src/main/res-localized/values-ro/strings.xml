@@ -16,6 +16,7 @@
   <!-- [verb] Action for performing retweet -->
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Salvează</string>
+  <string name="action_search">Căutare</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Trimite</string>
   <!-- [verb] Used for skip some settings -->
@@ -59,6 +60,7 @@
   <!-- Enhanced (paid) features title -->
   <!-- [noun] Twitter's favorite, in the plural -->
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
+  <string name="title_search">Căutare</string>
   <!-- 'Tweet' here is a verb -->
   <string name="uninstall">Dezinstalare</string>
   <!-- User list description -->

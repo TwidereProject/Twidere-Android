@@ -148,6 +148,7 @@
   <string name="status_not_updated">Tweet tidak dihantar.</string>
   <string name="status_not_updated_summary">Tweet tidak dihantar dan disimpan dalam draf.</string>
   <!-- [noun] Accessibility label for retweet icon -->
+  <string name="stream_type_messages">Mesej</string>
   <string name="tab_display_option_icon">Ikon</string>
   <string name="tab_editor_hint_name">Nama</string>
   <string name="tcp_dns_query">TCP DNS Query</string>

@@ -77,6 +77,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
         touchInterceptor = listener
     }
 
+    @Deprecated("Deprecated in Android")
     override fun fitSystemWindows(insets: Rect): Boolean {
         onFitSystemWindowsListener?.onFitSystemWindows(insets)
         return super.fitSystemWindows(insets)
@@ -109,6 +110,7 @@ open class ExtendedRelativeLayout(context: Context, attrs: AttributeSet? = null)
         restorePadding()
     }
 
+    @Deprecated("Deprecated in Android")
     override fun setBackgroundDrawable(background: Drawable) {
         backupPadding()
         super.setBackgroundDrawable(background)

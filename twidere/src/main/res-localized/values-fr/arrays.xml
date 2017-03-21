@@ -74,4 +74,11 @@
     <item>Blanc/noir pur</item>
     <item>Transparent</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Utilisateur</item>
+    <item>Fil d\'actualité de l\'utlisateur</item>
+    <item>User Favorites</item>
+    <item>Liste</item>
+    <item>Liste « fil d\'actualité »</item>
+  </string-array>
 </resources>

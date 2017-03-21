@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Kabul et</string>
   <string name="action_accepting_follow_request">takip isteği kabul ediliyor</string>
   <string name="action_add">Ekle</string>
+  <string name="action_add_conversation_participant">Üye ekle</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Kural ekle</string>
   <string name="action_add_member">Üye ekle</string>
@@ -69,6 +70,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Kaydet</string>
   <string name="action_saving_search">arama kaydediliyor</string>
+  <string name="action_search">Ara</string>
   <string name="action_select_user">Kullanıcı seç</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Gönder</string>
@@ -310,7 +312,9 @@
   <string name="label_background_operation_service">Arkaplan çalışma servisi</string>
   <string name="label_data_provider">Twidere veritabanı sağlayıcı</string>
   <string name="label_location_your_coarse_location">Kabaca konumunuz</string>
+  <string name="label_media">Medya</string>
   <string name="label_original_status">Orijinal tweet</string>
+  <string name="label_photo">Fotoğraf</string>
   <string name="label_poll">Anket</string>
   <string name="label_refresh_service">Servisi yenile</string>
   <string name="label_status_not_available">Tweet mevcut değil</string>
@@ -480,6 +484,7 @@
   <string name="preference_title_landscape">Yatay</string>
   <string name="preference_title_portrait">Dikey</string>
   <string name="preference_title_storage">Depolama</string>
+  <string name="preference_title_streaming_enabled">Akışı etkinleştir</string>
   <string name="preference_title_text_size">Yazı Boyutu</string>
   <string name="preference_title_translate">Çevir</string>
   <string name="preference_title_trends_location">Gündem konumu</string>
@@ -604,6 +609,7 @@
   <string name="settings_interface">Arayüz</string>
   <string name="settings_notifications">Bildirimler</string>
   <string name="settings_refresh">Yenile</string>
+  <string name="settings_streaming">Akış</string>
   <string name="share_format">Paylaşma şekli</string>
   <string name="share_format_summary">\"[TITLE]\" = İçerik başlığı\n\"[TEXT]\" = İçerik metni</string>
   <string name="share_link">Bağlantı paylaş</string>
@@ -642,6 +648,9 @@
   <string name="status_shortener_default">Hiçbiri (Göndermekten vazgeç)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet et</string>
+  <string name="stream_type_home">Anasayfa</string>
+  <string name="stream_type_interactions">Etkileşimler</string>
+  <string name="stream_type_messages">Mesajlar</string>
   <string name="streaming">Akış</string>
   <string name="style">Stil</string>
   <string name="subscribed_to_list">\"<xliff:g id="list">%s</xliff:g>\" listesine abone olundu.</string>
@@ -698,9 +707,11 @@
   <string name="title_nicknames">Lakaplar</string>
   <string name="title_open_source_license">Açık kaynak kod lisansı</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Ara</string>
   <string name="title_set_nickname">Lakap ayarla</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweetler</string>
+  <string name="title_streaming">Akış</string>
   <string name="title_subscription_name">Ad</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

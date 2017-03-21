@@ -33,14 +33,7 @@ val AccountExtras.official: Boolean
         return false
     }
 
-
-@JvmOverloads
-fun <T> AccountDetails.newMicroBlogInstance(
-        context: Context,
-        includeEntities: Boolean = true,
-        includeRetweets: Boolean = true,
-        cls: Class<T>
-): T {
+fun <T> AccountDetails.newMicroBlogInstance(context: Context, cls: Class<T>): T {
     return credentials.newMicroBlogInstance(context, type, cls)
 }
 

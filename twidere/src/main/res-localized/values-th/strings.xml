@@ -6,13 +6,16 @@
   <string name="account_delete_confirm_title">ลบบัญชี</string>
   <string name="account_options">ตัวเลือกแอคเคาท์</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">ทวิตเตอร์</string>
   <string name="action_accept_friend_request">ยอมรับ</string>
   <string name="action_accept_permission_request">ยอมรับ</string>
   <string name="action_accepting_follow_request">กำลังตอบรับคำขอติดตาม</string>
   <string name="action_add">เพิ่ม</string>
+  <string name="action_add_conversation_participant">เพิ่มสมาชิก</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">เพิ่มกฎ</string>
+  <string name="action_add_filters_subscription">เพิ่มการติดตาม</string>
   <string name="action_add_member">เพิ่มสมาชิก</string>
   <string name="action_add_tab">เพิ่มแถบ</string>
   <string name="action_add_to_filter">เพิ่มไปยังตัวกรอง</string>
@@ -23,28 +26,43 @@
   <string name="action_blocking">กำลังบล็อค</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">ยกเลิกทวีต</string>
+  <string name="action_cancelling_like">ยกเลิกการถูกใจ</string>
   <string name="action_center">กึ่งกลาง</string>
   <string name="action_clear">ล้าง</string>
   <string name="action_compose">เขียน</string>
+  <string name="action_compose_message_convert_to_status">แปลงไปยังทวีต</string>
+  <string name="action_conversation_info">ข้อมูลการสนทนา</string>
+  <string name="action_create_conversation">สร้างการสนทนา</string>
   <string name="action_creating_list">กำลังสร้างรายการ</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">ลบ</string>
+  <string name="action_delete_messages">ลบข้อความ</string>
   <string name="action_deleting">กำลังลบ</string>
   <string name="action_deleting_search">กำลังลบการค้นหาที่บันทึกไว้</string>
   <string name="action_denying_follow_request">กำลังปฏิเสธคำขอติดตาม</string>
   <string name="action_dont_restart">อย่าเพิ่งสิ</string>
+  <string name="action_dont_terminate">ไม่ยกเลิก</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">แก้ไข</string>
+  <string name="action_edit_conversation_avatar">แก้ไขไอค่อน</string>
+  <string name="action_edit_conversation_name">แก้ไขชื่อ</string>
+  <string name="action_edit_filter_rule">แก้ไขกฎ</string>
   <string name="action_favorite">ถูกใจ</string>
   <string name="action_favoriting">กำลังบันทึกข้อความโปรด</string>
+  <string name="action_filter_import_from_blocked_users">นำเข้าจากรายชื่อที่ถูกบล็อค</string>
+  <string name="action_filter_import_from_muted_users">นำเข้าจากรายชื่อที่ถูกซ่อน</string>
+  <string name="action_filter_subscriptions_card_manage">จัดการการติดตาม</string>
   <string name="action_finish">สำเร็จ</string>
   <string name="action_follow">ติดตาม</string>
   <string name="action_following">กำลังติดตาม</string>
   <string name="action_getting_status">กำลังรับข้อความ</string>
   <string name="action_getting_user_lists">กำลังเรียกลิสต์ของผู้ใช้</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">นำเข้า</string>
   <string name="action_import_from">นำเข้าจาก&#8230;</string>
   <!-- Used for decide something later, like permission request -->
+  <string name="action_later">ไว้ก่อน</string>
+  <string name="action_leave_conversation">ออกจากการสนทนา</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">ถูกใจ</string>
   <string name="action_modifying_lists">ปรับแต่งรายการ</string>
@@ -53,11 +71,14 @@
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> ถูกบันทึกที่ <xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_open_in_browser">เปิดในเบราว์เซอร์</string>
   <string name="action_pick_color">เลือกสี</string>
+  <string name="action_purchase">ซื้อ</string>
   <string name="action_quote">อ้างอิง</string>
+  <string name="action_record_video">อัดวิดีโอ</string>
   <string name="action_refresh">โหลดใหม่</string>
   <string name="action_refreshing_direct_messages">กำลังโหลดข้อความด่วน</string>
   <string name="action_refreshing_home_timeline">กำลังโหลดข้อความหน้าแรกใหม่</string>
   <string name="action_refreshing_mentions">กำลังโหลดข้อความที่กล่าวถึงคุณ</string>
+  <string name="action_remove_conversation_avatar">เอาไอค่อนออก</string>
   <string name="action_removing_profile_banner_image">กำลังลบภาพปก</string>
   <string name="action_reply">ตอบ</string>
   <string name="action_report_spam">รายงานสแปม</string>
@@ -70,6 +91,9 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">บันทึก</string>
   <string name="action_saving_search">กำลังบันทึกการค้นหา</string>
+  <string name="action_search">ค้นหา</string>
+  <string name="action_select_all">เลือกทั้งหมด</string>
+  <string name="action_select_none">ไม่เลือกเลย</string>
   <string name="action_select_user">เลือกผู้ใช้</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">ส่ง</string>
@@ -79,11 +103,15 @@
   <string name="action_share">แบ่งปัน</string>
   <string name="action_signing_in">กำลังเข้าสู่ระบบ</string>
   <!-- [verb] Used for skip some settings -->
+  <string name="action_skip">ข้าม</string>
   <string name="action_start">เริ่มต้น</string>
+  <string name="action_status_block_users">กำลังบล็อครายชื่อ...</string>
   <string name="action_subscribe">รับข่าวสาร</string>
   <string name="action_subscribing_to_list">กำลังติดตามรายการ</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">เชื่อมต่อ</string>
   <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">ยกเลิกการเชื่อมต่อ</string>
   <string name="action_sync_settings">ตั้งค่า</string>
   <string name="action_take_photo">ถ่ายรูป</string>
   <string name="action_toggle">เปิด/ปิด</string>
@@ -296,7 +324,7 @@
   <string name="inbox">กล่องขาเข้า</string>
   <string name="incoming_friendships">คำขอติดตามทที่รอตรวจสอบ</string>
   <string name="input_text">ใส่ข้อความ</string>
-  <string name="interactions">ปฏิสัมพันธ์</string>
+  <string name="interactions">การโต้ตอบ</string>
   <string name="invalid_consumer_key">Consumer key ไม่ถูกต้อง</string>
   <string name="invalid_consumer_secret">Consumer secret ไม่ถูกต้อง</string>
   <string name="invalid_list_name">ต้องเริ่มต้นด้วยอักขระที่ประกอบด้วย ตัวอักษร ตัวเลข \"-\" หรือ \"_\" เท่านั้น</string>
@@ -311,7 +339,9 @@
   <string name="label_background_operation_service">การดำเนินการเบื้องหลัง</string>
   <string name="label_data_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
   <string name="label_location_your_coarse_location">ตำแหน่งคร่าวๆ ของคุณ</string>
+  <string name="label_media">รูปภาพ</string>
   <string name="label_original_status">ทวีตเดิม</string>
+  <string name="label_photo">รูปภาพ</string>
   <string name="label_poll">โพล</string>
   <string name="label_refresh_service">เรียกบริการอีกครั้ง</string>
   <string name="label_status_not_available">ทวิตไม่พร้อมใช้งาน</string>
@@ -432,7 +462,7 @@
   <string name="notification_status">ทวีตใหม่โดย <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">ทวีตใหม่โดย <xliff:g id="user">%1$s</xliff:g> และคนอื่นอีก <xliff:g id="count">%2$d</xliff:g> คน</string>
   <string name="notification_type_home">หน้าหลัก</string>
-  <string name="notification_type_interactions">ปฏิสัมพันธ์</string>
+  <string name="notification_type_interactions">การโต้ตอบ</string>
   <string name="notification_type_messages">ข้อความส่วนตัว</string>
   <string name="notifications">การแจ้งเตือน</string>
   <string name="notifications_type">รูปแบบการแจ้งเตือน</string>
@@ -481,6 +511,7 @@
   <string name="preference_title_landscape">แนวนอน</string>
   <string name="preference_title_portrait">แนวตั้ง</string>
   <string name="preference_title_storage">พื้นที่จัดเก็บ</string>
+  <string name="preference_title_streaming_enabled">เปิดการใช้งานสตรีมมิ่ง</string>
   <string name="preference_title_text_size">ขนาดข้อความ</string>
   <string name="preference_title_translate">ช่วยแปลภาษา</string>
   <string name="preference_title_trends_location">ตำแหน่งเทรนด์</string>
@@ -488,6 +519,7 @@
   <string name="preview">ตัวอย่าง</string>
   <string name="preview_images">แสดงตัวอย่างภาพ</string>
   <string name="preview_style_crop">ตัด</string>
+  <string name="preview_style_real_size">ขนาดจริง</string>
   <string name="preview_style_scale">สเกล</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">ย้อนกลับ</string>
@@ -542,7 +574,7 @@
   <string name="refresh_on_start">โหลดใหม่เมื่อเริ่ม</string>
   <string name="refresh_on_start_summary">โหลดไทม์ไลน์และเม็นชั่นเมื่อเริ่มทำงาน</string>
   <string name="refresh_type_home">หน้าหลัก</string>
-  <string name="refresh_type_interactions">ปฏิสัมพันธ์</string>
+  <string name="refresh_type_interactions">การโต้ตอบ</string>
   <string name="refresh_type_messages">ข้อความส่วนตัว</string>
   <string name="refresh_type_trends">เทรนด์</string>
   <string name="register">ลงทะเบียน</string>
@@ -605,6 +637,7 @@
   <string name="settings_interface">อินเตอร์เฟส</string>
   <string name="settings_notifications">การแจ้งเตือน</string>
   <string name="settings_refresh">โหลดใหม่</string>
+  <string name="settings_streaming">สตรีมมิ่ง</string>
   <string name="share_format">รูปแบบการแบ่งปัน</string>
   <string name="share_format_summary">\"[TITLE]\" = หัวข้อเนื้อหา\n\"[TEXT]\" = เนื้อหา</string>
   <string name="share_link">แชร์ลิงค์</string>
@@ -643,11 +676,15 @@
   <string name="status_shortener_default">ไม่มี (ยกเลิกการส่ง)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">รีทวีต</string>
+  <string name="stream_type_home">หน้าหลัก</string>
+  <string name="stream_type_interactions">การโต้ตอบ</string>
+  <string name="stream_type_messages">ข้อความส่วนตัว</string>
   <string name="streaming">สตรีมมิ่ง</string>
   <string name="style">รูปแบบ</string>
   <string name="subscribed_to_list">ติดตามลิสต์ \"<xliff:g id="list">%s</xliff:g>\" แล้ว</string>
   <string name="subscribers">ผู้ติดตาม</string>
   <string name="swipe_down_to_refresh">ลากลงเพื่อรีเฟรช</string>
+  <string name="sync_provider_name_google_drive">Google Drive</string>
   <string name="system_default">ค่าเริ่มต้นของระบบ</string>
   <string name="tab_display_option">ตัวเลือกการแสดงแถบ</string>
   <string name="tab_display_option_icon">ไอคอน</string>
@@ -682,6 +719,7 @@
   <string name="title_browser_sign_in">เข้าสู่ระบบทางเบราเซอร์</string>
   <string name="title_compose">เขียน</string>
   <string name="title_direct_messages">ข้อความส่วนตัว</string>
+  <string name="title_direct_messages_conversation_info">ข้อมูลการสนทนา</string>
   <string name="title_drafts">ข้อความร่าง</string>
   <string name="title_edit_details">แก้ไขข้อมูล</string>
   <string name="title_edit_profile">แก้ไขข้อมูลส่วนตัว</string>
@@ -696,12 +734,15 @@
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">ถูกใจ</string>
   <string name="title_mentions">การกล่าวถึง</string>
+  <string name="title_message_conversation_info">ข้อมูลการสนทนา</string>
   <string name="title_nicknames">ชื่อเล่น</string>
   <string name="title_open_source_license">ลิขสิทธิ์ซอฟต์แวร์เปิด</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">ค้นหา</string>
   <string name="title_set_nickname">ตั้งชื่อเล่น</string>
   <string name="title_status">ข้อความ</string>
   <string name="title_statuses">ทวีต</string>
+  <string name="title_streaming">สตรีมมิ่ง</string>
   <string name="title_subscription_name">ชื่อ</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>

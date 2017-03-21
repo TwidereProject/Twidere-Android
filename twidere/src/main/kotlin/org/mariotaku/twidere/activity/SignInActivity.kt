@@ -714,7 +714,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val builder = AlertDialog.Builder(context)
             builder.setView(R.layout.dialog_password_sign_in)
-            builder.setPositiveButton(R.string.sign_in) { dialog, which ->
+            builder.setPositiveButton(R.string.sign_in) { dialog, _ ->
                 val alertDialog = dialog as AlertDialog
                 val editUsername = alertDialog.findViewById(R.id.username) as EditText?
                 val editPassword = alertDialog.findViewById(R.id.password) as EditText?

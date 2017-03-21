@@ -6,7 +6,7 @@
   <!-- 34 Sorry, that page does not exist: Corresponds with HTTP 404 - the specified resource was not found. -->
   <string name="error_twitter_34">이 트윗, 사용자 또는 페이지가 존재하지 않습니다.</string>
   <!-- 88 Rate limit exceeded: The request limit for this resource has been reached for the current rate limit window. -->
-  <string name="error_twitter_88">한도를 초과했습니다. 나중에 다시 시도해 주십시오.</string>
+  <string name="error_twitter_88">제한을 초과하였습니다. 다시 시도해 주십시오.</string>
   <!-- 89 Invalid or expired token: The access token used in the request is incorrect or has expired. Used in API v1.1 -->
   <string name="error_twitter_89">로그인 정보가 잘못되었거나 만료되었습니다. 다시 로그인해 주십시오.</string>
   <!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->

@@ -33,4 +33,11 @@
     <item>2 घंटे</item>
     <item>4 घंटे</item>
   </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>User</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>List</item>
+    <item>मुख्य पृष्ठ सूचीबद्ध करे</item>
+  </string-array>
 </resources>

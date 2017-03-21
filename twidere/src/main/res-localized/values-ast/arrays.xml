@@ -20,7 +20,7 @@
   </string-array>
   <string-array name="entries_image_sources">
     <item>Cámara</item>
-    <item>Galerís</item>
+    <item>Galería</item>
     <item>Cartafueyu</item>
   </string-array>
   <string-array name="entries_media_preload">
@@ -55,9 +55,9 @@
     <item>4 hores</item>
   </string-array>
   <string-array name="entries_tab_column_width">
-    <item>Narrow</item>
+    <item>Estrechu</item>
     <item>Normal</item>
-    <item>Wide</item>
+    <item>Anchu</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Iconu</item>
@@ -65,7 +65,7 @@
     <item>Iconu y etiqueta</item>
   </string-array>
   <string-array name="entries_theme">
-    <item>Lluz d\'avisu</item>
+    <item>Claru</item>
     <item>Escuru</item>
     <item>Auto</item>
   </string-array>
@@ -73,5 +73,12 @@
     <item>Por defeutu</item>
     <item>Blancu/Prietu puros</item>
     <item>Tresparente</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Usuariu</item>
+    <item>Llinia temporal d\'usuariu</item>
+    <item>Favoritos d\'usuariu</item>
+    <item>Llistáu</item>
+    <item>Llistar llinia temporal</item>
   </string-array>
 </resources>

@@ -4,18 +4,18 @@
   <string-array name="entries_auto_refresh_content">
     <item>Лента</item>
     <item>Взаимодействия</item>
-    <item>Direct messages</item>
-    <item>Trends</item>
+    <item>Личные сообщения</item>
+    <item>Тренды</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>Написать</item>
     <item>Сделать фото</item>
-    <item>Add media</item>
+    <item>Добавить медиафайл</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
     <item>Взаимодействия</item>
-    <item>Direct messages</item>
-    <item>Trends</item>
+    <item>Личные сообщения</item>
+    <item>Тренды</item>
     <item>Сохраненные поиски</item>
   </string-array>
   <string-array name="entries_image_sources">
@@ -23,19 +23,26 @@
     <item>Галерея</item>
     <item>Буфер обмена</item>
   </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
+  </string-array>
   <string-array name="entries_media_preview_style">
     <item>Адаптировать</item>
     <item>Масштабировать</item>
-    <item>Real size</item>
+    <item>Реальный размер</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>Лента</item>
     <item>Взаимодействия</item>
-    <item>Direct messages</item>
+    <item>Личные сообщения</item>
   </string-array>
   <string-array name="entries_profile_image_style">
     <item>Круг</item>
     <item>Квадрат</item>
+  </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 минуты</item>
@@ -48,9 +55,9 @@
     <item>4 часа</item>
   </string-array>
   <string-array name="entries_tab_column_width">
-    <item>Narrow</item>
+    <item>Узкий</item>
     <item>Нормальный</item>
-    <item>Wide</item>
+    <item>Широкий</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Иконка</item>
@@ -66,5 +73,12 @@
     <item>По умолчанию</item>
     <item>Просто белый/чёрный</item>
     <item>Прозрачный</item>
+  </string-array>
+  <string-array name="entries_quick_access_shortcut_types">
+    <item>Пользователь</item>
+    <item>User timeline</item>
+    <item>User Favorites</item>
+    <item>Список</item>
+    <item>Список</item>
   </string-array>
 </resources>

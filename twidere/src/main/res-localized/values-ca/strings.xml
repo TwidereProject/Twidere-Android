@@ -11,6 +11,7 @@
   <string name="action_accept_permission_request">Accepta</string>
   <string name="action_accepting_follow_request">s\'està acceptant la soŀlicitud de seguiment</string>
   <string name="action_add">Afegeix</string>
+  <string name="action_add_conversation_participant">Afegeix un membre</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Afegeix una regla</string>
   <string name="action_add_member">Afegeix un membre</string>
@@ -67,6 +68,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Desa</string>
   <string name="action_saving_search">s\'està desant la cerca</string>
+  <string name="action_search">Cerca</string>
   <string name="action_select_user">Escull usuari</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Envia</string>
@@ -305,7 +307,9 @@
   <string name="label_background_operation_service">Servei d\'execució en rerefons</string>
   <string name="label_data_provider">Proveïdor de la base de dades de Twidere</string>
   <string name="label_location_your_coarse_location">La teva ubicació aproximada</string>
+  <string name="label_media">Contingut multimèdia</string>
   <string name="label_original_status">Piulada original</string>
+  <string name="label_photo">Foto</string>
   <string name="label_poll">Enquesta</string>
   <string name="label_refresh_service">Actualitza el servei</string>
   <string name="label_streaming_service">Servei de piulades en temps real</string>
@@ -472,6 +476,7 @@
   <string name="preference_title_landscape">Horitzontal</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Emmagatzematge</string>
+  <string name="preference_title_streaming_enabled">Habilitar l\'streaming</string>
   <string name="preference_title_text_size">Mida del text</string>
   <string name="preference_title_translate">Ajudeu a traduir el Twidere</string>
   <string name="preference_title_trends_location">Ubicació de les tendències</string>
@@ -596,6 +601,7 @@
   <string name="settings_interface">Interfície</string>
   <string name="settings_notifications">Notificacions</string>
   <string name="settings_refresh">Actualitza</string>
+  <string name="settings_streaming">Streaming</string>
   <string name="share_format">Format per compartir</string>
   <string name="share_format_summary">\"[TITLE]\" = Títol dels continguts\n\"[TEXT]\" = Text dels continguts</string>
   <string name="share_status">Compartir tweet</string>
@@ -634,6 +640,9 @@
   <string name="status_shortener_default">Cap (Atura l\'enviament)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
+  <string name="stream_type_home">Inici</string>
+  <string name="stream_type_interactions">Interaccions</string>
+  <string name="stream_type_messages">Missatges</string>
   <string name="streaming">Streaming</string>
   <string name="style">Estil</string>
   <string name="subscribed_to_list">Us heu subscrit a la llista «<xliff:g id="list">%s</xliff:g>».</string>
@@ -689,9 +698,11 @@
   <string name="title_nicknames">Sobrenoms</string>
   <string name="title_open_source_license">Llicència de codi obert</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_search">Cerca</string>
   <string name="title_set_nickname">Establiu sobrenom</string>
   <string name="title_status">Piulada</string>
   <string name="title_statuses">Piulades</string>
+  <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nom</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
