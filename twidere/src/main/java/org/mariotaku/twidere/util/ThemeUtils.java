@@ -239,12 +239,6 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static String getThemeBackgroundOption(final Context context) {
-        if (context == null) return VALUE_THEME_BACKGROUND_DEFAULT;
-        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        return pref.getString(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT);
-    }
-
     public static int getThemeForegroundColor(final Context context) {
         return getThemeForegroundColor(context, 0);
     }
@@ -282,14 +276,6 @@ public class ThemeUtils implements Constants {
         final int def = ContextCompat.getColor(context, R.color.branding_color);
         return pref.getInt(KEY_THEME_COLOR, def);
     }
-
-    public static int getUserThemeBackgroundAlpha(final Context context) {
-        if (context == null) return DEFAULT_THEME_BACKGROUND_ALPHA;
-        final SharedPreferencesWrapper pref = getSharedPreferencesWrapper(context);
-        return TwidereMathUtils.clamp(pref.getInt(KEY_THEME_BACKGROUND_ALPHA, DEFAULT_THEME_BACKGROUND_ALPHA),
-                ThemeBackgroundPreference.MIN_ALPHA, ThemeBackgroundPreference.MAX_ALPHA);
-    }
-
 
     public static int getActionBarAlpha(final int alpha) {
         final int normalizedAlpha = TwidereMathUtils.clamp(alpha, 0, 0xFF);
@@ -341,10 +327,6 @@ public class ThemeUtils implements Constants {
 
     public static boolean isSolidBackground(final String option) {
         return VALUE_THEME_BACKGROUND_SOLID.equals(option);
-    }
-
-    public static boolean isTransparentBackground(final Context context) {
-        return isTransparentBackground(getThemeBackgroundOption(context));
     }
 
     public static boolean isTransparentBackground(final String option) {

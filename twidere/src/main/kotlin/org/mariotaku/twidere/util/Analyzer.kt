@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.app.Application
+import android.content.SharedPreferences
 import org.mariotaku.twidere.annotation.AccountType
 
 /**
@@ -34,6 +35,8 @@ abstract class Analyzer {
     protected abstract fun logException(throwable: Throwable)
 
     protected abstract fun init(application: Application)
+
+    protected abstract fun preferencesChanged(preferences: SharedPreferences)
 
     interface Event {
         val name: String
@@ -65,6 +68,10 @@ abstract class Analyzer {
 
         fun logException(throwable: Throwable) {
             implementation?.logException(throwable)
+        }
+
+        fun preferencesChanged(preferences: SharedPreferences) {
+            implementation?.preferencesChanged(preferences)
         }
     }
 }

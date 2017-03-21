@@ -100,11 +100,8 @@ import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.displaySensitiveContentsKey
-import org.mariotaku.twidere.constant.lightFontKey
-import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileBanner
@@ -673,8 +670,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         userColorNameManager.registerNicknameChangedListener(this)
         nameFirst = preferences.getBoolean(KEY_NAME_FIRST)
         cardBackgroundColor = ThemeUtils.getCardBackgroundColor(activity,
-                ThemeUtils.getThemeBackgroundOption(activity),
-                ThemeUtils.getUserThemeBackgroundAlpha(activity))
+                preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
         actionBarShadowColor = 0xA0000000.toInt()
         val args = arguments
         val accountId: UserKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)

@@ -127,6 +127,7 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
         UserAgentExtraHeaders(MicroBlogAPIFactory.getTwidereUserAgent(context))
     }
     val holder = DependencyHolder.get(context)
+    var extraRequestParams: Map<String, String>? = null
     when (cls) {
         TwitterUpload::class.java -> {
             val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
@@ -158,11 +159,14 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
         }
         AccountType.FANFOU -> {
             factory.setConstantPool(sFanfouConstantPool)
+            if (cls != FanfouStream::class.java) {
+                extraRequestParams = mapOf("format" to "html")
+            }
         }
     }
     val converterFactory = TwitterConverterFactory()
     factory.setRestConverterFactory(converterFactory)
-    factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(null))
+    factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(extraRequestParams))
     factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(extraHeaders))
     factory.setExceptionFactory(MicroBlogAPIFactory.TwidereExceptionFactory(converterFactory))
     return factory.build<T>(cls)

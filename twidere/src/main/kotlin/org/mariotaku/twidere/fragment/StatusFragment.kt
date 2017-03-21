@@ -1550,8 +1550,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemCounts[ITEM_IDX_REPLY_LOAD_MORE] = 1
             inflater = LayoutInflater.from(context)
             cardBackgroundColor = ThemeUtils.getCardBackgroundColor(context,
-                    ThemeUtils.getThemeBackgroundOption(context),
-                    ThemeUtils.getUserThemeBackgroundAlpha(context))
+                    preferences[themeBackgroundOptionKey], preferences[themeBackgroundAlphaKey])
             val listener = StatusAdapterLinkClickHandler<List<ParcelableStatus>>(context, preferences)
             listener.setAdapter(this)
             twidereLinkify = TwidereLinkify(listener)

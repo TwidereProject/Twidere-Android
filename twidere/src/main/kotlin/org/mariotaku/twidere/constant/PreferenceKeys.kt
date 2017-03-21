@@ -18,7 +18,6 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
-import org.mariotaku.twidere.view.ProfileImageView
 
 /**
  * Created by mariotaku on 16/8/25.
@@ -72,6 +71,8 @@ val multiColumnWidthKey = KStringKey("multi_column_tab_width", "normal")
 val streamingEnabledKey = KBooleanKey("streaming_enabled", false)
 val streamingNonMeteredNetworkKey = KBooleanKey("streaming_non_metered_network", true)
 val streamingPowerSavingKey = KBooleanKey("streaming_power_saving", true)
+
+val themeBackgroundOptionKey = KStringKey(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT)
 
 object themeBackgroundAlphaKey : KSimpleKey<Int>(KEY_THEME_BACKGROUND_ALPHA, 0xFF) {
     override fun read(preferences: SharedPreferences): Int {

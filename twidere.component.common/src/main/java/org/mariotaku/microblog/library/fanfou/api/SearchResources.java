@@ -21,13 +21,13 @@
 
 package org.mariotaku.microblog.library.fanfou.api;
 
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Query;
 
 /**
  * Created by mariotaku on 16/3/10.

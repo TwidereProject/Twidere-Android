@@ -778,7 +778,11 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
     private fun setupBars() {
         val backgroundOption = currentThemeBackgroundOption
         val isTransparent = ThemeUtils.isTransparentBackground(backgroundOption)
-        val actionBarAlpha = if (isTransparent) ThemeUtils.getActionBarAlpha(ThemeUtils.getUserThemeBackgroundAlpha(this)) else 0xFF
+        val actionBarAlpha = if (isTransparent) {
+            ThemeUtils.getActionBarAlpha(preferences[themeBackgroundAlphaKey])
+        } else {
+            0xFF
+        }
         actionsButton.alpha = actionBarAlpha / 255f
     }
 

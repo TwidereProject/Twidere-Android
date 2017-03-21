@@ -26,9 +26,11 @@ import com.soundcloud.android.crop.CropImageActivity
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
 import org.mariotaku.twidere.activity.iface.IThemedActivity
+import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
+import org.mariotaku.twidere.constant.themeBackgroundOptionKey
 import org.mariotaku.twidere.constant.themeKey
-import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 
 /**
@@ -39,6 +41,8 @@ class ImageCropperActivity : CropImageActivity(), IThemedActivity {
     // Data fields
     override val currentThemeBackgroundAlpha by lazy { themeBackgroundAlpha }
     override val currentThemeBackgroundOption by lazy { themeBackgroundOption }
+
+    private val preferences by lazy { getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE) }
 
     private var doneCancelBar: Toolbar? = null
 
@@ -61,9 +65,9 @@ class ImageCropperActivity : CropImageActivity(), IThemedActivity {
     }
 
     override val themeBackgroundAlpha: Int
-        get() = ThemeUtils.getUserThemeBackgroundAlpha(this)
+        get() = preferences[themeBackgroundAlphaKey]
 
     override val themeBackgroundOption: String
-        get() = ThemeUtils.getThemeBackgroundOption(this)
+        get() = preferences[themeBackgroundOptionKey]
 
 }

@@ -130,6 +130,8 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         listenExternalThemeChange()
 
         loadDefaultFeatures()
+
+        Analyzer.preferencesChanged(sharedPreferences)
     }
 
     private fun loadDefaultFeatures() {
@@ -267,6 +269,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
                 }
             }
         }
+        Analyzer.preferencesChanged(preferences)
     }
 
     override fun onTerminate() {
