@@ -54,8 +54,10 @@ class SendMessageTask(
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun onExecute(params: ParcelableNewMessage): SendMessageResult {
-        val account = params.account
+        val account = params.account ?: throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val updateData = requestSendMessage(microBlog, account, params)
         if (params.is_temp_conversation && params.conversation_id != null) {

@@ -26,9 +26,11 @@ import org.mariotaku.twidere.model.SingleResponse
  * Created by mariotaku on 2017/2/10.
  */
 
-abstract class ExceptionHandlingAbstractTask<Params, Result, in TaskException : Exception, Callback>(
+abstract class ExceptionHandlingAbstractTask<Params, Result, TaskException : Exception, Callback>(
         context: Context
 ) : BaseAbstractTask<Params, SingleResponse<Result>, Callback>(context) {
+
+    protected abstract val exceptionClass: Class<TaskException>
 
     override final fun afterExecute(callback: Callback?, result: SingleResponse<Result>) {
         @Suppress("UNCHECKED_CAST")
@@ -36,8 +38,12 @@ abstract class ExceptionHandlingAbstractTask<Params, Result, in TaskException : 
         if (result.data != null) {
             onSucceed(callback, result.data)
         } else if (result.exception != null) {
-            @Suppress("UNCHECKED_CAST")
-            onException(callback, result.exception as TaskException)
+            if (exceptionClass.isInstance(result.exception)) {
+                @Suppress("UNCHECKED_CAST")
+                onException(callback, result.exception as TaskException)
+            } else {
+                throw result.exception
+            }
         }
     }
 

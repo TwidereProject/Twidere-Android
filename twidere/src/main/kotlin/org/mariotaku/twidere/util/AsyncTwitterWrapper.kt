@@ -328,6 +328,8 @@ class AsyncTwitterWrapper(
 
     fun updateFriendship(accountKey: UserKey, userKey: UserKey, update: FriendshipUpdate) {
         TaskStarter.execute(object : ExceptionHandlingAbstractTask<Any?, Relationship, Exception, Any>(context) {
+            override val exceptionClass = Exception::class.java
+
             override fun onExecute(params: Any?): Relationship {
                 val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
                         ?: throw MicroBlogException("No account")
@@ -371,6 +373,8 @@ class AsyncTwitterWrapper(
 
     fun setActivitiesAboutMeUnreadAsync(accountKeys: Array<UserKey>, cursor: Long) {
         val task = object : ExceptionHandlingAbstractTask<Any?, Unit, MicroBlogException, Any?>(context) {
+            override val exceptionClass = MicroBlogException::class.java
+
             override fun onExecute(params: Any?) {
                 for (accountId in accountKeys) {
                     val microBlog = MicroBlogAPIFactory.getInstance(context, accountId) ?: continue

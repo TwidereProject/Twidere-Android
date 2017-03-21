@@ -49,6 +49,8 @@ class AddParticipantsTask(
 
     private val profileImageSize: String = context.getString(R.string.profile_image_size)
 
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun onExecute(params: Unit?): Boolean {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")

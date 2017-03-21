@@ -53,6 +53,9 @@ class MarkMessageReadTask(
         val accountKey: UserKey,
         val conversationId: String
 ) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, Unit?>(context) {
+
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun onExecute(params: Unit?): Boolean {
         if (conversationId.startsWith(TEMP_CONVERSATION_ID_PREFIX)) return true
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:

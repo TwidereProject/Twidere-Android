@@ -43,6 +43,9 @@ class SetConversationNotificationDisabledTask(
         val conversationId: String,
         val notificationDisabled: Boolean
 ) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, ((Boolean) -> Unit)?>(context) {
+
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun onExecute(params: Unit?): Boolean {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")

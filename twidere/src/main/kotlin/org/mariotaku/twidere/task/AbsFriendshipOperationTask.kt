@@ -22,6 +22,8 @@ abstract class AbsFriendshipOperationTask(
 ) : ExceptionHandlingAbstractTask<AbsFriendshipOperationTask.Arguments, ParcelableUser,
         MicroBlogException, Any?>(context) {
 
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun beforeExecute() {
         microBlogWrapper.addUpdatingRelationshipId(params.accountKey, params.userKey)
         val event = FriendshipTaskEvent(action, params.accountKey,
@@ -59,13 +61,13 @@ abstract class AbsFriendshipOperationTask(
 
     @Throws(MicroBlogException::class)
     protected abstract fun perform(twitter: MicroBlog,
-                                   details: AccountDetails,
-                                   args: Arguments): User
+            details: AccountDetails,
+            args: Arguments): User
 
     protected abstract fun succeededWorker(twitter: MicroBlog,
-                                           details: AccountDetails,
-                                           args: Arguments,
-                                           user: ParcelableUser)
+            details: AccountDetails,
+            args: Arguments,
+            user: ParcelableUser)
 
     protected abstract fun showSucceededMessage(params: Arguments, user: ParcelableUser)
 

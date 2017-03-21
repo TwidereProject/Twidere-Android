@@ -43,6 +43,9 @@ class DestroyMessageTask(
         val conversationId: String?,
         val messageId: String
 ) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, Unit?>(context) {
+
+    override val exceptionClass = MicroBlogException::class.java
+
     override fun onExecute(params: Unit?): Boolean {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
