@@ -298,8 +298,8 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         if (adapter.profileImageEnabled) {
             profileImageView.visibility = View.VISIBLE
             requestManager.loadProfileImage(context, status, adapter.profileImageStyle,
-                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio)
-                    .into(profileImageView)
+                    profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
+                    adapter.profileImageSize).into(profileImageView)
 
             profileTypeView.setImageResource(getUserTypeIconRes(status.user_is_verified, status.user_is_protected))
             profileTypeView.visibility = View.VISIBLE

@@ -5,6 +5,7 @@ import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
 import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.IUserListsAdapter
@@ -39,6 +40,7 @@ class DummyItemAdapter(
     @Inject
     override lateinit var bidiFormatter: BidiFormatter
 
+    override var profileImageSize: String = context.getString(R.string.profile_image_size)
     override var profileImageStyle: Int = 0
     override var mediaPreviewStyle: Int = 0
     override var textSize: Float = 0f

@@ -24,6 +24,7 @@ import android.support.v4.text.BidiFormatter
 import android.support.v7.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.constant.displayProfileImageKey
 import org.mariotaku.twidere.constant.profileImageStyleKey
@@ -58,6 +59,7 @@ abstract class BaseRecyclerViewAdapter<VH : RecyclerView.ViewHolder>(
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
 
+    override final val profileImageSize: String = context.getString(R.string.profile_image_size)
     override final val profileImageStyle: Int
     override final val textSize: Float
     override final val profileImageEnabled: Boolean

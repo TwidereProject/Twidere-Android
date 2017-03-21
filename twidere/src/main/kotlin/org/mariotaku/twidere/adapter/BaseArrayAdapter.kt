@@ -23,6 +23,7 @@ import android.content.Context
 import android.support.v4.text.BidiFormatter
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IContentAdapter
 import org.mariotaku.twidere.adapter.iface.IItemCountsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
@@ -54,6 +55,7 @@ open class BaseArrayAdapter<T>(
     @Inject
     lateinit var permissionsManager: PermissionsManager
 
+    final override val profileImageSize: String = context.getString(R.string.profile_image_size)
     final override val profileImageStyle: Int
     final override val textSize: Float
     final override val profileImageEnabled: Boolean
@@ -62,17 +64,16 @@ open class BaseArrayAdapter<T>(
 
     override val itemCounts: ItemCounts = ItemCounts(1)
 
-    @ILoadMoreSupportAdapter.IndicatorPosition
+
     override var loadMoreSupportedPosition: Long = 0
-        set(value) {
+        @ILoadMoreSupportAdapter.IndicatorPosition set(value) {
             field = value
             loadMoreIndicatorPosition = ILoadMoreSupportAdapter.apply(loadMoreIndicatorPosition, value)
             notifyDataSetChanged()
         }
 
-    @ILoadMoreSupportAdapter.IndicatorPosition
     override var loadMoreIndicatorPosition: Long = 0
-        set(value) {
+        @ILoadMoreSupportAdapter.IndicatorPosition set(value) {
             if (field == value) return
             field = ILoadMoreSupportAdapter.apply(value, loadMoreSupportedPosition)
             notifyDataSetChanged()
