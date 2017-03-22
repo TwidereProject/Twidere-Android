@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.activity_premium_dashboard.*
 import kotlinx.android.synthetic.main.card_item_extra_feature.view.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
@@ -110,10 +111,11 @@ class PremiumDashboardActivity : BaseActivity() {
                 if (!BuildConfig.DEBUG) {
                     return true
                 }
-                ProgressDialogFragment.show(supportFragmentManager, "consume_purchase_progress")
                 val weakThis = WeakReference(this)
                 val recreate = AtomicBoolean()
-                task {
+                executeAfterFragmentResumed {
+                    ProgressDialogFragment.show(it.supportFragmentManager, "consume_purchase_progress")
+                } and task {
                     val activity = weakThis.get() ?: throw IllegalStateException()
                     if (!activity.extraFeaturesService.destroyPurchase()) {
                         throw IllegalStateException()

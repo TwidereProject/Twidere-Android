@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.ExpandableListView
 import android.widget.TextView
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
@@ -54,10 +55,9 @@ class TrendsLocationSelectorActivity : BaseActivity() {
 
         if (savedInstanceState != null) return
         val weakThis = WeakReference(this)
-        ProgressDialogFragment.show(supportFragmentManager, PROGRESS_FRAGMENT_TAG).apply {
-            isCancelable = false
-        }
-        task {
+        executeAfterFragmentResumed {
+            ProgressDialogFragment.show(it.supportFragmentManager, PROGRESS_FRAGMENT_TAG).isCancelable = false
+        } and task {
             val activity = weakThis.get() ?: throw InterruptedException()
             val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)
                     ?: throw MicroBlogException("No account")

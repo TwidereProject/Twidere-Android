@@ -78,7 +78,6 @@ import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.failUi
-import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
@@ -945,10 +944,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 SetUserNicknameDialogFragment.show(fragmentManager, user.key, nick)
             }
             R.id.add_to_list -> {
-                promiseOnUi {
-                    executeAfterFragmentResumed {
-                        ProgressDialogFragment.show(fragmentManager, "get_list_progress")
-                    }
+                executeAfterFragmentResumed {
+                    ProgressDialogFragment.show(it.fragmentManager, "get_list_progress")
                 }.then {
                     fun MicroBlog.getUserListOwnerMemberships(id: String): ArrayList<UserList> {
                         val result = ArrayList<UserList>()
@@ -1671,11 +1668,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                     val checkedPositions = dialog.listView.checkedItemPositions
                     val weakActivity = WeakReference(activity)
-                    promiseOnUi {
-                        val activity = weakActivity.get() as? IBaseActivity<*> ?: return@promiseOnUi
-                        activity.executeAfterFragmentResumed { activity ->
-                            ProgressDialogFragment.show(activity.supportFragmentManager, "update_lists_progress")
-                        }
+                    (activity as IBaseActivity<*>).executeAfterFragmentResumed {
+                        ProgressDialogFragment.show(it.supportFragmentManager, "update_lists_progress")
                     }.then {
                         val activity = weakActivity.get() ?: throw IllegalStateException()
                         val twitter = MicroBlogAPIFactory.getInstance(activity, accountKey)

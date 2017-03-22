@@ -24,6 +24,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.Fragment
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.deferred
 import org.mariotaku.twidere.constant.IntentConstants
 import java.util.*
 
@@ -64,7 +66,7 @@ interface IBaseFragment<out F : Fragment> {
         fun getSystemWindowsInsets(insets: Rect): Boolean
     }
 
-    fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit)
+    fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit): Promise<Unit, Exception>
 
     class ActionHelper<out F : Fragment>(private val fragment: F) {
 
@@ -89,20 +91,32 @@ interface IBaseFragment<out F : Fragment> {
                 val cur = actionQueue.poll()
                 cur?.let { cur ->
                     if (cur.useHandler) {
-                        handler.post { cur.action(fragment) }
+                        handler.post { cur.invoke(fragment) }
                     } else {
-                        cur.action(fragment)
+                        cur.invoke(fragment)
                     }
                 }
                 info = cur
             } while (info != null)
         }
 
-        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit) {
-            actionQueue.add(ExecuteInfo(action, useHandler))
+        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (F) -> Unit)
+                : Promise<Unit, Exception> {
+            val info = ExecuteInfo(action, useHandler)
+            actionQueue.add(info)
             executePending()
+            return info.promise
         }
 
-        private data class ExecuteInfo<in F : Fragment>(val action: (F) -> Unit, val useHandler: Boolean)
+        private data class ExecuteInfo<in F : Fragment>(private val action: (F) -> Unit, val useHandler: Boolean) {
+            private val deferredInstance = deferred<Unit, Exception>()
+
+            val promise: Promise<Unit, Exception> get() = deferredInstance.promise
+
+            fun invoke(fragment: F) {
+                action(fragment)
+                deferredInstance.resolve(Unit)
+            }
+        }
     }
 }

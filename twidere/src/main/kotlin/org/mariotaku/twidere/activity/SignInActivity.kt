@@ -51,6 +51,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.bluelinelabs.logansquare.LoganSquare
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import nl.komponents.kovenant.ui.successUi
@@ -410,8 +411,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
 
     private fun updateDefaultFeatures() {
         val weakThis = WeakReference(this)
-        ProgressDialogFragment.show(supportFragmentManager, FRAGMENT_TAG_LOADING_DEFAULT_FEATURES)
-        task {
+        executeAfterFragmentResumed {
+            ProgressDialogFragment.show(it.supportFragmentManager, FRAGMENT_TAG_LOADING_DEFAULT_FEATURES)
+        } and task {
             val activity = weakThis.get() ?: return@task
             if (activity.isFinishing) return@task
             activity.defaultFeatures.loadRemoteSettings(activity.restHttpClient)

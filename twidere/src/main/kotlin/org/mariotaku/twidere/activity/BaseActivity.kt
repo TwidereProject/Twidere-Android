@@ -41,6 +41,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import com.squareup.otto.Bus
+import nl.komponents.kovenant.Promise
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.Chameleon.Theme.LightStatusBarMode
 import org.mariotaku.chameleon.ChameleonActivity
@@ -264,8 +265,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         actionHelper.dispatchOnResumeFragments()
     }
 
-    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit) {
-        actionHelper.executeAfterFragmentResumed(useHandler, action)
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (BaseActivity) -> Unit): Promise<Unit, Exception> {
+        return actionHelper.executeAfterFragmentResumed(useHandler, action)
     }
 
     override final val currentThemeBackgroundAlpha by lazy {

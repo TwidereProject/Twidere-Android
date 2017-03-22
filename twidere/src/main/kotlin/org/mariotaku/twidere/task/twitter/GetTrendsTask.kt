@@ -47,6 +47,7 @@ import org.mariotaku.twidere.util.content.ContentResolverUtils.bulkInsert
 import java.util.*
 
 /**
+ * Get local trends
  * Created by mariotaku on 16/2/24.
  */
 class GetTrendsTask(
@@ -59,8 +60,8 @@ class GetTrendsTask(
         val details = getAccountDetails(AccountManager.get(context), accountKey, true) ?: return
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         try {
-            val trends = when {
-                details.type == FANFOU -> twitter.fanfouTrends
+            val trends = when (details.type) {
+                FANFOU -> twitter.fanfouTrends
                 else -> twitter.getLocationTrends(woeId).firstOrNull()
             } ?: return
             storeTrends(context.contentResolver, CachedTrends.Local.CONTENT_URI, trends)

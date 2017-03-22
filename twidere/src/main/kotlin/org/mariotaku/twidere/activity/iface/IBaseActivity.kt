@@ -22,6 +22,8 @@ package org.mariotaku.twidere.activity.iface
 import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.FragmentActivity
+import nl.komponents.kovenant.Promise
+import nl.komponents.kovenant.deferred
 import java.util.*
 
 /**
@@ -29,7 +31,7 @@ import java.util.*
  */
 interface IBaseActivity<out A : FragmentActivity> {
 
-    fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit)
+    fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit): Promise<Unit, Exception>
 
     class ActionHelper<out A : FragmentActivity>(private val activity: A) {
 
@@ -54,20 +56,33 @@ interface IBaseActivity<out A : FragmentActivity> {
                 val cur = actionQueue.poll()
                 cur?.let { cur ->
                     if (cur.useHandler) {
-                        handler.post { cur.action(activity) }
+                        handler.post { cur.invoke(activity) }
                     } else {
-                        cur.action(activity)
+                        cur.invoke(activity)
                     }
                 }
                 info = cur
             } while (info != null)
         }
 
-        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit) {
-            actionQueue.add(ExecuteInfo(action, useHandler))
+        fun executeAfterFragmentResumed(useHandler: Boolean = false, action: (A) -> Unit)
+                : Promise<Unit, Exception> {
+            val info = ExecuteInfo(action, useHandler)
+            actionQueue.add(info)
             executePending()
+            return info.promise
         }
 
-        private data class ExecuteInfo<in A : FragmentActivity>(val action: (A) -> Unit, val useHandler: Boolean)
+        private data class ExecuteInfo<in A : FragmentActivity>(private val action: (A) -> Unit, val useHandler: Boolean) {
+
+            private val deferredInstance = deferred<Unit, Exception>()
+
+            val promise: Promise<Unit, Exception> get() = deferredInstance.promise
+
+            fun invoke(activity: A) {
+                action(activity)
+                deferredInstance.resolve(Unit)
+            }
+        }
     }
 }

@@ -28,6 +28,7 @@ import android.graphics.Canvas
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.bumptech.glide.Glide
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.kpreferences.get
@@ -161,8 +162,9 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                         shapeStyle = preferences[profileImageStyleKey], cornerRadiusRatio = 0.1f,
                         size = getString(R.string.profile_image_size)).into(DeferredTarget())
                 val weakThis = WeakReference(this)
-                ProgressDialogFragment.show(supportFragmentManager, TAG_LOAD_ICON_PROGRESS)
-                deferred.promise.successUi { drawable ->
+                executeAfterFragmentResumed {
+                    ProgressDialogFragment.show(it.supportFragmentManager, TAG_LOAD_ICON_PROGRESS)
+                } and deferred.promise.successUi { drawable ->
                     val activity = weakThis.get() ?: return@successUi
                     val launchIntent = IntentUtils.userProfile(accountKey, user.key,
                             user.screen_name, profileUrl = user.extras?.statusnet_profile_url)

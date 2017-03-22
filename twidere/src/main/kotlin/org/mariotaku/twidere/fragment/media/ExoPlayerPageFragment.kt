@@ -242,9 +242,7 @@ class ExoPlayerPageFragment : MediaViewerFragment(), IBaseFragment<ExoPlayerPage
         requestFitSystemWindows()
     }
 
-    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (ExoPlayerPageFragment) -> Unit) {
-        // No-op
-    }
+    override fun executeAfterFragmentResumed(useHandler: Boolean, action: (ExoPlayerPageFragment) -> Unit) = TODO()
 
     override fun isMediaLoaded(): Boolean {
         return !playerHasError

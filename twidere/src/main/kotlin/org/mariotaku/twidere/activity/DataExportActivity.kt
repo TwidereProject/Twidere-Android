@@ -121,8 +121,7 @@ class DataExportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
 
         override fun onPreExecute() {
             activity.executeAfterFragmentResumed {
-                val activity = it as DataExportActivity
-                ProgressDialogFragment.show(activity.supportFragmentManager, FRAGMENT_TAG).isCancelable = false
+                ProgressDialogFragment.show(it.supportFragmentManager, FRAGMENT_TAG).isCancelable = false
             }
         }
 

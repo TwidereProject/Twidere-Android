@@ -15,6 +15,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.alwaysUi
 import org.mariotaku.ktextension.*
@@ -194,9 +195,10 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
                     return@mapNotNull user
                 }
         selectedUsers.forEach { it.is_filtered = true }
-        ProgressDialogFragment.show(childFragmentManager, "import_progress")
         val weakThis = WeakReference(this)
-        task {
+        executeAfterFragmentResumed {
+            ProgressDialogFragment.show(it.childFragmentManager, "import_progress")
+        } and task {
             val context = weakThis.get()?.context ?: return@task
             DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
         }.alwaysUi {
