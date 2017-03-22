@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
@@ -33,17 +34,24 @@ import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
 import org.mariotaku.twidere.constant.localTrendsWoeIdKey
+import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment
+import org.mariotaku.twidere.fragment.iface.IFloatingActionButtonFragment.ActionInfo
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
+import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import org.mariotaku.twidere.util.Utils
 
-class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), LoaderCallbacks<Cursor>, AdapterView.OnItemClickListener {
+class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), LoaderCallbacks<Cursor>,
+        AdapterView.OnItemClickListener, IFloatingActionButtonFragment {
 
     private val tabExtras: TrendsTabExtras?
         get() = arguments.getParcelable(EXTRA_EXTRAS)
@@ -131,4 +139,19 @@ class TrendsSuggestionsFragment : AbsContentListViewFragment<TrendsAdapter>(), L
         refreshing = false
     }
 
+    override fun getActionInfo(tag: String): ActionInfo? {
+        when (tag) {
+            "home" -> {
+                return ActionInfo(R.drawable.ic_action_search, getString(R.string.action_search))
+            }
+        }
+        return null
+    }
+
+    override fun onActionClick(tag: String): Boolean {
+        val intent = Intent(activity, QuickSearchBarActivity::class.java)
+        intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+        startActivity(intent)
+        return true
+    }
 }
