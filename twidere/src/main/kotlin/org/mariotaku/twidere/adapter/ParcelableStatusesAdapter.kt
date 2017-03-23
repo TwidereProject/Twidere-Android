@@ -28,10 +28,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bumptech.glide.RequestManager
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.contains
-import org.mariotaku.ktextension.findPositionByItemId
-import org.mariotaku.ktextension.rangeOfSize
-import org.mariotaku.ktextension.safeMoveToPosition
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.iface.IGapSupportedAdapter
@@ -226,17 +223,17 @@ abstract class ParcelableStatusesAdapter(
         }, "")
     }
 
-    fun getStatusSortId(position: Int): Long {
+    fun getStatusSortId(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.getLong(indices.sort_id)
+            return@getFieldValue cursor.safeGetLong(indices.sort_id)
         }, { status ->
             return@getFieldValue status.sort_id
-        }, -1L)
+        }, -1L, raw)
     }
 
     override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.getLong(indices.timestamp)
+            return@getFieldValue cursor.safeGetLong(indices.timestamp)
         }, { status ->
             return@getFieldValue status.timestamp
         }, -1L)
@@ -244,9 +241,9 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            val positionKey = cursor.getLong(indices.position_key)
+            val positionKey = cursor.safeGetLong(indices.position_key)
             if (positionKey > 0) return@getFieldValue positionKey
-            return@getFieldValue cursor.getLong(indices.timestamp)
+            return@getFieldValue cursor.safeGetLong(indices.timestamp)
         }, { status ->
             val positionKey = status.position_key
             if (positionKey > 0) return@getFieldValue positionKey
@@ -372,11 +369,11 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (positionKey <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty()) return RecyclerView.NO_POSITION
-        if (positionKey < getStatusPositionKey(range.last)) {
+        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (positionKey < getStatusPositionKey(range.last, raw)) {
             return range.last
         }
-        return range.indexOfFirst { positionKey >= getStatusPositionKey(it) }
+        return range.indexOfFirst { positionKey >= getStatusPositionKey(it, raw) }
     }
 
     fun findPositionBySortId(sortId: Long, raw: Boolean = false): Int {
@@ -384,11 +381,11 @@ abstract class ParcelableStatusesAdapter(
         // lesser equals than read position
         if (sortId <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(statusStartIndex, getStatusCount(raw))
-        if (range.isEmpty()) return RecyclerView.NO_POSITION
-        if (sortId < getStatusSortId(range.last)) {
+        if (range.isEmpty() || range.start < 0) return RecyclerView.NO_POSITION
+        if (sortId < getStatusSortId(range.last, raw)) {
             return range.last
         }
-        return range.indexOfFirst { sortId >= getStatusSortId(it) }
+        return range.indexOfFirst { sortId >= getStatusSortId(it, raw) }
     }
 
     private fun getItemCountIndex(position: Int, raw: Boolean): Int {

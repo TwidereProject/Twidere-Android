@@ -144,6 +144,7 @@ public interface IntentConstants {
     String EXTRA_TAB_POSITION = "tab_position";
     String EXTRA_TAB_ID = "tab_id";
     String EXTRA_OAUTH_VERIFIER = "oauth_verifier";
+    String EXTRA_ACCESS_TOKEN = "access_token";
     String EXTRA_REQUEST_TOKEN = "request_token";
     String EXTRA_REQUEST_TOKEN_SECRET = "request_token_secret";
     String EXTRA_OMIT_INTENT_EXTRA = "omit_intent_extra";

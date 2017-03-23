@@ -95,7 +95,7 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
             domain = "stream"
             versionSuffix = null
         }
-        else -> throw TwitterConverterFactory.UnsupportedTypeException(cls)
+        else -> throw UnsupportedOperationException("Unsupported class $cls")
     }
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
     if (this is OAuthCredentials) {

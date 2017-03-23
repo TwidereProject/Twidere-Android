@@ -16,6 +16,14 @@ fun Cursor.safeMoveToPosition(pos: Int): Boolean {
     }
 }
 
+fun Cursor.safeGetLong(columnIndex: Int, def: Long = -1): Long {
+    try {
+        return getLong(columnIndex)
+    } catch(e: IllegalStateException) {
+        return def
+    }
+}
+
 fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     val list = ArrayList<T>()
     moveToFirst()

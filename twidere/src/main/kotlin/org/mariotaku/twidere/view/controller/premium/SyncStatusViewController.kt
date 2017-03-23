@@ -26,6 +26,7 @@ import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
  */
 
 class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewController() {
+
     override fun onCreate() {
         super.onCreate()
         updateSyncSettingActions()

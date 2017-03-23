@@ -24,6 +24,7 @@
     <!-- [verb] Action for blocking user -->
     <string name="action_block">Block</string>
     <string name="action_blocking">blocking</string>
+    <string name="action_buffer_settings">Settings</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
     <string name="action_cancel_retweet">Cancel retweet</string>
     <string name="action_cancelling_like">cancelling like</string>
@@ -31,6 +32,7 @@
     <string name="action_clear">Clear</string>
     <string name="action_compose">Compose</string>
     <string name="action_compose_message_convert_to_status">Convert to tweet</string>
+    <string name="action_connect_to_buffer">Connect</string>
     <string name="action_conversation_info">Conversation info</string>
     <string name="action_create_conversation">Create conversation</string>
     <string name="action_creating_list">creating list</string>
@@ -603,6 +605,8 @@
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="message_please_wait">Please wait.</string>
+    <string name="message_status_scheduling_connect_buffer_hint">Connect to buffer to schedule tweets even in offline</string>
+    <string name="message_status_scheduling_connected_to_buffer">Twidere is now connected to buffer</string>
     <string name="message_summary_type_sticker">[Sticker]</string>
     <string name="message_sync_data_connect_hint">Connect Twidere with network storage to sync data</string>
     <string name="message_sync_data_synced_with_name">Twidere is now synced with <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
@@ -1143,6 +1147,7 @@
     <string name="title_set_nickname">Set nickname</string>
     <string name="title_status">Tweet</string>
     <string name="title_statuses">Tweets</string>
+    <string name="title_statuses_scheduling">Tweets scheduling</string>
     <string name="title_streaming">Streaming</string>
     <string name="title_subscription_name">Name</string>
     <string name="title_subscription_url">URL</string>
