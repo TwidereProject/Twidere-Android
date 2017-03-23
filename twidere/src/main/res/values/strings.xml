@@ -807,6 +807,7 @@
     <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
+    <string name="preference_title_override_language">Override language</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_streaming_content">Streaming content</string>

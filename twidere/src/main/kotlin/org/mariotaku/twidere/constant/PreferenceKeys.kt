@@ -3,7 +3,9 @@ package org.mariotaku.twidere.constant
 import android.content.SharedPreferences
 import android.os.Build
 import android.text.TextUtils
+import org.apache.commons.lang3.LocaleUtils
 import org.mariotaku.kpreferences.*
+import org.mariotaku.ktextension.bcp47Tag
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
@@ -18,6 +20,7 @@ import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
+import java.util.*
 
 /**
  * Created by mariotaku on 16/8/25.
@@ -71,6 +74,19 @@ val multiColumnWidthKey = KStringKey("multi_column_tab_width", "normal")
 val streamingEnabledKey = KBooleanKey("streaming_enabled", false)
 val streamingNonMeteredNetworkKey = KBooleanKey("streaming_non_metered_network", true)
 val streamingPowerSavingKey = KBooleanKey("streaming_power_saving", true)
+
+object overrideLanguageKey : KSimpleKey<Locale?>("override_language", null) {
+    override fun read(preferences: SharedPreferences): Locale? {
+        return preferences.getString(key, null)?.takeIf(String::isNotEmpty)?.replace('-', '_')
+                ?.let(LocaleUtils::toLocale)
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: Locale?): Boolean {
+        editor.putString(key, value?.bcp47Tag)
+        return true
+    }
+
+}
 
 val themeBackgroundOptionKey = KStringKey(KEY_THEME_BACKGROUND, VALUE_THEME_BACKGROUND_DEFAULT)
 

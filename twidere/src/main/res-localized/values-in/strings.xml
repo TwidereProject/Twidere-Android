@@ -8,7 +8,7 @@
   <string name="account_type_fanfou">Fanfou</string>
   <string name="account_type_twitter">Twitter</string>
   <string name="action_accept_friend_request">Setuju</string>
-  <string name="action_accept_permission_request">同意並授權</string>
+  <string name="action_accept_permission_request">Setuju</string>
   <string name="action_accepting_follow_request">menyetujui permintaa mengikuti</string>
   <string name="action_add">Tambahkan</string>
   <string name="action_add_conversation_participant">Tambah Anggota</string>
@@ -16,8 +16,6 @@
   <string name="action_add_filter_rule">Tambah aturan</string>
   <string name="action_add_member">Tambah Anggota</string>
   <string name="action_add_tab">Tambah tab</string>
-  <string name="action_add_to_filter">新增到過濾器</string>
-  <string name="action_add_to_list">新增到列表</string>
   <string name="action_adding_member">menambahkan anggota</string>
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Blok</string>
@@ -34,7 +32,6 @@
   <string name="action_deleting">menghapus</string>
   <string name="action_deleting_search">menghapus pencarian</string>
   <string name="action_denying_follow_request">tolak permintaan mengikuti</string>
-  <string name="action_dont_restart">不重啟</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">Sunting</string>
   <string name="action_favorite">Favorit</string>
@@ -81,10 +78,8 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Simpan</string>
   <string name="action_saving_search">menyimpan pencarian</string>
-  <string name="action_search">搜尋</string>
   <string name="action_select_all">Pilih semua</string>
   <string name="action_select_none">Tidak memilih</string>
-  <string name="action_select_user">選擇使用者</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Kirim</string>
   <string name="action_sending_direct_message">Mengirim pesan langsung</string>
@@ -277,7 +272,7 @@
   <string name="filter_type_keywords">Kata kunci</string>
   <string name="filter_type_links">Tautan</string>
   <string name="filter_type_sources">Sumber</string>
-  <string name="filter_type_users">使用者</string>
+  <string name="filter_type_users">Pengguna</string>
   <string name="filter_user_confirm_message">Tambahkan <xliff:g example="Username" id="name"/> pada penyaringan?</string>
   <string name="follow_request_sent">Permintaan mengikuti terkirim</string>
   <string name="followed_user"><xliff:g id="user">%s</xliff:g> diikuti.</string>
@@ -311,7 +306,6 @@
   <string name="highlight_and_underline">Sorot dan garis bawah</string>
   <string name="hint_accounts_dashboard_message">Geser dari ujung layar untuk membuka panel akun.</string>
   <string name="hint_accounts_dashboard_title">Panel Akun</string>
-  <string name="hint_error_message_no_content">沒有內容</string>
   <string name="hint_no_account">Tidak ada akun</string>
   <string name="hints">Petunjuk</string>
   <string name="home_refresh">Segarkan pada timeline</string>
@@ -343,9 +337,7 @@
   <string name="label_background_operation_service">Latar Belakang layanan operasi</string>
   <string name="label_data_provider">Penyedia database Twidere</string>
   <string name="label_location_your_coarse_location">Lokasi anda secara kasar</string>
-  <string name="label_media">媒體</string>
   <string name="label_original_status">Cuit asli</string>
-  <string name="label_photo">照片</string>
   <string name="label_poll">Pemungutan suara</string>
   <string name="label_refresh_and_sync_service">Muat ulang &amp; Menyinkronisasikan layanan</string>
   <string name="label_refresh_service">Segarkan layanan</string>
@@ -357,7 +349,7 @@
   <string name="large">Banyak</string>
   <string name="leftside_compose_button">Tombol susun di kiri</string>
   <string name="leftside_compose_button_summary">Pasang tombol susun di kiri.</string>
-  <string name="light">亮色</string>
+  <string name="light">Terang</string>
   <string name="link_highlight_option">Opsi menyoroti link</string>
   <string name="link_to_quoted_status">Tautan ke kutipan twit</string>
   <string name="list_members">Daftarkan anggota</string>
@@ -423,7 +415,7 @@
   <string name="message_toast_login_verification_failed">Gagal Menverifikasi Login.</string>
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Masalah Jaringan.</string>
-  <string name="message_toast_no_account">沒有帳號</string>
+  <string name="message_toast_no_account">Tidak ada akun</string>
   <string name="message_toast_no_account_selected">Tidak ada akun yang dipilih.</string>
   <string name="message_toast_no_user_selected">Tidak ada pengguna yang dipilih</string>
   <string name="message_toast_press_again_to_close">Tekan sekali lagi untuk keluar</string>
@@ -457,7 +449,7 @@
   <string name="name_and_count_retweeted"><xliff:g id="user_name">%1$s</xliff:g> dan <xliff:g id="retweet_count">%2$d</xliff:g> lainnya me-retweet</string>
   <string name="name_first">Tampilkan nama lebih dahulu</string>
   <string name="name_first_summary_off">Tampilkan @screenname dahulu</string>
-  <string name="name_first_summary_on">優先顯示名字</string>
+  <string name="name_first_summary_on">Tampilkan nama depan</string>
   <string name="name_not_set"><xliff:g id="name">%s</xliff:g> tidak diatur</string>
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> me-retweet</string>
   <string name="name_with_nickname"><xliff:g id="name">%1$s</xliff:g> (<xliff:g id="nickname">%2$s</xliff:g>)</string>
@@ -469,8 +461,8 @@
   <string name="new_document_api_summary">Buka profil dan media pada tugas baru</string>
   <string name="new_user_list">Daftar baru</string>
   <!-- Next item (tweet, user etc.) -->
-  <string name="next_item">下一條</string>
-  <string name="next_step">下一步</string>
+  <string name="next_item">Lanjutkan</string>
+  <string name="next_step">Lanjut</string>
   <string name="next_tab">Tab berikutnya</string>
   <string name="no_close_after_status_updated">Tetap \"Menulis\" terbuka setelah tweet terkirim</string>
   <string name="no_close_after_status_updated_summary">Sebuah hadiah kecil untuk chatterbox</string>
@@ -479,7 +471,7 @@
   <string name="no_rule">Tak ada aturan</string>
   <string name="no_status_content_text">Tidak ada konten</string>
   <string name="no_tab">Tidak terdapat tab</string>
-  <string name="no_tab_hint">沒有標籤頁</string>
+  <string name="no_tab_hint">Tidak ada tab</string>
   <string name="no_thanks">Tidak, terima kasih</string>
   <string name="no_user_found">Tidak menemukan pengguna</string>
   <string name="no_version_suffix">Tidak ada akhiran versi</string>
@@ -493,8 +485,6 @@
   <string name="notification_ringtone">Nada dering</string>
   <string name="notification_status">Tweet baru oleh <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Tweet baru oleh <xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="count">%2$d</xliff:g> lainnya</string>
-  <string name="notification_type_home">首頁</string>
-  <string name="notification_type_interactions">互動</string>
   <string name="notification_type_messages">Pesan</string>
   <string name="notifications">Notifikasi</string>
   <string name="notifications_type">Jenis pemberitahuan</string>
@@ -541,7 +531,6 @@
   <string name="preference_randomize_account_name">Hasilkan nama akun secara acak</string>
   <string name="preference_randomize_account_name_summary">Menghalau aplikasi lain untuk mengambil nama Anda dengan cara membaca akun, meningkatkan privasi.</string>
   <string name="preference_randomize_account_rename_accounts_confirm">Ganti nama akun yang ada?</string>
-  <string name="preference_summary_auto_refresh_power_saving">電量低時停止自動更新</string>
   <string name="preference_summary_database_item_limit">Batas atas item yang disimpan pada database untuk tiap akun, berikan nilai kecil untuk menghemat ruang dan meningkatkan kecepatan muat.</string>
   <string name="preference_title_accounts">Akun</string>
   <string name="preference_title_advanced">Lanjutan</string>
@@ -551,9 +540,8 @@
   <string name="preference_title_landscape">Lanskap</string>
   <string name="preference_title_portrait">Layar Tegak</string>
   <string name="preference_title_storage">Penyimpanan</string>
-  <string name="preference_title_streaming_enabled">啟用實時流</string>
   <string name="preference_title_text_size">Ukuran teks</string>
-  <string name="preference_title_translate">翻譯</string>
+  <string name="preference_title_translate">Terjemahkan</string>
   <string name="preference_title_trends_location">Lokasi tren</string>
   <string name="preload_wifi_only">Preload menggunakan Wi-Fi saja</string>
   <string name="preview">Pratinjau</string>
@@ -580,7 +568,7 @@
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
-  <string name="provider_fanfou">飯否</string>
+  <string name="provider_fanfou">Fanfou</string>
   <string name="provider_gnusocial_de">GNU Social.de</string>
   <string name="provider_gnusocial_net">GNU Social.net</string>
   <string name="provider_loadaverage_org">LoadAverage.org</string>
@@ -612,8 +600,6 @@
   <string name="refresh_interval">Interval refresh</string>
   <string name="refresh_on_start">Muat ulang di awal</string>
   <string name="refresh_on_start_summary">Muat ulang timeline dan mention saat memulai.</string>
-  <string name="refresh_type_home">首頁</string>
-  <string name="refresh_type_interactions">互動</string>
   <string name="refresh_type_messages">Pesan</string>
   <string name="refresh_type_trends">Tren</string>
   <string name="register">Registrasi</string>
@@ -655,7 +641,7 @@
   <string name="search_hint">Pencarian tweets atau pengguna</string>
   <string name="search_statuses">Cari Kicauan</string>
   <string name="search_type_statuses">Kicauan</string>
-  <string name="search_type_users">用戶</string>
+  <string name="search_type_users">Pengguna</string>
   <string name="security_key">Kunci keamanan</string>
   <string name="select_account">Pilih akun</string>
   <string name="select_accounts">Pilih akun</string>
@@ -675,8 +661,7 @@
   <string name="settings">Pengaturan</string>
   <string name="settings_interface">Antarmuka</string>
   <string name="settings_notifications">Notifikasi</string>
-  <string name="settings_refresh">更新</string>
-  <string name="settings_streaming">實時流</string>
+  <string name="settings_refresh">Segarkan</string>
   <string name="share_format">Bagikan format</string>
   <string name="share_format_summary">\"[TITLE]\" = Konten title\n\"[TEXT]\" = Teks konten</string>
   <string name="share_link">Bagikan tautan</string>
@@ -716,9 +701,7 @@
   <string name="status_shortener">Penyingkat tweet</string>
   <string name="status_shortener_default">Tidak ada (Batal mengirim)</string>
   <!-- [noun] Accessibility label for retweet icon -->
-  <string name="status_type_retweet">轉推</string>
-  <string name="stream_type_home">首頁</string>
-  <string name="stream_type_interactions">互動</string>
+  <string name="status_type_retweet">Retweet</string>
   <string name="stream_type_messages">Pesan</string>
   <string name="streaming">Streaming</string>
   <string name="style">Gaya</string>
@@ -731,7 +714,7 @@
   <string name="tab_display_option_icon">Ikon</string>
   <string name="tab_display_option_icon_and_label">Gambar dan tanda</string>
   <string name="tab_display_option_label">Tanda</string>
-  <string name="tab_editor_hint_name">名字</string>
+  <string name="tab_editor_hint_name">Nama</string>
   <string name="tabs">Tab</string>
   <string name="tcp_dns_query">TCP DNS Query</string>
   <string name="tcp_dns_query_summary">Gunakan Protokol TCP untuk membuat permintaan DNS untuk menghindari DNS spoofing.</string>
@@ -747,18 +730,17 @@
   <string name="theme_dark">Gelap</string>
   <string name="theme_dark_actionbar">Bar aksi gelap</string>
   <string name="theme_font_family">Tema font keluarga</string>
-  <string name="theme_light">燈光</string>
+  <string name="theme_light">Terang</string>
   <string name="thumbor_integration">Integrasi dengan Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
   <string name="timeline_streaming_running">Timeline streaming yang berjalan</string>
   <string name="timeline_sync_service">Layanan sinkronisasi timeline</string>
   <string name="title_about">Tentang</string>
-  <string name="title_accounts">帳號</string>
-  <string name="title_add_or_remove_from_list">從列表新增或移除</string>
+  <string name="title_accounts">Akun</string>
   <string name="title_block_user">Blok <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">Pengguna diblokir</string>
   <string name="title_browser_sign_in">Masuk melalui browser</string>
-  <string name="title_compose">撰寫</string>
+  <string name="title_compose">Susun</string>
   <string name="title_conversation">Percakapan</string>
   <string name="title_dialog_sync_connect_to">Menghubungkan ke&#8230;</string>
   <string name="title_direct_messages">Pesan</string>
@@ -777,25 +759,22 @@
   <string name="title_home">Beranda</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Suka</string>
-  <string name="title_manage_filter_subscriptions">過濾器訂閱</string>
+  <string name="title_manage_filter_subscriptions">Menyaring langganan</string>
   <string name="title_mentions">Menyebutkan</string>
   <string name="title_nicknames">Nama panggilan</string>
   <string name="title_open_source_license">Lisensi Open Source</string>
   <string name="title_premium_features_name">Twidere ∞</string>
-  <string name="title_search">搜尋</string>
   <string name="title_select_users">Pilih pengguna</string>
-  <string name="title_set_nickname">設定暱稱</string>
+  <string name="title_set_nickname">Tentukan nama panggilan</string>
   <string name="title_status">Tweet</string>
-  <string name="title_statuses">推文</string>
-  <string name="title_streaming">實時流</string>
-  <string name="title_subscription_name">名稱</string>
-  <string name="title_subscription_url">網址</string>
+  <string name="title_statuses">Kicauan</string>
+  <string name="title_subscription_name">Nama</string>
+  <string name="title_subscription_url">Alamat web</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s </xliff:g>: <xliff:g id="summary">%2$s </xliff:g></string>
   <string name="title_sync">Sinkronasi Data</string>
   <string name="title_sync_settings">Sinkronisasi pengaturan</string>
   <string name="title_user">Pengguna</string>
   <string name="title_user_colors">Warna pengguna</string>
-  <string name="title_user_list_memberships">屬於</string>
   <string name="title_users_favorited_this">Disukai para pengguna</string>
   <string name="title_users_liked_this">Pengguna menyukai ini</string>
   <string name="title_users_retweeted_this">Pengguna yang me-retweet ini</string>
@@ -842,14 +821,14 @@
   <!-- User list is public -->
   <string name="user_list_details_is_public">Publik</string>
   <!-- User list name -->
-  <string name="user_list_details_name">名字</string>
-  <string name="user_lists">列表</string>
+  <string name="user_list_details_name">Nama</string>
+  <string name="user_lists">Daftar-dafar</string>
   <string name="user_mentioned_you"><xliff:g id="nama">%s</xliff:g> me-mention anda</string>
   <string name="user_mentions">Mention pengguna</string>
-  <string name="user_profile_description">簡介</string>
+  <string name="user_profile_description">Deskripsi</string>
   <string name="user_profile_location">Lokasi</string>
-  <string name="user_profile_name">名字</string>
-  <string name="user_profile_url">網址</string>
+  <string name="user_profile_name">Nama</string>
+  <string name="user_profile_url">Alamat web</string>
   <string name="user_protected_summary">Anda perlu mengirim permintaan mengikuti kepada pengguna yang diproteksi ini untuk melihat tweetnya</string>
   <string name="user_type_protected">Dilindungi</string>
   <string name="user_type_verified">Diverifikasi</string>

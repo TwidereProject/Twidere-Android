@@ -23,6 +23,7 @@ import android.app.Application
 import android.content.*
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.AsyncTask
@@ -36,6 +37,7 @@ import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
+import org.mariotaku.ktextension.setLayoutDirectionCompat
 import org.mariotaku.mediaviewer.library.MediaDownloader
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
@@ -90,12 +92,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
     @Inject
     lateinit internal var thumbor: ThumborWrapper
 
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }
-
-
     val sqLiteDatabase: SQLiteDatabase by lazy {
         StrictModeUtils.checkDiskIO()
         sqLiteOpenHelper.writableDatabase
@@ -105,12 +101,24 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         TwidereSQLiteOpenHelper(this, Constants.DATABASES_NAME, Constants.DATABASES_VERSION)
     }
 
+    private val sharedPreferences: SharedPreferences by lazy {
+        val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+        prefs.registerOnSharedPreferenceChangeListener(this)
+        return@lazy prefs
+    }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
+
     override fun onCreate() {
         instance = this
         if (BuildConfig.DEBUG) {
             StrictModeUtils.detectAllVmPolicy()
         }
         super.onCreate()
+        applyLanguageSettings()
         startKovenant()
         initializeAsyncTask()
         initDebugMode()
@@ -132,6 +140,77 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         loadDefaultFeatures()
 
         Analyzer.preferencesChanged(sharedPreferences)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        applyLanguageSettings()
+        super.onConfigurationChanged(newConfig)
+    }
+
+    override fun onTrimMemory(level: Int) {
+        Glide.with(this).onTrimMemory(level)
+        super.onTrimMemory(level)
+    }
+
+    override fun onLowMemory() {
+        Glide.with(this).onLowMemory()
+        super.onLowMemory()
+    }
+
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
+        when (key) {
+            KEY_REFRESH_INTERVAL -> {
+                autoRefreshController.rescheduleAll()
+            }
+            KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME,
+            KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
+                HttpClientFactory.reloadConnectivitySettings(this)
+            }
+            KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER -> {
+                reloadDnsSettings()
+            }
+            KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_CREDENTIALS_TYPE,
+            KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
+                preferences[apiLastChangeKey] = System.currentTimeMillis()
+            }
+            KEY_EMOJI_SUPPORT -> {
+                externalThemeManager.reloadEmojiPreferences()
+            }
+            KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
+                thumbor.reloadSettings(preferences)
+            }
+            KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
+                mediaPreloader.reloadOptions(preferences)
+            }
+            KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
+                contentNotificationManager.updatePreferences()
+            }
+            streamingEnabledKey.key, streamingPowerSavingKey.key,
+            streamingNonMeteredNetworkKey.key -> {
+                val streamingIntent = Intent(this, StreamingService::class.java)
+                if (activityTracker.isHomeActivityLaunched) {
+                    startService(streamingIntent)
+                } else {
+                    stopService(streamingIntent)
+                }
+            }
+        }
+        Analyzer.preferencesChanged(preferences)
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        stopKovenant()
+    }
+
+    @Suppress("DEPRECATION")
+    private fun applyLanguageSettings() {
+        val locale = sharedPreferences[overrideLanguageKey] ?: return
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.locale = locale
+        config.setLayoutDirectionCompat(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun loadDefaultFeatures() {
@@ -213,68 +292,6 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             editor.remove(KEY_SPICE_DATA_PROFILING)
             editor.apply()
         }
-    }
-
-    private val sharedPreferences: SharedPreferences by lazy {
-        val prefs = getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-        prefs.registerOnSharedPreferenceChangeListener(this)
-        return@lazy prefs
-    }
-
-    override fun onTrimMemory(level: Int) {
-        Glide.with(this).onTrimMemory(level)
-        super.onTrimMemory(level)
-    }
-
-    override fun onLowMemory() {
-        Glide.with(this).onLowMemory()
-        super.onLowMemory()
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, key: String) {
-        when (key) {
-            KEY_REFRESH_INTERVAL -> {
-                autoRefreshController.rescheduleAll()
-            }
-            KEY_ENABLE_PROXY, KEY_PROXY_HOST, KEY_PROXY_PORT, KEY_PROXY_TYPE, KEY_PROXY_USERNAME,
-            KEY_PROXY_PASSWORD, KEY_CONNECTION_TIMEOUT, KEY_RETRY_ON_NETWORK_ISSUE -> {
-                HttpClientFactory.reloadConnectivitySettings(this)
-            }
-            KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER -> {
-                reloadDnsSettings()
-            }
-            KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_CREDENTIALS_TYPE,
-            KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
-                preferences[apiLastChangeKey] = System.currentTimeMillis()
-            }
-            KEY_EMOJI_SUPPORT -> {
-                externalThemeManager.reloadEmojiPreferences()
-            }
-            KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
-                thumbor.reloadSettings(preferences)
-            }
-            KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {
-                mediaPreloader.reloadOptions(preferences)
-            }
-            KEY_NAME_FIRST, KEY_I_WANT_MY_STARS_BACK -> {
-                contentNotificationManager.updatePreferences()
-            }
-            streamingEnabledKey.key, streamingPowerSavingKey.key,
-            streamingNonMeteredNetworkKey.key -> {
-                val streamingIntent = Intent(this, StreamingService::class.java)
-                if (activityTracker.isHomeActivityLaunched) {
-                    startService(streamingIntent)
-                } else {
-                    stopService(streamingIntent)
-                }
-            }
-        }
-        Analyzer.preferencesChanged(preferences)
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
-        stopKovenant()
     }
 
     private fun reloadDnsSettings() {

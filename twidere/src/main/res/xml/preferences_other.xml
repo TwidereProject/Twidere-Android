@@ -32,5 +32,15 @@
             android:name="should_recreate"
             android:value="true"/>
     </SwitchPreferenceCompat>
+    <org.mariotaku.twidere.preference.EntrySummaryListPreference
+        android:defaultValue=""
+        android:entries="@array/values_app_languages"
+        android:entryValues="@array/entries_app_languages"
+        android:key="override_language"
+        android:title="@string/preference_title_override_language">
+        <extra
+            android:name="should_terminate"
+            android:value="true"/>
+    </org.mariotaku.twidere.preference.EntrySummaryListPreference>
 
 </PreferenceScreen>
