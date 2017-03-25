@@ -95,9 +95,6 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             INTENT_ACTION_UPDATE_STATUS -> {
                 handleUpdateStatusIntent(intent)
             }
-            INTENT_ACTION_SCHEDULE_STATUS -> {
-                handleScheduleStatusIntent(intent)
-            }
             INTENT_ACTION_SEND_DIRECT_MESSAGE -> {
                 handleSendDirectMessageIntent(intent)
             }
@@ -138,7 +135,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         when (draft.action_type) {
             Draft.Action.UPDATE_STATUS_COMPAT_1, Draft.Action.UPDATE_STATUS_COMPAT_2,
             Draft.Action.UPDATE_STATUS, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                updateStatuses(ParcelableStatusUpdateUtils.fromDraftItem(this, draft))
+                updateStatuses(arrayOf(ParcelableStatusUpdateUtils.fromDraftItem(this, draft)))
             }
             Draft.Action.SEND_DIRECT_MESSAGE_COMPAT, Draft.Action.SEND_DIRECT_MESSAGE -> {
                 val extras = draft.action_extras as? SendDirectMessageActionExtras ?: return
@@ -224,6 +221,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     private fun handleUpdateStatusIntent(intent: Intent) {
         val status = intent.getParcelableExtra<ParcelableStatusUpdate>(EXTRA_STATUS)
         val statusParcelables = intent.getParcelableArrayExtra(EXTRA_STATUSES)
+        val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
         val statuses: Array<ParcelableStatusUpdate>
         if (statusParcelables != null) {
             statuses = statusParcelables.toTypedArray(ParcelableStatusUpdate.CREATOR)
@@ -234,19 +232,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         @Draft.Action
         val actionType = intent.getStringExtra(EXTRA_ACTION)
         statuses.forEach { it.draft_action = actionType }
-        updateStatuses(*statuses)
+        updateStatuses(statuses, scheduleInfo)
     }
 
-    private fun handleScheduleStatusIntent(intent: Intent) {
-        val status = intent.getParcelableExtra<ParcelableStatusUpdate>(EXTRA_STATUS)
-        val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
-        @Draft.Action
-        val actionType = intent.getStringExtra(EXTRA_ACTION)
-        status.draft_action = actionType
-
-    }
-
-    private fun updateStatuses(vararg statuses: ParcelableStatusUpdate) {
+    private fun updateStatuses(statuses: Array<ParcelableStatusUpdate>, scheduleInfo: ScheduleInfo? = null) {
         val context = this
         val builder = Builder(context)
         startForeground(NOTIFICATION_ID_UPDATE_STATUS, updateUpdateStatusNotification(context,
@@ -316,7 +305,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 }
             })
             task.callback = this
-            task.params = item
+            task.params = Pair(item, scheduleInfo)
             invokeBeforeExecute(task)
 
             val result = ManualTaskStarter.invokeExecute(task)
@@ -465,19 +454,10 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         }
 
         fun updateStatusesAsync(context: Context, @Draft.Action action: String,
-                vararg statuses: ParcelableStatusUpdate) {
+                vararg statuses: ParcelableStatusUpdate, scheduleInfo: ScheduleInfo? = null) {
             val intent = Intent(context, LengthyOperationsService::class.java)
             intent.action = INTENT_ACTION_UPDATE_STATUS
             intent.putExtra(EXTRA_STATUSES, statuses)
-            intent.putExtra(EXTRA_ACTION, action)
-            context.startService(intent)
-        }
-
-        fun scheduleStatus(context: Context, @Draft.Action action: String,
-                status: ParcelableStatusUpdate, scheduleInfo: ScheduleInfo) {
-            val intent = Intent(context, LengthyOperationsService::class.java)
-            intent.action = INTENT_ACTION_SCHEDULE_STATUS
-            intent.putExtra(EXTRA_STATUS, status)
             intent.putExtra(EXTRA_SCHEDULE_INFO, scheduleInfo)
             intent.putExtra(EXTRA_ACTION, action)
             context.startService(intent)

@@ -21,8 +21,10 @@ package org.mariotaku.twidere.util.schedule
 
 import android.content.Context
 import android.content.Intent
+import android.support.annotation.WorkerThread
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import java.util.*
 
 /**
@@ -30,17 +32,26 @@ import java.util.*
  */
 
 interface StatusScheduleController {
-    fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, scheduleInfo: ScheduleInfo)
+
+    @WorkerThread
+    @Throws(UpdateStatusTask.ScheduleException::class)
+    fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, overrideTexts: Array<String>,
+            scheduleInfo: ScheduleInfo)
+
     fun createSetScheduleIntent(): Intent
 
     interface Factory {
         fun newInstance(context: Context): StatusScheduleController?
+
+        fun parseInfo(json: String): ScheduleInfo?
 
         companion object {
             val instance: Factory get() = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
 
             private object NullFactory : Factory {
                 override fun newInstance(context: Context) = null
+
+                override fun parseInfo(json: String): ScheduleInfo? = null
 
             }
         }

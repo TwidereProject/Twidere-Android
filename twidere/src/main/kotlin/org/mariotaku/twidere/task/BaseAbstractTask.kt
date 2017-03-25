@@ -7,6 +7,7 @@ import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.MediaPreloader
+import org.mariotaku.twidere.util.schedule.StatusScheduleController
 import javax.inject.Inject
 
 /**
@@ -33,6 +34,11 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var readStateManager: ReadStateManager
     @Inject
     lateinit var userColorNameManager: UserColorNameManager
+    @Inject
+    lateinit var scheduleControllerFactory: StatusScheduleController.Factory
+
+    val scheduleController: StatusScheduleController?
+        get() = scheduleControllerFactory.newInstance(context)
 
     init {
         injectMembers()
