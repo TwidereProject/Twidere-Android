@@ -218,4 +218,5 @@ public interface IntentConstants {
     String EXTRA_WOEID = "woeid";
     String EXTRA_PLACE = "place";
     String EXTRA_PLACE_NAME = "place_name";
+    String EXTRA_SCHEDULE_INFO = "schedule_info";
 }

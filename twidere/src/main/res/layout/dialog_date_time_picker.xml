@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Twidere - Twitter client for Android
+  ~             Twidere - Twitter client for Android
   ~
-  ~  Copyright (C) 2012-2014 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
   ~
   ~  This program is free software: you can redistribute it and/or modify
   ~  it under the terms of the GNU General Public License as published by
@@ -18,24 +18,29 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<ViewAnimator
+    android:id="@+id/viewAnimator"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:padding="@dimen/element_spacing_small"
-    tools:layout_height="48dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inAnimation="@android:anim/fade_in"
+    android:measureAllChildren="false"
+    android:orientation="vertical"
+    android:outAnimation="@android:anim/fade_out">
 
-    <org.mariotaku.twidere.view.ProfileImageView
-        android:id="@+id/icon"
-        style="?profileImageStyle"
+    <DatePicker
+        android:id="@+id/datePicker"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:sivBorder="true"
-        app:sivBorderWidth="1.5dp"
-        tools:src="@drawable/ic_profile_image_twidere"/>
+        android:datePickerMode="calendar"
+        tools:ignore="UnusedAttribute"/>
 
-</FrameLayout>
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</ViewAnimator>

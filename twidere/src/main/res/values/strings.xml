@@ -16,6 +16,7 @@
     <!-- [verb] Add mute filter rule -->
     <string name="action_add_filter_rule">Add rule</string>
     <string name="action_add_filters_subscription">Add subscription</string>
+    <string name="action_add_media">Add media</string>
     <string name="action_add_member">Add member</string>
     <string name="action_add_tab">Add tab</string>
     <string name="action_add_to_filter">Add to filter</string>
@@ -75,6 +76,7 @@
     <string name="action_mute_notifications">Mute notifications</string>
     <string name="action_muting">muting</string>
     <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, saved at <xliff:g id="time">%2$s</xliff:g></string>
+    <string name="action_next_step">Next</string>
     <string name="action_open_in_browser">Open in browser</string>
     <string name="action_pick_color">Pick color</string>
     <string name="action_purchase">Purchase</string>
@@ -115,6 +117,7 @@
     <string name="action_start">Start</string>
     <string name="action_status_block_users">Block users…</string>
     <string name="action_status_mute_users">Mute users…</string>
+    <string name="action_status_schedule">Tweet schedule</string>
     <string name="action_subscribe">Subscribe</string>
     <string name="action_subscribing_to_list">subscribing to list</string>
     <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -508,6 +511,7 @@
     <string name="label_account_type">Account type</string>
     <string name="label_auth_type">Auth type</string>
     <string name="label_background_operation_service">Background operation service</string>
+    <string name="label_buffer_accounts">Buffer accounts</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_location_your_coarse_location">Your coarse location</string>
@@ -519,6 +523,8 @@
     <string name="label_poll">Poll</string>
     <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
     <string name="label_refresh_service">Refresh service</string>
+    <string name="label_schedule_time_buffer_default">Buffer default</string>
+    <string name="label_send_at">Send at</string>
     <string name="label_sensitive_content">Sensitive content</string>
     <string name="label_status_not_available">Tweet not available</string>
     <string name="label_streaming_service">Streaming service</string>
@@ -1249,4 +1255,5 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
+    <string name="message_toast_buffer_connection_failed">Unable to communicate with Buffer</string>
 </resources>

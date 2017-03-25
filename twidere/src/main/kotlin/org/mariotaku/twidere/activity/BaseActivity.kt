@@ -65,6 +65,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.schedule.StatusScheduleController
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
@@ -100,9 +101,15 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
+    lateinit var statusScheduleControllerFactory: StatusScheduleController.Factory
+    @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
     lateinit var restHttpClient: RestHttpClient
+
+    protected val statusScheduleController: StatusScheduleController? by lazy {
+        statusScheduleControllerFactory.newInstance(this)
+    }
 
     private val actionHelper = IBaseActivity.ActionHelper(this)
     private val themePreferences by lazy {

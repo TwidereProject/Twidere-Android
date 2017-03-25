@@ -28,7 +28,10 @@ abstract class ExtraFeaturesService {
     open fun release() {
     }
 
-    abstract fun isSupported(): Boolean
+    /**
+     * @param feature Checking feature, `null` for checking service itself supported
+     */
+    abstract fun isSupported(feature: String? = null): Boolean
 
     abstract fun isEnabled(feature: String): Boolean
 

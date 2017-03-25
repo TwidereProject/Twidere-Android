@@ -22,10 +22,11 @@ package org.mariotaku.microblog.library.twitter.util;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
-import com.bluelinelabs.logansquare.JsonMapper;
+import com.bluelinelabs.logansquare.Commons_ParameterizedTypeAccessor;
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.ParameterizedType;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.ContentType;
@@ -36,6 +37,8 @@ import org.mariotaku.restfu.http.mime.StringBody;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mariotaku on 2017/3/23.
@@ -52,13 +55,7 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
         if (converter != null) {
             return converter;
         }
-        final JsonMapper<?> mapper;
-        try {
-            mapper = LoganSquareMapperFinder.mapperFor(type);
-        } catch (LoganSquareMapperFinder.ClassLoaderDeadLockException e) {
-            throw new RestConverter.ConvertException(e);
-        }
-        return new JsonResponseConverter<>(mapper);
+        return new JsonResponseConverter<>(type);
     }
 
     @Override
@@ -70,18 +67,21 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
         if (SimpleBody.supports(type)) {
             return new SimpleBodyConverter<>(type);
         }
-        try {
-            return new JsonRequestConverter<>(LoganSquareMapperFinder.mapperFor(type));
-        } catch (LoganSquareMapperFinder.ClassLoaderDeadLockException e) {
-            throw new RestConverter.ConvertException(e);
-        }
+        return new JsonRequestConverter<>(type);
     }
 
     @NonNull
-    private static Object parseOrThrow(HttpResponse response, JsonMapper<?> mapper)
+    private static Object parseOrThrow(HttpResponse response, ParameterizedType<?> type)
             throws IOException, RestConverter.ConvertException {
         try {
-            final Object parsed = mapper.parse(response.getBody().stream());
+            final Object parsed;
+            if (type.rawType == List.class) {
+                parsed = LoganSquare.parseList(response.getBody().stream(), type.typeParameters.get(0).rawType);
+            } else if (type.rawType == Map.class) {
+                parsed = LoganSquare.parseMap(response.getBody().stream(), type.typeParameters.get(1).rawType);
+            } else {
+                parsed = LoganSquare.parse(response.getBody().stream(), type);
+            }
             if (parsed == null) {
                 throw new IOException("Empty data");
             }
@@ -92,15 +92,15 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
     }
 
     private static class JsonResponseConverter<E extends Exception> implements RestConverter<HttpResponse, Object, E> {
-        private final JsonMapper<?> mapper;
+        private final ParameterizedType<?> type;
 
-        JsonResponseConverter(JsonMapper<?> mapper) {
-            this.mapper = mapper;
+        JsonResponseConverter(Type type) {
+            this.type = Commons_ParameterizedTypeAccessor.create(type);
         }
 
         @Override
         public Object convert(HttpResponse httpResponse) throws IOException, ConvertException, E {
-            final Object object = parseOrThrow(httpResponse, mapper);
+            final Object object = parseOrThrow(httpResponse, type);
             if (object instanceof TwitterResponse) {
                 ((TwitterResponse) object).processResponseHeader(httpResponse);
             }
@@ -109,15 +109,16 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
     }
 
     private static class JsonRequestConverter<E extends Exception> implements RestConverter<Object, Body, E> {
-        private final JsonMapper<Object> mapper;
+        private final ParameterizedType<?> type;
 
-        JsonRequestConverter(JsonMapper<Object> mapper) {
-            this.mapper = mapper;
+        JsonRequestConverter(Type type) {
+            this.type = Commons_ParameterizedTypeAccessor.create(type);
         }
 
         @Override
         public Body convert(Object request) throws IOException, ConvertException, E {
-            return new StringBody(mapper.serialize(request), ContentType.parse("application/json"));
+            return new StringBody(LoganSquare.serialize(request, (ParameterizedType) type),
+                    ContentType.parse("application/json"));
         }
     }
 }

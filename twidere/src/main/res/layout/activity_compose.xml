@@ -258,6 +258,7 @@
                 tools:text="140"/>
 
             <org.mariotaku.twidere.view.IconActionView
+                android:id="@+id/updateStatusIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/action_send"
