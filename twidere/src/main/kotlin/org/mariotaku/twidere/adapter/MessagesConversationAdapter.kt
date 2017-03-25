@@ -60,8 +60,8 @@ class MessagesConversationAdapter(
     val nameFirst: Boolean = preferences[nameFirstKey]
     val linkify: TwidereLinkify = TwidereLinkify(DirectMessageOnLinkClickHandler(context, null, preferences))
     val mediaClickListener: OnMediaClickListener = object : OnMediaClickListener {
-        override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
-            listener?.onMediaClick(id.toInt(), media, accountKey)
+        override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
+            listener?.onMediaClick(id.toInt(), current, accountKey)
         }
     }
     val messageRange: IntRange

@@ -456,11 +456,11 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
         }
     }
 
-    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
+    override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
         if (view.parent == quotedMediaPreview) {
-            statusClickListener?.onQuotedMediaClick(this, view, media, layoutPosition)
+            statusClickListener?.onQuotedMediaClick(this, view, current, layoutPosition)
         } else {
-            statusClickListener?.onMediaClick(this, view, media, layoutPosition)
+            statusClickListener?.onMediaClick(this, view, current, layoutPosition)
         }
     }
 

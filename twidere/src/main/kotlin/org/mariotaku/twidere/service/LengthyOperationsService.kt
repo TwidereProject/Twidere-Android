@@ -61,6 +61,7 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
+import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
@@ -93,6 +94,9 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         when (action) {
             INTENT_ACTION_UPDATE_STATUS -> {
                 handleUpdateStatusIntent(intent)
+            }
+            INTENT_ACTION_SCHEDULE_STATUS -> {
+                handleScheduleStatusIntent(intent)
             }
             INTENT_ACTION_SEND_DIRECT_MESSAGE -> {
                 handleSendDirectMessageIntent(intent)
@@ -231,6 +235,15 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
         val actionType = intent.getStringExtra(EXTRA_ACTION)
         statuses.forEach { it.draft_action = actionType }
         updateStatuses(*statuses)
+    }
+
+    private fun handleScheduleStatusIntent(intent: Intent) {
+        val status = intent.getParcelableExtra<ParcelableStatusUpdate>(EXTRA_STATUS)
+        val scheduleInfo = intent.getParcelableExtra<ScheduleInfo>(EXTRA_SCHEDULE_INFO)
+        @Draft.Action
+        val actionType = intent.getStringExtra(EXTRA_ACTION)
+        status.draft_action = actionType
+
     }
 
     private fun updateStatuses(vararg statuses: ParcelableStatusUpdate) {
@@ -456,6 +469,16 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
             val intent = Intent(context, LengthyOperationsService::class.java)
             intent.action = INTENT_ACTION_UPDATE_STATUS
             intent.putExtra(EXTRA_STATUSES, statuses)
+            intent.putExtra(EXTRA_ACTION, action)
+            context.startService(intent)
+        }
+
+        fun scheduleStatus(context: Context, @Draft.Action action: String,
+                status: ParcelableStatusUpdate, scheduleInfo: ScheduleInfo) {
+            val intent = Intent(context, LengthyOperationsService::class.java)
+            intent.action = INTENT_ACTION_SCHEDULE_STATUS
+            intent.putExtra(EXTRA_STATUS, status)
+            intent.putExtra(EXTRA_SCHEDULE_INFO, scheduleInfo)
             intent.putExtra(EXTRA_ACTION, action)
             context.startService(intent)
         }

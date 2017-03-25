@@ -353,7 +353,7 @@ class CardMediaContainer(context: Context, attrs: AttributeSet? = null) : ViewGr
     }
 
     interface OnMediaClickListener {
-        fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long)
+        fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long)
     }
 
     private class MediaItemViewClickListener(

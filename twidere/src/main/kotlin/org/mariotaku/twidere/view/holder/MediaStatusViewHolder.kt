@@ -97,7 +97,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
         return false
     }
 
-    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
+    override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
     }
 
     override fun setStatusClickListener(listener: IStatusViewHolder.StatusClickListener?) {

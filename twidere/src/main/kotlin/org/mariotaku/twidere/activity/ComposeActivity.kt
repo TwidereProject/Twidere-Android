@@ -1383,7 +1383,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         update.in_reply_to_status = inReplyToStatus
         update.is_possibly_sensitive = isPossiblySensitive
         update.attachment_url = (draft?.action_extras as? UpdateStatusActionExtras)?.attachmentUrl
-        LengthyOperationsService.updateStatusesAsync(this, action, update)
+        val scheduleInfo = this.scheduleInfo
+        if (scheduleInfo != null) {
+            LengthyOperationsService.scheduleStatus(this, action, update, scheduleInfo)
+        } else {
+            LengthyOperationsService.updateStatusesAsync(this, action, update)
+        }
         if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
             possiblySensitive = false
             shouldSaveAccounts = true

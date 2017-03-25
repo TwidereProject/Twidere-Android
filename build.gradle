@@ -36,7 +36,7 @@ subprojects {
                     Kotlin          : '1.1.1',
                     SupportLib      : '25.3.0',
                     MariotakuCommons: '0.9.11',
-                    RestFu          : '0.9.42',
+                    RestFu          : '0.9.43',
                     ObjectCursor    : '0.9.16',
                     PlayServices    : '10.2.0',
                     MapsUtils       : '0.4.4',

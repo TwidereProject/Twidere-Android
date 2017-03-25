@@ -41,7 +41,7 @@ interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
 
     val profileTypeView: ImageView?
 
-    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long)
+    override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long)
 
     fun setStatusClickListener(listener: StatusClickListener?)
 

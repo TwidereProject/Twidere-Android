@@ -356,12 +356,17 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 null)
     }
 
-    override fun onMediaClick(view: View, media: ParcelableMedia, accountKey: UserKey?, id: Long) {
+    override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
         val status = adapter.status ?: return
-        IntentUtils.openMediaDirectly(activity, accountKey, status, media,
-                preferences[newDocumentApiKey], null)
+        if ((view.parent as View).id == R.id.quotedMediaPreview && status.quoted_media != null) {
+            IntentUtils.openMediaDirectly(activity, accountKey, status.quoted_media!!, current,
+                    newDocument = preferences[newDocumentApiKey], status = status)
+        } else if (status.media != null) {
+            IntentUtils.openMediaDirectly(activity, accountKey, status.media!!, current,
+                    newDocument = preferences[newDocumentApiKey], status = status)
+        } else return
         // BEGIN HotMobi
-        val event = MediaEvent.create(activity, status, media, TimelineType.OTHER,
+        val event = MediaEvent.create(activity, status, current, TimelineType.OTHER,
                 adapter.mediaPreviewEnabled)
         HotMobiLogger.getInstance(activity).log(status.account_key, event)
         // END HotMobi
