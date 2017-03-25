@@ -21,6 +21,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/leave_conversation"
-        android:icon="@drawable/ic_action_delete"
+        android:icon="@drawable/ic_action_cancel"
         android:title="@string/action_leave_conversation"/>
+    <item
+        android:id="@+id/clear_messages"
+        android:icon="@drawable/ic_action_delete"
+        android:title="@string/action_clear_messages"/>
 </menu>

@@ -92,6 +92,7 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.task.twitter.message.AddParticipantsTask
+import org.mariotaku.twidere.task.twitter.message.ClearMessagesTask
 import org.mariotaku.twidere.task.twitter.message.DestroyConversationTask
 import org.mariotaku.twidere.task.twitter.message.SetConversationNotificationDisabledTask
 import org.mariotaku.twidere.util.IntentUtils
@@ -210,6 +211,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.setItemAvailability(R.id.clear_messages, true)
         if (adapter.conversation?.conversation_extras_type == ExtrasType.TWITTER_OFFICIAL) {
             menu.setItemAvailability(R.id.leave_conversation, true)
         } else {
@@ -222,6 +224,11 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             R.id.leave_conversation -> {
                 val df = DestroyConversationConfirmDialogFragment()
                 df.show(childFragmentManager, "destroy_conversation_confirm")
+                return true
+            }
+            R.id.clear_messages -> {
+                val df = ClearMessagesConfirmDialogFragment()
+                df.show(childFragmentManager, "clear_messages_confirm")
                 return true
             }
         }
@@ -287,6 +294,21 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             f.dismissDialogThen("leave_conversation_progress") {
                 if (succeed) {
                     activity?.setResult(RESULT_CLOSE)
+                    activity?.finish()
+                }
+            }
+        }
+        TaskStarter.execute(task)
+    }
+
+    private fun performClearMessages() {
+        ProgressDialogFragment.show(childFragmentManager, "clear_messages_progress")
+        val weakThis = WeakReference(this)
+        val task = ClearMessagesTask(context, accountKey, conversationId)
+        task.callback = callback@ { succeed ->
+            val f = weakThis.get() ?: return@callback
+            f.dismissDialogThen("clear_messages_progress") {
+                if (succeed) {
                     activity?.finish()
                 }
             }
@@ -732,6 +754,24 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             builder.setMessage(R.string.message_destroy_conversation_confirm)
             builder.setPositiveButton(R.string.action_leave_conversation) { _, _ ->
                 (parentFragment as MessageConversationInfoFragment).performDestroyConversation()
+            }
+            builder.setNegativeButton(android.R.string.cancel, null)
+            val dialog = builder.create()
+            dialog.setOnShowListener {
+                it as AlertDialog
+                it.applyTheme()
+            }
+            return dialog
+        }
+
+    }
+
+    class ClearMessagesConfirmDialogFragment : BaseDialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(R.string.message_clear_messages_confirm)
+            builder.setPositiveButton(R.string.action_clear_messages) { _, _ ->
+                (parentFragment as MessageConversationInfoFragment).performClearMessages()
             }
             builder.setNegativeButton(android.R.string.cancel, null)
             val dialog = builder.create()

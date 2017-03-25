@@ -262,11 +262,7 @@ class UpdateStatusTask(
             throw SchedulerNotFoundException("No scheduler found")
         }
 
-        try {
-            controller.scheduleStatus(statusUpdate, pendingUpdate.overrideTexts, scheduleInfo)
-        } catch (e: ScheduleException) {
-            return UpdateStatusResult(e, draftId)
-        }
+        controller.scheduleStatus(statusUpdate, pendingUpdate.overrideTexts, scheduleInfo)
 
         return UpdateStatusResult(pendingUpdate.length, draftId)
     }

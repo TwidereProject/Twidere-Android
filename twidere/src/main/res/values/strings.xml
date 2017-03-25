@@ -31,6 +31,7 @@
     <string name="action_cancelling_like">cancelling like</string>
     <string name="action_center">Center</string>
     <string name="action_clear">Clear</string>
+    <string name="action_clear_messages">Clear messages</string>
     <string name="action_compose">Compose</string>
     <string name="action_compose_message_convert_to_status">Convert to tweet</string>
     <string name="action_connect_to_buffer">Connect</string>
@@ -592,6 +593,7 @@
     <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="message_clear_messages_confirm">Clear all messages?</string>
     <string name="message_conversation_created">Conversation created.</string>
     <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
     <string name="message_direct_message_deleted">Direct message deleted.</string>
@@ -628,6 +630,7 @@
     <string name="message_toast_added_to_filter">Added to filter</string>
     <string name="message_toast_added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\"</string>
     <string name="message_toast_already_logged_in">You have already logged in</string>
+    <string name="message_toast_buffer_connection_failed">Unable to communicate with Buffer</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>
     <string name="message_toast_duplicate_filter_rule">Rule duplicated</string>
@@ -1255,5 +1258,4 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
-    <string name="message_toast_buffer_connection_failed">Unable to communicate with Buffer</string>
 </resources>

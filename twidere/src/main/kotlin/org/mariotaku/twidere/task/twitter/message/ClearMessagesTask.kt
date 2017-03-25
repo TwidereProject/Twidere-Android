@@ -21,28 +21,26 @@ package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
 import android.content.Context
+import org.mariotaku.ktextension.useCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.sqliteqb.library.Expression
-import org.mariotaku.twidere.annotation.AccountType
-import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
-import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
+import org.mariotaku.twidere.util.content.ContentResolverUtils
 
 /**
  * Created by mariotaku on 2017/2/16.
  */
 
-class DestroyMessageTask(
+class ClearMessagesTask(
         context: Context,
         val accountKey: UserKey,
-        val conversationId: String?,
-        val messageId: String
-) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, Unit?>(context) {
+        val conversationId: String
+) : ExceptionHandlingAbstractTask<Unit?, Boolean, MicroBlogException, ((Boolean) -> Unit)?>(context) {
 
     override val exceptionClass = MicroBlogException::class.java
 
@@ -50,39 +48,33 @@ class DestroyMessageTask(
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
-        if (!performDestroyMessage(context, microBlog, account, messageId)) {
-            return false
+        val messagesWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+        val messagesWhereArgs = arrayOf(accountKey.toString(), conversationId)
+        val projection = arrayOf(Messages.MESSAGE_ID)
+        val messageIds = mutableListOf<String>()
+        context.contentResolver.query(Messages.CONTENT_URI, projection, messagesWhere,
+                messagesWhereArgs, null)?.useCursor { cur ->
+            cur.moveToFirst()
+            while (!cur.isAfterLast) {
+                val messageId = cur.getString(0)
+                try {
+                    if (DestroyMessageTask.performDestroyMessage(context, microBlog, account,
+                            messageId)) {
+                        messageIds.add(messageId)
+                    }
+                } catch (e: MicroBlogException) {
+                    // Ignore
+                }
+                cur.moveToNext()
+            }
         }
-        val deleteWhere: String
-        val deleteWhereArgs: Array<String>
-        if (conversationId != null) {
-            deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                    Expression.equalsArgs(Messages.CONVERSATION_ID),
-                    Expression.equalsArgs(Messages.MESSAGE_ID)).sql
-            deleteWhereArgs = arrayOf(accountKey.toString(), conversationId, messageId)
-        } else {
-            deleteWhere = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                    Expression.equalsArgs(Messages.MESSAGE_ID)).sql
-            deleteWhereArgs = arrayOf(accountKey.toString(), messageId)
-        }
-        context.contentResolver.delete(Messages.CONTENT_URI, deleteWhere, deleteWhereArgs)
+        ContentResolverUtils.bulkDelete(context.contentResolver, Messages.CONTENT_URI,
+                Messages.MESSAGE_ID, false, messageIds, messagesWhere, messagesWhereArgs)
         return true
     }
 
-    companion object {
-
-        internal fun performDestroyMessage(context: Context, microBlog: MicroBlog,
-                account: AccountDetails, messageId: String): Boolean {
-            when (account.type) {
-                AccountType.TWITTER -> {
-                    if (account.isOfficial(context)) {
-                        return microBlog.destroyDm(messageId).isSuccessful
-                    }
-                }
-            }
-            microBlog.destroyDirectMessage(messageId)
-            return true
-        }
-
+    override fun afterExecute(callback: ((Boolean) -> Unit)?, result: Boolean?, exception: MicroBlogException?) {
+        callback?.invoke(result ?: false)
     }
 }
