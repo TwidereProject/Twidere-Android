@@ -41,6 +41,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.coerceInOr
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter
@@ -58,6 +59,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.extension.model.id
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
@@ -310,6 +312,14 @@ abstract class AbsActivitiesFragment protected constructor() :
     override fun onGapClick(holder: GapViewHolder, position: Int) {
         val activity = adapter.getActivity(position)
         DebugLog.v(msg = "Load activity gap $activity")
+        if (!Utils.isOfficialCredentials(context, activity.account_key)) {
+            // Skip if item is not a status
+            if (activity.action !in Activity.Action.MENTION_ACTIONS) {
+                adapter.removeGapLoadingId(ObjectId(activity.account_key, activity.id))
+                adapter.notifyItemChanged(position)
+                return
+            }
+        }
         val accountIds = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)

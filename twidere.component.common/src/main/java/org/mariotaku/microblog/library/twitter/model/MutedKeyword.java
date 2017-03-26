@@ -21,11 +21,43 @@
 
 package org.mariotaku.microblog.library.twitter.model;
 
+import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import org.mariotaku.twidere.model.util.UnixEpochMillisDateConverter;
+
+import java.util.Date;
 
 /**
  * Created by mariotaku on 2017/3/26.
  */
 @JsonObject
 public class MutedKeyword {
+    @JsonField(name = "id")
+    String id;
+    @JsonField(name = "keyword")
+    String keyword;
+    @JsonField(name = "created_at", typeConverter = UnixEpochMillisDateConverter.class)
+    Date createdAt;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "MutedKeyword{" +
+                "id='" + id + '\'' +
+                ", keyword='" + keyword + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

@@ -36,6 +36,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.message.conversation.TwitterOfficialConversationExtras
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages
@@ -75,6 +76,10 @@ class MarkMessageReadTask(
                 lastReadEvent.second.toString())
         context.contentResolver.update(Conversations.CONTENT_URI, values, updateWhere, updateWhereArgs)
         return true
+    }
+
+    override fun onSucceed(callback: Unit?, result: Boolean) {
+        bus.post(UnreadCountUpdatedEvent(-1))
     }
 
     private fun performMarkRead(microBlog: MicroBlog, account: AccountDetails,

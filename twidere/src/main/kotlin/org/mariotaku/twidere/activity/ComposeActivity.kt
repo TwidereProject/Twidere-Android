@@ -79,12 +79,10 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
-import org.mariotaku.twidere.fragment.BaseDialogFragment
-import org.mariotaku.twidere.fragment.EditAltTextDialogFragment
-import org.mariotaku.twidere.fragment.PermissionRequestDialog
+import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
-import org.mariotaku.twidere.fragment.ProgressDialogFragment
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.analyzer.PurchaseFinished
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -328,27 +326,27 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             REQUEST_TAKE_PHOTO, REQUEST_PICK_MEDIA -> {
-                if (resultCode == Activity.RESULT_OK && intent != null) {
-                    val src = MediaPickerActivity.getMediaUris(intent)
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val src = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, src, false, false))
                 }
             }
             REQUEST_EDIT_IMAGE -> {
-                if (resultCode == Activity.RESULT_OK && intent != null) {
-                    if (intent.data != null) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    if (data.data != null) {
                         setMenu()
                         updateTextCount()
                     }
                 }
             }
             REQUEST_EXTENSION_COMPOSE -> {
-                if (resultCode == Activity.RESULT_OK && intent != null) {
-                    val text = intent.getStringExtra(EXTRA_TEXT)
-                    val append = intent.getStringExtra(EXTRA_APPEND_TEXT)
-                    val imageUri = intent.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val text = data.getStringExtra(EXTRA_TEXT)
+                    val append = data.getStringExtra(EXTRA_APPEND_TEXT)
+                    val imageUri = data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)
                     if (text != null) {
                         editText.setText(text)
                     } else if (append != null) {
@@ -360,9 +358,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     updateTextCount()
                 }
             }
+            REQUEST_PURCHASE_EXTRA_FEATURES -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    Analyzer.log(PurchaseFinished.create(data!!))
+                }
+            }
             REQUEST_SET_SCHEDULE -> {
-                if (resultCode == Activity.RESULT_OK && intent != null) {
-                    scheduleInfo = intent.getParcelableExtra(EXTRA_SCHEDULE_INFO)
+                if (resultCode == Activity.RESULT_OK) {
+                    scheduleInfo = data?.getParcelableExtra(EXTRA_SCHEDULE_INFO)
                 }
             }
         }
@@ -545,7 +548,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             R.id.schedule -> {
                 val controller = statusScheduleController ?: return true
-                startActivityForResult(controller.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
+                if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
+                    startActivityForResult(controller.createSetScheduleIntent(), REQUEST_SET_SCHEDULE)
+                } else {
+                    ExtraFeaturesIntroductionDialogFragment.show(supportFragmentManager,
+                            feature = ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
+                            requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
+                }
             }
             else -> {
                 val intent = item.intent

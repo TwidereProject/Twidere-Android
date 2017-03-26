@@ -24,6 +24,10 @@ fun <T> Collection<T>.addAllTo(collection: MutableCollection<T>): Boolean {
     return collection.addAll(this)
 }
 
+fun <T> Array<T>.addAllTo(collection: MutableCollection<T>): Boolean {
+    return collection.addAll(this)
+}
+
 fun <E> Collection<E>?.nullableContentEquals(other: Collection<E>?): Boolean {
     if (this == null) return other.isNullOrEmpty()
     return contentEquals(other!!)

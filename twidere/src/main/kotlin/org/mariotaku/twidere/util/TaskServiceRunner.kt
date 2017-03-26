@@ -63,8 +63,8 @@ class TaskServiceRunner(
             ACTION_REFRESH_NOTIFICATIONS -> {
                 val task = GetActivitiesAboutMeTask(context)
                 task.params = AutoRefreshTaskParam(context, AccountPreferences::isAutoRefreshMentionsEnabled) { accountKeys ->
-                    DataStoreUtils.getNewestActivityMaxPositions(context, Activities.AboutMe.CONTENT_URI,
-                            accountKeys.toNulls())
+                    DataStoreUtils.getRefreshNewestActivityMaxPositions(context,
+                            Activities.AboutMe.CONTENT_URI, accountKeys.toNulls())
                 }
                 return task
             }
