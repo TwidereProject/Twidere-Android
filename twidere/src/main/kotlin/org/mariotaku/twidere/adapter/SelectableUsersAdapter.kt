@@ -52,6 +52,7 @@ class SelectableUsersAdapter(
     var data: List<ParcelableUser>? = null
         set(value) {
             field = value
+            updateItemCounts()
             notifyDataSetChanged()
         }
 
@@ -60,10 +61,6 @@ class SelectableUsersAdapter(
     }
 
     override fun getItemCount(): Int {
-        val position = loadMoreIndicatorPosition
-        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
-        itemCounts[1] = userCount
-        itemCounts[2] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
         return itemCounts.itemCount
     }
 
@@ -91,11 +88,12 @@ class SelectableUsersAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        when (itemCounts.getItemCountIndex(position)) {
+        val countIndex = itemCounts.getItemCountIndex(position)
+        when (countIndex) {
             0, 2 -> ILoadMoreSupportAdapter.ITEM_VIEW_TYPE_LOAD_INDICATOR
             1 -> return ITEM_VIEW_TYPE_USER
         }
-        throw UnsupportedOperationException()
+        throw UnsupportedOperationException("Unsupported countIndex $countIndex, position $position")
     }
 
     override fun getItemId(position: Int): Long {
@@ -104,11 +102,18 @@ class SelectableUsersAdapter(
             0, 2 -> return Integer.MAX_VALUE.toLong() + countIndex
             1 -> return getUser(position)!!.hashCode().toLong()
         }
-        throw UnsupportedOperationException()
+        throw UnsupportedOperationException("Unsupported countIndex $countIndex, position $position")
     }
 
     private fun bindUser(holder: SelectableUserViewHolder, position: Int) {
         holder.displayUser(getUser(position)!!)
+    }
+
+    private fun updateItemCounts() {
+        val position = loadMoreIndicatorPosition
+        itemCounts[0] = if (position and ILoadMoreSupportAdapter.START != 0L) 1 else 0
+        itemCounts[1] = userCount
+        itemCounts[2] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
     }
 
     fun getUser(position: Int): ParcelableUser? {

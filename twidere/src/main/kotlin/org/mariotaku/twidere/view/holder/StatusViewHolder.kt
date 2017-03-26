@@ -346,10 +346,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             mediaPreview.visibility = View.GONE
         }
 
-        var displayEnd = -1
-        if (status.extras.display_text_range != null) {
-            displayEnd = status.extras.display_text_range!![1]
-        }
+        val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
 
         val text: CharSequence
         if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {

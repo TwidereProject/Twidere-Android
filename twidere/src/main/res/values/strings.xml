@@ -598,6 +598,7 @@
     <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
+    <string name="message_error_buffer_media_not_supported">Schedule media with Buffer is not yet supported</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
     <string name="message_format_compose_message_convert_to_status">This tweet will be sent as a message to <xliff:g id="name">%1$s</xliff:g>, continue? Converting to a normal tweet uses an extra character.</string>
     <string name="message_format_conversation_avatar_update">Conversation avatar changed</string>
@@ -1122,6 +1123,7 @@
     <string name="title_block_user">Block <xliff:g id="name">%s</xliff:g></string>
     <string name="title_blocked_users">Blocked users</string>
     <string name="title_browser_sign_in">Browser sign in</string>
+    <string name="title_buffer_set_schedule">Schedule with Buffer</string>
     <string name="title_compose">Compose</string>
     <string name="title_conversation">Conversation</string>
     <string name="title_dialog_sync_connect_to">Connect to…</string>
@@ -1154,6 +1156,7 @@
     <string name="title_search">Search</string>
     <string name="title_select_users">Select users</string>
     <string name="title_set_nickname">Set nickname</string>
+    <string name="title_sign_in_to_buffer">Sign in to Buffer</string>
     <string name="title_status">Tweet</string>
     <string name="title_statuses">Tweets</string>
     <string name="title_statuses_scheduling">Tweets scheduling</string>
@@ -1258,6 +1261,4 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
-    <string name="message_error_buffer_media_not_supported">Schedule media with Buffer is not yet supported</string>
-    <string name="title_buffer_set_schedule">Schedule with Buffer</string>
 </resources>

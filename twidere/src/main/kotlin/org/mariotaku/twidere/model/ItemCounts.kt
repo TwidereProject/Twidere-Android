@@ -35,4 +35,10 @@ class ItemCounts(counts: Int) {
         return data[countIndex]
     }
 
+    fun clear() {
+        for (i in data.indices) {
+            data[i] = 0
+        }
+    }
+
 }

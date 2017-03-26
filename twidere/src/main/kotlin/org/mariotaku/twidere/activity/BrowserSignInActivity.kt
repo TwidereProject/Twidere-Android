@@ -32,6 +32,7 @@ import android.view.MenuItem
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_browser_sign_in.*
@@ -77,6 +78,7 @@ class BrowserSignInActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_browser_sign_in)
         CookieManager.getInstance().removeAllCookiesSupport()
+        webView.setWebChromeClient(AuthorizationWebChromeClient(this))
         webView.setWebViewClient(AuthorizationWebViewClient(this))
         webView.isVerticalScrollBarEnabled = false
         webView.addJavascriptInterface(InjectorJavaScriptInterface(this), "injector")
@@ -134,16 +136,31 @@ class BrowserSignInActivity : BaseActivity() {
         progressContainer.visibility = if (shown) View.VISIBLE else View.GONE
     }
 
+    private fun setLoadProgress(progress: Int) {
+        loadProgress.progress = progress
+    }
+
     private fun setRequestToken(token: OAuthToken) {
         requestToken = token
     }
 
-    internal class AuthorizationWebViewClient(activity: BrowserSignInActivity) : DefaultWebViewClient(activity) {
+    internal class AuthorizationWebChromeClient(val activity: BrowserSignInActivity) : WebChromeClient() {
+        override fun onProgressChanged(view: WebView, newProgress: Int) {
+            super.onProgressChanged(view, newProgress)
+            activity.setLoadProgress(newProgress)
+        }
+    }
+
+    internal class AuthorizationWebViewClient(activity: BrowserSignInActivity) : DefaultWebViewClient<BrowserSignInActivity>(activity) {
+
+        override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+            super.onPageStarted(view, url, favicon)
+            activity.setLoadProgressShown(true)
+        }
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             view.loadUrl(INJECT_CONTENT)
-            val activity = activity as BrowserSignInActivity
             activity.setLoadProgressShown(false)
             val uri = Uri.parse(url)
             // Hack for fanfou
@@ -164,11 +181,6 @@ class BrowserSignInActivity : BaseActivity() {
             }
         }
 
-        override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-            super.onPageStarted(view, url, favicon)
-            (activity as BrowserSignInActivity).setLoadProgressShown(true)
-        }
-
         @Suppress("Deprecation")
         override fun onReceivedError(view: WebView, errorCode: Int, description: String?,
                 failingUrl: String?) {
@@ -183,7 +195,7 @@ class BrowserSignInActivity : BaseActivity() {
             val uri = Uri.parse(url)
             if (url.startsWith(TwidereConstants.OAUTH_CALLBACK_URL)) {
                 val oauthVerifier = uri.getQueryParameter(EXTRA_OAUTH_VERIFIER)
-                val activity = activity as BrowserSignInActivity
+                val activity = activity
                 val requestToken = activity.requestToken
                 if (oauthVerifier != null && requestToken != null) {
                     val intent = Intent()

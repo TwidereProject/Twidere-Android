@@ -572,16 +572,6 @@ class UpdateStatusTask(
         constructor(message: String) : super(message)
     }
 
-    class ScheduleException : UpdateStatusException {
-
-        constructor() : super()
-
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
-
-        constructor(throwable: Throwable) : super(throwable)
-
-        constructor(message: String) : super(message)
-    }
 
     class ExtensionVersionMismatchException : AbsServiceInterface.CheckServiceException()
 

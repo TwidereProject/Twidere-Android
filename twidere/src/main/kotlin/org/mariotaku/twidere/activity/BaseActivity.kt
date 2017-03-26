@@ -107,9 +107,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var restHttpClient: RestHttpClient
 
-    protected val statusScheduleController: StatusScheduleController? by lazy {
-        statusScheduleControllerFactory.newInstance(this)
-    }
+    protected val statusScheduleController: StatusScheduleController?
+        get() = statusScheduleControllerFactory.newInstance(this)
+
 
     private val actionHelper = IBaseActivity.ActionHelper(this)
     private val themePreferences by lazy {

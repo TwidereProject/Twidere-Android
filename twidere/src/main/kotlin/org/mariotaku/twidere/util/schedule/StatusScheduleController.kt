@@ -35,11 +35,22 @@ import java.util.*
 interface StatusScheduleController {
 
     @WorkerThread
-    @Throws(UpdateStatusTask.ScheduleException::class)
+    @Throws(ScheduleException::class)
     fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate,
             scheduleInfo: ScheduleInfo)
 
     fun createSetScheduleIntent(): Intent
+
+    class ScheduleException : UpdateStatusTask.UpdateStatusException {
+
+        constructor() : super()
+
+        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
+
+        constructor(throwable: Throwable) : super(throwable)
+
+        constructor(message: String) : super(message)
+    }
 
     interface Factory {
         fun newInstance(context: Context): StatusScheduleController?

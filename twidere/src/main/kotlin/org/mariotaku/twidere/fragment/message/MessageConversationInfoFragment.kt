@@ -509,12 +509,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         var conversation: ParcelableMessageConversation? = null
             set(value) {
                 field = value
+                updateItemCounts()
                 notifyDataSetChanged()
             }
 
         var showButtonSpace: Boolean = false
             set(value) {
                 field = value
+                updateItemCounts()
                 notifyDataSetChanged()
             }
 
@@ -524,25 +526,6 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemCount(): Int {
-            val conversation = this.conversation ?: return 0
-            val participantsSize = conversation.participants.size
-            itemCounts[ITEM_INDEX_TOP_SPACE] = if (showButtonSpace) 1 else 0
-            itemCounts[ITEM_INDEX_HEADER] = 1
-            itemCounts[ITEM_INDEX_ITEM] = participantsSize
-            when (conversation.conversation_type) {
-                ConversationType.GROUP -> {
-                    if (participantsSize < defaultFeatures.getDirectMessageMaxParticipants(conversation.conversation_extras_type)) {
-                        itemCounts[ITEM_INDEX_ADD_USER] = 1
-                    } else {
-                        itemCounts[ITEM_INDEX_ADD_USER] = 0
-                    }
-                }
-                else -> {
-                    itemCounts[ITEM_INDEX_ADD_USER] = 0
-                }
-            }
-
-            itemCounts[ITEM_INDEX_SPACE] = 1
             return itemCounts.itemCount
         }
 
@@ -611,6 +594,31 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         fun getUser(position: Int): ParcelableUser? {
             val itemPos = position - itemCounts.getItemStartPosition(ITEM_INDEX_ITEM)
             return conversation?.participants?.getOrNull(itemPos)
+        }
+
+        private fun updateItemCounts() {
+            val conversation = this.conversation ?: run {
+                itemCounts.clear()
+                return
+            }
+            val participantsSize = conversation.participants.size
+            itemCounts[ITEM_INDEX_TOP_SPACE] = if (showButtonSpace) 1 else 0
+            itemCounts[ITEM_INDEX_HEADER] = 1
+            itemCounts[ITEM_INDEX_ITEM] = participantsSize
+            when (conversation.conversation_type) {
+                ConversationType.GROUP -> {
+                    if (participantsSize < defaultFeatures.getDirectMessageMaxParticipants(conversation.conversation_extras_type)) {
+                        itemCounts[ITEM_INDEX_ADD_USER] = 1
+                    } else {
+                        itemCounts[ITEM_INDEX_ADD_USER] = 0
+                    }
+                }
+                else -> {
+                    itemCounts[ITEM_INDEX_ADD_USER] = 0
+                }
+            }
+
+            itemCounts[ITEM_INDEX_SPACE] = 1
         }
 
         interface Listener {

@@ -76,6 +76,13 @@ class MessagesConversationAdapter(
     var listener: Listener? = null
     var displaySenderProfile: Boolean = false
 
+    override var loadMoreIndicatorPosition: Long
+        get() = super.loadMoreIndicatorPosition
+        set(value) {
+            super.loadMoreIndicatorPosition = value
+            updateItemCounts()
+        }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
@@ -126,8 +133,6 @@ class MessagesConversationAdapter(
     }
 
     override fun getItemCount(): Int {
-        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
-        itemCounts[ITEM_START_LOAD_OLDER] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L) 1 else 0
         return itemCounts.itemCount
     }
 
@@ -162,7 +167,13 @@ class MessagesConversationAdapter(
     fun setData(conversation: ParcelableMessageConversation?, messages: List<ParcelableMessage>?) {
         this.conversation = conversation
         this.messages = messages
+        updateItemCounts()
         notifyDataSetChanged()
+    }
+
+    private fun updateItemCounts() {
+        itemCounts[ITEM_START_MESSAGE] = messages?.size ?: 0
+        itemCounts[ITEM_START_LOAD_OLDER] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.START != 0L) 1 else 0
     }
 
     interface Listener {

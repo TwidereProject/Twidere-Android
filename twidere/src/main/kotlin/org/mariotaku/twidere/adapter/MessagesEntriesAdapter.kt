@@ -28,12 +28,14 @@ class MessagesEntriesAdapter(
     var conversations: List<ParcelableMessageConversation>? = null
         set(value) {
             field = value
+            updateItemCounts()
             notifyDataSetChanged()
         }
 
     var drawAccountColors: Boolean = false
         set(value) {
             field = value
+            updateItemCounts()
             notifyDataSetChanged()
         }
 
@@ -42,8 +44,6 @@ class MessagesEntriesAdapter(
     var listener: MessageConversationClickListener? = null
 
     override fun getItemCount(): Int {
-        itemCounts[0] = conversations?.size ?: 0
-        itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
         return itemCounts.itemCount
     }
 
@@ -78,6 +78,11 @@ class MessagesEntriesAdapter(
             1 -> return ITEM_VIEW_TYPE_LOAD_INDICATOR
         }
         throw UnsupportedOperationException()
+    }
+
+    private fun updateItemCounts() {
+        itemCounts[0] = conversations?.size ?: 0
+        itemCounts[1] = if (loadMoreIndicatorPosition and ILoadMoreSupportAdapter.END != 0L) 1 else 0
     }
 
     fun getConversation(position: Int): ParcelableMessageConversation? {
