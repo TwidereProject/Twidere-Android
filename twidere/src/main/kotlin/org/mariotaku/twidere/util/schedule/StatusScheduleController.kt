@@ -41,6 +41,10 @@ interface StatusScheduleController {
 
     fun createSetScheduleIntent(): Intent
 
+    fun createSettingsIntent(): Intent?
+
+    fun createManageIntent(): Intent?
+
     class ScheduleException : UpdateStatusTask.UpdateStatusException {
 
         constructor() : super()

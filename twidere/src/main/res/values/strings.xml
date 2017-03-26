@@ -1123,7 +1123,9 @@
     <string name="title_block_user">Block <xliff:g id="name">%s</xliff:g></string>
     <string name="title_blocked_users">Blocked users</string>
     <string name="title_browser_sign_in">Browser sign in</string>
+    <string name="title_buffer_queue_manager">Buffer queue</string>
     <string name="title_buffer_set_schedule">Schedule with Buffer</string>
+    <string name="title_buffer_settings">Buffer settings</string>
     <string name="title_compose">Compose</string>
     <string name="title_conversation">Conversation</string>
     <string name="title_dialog_sync_connect_to">Connect to…</string>
@@ -1261,4 +1263,5 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
+    <string name="title_scheduled_statuses">Scheduled tweets</string>
 </resources>

@@ -31,6 +31,7 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.schedule.StatusScheduleController
 import org.mariotaku.twidere.view.ContainerView
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
@@ -166,6 +167,9 @@ class PremiumDashboardActivity : BaseActivity() {
 
         @Inject
         protected lateinit var preferences: SharedPreferencesWrapper
+
+        @Inject
+        protected lateinit var scheduleControllerFactory: StatusScheduleController.Factory
 
         var position: Int = RecyclerView.NO_POSITION
             internal set

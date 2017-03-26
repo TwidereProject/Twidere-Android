@@ -26,11 +26,13 @@ import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import com.twitter.Validator
 import nl.komponents.kovenant.Promise
+import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.fragment.iface.IBaseFragment
 import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.schedule.StatusScheduleController
 import javax.inject.Inject
 
 open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
@@ -64,6 +66,13 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     lateinit var permissionsManager: PermissionsManager
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
+    @Inject
+    lateinit var statusScheduleControllerFactory: StatusScheduleController.Factory
+    @Inject
+    lateinit var restHttpClient: RestHttpClient
+
+    protected val statusScheduleController: StatusScheduleController?
+        get() = statusScheduleControllerFactory.newInstance(context)
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 
