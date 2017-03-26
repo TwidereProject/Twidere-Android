@@ -293,7 +293,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             } else {
                 firstVisibleItemPosition
             }.coerceInOr(statusRange, -1)
-            lastReadId = if (useSortIdAsReadPosition) {
+            lastReadId = if (lastReadPosition < 0) {
+                -1
+            } else if (useSortIdAsReadPosition) {
                 adapter.getStatusSortId(lastReadPosition, false)
             } else {
                 adapter.getStatusPositionKey(lastReadPosition)

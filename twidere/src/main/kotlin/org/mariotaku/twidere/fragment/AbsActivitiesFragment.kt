@@ -251,7 +251,11 @@ abstract class AbsActivitiesFragment protected constructor() :
             } else {
                 firstVisibleItemPosition
             }.coerceInOr(activityRange, -1)
-            lastReadId = adapter.getTimestamp(lastReadPosition)
+            lastReadId = if (lastReadPosition < 0) {
+                -1
+            } else {
+                adapter.getTimestamp(lastReadPosition)
+            }
             lastReadViewTop = layoutManager.findViewByPosition(lastReadPosition)?.top ?: 0
             loadMore = activityRange.endInclusive in 0..lastVisibleItemPosition
         } else if (rememberPosition && readPositionTag != null) {
