@@ -262,7 +262,7 @@ class UpdateStatusTask(
             throw SchedulerNotFoundException("No scheduler found")
         }
 
-        controller.scheduleStatus(statusUpdate, pendingUpdate.overrideTexts, scheduleInfo)
+        controller.scheduleStatus(statusUpdate, pendingUpdate, scheduleInfo)
 
         return UpdateStatusResult(pendingUpdate.length, draftId)
     }
@@ -499,9 +499,9 @@ class UpdateStatusTask(
         }
     }
 
-    internal class PendingStatusUpdate(val length: Int, defaultText: String) {
+    class PendingStatusUpdate internal constructor(val length: Int, defaultText: String) {
 
-        constructor(statusUpdate: ParcelableStatusUpdate) : this(statusUpdate.accounts.size,
+        internal constructor(statusUpdate: ParcelableStatusUpdate) : this(statusUpdate.accounts.size,
                 statusUpdate.text)
 
         var sharedMediaIds: Array<String>? = null

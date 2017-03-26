@@ -25,6 +25,7 @@ import android.support.annotation.WorkerThread
 import org.mariotaku.twidere.model.ParcelableStatusUpdate
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.task.twitter.UpdateStatusTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask.PendingStatusUpdate
 import java.util.*
 
 /**
@@ -35,7 +36,7 @@ interface StatusScheduleController {
 
     @WorkerThread
     @Throws(UpdateStatusTask.ScheduleException::class)
-    fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, overrideTexts: Array<String>,
+    fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate,
             scheduleInfo: ScheduleInfo)
 
     fun createSetScheduleIntent(): Intent

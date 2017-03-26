@@ -1258,4 +1258,6 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
+    <string name="message_error_buffer_media_not_supported">Schedule media with Buffer is not yet supported</string>
+    <string name="title_buffer_set_schedule">Schedule with Buffer</string>
 </resources>

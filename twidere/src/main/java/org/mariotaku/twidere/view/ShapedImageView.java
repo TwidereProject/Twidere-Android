@@ -119,12 +119,8 @@ public class ShapedImageView extends AppCompatImageView {
     }
 
     public void setShapeBackground(final int color) {
-        if (OUTLINE_DRAW) {
-            setBackgroundColor(color);
-        } else {
-            mBackgroundPaint.setColor(color);
-            invalidate();
-        }
+        mBackgroundPaint.setColor(color);
+        invalidate();
     }
 
     public int[] getBorderColors() {
@@ -193,15 +189,17 @@ public class ShapedImageView extends AppCompatImageView {
         mDestination.set(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(),
                 getHeight() - getPaddingBottom());
 
+        final int contentLeft = getPaddingLeft(), contentTop = getPaddingTop(),
+                contentRight = getWidth() - getPaddingRight(),
+                contentBottom = getHeight() - getPaddingBottom();
+        final int contentWidth = contentRight - contentLeft,
+                contentHeight = contentBottom - contentTop;
+        final int size = Math.min(contentWidth, contentHeight);
+
         if (OUTLINE_DRAW) {
+            drawShape(canvas, mDestination, 0, mBackgroundPaint);
             super.onDraw(canvas);
         } else {
-            final int contentLeft = getPaddingLeft(), contentTop = getPaddingTop(),
-                    contentRight = getWidth() - getPaddingRight(),
-                    contentBottom = getHeight() - getPaddingBottom();
-            final int contentWidth = contentRight - contentLeft,
-                    contentHeight = contentBottom - contentTop;
-            final int size = Math.min(contentWidth, contentHeight);
             if (mShadowBitmap != null && mDrawShadow) {
                 canvas.drawBitmap(mShadowBitmap, contentLeft + (contentWidth - size) / 2 - mShadowRadius,
                         contentTop + (contentHeight - size) / 2 - mShadowRadius, null);

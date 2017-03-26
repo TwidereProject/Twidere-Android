@@ -51,11 +51,6 @@ public interface UsersResources {
     @POST("/blocks/create.json")
     User createBlockByScreenName(@Query("screen_name") String screenName) throws MicroBlogException;
 
-    @POST("/mutes/users/create.json")
-    User createMute(@Param("user_id") String userId) throws MicroBlogException;
-
-    @POST("/mutes/users/create.json")
-    User createMuteByScreenName(@Query("screen_name") String screenName) throws MicroBlogException;
 
     @POST("/blocks/destroy.json")
     User destroyBlock(@Param("user_id") String userId) throws MicroBlogException;
@@ -63,11 +58,6 @@ public interface UsersResources {
     @POST("/blocks/destroy.json")
     User destroyBlockByScreenName(@Query("screen_name") String screenName) throws MicroBlogException;
 
-    @POST("/mutes/users/destroy.json")
-    User destroyMute(@Param("user_id") String userId) throws MicroBlogException;
-
-    @POST("/mutes/users/destroy.json")
-    User destroyMuteByScreenName(@Query("screen_name") String screenName) throws MicroBlogException;
 
     @GET("/account/settings.json")
     AccountSettings getAccountSettings() throws MicroBlogException;
@@ -80,11 +70,6 @@ public interface UsersResources {
 
     ResponseList<User> getMemberSuggestions(String categorySlug) throws MicroBlogException;
 
-    @GET("/mutes/users/ids.json")
-    IDs getMutesUsersIDs(Paging paging) throws MicroBlogException;
-
-    @GET("/mutes/users/list.json")
-    PageableResponseList<User> getMutesUsersList(@Query Paging paging) throws MicroBlogException;
 
     ResponseList<Category> getSuggestedUserCategories() throws MicroBlogException;
 
