@@ -29,6 +29,7 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 
 class UserBlocksLoader(
@@ -57,7 +58,7 @@ class UserBlocksLoader(
         return super.onLoadInBackground()
     }
 
-    override fun processUser(user: ParcelableUser) {
+    override fun processUser(details: AccountDetails, user: ParcelableUser) {
         user.is_filtered = filteredUsers?.contains(user.key) ?: false
     }
 }

@@ -26,7 +26,7 @@ object ParcelableStatusUtils {
         status.retweet_id = null
     }
 
-    fun fromStatus(orig: Status, accountKey: UserKey, isGap: Boolean = false,
+    fun fromStatus(orig: Status, accountKey: UserKey, accountType: String, isGap: Boolean = false,
             profileImageSize: String = "normal"): ParcelableStatus {
         val result = ParcelableStatus()
         result.is_gap = isGap
@@ -100,7 +100,7 @@ object ParcelableStatusUtils {
 
             result.quoted_timestamp = quoted.createdAt.time
             result.quoted_source = quoted.source
-            result.quoted_media = ParcelableMediaUtils.fromStatus(quoted, accountKey)
+            result.quoted_media = ParcelableMediaUtils.fromStatus(quoted, accountKey, accountType)
 
             result.quoted_user_key = UserKeyUtils.fromUser(quotedUser)
             result.quoted_user_name = quotedUser.name
@@ -151,7 +151,7 @@ object ParcelableStatusUtils {
             result.extras.display_text_range = textWithIndices.range
         }
 
-        result.media = ParcelableMediaUtils.fromStatus(status, accountKey)
+        result.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
         result.source = status.source
         result.location = getLocation(status)
         result.is_favorite = status.isFavorited
@@ -163,7 +163,7 @@ object ParcelableStatusUtils {
         result.is_possibly_sensitive = status.isPossiblySensitive
         result.mentions = ParcelableUserMentionUtils.fromUserMentionEntities(user,
                 status.userMentionEntities)
-        result.card = ParcelableCardEntityUtils.fromCardEntity(status.card, accountKey)
+        result.card = ParcelableCardEntityUtils.fromCardEntity(status.card, accountKey, accountType)
         result.place_full_name = getPlaceFullName(status)
         result.card_name = if (result.card != null) result.card!!.name else null
         result.lang = status.lang
@@ -206,11 +206,11 @@ object ParcelableStatusUtils {
         return UserKey(inReplyToUserId, accountKey.host)
     }
 
-    fun fromStatuses(statuses: Array<Status>?, accountKey: UserKey,
-            profileImageSize: String = "normal"): Array<ParcelableStatus>? {
+    fun fromStatuses(statuses: Array<Status>?, accountKey: UserKey, accountType: String,
+            profileImageSize: String): Array<ParcelableStatus>? {
         if (statuses == null) return null
         return Array(statuses.size) { i ->
-            fromStatus(statuses[i], accountKey, false, profileImageSize)
+            fromStatus(statuses[i], accountKey, accountType, false, profileImageSize)
         }
     }
 

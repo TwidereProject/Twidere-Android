@@ -1,14 +1,18 @@
 package org.mariotaku.twidere.task
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.net.Uri
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.DebugLog
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
@@ -40,8 +44,10 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
 
     override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
         try {
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)!!
-            TwitterWrapper.updateProfileBackgroundImage(context, twitter, imageUri, tile,
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
+                    true) ?: throw MicroBlogException("No account")
+            val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
+            TwitterWrapper.updateProfileBackgroundImage(context, microBlog, imageUri, tile,
                     deleteImage)
             // Wait for 5 seconds, see
             // https://dev.twitter.com/docs/api/1.1/post/account/update_profile_image
@@ -50,8 +56,8 @@ open class UpdateProfileBackgroundImageTask<ResultHandler>(
             } catch (e: InterruptedException) {
                 DebugLog.w(LOGTAG, tr = e)
             }
-            val user = twitter.verifyCredentials()
-            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey))
+            val user = microBlog.verifyCredentials()
+            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey, details.type))
         } catch (e: MicroBlogException) {
             return SingleResponse(exception = e)
         } catch (e: IOException) {

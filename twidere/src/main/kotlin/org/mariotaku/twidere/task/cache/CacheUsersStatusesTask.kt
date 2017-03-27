@@ -28,16 +28,17 @@ import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedHashtags
+import org.mariotaku.twidere.provider.TwidereDataStore.CachedStatuses
 import org.mariotaku.twidere.util.ContentValuesCreator
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
-import org.mariotaku.twidere.util.TwitterWrapper.TwitterListResponse
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import java.util.*
 
 class CacheUsersStatusesTask(
         private val context: Context,
         private val accountKey: UserKey,
+        private val accountType: String,
         private val statuses: List<Status>
 ) : AbstractTask<Any?, Unit?, Unit?>() {
 
@@ -58,7 +59,8 @@ class CacheUsersStatusesTask(
                 val statusesValues = HashSet<ContentValues>()
                 val hashTagValues = HashSet<ContentValues>()
 
-                statusesValues.add(ContentValuesCreator.createStatus(status, accountKey, profileImageSize))
+                statusesValues.add(ContentValuesCreator.createStatus(status, accountKey, accountType,
+                        profileImageSize))
                 val text = InternalTwitterContentUtils.unescapeTwitterStatusText(status.extendedText)
                 for (hashtag in extractor.extractHashtags(text)) {
                     val values = ContentValues()
@@ -72,7 +74,8 @@ class CacheUsersStatusesTask(
 
                 ContentResolverUtils.bulkInsert(resolver, CachedStatuses.CONTENT_URI, statusesValues)
                 ContentResolverUtils.bulkInsert(resolver, CachedHashtags.CONTENT_URI, hashTagValues)
-                CacheUserRelationshipTask.cacheUserRelationships(resolver, accountKey, users)
+                CacheUserRelationshipTask.cacheUserRelationships(resolver, accountKey, accountType,
+                        users)
                 idx++
             }
             bulkIdx += 100

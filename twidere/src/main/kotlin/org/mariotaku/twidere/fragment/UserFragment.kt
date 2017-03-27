@@ -1401,22 +1401,31 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val args = arguments
         val tabArgs = Bundle()
         val user = args.getParcelable<ParcelableUser>(EXTRA_USER)
+        val userKey: UserKey?
         if (user != null) {
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, user.account_key)
+            userKey = user.account_key
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
             tabArgs.putParcelable(EXTRA_USER_KEY, user.key)
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name)
         } else {
-            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, args.getParcelable<Parcelable>(EXTRA_ACCOUNT_KEY))
+            userKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+            tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable<Parcelable>(EXTRA_USER_KEY))
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
         }
-        pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs).apply {
-            putBoolean(EXTRA_EXCLUDE_REPLIES, true)
-        }, name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES,
-                position = TAB_POSITION_STATUSES)
-        pagerAdapter.add(cls = UserTimelineFragment::class.java, args = tabArgs,
-                name = getString(R.string.title_statuses_and_replies), type = TAB_TYPE_STATUSES_WITH_REPLIES,
-                position = TAB_POSITION_STATUSES)
+        if (userKey?.host == USER_TYPE_TWITTER_COM) {
+            pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs).apply {
+                putBoolean(EXTRA_EXCLUDE_REPLIES, true)
+            }, name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES,
+                    position = TAB_POSITION_STATUSES)
+            pagerAdapter.add(cls = UserTimelineFragment::class.java, args = tabArgs,
+                    name = getString(R.string.title_statuses_and_replies), type = TAB_TYPE_STATUSES_WITH_REPLIES,
+                    position = TAB_POSITION_STATUSES)
+        } else {
+            pagerAdapter.add(cls = UserTimelineFragment::class.java, args = tabArgs,
+                    name = getString(R.string.title_statuses), type = TAB_TYPE_STATUSES,
+                    position = TAB_POSITION_STATUSES)
+        }
         pagerAdapter.add(cls = UserMediaTimelineFragment::class.java, args = tabArgs,
                 name = getString(R.string.media), type = TAB_TYPE_MEDIA,
                 position = TAB_POSITION_MEDIA)

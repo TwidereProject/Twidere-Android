@@ -57,8 +57,8 @@ object ParcelableActivityUtils {
         return result
     }
 
-    fun fromActivity(activity: Activity, accountKey: UserKey, isGap: Boolean = false,
-            profileImageSize: String = "normal"): ParcelableActivity {
+    fun fromActivity(activity: Activity, accountKey: UserKey, accountType: String,
+            isGap: Boolean = false, profileImageSize: String = "normal"): ParcelableActivity {
         val result = ParcelableActivity()
         result.account_key = accountKey
         result.timestamp = activity.createdAt.time
@@ -67,13 +67,20 @@ object ParcelableActivityUtils {
         result.min_sort_position = activity.minSortPosition
         result.max_position = activity.maxPosition
         result.min_position = activity.minPosition
-        result.sources = ParcelableUserUtils.fromUsers(activity.sources, accountKey, profileImageSize)
-        result.target_users = ParcelableUserUtils.fromUsers(activity.targetUsers, accountKey, profileImageSize)
-        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetUserLists, accountKey, profileImageSize)
-        result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.targetStatuses, accountKey, profileImageSize)
-        result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.targetObjectStatuses, accountKey, profileImageSize)
-        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetObjectUserLists, accountKey, profileImageSize)
-        result.target_object_users = ParcelableUserUtils.fromUsers(activity.targetObjectUsers, accountKey, profileImageSize)
+        result.sources = ParcelableUserUtils.fromUsers(activity.sources, accountKey, accountType,
+                profileImageSize)
+        result.target_users = ParcelableUserUtils.fromUsers(activity.targetUsers, accountKey,
+                accountType, profileImageSize)
+        result.target_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetUserLists,
+                accountKey, profileImageSize)
+        result.target_statuses = ParcelableStatusUtils.fromStatuses(activity.targetStatuses,
+                accountKey, accountType, profileImageSize)
+        result.target_object_statuses = ParcelableStatusUtils.fromStatuses(activity.targetObjectStatuses,
+                accountKey, accountType, profileImageSize)
+        result.target_object_user_lists = ParcelableUserListUtils.fromUserLists(activity.targetObjectUserLists,
+                accountKey, profileImageSize)
+        result.target_object_users = ParcelableUserUtils.fromUsers(activity.targetObjectUsers,
+                accountKey, accountType, profileImageSize)
         result.has_following_source = activity.sources.fold(false) { folded, item ->
             if (item.isFollowing == true) {
                 return@fold true

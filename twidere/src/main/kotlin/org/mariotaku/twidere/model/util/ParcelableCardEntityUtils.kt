@@ -24,12 +24,12 @@ object ParcelableCardEntityUtils {
         sISOFormat.timeZone = TimeZone.getTimeZone("UTC")
     }
 
-    fun fromCardEntity(card: CardEntity?, accountKey: UserKey?): ParcelableCardEntity? {
+    fun fromCardEntity(card: CardEntity?, accountKey: UserKey?, accountType: String?): ParcelableCardEntity? {
         if (card == null) return null
         val obj = ParcelableCardEntity()
         obj.name = card.name
         obj.url = card.url
-        obj.users = ParcelableUserUtils.fromUsers(card.users, accountKey)
+        obj.users = ParcelableUserUtils.fromUsers(card.users, accountKey, accountType)
         obj.account_key = accountKey
         obj.values = from(card.bindingValues)
         return obj

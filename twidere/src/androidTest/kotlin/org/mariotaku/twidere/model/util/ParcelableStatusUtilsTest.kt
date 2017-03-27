@@ -24,12 +24,14 @@ class ParcelableStatusUtilsTest {
         val context = InstrumentationRegistry.getContext()
         val status_8754050 = context.resources.openRawResource(R.raw.status_8754050).use {
             val status = LoganSquare.parse(it, Status::class.java)
-            return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"), false)
+            return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"),
+                    "statusnet", false)
         }
 
         val status_9171447 = context.resources.openRawResource(R.raw.status_9171447).use {
             val status = LoganSquare.parse(it, Status::class.java)
-            return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"), false)
+            return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"),
+                    "statusnet", false)
         }
 
         Assert.assertEquals(status_8754050.text_unescaped, expectedStatusText)

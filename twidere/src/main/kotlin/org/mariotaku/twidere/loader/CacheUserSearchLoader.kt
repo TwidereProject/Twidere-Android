@@ -1,5 +1,6 @@
 package org.mariotaku.twidere.loader
 
+import android.annotation.SuppressLint
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -37,14 +38,16 @@ class CacheUserSearchLoader(
         return super.getUsers(twitter, details)
     }
 
-    override fun processUsersData(list: MutableList<ParcelableUser>) {
+    override fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {
         if (query.isEmpty() || !fromCache) return
         val queryEscaped = query.replace("_", "^_")
         val nicknameKeys = Utils.getMatchedNicknameKeys(query, userColorNameManager)
-        val selection = Expression.or(Expression.likeRaw(Columns.Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
-                Expression.likeRaw(Columns.Column(CachedUsers.NAME), "?||'%'", "^"),
-                Expression.inArgs(Columns.Column(CachedUsers.USER_KEY), nicknameKeys.size))
-        val selectionArgs = arrayOf(queryEscaped, queryEscaped, *nicknameKeys)
+        val selection = Expression.and(Expression.equalsArgs(Columns.Column(CachedUsers.USER_TYPE)),
+                Expression.or(Expression.likeRaw(Columns.Column(CachedUsers.SCREEN_NAME), "?||'%'", "^"),
+                        Expression.likeRaw(Columns.Column(CachedUsers.NAME), "?||'%'", "^"),
+                        Expression.inArgs(Columns.Column(CachedUsers.USER_KEY), nicknameKeys.size)))
+        val selectionArgs = arrayOf(details.type, queryEscaped, queryEscaped, *nicknameKeys)
+        @SuppressLint("Recycle")
         val c = context.contentResolver.query(CachedUsers.CONTENT_URI, CachedUsers.BASIC_COLUMNS,
                 selection.sql, selectionArgs, null)!!
         val i = ObjectCursor.indicesFrom(c, ParcelableUser::class.java)

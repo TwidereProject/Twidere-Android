@@ -54,7 +54,7 @@ abstract class AbsFriendshipOperationTask(
                 ?: throw MicroBlogException("No account")
         val twitter = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val user = perform(twitter, details, params)
-        val parcelableUser = ParcelableUserUtils.fromUser(user, params.accountKey)
+        val parcelableUser = ParcelableUserUtils.fromUser(user, params.accountKey, details.type)
         succeededWorker(twitter, details, params, parcelableUser)
         return parcelableUser
     }

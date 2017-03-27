@@ -130,8 +130,8 @@ abstract class GetActivitiesTask(
             val sortDiff = firstSortId - lastSortId
             for (i in activities.indices) {
                 val item = activities[i]
-                val activity = ParcelableActivityUtils.fromActivity(item, details.key, false,
-                        profileImageSize)
+                val activity = ParcelableActivityUtils.fromActivity(item, details.key, details.type,
+                        false, profileImageSize)
                 mediaPreloader.preloadActivity(activity)
                 activity.position_key = GetStatusesTask.getPositionKey(activity.timestamp,
                         activity.timestamp, lastSortId, sortDiff, i, activities.size)

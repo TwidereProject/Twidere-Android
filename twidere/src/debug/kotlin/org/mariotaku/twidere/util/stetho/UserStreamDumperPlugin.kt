@@ -106,7 +106,8 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
                 if (!includeInteractions && includeTimeline) return true
-                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key)
+                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
+                        account.type)
                 val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
                         true, true)
                 if (message != null) {
@@ -154,7 +155,8 @@ class UserStreamDumperPlugin(val context: Context) : DumperPlugin {
 
             override fun onActivityAboutMe(activity: Activity): Boolean {
                 if (!includeInteractions && includeTimeline) return true
-                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key)
+                val pActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
+                        account.type)
                 val message = ActivityTitleSummaryMessage.get(context, manager, pActivity, pActivity.sources, 0,
                         true, true)
                 if (message != null) {

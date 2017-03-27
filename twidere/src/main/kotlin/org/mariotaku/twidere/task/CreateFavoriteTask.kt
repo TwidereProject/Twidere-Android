@@ -58,11 +58,11 @@ class CreateFavoriteTask(
             val result = when (details.type) {
                 AccountType.FANFOU -> {
                     ParcelableStatusUtils.fromStatus(microBlog.createFanfouFavorite(statusId), accountKey,
-                            false)
+                            details.type, false)
                 }
                 else -> {
                     ParcelableStatusUtils.fromStatus(microBlog.createFavorite(statusId), accountKey,
-                            false)
+                            details.type, false)
                 }
             }
             ParcelableStatusUtils.updateExtraInformation(result, details)

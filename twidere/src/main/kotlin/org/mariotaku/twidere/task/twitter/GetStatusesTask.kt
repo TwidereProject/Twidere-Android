@@ -109,7 +109,7 @@ abstract class GetStatusesTask(
                 val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId, sinceSortId,
                         maxSortId, loadItemLimit, false)
                 // TODO cache related data and preload
-                val cacheTask = CacheUsersStatusesTask(context, accountKey, statuses)
+                val cacheTask = CacheUsersStatusesTask(context, accountKey, details.type, statuses)
                 TaskStarter.execute(cacheTask)
                 errorInfoStore.remove(errorInfoKey, accountKey.id)
                 result.add(TwitterWrapper.StatusListResponse(accountKey, statuses))
@@ -165,7 +165,8 @@ abstract class GetStatusesTask(
             val creator = ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java)
             for (i in 0 until statuses.size) {
                 val item = statuses[i]
-                val status = ParcelableStatusUtils.fromStatus(item, accountKey, false, profileImageSize)
+                val status = ParcelableStatusUtils.fromStatus(item, accountKey, details.type, false,
+                        profileImageSize)
                 ParcelableStatusUtils.updateExtraInformation(status, details)
                 status.position_key = getPositionKey(status.timestamp, status.sort_id, lastSortId,
                         sortDiff, i, statuses.size)

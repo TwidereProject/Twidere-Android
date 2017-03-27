@@ -70,7 +70,7 @@ class UserTimelineLoader(
         if (pinnedStatusIds != null) {
             pinnedStatuses = try {
                 microBlog.lookupStatuses(pinnedStatusIds).mapIndexed { idx, status ->
-                    val created = ParcelableStatusUtils.fromStatus(status, details.key,
+                    val created = ParcelableStatusUtils.fromStatus(status, details.key, details.type,
                             profileImageSize = profileImageSize)
                     created.sort_id = idx.toLong()
                     return@mapIndexed created

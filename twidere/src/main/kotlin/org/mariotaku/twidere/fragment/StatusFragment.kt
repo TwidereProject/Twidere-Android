@@ -2102,7 +2102,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val retweeters = ArrayList<ParcelableUser>()
             try {
                 for (status in twitter.getRetweets(statusId, paging)) {
-                    val user = ParcelableUserUtils.fromUser(status.user, accountKey)
+                    val user = ParcelableUserUtils.fromUser(status.user, accountKey, details.type)
                     if (!DataStoreUtils.isFilteringUser(context, user.key.toString())) {
                         retweeters.add(user)
                     }
@@ -2132,8 +2132,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 Expression.equalsArgs(Activities.STATUS_ID),
                                 Expression.equalsArgs(Activities.STATUS_RETWEET_ID)))
 
-                val pStatus = ParcelableStatusUtils.fromStatus(status,
-                        accountKey, false)
+                val pStatus = ParcelableStatusUtils.fromStatus(status, accountKey, details.type,
+                        false)
                 cr.insert(CachedStatuses.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableStatus::class.java).create(pStatus))
 
                 val activityCursor = cr.query(Activities.AboutMe.CONTENT_URI,

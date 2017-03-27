@@ -156,9 +156,10 @@ class ParcelableUserLoader(
                     twitterUser = TwitterWrapper.tryShowUser(twitter, id, screenName, details.type)
                 }
             }
-            val cachedUserValues = ContentValuesCreator.createCachedUser(twitterUser, profileImageSize)
+            val cachedUserValues = ContentValuesCreator.createCachedUser(twitterUser, details.type,
+                    profileImageSize)
             resolver.insert(CachedUsers.CONTENT_URI, cachedUserValues)
-            val user = ParcelableUserUtils.fromUser(twitterUser, accountKey,
+            val user = ParcelableUserUtils.fromUser(twitterUser, accountKey, details.type,
                     profileImageSize = profileImageSize)
             ParcelableUserUtils.updateExtraInformation(user, details, userColorNameManager)
             return SingleResponse(user).apply {

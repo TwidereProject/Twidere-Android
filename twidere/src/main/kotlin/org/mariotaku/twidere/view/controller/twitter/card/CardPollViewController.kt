@@ -104,7 +104,8 @@ class CardPollViewController : ContainerView.ViewController() {
             if (cardResponse == null || cardResponse.name == null) {
                 throw IllegalStateException()
             }
-            return@task ParcelableCardEntityUtils.fromCardEntity(cardResponse, details.key)
+            return@task ParcelableCardEntityUtils.fromCardEntity(cardResponse, details.key,
+                    details.type)
         }.successUi { data ->
             weakThis.get()?.displayPoll(data, status)
         }
@@ -159,7 +160,7 @@ class CardPollViewController : ContainerView.ViewController() {
                                 try {
                                     val cardEntity = caps.sendPassThrough(cardDataMap).card
                                     return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
-                                            card.account_key)
+                                            card.account_key, details.type)
                                 } catch (e: MicroBlogException) {
                                     Log.w(LOGTAG, e)
                                 }

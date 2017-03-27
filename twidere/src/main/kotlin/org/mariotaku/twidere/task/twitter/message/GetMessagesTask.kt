@@ -222,6 +222,7 @@ class GetMessagesTask(
     private fun getFanfouConversations(microBlog: MicroBlog, details: AccountDetails,
             param: RefreshMessagesTaskParam, index: Int): DatabaseUpdateData {
         val accountKey = details.key
+        val accountType = details.type
         val cursor = param.cursors?.get(index)
         val page = cursor?.substringAfter("page:").toInt(-1)
         val result = microBlog.getConversationList(Paging().apply {
@@ -240,8 +241,8 @@ class GetMessagesTask(
             // Sender is our self, treat as outgoing message
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, dm.senderId == accountKey.id,
                     1.0 - (i.toDouble() / result.size))
-            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey)
-            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey)
+            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey, accountType)
+            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey, accountType)
             val mc = conversations.addConversation(message.conversation_id, details, message,
                     setOf(sender, recipient))
             mc?.request_cursor = "page:$page"
@@ -392,8 +393,8 @@ class GetMessagesTask(
                         return@mapNotNullTo null
                     }
                     else -> {
-                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, entry,
-                                respUsers, profileImageSize)
+                        return@mapNotNullTo ParcelableMessageUtils.fromEntry(accountKey, account.type,
+                                entry, respUsers, profileImageSize)
                     }
                 }
             }
@@ -406,7 +407,10 @@ class GetMessagesTask(
                 val recentMessage = messagesMap[k]?.maxBy(ParcelableMessage::message_timestamp)
                 val participants = respUsers.filterKeys { userId ->
                     v.participants.any { it.userId == userId }
-                }.values.map { ParcelableUserUtils.fromUser(it, accountKey, profileImageSize = profileImageSize) }
+                }.values.map {
+                    ParcelableUserUtils.fromUser(it, accountKey, account.type,
+                            profileImageSize = profileImageSize)
+                }
                 val conversationType = when (v.type?.toUpperCase(Locale.US)) {
                     DMResponse.Conversation.Type.ONE_TO_ONE -> ConversationType.ONE_TO_ONE
                     DMResponse.Conversation.Type.GROUP_DM -> ConversationType.GROUP
@@ -583,12 +587,13 @@ class GetMessagesTask(
                 details: AccountDetails, dm: DirectMessage, index: Int, size: Int,
                 outgoing: Boolean, profileImageSize: String = "normal", updateLastRead: Boolean) {
             val accountKey = details.key
+            val accountType = details.type
             val message = ParcelableMessageUtils.fromMessage(accountKey, dm, outgoing,
                     1.0 - (index.toDouble() / size))
             messages.add(message)
-            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey,
+            val sender = ParcelableUserUtils.fromUser(dm.sender, accountKey, accountType,
                     profileImageSize = profileImageSize)
-            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey,
+            val recipient = ParcelableUserUtils.fromUser(dm.recipient, accountKey, accountType,
                     profileImageSize = profileImageSize)
             val conversation = conversations.addConversation(message.conversation_id, details,
                     message, setOf(sender, recipient), updateLastRead = updateLastRead) ?: return

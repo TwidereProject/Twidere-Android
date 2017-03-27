@@ -52,7 +52,7 @@ class RetweetStatusTask(
                 context, MicroBlog::class.java)
         try {
             val result = ParcelableStatusUtils.fromStatus(microBlog.retweetStatus(statusId),
-                    accountKey, false)
+                    accountKey, details.type, false)
             ParcelableStatusUtils.updateExtraInformation(result, details)
             Utils.setLastSeen(context, result.mentions, System.currentTimeMillis())
             val values = ContentValues()

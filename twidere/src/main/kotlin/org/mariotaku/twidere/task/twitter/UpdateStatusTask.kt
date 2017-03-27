@@ -301,7 +301,7 @@ class UpdateStatusTask(
                     }
                 }
                 result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
-                        account.key, false)
+                        account.key, account.type, false)
             } catch (e: MicroBlogException) {
                 result.exceptions[i] = e
             }

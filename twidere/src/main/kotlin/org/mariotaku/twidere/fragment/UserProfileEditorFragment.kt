@@ -363,9 +363,10 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
 
         override fun doLongOperation(context: Context): SingleResponse<ParcelableUser> {
-            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: return SingleResponse.getInstance()
-            val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
             try {
+                val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
+                        true) ?: throw MicroBlogException("No account")
+                val microBlog = details.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)
                 var user: User? = null
                 if (isProfileChanged) {
                     val profileUpdate = ProfileUpdate()
@@ -379,15 +380,15 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
                 }
                 if (user == null) {
                     // User profile unchanged
-                    return SingleResponse.Companion.getInstance<ParcelableUser>()
+                    return SingleResponse()
                 }
                 val profileImageSize = context.getString(R.string.profile_image_size)
                 val response = SingleResponse(ParcelableUserUtils.fromUser(user, accountKey,
-                        profileImageSize = profileImageSize))
+                        details.type, profileImageSize = profileImageSize))
                 response.extras.putParcelable(EXTRA_ACCOUNT, details)
                 return response
             } catch (e: MicroBlogException) {
-                return SingleResponse.Companion.getInstance<ParcelableUser>(e)
+                return SingleResponse(e)
             }
 
         }

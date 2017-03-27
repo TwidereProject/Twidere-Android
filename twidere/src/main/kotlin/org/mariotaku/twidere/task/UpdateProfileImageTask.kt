@@ -1,17 +1,20 @@
 package org.mariotaku.twidere.task
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.Utils
 import java.io.IOException
@@ -30,8 +33,9 @@ open class UpdateProfileImageTask<ResultHandler>(
 
     override fun doLongOperation(params: Any?): SingleResponse<ParcelableUser> {
         try {
-            val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey)
-                    ?: throw MicroBlogException("No account")
+            val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey,
+                    true) ?: throw MicroBlogException("No account")
+            val microBlog = details.newMicroBlogInstance(context, MicroBlog::class.java)
             TwitterWrapper.updateProfileImage(context, microBlog, imageUri, deleteImage)
             // Wait for 5 seconds, see
             // https://dev.twitter.com/rest/reference/post/account/update_profile_image
@@ -42,7 +46,7 @@ open class UpdateProfileImageTask<ResultHandler>(
             }
 
             val user = microBlog.verifyCredentials()
-            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey,
+            return SingleResponse(ParcelableUserUtils.fromUser(user, accountKey, details.type,
                     profileImageSize = profileImageSize))
         } catch (e: MicroBlogException) {
             return SingleResponse(exception = e)

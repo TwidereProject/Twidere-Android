@@ -32,7 +32,6 @@ import org.mariotaku.twidere.model.FiltersSubscriptionTableInfo;
 import org.mariotaku.twidere.model.ParcelableActivityTableInfo;
 import org.mariotaku.twidere.model.ParcelableMessageConversationTableInfo;
 import org.mariotaku.twidere.model.ParcelableMessageTableInfo;
-import org.mariotaku.twidere.model.ParcelableRelationship;
 import org.mariotaku.twidere.model.ParcelableRelationshipTableInfo;
 import org.mariotaku.twidere.model.ParcelableStatusTableInfo;
 import org.mariotaku.twidere.model.ParcelableTrendTableInfo;
@@ -271,6 +270,8 @@ public interface TwidereDataStore {
         String LAST_SEEN = "last_seen";
 
         String SCORE = "score";
+
+        String USER_TYPE = "user_type";
 
         String EXTRAS = "extras";
 

@@ -67,24 +67,24 @@ abstract class MicroBlogAPIUsersLoader(
             if (hasId(user.id)) {
                 continue
             }
-            val item = ParcelableUserUtils.fromUser(user, accountKey, pos.toLong(),
+            val item = ParcelableUserUtils.fromUser(user, accountKey, details.type, pos.toLong(),
                     profileImageSize = profileImageSize)
-            processUser(item)
+            processUser(details, item)
             data.add(item)
             pos++
         }
-        processUsersData(data)
+        processUsersData(details, data)
         return ListResponse.getListInstance(data)
     }
 
-    protected open fun processUser(user: ParcelableUser) {
+    protected open fun processUser(details: AccountDetails, user: ParcelableUser) {
 
     }
 
     @Throws(MicroBlogException::class)
     protected abstract fun getUsers(twitter: MicroBlog, details: AccountDetails): List<User>
 
-    protected open fun processUsersData(list: MutableList<ParcelableUser>) {
+    protected open fun processUsersData(details: AccountDetails, list: MutableList<ParcelableUser>) {
         Collections.sort(data)
     }
 }

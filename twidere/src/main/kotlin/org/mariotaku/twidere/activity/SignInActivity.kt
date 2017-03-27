@@ -344,8 +344,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             Toast.makeText(this, R.string.message_toast_already_logged_in, Toast.LENGTH_SHORT).show()
         } else {
             result.addAccount(am, preferences[randomizeAccountNameKey])
-            Analyzer.log(SignIn(true, accountType = result.accountType.first, credentialsType = apiConfig.credentialsType,
-                    officialKey = result.accountType.second?.official ?: false))
+            Analyzer.log(SignIn(true, accountType = result.typeExtras.first, credentialsType = apiConfig.credentialsType,
+                    officialKey = result.typeExtras.second?.official ?: false))
             finishSignIn()
         }
     }
@@ -611,10 +611,10 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val userId = apiUser.id!!
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(context)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -633,7 +633,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
             return SignInResponse(account != null, Credentials.Type.OAUTH, credentials, user, color,
-                    accountType)
+                    typeExtras)
         }
     }
 
@@ -763,19 +763,19 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             val credentials: Credentials,
             val user: ParcelableUser,
             val color: Int = 0,
-            val accountType: Pair<String, AccountExtras?>
+            val typeExtras: Pair<String, AccountExtras?>
     ) {
 
         private fun writeAccountInfo(action: (k: String, v: String?) -> Unit) {
             action(ACCOUNT_USER_DATA_KEY, user.key.toString())
-            action(ACCOUNT_USER_DATA_TYPE, accountType.first)
+            action(ACCOUNT_USER_DATA_TYPE, typeExtras.first)
             action(ACCOUNT_USER_DATA_CREDS_TYPE, credsType)
 
             action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
             action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 
             action(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
-            action(ACCOUNT_USER_DATA_EXTRAS, accountType.second?.let { LoganSquare.serialize(it) })
+            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { LoganSquare.serialize(it) })
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {
@@ -901,9 +901,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
 
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -916,7 +916,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             credentials.username = username
             credentials.password = password
             return SignInResponse(account != null, Credentials.Type.BASIC, credentials, user,
-                    color, accountType)
+                    color, typeExtras)
         }
 
 
@@ -932,9 +932,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             val apiUser = twitter.verifyCredentials()
             val userId = apiUser.id!!
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -946,7 +946,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             credentials.no_version_suffix = apiConfig.isNoVersionSuffix
 
             return SignInResponse(account != null, Credentials.Type.EMPTY, credentials, user, color,
-                    accountType)
+                    typeExtras)
         }
 
         @Throws(MicroBlogException::class)
@@ -961,9 +961,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
                     accountType = apiConfig.type, cls = MicroBlog::class.java)
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
-            val accountType = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
+            val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
-            val user = ParcelableUserUtils.fromUser(apiUser, accountKey,
+            val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
                     profileImageSize = profileImageSize)
             val am = AccountManager.get(activity)
             val account = AccountUtils.findByAccountKey(am, accountKey)
@@ -981,7 +981,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             credentials.access_token = accessToken.oauthToken
             credentials.access_token_secret = accessToken.oauthTokenSecret
 
-            return SignInResponse(account != null, authType, credentials, user, color, accountType)
+            return SignInResponse(account != null, authType, credentials, user, color, typeExtras)
         }
 
         internal class WrongBasicCredentialException : OAuthPasswordAuthenticator.AuthenticationException()

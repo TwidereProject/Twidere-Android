@@ -15,12 +15,11 @@ import org.mariotaku.twidere.util.UserColorNameManager
 /**
  * Processing ParcelableUser
  *
- *
  * Created by mariotaku on 16/2/24.
  */
 object ParcelableUserUtils {
 
-    fun fromUser(user: User, accountKey: UserKey?, position: Long = 0,
+    fun fromUser(user: User, accountKey: UserKey?, accountType: String?, position: Long = 0,
             profileImageSize: String = "normal"): ParcelableUser {
         val urlEntities = user.urlEntities
         val obj = ParcelableUser()
@@ -60,6 +59,7 @@ object ParcelableUserUtils {
         obj.background_color = parseColor(user.profileBackgroundColor)
         obj.link_color = parseColor(user.profileLinkColor)
         obj.text_color = parseColor(user.profileTextColor)
+        obj.user_type = accountType
         obj.is_cache = false
         obj.is_basic = false
 
@@ -78,8 +78,11 @@ object ParcelableUserUtils {
         return obj
     }
 
-    fun fromUsers(users: Array<User>?, accountKey: UserKey?, profileImageSize: String = "normal"): Array<ParcelableUser>? {
-        return users?.map { fromUser(it, accountKey, profileImageSize = profileImageSize) }?.toTypedArray()
+    fun fromUsers(users: Array<User>?, accountKey: UserKey?, accountType: String?,
+            profileImageSize: String = "normal"): Array<ParcelableUser>? {
+        return users?.map {
+            fromUser(it, accountKey, accountType, profileImageSize = profileImageSize)
+        }?.toTypedArray()
     }
 
     fun parseColor(colorString: String?): Int {
@@ -99,7 +102,8 @@ object ParcelableUserUtils {
         return null
     }
 
-    fun updateExtraInformation(user: ParcelableUser, account: AccountDetails, manager: UserColorNameManager) {
+    fun updateExtraInformation(user: ParcelableUser, account: AccountDetails,
+            manager: UserColorNameManager) {
         user.account_color = account.color
         user.color = manager.getUserColor(user.key)
         user.nickname = manager.getUserNickname(user.key)

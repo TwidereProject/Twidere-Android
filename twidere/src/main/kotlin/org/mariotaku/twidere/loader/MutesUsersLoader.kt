@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 
 class MutesUsersLoader(
@@ -49,7 +50,7 @@ class MutesUsersLoader(
         return super.onLoadInBackground()
     }
 
-    override fun processUser(user: ParcelableUser) {
+    override fun processUser(details: AccountDetails, user: ParcelableUser) {
         user.is_filtered = filteredUsers?.contains(user.key) ?: false
     }
 }

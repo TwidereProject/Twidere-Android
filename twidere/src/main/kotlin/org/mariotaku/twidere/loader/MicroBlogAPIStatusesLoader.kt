@@ -90,6 +90,7 @@ abstract class MicroBlogAPIStatusesLoader(
         val accountKey = accountKey ?: return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
+        val accountType = details.type
 
         var data: MutableList<ParcelableStatus>? = data
         if (data == null) {
@@ -151,7 +152,8 @@ abstract class MicroBlogAPIStatusesLoader(
             for (i in 0 until statuses.size) {
                 val status = statuses[i]
                 val isGap = insertGap && isGapEnabled && minIdx == i
-                val item = ParcelableStatusUtils.fromStatus(status, accountKey, isGap, profileImageSize)
+                val item = ParcelableStatusUtils.fromStatus(status, accountKey, accountType, isGap,
+                        profileImageSize)
                 item.position_key = GetStatusesTask.getPositionKey(item.timestamp, item.sort_id, lastSortId,
                         sortDiff, i, statuses.size)
                 ParcelableStatusUtils.updateExtraInformation(item, details)

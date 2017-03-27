@@ -34,8 +34,8 @@ object ParcelableMessageUtils {
         return result
     }
 
-    fun fromEntry(accountKey: UserKey, entry: DMResponse.Entry, users: Map<String, User>,
-            profileImageSize: String = "normal"): ParcelableMessage? {
+    fun fromEntry(accountKey: UserKey, accountType: String, entry: DMResponse.Entry,
+            users: Map<String, User>, profileImageSize: String = "normal"): ParcelableMessage? {
         when {
             entry.message != null -> {
                 return ParcelableMessage().apply { applyMessage(accountKey, entry.message) }
@@ -45,28 +45,28 @@ object ParcelableMessageUtils {
             }
             entry.joinConversation != null -> {
                 return ParcelableMessage().apply {
-                    applyUsersEvent(accountKey, entry.joinConversation, users, MessageType.JOIN_CONVERSATION)
+                    applyUsersEvent(accountKey, accountType, entry.joinConversation, users, MessageType.JOIN_CONVERSATION)
                 }
             }
             entry.participantsLeave != null -> {
                 return ParcelableMessage().apply {
-                    applyUsersEvent(accountKey, entry.participantsLeave, users, MessageType.PARTICIPANTS_LEAVE)
+                    applyUsersEvent(accountKey, accountType, entry.participantsLeave, users, MessageType.PARTICIPANTS_LEAVE)
                 }
             }
             entry.participantsJoin != null -> {
                 return ParcelableMessage().apply {
-                    applyUsersEvent(accountKey, entry.participantsJoin, users, MessageType.PARTICIPANTS_JOIN)
+                    applyUsersEvent(accountKey, accountType, entry.participantsJoin, users, MessageType.PARTICIPANTS_JOIN)
                 }
             }
             entry.conversationNameUpdate != null -> {
                 return ParcelableMessage().apply {
-                    applyInfoUpdatedEvent(accountKey, entry.conversationNameUpdate, users,
+                    applyInfoUpdatedEvent(accountKey, accountType, entry.conversationNameUpdate, users,
                             MessageType.CONVERSATION_NAME_UPDATE, profileImageSize)
                 }
             }
             entry.conversationAvatarUpdate != null -> {
                 return ParcelableMessage().apply {
-                    applyInfoUpdatedEvent(accountKey, entry.conversationAvatarUpdate, users,
+                    applyInfoUpdatedEvent(accountKey, accountType, entry.conversationAvatarUpdate, users,
                             MessageType.CONVERSATION_AVATAR_UPDATE, profileImageSize)
                 }
             }
@@ -101,28 +101,30 @@ object ParcelableMessageUtils {
         this.is_outgoing = false
     }
 
-    private fun ParcelableMessage.applyUsersEvent(accountKey: UserKey, message: Message,
-            users: Map<String, User>, @MessageType type: String) {
+    private fun ParcelableMessage.applyUsersEvent(accountKey: UserKey, accountType: String,
+            message: Message, users: Map<String, User>, @MessageType type: String) {
         this.commonEntry(accountKey, message)
         this.message_type = type
         this.extras = UserArrayExtras().apply {
             this.users = message.participants.mapNotNull {
                 val user = users[it.userId] ?: return@mapNotNull null
-                ParcelableUserUtils.fromUser(user, accountKey)
+                ParcelableUserUtils.fromUser(user, accountKey, accountType)
             }.toTypedArray()
         }
         this.is_outgoing = false
     }
 
-    private fun ParcelableMessage.applyInfoUpdatedEvent(accountKey: UserKey, message: Message,
-            users: Map<String, User>, @MessageType type: String, profileImageSize: String = "normal") {
+    private fun ParcelableMessage.applyInfoUpdatedEvent(accountKey: UserKey, accountType: String,
+            message: Message, users: Map<String, User>, @MessageType type: String,
+            profileImageSize: String = "normal") {
         this.commonEntry(accountKey, message)
         this.message_type = type
         this.extras = ConversationInfoUpdatedExtras().apply {
             this.name = message.conversationName
             this.avatar = message.conversationAvatarImageHttps
             this.user = users[message.byUserId]?.let {
-                ParcelableUserUtils.fromUser(it, accountKey, profileImageSize = profileImageSize)
+                ParcelableUserUtils.fromUser(it, accountKey, accountType,
+                        profileImageSize = profileImageSize)
             }
         }
         this.is_outgoing = false
