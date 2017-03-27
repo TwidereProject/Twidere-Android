@@ -198,7 +198,7 @@ dependencies {
 
 task svgToDrawable(type: SvgDrawableTask) {
     // specify where to pick SVG from
-    from = files('src/main/svg/drawable')
+    from = files(android.sourceSets.collect { "src/${it.name}/svg/drawable" })
     // specify the android res folder
     to = file('src/main/res-svg2png')
     // override files only if necessary
@@ -215,7 +215,7 @@ task svgToDrawable(type: SvgDrawableTask) {
 
 task svgToMipmap(type: SvgDrawableTask) {
     // specify where to pick SVG from
-    from = files('src/main/svg/mipmap')
+    from = files(android.sourceSets.collect { "src/${it.name}/svg/mipmap" })
     // specify the android res folder
     to = file('src/main/res-svg2png')
     // override files only if necessary

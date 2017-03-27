@@ -94,6 +94,7 @@ public interface IntentConstants {
     String EXTRA_SINCE_SORT_ID = "since_sort_id";
     String EXTRA_STATUS_ID = "status_id";
     String EXTRA_SCREEN_NAME = "screen_name";
+    String EXTRA_EXCLUDE_REPLIES = "exclude_replies";
     String EXTRA_SCREEN_NAMES = "screen_names";
     String EXTRA_LIST_NAME = "list_name";
     String EXTRA_GROUP_NAME = "group_name";

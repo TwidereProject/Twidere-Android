@@ -38,7 +38,7 @@ subprojects {
                     MariotakuCommons: '0.9.11',
                     RestFu          : '0.9.43',
                     ObjectCursor    : '0.9.16',
-                    PlayServices    : '10.2.0',
+                    PlayServices    : '10.2.1',
                     MapsUtils       : '0.4.4',
                     Crashlyrics     : '2.6.7',
                     FabricPlugin    : '1.22.1',

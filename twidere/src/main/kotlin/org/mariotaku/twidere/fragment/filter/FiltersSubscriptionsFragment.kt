@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
@@ -138,8 +137,7 @@ class FiltersSubscriptionsFragment : BaseFragment(), LoaderManager.LoaderCallbac
                     val fragmentRef = WeakReference(fragment)
                     task.callback = {
                         fragmentRef.get()?.executeAfterFragmentResumed { fragment ->
-                            val df = fragment.childFragmentManager.findFragmentByTag(FRAGMENT_TAG_RREFRESH_FILTERS) as? DialogFragment
-                            df?.dismiss()
+                            fragment.fragmentManager.dismissDialogFragment(FRAGMENT_TAG_RREFRESH_FILTERS)
                         }
                     }
                     TaskStarter.execute(task)

@@ -46,6 +46,7 @@ class ProgressDialogFragment : BaseDialogFragment() {
             f.show(fm, tag)
             return f
         }
+
     }
 
 }

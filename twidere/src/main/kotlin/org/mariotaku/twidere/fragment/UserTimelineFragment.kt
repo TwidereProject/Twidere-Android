@@ -48,6 +48,7 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
             val accountKey = Utils.getAccountKey(context, args)!!
             val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
             val screenName = args.getString(EXTRA_SCREEN_NAME)
+            val excludeReplies = args.getBoolean(EXTRA_EXCLUDE_REPLIES)
             val result = ArrayList<String>()
             result.add(AUTHORITY_USER_TIMELINE)
             result.add("account=$accountKey")
@@ -57,6 +58,9 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
                 result.add("screen_name=$screenName")
             } else {
                 return null
+            }
+            if (excludeReplies) {
+                result.add("exclude_replies")
             }
             return result.toTypedArray()
         }
@@ -91,9 +95,10 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
+        val excludeReplies = args.getBoolean(EXTRA_EXCLUDE_REPLIES, false)
         val pinnedIds = if (adapter.hasPinnedStatuses) null else pinnedStatusIds
         return UserTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds)
+                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds, excludeReplies)
     }
 
     override fun onStatusesLoaded(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?) {

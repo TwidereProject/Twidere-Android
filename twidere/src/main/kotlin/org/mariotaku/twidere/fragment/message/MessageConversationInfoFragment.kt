@@ -32,6 +32,7 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
 import android.support.v4.content.AsyncTaskLoader
+import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -473,7 +474,8 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
     internal class ConversationInfoLoader(
             context: Context,
             val accountKey: UserKey,
-            val conversationId: String) : AsyncTaskLoader<ParcelableMessageConversation?>(context) {
+            val conversationId: String
+    ) : FixedAsyncTaskLoader<ParcelableMessageConversation?>(context) {
 
         override fun loadInBackground(): ParcelableMessageConversation? {
             val where = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),

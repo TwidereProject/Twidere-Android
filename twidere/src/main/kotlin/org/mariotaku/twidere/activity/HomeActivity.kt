@@ -684,7 +684,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
             val accountKey = uri?.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
             val adapter = pagerAdapter
             for (i in 0 until adapter.count) {
-                val tab = adapter.getTab(i)
+                val tab = adapter.get(i)
                 if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
                     if (args != null && CustomTabUtils.hasAccountId(this, args,
@@ -788,7 +788,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
 
     private fun setupHomeTabs() {
         pagerAdapter.clear()
-        pagerAdapter.addTabs(CustomTabUtils.getHomeTabs(this))
+        pagerAdapter.addAll(CustomTabUtils.getHomeTabs(this))
         val hasNoTab = pagerAdapter.count == 0
         emptyTabHint.visibility = if (hasNoTab) View.VISIBLE else View.GONE
         mainPager.visibility = if (hasNoTab) View.GONE else View.VISIBLE

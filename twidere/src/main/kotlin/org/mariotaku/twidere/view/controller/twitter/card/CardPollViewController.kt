@@ -147,9 +147,9 @@ class CardPollViewController : ContainerView.ViewController() {
                         cardData.putString("selected_choice", (i + 1).toString())
                         val task = object : AbstractTask<CardDataMap, ParcelableCardEntity, CardPollViewController>() {
 
-                            override fun afterExecute(handler: CardPollViewController?, result: ParcelableCardEntity?) {
+                            override fun afterExecute(callback: CardPollViewController?, result: ParcelableCardEntity?) {
                                 result ?: return
-                                handler?.displayAndReloadPoll(result, status)
+                                callback?.displayAndReloadPoll(result, status)
                             }
 
                             override fun doLongOperation(cardDataMap: CardDataMap): ParcelableCardEntity? {

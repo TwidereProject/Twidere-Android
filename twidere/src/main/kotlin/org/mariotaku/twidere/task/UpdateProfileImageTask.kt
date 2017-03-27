@@ -52,8 +52,8 @@ open class UpdateProfileImageTask<ResultHandler>(
 
     }
 
-    override fun afterExecute(handler: ResultHandler?, result: SingleResponse<ParcelableUser>) {
-        super.afterExecute(handler, result)
+    override fun afterExecute(callback: ResultHandler?, result: SingleResponse<ParcelableUser>) {
+        super.afterExecute(callback, result)
         if (result.hasData()) {
             Utils.showOkMessage(context, R.string.profile_image_updated, false)
             bus.post(ProfileUpdatedEvent(result.data!!))

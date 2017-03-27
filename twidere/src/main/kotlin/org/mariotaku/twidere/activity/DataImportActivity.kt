@@ -5,6 +5,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.util.Log
+import org.mariotaku.ktextension.dismissDialogFragment
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.fragment.DataExportImportTypeSelectorDialogFragment
@@ -107,11 +108,8 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         override fun onPostExecute(result: Boolean?) {
-            activity.executeAfterFragmentResumed {
-                val activity = it as DataImportActivity
-                val fm = activity.supportFragmentManager
-                val f = fm.findFragmentByTag(FRAGMENT_TAG) as? DialogFragment
-                f?.dismiss()
+            activity.executeAfterFragmentResumed { activity ->
+                activity.supportFragmentManager.dismissDialogFragment(FRAGMENT_TAG)
             }
             if (result != null && result) {
                 activity.setResult(RESULT_OK)
@@ -148,11 +146,8 @@ class DataImportActivity : BaseActivity(), DataExportImportTypeSelectorDialogFra
         }
 
         override fun onPostExecute(flags: Int?) {
-            activity.executeAfterFragmentResumed {
-                val activity = it as DataImportActivity
-                val fm = activity.supportFragmentManager
-                val f = fm.findFragmentByTag(FRAGMENT_TAG) as? DialogFragment
-                f?.dismiss()
+            activity.executeAfterFragmentResumed { activity ->
+                activity.supportFragmentManager.dismissDialogFragment(FRAGMENT_TAG)
             }
             val df = DataExportImportTypeSelectorDialogFragment()
             val args = Bundle()

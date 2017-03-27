@@ -85,7 +85,7 @@ class UpdateStatusTask(
         stateCallback.beforeExecute()
     }
 
-    override fun afterExecute(handler: Any?, result: UpdateStatusResult) {
+    override fun afterExecute(callback: Any?, result: UpdateStatusResult) {
         stateCallback.afterExecute(result)
         logUpdateStatus(params.first, result)
     }

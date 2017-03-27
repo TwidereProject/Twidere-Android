@@ -60,8 +60,10 @@ install:
   - cat private/ssh_config >> ~/.ssh/config
   # Append known_hosts
   - cat private/ssh_known_hosts >> ~/.ssh/known_hosts
-  # Checkout Google components
+  # Clone Google components
   - ssh-agent bash -c "ssh-add private/ssh_id_rsa; git clone $COMPONENT_GOOGLE_REPO twidere/src/google" > /dev/null 2>&1
+  # Force reset to required commit id
+  - git -C twidere/src/google reset --hard `cat twidere/src/.google.commit-id` > /dev/null 2>&1
   # Dropbox accessToken for uploading logs
   - cat private/dropbox_uploader >> ~/.dropbox_uploader
 

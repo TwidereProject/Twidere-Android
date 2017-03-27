@@ -114,9 +114,9 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
 
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        adapter.addTab(cls = StatusesSearchFragment::class.java, args = arguments,
+        adapter.add(cls = StatusesSearchFragment::class.java, args = arguments,
                 name = getString(R.string.search_type_statuses), icon = DrawableHolder.resource(R.drawable.ic_action_twitter))
-        adapter.addTab(cls = SearchUsersFragment::class.java, args = arguments,
+        adapter.add(cls = SearchUsersFragment::class.java, args = arguments,
                 name = getString(R.string.search_type_users), icon = DrawableHolder.resource(R.drawable.ic_action_user))
     }
 

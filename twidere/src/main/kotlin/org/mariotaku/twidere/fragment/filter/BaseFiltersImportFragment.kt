@@ -203,9 +203,7 @@ abstract class BaseFiltersImportFragment : AbsContentListRecyclerViewFragment<Se
             DataStoreUtils.addToFilter(context, selectedUsers, filterEverywhere)
         }.alwaysUi {
             executeAfterFragmentResumed(true) { fragment ->
-                val fm = fragment.fragmentManager
-                val df = fm.findFragmentByTag("import_progress") as? DialogFragment
-                df?.dismiss()
+                fragment.childFragmentManager.dismissDialogFragment("import_progress")
             }
             weakThis.get()?.adapter?.notifyDataSetChanged()
         }

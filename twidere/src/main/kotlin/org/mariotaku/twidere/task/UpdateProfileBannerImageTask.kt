@@ -28,8 +28,8 @@ open class UpdateProfileBannerImageTask<ResultHandler>(
 
     private val profileImageSize = context.getString(R.string.profile_image_size)
 
-    override fun afterExecute(handler: ResultHandler?, result: SingleResponse<ParcelableUser>?) {
-        super.afterExecute(handler, result)
+    override fun afterExecute(callback: ResultHandler?, result: SingleResponse<ParcelableUser>?) {
+        super.afterExecute(callback, result)
         if (result!!.hasData()) {
             Utils.showOkMessage(context, R.string.message_toast_profile_banner_image_updated, false)
             bus.post(ProfileUpdatedEvent(result.data!!))

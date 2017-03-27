@@ -153,9 +153,9 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             tabArgs.putString(EXTRA_LIST_ID, args.getString(EXTRA_LIST_ID))
             tabArgs.putString(EXTRA_LIST_NAME, args.getString(EXTRA_LIST_NAME))
         }
-        adapter.addTab(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
-        adapter.addTab(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
-        adapter.addTab(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.subscribers))
+        adapter.add(cls = UserListTimelineFragment::class.java, args = tabArgs, name = getString(R.string.title_statuses))
+        adapter.add(cls = UserListMembersFragment::class.java, args = tabArgs, name = getString(R.string.members))
+        adapter.add(cls = UserListSubscribersFragment::class.java, args = tabArgs, name = getString(R.string.subscribers))
     }
 
     override fun onStart() {

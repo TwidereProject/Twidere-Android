@@ -28,6 +28,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.microblog.library.twitter.model.TimelineOption
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -48,7 +49,8 @@ class UserTimelineLoader(
         tabPosition: Int,
         fromUser: Boolean,
         loadingMore: Boolean,
-        val pinnedStatusIds: Array<String>?
+        val pinnedStatusIds: Array<String>?,
+        val excludeReplies: Boolean = false
 ) : MicroBlogAPIStatusesLoader(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
@@ -77,10 +79,12 @@ class UserTimelineLoader(
                 null
             }
         }
+        val option = TimelineOption()
+        option.setExcludeReplies(excludeReplies)
         if (userId != null) {
-            return microBlog.getUserTimeline(userId.id, paging)
+            return microBlog.getUserTimeline(userId.id, paging, option)
         } else if (screenName != null) {
-            return microBlog.getUserTimelineByScreenName(screenName, paging)
+            return microBlog.getUserTimelineByScreenName(screenName, paging, option)
         } else {
             throw MicroBlogException("Invalid user")
         }

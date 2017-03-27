@@ -32,11 +32,11 @@ class ListsFragment : AbsToolbarTabPagesFragment() {
     }
 
     override fun addTabs(adapter: SupportTabsAdapter) {
-        adapter.addTab(cls = UserListsOwnershipsFragment::class.java, args = arguments,
+        adapter.add(cls = UserListsOwnershipsFragment::class.java, args = arguments,
                 name = getString(R.string.title_user_list_ownerships))
-        adapter.addTab(cls = UserListSubscriptionsFragment::class.java, args = arguments,
+        adapter.add(cls = UserListSubscriptionsFragment::class.java, args = arguments,
                 name = getString(R.string.title_user_list_subscriptions))
-        adapter.addTab(cls = UserListMembershipsFragment::class.java, args = arguments,
+        adapter.add(cls = UserListMembershipsFragment::class.java, args = arguments,
                 name = getString(R.string.title_user_list_memberships))
     }
 }
