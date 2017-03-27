@@ -442,9 +442,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_PROFILE_EDITOR -> {
                 setTitle(R.string.title_edit_profile)
             }
-            LINK_ID_SCHEDULED_STATUSES -> {
-                title = getString(R.string.scheduled_statuses)
-            }
             LINK_ID_MESSAGES -> {
                 title = getString(R.string.title_direct_messages)
             }

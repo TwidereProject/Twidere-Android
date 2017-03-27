@@ -27,7 +27,7 @@
     <string name="action_blocking">blocking</string>
     <string name="action_buffer_disconnect">Disconnect from Buffer</string>
     <string name="action_buffer_settings">Settings</string>
-    <string name="action_buffer_update_now">Update now</string>
+    <string name="action_buffer_update_now">Publish now</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
     <string name="action_cancel_retweet">Cancel retweet</string>
     <string name="action_cancelling_like">cancelling like</string>
@@ -639,7 +639,6 @@
     <string name="message_toast_added_to_filter">Added to filter</string>
     <string name="message_toast_added_user_to_list">Added <xliff:g id="user">%1$s</xliff:g> to list \"<xliff:g id="list">%2$s</xliff:g>\"</string>
     <string name="message_toast_already_logged_in">You have already logged in</string>
-    <string name="message_toast_buffer_connection_failed">Unable to communicate with Buffer</string>
     <string name="message_toast_cannot_get_location">Can\'t get your location</string>
     <string name="message_toast_compose_write_storage_no_permission">Permission required to delete taken photo/video</string>
     <string name="message_toast_duplicate_filter_rule">Rule duplicated</string>

@@ -1057,10 +1057,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 IntentUtils.openSavedSearches(context, user.account_key)
                 return true
             }
-            R.id.scheduled_statuses -> {
-                IntentUtils.openScheduledStatuses(context, user.account_key)
-                return true
-            }
             R.id.open_in_browser -> {
                 val uri = LinkCreator.getUserWebLink(user)
                 val intent = Intent(Intent.ACTION_VIEW, uri)

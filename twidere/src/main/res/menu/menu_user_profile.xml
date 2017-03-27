@@ -37,12 +37,6 @@
         android:icon="@drawable/ic_action_search"
         android:title="@string/saved_searches"/>
     <item
-        android:id="@+id/scheduled_statuses"
-        android:enabled="false"
-        android:icon="@drawable/ic_action_time"
-        android:title="@string/scheduled_statuses"
-        android:visible="false"/>
-    <item
         android:id="@+id/enable_notifications"
         android:checkable="true"
         android:checked="false"

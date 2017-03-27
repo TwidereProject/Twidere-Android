@@ -330,19 +330,6 @@ object IntentUtils {
         context.startActivity(intent)
     }
 
-    fun openScheduledStatuses(context: Context,
-            accountKey: UserKey?) {
-        val builder = Uri.Builder()
-        builder.scheme(SCHEME_TWIDERE)
-        builder.authority(AUTHORITY_SCHEDULED_STATUSES)
-        if (accountKey != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
-        }
-        val intent = Intent(Intent.ACTION_VIEW, builder.build())
-        intent.`package` = BuildConfig.APPLICATION_ID
-        context.startActivity(intent)
-    }
-
     fun openSavedSearches(context: Context, accountKey: UserKey?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
