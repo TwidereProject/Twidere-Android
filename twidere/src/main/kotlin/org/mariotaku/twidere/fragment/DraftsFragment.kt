@@ -47,6 +47,7 @@ import kotlinx.android.synthetic.main.fragment_drafts.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.OrderBy
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.iface.IBaseActivity
@@ -109,7 +110,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
         val uri = Drafts.CONTENT_URI_UNSENT
         val cols = Drafts.COLUMNS
-        val orderBy = Drafts.TIMESTAMP + " DESC"
+        val orderBy = OrderBy(Drafts.TIMESTAMP, false).sql
         return CursorLoader(activity, uri, cols, null, null, orderBy)
     }
 

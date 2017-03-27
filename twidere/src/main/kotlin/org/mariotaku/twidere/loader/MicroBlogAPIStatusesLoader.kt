@@ -23,13 +23,11 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.support.annotation.WorkerThread
-import android.util.Log
 import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.Status
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.app.TwidereApplication
@@ -121,9 +119,7 @@ abstract class MicroBlogAPIStatusesLoader(
         } catch (e: MicroBlogException) {
             // mHandler.post(new ShowErrorRunnable(e));
             exception = e
-            if (BuildConfig.DEBUG) {
-                Log.w(LOGTAG, e)
-            }
+            DebugLog.w(tr = e)
             return ListResponse.getListInstance(CopyOnWriteArrayList(data), e)
         }
 

@@ -55,7 +55,7 @@ public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<Response
                 jsonParser.skipChildren();
             }
             return instance;
-        } else if (jsonParser.getCurrentToken() != JsonToken.START_ARRAY) {
+        } else if (jsonParser.getCurrentToken() == JsonToken.START_ARRAY) {
             return new ResponseList<>(m84ClassJsonMapper.parseList(jsonParser));
         }
         jsonParser.skipChildren();
