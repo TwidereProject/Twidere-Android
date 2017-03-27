@@ -56,6 +56,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextUtils
 import android.text.util.Linkify
 import android.util.SparseBooleanArray
@@ -122,6 +123,7 @@ import org.mariotaku.twidere.model.event.TaskStateChangedEvent
 import org.mariotaku.twidere.model.util.*
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedRelationships
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedUsers
+import org.mariotaku.twidere.text.TwidereURLSpan
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.InternalTwitterContentUtils.getBestBannerUrl
 import org.mariotaku.twidere.util.KeyboardShortcutsHandler.KeyboardShortcutCallback
@@ -461,7 +463,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         this.user = user
         profileImage.setBorderColor(if (user.color != 0) user.color else Color.WHITE)
         profileNameContainer.drawEnd(user.account_color)
-        profileNameContainer.name.text = bidiFormatter.unicodeWrap(if (TextUtils.isEmpty(user.nickname)) user.name else getString(R.string.name_with_nickname, user.name, user.nickname))
+        profileNameContainer.name.text = bidiFormatter.unicodeWrap(if (user.nickname.isNullOrEmpty()) {
+            user.name
+        } else {
+            getString(R.string.name_with_nickname, user.name, user.nickname)
+        })
         val typeIconRes = Utils.getUserTypeIconRes(user.is_verified, user.is_protected)
         if (typeIconRes != 0) {
             profileType.setImageResource(typeIconRes)
@@ -471,7 +477,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             profileType.visibility = View.GONE
         }
         profileNameContainer.screenName.text = "@${user.screen_name}"
-        val linkify = TwidereLinkify(this)
+        val linkHighlightOption = preferences[linkHighlightOptionKey]
+        val linkify = TwidereLinkify(this, linkHighlightOption)
         if (user.description_unescaped != null) {
             val text = SpannableStringBuilder.valueOf(user.description_unescaped).apply {
                 user.description_spans?.applyTo(this)
@@ -484,10 +491,15 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
         descriptionContainer.visibility = if (descriptionContainer.description.empty) View.GONE else View.VISIBLE
 
-        locationContainer.visibility = if (TextUtils.isEmpty(user.location)) View.GONE else View.VISIBLE
         locationContainer.location.text = user.location
-        urlContainer.visibility = if (TextUtils.isEmpty(user.url) && TextUtils.isEmpty(user.url_expanded)) View.GONE else View.VISIBLE
-        urlContainer.url.text = if (TextUtils.isEmpty(user.url_expanded)) user.url else user.url_expanded
+        locationContainer.visibility = if (locationContainer.location.empty) View.GONE else View.VISIBLE
+        urlContainer.url.text = (user.url_expanded?.takeIf(String::isNotEmpty) ?: user.url)?.let {
+            val ssb = SpannableStringBuilder(it)
+            ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            return@let ssb
+        }
+        urlContainer.visibility = if (urlContainer.url.empty) View.GONE else View.VISIBLE
         if (user.created_at >= 0) {
             val createdAt = Utils.formatToLongTimeString(activity, user.created_at)
             val daysSinceCreation = (System.currentTimeMillis() - user.created_at) / 1000 / 60 / 60 / 24.toFloat()

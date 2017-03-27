@@ -23,24 +23,22 @@ import android.text.TextPaint
 import android.text.style.URLSpan
 import android.view.View
 import org.mariotaku.ktextension.contains
-import org.mariotaku.twidere.Constants
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_HIGHLIGHT
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_LINK_HIGHLIGHT_OPTION_CODE_UNDERLINE
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.TwidereLinkify.OnLinkClickListener
 
 class TwidereURLSpan(
         url: String,
-        private val orig: String?,
-        private val accountKey: UserKey?,
-        private val extraId: Long,
-        private val type: Int,
-        private val sensitive: Boolean,
-        private val highlightStyle: Int,
-        private val start: Int,
-        private val end: Int,
-        private val listener: OnLinkClickListener?
-) : URLSpan(url), Constants {
+        private val orig: String? = null,
+        private val accountKey: UserKey? = null,
+        private val extraId: Long = -1,
+        private val type: Int = 0,
+        private val sensitive: Boolean = false,
+        private val highlightStyle: Int = VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE,
+        private val start: Int = 0,
+        private val end: Int = 0,
+        private val listener: OnLinkClickListener? = null
+) : URLSpan(url) {
 
     override fun onClick(widget: View) {
         listener?.onLinkClick(url, orig, accountKey, extraId, type, sensitive, start, end)
