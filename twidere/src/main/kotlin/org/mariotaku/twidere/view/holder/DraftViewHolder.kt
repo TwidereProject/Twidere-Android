@@ -93,6 +93,7 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     companion object {
 
         const val layoutResource = R.layout.list_item_draft
+        const val layoutResourceClickable = R.layout.list_item_draft_clickable
 
     }
 

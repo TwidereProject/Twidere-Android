@@ -294,7 +294,13 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                         }
                     }
                     if (!failed) {
-                        Toast.makeText(context, R.string.message_toast_status_updated, Toast.LENGTH_SHORT).show()
+                        if (scheduleInfo != null) {
+                            Toast.makeText(context, R.string.message_toast_status_scheduled,
+                                    Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, R.string.message_toast_status_updated,
+                                    Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
 

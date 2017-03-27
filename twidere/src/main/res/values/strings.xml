@@ -27,6 +27,7 @@
     <string name="action_blocking">blocking</string>
     <string name="action_buffer_disconnect">Disconnect from Buffer</string>
     <string name="action_buffer_settings">Settings</string>
+    <string name="action_buffer_update_now">Update now</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
     <string name="action_cancel_retweet">Cancel retweet</string>
     <string name="action_cancelling_like">cancelling like</string>
@@ -515,6 +516,7 @@
     <string name="label_auth_type">Auth type</string>
     <string name="label_background_operation_service">Background operation service</string>
     <string name="label_buffer_accounts">Buffer accounts</string>
+    <string name="label_buffer_due_at_no_time">No time</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -596,6 +598,7 @@
     <string name="message_api_url_format_help">[DOMAIN]: Twitter API domain.\nExample: https://[DOMAIN].twitter.com/ will be replaced to https://api.twitter.com/.</string>
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
+    <string name="message_buffer_delete_schedule_confirm">Delete this schedule?</string>
     <string name="message_clear_messages_confirm">Clear all messages?</string>
     <string name="message_conversation_created">Conversation created.</string>
     <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
@@ -659,6 +662,7 @@
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
+    <string name="message_toast_schedule_future_time_required">Date/time should be in future</string>
     <string name="message_toast_search_deleted">Search deleted</string>
     <string name="message_toast_search_name_deleted">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" deleted</string>
     <string name="message_toast_search_name_saved">Search \"<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>\" saved</string>
@@ -671,6 +675,7 @@
     <string name="message_toast_status_liked">Tweet liked</string>
     <string name="message_toast_status_retweeted">Retweeted</string>
     <string name="message_toast_status_saved_to_draft">Tweet saved to draft</string>
+    <string name="message_toast_status_scheduled">Tweet scheduled</string>
     <string name="message_toast_status_unfavorited">Tweet unfavorited</string>
     <string name="message_toast_status_updated">Tweet sent</string>
     <string name="message_toast_unable_to_load_more_statuses">Unable to load earlier tweets</string>
@@ -1129,6 +1134,7 @@
     <string name="title_blocked_users">Blocked users</string>
     <string name="title_browser_sign_in">Browser sign in</string>
     <string name="title_buffer_queue_manager">Buffer queue</string>
+    <string name="title_buffer_schedule">Buffer schedule</string>
     <string name="title_buffer_set_schedule">Schedule with Buffer</string>
     <string name="title_buffer_settings">Buffer settings</string>
     <string name="title_compose">Compose</string>
@@ -1270,5 +1276,4 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
-    <string name="label_buffer_due_at_no_time">No time</string>
 </resources>
