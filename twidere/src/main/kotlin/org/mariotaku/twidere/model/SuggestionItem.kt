@@ -1,8 +1,7 @@
 package org.mariotaku.twidere.model
 
 import android.database.Cursor
-import org.mariotaku.twidere.provider.TwidereDataStore
-import org.mariotaku.twidere.provider.TwidereDataStore.*
+import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 
 class SuggestionItem(cursor: Cursor, indices: Indices) {
 
@@ -12,7 +11,7 @@ class SuggestionItem(cursor: Cursor, indices: Indices) {
     val extra_id: String?
 
     init {
-        _id = cursor.getLong(indices._id)
+        _id = if (indices._id < 0) -1 else cursor.getLong(indices._id)
         title = cursor.getString(indices.title)
         summary = cursor.getString(indices.summary)
         extra_id = cursor.getString(indices.extra_id)
