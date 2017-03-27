@@ -180,7 +180,7 @@ dependencies {
     compile "com.github.mariotaku.MediaViewerLibrary:subsample-image-view:${libVersions['MediaViewerLibrary']}"
     compile 'com.github.mariotaku:SQLiteQB:0.9.12'
     compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
-    compile 'com.github.mariotaku:MultiValueSwitch:0.9.7'
+    compile "com.github.mariotaku:MultiValueSwitch:${libVersions['MultiValueSwitch']}"
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile "com.github.mariotaku.CommonsLibrary:parcel:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"

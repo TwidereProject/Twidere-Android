@@ -196,6 +196,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
         locationSwitch.max = LOCATION_OPTIONS.size
+        locationSwitch.highlightCheckedPositions = kotlin.IntArray(LOCATION_OPTIONS.size - 1) { it + 1 }
         val attachLocation = kPreferences[attachLocationKey]
         val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
         if (attachLocation) {
