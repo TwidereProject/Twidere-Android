@@ -19,34 +19,24 @@
 
 package org.mariotaku.twidere.model.util;
 
-import com.bluelinelabs.logansquare.typeconverters.TypeConverter;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
+import com.bluelinelabs.logansquare.typeconverters.LongBasedTypeConverter;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
  * Created by mariotaku on 2017/3/25.
  */
 
-public class UnixEpochMillisDateConverter implements TypeConverter<Date> {
+public class UnixEpochMillisDateConverter extends LongBasedTypeConverter<Date> {
     @Override
-    public Date parse(final JsonParser jsonParser) throws IOException {
-        long value = jsonParser.nextLongValue(-1);
-        return new Date(value);
+    public Date getFromLong(final long l) {
+        return new Date(l);
     }
 
     @Override
-    public void serialize(final Date object, final String fieldName,
-            final boolean writeFieldNameForObject, final JsonGenerator jsonGenerator) throws IOException {
-        if (writeFieldNameForObject) {
-            jsonGenerator.writeFieldName(fieldName);
-        }
-        if (object == null) {
-            jsonGenerator.writeNull();
-        } else {
-            jsonGenerator.writeNumber(object.getTime());
-        }
+    public long convertToLong(final Date object) {
+        if (object == null) return -1;
+        return object.getTime();
     }
+
 }

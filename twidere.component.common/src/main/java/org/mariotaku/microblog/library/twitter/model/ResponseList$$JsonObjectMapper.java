@@ -46,7 +46,7 @@ public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<Response
         if (jsonParser.getCurrentToken() == null) {
             jsonParser.nextToken();
         }
-        if (m84ClassJsonMapper instanceof ScheduledStatus$$JsonObjectMapper) {
+        if (jsonParser.getCurrentToken() == JsonToken.START_OBJECT) {
             ResponseList<T> instance = new ResponseList<>();
             while (jsonParser.nextToken() != JsonToken.END_OBJECT) {
                 String fieldName = jsonParser.getCurrentName();
@@ -56,10 +56,10 @@ public final class ResponseList$$JsonObjectMapper<T> extends JsonMapper<Response
             }
             return instance;
         } else if (jsonParser.getCurrentToken() != JsonToken.START_ARRAY) {
-            jsonParser.skipChildren();
-            return null;
+            return new ResponseList<>(m84ClassJsonMapper.parseList(jsonParser));
         }
-        return new ResponseList<>(m84ClassJsonMapper.parseList(jsonParser));
+        jsonParser.skipChildren();
+        throw new IOException("Unsupported object");
     }
 
     @Override

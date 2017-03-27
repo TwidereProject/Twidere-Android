@@ -25,6 +25,7 @@
     <!-- [verb] Action for blocking user -->
     <string name="action_block">Block</string>
     <string name="action_blocking">blocking</string>
+    <string name="action_buffer_disconnect">Disconnect from Buffer</string>
     <string name="action_buffer_settings">Settings</string>
     <!-- [verb] Action for cancelling (deleting) a retweet-->
     <string name="action_cancel_retweet">Cancel retweet</string>
@@ -516,6 +517,7 @@
     <string name="label_buffer_accounts">Buffer accounts</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
+    <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
     <string name="label_location_your_coarse_location">Your coarse location</string>
     <string name="label_media">Media</string>
     <string name="label_original_status">Original tweet</string>
@@ -599,6 +601,7 @@
     <string name="message_destroy_conversation_confirm">Leave this conversation?</string>
     <string name="message_direct_message_deleted">Direct message deleted.</string>
     <string name="message_direct_message_sent">Direct message sent.</string>
+    <string name="message_error_buffer_connection_failed">Unable to connect to Buffer</string>
     <string name="message_error_buffer_media_not_supported">Schedule media with Buffer is not yet supported</string>
     <string name="message_error_invalid_account">Some account data are corrupted, Twidere will remove those accounts to prevent crash.</string>
     <string name="message_format_compose_message_convert_to_status">This tweet will be sent as a message to <xliff:g id="name">%1$s</xliff:g>, continue? Converting to a normal tweet uses an extra character.</string>
@@ -610,6 +613,7 @@
     <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> added <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
     <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> left</string>
     <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+    <string name="message_info_buffer_queue_empty">Buffer queue is empty</string>
     <string name="message_join_conversation">Joined conversation.</string>
     <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
@@ -1266,5 +1270,5 @@
     <string name="users_statuses">User\'s tweets</string>
 
     <string name="vibration">Vibration</string>
-    <string name="action_buffer_disconnect">Disconnect from Buffer</string>
+    <string name="label_buffer_due_at_no_time">No time</string>
 </resources>

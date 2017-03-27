@@ -253,6 +253,7 @@ public class ParcelableMediaUtils {
         return ParcelableMedia.Type.UNKNOWN;
     }
 
+    @NonNull
     public static ParcelableMedia image(final String url) {
         ParcelableMedia media = new ParcelableMedia();
         media.type = ParcelableMedia.Type.IMAGE;
