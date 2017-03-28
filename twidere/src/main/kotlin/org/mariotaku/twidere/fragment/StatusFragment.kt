@@ -54,7 +54,6 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
 import android.view.*
 import android.view.View.OnClickListener
-import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -117,6 +116,7 @@ import org.mariotaku.twidere.util.RecyclerViewScrollHandler.RecyclerViewCallback
 import org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 import org.mariotaku.twidere.view.CardMediaContainer.OnMediaClickListener
 import org.mariotaku.twidere.view.ExtendedRecyclerView
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
 import org.mariotaku.twidere.view.holder.StatusViewHolder
@@ -812,10 +812,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         @UiThread
-        fun displayStatus(account: AccountDetails?,
-                status: ParcelableStatus?,
-                statusActivity: StatusActivity?,
-                translation: TranslationResult?) {
+        fun displayStatus(account: AccountDetails?, status: ParcelableStatus?,
+                statusActivity: StatusActivity?, translation: TranslationResult?) {
             if (account == null || status == null) return
             val fragment = adapter.fragment
             val context = adapter.context
@@ -1374,7 +1372,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
 
             internal class ProfileImageViewHolder(private val adapter: CountsUsersAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
-                private val profileImageView = itemView.findViewById(R.id.profileImage) as ImageView
+                private val profileImageView = itemView.findViewById(R.id.profileImage) as ProfileImageView
 
                 init {
                     itemView.setOnClickListener(this)
@@ -1382,7 +1380,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
                 fun displayUser(item: ParcelableUser) {
                     val context = adapter.context
-                    adapter.requestManager.loadProfileImage(context, item, adapter.profileImageStyle).into(profileImageView)
+                    val requestManager = adapter.requestManager
+                    requestManager.loadProfileImage(context, item, adapter.profileImageStyle,
+                            profileImageView.cornerRadius, profileImageView.cornerRadiusRatio,
+                            adapter.profileImageSize).into(profileImageView)
                 }
 
                 override fun onClick(v: View) {
@@ -1529,11 +1530,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         var statusActivity: StatusActivity? = null
             internal set(value) {
                 val status = status ?: return
-                if (value != null && value.isStatus(status)) {
+                if (value != null && !value.isStatus(status)) {
                     return
                 }
                 field = value
-                notifyDataSetChanged()
+                val statusIndex = getIndexStart(ITEM_IDX_STATUS)
+                notifyItemChanged(statusIndex)
             }
         var statusAccount: AccountDetails? = null
             internal set
