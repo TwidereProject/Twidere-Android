@@ -200,7 +200,7 @@
   <string name="large">גדול</string>
   <string name="leftside_compose_button">כפתור \"כתוב\" בצד שמאל</string>
   <string name="leftside_compose_button_summary">שים את כפתור ה\"כתוב\" בצד שמאל.</string>
-  <string name="light">בהיר</string>
+  <string name="notification_method_light">בהיר</string>
   <string name="link_highlight_option">אפשרות הדגשת קישור</string>
   <string name="link_to_quoted_status">קשר לציוץ המצוטט</string>
   <string name="lists">רשימות</string>
@@ -453,5 +453,5 @@
   <string name="users_blocked">משתמשים אלה נחסמו.</string>
   <string name="users_lists_with_name">הרשימות של <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">ציוצים של המשתמש</string>
-  <string name="vibration">רטט</string>
+  <string name="notification_method_vibration">רטט</string>
 </resources>

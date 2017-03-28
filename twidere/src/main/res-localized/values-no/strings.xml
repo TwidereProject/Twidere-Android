@@ -287,7 +287,7 @@
   <string name="large">Stor</string>
   <string name="leftside_compose_button">Ny-tweet-knappen på venstre side</string>
   <string name="leftside_compose_button_summary">Plasser ny-tweet-knappen til venstre.</string>
-  <string name="light">Lyst</string>
+  <string name="notification_method_light">Lyst</string>
   <string name="link_highlight_option">Lenkemarkering</string>
   <string name="link_to_quoted_status">Lenke til sitert tweet</string>
   <string name="list_members">List medlemmer</string>
@@ -378,7 +378,7 @@
   <string name="notification_light_color">Lysfarge</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> omtalte deg.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre omtalte deg.</string>
-  <string name="notification_ringtone">Ringetone</string>
+  <string name="preference_title_notification_ringtone">Ringetone</string>
   <string name="notification_status">Ny tweet av <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Ny tweet av <xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre</string>
   <string name="notification_type_home">Hjem</string>
@@ -501,7 +501,7 @@
   <string name="retweeted_by_name_with_count">Retweetet av <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>
   <string name="retweets_of_me">Retweets av meg</string>
   <string name="revoke_permissions">Tilbakekall tillatelser</string>
-  <string name="ringtone">Ringetone</string>
+  <string name="notification_method_ringtone">Ringetone</string>
   <string name="round">Rund</string>
   <string name="safety">Sikkerhet</string>
   <string name="same_oauth_signing_url">Bruk samme URL til OAuth-signering</string>
@@ -685,5 +685,5 @@
   <string name="users_blocked">Blokkerte disse brukerne.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> sine lister</string>
   <string name="users_statuses">Brukerens tweets</string>
-  <string name="vibration">Vibrasjon</string>
+  <string name="notification_method_vibration">Vibrasjon</string>
 </resources>

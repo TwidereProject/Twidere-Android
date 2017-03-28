@@ -41,7 +41,14 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/list_item_section_header"/>
+        <org.mariotaku.twidere.view.FixedTextView
+            android:id="@+id/sectionHeader"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_account"
+            android:textColor="?colorAccent"
+            tools:showIn="@layout/dialog_custom_tab_editor"/>
 
         <Spinner
             android:id="@+id/accountSpinner"

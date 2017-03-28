@@ -382,7 +382,7 @@
   <string name="large">大</string>
   <string name="leftside_compose_button">ツイートボタンを左に配置</string>
   <string name="leftside_compose_button_summary">ツイートボタンを左に配置します。</string>
-  <string name="light">LED点灯</string>
+  <string name="notification_method_light">LED点灯</string>
   <string name="link_highlight_option">リンクの強調オプション</string>
   <string name="link_to_quoted_status">引用ツイートへのリンク</string>
   <string name="list_members">リスト内アカウント</string>
@@ -543,7 +543,7 @@
   <string name="notification_light_color">LED色</string>
   <string name="notification_mention">%sさんからあなた宛のツイートがあります。</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> さんと他<xliff:g id="count">%2$d</xliff:g>人からあなた宛のツイートがあります。</string>
-  <string name="notification_ringtone">通知音</string>
+  <string name="preference_title_notification_ringtone">通知音</string>
   <string name="notification_status"><xliff:g id="user">%s</xliff:g>さんの新しいツイート</string>
   <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g>さんと他<xliff:g id="count">%2$d</xliff:g>人の新しいツイート</string>
   <string name="notification_type_home">ホーム</string>
@@ -710,7 +710,7 @@
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>さんと他<xliff:g id="retweet_count">%2$d</xliff:g>人のリツイート</string>
   <string name="retweets_of_me">リツイートされたツイート</string>
   <string name="revoke_permissions">許可を取り消す</string>
-  <string name="ringtone">通知音</string>
+  <string name="notification_method_ringtone">通知音</string>
   <string name="round">丸型</string>
   <string name="safety">安全性</string>
   <string name="same_oauth_signing_url">OAuth 認証に同じ URL を使う</string>
@@ -930,5 +930,5 @@
   <string name="users_blocked">選択したユーザーをブロックしました。</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>さんが保存しているリスト</string>
   <string name="users_statuses">ユーザーのツイート</string>
-  <string name="vibration">バイブ</string>
+  <string name="notification_method_vibration">バイブ</string>
 </resources>

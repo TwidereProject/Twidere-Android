@@ -325,7 +325,7 @@
   <string name="large">Büyük</string>
   <string name="leftside_compose_button">Solda tweet yaz butonu</string>
   <string name="leftside_compose_button_summary">Tweet yaz butonunu sola yerleştirir.</string>
-  <string name="light">Aydınlık</string>
+  <string name="notification_method_light">Aydınlık</string>
   <string name="link_highlight_option">Link vurgula seçeneği</string>
   <string name="link_to_quoted_status">Alıntılanmış tweet\'a link</string>
   <string name="list_members">Liste üyeleri</string>
@@ -431,7 +431,7 @@
   <string name="notification_light_color">Işık Rengi</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> senden bahsetti.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> ve diğer <xliff:g id="count">%2$d</xliff:g> kişi senden bahsetti.</string>
-  <string name="notification_ringtone">Zil sesi</string>
+  <string name="preference_title_notification_ringtone">Zil sesi</string>
   <string name="notification_status"><xliff:g id="user">%s</xliff:g> tarafından yeni tweet</string>
   <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g> ve <xliff:g id="count">%2$d</xliff:g> kişi yeni tweet attı</string>
   <string name="notification_type_home">Anasayfa</string>
@@ -576,7 +576,7 @@
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
   <string name="retweets_of_me">Benim retweet ettiklerim</string>
   <string name="revoke_permissions">İzinleri kaldır</string>
-  <string name="ringtone">Zil sesi</string>
+  <string name="notification_method_ringtone">Zil sesi</string>
   <string name="round">Yuvarlak</string>
   <string name="safety">Güvenlik</string>
   <string name="same_oauth_signing_url">Otomatik giriş için aynı url\'yi kullan</string>
@@ -780,5 +780,5 @@
   <string name="users_blocked">Bu kullanıcılar engellendi.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'nın listeleri</string>
   <string name="users_statuses">Kullanıcının tweet\'ları</string>
-  <string name="vibration">Titreşim</string>
+  <string name="notification_method_vibration">Titreşim</string>
 </resources>

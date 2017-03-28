@@ -183,7 +183,7 @@
   <string name="large">Velké</string>
   <string name="leftside_compose_button">Tlačítko Napsat na levé straně</string>
   <string name="leftside_compose_button_summary">Přesunout tlačítko Napsat doleva.</string>
-  <string name="light">Světlo</string>
+  <string name="notification_method_light">Světlo</string>
   <string name="link_highlight_option">Možnost zvýraznění odkazu</string>
   <string name="lists">Seznamy</string>
   <string name="load_defaults">Načíst výchozí hodnoty</string>
@@ -224,7 +224,7 @@
   <string name="no_thanks">Ne, děkuji</string>
   <string name="no_user_found">Nenalezen žádný uživatel</string>
   <string name="notification_light_color">Světlá barva</string>
-  <string name="notification_ringtone">Vyzváněcí tón</string>
+  <string name="preference_title_notification_ringtone">Vyzváněcí tón</string>
   <string name="notification_type_home">Domů</string>
   <string name="notification_type_interactions">Interakce</string>
   <string name="notification_type_messages">Zprávy</string>
@@ -297,7 +297,7 @@
   <string name="retweeted_by_name">Retweetováno uživatelem <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetováno uživatelem <xliff:g id="user_name">%1$s</xliff:g> a <xliff:g id="retweet_count">%2$d</xliff:g> dalšími</string>
   <string name="revoke_permissions">Odvolat oprávnění</string>
-  <string name="ringtone">Vyzváněcí tón</string>
+  <string name="notification_method_ringtone">Vyzváněcí tón</string>
   <string name="round">Kulaté</string>
   <string name="safety">Bezpečnost</string>
   <string name="same_oauth_signing_url">Použít stejnou adresu URL pro přihlášení OAuth</string>
@@ -422,5 +422,5 @@
   <string name="username">Uživatelské jméno</string>
   <string name="users_blocked">Blokovat tyto uživatele.</string>
   <string name="users_statuses">Tweety uživatele</string>
-  <string name="vibration">Vibrace</string>
+  <string name="notification_method_vibration">Vibrace</string>
 </resources>

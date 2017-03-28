@@ -397,7 +397,7 @@
   <string name="large">크게</string>
   <string name="leftside_compose_button">작성 버튼을 왼쪽으로</string>
   <string name="leftside_compose_button_summary">작성 버튼을 왼쪽으로 옮깁니다.</string>
-  <string name="light">알림 표시등</string>
+  <string name="notification_method_light">알림 표시등</string>
   <string name="link_highlight_option">링크 강조 옵션</string>
   <string name="link_to_quoted_status">인용 트윗에 링크하기</string>
   <string name="list_members">리스트 멤버</string>
@@ -551,7 +551,7 @@
   <string name="notification_light_color">표시등 색상</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g>님이 멘션을 보냈습니다.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g>님 등 <xliff:g id="count">%2$d</xliff:g>명이 멘션을 보냈습니다.</string>
-  <string name="notification_ringtone">알림 소리</string>
+  <string name="preference_title_notification_ringtone">알림 소리</string>
   <string name="notification_status"><xliff:g id="user">%s</xliff:g>님의 새로운 트윗</string>
   <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g>님과 <xliff:g id="count">%2$d</xliff:g>님 등의 새로운 트윗</string>
   <string name="notification_type_home">홈</string>
@@ -719,7 +719,7 @@
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> 님과 다른 <xliff:g id="retweet_count">%2$d</xliff:g>명이 리트윗했습니다</string>
   <string name="retweets_of_me">리트윗된 내 트윗</string>
   <string name="revoke_permissions">권한 취소</string>
-  <string name="ringtone">알림 소리</string>
+  <string name="notification_method_ringtone">알림 소리</string>
   <string name="round">원형</string>
   <string name="safety">안전</string>
   <string name="same_oauth_signing_url">OAuth 인증 서명도 같은 주소를 사용</string>
@@ -943,5 +943,5 @@
   <string name="users_blocked">이 유저들을 차단하였습니다.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> 님의 리스트</string>
   <string name="users_statuses">사용자 트윗</string>
-  <string name="vibration">진동</string>
+  <string name="notification_method_vibration">진동</string>
 </resources>

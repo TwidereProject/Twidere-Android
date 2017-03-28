@@ -358,7 +358,7 @@
   <string name="large">Большой</string>
   <string name="leftside_compose_button">Кнопка \"написать\" слева</string>
   <string name="leftside_compose_button_summary">Поместить кнопку \"написать\" слева.</string>
-  <string name="light">Светлая</string>
+  <string name="notification_method_light">Светлая</string>
   <string name="link_highlight_option">Способ выделения ссылок</string>
   <string name="link_to_quoted_status">Ссылка на цитированный твит</string>
   <string name="list_members">Список пользователей</string>
@@ -492,7 +492,7 @@
   <string name="notification_light_color">Цвет индикатора</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> упомянул(а) вас.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> и <xliff:g id="count">%2$d</xliff:g> других упомянули вас.</string>
-  <string name="notification_ringtone">Мелодия</string>
+  <string name="preference_title_notification_ringtone">Мелодия</string>
   <string name="notification_status">Новый твит от <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Новый твит от <xliff:g id="user">%1$s</xliff:g> и <xliff:g id="count">%2$d</xliff:g> других</string>
   <string name="notification_type_home">Лента</string>
@@ -645,7 +645,7 @@
   <string name="retweeted_by_name_with_count">Ретвитнул <xliff:g id="user_name">%1$s</xliff:g> и <xliff:g id="retweet_count">%2$d</xliff:g> других</string>
   <string name="retweets_of_me">Ретвиты меня</string>
   <string name="revoke_permissions">Перераспределить права</string>
-  <string name="ringtone">Мелодия</string>
+  <string name="notification_method_ringtone">Мелодия</string>
   <string name="round">Круг</string>
   <string name="safety">Безопасность</string>
   <string name="same_oauth_signing_url">Используйте тот же URL для входа через OAuth</string>
@@ -859,5 +859,5 @@
   <string name="users_blocked">Заблокировать этих пользователей.</string>
   <string name="users_lists_with_name">Списки <xliff:g id="name">%s</xliff:g> </string>
   <string name="users_statuses">Твиты пользователя</string>
-  <string name="vibration">Вибрация</string>
+  <string name="notification_method_vibration">Вибрация</string>
 </resources>

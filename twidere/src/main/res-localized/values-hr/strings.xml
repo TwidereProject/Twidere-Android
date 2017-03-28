@@ -274,7 +274,7 @@
   <string name="large">Veliko</string>
   <string name="leftside_compose_button">Gumb za sastavljanje na lijevoj strani</string>
   <string name="leftside_compose_button_summary">Stavi gumb za sastavljanje na lijevu stranu.</string>
-  <string name="light">Svijetlo</string>
+  <string name="notification_method_light">Svijetlo</string>
   <string name="link_highlight_option">Opcija označavanja linkova</string>
   <string name="link_to_quoted_status">Link do citiranog tweeta</string>
   <string name="list_members">Popis suradnika</string>
@@ -363,7 +363,7 @@
   <string name="notification_light_color">Svijetla Boja</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> vas je spomenuo/-la.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="count">%2$d</xliff:g> drugih su vas spomenuli.</string>
-  <string name="notification_ringtone">Zvono</string>
+  <string name="preference_title_notification_ringtone">Zvono</string>
   <string name="notification_status">Novi tweet od <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Novi tweet od <xliff:g id="user">%1$s</xliff:g> i <xliff:g id="count">%2$d</xliff:g> drugih</string>
   <string name="notification_type_home">Polazno</string>
@@ -481,7 +481,7 @@
   <string name="retweeted_by_name_with_count">Retweetao/-la <xliff:g id="user_name">%1$s</xliff:g> i još <xliff:g id="retweet_count">%2$d</xliff:g> drugih</string>
   <string name="retweets_of_me">Moji rewteetovi</string>
   <string name="revoke_permissions">Uskrati dopuštenja</string>
-  <string name="ringtone">Zvuk zvona</string>
+  <string name="notification_method_ringtone">Zvuk zvona</string>
   <string name="round">Okruglo</string>
   <string name="safety">Sigurnost</string>
   <string name="same_oauth_signing_url">Koristi isti URL za OAuth prijavu</string>
@@ -662,5 +662,5 @@
   <string name="users_blocked">Ovi korisnici su blokirani.</string>
   <string name="users_lists_with_name">Liste od <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tweetovi korisnika</string>
-  <string name="vibration">Vibracija</string>
+  <string name="notification_method_vibration">Vibracija</string>
 </resources>

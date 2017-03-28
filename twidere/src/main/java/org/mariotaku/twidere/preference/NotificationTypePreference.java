@@ -66,9 +66,9 @@ public class NotificationTypePreference extends DialogPreference implements
     private String[] getEntries() {
         final Context context = getContext();
         final String[] entries = new String[3];
-        entries[0] = context.getString(R.string.ringtone);
-        entries[1] = context.getString(R.string.vibration);
-        entries[2] = context.getString(R.string.light);
+        entries[0] = context.getString(R.string.notification_method_ringtone);
+        entries[1] = context.getString(R.string.notification_method_vibration);
+        entries[2] = context.getString(R.string.notification_method_light);
         return entries;
     }
 

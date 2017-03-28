@@ -83,7 +83,7 @@
   <string name="label_streaming_service">Perkhidmatan penstriman</string>
   <string name="large">Besar</string>
   <string name="leftside_compose_button_summary">Letakkan butang karang ke kiri.</string>
-  <string name="light">Cerah</string>
+  <string name="notification_method_light">Cerah</string>
   <string name="list_timeline">Senarai garis masa</string>
   <string name="lists">Senarai</string>
   <string name="media_uploader">Pemuat naik Media</string>
@@ -100,7 +100,7 @@
   <!-- Next item (tweet, user etc.) -->
   <string name="next_item">Selepas</string>
   <string name="next_step">Selepas</string>
-  <string name="notification_ringtone">Nada dering</string>
+  <string name="preference_title_notification_ringtone">Nada dering</string>
   <string name="notification_type_messages">Mesej</string>
   <string name="notifications">Pemberitahuan</string>
   <string name="notifications_type">Jenis pemberitahuan</string>
@@ -132,7 +132,7 @@
   <string name="remember_position">Ingat kedudukan</string>
   <string name="remember_position_summary">Ingat kedudukan senarai/tab sebelum menutup Twidere</string>
   <string name="report_for_spam">Lapor spam</string>
-  <string name="ringtone">Nada dering</string>
+  <string name="notification_method_ringtone">Nada dering</string>
   <string name="search_hint">Cari tweet atau pengguna</string>
   <string name="search_statuses">Cari Tweets</string>
   <string name="search_type_statuses">Tweet</string>

@@ -328,7 +328,7 @@
   <string name="large">Nagy</string>
   <string name="leftside_compose_button">Új tweet gomb bal oldalt</string>
   <string name="leftside_compose_button_summary">Új tweet gomb bal oldalra helyezése.</string>
-  <string name="light">Jelzőfény</string>
+  <string name="notification_method_light">Jelzőfény</string>
   <string name="link_highlight_option">Link kiemelés módja</string>
   <string name="link_to_quoted_status">Link az idézett tweet-hez</string>
   <string name="list_members">Tagok listázása</string>
@@ -433,7 +433,7 @@
   <string name="notification_light_color">Világos szín</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> említett téged.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> és még <xliff:g id="count">%2$d</xliff:g> felhasználó említett téged.</string>
-  <string name="notification_ringtone">Csengőhang</string>
+  <string name="preference_title_notification_ringtone">Csengőhang</string>
   <string name="notification_status">Új tweet <xliff:g id="user">%s</xliff:g> felhasználótól</string>
   <string name="notification_status_multiple">Új tweet <xliff:g id="user">%1$s</xliff:g> felhasználótól és <xliff:g id="count">%2$d</xliff:g> másiktól</string>
   <string name="notification_type_home">Haza</string>
@@ -573,7 +573,7 @@
   <string name="retweeted_by_name_with_count">Retweetelte <xliff:g id="user_name">%1$s</xliff:g> és még <xliff:g id="retweet_count">%2$d</xliff:g> felhasználó</string>
   <string name="retweets_of_me">Retweetjeim</string>
   <string name="revoke_permissions">Engedély visszavonása</string>
-  <string name="ringtone">Csengőhang</string>
+  <string name="notification_method_ringtone">Csengőhang</string>
   <string name="round">Kerek</string>
   <string name="safety">Biztonság</string>
   <string name="same_oauth_signing_url">Azonos URL használata OAuth bejelentkezéshez</string>
@@ -775,5 +775,5 @@
   <string name="users_blocked">Blokkolja a következő felhasználókat.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> listái</string>
   <string name="users_statuses">Felhasználó tweetjei</string>
-  <string name="vibration">Rezgés</string>
+  <string name="notification_method_vibration">Rezgés</string>
 </resources>

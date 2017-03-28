@@ -201,7 +201,7 @@
   <string name="large">Stor</string>
   <string name="leftside_compose_button">Vänster sida komponeraknappen</string>
   <string name="leftside_compose_button_summary">Placera Skriv-knappen på vänster sida.</string>
-  <string name="light">Ljus</string>
+  <string name="notification_method_light">Ljus</string>
   <string name="link_highlight_option">Link highlight option</string>
   <string name="list_members">Lista medlemmar</string>
   <string name="list_subscribers">Lista premenumanter</string>
@@ -255,7 +255,7 @@
   <string name="notification_light_color">Ljus färg</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mentioned you.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others mentioned you.</string>
-  <string name="notification_ringtone">Ringsignal</string>
+  <string name="preference_title_notification_ringtone">Ringsignal</string>
   <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">New Tweet by <xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
   <string name="notification_type_home">Hem</string>
@@ -326,7 +326,7 @@
   <string name="retweeted_by_name">Retweeted av <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweeted av <xliff:g id="user_name">%1$s</xliff:g> och <xliff:g id="retweet_count">%2$d</xliff:g> andra</string>
   <string name="revoke_permissions">Återkalla behörigheter</string>
-  <string name="ringtone">Ringsignal</string>
+  <string name="notification_method_ringtone">Ringsignal</string>
   <string name="safety">Säkerhet</string>
   <string name="same_oauth_signing_url">Använd samma URL för OAuth-signering</string>
   <string name="saved_searches">Sparade sökningar</string>
@@ -445,5 +445,5 @@
   <string name="users_blocked">Blockerade de här användarna.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lista</string>
   <string name="users_statuses">Användares tweets</string>
-  <string name="vibration">Vibration</string>
+  <string name="notification_method_vibration">Vibration</string>
 </resources>

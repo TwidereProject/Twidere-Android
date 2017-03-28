@@ -319,7 +319,7 @@
   <string name="large">Gran</string>
   <string name="leftside_compose_button">Botó de redactar al costat esquerre</string>
   <string name="leftside_compose_button_summary">Mostra el botó de redactar a la part esquerra.</string>
-  <string name="light">Llum</string>
+  <string name="notification_method_light">Llum</string>
   <string name="link_highlight_option">Ressalta els enllaços</string>
   <string name="link_to_quoted_status">Enllaça la piulada citada</string>
   <string name="list_members">Llista de membres</string>
@@ -424,7 +424,7 @@
   <string name="notification_light_color">Color de la llum</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> t\'ha mencionat.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%s</xliff:g> i altres <xliff:g id="count">%d</xliff:g> us han mencionat.</string>
-  <string name="notification_ringtone">To de notificació</string>
+  <string name="preference_title_notification_ringtone">To de notificació</string>
   <string name="notification_status">Nova piulada de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Nova piulada de <xliff:g id="user">%1$s</xliff:g> i <xliff:g id="count">%2$d</xliff:g> altres usuaris</string>
   <string name="notification_type_home">Inici</string>
@@ -568,7 +568,7 @@
   <string name="retweeted_by_name_with_count">Repiulat per <xliff:g id="user_name">%1$s</xliff:g> i <xliff:g id="retweet_count">%2$d</xliff:g> més</string>
   <string name="retweets_of_me">Repiulades meves</string>
   <string name="revoke_permissions">Revoca els permisos</string>
-  <string name="ringtone">To de notificació</string>
+  <string name="notification_method_ringtone">To de notificació</string>
   <string name="round">Rodó</string>
   <string name="safety">Seguretat</string>
   <string name="same_oauth_signing_url">Utilitza la mateixa URL per l\'inici de sessió amb OAuth</string>
@@ -771,5 +771,5 @@
   <string name="users_blocked">S\'han bloquejat aquests usuaris.</string>
   <string name="users_lists_with_name">Llistes de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Piulades de l\'usuari</string>
-  <string name="vibration">Vibració</string>
+  <string name="notification_method_vibration">Vibració</string>
 </resources>

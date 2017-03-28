@@ -362,7 +362,7 @@
   <string name="large">Grande</string>
   <string name="leftside_compose_button">Botão de escrever no lado esquerdo</string>
   <string name="leftside_compose_button_summary">Coloca o botão de escrever para a esquerda da tela.</string>
-  <string name="light">Claro</string>
+  <string name="notification_method_light">Claro</string>
   <string name="link_highlight_option">Destacar links</string>
   <string name="link_to_quoted_status">Link para o tweet mencionado</string>
   <string name="list_members">Listar membros</string>
@@ -468,7 +468,7 @@
   <string name="notification_light_color">Cor Clara</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mencionou você.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g> mencionaram você.</string>
-  <string name="notification_ringtone">Toque</string>
+  <string name="preference_title_notification_ringtone">Toque</string>
   <string name="notification_status">Novo tweet de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Novo Tweet de <xliff:g id="user">%1$s</xliff:g> e <xliff:g id="count">%2$d</xliff:g>  outros
 </string>
@@ -614,7 +614,7 @@
   <string name="retweeted_by_name_with_count">Retweetado por <xliff:g id="user_name">%1$s</xliff:g> e <xliff:g id="retweet_count">%2$d</xliff:g> outros</string>
   <string name="retweets_of_me">Retweets meus</string>
   <string name="revoke_permissions">Remover permissões</string>
-  <string name="ringtone">Toque</string>
+  <string name="notification_method_ringtone">Toque</string>
   <string name="round">Arredondado</string>
   <string name="safety">Segurança</string>
   <string name="same_oauth_signing_url">Usar a mesma URL para autenticação OAuth</string>
@@ -819,5 +819,5 @@
   <string name="users_blocked">Usuários bloqueados.</string>
   <string name="users_lists_with_name">listas de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tweets do usuário</string>
-  <string name="vibration">Vibração</string>
+  <string name="notification_method_vibration">Vibração</string>
 </resources>

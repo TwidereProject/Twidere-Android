@@ -183,5 +183,5 @@
   <string name="user_profile_name">नाम</string>
   <string name="user_unblocked">इस उपयोगकर्ता को अन्ब्लाक किया |</string>
   <string name="username">यूज़रनेम</string>
-  <string name="vibration">कंपन</string>
+  <string name="notification_method_vibration">कंपन</string>
 </resources>

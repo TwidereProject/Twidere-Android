@@ -264,7 +264,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             val iconSpinner = dialog.findViewById(R.id.tabIconSpinner) as Spinner
             val accountSpinner = dialog.findViewById(R.id.accountSpinner) as Spinner
             val accountContainer = dialog.findViewById(R.id.accountContainer)!!
-            val accountSectionHeader = accountContainer.sectionHeader
             val extraConfigContainer = dialog.findViewById(R.id.extraConfigContainer) as LinearLayout
 
             val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE)
@@ -279,7 +278,6 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             tabName.hint = conf.name.createString(context)
             tabName.setText(tab.name)
             iconSpinner.setSelection(iconsAdapter.findPositionByKey(tab.icon))
-            accountSectionHeader.setText(R.string.account)
 
             val editMode = tag == TAG_EDIT_TAB
 

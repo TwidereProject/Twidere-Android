@@ -133,7 +133,7 @@
   <string name="label_refresh_service">Genopfrisk service</string>
   <string name="leftside_compose_button">Komponerknap til venstre</string>
   <string name="leftside_compose_button_summary">Sæt komponerknappen til venstre side.</string>
-  <string name="light">Lys</string>
+  <string name="notification_method_light">Lys</string>
   <string name="list_members">Listemedlemmer</string>
   <string name="list_subscribers">Listeabonnenter</string>
   <string name="list_timeline">Listetidslinje</string>
@@ -168,7 +168,7 @@
   <string name="notification_light_color">Lysfarve</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> nævnte dig.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre nævnte dig.</string>
-  <string name="notification_ringtone">Ringetone</string>
+  <string name="preference_title_notification_ringtone">Ringetone</string>
   <string name="notification_status">Ny tweet af <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Ny tweet af <xliff:g id="user">%1$s</xliff:g> og <xliff:g id="count">%2$d</xliff:g> andre</string>
   <string name="notification_type_home">Hjem</string>
@@ -217,7 +217,7 @@
   <string name="retweeted_by_count">Retweetet af <xliff:g id="retweet_count">%d</xliff:g> brugere</string>
   <string name="retweeted_by_name">Retweetet af <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetet af <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>
-  <string name="ringtone">Ringetone</string>
+  <string name="notification_method_ringtone">Ringetone</string>
   <string name="saved_searches">Gemte søgninger</string>
   <string name="search_hint">Søg tweets eller brugere</string>
   <string name="search_statuses">Søg i tweets</string>
@@ -304,5 +304,5 @@
   <string name="user_unblocked">Ublokerede disse brugere.</string>
   <string name="username">Brugernavn</string>
   <string name="users_blocked">Blokerede disse brugere.</string>
-  <string name="vibration">Vibration</string>
+  <string name="notification_method_vibration">Vibration</string>
 </resources>

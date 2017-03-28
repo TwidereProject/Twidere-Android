@@ -325,7 +325,7 @@
   <string name="large">Duży</string>
   <string name="leftside_compose_button">Przycisk \"Tweetnij\" po lewej stronie</string>
   <string name="leftside_compose_button_summary">Pokaż przycisk \"Tweetnij\" po lewej stronie ekranu.</string>
-  <string name="light">Dioda (LED)</string>
+  <string name="notification_method_light">Dioda (LED)</string>
   <string name="link_highlight_option">Podświetlanie linków</string>
   <string name="link_to_quoted_status">Linkuj do cytowanego tweeta</string>
   <string name="list_members">Członkowie listy</string>
@@ -441,7 +441,7 @@
   <string name="notification_light_color">Kolor diody</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> wzmiankował/a o Tobie.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> i <xliff:g id="count">%2$d</xliff:g> innych wzmiankowali o Tobie.</string>
-  <string name="notification_ringtone">Dzwonek</string>
+  <string name="preference_title_notification_ringtone">Dzwonek</string>
   <string name="notification_status">Nowy tweet od <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Nowy tweet od <xliff:g id="user">%1$s</xliff:g> i <xliff:g id="count">%2$d</xliff:g> innych</string>
   <string name="notification_type_home">Strona główna</string>
@@ -560,7 +560,7 @@
   <string name="retweeted_by_name_with_count">Podano dalej przez <xliff:g id="user_name">%1$s</xliff:g> oraz <xliff:g id="retweet_count">%2$d</xliff:g> innych</string>
   <string name="retweets_of_me">Moje posty podane dalej</string>
   <string name="revoke_permissions">Odwołaj pozwolenia</string>
-  <string name="ringtone">Dzwonek</string>
+  <string name="notification_method_ringtone">Dzwonek</string>
   <string name="round">Koło</string>
   <string name="safety">Bezpieczeństwo</string>
   <string name="same_oauth_signing_url">Użyj tego samego adresu do logowania przez OAuth</string>
@@ -742,5 +742,5 @@
   <string name="users_blocked">Zablokowano tych użytkowników.</string>
   <string name="users_lists_with_name">Listy użytkownika <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tweety użytkownika</string>
-  <string name="vibration">Wibracja</string>
+  <string name="notification_method_vibration">Wibracja</string>
 </resources>

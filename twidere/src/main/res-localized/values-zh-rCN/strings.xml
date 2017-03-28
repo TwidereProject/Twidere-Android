@@ -427,7 +427,7 @@
   <string name="large">大尺寸</string>
   <string name="leftside_compose_button">左侧撰写按钮</string>
   <string name="leftside_compose_button_summary">将撰写按钮放置在左边</string>
-  <string name="light">灯光</string>
+  <string name="notification_method_light">灯光</string>
   <string name="link_highlight_option">链接高亮选项</string>
   <string name="link_to_quoted_status">链接到引用的推文</string>
   <string name="list_members">列表成员</string>
@@ -584,7 +584,7 @@
   <string name="notification_light_color">灯光颜色</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> 提到了您</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> 和其他 <xliff:g id="count">%2$d</xliff:g> 人提到了您</string>
-  <string name="notification_ringtone">铃声</string>
+  <string name="preference_title_notification_ringtone">铃声</string>
   <string name="notification_status"><xliff:g id="user">%s</xliff:g> 发送了新推文</string>
   <string name="notification_status_multiple"><xliff:g id="user">%1$s</xliff:g> 和其他 <xliff:g id="count">%2$d</xliff:g> 人发送了新推文</string>
   <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> 转推了</string>
@@ -759,7 +759,7 @@
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> 和其他 <xliff:g id="retweet_count">%2$d</xliff:g> 人已转推</string>
   <string name="retweets_of_me">转推我的内容</string>
   <string name="revoke_permissions">撤销授权</string>
-  <string name="ringtone">铃声</string>
+  <string name="notification_method_ringtone">铃声</string>
   <string name="round">圆形</string>
   <string name="safety">安全</string>
   <string name="same_oauth_signing_url">OAuth 签名时使用相同 URL</string>
@@ -985,5 +985,5 @@
   <string name="users_blocked">您阻止了这些用户</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> 的列表</string>
   <string name="users_statuses">用户的推文</string>
-  <string name="vibration">震动</string>
+  <string name="notification_method_vibration">震动</string>
 </resources>

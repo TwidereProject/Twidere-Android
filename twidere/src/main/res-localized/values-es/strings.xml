@@ -425,7 +425,7 @@
   <string name="large">Grande</string>
   <string name="leftside_compose_button">Botón «redactar» en el lado izquierdo</string>
   <string name="leftside_compose_button_summary">Colocar el botón de escribir en la izquierda.</string>
-  <string name="light">Claro</string>
+  <string name="notification_method_light">Claro</string>
   <string name="link_highlight_option">Opciones de resaltado de enlaces</string>
   <string name="link_to_quoted_status">Enlace al tuit citado</string>
   <string name="list_members">Lista de miembros</string>
@@ -581,7 +581,7 @@
   <string name="notification_light_color">Color de la luz</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> te ha mencionado.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%s</xliff:g> y otros <xliff:g id="count">%d</xliff:g> te han mencionado.</string>
-  <string name="notification_ringtone">Tono</string>
+  <string name="preference_title_notification_ringtone">Tono</string>
   <string name="notification_status">Nuevo tweet de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Nuevo Tweet de <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="count">%2$d</xliff:g> más</string>
   <string name="notification_type_home">Inicio</string>
@@ -749,7 +749,7 @@
   <string name="retweeted_by_name_with_count">Retwitteado por <xliff:g id="user_name">%1$s</xliff:g> y <xliff:g id="retweet_count">%2$d</xliff:g> otros</string>
   <string name="retweets_of_me">Retweets de mi</string>
   <string name="revoke_permissions">Quitar permisos</string>
-  <string name="ringtone">Tono de notificación</string>
+  <string name="notification_method_ringtone">Tono de notificación</string>
   <string name="round">Redonda</string>
   <string name="safety">Seguro</string>
   <string name="same_oauth_signing_url">Use la misma URL para el registro OAuth</string>
@@ -973,5 +973,5 @@
   <string name="users_blocked">Estos usuarios han sido bloqueados.</string>
   <string name="users_lists_with_name">Listas de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tweets de los usuarios</string>
-  <string name="vibration">Vibración</string>
+  <string name="notification_method_vibration">Vibración</string>
 </resources>

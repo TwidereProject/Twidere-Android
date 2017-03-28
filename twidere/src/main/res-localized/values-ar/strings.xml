@@ -264,7 +264,7 @@
   <string name="large">كبير</string>
   <string name="leftside_compose_button">زر كتابة التغريدة على اليسار</string>
   <string name="leftside_compose_button_summary">وضع زر كتابة التغريدة على اليسار.</string>
-  <string name="light">فاتح</string>
+  <string name="notification_method_light">فاتح</string>
   <string name="link_highlight_option">خيار تمييز الروابط</string>
   <string name="link_to_quoted_status">ربط لتغريدة مقتبسة</string>
   <string name="list_members">أعضاء القائمة</string>
@@ -343,7 +343,7 @@
   <string name="notification_light_color">لون فاتح</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> قد أشار إليك.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> و <xliff:g id="count">%2$d</xliff:g> آخرون أشاروا إليك.</string>
-  <string name="notification_ringtone">الرنة</string>
+  <string name="preference_title_notification_ringtone">الرنة</string>
   <string name="notification_status">تغريدة جديدة من <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">تغريدة جديدة من <xliff:g id="user">%1$s</xliff:g> و<xliff:g id="count">%2$d</xliff:g> آخرين</string>
   <string name="notification_type_home">الرئيسية</string>
@@ -446,7 +446,7 @@
   <string name="retweeted_by_name_with_count">أعادها <xliff:g id="user_name">%1$s</xliff:g> و<xliff:g id="retweet_count">%2$d</xliff:g> وآخرين</string>
   <string name="retweets_of_me">إعاداتي</string>
   <string name="revoke_permissions">إبطال الإستئذانات</string>
-  <string name="ringtone">الرنة</string>
+  <string name="notification_method_ringtone">الرنة</string>
   <string name="round">مدوّرة</string>
   <string name="safety">الأمن</string>
   <string name="same_oauth_signing_url">إستخدم نفس الرابط لتسجيل الدخول</string>
@@ -608,5 +608,5 @@
   <string name="users_blocked">حظر هؤلاء المستخدمين.</string>
   <string name="users_lists_with_name">قوائم <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">التغريدات</string>
-  <string name="vibration">بالإهتزاز</string>
+  <string name="notification_method_vibration">بالإهتزاز</string>
 </resources>

@@ -513,6 +513,7 @@
 
     <string name="keyword_filter_name">Keyword: <xliff:g id="name">%s</xliff:g></string>
 
+    <string name="label_account">Account</string>
     <string name="label_account_type">Account type</string>
     <string name="label_auth_type">Auth type</string>
     <string name="label_background_operation_service">Background operation service</string>
@@ -544,8 +545,6 @@
 
     <string name="leftside_compose_button">Left side compose button</string>
     <string name="leftside_compose_button_summary">Put the compose button on the left.</string>
-
-    <string name="light">Light</string>
 
     <string name="link_highlight_option">Link highlight option</string>
     <string name="link_to_quoted_status">Link to quoted tweet</string>
@@ -738,7 +737,12 @@
     <string name="notification_light_color">Light Color</string>
     <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mentioned you.</string>
     <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others mentioned you.</string>
-    <string name="notification_ringtone">Ringtone</string>
+    <!-- Notification method, flashing LED light -->
+    <string name="notification_method_light">Light</string>
+    <!-- Notification method, ringtone -->
+    <string name="notification_method_ringtone">Ringtone</string>
+    <!-- Notification method, device vibration -->
+    <string name="notification_method_vibration">Vibration</string>
     <string name="notification_status">New tweet by <xliff:g id="user">%s</xliff:g></string>
     <string name="notification_status_multiple">New Tweet by <xliff:g id="user">%1$s</xliff:g> and <xliff:g id="count">%2$d</xliff:g> others</string>
     <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retweeted</string>
@@ -832,6 +836,7 @@
     <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
+    <string name="preference_title_notification_ringtone">Ringtone</string>
     <string name="preference_title_override_language">Override language</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
@@ -964,8 +969,6 @@
     <string name="retweets_of_me">Retweets of me</string>
 
     <string name="revoke_permissions">Revoke permissions</string>
-
-    <string name="ringtone">Ringtone</string>
 
     <string name="round">Round</string>
 
@@ -1116,9 +1119,11 @@
     <string name="theme_background_solid">Pure white/black</string>
     <string name="theme_background_transparent">Transparent</string>
     <string name="theme_color">Theme color</string>
+    <!-- Dark theme -->
     <string name="theme_dark">Dark</string>
     <string name="theme_dark_actionbar">Dark ActionBar</string>
     <string name="theme_font_family">Theme font family</string>
+    <!-- Light theme -->
     <string name="theme_light">Light</string>
 
     <string name="thumbor_integration">Thumbor integration</string>
@@ -1275,6 +1280,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-
-    <string name="vibration">Vibration</string>
 </resources>

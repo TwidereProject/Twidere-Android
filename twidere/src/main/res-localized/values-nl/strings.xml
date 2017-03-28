@@ -326,7 +326,7 @@
   <string name="large">Groot</string>
   <string name="leftside_compose_button">Linkerkant opstel-knop</string>
   <string name="leftside_compose_button_summary">Zet de opstel-knop naar links.</string>
-  <string name="light">Licht</string>
+  <string name="notification_method_light">Licht</string>
   <string name="link_highlight_option">Link markering optie</string>
   <string name="link_to_quoted_status">Link naar geciteerde tweet</string>
   <string name="list_members">Lijst-leden</string>
@@ -431,7 +431,7 @@
   <string name="notification_light_color">Lichte Kleur</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> vermeldde jou.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> en <xliff:g id="count">%2$d</xliff:g> anderen vermeldden jou.</string>
-  <string name="notification_ringtone">Beltoon</string>
+  <string name="preference_title_notification_ringtone">Beltoon</string>
   <string name="notification_status">Nieuwe tweet door <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Nieuwe tweet door <xliff:g id="user">%1$s</xliff:g> en <xliff:g id="count">%2$d</xliff:g> anderen</string>
   <string name="notification_type_home">Thuis</string>
@@ -574,7 +574,7 @@
   <string name="retweeted_by_name_with_count">Geretweet door <xliff:g id="user_name">%1$s</xliff:g> en <xliff:g id="retweet_count">%2$d</xliff:g> anderen</string>
   <string name="retweets_of_me">Retweets van mij</string>
   <string name="revoke_permissions">Machtigingen intrekken</string>
-  <string name="ringtone">Beltoon</string>
+  <string name="notification_method_ringtone">Beltoon</string>
   <string name="round">Rond</string>
   <string name="safety">Veiligheid</string>
   <string name="same_oauth_signing_url">Gebruik dezelfde URL voor OAuth-ondertekening</string>
@@ -774,5 +774,5 @@
   <string name="users_blocked">Geblokkeerde gebruikers.</string>
   <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g> lijsten</string>
   <string name="users_statuses">Gebruikerstweets</string>
-  <string name="vibration">Trilling</string>
+  <string name="notification_method_vibration">Trilling</string>
 </resources>

@@ -427,7 +427,7 @@
   <string name="large">Grande</string>
   <string name="leftside_compose_button">Botón Componer nel llau esquierdu</string>
   <string name="leftside_compose_button_summary">Pon el botón Componer na izquierda.</string>
-  <string name="light">Lluz d\'avisu</string>
+  <string name="notification_method_light">Lluz d\'avisu</string>
   <string name="link_highlight_option">Opción de resaltáu de testu</string>
   <string name="link_to_quoted_status">Enllaz al tuit citáu</string>
   <string name="list_members">Llistáu de miembros</string>
@@ -585,7 +585,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="notification_light_color">Color de lluz</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mentóte.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> y <xliff:g id="count">%2$d</xliff:g> más mentáronte.</string>
-  <string name="notification_ringtone">Soníu d\'avisu</string>
+  <string name="preference_title_notification_ringtone">Soníu d\'avisu</string>
   <string name="notification_status">Tuit nuevu por <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Tuit nuevu por <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="count">%2$d</xliff:g> más</string>
   <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retuitió</string>
@@ -760,7 +760,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="retweeted_by_name_with_count">Retuitiáu por <xliff:g id="user_name">%1$s</xliff:g> y <xliff:g id="retweet_count">%2$d</xliff:g> más</string>
   <string name="retweets_of_me">Retuits de mio</string>
   <string name="revoke_permissions">Revocar permisos</string>
-  <string name="ringtone">Soníu d\'avisu</string>
+  <string name="notification_method_ringtone">Soníu d\'avisu</string>
   <string name="round">Arredondiáu</string>
   <string name="safety">Seguranza</string>
   <string name="same_oauth_signing_url">Usar la mesma URL pal robláu d\'OAuth</string>
@@ -986,5 +986,5 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="users_blocked">Bloquiáronse a estos usuarios.</string>
   <string name="users_lists_with_name">Llistaos de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Tuits d\'usuarios</string>
-  <string name="vibration">Vibración</string>
+  <string name="notification_method_vibration">Vibración</string>
 </resources>

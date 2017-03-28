@@ -326,7 +326,7 @@
   <string name="large">Великий</string>
   <string name="leftside_compose_button">Кнопка Створити зліва</string>
   <string name="leftside_compose_button_summary">Розмістити кнопку Створити зліва.</string>
-  <string name="light">Індикатор подій</string>
+  <string name="notification_method_light">Індикатор подій</string>
   <string name="link_highlight_option">Спосіб виділення посилання</string>
   <string name="link_to_quoted_status">Посилання на цитований твіт</string>
   <string name="list_members">Список учасників</string>
@@ -432,7 +432,7 @@
   <string name="notification_light_color">Колір індікатору подій</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> згадав(ла) вас.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> і ще <xliff:g id="count">%2$d</xliff:g> інших згадали вас.</string>
-  <string name="notification_ringtone">Звук сповіщення</string>
+  <string name="preference_title_notification_ringtone">Звук сповіщення</string>
   <string name="notification_status">Новий твіт від <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Новий твіт від <xliff:g id="user">%1$s</xliff:g> і ще <xliff:g id="count">%2$d</xliff:g> інших</string>
   <string name="notification_type_home">Головна</string>
@@ -577,7 +577,7 @@
   <string name="retweeted_by_name_with_count">Ретвітнув(ла) <xliff:g id="user_name">%1$s</xliff:g> і ще <xliff:g id="retweet_count">%2$d</xliff:g> інших</string>
   <string name="retweets_of_me">Ретвіти мене</string>
   <string name="revoke_permissions">Скасувати дозволи</string>
-  <string name="ringtone">Звук сповіщення</string>
+  <string name="notification_method_ringtone">Звук сповіщення</string>
   <string name="round">Коло</string>
   <string name="safety">Безпека</string>
   <string name="same_oauth_signing_url">Той же URL для входу через OAuth</string>
@@ -782,5 +782,5 @@
   <string name="users_blocked">Заблокував цих користувачів.</string>
   <string name="users_lists_with_name">Списки <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Твіти користувача</string>
-  <string name="vibration">Вібрація</string>
+  <string name="notification_method_vibration">Вібрація</string>
 </resources>

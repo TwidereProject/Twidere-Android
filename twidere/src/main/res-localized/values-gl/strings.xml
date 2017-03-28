@@ -427,7 +427,7 @@
   <string name="large">Grande</string>
   <string name="leftside_compose_button">Botón de compor no lado esquerdo</string>
   <string name="leftside_compose_button_summary">Colocar o botón de escribir chío na esquerda.</string>
-  <string name="light">Luz LED</string>
+  <string name="notification_method_light">Luz LED</string>
   <string name="link_highlight_option">Opcións de destaque de ligazóns</string>
   <string name="link_to_quoted_status">Ligazón a chío citado</string>
   <string name="list_members">Listar membros</string>
@@ -584,7 +584,7 @@
   <string name="notification_light_color">Cor do LED</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mencionoute.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g> mencionáronte.</string>
-  <string name="notification_ringtone">Son de aviso</string>
+  <string name="preference_title_notification_ringtone">Son de aviso</string>
   <string name="notification_status">Novo chío de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Novo chío de <xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g></string>
   <string name="notification_title_new_retweet_by_user">Rechouchiado por <xliff:g id="user">%1$s</xliff:g></string>
@@ -759,7 +759,7 @@
   <string name="retweeted_by_name_with_count">Rechouchiado por <xliff:g id="user_name">%1$s</xliff:g> e outros <xliff:g id="retweet_count">%2$d</xliff:g></string>
   <string name="retweets_of_me">Rechouchíos de min</string>
   <string name="revoke_permissions">Revocar permisos</string>
-  <string name="ringtone">Son de aviso</string>
+  <string name="notification_method_ringtone">Son de aviso</string>
   <string name="round">Redondo</string>
   <string name="safety">Seguridade</string>
   <string name="same_oauth_signing_url">Usar mesma URL para OAuth</string>
@@ -985,5 +985,5 @@
   <string name="users_blocked">Bloqueados estes usuarios.</string>
   <string name="users_lists_with_name">Listas de <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Chíos do usuario</string>
-  <string name="vibration">Vibración</string>
+  <string name="notification_method_vibration">Vibración</string>
 </resources>

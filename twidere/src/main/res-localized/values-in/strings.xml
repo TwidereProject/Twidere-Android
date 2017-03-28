@@ -349,7 +349,7 @@
   <string name="large">Banyak</string>
   <string name="leftside_compose_button">Tombol susun di kiri</string>
   <string name="leftside_compose_button_summary">Pasang tombol susun di kiri.</string>
-  <string name="light">Terang</string>
+  <string name="notification_method_light">Terang</string>
   <string name="link_highlight_option">Opsi menyoroti link</string>
   <string name="link_to_quoted_status">Tautan ke kutipan twit</string>
   <string name="list_members">Daftarkan anggota</string>
@@ -482,7 +482,7 @@
   <string name="notification_light_color">Warna cahaya</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> menyebut Anda.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="count">%2$d</xliff:g> lainnya menyebut Anda.</string>
-  <string name="notification_ringtone">Nada dering</string>
+  <string name="preference_title_notification_ringtone">Nada dering</string>
   <string name="notification_status">Tweet baru oleh <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Tweet baru oleh <xliff:g id="user">%1$s</xliff:g> dan <xliff:g id="count">%2$d</xliff:g> lainnya</string>
   <string name="notification_type_messages">Pesan</string>
@@ -629,7 +629,7 @@
   <string name="retweeted_by_name_with_count">Di-retweet oleh <xliff:g id="user_name">%1$s</xliff:g> dan <xliff:g id="retweet_count">%2$d</xliff:g> lainnya</string>
   <string name="retweets_of_me">Retweet oleh saya</string>
   <string name="revoke_permissions">Cabut ijin yang diberikan</string>
-  <string name="ringtone">Nada dering</string>
+  <string name="notification_method_ringtone">Nada dering</string>
   <string name="round">Lingkaran</string>
   <string name="safety">Keamanan</string>
   <string name="same_oauth_signing_url">Gunakan URL yang sama untuk penandatanganan OAuth</string>
@@ -837,5 +837,5 @@
   <string name="users_blocked">Blokir pengguna ini.</string>
   <string name="users_lists_with_name">Daftar <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Twit pengguna</string>
-  <string name="vibration">Getaran</string>
+  <string name="notification_method_vibration">Getaran</string>
 </resources>

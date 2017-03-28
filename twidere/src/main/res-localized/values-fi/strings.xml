@@ -317,7 +317,7 @@
   <string name="large">Suuri</string>
   <string name="leftside_compose_button">Vasemman reunan Kirjoita-painike</string>
   <string name="leftside_compose_button_summary">Sijoita Kirjoita-painike vasempaan reunaan.</string>
-  <string name="light">Vaalea</string>
+  <string name="notification_method_light">Vaalea</string>
   <string name="link_highlight_option">Linkin korostuksen valinta</string>
   <string name="link_to_quoted_status">Linkki lainattuun twiittiin</string>
   <string name="list_members">Listan jäsenet</string>
@@ -419,7 +419,7 @@
   <string name="notification_light_color">Merkkivalon väri</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mainitsi sinut.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="count">%2$d</xliff:g> muuta käyttäjää mainitsivat sinut.</string>
-  <string name="notification_ringtone">Merkkiääni</string>
+  <string name="preference_title_notification_ringtone">Merkkiääni</string>
   <string name="notification_status">Uusi twiitti käyttäjältä <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Uusi twiitti käyttäjältä <xliff:g id="user">%1$s</xliff:g> ja <xliff:g id="count">%2$d</xliff:g> muulta käyttäjältä</string>
   <string name="notification_type_home">Koti</string>
@@ -558,7 +558,7 @@
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ja <xliff:g id="retweet_count">%2$d</xliff:g> muuta uudelleentwiittasivat</string>
   <string name="retweets_of_me">Twiittieni uudelleentwiittaukset</string>
   <string name="revoke_permissions">Kumoa oikeudet</string>
-  <string name="ringtone">Merkkiääni</string>
+  <string name="notification_method_ringtone">Merkkiääni</string>
   <string name="round">Pyöreä</string>
   <string name="safety">Turvallisuus</string>
   <string name="same_oauth_signing_url">Käytä samaa URL-osoitetta OAuth-kirjautumiseen</string>
@@ -756,5 +756,5 @@
   <string name="users_blocked">Käyttäjät on estetty.</string>
   <string name="users_lists_with_name">Listat käyttäjältä <xliff:g id="name">%s</xliff:g></string>
   <string name="users_statuses">Käyttäjän twiitit</string>
-  <string name="vibration">Värinä</string>
+  <string name="notification_method_vibration">Värinä</string>
 </resources>
