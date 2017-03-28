@@ -47,7 +47,7 @@ class SelectableUsersAdapter(
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val checkedState: MutableMap<UserKey, Boolean> = ArrayMap()
     private val lockedState: MutableMap<UserKey, Boolean> = ArrayMap()
-    var itemCheckedListener: ((Int, Boolean) -> Unit)? = null
+    var itemCheckedListener: ((Int, Boolean) -> Boolean)? = null
 
     var data: List<ParcelableUser>? = null
         set(value) {
@@ -174,7 +174,10 @@ class SelectableUsersAdapter(
     fun setItemChecked(position: Int, value: Boolean) {
         val userKey = getUserKey(position)
         setCheckState(userKey, value)
-        itemCheckedListener?.invoke(position, value)
+        if (!(itemCheckedListener?.invoke(position, value) ?: true)) {
+            setCheckState(userKey, !value)
+            notifyItemChanged(position)
+        }
     }
 
     fun clearCheckState() {

@@ -51,6 +51,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.task.BaseAbstractTask
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.io.ContentLengthInputStream
+import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import java.io.Closeable
 import java.io.File
 import java.io.FileNotFoundException
@@ -257,9 +258,12 @@ class UpdateStatusTask(
     ): UpdateStatusResult {
 
         stateCallback.onUpdatingStatus()
+        if (!extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
+            throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
+        }
 
         val controller = scheduleController ?: run {
-            throw SchedulerNotFoundException("No scheduler found")
+            throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
         }
 
         controller.scheduleStatus(statusUpdate, pendingUpdate, scheduleInfo)

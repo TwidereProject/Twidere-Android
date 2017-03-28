@@ -135,14 +135,8 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.scheduled_statuses -> {
-                if (extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
-                    val scheduleManageIntent = statusScheduleController?.createManageIntent()
-                    startActivity(scheduleManageIntent)
-                } else {
-                    ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
-                            ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
-                            requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
-                }
+                val scheduleManageIntent = statusScheduleController?.createManageIntent() ?: return true
+                startActivity(scheduleManageIntent)
                 return true
             }
         }

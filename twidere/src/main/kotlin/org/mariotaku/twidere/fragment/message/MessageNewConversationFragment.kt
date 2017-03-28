@@ -140,8 +140,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val roundRadius = resources.getDimension(R.dimen.element_spacing_xsmall)
         val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
         usersAdapter.itemCheckedListener = itemChecked@ { pos, checked ->
-            val text: Editable = editParticipants.editableText ?: return@itemChecked
-            val user = usersAdapter.getUser(pos) ?: return@itemChecked
+            val text: Editable = editParticipants.editableText ?: return@itemChecked false
+            val user = usersAdapter.getUser(pos) ?: return@itemChecked false
             if (checked) {
                 text.getSpans(0, text.length, PendingQuerySpan::class.java).forEach { pending ->
                     val start = text.getSpanStart(pending)
@@ -173,6 +173,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             }
             editParticipants.clearComposingText()
             updateCheckState()
+            return@itemChecked true
         }
     }
 

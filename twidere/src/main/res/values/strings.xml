@@ -368,6 +368,7 @@
     <string name="error_message_no_content">No content</string>
     <string name="error_message_rate_limit">Twitter\'s rate limit exceeded, please retry <xliff:g id="time">%s</xliff:g></string>
     <string name="error_message_rate_limit_with_action">Twitter\'s rate limit exceeded while <xliff:g id="action">%1$s</xliff:g>, please retry <xliff:g id="time">%2$s</xliff:g></string>
+    <string name="error_message_scheduler_not_available">Tweet schedule not available</string>
     <string name="error_message_status_too_long">Tweet too long.</string>
     <string name="error_message_tweet_shorten_failed">Tweet shorten failed.</string>
     <string name="error_message_tweet_shortener_not_found">Tweet shortener not found, maybe it was uninstalled.</string>
@@ -599,6 +600,7 @@
     <string name="message_auto_refresh_confirm">Enable auto refresh to get new tweets automatically?</string>
     <string name="message_blocked_user">Blocked <xliff:g id="user">%s</xliff:g>.</string>
     <string name="message_buffer_delete_schedule_confirm">Delete this schedule?</string>
+    <string name="message_buffer_disconnect_confirm">Disconnect from Buffer?</string>
     <string name="message_clear_messages_confirm">Clear all messages?</string>
     <string name="message_conversation_created">Conversation created.</string>
     <string name="message_destroy_conversation_confirm">Leave this conversation?</string>

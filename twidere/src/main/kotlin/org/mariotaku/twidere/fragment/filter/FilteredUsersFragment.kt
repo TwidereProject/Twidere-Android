@@ -29,7 +29,6 @@ import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_HOST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.fragment.AddUserFilterDialogFragment
-import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
@@ -41,7 +40,6 @@ import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.content.ContentResolverUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
-import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import javax.inject.Inject
 
 class FilteredUsersFragment : BaseFiltersFragment() {
@@ -105,31 +103,22 @@ class FilteredUsersFragment : BaseFiltersFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        var isExtraFeatures: Boolean = false
         val intent = Intent(context, AccountSelectorActivity::class.java)
         intent.putExtra(EXTRA_SINGLE_SELECTION, true)
         intent.putExtra(EXTRA_SELECT_ONLY_ITEM_AUTOMATICALLY, true)
         val requestCode = when (item.itemId) {
             R.id.add_user_single, R.id.add_user -> REQUEST_ADD_USER_SELECT_ACCOUNT
             R.id.import_from_blocked_users -> {
-                isExtraFeatures = true
                 REQUEST_IMPORT_BLOCKS_SELECT_ACCOUNT
             }
             R.id.import_from_muted_users -> {
-                isExtraFeatures = true
                 intent.putExtra(EXTRA_ACCOUNT_HOST, USER_TYPE_TWITTER_COM)
                 REQUEST_IMPORT_MUTES_SELECT_ACCOUNT
             }
             else -> return false
         }
 
-        if (!isExtraFeatures || extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_FILTERS_IMPORT)) {
-            startActivityForResult(intent, requestCode)
-        } else {
-            ExtraFeaturesIntroductionDialogFragment.show(childFragmentManager,
-                    feature = ExtraFeaturesService.FEATURE_FILTERS_IMPORT,
-                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
-        }
+        startActivityForResult(intent, requestCode)
         return true
     }
 

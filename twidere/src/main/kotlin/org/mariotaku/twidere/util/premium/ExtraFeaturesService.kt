@@ -51,7 +51,6 @@ abstract class ExtraFeaturesService {
         const val FEATURE_FILTERS_IMPORT = "import_filters"
         const val FEATURE_FILTERS_SUBSCRIPTION = "filters_subscriptions"
         const val FEATURE_SYNC_DATA = "sync_data"
-
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
 
         fun newInstance(context: Context): ExtraFeaturesService {
