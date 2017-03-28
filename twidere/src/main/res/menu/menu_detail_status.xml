@@ -59,10 +59,6 @@
         android:title="@string/action_delete"
         android:visible="false"/>
     <item
-        android:id="@id/open_in_browser"
-        android:icon="@drawable/ic_action_web"
-        android:title="@string/action_open_in_browser"/>
-    <item
         android:id="@id/copy_url"
         android:icon="@drawable/ic_action_link"
         android:title="@string/copy_link"/>
@@ -70,5 +66,9 @@
         android:id="@id/open_with_account"
         android:icon="@drawable/ic_action_accounts"
         android:title="@string/open_with_account"/>
+    <item
+        android:id="@id/open_in_browser"
+        android:icon="@drawable/ic_action_web"
+        android:title="@string/action_open_in_browser"/>
 
 </menu>

@@ -96,8 +96,7 @@ class DestroyFavoriteTask(
 
     override fun afterExecute(callback: Any?, result: SingleResponse<ParcelableStatus>) {
         destroyingFavoriteIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
-        val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY,
-                accountKey, statusId)
+        val taskEvent = FavoriteTaskEvent(FavoriteTaskEvent.Action.DESTROY, accountKey, statusId)
         taskEvent.isFinished = true
         if (result.hasData()) {
             val status = result.data

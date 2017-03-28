@@ -47,6 +47,18 @@ import java.util.*
  */
 abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
 
+    override var refreshing: Boolean
+        get() {
+            if (context == null || isDetached) return false
+            return loaderManager.hasRunningLoadersSafe()
+        }
+        set(value) {
+            super.refreshing = value
+        }
+
+    protected open val savedStatusesFileArgs: Array<String>?
+        get() = null
+
     private var lastId: String? = null
     private var page = 1
     private var pageDelta: Int = 0
@@ -58,22 +70,19 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         }
     }
 
-    fun deleteStatus(statusId: String) {
-        val list = adapterData ?: return
-        val dataToRemove = HashSet<ParcelableStatus>()
-        for (i in 0 until list.size) {
-            val status = list[i]
-            if (status.id == statusId || status.retweet_id == statusId) {
-                dataToRemove.add(status)
-            } else if (status.my_retweet_id == statusId) {
-                status.my_retweet_id = null
-                status.retweet_count = status.retweet_count - 1
-            }
-        }
-        if (list is MutableList) {
-            list.removeAll(dataToRemove)
-        }
-        adapterData = list
+    override fun onStart() {
+        super.onStart()
+        bus.register(this)
+    }
+
+    override fun onStop() {
+        bus.unregister(this)
+        super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(EXTRA_PAGE, page)
     }
 
     override fun getStatuses(param: RefreshTaskParam): Boolean {
@@ -97,16 +106,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         }
         loaderManager.restartLoader(0, args, this)
         return true
-    }
-
-    override fun onStart() {
-        super.onStart()
-        bus.register(this)
-    }
-
-    override fun onStop() {
-        bus.unregister(this)
-        super.onStop()
     }
 
     override fun hasMoreData(data: List<ParcelableStatus>?): Boolean {
@@ -164,6 +163,43 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         getStatuses(param)
     }
 
+    override fun triggerRefresh(): Boolean {
+        super.triggerRefresh()
+        val accountKeys = accountKeys
+        if (adapter.getStatusCount(true) > 0) {
+            val firstStatus = adapter.getStatus(0, true)
+            val sinceIds = Array(accountKeys.size) {
+                return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null
+            }
+            getStatuses(BaseRefreshTaskParam(accountKeys, null, sinceIds))
+        } else {
+            getStatuses(BaseRefreshTaskParam(accountKeys, null, null))
+        }
+        return true
+    }
+
+    override fun onHasMoreDataChanged(hasMoreData: Boolean) {
+        pageDelta = if (hasMoreData) 1 else 0
+    }
+
+    fun removeStatus(statusId: String) {
+        val list = adapterData ?: return
+        val dataToRemove = HashSet<ParcelableStatus>()
+        for (i in 0 until list.size) {
+            val status = list[i]
+            if (status.id == statusId || status.retweet_id == statusId) {
+                dataToRemove.add(status)
+            } else if (status.my_retweet_id == statusId) {
+                status.my_retweet_id = null
+                status.retweet_count = status.retweet_count - 1
+            }
+        }
+        if (list is MutableList) {
+            list.removeAll(dataToRemove)
+        }
+        adapterData = list
+    }
+
     fun replaceStatusStates(status: ParcelableStatus?) {
         if (status == null) return
         val lm = layoutManager
@@ -182,41 +218,6 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         adapter.notifyItemRangeChanged(rangeStart, rangeEnd)
     }
 
-    override fun triggerRefresh(): Boolean {
-        super.triggerRefresh()
-        val accountKeys = accountKeys
-        if (adapter.getStatusCount(true) > 0) {
-            val firstStatus = adapter.getStatus(0, true)
-            val sinceIds = Array(accountKeys.size) {
-                return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null
-            }
-            getStatuses(BaseRefreshTaskParam(accountKeys, null, sinceIds))
-        } else {
-            getStatuses(BaseRefreshTaskParam(accountKeys, null, null))
-        }
-        return true
-    }
-
-    override var refreshing: Boolean
-        get() {
-            if (context == null || isDetached) return false
-            return loaderManager.hasRunningLoadersSafe()
-        }
-        set(value) {
-            super.refreshing = value
-        }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState!!.putInt(EXTRA_PAGE, page)
-    }
-
-    protected open val savedStatusesFileArgs: Array<String>?
-        get() = null
-
-    override fun onHasMoreDataChanged(hasMoreData: Boolean) {
-        pageDelta = if (hasMoreData) 1 else 0
-    }
 
     private fun updateFavoritedStatus(status: ParcelableStatus) {
         replaceStatusStates(status)
@@ -234,28 +235,44 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         adapterData = data
     }
 
+    protected open fun notifyFavoriteTask(event: FavoriteTaskEvent) {
+        if (event.isSucceeded) {
+            updateFavoritedStatus(event.status!!)
+        }
+    }
+
+    protected open fun notifyStatusDestroyed(event: StatusDestroyedEvent) {
+        removeStatus(event.status.id)
+    }
+
+    protected open fun notifyStatusListChanged(event: StatusListChangedEvent) {
+        adapter.notifyDataSetChanged()
+    }
+
+    protected open fun notifyStatusRetweeted(event: StatusRetweetedEvent) {
+        updateRetweetedStatuses(event.status)
+    }
+
     protected inner class ParcelableStatusesBusCallback {
 
         @Subscribe
-        fun notifyFavoriteTask(event: FavoriteTaskEvent) {
-            if (event.isSucceeded) {
-                updateFavoritedStatus(event.status!!)
-            }
+        fun onFavoriteTaskEvent(event: FavoriteTaskEvent) {
+            notifyFavoriteTask(event)
         }
 
         @Subscribe
-        fun notifyStatusDestroyed(event: StatusDestroyedEvent) {
-            deleteStatus(event.status.id)
+        fun onStatusDestroyedEvent(event: StatusDestroyedEvent) {
+            notifyStatusDestroyed(event)
         }
 
         @Subscribe
-        fun notifyStatusListChanged(event: StatusListChangedEvent) {
-            adapter.notifyDataSetChanged()
+        fun onStatusListChangedEvent(event: StatusListChangedEvent) {
+            notifyStatusListChanged(event)
         }
 
         @Subscribe
-        fun notifyStatusRetweeted(event: StatusRetweetedEvent) {
-            updateRetweetedStatuses(event.status)
+        fun onStatusRetweetedEvent(event: StatusRetweetedEvent) {
+            notifyStatusRetweeted(event)
         }
 
     }
