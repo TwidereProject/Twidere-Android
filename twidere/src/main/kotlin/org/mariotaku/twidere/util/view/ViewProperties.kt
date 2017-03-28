@@ -17,23 +17,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension
+package org.mariotaku.twidere.util.view
 
+import android.util.FloatProperty
 import android.view.View
-import android.widget.ViewAnimator
 
-/**
- * Created by mariotaku on 2017/3/24.
- */
+object ViewProperties {
+    val TRANSLATION_X_RELATIVE = object : FloatProperty<View>("xRelative") {
+        override fun setValue(obj: View, value: Float) {
+            obj.translationX = value * obj.width
+        }
 
-var ViewAnimator.currentChild: View?
-    get() = getChildAt(displayedChild)
-    set(value) {
-        displayedChild = indexOfChild(value)
+        override fun get(obj: View): Float {
+            return obj.translationX / obj.width
+        }
+
     }
 
-var ViewAnimator.displayedChildId: Int
-    get() = getChildAt(displayedChild).id
-    set(value) {
-        displayedChild = (0 until childCount).indexOfFirst { getChildAt(it).id == value }
-    }
+}

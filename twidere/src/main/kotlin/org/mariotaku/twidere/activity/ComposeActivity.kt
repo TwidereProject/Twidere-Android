@@ -20,6 +20,8 @@
 package org.mariotaku.twidere.activity
 
 import android.accounts.AccountManager
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
@@ -39,7 +41,6 @@ import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.view.SupportMenuInflater
 import android.support.v7.widget.ActionMenuView.OnMenuItemClickListener
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.FixedLinearLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -54,6 +55,8 @@ import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
+import android.view.animation.DecelerateInterpolator
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
@@ -98,6 +101,8 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
+import org.mariotaku.twidere.util.view.ViewAnimator
+import org.mariotaku.twidere.util.view.ViewProperties
 import org.mariotaku.twidere.view.CheckableLinearLayout
 import org.mariotaku.twidere.view.ExtendedRecyclerView
 import org.mariotaku.twidere.view.ShapedImageView
@@ -121,6 +126,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     lateinit var locationManager: LocationManager
 
     private lateinit var itemTouchHelper: ItemTouchHelper
+    private lateinit var bottomMenuAnimator: ViewAnimator
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
     private var currentTask: AsyncTask<Any, Any, *>? = null
 
@@ -161,6 +167,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         nameFirst = preferences[nameFirstKey]
         setContentView(R.layout.activity_compose)
 
+        bottomMenuAnimator = ViewAnimator()
+        bottomMenuAnimator.setupViews()
+
         mediaPreviewAdapter = MediaPreviewAdapter(this, Glide.with(this))
         mediaPreviewAdapter.listener = object : MediaPreviewAdapter.Listener {
             override fun onEditClick(position: Int, holder: MediaPreviewViewHolder) {
@@ -192,7 +201,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val defaultAccountIds = accountDetails.map(AccountDetails::key).toTypedArray()
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
-        accountSelectorContainer.setOnClickListener(this)
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
         locationSwitch.max = LOCATION_OPTIONS.size
@@ -244,10 +252,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         accountSelector.layoutManager = FixedLinearLayoutManager(this).apply {
-            orientation = LinearLayoutManager.VERTICAL
-            stackFromEnd = true
+            orientation = LinearLayoutManager.HORIZONTAL
+            reverseLayout = false
+            stackFromEnd = false
         }
-        accountSelector.itemAnimator = DefaultItemAnimator()
+//        accountSelector.itemAnimator = DefaultItemAnimator()
         accountsAdapter = AccountIconsAdapter(this).apply {
             setAccounts(accountDetails)
         }
@@ -322,6 +331,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         updateUpdateStatusIcon()
 
         textChanged = false
+        bottomMenuAnimator.showView(composeMenu, false)
 
         updateAttachedMediaView()
     }
@@ -461,9 +471,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             updateStatus -> {
                 confirmAndUpdateStatus()
             }
-            accountSelectorContainer -> {
-                isAccountSelectorVisible = false
-            }
             accountSelectorButton -> {
                 isAccountSelectorVisible = !isAccountSelectorVisible
             }
@@ -475,9 +482,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private var isAccountSelectorVisible: Boolean
-        get() = accountSelectorContainer.visibility == View.VISIBLE
+        get() = bottomMenuAnimator.currentChild == accountSelector
         set(visible) {
-            accountSelectorContainer.visibility = if (visible) View.VISIBLE else View.GONE
+            bottomMenuAnimator.showView(if (visible) accountSelector else composeMenu, true)
+            displaySelectedAccountsIcon()
         }
 
     private fun confirmAndUpdateStatus() {
@@ -655,25 +663,54 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return draftUri
     }
 
-    fun setSelectedAccounts(vararg accounts: AccountDetails) {
-        if (accounts.size == 1) {
-            accountsCount.setText(null)
-            val account = accounts[0]
-            val profileImageStyle = preferences[profileImageStyleKey]
-            Glide.with(this).loadProfileImage(this, account, profileImageStyle).into(accountProfileImage)
-            accountProfileImage.setBorderColor(account.color)
-        } else {
-            accountsCount.setText(accounts.size.toString())
-            //TODO cancel image load
-            accountProfileImage.setImageDrawable(null)
-            accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
-        }
-    }
-
     override fun onActionModeStarted(mode: ActionMode) {
         super.onActionModeStarted(mode)
         ThemeUtils.applyColorFilterToMenuIcon(mode.menu, ThemeUtils.getContrastActionBarItemColor(this),
                 0, 0, Mode.MULTIPLY)
+    }
+
+    private fun displaySelectedAccountsIcon() {
+        val accounts = accountsAdapter.selectedAccounts
+        val account = accounts.singleOrNull()
+
+        val displayDoneIcon = isAccountSelectorVisible
+
+        if (account != null) {
+            accountsCount.setText(null)
+
+            if (displayDoneIcon) {
+                Glide.clear(accountProfileImage)
+                accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
+                        android.R.attr.colorForeground, 0))
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
+            } else {
+                accountProfileImage.clearColorFilter()
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_CROP
+                Glide.with(this).loadProfileImage(this, account, accountProfileImage.style)
+                        .into(accountProfileImage)
+            }
+
+            accountProfileImage.setBorderColor(account.color)
+        } else {
+            accountsCount.setText(accounts.size.toString())
+
+            Glide.clear(accountProfileImage)
+            if (displayDoneIcon) {
+                accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
+                accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
+            } else {
+                accountProfileImage.setImageDrawable(null)
+            }
+
+            accountProfileImage.setBorderColors(*Utils.getAccountColors(accounts))
+        }
+
+        if (displayDoneIcon) {
+            accountsCount.visibility = View.GONE
+        } else {
+            accountsCount.visibility = View.VISIBLE
+        }
     }
 
     private fun updateViewStyle() {
@@ -1138,8 +1175,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun notifyAccountSelectionChanged() {
+        displaySelectedAccountsIcon()
         val accounts = accountsAdapter.selectedAccounts
-        setSelectedAccounts(*accounts)
         if (ArrayUtils.isEmpty(accounts)) {
             editText.accountKey = Utils.getDefaultAccountKey(this)
         } else {
@@ -1429,6 +1466,46 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+    private fun ViewAnimator.setupViews() {
+        fun AnimatorSet.setup() {
+            interpolator = DecelerateInterpolator()
+            duration = 250
+        }
+
+        addView(accountSelector) { view ->
+            inAnimator = AnimatorSet().also { set ->
+                set.playTogether(
+                        ObjectAnimator.ofFloat(view, ViewProperties.TRANSLATION_X_RELATIVE, -1f, 0f),
+                        ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
+                )
+                set.setup()
+            }
+            outAnimator = AnimatorSet().also { set ->
+                set.playTogether(
+                        ObjectAnimator.ofFloat(view, ViewProperties.TRANSLATION_X_RELATIVE, 0f, -1f),
+                        ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
+                )
+                set.setup()
+            }
+        }
+        addView(composeMenu) { view ->
+            inAnimator = AnimatorSet().also { set ->
+                set.playTogether(
+                        ObjectAnimator.ofFloat(view, ViewProperties.TRANSLATION_X_RELATIVE, 1f, 0f),
+                        ObjectAnimator.ofFloat(view, View.ALPHA, 0f, 1f)
+                )
+                set.setup()
+            }
+            outAnimator = AnimatorSet().also { set ->
+                set.playTogether(
+                        ObjectAnimator.ofFloat(view, ViewProperties.TRANSLATION_X_RELATIVE, 0f, 1f),
+                        ObjectAnimator.ofFloat(view, View.ALPHA, 1f, 0f)
+                )
+                set.setup()
+            }
+        }
+    }
+
     internal class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
 
         private val activityRef = WeakReference(activity)
@@ -1452,7 +1529,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
         private val iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
-        private val nameView = itemView.findViewById(android.R.id.text1) as TextView
 
         init {
             itemView.setOnClickListener(this)
@@ -1460,11 +1536,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
             itemView.alpha = if (isSelected) 1f else 0.33f
-            (itemView as CheckableLinearLayout).isChecked = isSelected
             val context = adapter.context
             adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
             iconView.setBorderColor(account.color)
-            nameView.text = if (adapter.isNameFirst) account.user.name else "@" + account.user.screen_name
         }
 
         override fun onClick(v: View) {
@@ -1598,11 +1672,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     internal class DiscardTweetTask(activity: ComposeActivity) : AsyncTask<Any, Any, Unit>() {
 
-        val activityRef: WeakReference<ComposeActivity>
+        private val activityRef = WeakReference(activity)
         private val media: List<ParcelableMediaUpdate>
 
         init {
-            this.activityRef = WeakReference(activity)
             this.media = activity.mediaList
         }
 
@@ -1858,3 +1931,4 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 }
+

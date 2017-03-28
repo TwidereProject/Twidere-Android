@@ -132,26 +132,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <FrameLayout
-            android:id="@+id/accountSelectorContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/editTextContainer"
-            android:layout_alignEnd="@+id/editTextContainer"
-            android:layout_alignLeft="@+id/editTextContainer"
-            android:layout_alignRight="@+id/editTextContainer"
-            android:layout_alignStart="@+id/editTextContainer"
-            android:layout_alignTop="@+id/editTextContainer"
-            android:visibility="gone">
-
-            <org.mariotaku.twidere.view.ExtendedRecyclerView
-                android:id="@+id/accountSelector"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:overScrollMode="never"/>
-        </FrameLayout>
-
     </RelativeLayout>
 
     <View
@@ -165,6 +145,89 @@
         android:layout_height="?actionBarSize"
         android:background="?android:panelColorBackground"
         android:baselineAligned="false">
+
+        <org.mariotaku.twidere.view.ExtendedRecyclerView
+            android:id="@+id/accountSelector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@+id/accountSelectorButton"
+            android:layout_toRightOf="@id/accountSelectorButton"
+            android:clickable="true"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            tools:listitem="@layout/adapter_item_compose_account"/>
+
+        <RelativeLayout
+            android:id="@+id/composeMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_toEndOf="@+id/accountSelectorButton"
+            android:layout_toRightOf="@id/accountSelectorButton"
+            android:clickable="true"
+            android:visibility="visible">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/updateStatus"
+                android:layout_toStartOf="@+id/updateStatus"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <android.support.v7.widget.TwidereActionMenuView
+                    android:id="@+id/menuBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@null"/>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/updateStatus"
+                style="?actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/action_send"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/element_spacing_normal"
+                android:paddingEnd="@dimen/element_spacing_normal"
+                android:paddingLeft="@dimen/element_spacing_large"
+                android:paddingRight="@dimen/element_spacing_normal"
+                android:paddingStart="@dimen/element_spacing_large"
+                android:paddingTop="@dimen/element_spacing_normal">
+
+                <org.mariotaku.twidere.view.StatusTextCountView
+                    android:id="@+id/statusTextCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:minWidth="@dimen/element_size_small"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    tools:text="140"/>
+
+                <org.mariotaku.twidere.view.IconActionView
+                    android:id="@+id/updateStatusIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/action_send"
+                    android:cropToPadding="false"
+                    android:padding="@dimen/element_spacing_xsmall"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_action_send"
+                    app:iabColor="?android:textColorSecondary"
+                    tools:tint="?android:textColorSecondary"/>
+
+            </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/accountSelectorButton"
@@ -214,61 +277,5 @@
 
         </RelativeLayout>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@+id/accountSelectorButton"
-            android:layout_toLeftOf="@+id/updateStatus"
-            android:layout_toRightOf="@+id/accountSelectorButton"
-            android:layout_toStartOf="@+id/updateStatus"
-            android:scrollbars="none">
-
-            <android.support.v7.widget.TwidereActionMenuView
-                android:id="@+id/menuBar"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@null"/>
-        </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/updateStatus"
-            style="?actionButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:contentDescription="@string/action_send"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/element_spacing_normal"
-            android:paddingEnd="@dimen/element_spacing_normal"
-            android:paddingLeft="@dimen/element_spacing_large"
-            android:paddingRight="@dimen/element_spacing_normal"
-            android:paddingStart="@dimen/element_spacing_large"
-            android:paddingTop="@dimen/element_spacing_normal">
-
-            <org.mariotaku.twidere.view.StatusTextCountView
-                android:id="@+id/statusTextCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minWidth="@dimen/element_size_small"
-                android:textAppearance="?android:textAppearanceSmall"
-                tools:text="140"/>
-
-            <org.mariotaku.twidere.view.IconActionView
-                android:id="@+id/updateStatusIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/action_send"
-                android:cropToPadding="false"
-                android:padding="@dimen/element_spacing_xsmall"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_action_send"
-                app:iabColor="?android:textColorSecondary"
-                tools:tint="?android:textColorSecondary"/>
-
-        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
