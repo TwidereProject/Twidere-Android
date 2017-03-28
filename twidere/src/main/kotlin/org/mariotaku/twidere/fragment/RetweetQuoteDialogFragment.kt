@@ -34,6 +34,9 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.twitter.Validator
 import org.mariotaku.ktextension.Bundle
@@ -53,18 +56,22 @@ import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.Utils.isMyRetweet
+import org.mariotaku.twidere.view.ColorLabelRelativeLayout
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 
 class RetweetQuoteDialogFragment : BaseDialogFragment() {
-    private var popupMenu: PopupMenu? = null
+    private lateinit var popupMenu: PopupMenu
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
-        val status = this.status
         val accountKey = this.accountKey
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)!!
+        val status = this.status.apply {
+            account_key = details.key
+            account_color = details.color
+        }
 
         builder.setView(R.layout.dialog_status_quote_retweet)
         builder.setTitle(R.string.retweet_quote_confirm_title)
@@ -72,7 +79,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.setNeutralButton(R.string.action_quote) { _, _ ->
             val intent = Intent(INTENT_ACTION_QUOTE)
-            val menu = popupMenu!!.menu
+            val menu = popupMenu.menu
             val quoteOriginalStatus = menu.findItem(R.id.quote_original_status)
             intent.putExtra(EXTRA_STATUS, status)
             intent.putExtra(EXTRA_QUOTE_ORIGINAL_STATUS, quoteOriginalStatus.isChecked)
@@ -83,13 +90,13 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         dialog.setOnShowListener {
             it as AlertDialog
             it.applyTheme()
-            val itemContent = it.findViewById(R.id.itemContent)!!
-            val textCountView = it.findViewById(R.id.comment_text_count) as StatusTextCountView
-            val itemMenu = it.findViewById(R.id.itemMenu)!!
-            val actionButtons = it.findViewById(R.id.actionButtons)!!
-            val commentContainer = it.findViewById(R.id.comment_container)!!
-            val editComment = it.findViewById(R.id.edit_comment) as ComposeEditText
-            val commentMenu = it.findViewById(R.id.comment_menu)!!
+            val itemContent = it.findViewById(R.id.itemContent) as ColorLabelRelativeLayout
+            val textCountView = it.findViewById(R.id.commentTextCount) as StatusTextCountView
+            val itemMenu = it.findViewById(R.id.itemMenu) as ImageButton
+            val actionButtons = it.findViewById(R.id.actionButtons) as LinearLayout
+            val commentContainer = it.findViewById(R.id.commentContainer) as RelativeLayout
+            val editComment = it.findViewById(R.id.editComment) as ComposeEditText
+            val commentMenu = it.findViewById(R.id.commentMenu) as ImageButton
 
             val adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
             adapter.setShouldShowAccountsColor(true)
@@ -135,20 +142,20 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             })
 
             popupMenu = PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
-                    R.attr.actionOverflowMenuStyle, 0)
-            commentMenu.setOnClickListener { popupMenu!!.show() }
-            commentMenu.setOnTouchListener(popupMenu!!.dragToOpenListener)
-            popupMenu!!.inflate(R.menu.menu_dialog_comment)
-            val menu = popupMenu!!.menu
-            menu.setItemAvailability(R.id.quote_original_status,
-                    status.retweet_id != null || status.quoted_id != null)
-            popupMenu!!.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
-                if (item.isCheckable) {
-                    item.isChecked = !item.isChecked
-                    return@OnMenuItemClickListener true
-                }
-                false
-            })
+                    R.attr.actionOverflowMenuStyle, 0).apply {
+                inflate(R.menu.menu_dialog_comment)
+                menu.setItemAvailability(R.id.quote_original_status, status.retweet_id != null || status.quoted_id != null)
+                setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item ->
+                    if (item.isCheckable) {
+                        item.isChecked = !item.isChecked
+                        return@OnMenuItemClickListener true
+                    }
+                    false
+                })
+            }
+            commentMenu.setOnClickListener { popupMenu.show() }
+            commentMenu.setOnTouchListener(popupMenu.dragToOpenListener)
+            commentMenu.visibility = if (popupMenu.menu.hasVisibleItems()) View.VISIBLE else View.GONE
 
             it.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 var dismissDialog = false
@@ -188,7 +195,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = !status.user_is_protected
         }
-        val textCountView = (dialog.findViewById(R.id.comment_text_count) as StatusTextCountView?)!!
+        val textCountView = (dialog.findViewById(R.id.commentTextCount) as StatusTextCountView?)!!
         textCountView.textCount = validator.getTweetLength(s.toString())
     }
 
@@ -203,9 +210,9 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             showProtectedConfirmation: Boolean): Boolean {
         val twitter = twitterWrapper
         val dialog = dialog ?: return false
-        val editComment = dialog.findViewById(R.id.edit_comment) as EditText
+        val editComment = dialog.findViewById(R.id.editComment) as EditText
         if (useQuote(editComment.length() > 0, account)) {
-            val menu = popupMenu!!.menu
+            val menu = popupMenu.menu
             val itemQuoteOriginalStatus = menu.findItem(R.id.quote_original_status)
             val statusLink: Uri
             val quoteOriginalStatus = itemQuoteOriginalStatus.isChecked

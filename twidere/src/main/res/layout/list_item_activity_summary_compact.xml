@@ -12,7 +12,6 @@
     android:padding="@dimen/element_spacing_normal"
     app:ignorePadding="true">
 
-
     <org.mariotaku.twidere.view.IconActionView
         android:id="@+id/activity_type"
         android:layout_width="@dimen/element_size_small"

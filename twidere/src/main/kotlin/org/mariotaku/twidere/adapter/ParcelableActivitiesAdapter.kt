@@ -207,7 +207,7 @@ class ParcelableActivitiesAdapter(
                 return holder
             }
             ITEM_VIEW_TYPE_TITLE_SUMMARY -> {
-                val view = inflater.inflate(R.layout.card_item_activity_summary_compact, parent, false)
+                val view = inflater.inflate(R.layout.list_item_activity_summary_compact, parent, false)
                 val holder = ActivityTitleSummaryViewHolder(view, this)
                 holder.setOnClickListeners()
                 holder.setupViewOptions()
