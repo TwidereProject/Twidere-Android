@@ -17,57 +17,30 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util.schedule
+package org.mariotaku.twidere.util.gifshare
 
 import android.content.Context
 import android.content.Intent
-import android.support.annotation.WorkerThread
-import org.mariotaku.twidere.model.ParcelableStatusUpdate
-import org.mariotaku.twidere.model.schedule.ScheduleInfo
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask
-import org.mariotaku.twidere.task.twitter.UpdateStatusTask.PendingStatusUpdate
 import java.util.*
 
 /**
  * Created by mariotaku on 2017/3/24.
  */
 
-interface StatusScheduleController {
+interface GifShareProvider {
 
-    @WorkerThread
-    @Throws(ScheduleException::class)
-    fun scheduleStatus(statusUpdate: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate,
-            scheduleInfo: ScheduleInfo)
-
-    fun createSetScheduleIntent(): Intent
+    fun createGifSelectorIntent(): Intent
 
     fun createSettingsIntent(): Intent?
 
-    fun createManageIntent(): Intent?
-
-    class ScheduleException : UpdateStatusTask.UpdateStatusException {
-
-        constructor() : super()
-
-        constructor(detailMessage: String, throwable: Throwable) : super(detailMessage, throwable)
-
-        constructor(throwable: Throwable) : super(throwable)
-
-        constructor(message: String) : super(message)
-    }
-
     interface Factory {
-        fun newInstance(context: Context): StatusScheduleController?
-
-        fun parseInfo(json: String): ScheduleInfo?
+        fun newInstance(context: Context): GifShareProvider?
 
         companion object {
             val instance: Factory get() = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
 
             private object NullFactory : Factory {
                 override fun newInstance(context: Context) = null
-
-                override fun parseInfo(json: String): ScheduleInfo? = null
 
             }
         }

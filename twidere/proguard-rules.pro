@@ -65,11 +65,13 @@
     <init>(android.content.Context);
 }
 
--keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
--keep class * extends org.mariotaku.twidere.util.TwitterCardFragmentFactory
 -keep class * extends org.mariotaku.twidere.util.Analyzer
+-keep class * extends org.mariotaku.twidere.util.MapFragmentFactory
+-keep class * extends org.mariotaku.twidere.util.gifshare.GifShareProvider.Factory
 -keep class * extends org.mariotaku.twidere.util.premium.ExtraFeaturesService
--keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleController.Factory
+-keep class * extends org.mariotaku.twidere.util.schedule.StatusScheduleProvider.Factory
+-keep class * extends org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
+-keep class * extends org.mariotaku.twidere.util.twitter.card.TwitterCardViewFactory
 -keep class * extends org.mariotaku.twidere.util.view.AppBarChildBehavior.ChildTransformation
 
 -keepclassmembers class * {

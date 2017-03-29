@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.schedule.StatusScheduleController
+import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import javax.inject.Inject
 
 open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
@@ -67,12 +67,12 @@ open class BaseFragment : Fragment(), IBaseFragment<BaseFragment> {
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
     @Inject
-    lateinit var statusScheduleControllerFactory: StatusScheduleController.Factory
+    lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
     @Inject
     lateinit var restHttpClient: RestHttpClient
 
-    protected val statusScheduleController: StatusScheduleController?
-        get() = statusScheduleControllerFactory.newInstance(context)
+    protected val statusScheduleProvider: StatusScheduleProvider?
+        get() = statusScheduleProviderFactory.newInstance(context)
 
     private val actionHelper = IBaseFragment.ActionHelper(this)
 

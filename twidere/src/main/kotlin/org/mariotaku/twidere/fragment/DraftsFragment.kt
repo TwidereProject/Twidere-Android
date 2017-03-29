@@ -135,7 +135,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.scheduled_statuses -> {
-                val scheduleManageIntent = statusScheduleController?.createManageIntent() ?: return true
+                val scheduleManageIntent = statusScheduleProvider?.createManageIntent() ?: return true
                 startActivity(scheduleManageIntent)
                 return true
             }

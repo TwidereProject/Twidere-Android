@@ -62,7 +62,7 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
-import org.mariotaku.twidere.util.schedule.StatusScheduleController
+import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.sync.JobSchedulerSyncController
 import org.mariotaku.twidere.util.sync.LegacySyncController
 import org.mariotaku.twidere.util.sync.SyncController
@@ -257,8 +257,8 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun statusScheduleControllerFactory(): StatusScheduleController.Factory {
-        return StatusScheduleController.Factory.instance
+    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
+        return StatusScheduleProvider.Factory.instance
     }
 
     @Provides

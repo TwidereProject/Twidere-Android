@@ -8,7 +8,7 @@ import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.schedule.StatusScheduleController
+import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import javax.inject.Inject
 
 /**
@@ -38,10 +38,10 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
     @Inject
-    lateinit var scheduleControllerFactory: StatusScheduleController.Factory
+    lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
 
-    val scheduleController: StatusScheduleController?
-        get() = scheduleControllerFactory.newInstance(context)
+    val scheduleProvider: StatusScheduleProvider?
+        get() = scheduleProviderFactory.newInstance(context)
 
     init {
         injectMembers()

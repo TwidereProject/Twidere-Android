@@ -262,7 +262,7 @@ class UpdateStatusTask(
             throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
         }
 
-        val controller = scheduleController ?: run {
+        val controller = scheduleProvider ?: run {
             throw SchedulerNotFoundException(context.getString(R.string.error_message_scheduler_not_available))
         }
 
