@@ -54,6 +54,7 @@ import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.cache.DiskLRUFileCache
 import org.mariotaku.twidere.util.cache.JsonCache
+import org.mariotaku.twidere.util.gifshare.GifShareProvider
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
@@ -259,6 +260,12 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
         return StatusScheduleProvider.Factory.instance
+    }
+
+    @Provides
+    @Singleton
+    fun gifShareProviderFactory(): GifShareProvider.Factory {
+        return GifShareProvider.Factory.instance
     }
 
     @Provides
