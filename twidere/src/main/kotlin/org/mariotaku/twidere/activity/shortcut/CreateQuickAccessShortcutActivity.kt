@@ -91,6 +91,7 @@ class CreateQuickAccessShortcutActivity : BaseActivity() {
                     "list", "list_timeline" -> {
                         val selectUserListIntent = Intent(this, UserListSelectorActivity::class.java)
                         selectUserListIntent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+                        selectUserListIntent.putExtra(EXTRA_SHOW_MY_LISTS, true)
                         selectUserListIntent.putExtra(EXTRA_EXTRAS, Bundle {
                             this[EXTRA_TYPE] = actionType
                             this[EXTRA_ACCOUNT_KEY] = accountKey
