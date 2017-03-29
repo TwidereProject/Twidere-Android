@@ -54,6 +54,11 @@
     <item>2時間</item>
     <item>4時間</item>
   </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>狭い</item>
+    <item>普通</item>
+    <item>広い</item>
+  </string-array>
   <string-array name="entries_tab_display_option">
     <item>アイコン</item>
     <item>ラベル</item>
@@ -72,7 +77,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>ユーザー</item>
     <item>ユーザータイムライン</item>
-    <item>User Favorites</item>
+    <item>ユーザーのお気に入り</item>
     <item>リスト</item>
     <item>リストタイムライン</item>
   </string-array>

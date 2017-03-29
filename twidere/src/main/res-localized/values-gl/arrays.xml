@@ -65,7 +65,7 @@
     <item>Icona e etiqueta</item>
   </string-array>
   <string-array name="entries_theme">
-    <item>Luz LED</item>
+    <item>Lixeiro</item>
     <item>Escuro</item>
     <item>Auto</item>
   </string-array>
@@ -76,8 +76,8 @@
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">
     <item>Usuario</item>
-    <item>User timeline</item>
-    <item>User Favorites</item>
+    <item>Liña de tempo do usuario</item>
+    <item>Favoritos do usuario</item>
     <item>Lista</item>
     <item>Listar liña de tempo</item>
   </string-array>

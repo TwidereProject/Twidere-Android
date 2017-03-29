@@ -24,14 +24,14 @@
   <string name="error_twitter_144">Non se atopou o chío, se cadra foi eliminado.</string>
   <string name="error_twitter_161">Xa enviaches petición de seguimento a este usuario.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
-  <string name="error_twitter_162">Estás a ser bloqueado por este usuario.</string>
+  <string name="error_twitter_162">Estás bloqueado por este usuario.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
   <string name="error_twitter_172">Xa gardaches esta busca.</string>
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
   <string name="error_twitter_179">Non podes ver este chío dun usuario protexido.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
   <string name="error_twitter_187">Xa enviaches este chío.</string>
-  <string name="error_twitter_193">A foto dúbida e grande de máis.</string>
+  <string name="error_twitter_193">A foto subida é grande de máis.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Quizá precises entrar de novo.</string>
 </resources>
