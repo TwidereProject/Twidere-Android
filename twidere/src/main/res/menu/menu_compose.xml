@@ -5,35 +5,58 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/add_media"
-        android:icon="@drawable/ic_action_gallery"
-        android:title="@string/action_add_media"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction"/>
-    <item
-        android:id="@+id/media_menu"
-        android:icon="@drawable/ic_action_gallery"
-        android:title="@string/label_media"
-        android:visible="false"
+        android:id="@+id/status_attachment"
+        android:icon="@drawable/ic_action_add"
+        android:title="@string/action_add"
+        android:visible="true"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction">
         <menu>
             <item
-                android:id="@+id/add_media_sub_item"
-                android:icon="@drawable/ic_action_add"
+                android:id="@+id/add_media"
+                android:icon="@drawable/ic_action_gallery"
                 android:title="@string/action_add_media"/>
+            <item
+                android:id="@+id/take_photo"
+                android:icon="@drawable/ic_action_camera"
+                android:title="@string/action_take_photo"/>
+            <item
+                android:id="@+id/record_video"
+                android:icon="@drawable/ic_action_camcorder"
+                android:title="@string/action_record_video"/>
             <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"
                 android:icon="@drawable/ic_action_warning"
                 android:title="@string/mark_as_sensitive"/>
+            <item
+                android:id="@+id/schedule"
+                android:icon="@drawable/ic_action_time"
+                android:title="@string/action_status_schedule"/>
         </menu>
     </item>
     <item
-        android:id="@+id/schedule"
-        android:icon="@drawable/ic_action_time"
-        android:title="@string/action_status_schedule"
-        app:showAsAction="always"/>
+        android:id="@+id/location_submenu"
+        android:icon="@drawable/ic_action_location"
+        android:title="@string/action_location"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction">
+        <menu>
+            <group
+                android:id="@+id/location_option"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/location_precise"
+                    android:title="@string/label_location_precise"/>
+                <item
+                    android:id="@+id/location_coarse"
+                    android:title="@string/label_location_coarse"/>
+                <item
+                    android:id="@+id/location_off"
+                    android:title="@string/label_location_no_location"/>
+            </group>
+        </menu>
+    </item>
     <item
         android:id="@id/drafts"
         android:icon="@drawable/ic_action_draft"

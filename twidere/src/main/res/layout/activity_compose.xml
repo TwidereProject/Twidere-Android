@@ -32,15 +32,18 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ScrollView
+        <org.mariotaku.twidere.view.MaxHeightScrollView
             android:id="@+id/editTextContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:maxHeight="240dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:minHeight="160dp"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/element_spacing_normal">
 
                 <org.mariotaku.twidere.view.FixedTextView
                     android:id="@+id/replyLabel"
@@ -66,9 +69,7 @@
                     android:gravity="top"
                     android:hint="@string/status_hint"
                     android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                    android:minLines="@integer/default_compose_min_lines"
-                    android:padding="@dimen/element_spacing_normal"
-                    tools:minLines="@integer/media_compose_min_lines"/>
+                    android:padding="@dimen/element_spacing_normal"/>
 
                 <org.mariotaku.twidere.view.ExtendedRecyclerView
                     android:id="@+id/attachedMediaPreview"
@@ -77,60 +78,40 @@
                     android:clipChildren="false"
                     tools:listitem="@layout/grid_item_media_editor"/>
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/locationContainer"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="?selectableItemBackground"
                     android:clickable="false"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingBottom="@dimen/element_spacing_normal"
+                    android:paddingBottom="@dimen/element_spacing_small"
                     android:paddingLeft="@dimen/element_spacing_normal"
                     android:paddingRight="@dimen/element_spacing_normal"
-                    android:paddingTop="@dimen/element_spacing_normal">
+                    android:paddingTop="@dimen/element_spacing_small">
 
                     <org.mariotaku.twidere.view.IconActionView
                         android:id="@+id/locationIcon"
-                        android:layout_width="@dimen/element_size_small"
-                        android:layout_height="@dimen/element_size_small"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
                         android:src="@drawable/ic_action_location"
-                        app:iabActivatedColor="?colorAccent"
-                        app:iabColor="?android:textColorSecondary"
-                        tools:activated="true"/>
+                        app:iabColor="?android:textColorSecondary"/>
 
                     <org.mariotaku.twidere.view.FixedTextView
                         android:id="@+id/locationText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/element_spacing_normal"
-                        android:layout_marginRight="@dimen/element_spacing_normal"
-                        android:layout_toEndOf="@+id/locationIcon"
-                        android:layout_toLeftOf="@+id/locationSwitch"
-                        android:layout_toRightOf="@+id/locationIcon"
-                        android:layout_toStartOf="@+id/locationSwitch"
                         android:maxLines="1"
-                        android:paddingLeft="@dimen/element_spacing_normal"
-                        android:paddingRight="@dimen/element_spacing_normal"
+                        android:paddingLeft="@dimen/element_spacing_small"
+                        android:paddingRight="@dimen/element_spacing_small"
+                        android:textColor="?android:textColorSecondary"
                         tools:text="11.4, 51.4"/>
 
-                    <org.mariotaku.twidere.view.ThemedMultiValueSwitch
-                        android:id="@+id/locationSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        tools:max="3"
-                        tools:position="2"/>
-
-                </RelativeLayout>
+                </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </org.mariotaku.twidere.view.MaxHeightScrollView>
 
     </RelativeLayout>
 

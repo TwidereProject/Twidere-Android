@@ -74,6 +74,7 @@
     <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
     <string name="action_like">Like</string>
     <string name="action_liking">liking</string>
+    <string name="action_location">Location</string>
     <string name="action_manage_in_buffer">Manage in Buffer</string>
     <string name="action_mark_as_read">Mark as read</string>
     <string name="action_modifying_lists">modifying lists</string>
@@ -523,6 +524,9 @@
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
+    <string name="label_location_coarse">Coarse (City)</string>
+    <string name="label_location_no_location">None</string>
+    <string name="label_location_precise">Precise (Coordinate)</string>
     <string name="label_location_your_coarse_location">Your coarse location</string>
     <string name="label_media">Media</string>
     <string name="label_original_status">Original tweet</string>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_location_off-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_location_off-mdpi">
+            <path d="M4,4 L28,4 L28,28 L4,28 L4,4 Z M15.75,15.47 L15.64,15.36 L15.75,15.47 Z" id="Shape"></path>
+            <path d="M16,10.5 C17.38,10.5 18.5,11.62 18.5,13 C18.5,13.74 18.17,14.39 17.67,14.85 L21.3,18.48 C22.28,16.62 23,14.68 23,13 C23,9.13 19.87,6 16,6 C14.02,6 12.24,6.83 10.96,8.15 L14.15,11.34 C14.61,10.82 15.26,10.5 16,10.5 Z M20.37,20.1 L15.74,15.47 L15.63,15.36 L7.27,7 L6,8.27 L9.18,11.45 C9.07,11.95 9,12.47 9,13 C9,18.25 16,26 16,26 C16,26 17.67,24.15 19.38,21.65 L22.73,25 L24,23.73 L20.37,20.1 L20.37,20.1 Z" id="Shape" fill="#FFFFFF" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

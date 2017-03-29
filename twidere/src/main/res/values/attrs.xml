@@ -175,6 +175,9 @@
         <attr name="layout_isMediaItemView" format="boolean"/>
         <attr name="layout_videoViewId" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="MaxHeightScrollView">
+        <attr name="android:maxHeight"/>
+    </declare-styleable>
     <attr name="behavior_alignmentRule">
         <flag name="left" value="0x00000001"/>
         <flag name="right" value="0x00000002"/>
