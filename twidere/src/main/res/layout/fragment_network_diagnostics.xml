@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:padding="@dimen/element_spacing_normal"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="?android:textColorPrimary"

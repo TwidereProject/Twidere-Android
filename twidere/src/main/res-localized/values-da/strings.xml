@@ -177,7 +177,7 @@
   <string name="notifications_type">Notifikationstyper</string>
   <string name="other_settings">Indstillinger andre</string>
   <string name="overwrite">Overskriv</string>
-  <string name="password">Adgangskode</string>
+  <string name="label_password">Adgangskode</string>
   <string name="pause">Pause</string>
   <string name="pick_file">Vælg fil</string>
   <string name="play">Afspil</string>
@@ -302,7 +302,7 @@
   <string name="user_profile_name">Navn</string>
   <string name="user_profile_url">URL</string>
   <string name="user_unblocked">Ublokerede disse brugere.</string>
-  <string name="username">Brugernavn</string>
+  <string name="label_username">Brugernavn</string>
   <string name="users_blocked">Blokerede disse brugere.</string>
   <string name="notification_method_vibration">Vibration</string>
 </resources>

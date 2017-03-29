@@ -92,7 +92,7 @@
   <!-- Next item (tweet, user etc.) -->
   <string name="notification_light_color">Light Colour</string>
   <string name="notification_type_home">Home</string>
-  <string name="password">Password</string>
+  <string name="label_password">Password</string>
   <string name="preference_title_advanced">Advanced</string>
   <string name="preference_title_database_item_limit">Database size limit</string>
   <string name="preference_title_storage">Storage</string>
@@ -145,5 +145,5 @@
   <string name="user_profile_location">Location</string>
   <string name="user_profile_name">Name</string>
   <string name="user_profile_url">URL</string>
-  <string name="username">Username</string>
+  <string name="label_username">Username</string>
 </resources>

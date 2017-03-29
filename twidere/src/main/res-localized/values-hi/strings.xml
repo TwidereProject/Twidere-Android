@@ -105,7 +105,7 @@
   <string name="notifications">सूचनाएँ</string>
   <string name="notifications_type">सूचना प्रकार</string>
   <string name="other_settings">अन्य सेटिंग्स</string>
-  <string name="password">पासवर्ड</string>
+  <string name="label_password">पासवर्ड</string>
   <string name="preference_title_accounts">खातों</string>
   <string name="preference_title_advanced">उन्नत</string>
   <string name="preference_title_storage">भंडारण</string>
@@ -182,6 +182,6 @@
   <string name="user_profile_location">स्थान</string>
   <string name="user_profile_name">नाम</string>
   <string name="user_unblocked">इस उपयोगकर्ता को अन्ब्लाक किया |</string>
-  <string name="username">यूज़रनेम</string>
+  <string name="label_username">यूज़रनेम</string>
   <string name="notification_method_vibration">कंपन</string>
 </resources>

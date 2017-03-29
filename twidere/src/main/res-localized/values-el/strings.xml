@@ -94,7 +94,7 @@
   <string name="name_retweeted"><xliff:g id="user_name">%s</xliff:g> έκανε ρετουϊτ</string>
   <!-- Next item (tweet, user etc.) -->
   <string name="overwrite">Αντικατάσταση</string>
-  <string name="password">Κωδικός πρόσβασης</string>
+  <string name="label_password">Κωδικός πρόσβασης</string>
   <string name="pause">Παύση</string>
   <string name="play">Αναπαραγωγή</string>
   <string name="preference_summary_database_item_limit">Ανώτατο όριο αντικειμένων αποθηκευμένων στις βάσεις δεδομένων για κάθε λογαριασμό, επιλέξτε μικρότερη τιμή για εξοικονόμηση χώρου και αύξηση της ταχύτητας φόρτωσης.</string>
@@ -142,5 +142,5 @@
   <!-- User list is public -->
   <!-- User list name -->
   <string name="user_mentions">Αναφορές χρήστη</string>
-  <string name="username">Όνομα χρήστη</string>
+  <string name="label_username">Όνομα χρήστη</string>
 </resources>

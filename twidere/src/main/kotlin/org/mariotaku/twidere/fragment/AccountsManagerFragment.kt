@@ -232,8 +232,8 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             val builder = AlertDialog.Builder(context)
             builder.setNegativeButton(android.R.string.cancel, null)
             builder.setPositiveButton(android.R.string.ok, this)
-            builder.setTitle(R.string.account_delete_confirm_title)
-            builder.setMessage(R.string.account_delete_confirm_message)
+            builder.setTitle(R.string.title_account_delete_confirm)
+            builder.setMessage(R.string.message_account_delete_confirm)
             val dialog = builder.create()
             dialog.setOnShowListener {
                 it as AlertDialog

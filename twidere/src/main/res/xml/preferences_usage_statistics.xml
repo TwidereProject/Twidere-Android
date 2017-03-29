@@ -41,15 +41,12 @@
     <Preference
         android:layout="@layout/header_usage_statistics"
         android:order="20"/>
-    <org.mariotaku.twidere.preference.TintedPreferenceCategory
-        android:order="21"
-        android:title="@string/projects_we_took_part">
 
-        <Preference android:title="@string/research_hot_mobile">
-            <intent
-                android:action="android.intent.action.VIEW"
-                android:data="http://spice.hot-mobile.org/"/>
-        </Preference>
-    </org.mariotaku.twidere.preference.TintedPreferenceCategory>
+    <Preference
+        android:title="@string/projects_we_took_part">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/mariotaku/twidere/wiki/Research-Projects"/>
+    </Preference>
 
 </PreferenceScreen>
