@@ -151,7 +151,7 @@ dependencies {
     compile 'com.github.mariotaku:MessageBubbleView:1.6'
     compile 'com.github.mariotaku:DragSortListView:0.6.1'
     compile 'com.github.uucky:ColorPicker-Android:0.9.7@aar'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
+    compile "pl.droidsonroids.gif:android-gif-drawable:${libVersions['AndroidGIFDrawable']}"
     compile 'com.sprylab.android.texturevideoview:texturevideoview:1.2.1'
     compile 'com.squareup:pollexor:2.0.4'
     compile 'org.apache.commons:commons-lang3:3.5'
@@ -180,7 +180,6 @@ dependencies {
     compile "com.github.mariotaku.MediaViewerLibrary:subsample-image-view:${libVersions['MediaViewerLibrary']}"
     compile 'com.github.mariotaku:SQLiteQB:0.9.12'
     compile "com.github.mariotaku.ObjectCursor:core:${libVersions['ObjectCursor']}"
-    compile "com.github.mariotaku:MultiValueSwitch:${libVersions['MultiValueSwitch']}"
     compile 'com.github.mariotaku:AbstractTask:0.9.4'
     compile "com.github.mariotaku.CommonsLibrary:parcel:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"

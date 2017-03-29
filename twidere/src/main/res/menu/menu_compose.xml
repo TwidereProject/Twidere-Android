@@ -25,6 +25,10 @@
                 android:icon="@drawable/ic_action_camcorder"
                 android:title="@string/action_record_video"/>
             <item
+                android:id="@+id/add_gif"
+                android:icon="@drawable/ic_action_gif"
+                android:title="@string/action_add_gif"/>
+            <item
                 android:id="@id/toggle_sensitive"
                 android:checkable="true"
                 android:icon="@drawable/ic_action_warning"

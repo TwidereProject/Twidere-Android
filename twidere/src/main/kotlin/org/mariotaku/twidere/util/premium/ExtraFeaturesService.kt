@@ -52,6 +52,7 @@ abstract class ExtraFeaturesService {
         const val FEATURE_FILTERS_SUBSCRIPTION = "filters_subscriptions"
         const val FEATURE_SYNC_DATA = "sync_data"
         const val FEATURE_SCHEDULE_STATUS = "schedule_status"
+        const val FEATURE_SHARE_GIF = "share_gif"
 
         fun newInstance(context: Context): ExtraFeaturesService {
             val instance = ServiceLoader.load(ExtraFeaturesService::class.java).firstOrNull() ?: run {
@@ -72,6 +73,8 @@ abstract class ExtraFeaturesService {
                         context.getString(R.string.extra_feature_description_filters_subscription))
                 FEATURE_SCHEDULE_STATUS -> Introduction(R.drawable.ic_action_time,
                         context.getString(R.string.extra_feature_description_schedule_status))
+                FEATURE_SHARE_GIF -> Introduction(R.drawable.ic_action_gif,
+                        context.getString(R.string.extra_feature_description_share_gif))
                 else -> throw UnsupportedOperationException(feature)
             }
         }

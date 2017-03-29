@@ -56,7 +56,8 @@ subprojects {
                     TwitterText       : '1.14.3',
                     MediaViewerLibrary: '0.9.23',
                     MultiValueSwitch  : '0.9.8',
-                    PickNCrop         : '0.9.22'
+                    PickNCrop         : '0.9.22',
+                    AndroidGIFDrawable: '1.2.6'
             ]
         }
 

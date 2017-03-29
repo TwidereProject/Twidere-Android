@@ -29,9 +29,11 @@ import com.bumptech.glide.module.GlideModule
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.mariotaku.twidere.model.media.AuthenticatedUri
+import org.mariotaku.twidere.model.media.NoThumborUrl
 import org.mariotaku.twidere.util.HttpClientFactory
 import org.mariotaku.twidere.util.UserAgentUtils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.glide.NoThumborUrlLoader.Companion.HEADER_NO_THUMBOR
 import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.okhttp.ModifyRequestInterceptor
 import java.io.InputStream
@@ -51,14 +53,20 @@ class TwidereGlideModule : GlideModule {
         builder.addInterceptor(ModifyRequestInterceptor(ThumborModifier(thumbor), UserAgentModifier(userAgent)))
         val client = builder.build()
         glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(client))
-        glide.register(AuthenticatedUri::class.java, InputStream::class.java, AuthenticatedUrlLoader.Factory(client))
+        glide.register(AuthenticatedUri::class.java, InputStream::class.java, AuthenticatedUriLoader.Factory(client))
+        glide.register(NoThumborUrl::class.java, InputStream::class.java, NoThumborUrlLoader.Factory(client))
     }
 
     class ThumborModifier(val thumbor: ThumborWrapper) : ModifyRequestInterceptor.RequestModifier {
+
         override fun modify(original: Request, builder: Request.Builder): Boolean {
             if (!thumbor.available) return false
             // Since Thumbor doesn't support Authorization header, disable for requests with authorization
             if (original.header("Authorization") != null) {
+                return false
+            }
+            if (original.header(HEADER_NO_THUMBOR) != null) {
+                builder.removeHeader(HEADER_NO_THUMBOR)
                 return false
             }
             builder.url(thumbor.buildUri(original.url().toString()))
@@ -71,6 +79,7 @@ class TwidereGlideModule : GlideModule {
     }
 
     class UserAgentModifier(val userAgent: String) : ModifyRequestInterceptor.RequestModifier {
+
         override fun modify(original: Request, builder: Request.Builder): Boolean {
             builder.header("User-Agent", userAgent)
             return true

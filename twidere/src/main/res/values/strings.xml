@@ -18,6 +18,7 @@
     <string name="action_add_filter_rule">Add rule</string>
     <string name="action_add_filters_subscription">Add subscription</string>
     <string name="action_add_media">Add media</string>
+    <string name="action_add_gif">Add GIF</string>
     <string name="action_add_member">Add member</string>
     <string name="action_add_tab">Add tab</string>
     <string name="action_add_to_filter">Add to filter</string>
@@ -397,6 +398,7 @@
     <string name="extra_feature_description_filters_import">Import filter list from blocks/mutes</string>
     <string name="extra_feature_description_filters_subscription">Subscribe to mute filters and sync automatically</string>
     <string name="extra_feature_description_schedule_status">Schedule tweet (send later)</string>
+    <string name="extra_feature_description_share_gif">Share GIF in tweet</string>
     <string name="extra_feature_description_sync_data">Sync data with Dropbox, Google Drive etc</string>
     <string name="extra_feature_title_filters_import">Filters import</string>
     <string name="extra_feature_title_filters_subscription">Filters subscription</string>
@@ -1284,4 +1286,5 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
+    <string name="title_giphy_search">Search GIF by Giphy</string>
 </resources>
