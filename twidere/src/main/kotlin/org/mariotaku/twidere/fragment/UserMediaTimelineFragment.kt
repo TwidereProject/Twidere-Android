@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.extensions.reachingEnd
+import org.mariotaku.twidere.extensions.reachingStart
 import org.mariotaku.twidere.loader.MediaTimelineLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -36,26 +38,11 @@ class UserMediaTimelineFragment : AbsContentRecyclerViewFragment<StaggeredGridPa
             super.refreshing = value
         }
 
-
     override val reachingEnd: Boolean
-        get() {
-            val lm = layoutManager
-            var visiblePos = lm.findLastCompletelyVisibleItemPositions(null)
-            if (visiblePos.all { it == RecyclerView.NO_POSITION }) {
-                visiblePos = lm.findLastVisibleItemPositions(null)
-            }
-            return visiblePos.contains(lm.itemCount - 1)
-        }
+        get() = layoutManager.reachingEnd
 
     override val reachingStart: Boolean
-        get() {
-            val lm = layoutManager
-            var visiblePos = lm.findFirstCompletelyVisibleItemPositions(null)
-            if (visiblePos.all { it == RecyclerView.NO_POSITION }) {
-                visiblePos = lm.findFirstVisibleItemPositions(null)
-            }
-            return visiblePos.contains(0)
-        }
+        get() = layoutManager.reachingStart
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

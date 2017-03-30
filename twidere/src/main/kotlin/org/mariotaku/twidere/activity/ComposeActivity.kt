@@ -332,7 +332,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 }
             }
             REQUEST_ADD_GIF -> {
-
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
+                            .getMedia(data.data)
+                            .build()
+                    startActivityForResult(intent, REQUEST_PICK_MEDIA)
+                }
             }
         }
 
@@ -521,7 +526,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             R.id.add_gif -> {
                 val provider = gifShareProvider ?: return true
-                startActivityForResult(provider.createGifSelectorIntent(), REQUEST_SET_SCHEDULE)
+                startActivityForResult(provider.createGifSelectorIntent(), REQUEST_ADD_GIF)
             }
             else -> {
                 when (item.groupId) {
