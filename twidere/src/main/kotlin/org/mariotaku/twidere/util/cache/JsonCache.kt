@@ -44,8 +44,14 @@ class JsonCache(val cacheDir: File) {
     }
 
     fun <T> saveList(key: String, list: List<T>, cls: Class<T>) {
-        cache?.get(key)?.getFile(0)?.outputStream()?.use {
-            LoganSquare.serialize(list, it, cls)
+        val editor = cache?.edit(key) ?: return
+        try {
+            editor.getFile(0)?.outputStream()?.use {
+                LoganSquare.serialize(list, it, cls)
+            }
+            editor.commit()
+        } finally {
+            editor.abortUnlessCommitted()
         }
     }
 }

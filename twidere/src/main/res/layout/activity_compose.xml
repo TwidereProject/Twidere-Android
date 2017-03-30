@@ -41,9 +41,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="160dp"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/element_spacing_normal">
+                android:orientation="vertical">
 
                 <org.mariotaku.twidere.view.FixedTextView
                     android:id="@+id/replyLabel"
@@ -55,61 +53,48 @@
                     android:padding="@dimen/element_spacing_normal"
                     tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
 
-                <View
-                    android:id="@+id/replyLabelDivider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?dividerVertical"/>
-
-                <org.mariotaku.twidere.view.ComposeEditText
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:gravity="top"
-                    android:hint="@string/status_hint"
-                    android:inputType="textMultiLine|textLongMessage|textCapSentences"
-                    android:padding="@dimen/element_spacing_normal"/>
-
-                <org.mariotaku.twidere.view.ExtendedRecyclerView
-                    android:id="@+id/attachedMediaPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="128dp"
-                    android:clipChildren="false"
-                    tools:listitem="@layout/grid_item_media_editor"/>
-
                 <LinearLayout
-                    android:id="@+id/locationContainer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?selectableItemBackground"
-                    android:clickable="false"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/element_spacing_small"
-                    android:paddingLeft="@dimen/element_spacing_normal"
-                    android:paddingRight="@dimen/element_spacing_normal"
-                    android:paddingTop="@dimen/element_spacing_small">
+                    android:minHeight="160dp"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/element_spacing_normal">
 
-                    <org.mariotaku.twidere.view.IconActionView
-                        android:id="@+id/locationIcon"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_action_location"
-                        app:iabColor="?android:textColorSecondary"/>
-
-                    <org.mariotaku.twidere.view.FixedTextView
-                        android:id="@+id/locationText"
-                        android:layout_width="wrap_content"
+                    <org.mariotaku.twidere.view.ComposeEditText
+                        android:id="@+id/editText"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:hint="@string/status_hint"
+                        android:inputType="textMultiLine|textLongMessage|textCapSentences"
+                        android:padding="@dimen/element_spacing_normal"/>
+
+                    <org.mariotaku.twidere.view.ExtendedRecyclerView
+                        android:id="@+id/attachedMediaPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="128dp"
+                        android:clipChildren="false"
                         android:paddingLeft="@dimen/element_spacing_small"
                         android:paddingRight="@dimen/element_spacing_small"
+                        tools:listitem="@layout/grid_item_media_editor"/>
+
+                    <org.mariotaku.twidere.view.ActionIconThemedTextView
+                        android:id="@+id/locationLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/element_spacing_minus_normal"
+                        android:drawableLeft="@drawable/ic_action_location"
+                        android:drawableStart="@drawable/ic_action_location"
+                        android:gravity="center_vertical"
+                        android:maxLines="1"
                         android:textColor="?android:textColorSecondary"
+                        app:iabColor="?android:textColorSecondary"
+                        app:iabIconHeight="20dp"
+                        app:iabIconWidth="20dp"
                         tools:text="11.4, 51.4"/>
 
                 </LinearLayout>
-
             </LinearLayout>
         </org.mariotaku.twidere.view.MaxHeightScrollView>
 

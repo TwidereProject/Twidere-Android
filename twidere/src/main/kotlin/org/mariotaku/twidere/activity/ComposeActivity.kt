@@ -661,7 +661,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             R.id.location_precise -> {
                 attachLocationChecked = true
                 attachPreciseLocationChecked = true
-                locationText.tag = null
+                locationLabel.tag = null
             }
             R.id.location_coarse -> {
                 attachLocationChecked = true
@@ -1053,7 +1053,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
         replyLabel.text = getString(R.string.quote_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
-        replyLabelDivider.visibility = View.VISIBLE
     }
 
     private fun showReplyLabel(status: ParcelableStatus?) {
@@ -1064,12 +1063,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
         replyLabel.text = getString(R.string.reply_to_name_text, replyToName, status.text_unescaped)
         replyLabel.visibility = View.VISIBLE
-        replyLabelDivider.visibility = View.VISIBLE
     }
 
     private fun hideLabel() {
         replyLabel.visibility = View.GONE
-        replyLabelDivider.visibility = View.GONE
     }
 
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
@@ -1346,17 +1343,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (location != null) {
             val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
             if (attachPreciseLocation) {
-                locationText.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                locationLabel.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
             } else {
-                if (locationText.tag == null || location != recentLocation) {
+                if (locationLabel.tag == null || location != recentLocation) {
                     val task = DisplayPlaceNameTask(this)
                     task.params = location
-                    task.callback = locationText
+                    task.callback = locationLabel
                     TaskStarter.execute(task)
                 }
             }
         } else {
-            locationText.setText(R.string.unknown_location)
+            locationLabel.setText(R.string.unknown_location)
         }
         recentLocation = location
     }
@@ -1382,7 +1379,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
         val provider = locationManager.getBestProvider(criteria, true)
         if (provider != null) {
-            locationText.setText(R.string.getting_location)
+            locationLabel.setText(R.string.getting_location)
             locationListener = ComposeLocationListener(this)
             locationManager.requestLocationUpdates(provider, 0, 0f, locationListener)
             val location = Utils.getCachedLocation(this)
@@ -1411,14 +1408,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateLocationState() {
         if (kPreferences[attachLocationKey]) {
-            locationContainer.visibility = View.VISIBLE
+            locationLabel.visibility = View.VISIBLE
             if (recentLocation != null) {
                 setRecentLocation(recentLocation)
             } else {
-                locationText.setText(R.string.getting_location)
+                locationLabel.setText(R.string.getting_location)
             }
         } else {
-            locationContainer.visibility = View.GONE
+            locationLabel.visibility = View.GONE
         }
     }
 

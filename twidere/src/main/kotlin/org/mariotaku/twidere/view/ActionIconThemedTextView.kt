@@ -107,9 +107,11 @@ class ActionIconThemedTextView(
             } else {
                 color = disabledColor
             }
-            if (iconWidth > 0 && iconHeight > 0) {
-                d.setBounds(0, 0, iconWidth, iconHeight)
-            }
+
+            val top = (d.intrinsicHeight - iconHeight) / 2
+            val left = (d.intrinsicWidth - iconWidth) / 2
+            d.setBounds(left, top, left + iconWidth, top + iconHeight)
+
             d.setColorFilter(color, Mode.SRC_ATOP)
         }
     }

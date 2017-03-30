@@ -112,7 +112,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
      * Used for 'restore position' feature
      */
     protected open val currentReadPositionTag: String?
-        get() = if (readPositionTag == null || tabId < 0) null else "${readPositionTag}_${tabId}_current"
+        get() {
+            val positionTag = readPositionTagWithArguments ?: readPositionTag ?: return null
+            return if (tabId < 0) null else "${positionTag}_${tabId}_current"
+        }
 
     override val extraContentPadding: Rect
         get() {
@@ -488,13 +491,17 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         if (host == null) return
         if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
         val status = adapter.getStatus(position)
-        val positionKey = if (status.position_key > 0) status.position_key else status.timestamp
+        val readPosition = if (useSortIdAsReadPosition) {
+            status.sort_id
+        } else {
+            status.position_key
+        }
         readPositionTagWithArguments?.let {
             accountKeys.map { accountKey -> Utils.getReadPositionTagWithAccount(it, accountKey) }
-                    .forEach { readStateManager.setPosition(it, positionKey) }
+                    .forEach { readStateManager.setPosition(it, readPosition) }
         }
         currentReadPositionTag?.let {
-            readStateManager.setPosition(it, positionKey, true)
+            readStateManager.setPosition(it, readPosition, true)
         }
     }
 

@@ -35,9 +35,7 @@ import java.util.*
  */
 class UserTimelineFragment : ParcelableStatusesFragment() {
 
-    override val timelineType: String
-        @TimelineType
-        get() = TimelineType.USER
+    override val timelineType: String = TimelineType.USER
 
     val pinnedStatusIds: Array<String>?
         get() = (parentFragment as? UserTimelineFragmentDelegate)?.pinnedStatusIds
