@@ -17,8 +17,8 @@
     <!-- [verb] Add mute filter rule -->
     <string name="action_add_filter_rule">Add rule</string>
     <string name="action_add_filters_subscription">Add subscription</string>
-    <string name="action_add_media">Add media</string>
     <string name="action_add_gif">Add GIF</string>
+    <string name="action_add_media">Add media</string>
     <string name="action_add_member">Add member</string>
     <string name="action_add_tab">Add tab</string>
     <string name="action_add_to_filter">Add to filter</string>
@@ -537,6 +537,7 @@
     <string name="label_photo">Photo</string>
     <string name="label_photos">Photos</string>
     <string name="label_poll">Poll</string>
+    <string name="label_powered_by_giphy">Powered by GIPHY</string>
     <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
     <string name="label_refresh_service">Refresh service</string>
     <string name="label_schedule_time_buffer_default">Buffer default</string>
@@ -1182,6 +1183,7 @@
     <string name="title_quick_action">Quick action</string>
     <string name="title_scheduled_statuses">Scheduled tweets</string>
     <string name="title_search">Search</string>
+    <string name="title_search_gif">Search GIF</string>
     <string name="title_select_users">Select users</string>
     <string name="title_set_nickname">Set nickname</string>
     <string name="title_sign_in_to_buffer">Sign in to Buffer</string>
@@ -1286,5 +1288,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="title_giphy_search">Search GIF by Giphy</string>
 </resources>
