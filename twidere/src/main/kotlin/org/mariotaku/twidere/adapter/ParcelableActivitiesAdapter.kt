@@ -123,19 +123,27 @@ class ParcelableActivitiesAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        val dataPosition = position - activityStartIndex
-        if (data is ObjectCursor) {
-            val cursor = (data as ObjectCursor).cursor
-            if (!cursor.moveToPosition(dataPosition)) return -1
-            val indices = (data as ObjectCursor).indices
-            val accountKey = UserKey.valueOf(cursor.getString(indices[Activities.ACCOUNT_KEY]))
-            val timestamp = cursor.getLong(indices[Activities.TIMESTAMP])
-            val maxPosition = cursor.getLong(indices[Activities.MAX_SORT_POSITION])
-            val minPosition = cursor.getLong(indices[Activities.MIN_SORT_POSITION])
-            return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
-                    minPosition).toLong()
+        val countIndex = itemCounts.getItemCountIndex(position)
+        when (countIndex) {
+            ITEM_INDEX_ACTIVITY -> {
+                val dataPosition = position - activityStartIndex
+                if (data is ObjectCursor) {
+                    val cursor = (data as ObjectCursor).cursor
+                    if (!cursor.moveToPosition(dataPosition)) return -1
+                    val indices = (data as ObjectCursor).indices
+                    val accountKey = UserKey.valueOf(cursor.getString(indices[Activities.ACCOUNT_KEY]))
+                    val timestamp = cursor.getLong(indices[Activities.TIMESTAMP])
+                    val maxPosition = cursor.getLong(indices[Activities.MAX_SORT_POSITION])
+                    val minPosition = cursor.getLong(indices[Activities.MIN_SORT_POSITION])
+                    return ParcelableActivity.calculateHashCode(accountKey, timestamp, maxPosition,
+                            minPosition).toLong()
+                }
+                return (countIndex.toLong() shl 32) or getActivity(position, false).hashCode().toLong()
+            }
+            else -> {
+                return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
+            }
         }
-        return getActivity(position, false).hashCode().toLong()
     }
 
     fun getTimestamp(adapterPosition: Int, raw: Boolean = false): Long {

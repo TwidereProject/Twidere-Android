@@ -1822,12 +1822,13 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         override fun getItemId(position: Int): Long {
-            when (getItemCountIndex(position)) {
+            val countIndex = getItemCountIndex(position)
+            when (countIndex) {
                 ITEM_IDX_CONVERSATION, ITEM_IDX_STATUS, ITEM_IDX_REPLY -> {
-                    return getStatus(position).hashCode().toLong()
+                    return (countIndex.toLong() shl 32) or getStatus(position).hashCode().toLong()
                 }
             }
-            return getItemType(position).toLong()
+            return (countIndex.toLong() shl 32) or getItemType(position).toLong()
         }
 
         override fun getItemCount(): Int {

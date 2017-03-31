@@ -31,7 +31,6 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager
-import android.support.v4.content.AsyncTaskLoader
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
@@ -582,13 +581,14 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
         }
 
         override fun getItemId(position: Int): Long {
-            when (itemCounts.getItemCountIndex(position)) {
+            val countIndex = itemCounts.getItemCountIndex(position)
+            when (countIndex) {
                 ITEM_INDEX_ITEM -> {
                     val user = getUser(position)!!
-                    return user.hashCode().toLong()
+                    return (countIndex.toLong() shl 32) or user.hashCode().toLong()
                 }
                 else -> {
-                    return Integer.MAX_VALUE.toLong() + getItemViewType(position)
+                    return (countIndex.toLong() shl 32) or getItemViewType(position).toLong()
                 }
             }
         }

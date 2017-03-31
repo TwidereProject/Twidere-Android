@@ -213,17 +213,16 @@ abstract class ParcelableStatusesAdapter(
         when (countIndex) {
             ITEM_INDEX_PINNED_STATUS -> {
                 val status = pinnedStatuses!![position - getItemStartPosition(ITEM_INDEX_PINNED_STATUS)]
-                val mask = ITEM_INDEX_PINNED_STATUS.toLong() shl 32
-                return mask + status.hashCode()
+                return (countIndex.toLong() shl 32) or status.hashCode().toLong()
             }
-            ITEM_INDEX_STATUS -> return getFieldValue(position, { cursor, indices ->
+            ITEM_INDEX_STATUS -> return (countIndex.toLong() shl 32) or getFieldValue(position, { cursor, indices ->
                 val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
                 val id = cursor.getString(indices[Statuses.STATUS_ID])
-                return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id).toLong()
+                return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id)
             }, { status ->
-                return@getFieldValue status.hashCode().toLong()
-            }, -1L)
-            else -> return (countIndex.toLong() shl 32) + position
+                return@getFieldValue status.hashCode()
+            }, -1).toLong()
+            else -> return (countIndex.toLong() shl 32) or position.toLong()
         }
     }
 

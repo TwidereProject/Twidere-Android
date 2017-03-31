@@ -60,6 +60,8 @@ public class UserTimelineFilter implements TimelineFilter, Parcelable {
             return context.getString(R.string.label_statuses_retweets_replies);
         } else if (includeReplies) {
             return context.getString(R.string.label_statuses_replies);
+        } else if (includeRetweets) {
+            return context.getString(R.string.label_statuses_retweets);
         }
         return context.getString(R.string.label_statuses);
     }
