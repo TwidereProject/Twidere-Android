@@ -48,6 +48,8 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
 import org.mariotaku.twidere.extension.applyTheme
+import org.mariotaku.twidere.extension.getTweetLength
+import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -179,7 +181,8 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         return dialog
     }
 
-    private fun updateTextCount(dialog: DialogInterface, s: CharSequence, status: ParcelableStatus, credentials: AccountDetails) {
+    private fun updateTextCount(dialog: DialogInterface, s: CharSequence, status: ParcelableStatus,
+            credentials: AccountDetails) {
         if (dialog !is AlertDialog) return
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE) ?: return
         if (s.isNotEmpty()) {
@@ -195,8 +198,11 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             positiveButton.setText(R.string.action_retweet)
             positiveButton.isEnabled = !status.user_is_protected
         }
-        val textCountView = (dialog.findViewById(R.id.commentTextCount) as StatusTextCountView?)!!
-        textCountView.textCount = validator.getTweetLength(s.toString())
+        val textCountView = dialog.findViewById(R.id.commentTextCount) as StatusTextCountView
+        val am = AccountManager.get(context)
+        val ignoreMentions = AccountUtils.findByAccountKey(am, accountKey)?.getAccountType(am) ==
+                AccountType.TWITTER
+        textCountView.textCount = validator.getTweetLength(s.toString(), ignoreMentions)
     }
 
     private val status: ParcelableStatus

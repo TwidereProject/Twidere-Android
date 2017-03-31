@@ -17,26 +17,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util;
+package org.mariotaku.twidere.util
 
-import android.support.annotation.NonNull;
-
-import com.rengwuxian.materialedittext.validation.METLengthChecker;
-import com.twitter.Validator;
+import com.rengwuxian.materialedittext.validation.METLengthChecker
+import com.twitter.Validator
+import org.mariotaku.twidere.extension.getTweetLength
 
 /**
  * Created by mariotaku on 15/4/29.
  */
-public class TwitterValidatorMETLengthChecker extends METLengthChecker {
-    private final Validator mValidator;
+class TwitterValidatorMETLengthChecker(
+        private val validator: Validator,
+        private val ignoreMentions: Boolean
+) : METLengthChecker() {
 
-    public TwitterValidatorMETLengthChecker(@NonNull Validator validator) {
-        mValidator = validator;
-    }
-
-    @Override
-    public int getLength(CharSequence charSequence) {
-        return mValidator.getTweetLength(String.valueOf(charSequence));
+    override fun getLength(charSequence: CharSequence): Int {
+        return validator.getTweetLength(charSequence.toString(), ignoreMentions)
     }
 
 }

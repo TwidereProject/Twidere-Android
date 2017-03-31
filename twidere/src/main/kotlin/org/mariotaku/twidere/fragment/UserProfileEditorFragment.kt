@@ -185,7 +185,7 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
             return
         }
 
-        val lengthChecker = TwitterValidatorMETLengthChecker(Validator())
+        val lengthChecker = TwitterValidatorMETLengthChecker(Validator(), false)
         editName.addTextChangedListener(this)
         editDescription.addTextChangedListener(this)
         editLocation.addTextChangedListener(this)
