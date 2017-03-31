@@ -31,6 +31,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.mariotaku.library.objectcursor.ObjectCursor;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
@@ -38,7 +39,6 @@ import org.mariotaku.twidere.annotation.ReadPositionTag;
 import org.mariotaku.twidere.fragment.InvalidTabFragment;
 import org.mariotaku.twidere.model.SupportTabSpec;
 import org.mariotaku.twidere.model.Tab;
-import org.mariotaku.twidere.model.TabCursorIndices;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
@@ -56,7 +56,6 @@ public class CustomTabUtils implements Constants {
     private CustomTabUtils() {
     }
 
-
     public static List<Tab> getTabs(@NonNull final Context context) {
         final ContentResolver resolver = context.getContentResolver();
         final Cursor cur = resolver.query(Tabs.CONTENT_URI, Tabs.COLUMNS, null, null, Tabs.DEFAULT_SORT_ORDER);
@@ -64,7 +63,7 @@ public class CustomTabUtils implements Constants {
         try {
             final ArrayList<Tab> tabs = new ArrayList<>();
             cur.moveToFirst();
-            TabCursorIndices indices = new TabCursorIndices(cur);
+            ObjectCursor.CursorIndices<Tab> indices = ObjectCursor.indicesFrom(cur, Tab.class);
             while (!cur.isAfterLast()) {
                 tabs.add(indices.newObject(cur));
                 cur.moveToNext();

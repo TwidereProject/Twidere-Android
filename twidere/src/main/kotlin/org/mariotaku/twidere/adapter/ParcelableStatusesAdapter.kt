@@ -161,7 +161,7 @@ abstract class ParcelableStatusesAdapter(
             val cursor = (data as ObjectCursor).cursor
             if (!cursor.moveToPosition(dataPosition)) return false
             val indices = (data as ObjectCursor).indices
-            return cursor.getShort(indices[Statuses.STATUS_ID]).toInt() == 1
+            return cursor.getInt(indices[Statuses.IS_GAP]) == 1
         }
         return getStatus(position).is_gap
     }
