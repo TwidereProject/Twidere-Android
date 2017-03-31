@@ -474,6 +474,7 @@
     <string name="hint_error_message_no_content">No content</string>
     <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>
+    <string name="hint_search_gif">Search GIF</string>
 
     <string name="hints">Hints</string>
 
@@ -523,6 +524,10 @@
     <string name="label_background_operation_service">Background operation service</string>
     <string name="label_buffer_accounts">Buffer accounts</string>
     <string name="label_buffer_due_at_no_time">No time</string>
+    <string name="label_content_rating_g">G</string>
+    <string name="label_content_rating_pg">PG</string>
+    <string name="label_content_rating_pg13">PG-13</string>
+    <string name="label_content_rating_r">R</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
@@ -544,6 +549,10 @@
     <string name="label_send_at">Send at</string>
     <string name="label_sensitive_content">Sensitive content</string>
     <string name="label_status_not_available">Tweet not available</string>
+    <string name="label_statuses">Tweets</string>
+    <string name="label_statuses_replies">Tweets and replies</string>
+    <string name="label_statuses_retweets">Tweets and retweets</string>
+    <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
     <string name="label_streaming_service">Streaming service</string>
     <string name="label_translate_from_language">Translate from <xliff:g id="language">%s</xliff:g></string>
     <string name="label_translation">Translation</string>
@@ -1202,6 +1211,7 @@
     <string name="title_user_list_memberships">Belongs to</string>
     <string name="title_user_list_ownerships">Created</string>
     <string name="title_user_list_subscriptions">Subscriptions</string>
+    <string name="title_user_timeline_filter">Timeline filter</string>
     <string name="title_users_favorited_this">Users favorited this</string>
     <string name="title_users_liked_this">Users liked this</string>
     <string name="title_users_retweeted_this">Users retweeted this</string>
@@ -1288,10 +1298,4 @@
     <string name="users_blocked">Blocked these users.</string>
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
-    <string name="hint_search_gif">Search GIF</string>
-    <string name="title_user_timeline_filter">Timeline filter</string>
-    <string name="label_statuses">Tweets</string>
-    <string name="label_statuses_retweets">Tweets and retweets</string>
-    <string name="label_statuses_replies">Tweets and replies</string>
-    <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
 </resources>

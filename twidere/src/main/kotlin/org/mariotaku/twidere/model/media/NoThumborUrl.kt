@@ -19,4 +19,8 @@
 
 package org.mariotaku.twidere.model.media
 
-data class NoThumborUrl(val url: String)
+data class NoThumborUrl(val url: String) {
+    init {
+        if (url.isEmpty()) throw IllegalArgumentException("URL can't be empty")
+    }
+}
