@@ -37,7 +37,7 @@ val ParcelableMessageConversation.timestamp: Long
 val ParcelableMessageConversation.user: ParcelableUser?
     get() {
         val userKey = if (is_outgoing) recipient_key else sender_key
-        return participants.firstOrNull { it.key == userKey }
+        return participants?.firstOrNull { it.key == userKey }
     }
 
 val ParcelableMessageConversation.readOnly: Boolean
