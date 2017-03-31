@@ -89,10 +89,9 @@ class ActionIconThemedTextView(
         a.recycle()
     }
 
-
-    override fun refreshDrawableState() {
+    override fun drawableStateChanged() {
+        super.drawableStateChanged()
         updateCompoundDrawables()
-        super.refreshDrawableState()
     }
 
     private fun updateCompoundDrawables() {
@@ -108,9 +107,11 @@ class ActionIconThemedTextView(
                 color = disabledColor
             }
 
-            val top = (d.intrinsicHeight - iconHeight) / 2
-            val left = (d.intrinsicWidth - iconWidth) / 2
-            d.setBounds(left, top, left + iconWidth, top + iconHeight)
+            if (iconWidth > 0 && iconHeight > 0) {
+                val top = (d.intrinsicHeight - iconHeight) / 2
+                val left = (d.intrinsicWidth - iconWidth) / 2
+                d.setBounds(left, top, left + iconWidth, top + iconHeight)
+            }
 
             d.setColorFilter(color, Mode.SRC_ATOP)
         }

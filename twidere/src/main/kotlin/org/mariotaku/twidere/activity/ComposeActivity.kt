@@ -298,6 +298,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val src = MediaPickerActivity.getMediaUris(data)
                     TaskStarter.execute(AddMediaTask(this, src, false, false))
+                    val extras = data.getBundleExtra(MediaPickerActivity.EXTRA_EXTRAS)
+                    if (extras?.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE) ?: false) {
+                        possiblySensitive = true
+                    }
                 }
             }
             REQUEST_EDIT_IMAGE -> {
@@ -338,6 +342,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val intent = ThemedMediaPickerActivity.withThemed(this@ComposeActivity)
                             .getMedia(data.data)
+                            .extras(Bundle {
+                                this[EXTRA_IS_POSSIBLY_SENSITIVE] = data.getBooleanExtra(EXTRA_IS_POSSIBLY_SENSITIVE, false)
+                            })
                             .build()
                     startActivityForResult(intent, REQUEST_PICK_MEDIA)
                 }
