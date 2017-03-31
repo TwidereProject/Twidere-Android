@@ -2,6 +2,7 @@ package org.mariotaku.twidere.constant
 
 import android.content.SharedPreferences
 import android.os.Build
+import android.support.v4.util.ArraySet
 import android.text.TextUtils
 import org.apache.commons.lang3.LocaleUtils
 import org.mariotaku.kpreferences.*
@@ -18,6 +19,7 @@ import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.account.cred.Credentials
 import org.mariotaku.twidere.model.sync.SyncProviderInfo
+import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.preference.ThemeBackgroundPreference
 import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
 import java.util.*
@@ -238,6 +240,31 @@ object composeAccountsKey : KSimpleKey<Array<UserKey>?>(KEY_COMPOSE_ACCOUNTS, nu
 
     override fun write(editor: SharedPreferences.Editor, value: Array<UserKey>?): Boolean {
         editor.putString(key, value?.joinToString(","))
+        return true
+    }
+
+}
+
+object userTimelineFilterKey : KSimpleKey<UserTimelineFilter>("user_timeline_filter", UserTimelineFilter()) {
+    override fun read(preferences: SharedPreferences): UserTimelineFilter {
+        val rawString = preferences.getString(key, null) ?: return def
+        val options = rawString.split(",")
+        return UserTimelineFilter().apply {
+            isIncludeReplies = "replies" in options
+            isIncludeRetweets = "retweets" in options
+        }
+    }
+
+    override fun write(editor: SharedPreferences.Editor, value: UserTimelineFilter): Boolean {
+        val options = ArraySet<String>().apply {
+            if (value.isIncludeReplies) {
+                add("replies")
+            }
+            if (value.isIncludeRetweets) {
+                add("retweets")
+            }
+        }.joinToString(",")
+        editor.putString(key, options)
         return true
     }
 

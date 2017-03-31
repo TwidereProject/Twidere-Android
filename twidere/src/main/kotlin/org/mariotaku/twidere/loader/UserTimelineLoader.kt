@@ -33,6 +33,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.timeline.UserTimelineFilter
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 import java.util.concurrent.atomic.AtomicReference
@@ -50,7 +51,7 @@ class UserTimelineLoader(
         fromUser: Boolean,
         loadingMore: Boolean,
         val pinnedStatusIds: Array<String>?,
-        val excludeReplies: Boolean = false
+        val timelineFilter: UserTimelineFilter? = null
 ) : MicroBlogAPIStatusesLoader(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
@@ -80,7 +81,10 @@ class UserTimelineLoader(
             }
         }
         val option = TimelineOption()
-        option.setExcludeReplies(excludeReplies)
+        if (timelineFilter != null) {
+            option.setExcludeReplies(!timelineFilter.isIncludeReplies)
+            option.setIncludeRetweets(timelineFilter.isIncludeRetweets)
+        }
         if (userId != null) {
             return microBlog.getUserTimeline(userId.id, paging, option)
         } else if (screenName != null) {

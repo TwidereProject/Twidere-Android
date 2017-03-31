@@ -4,6 +4,7 @@ import android.content.Context
 import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.twidere.model.DefaultFeatures
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.MediaPreloader
@@ -37,6 +38,8 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var userColorNameManager: UserColorNameManager
     @Inject
     lateinit var extraFeaturesService: ExtraFeaturesService
+    @Inject
+    lateinit var defaultFeatures: DefaultFeatures
     @Inject
     lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
 

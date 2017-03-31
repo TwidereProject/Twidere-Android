@@ -57,6 +57,7 @@ import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
+import org.mariotaku.twidere.model.timeline.TimelineFilter
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.*
@@ -126,6 +127,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     val shouldInitLoader: Boolean
         get() = (parentFragment as? StatusesFragmentDelegate)?.shouldInitLoader ?: true
 
+
+    protected open val enableTimelineFilter: Boolean = false
+
+    protected open val timelineFilter: TimelineFilter? = null
 
     // Fragment life cycles
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -311,6 +316,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         }
         // 2. Change adapter data
         adapterData = data
+        adapter.timelineFilter = timelineFilter
 
         refreshEnabled = true
 
@@ -490,7 +496,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
     protected fun saveReadPosition(position: Int) {
         if (host == null) return
         if (position == RecyclerView.NO_POSITION || adapter.getStatusCount(false) <= 0) return
-        val status = adapter.getStatus(position)
+        val status = adapter.getStatus(position.coerceIn(rangeOfSize(adapter.statusStartIndex,
+                adapter.getStatusCount(false))))
         val readPosition = if (useSortIdAsReadPosition) {
             status.sort_id
         } else {

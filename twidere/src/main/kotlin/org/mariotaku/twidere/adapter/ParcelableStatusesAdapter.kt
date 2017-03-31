@@ -40,13 +40,19 @@ import org.mariotaku.twidere.adapter.iface.IStatusesAdapter
 import org.mariotaku.twidere.annotation.PreviewStyle
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_DISPLAY_SENSITIVE_CONTENTS
-import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.ItemCounts
+import org.mariotaku.twidere.model.ObjectId
+import org.mariotaku.twidere.model.ParcelableStatus
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.timeline.TimelineFilter
+import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.StatusAdapterLinkClickHandler
 import org.mariotaku.twidere.util.TwidereLinkify
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.holder.EmptyViewHolder
 import org.mariotaku.twidere.view.holder.GapViewHolder
 import org.mariotaku.twidere.view.holder.LoadIndicatorViewHolder
+import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import org.mariotaku.twidere.view.holder.iface.IStatusViewHolder
 import java.util.*
 
@@ -56,8 +62,8 @@ import java.util.*
 abstract class ParcelableStatusesAdapter(
         context: Context,
         requestManager: RequestManager
-) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager), IStatusesAdapter<List<ParcelableStatus>>,
-        IItemCountsAdapter {
+) : LoadMoreSupportAdapter<RecyclerView.ViewHolder>(context, requestManager),
+        IStatusesAdapter<List<ParcelableStatus>>, IItemCountsAdapter {
 
     protected val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -105,6 +111,12 @@ abstract class ParcelableStatusesAdapter(
             notifyDataSetChanged()
         }
 
+    var timelineFilter: TimelineFilter? = null
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
     private var data: List<ParcelableStatus>? = null
     private var displayPositions: IntArray? = null
     private var displayDataCount: Int = 0
@@ -112,7 +124,7 @@ abstract class ParcelableStatusesAdapter(
 
     private var showingActionCardId = RecyclerView.NO_ID
 
-    override val itemCounts = ItemCounts(4)
+    override val itemCounts = ItemCounts(5)
 
     val statusStartIndex: Int
         get() = getItemStartPosition(ITEM_INDEX_STATUS)
@@ -148,8 +160,8 @@ abstract class ParcelableStatusesAdapter(
         if (data is ObjectCursor) {
             val cursor = (data as ObjectCursor).cursor
             if (!cursor.moveToPosition(dataPosition)) return false
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
-            return cursor.getShort(indices.is_gap).toInt() == 1
+            val indices = (data as ObjectCursor).indices
+            return cursor.getShort(indices[Statuses.STATUS_ID]).toInt() == 1
         }
         return getStatus(position).is_gap
     }
@@ -205,8 +217,8 @@ abstract class ParcelableStatusesAdapter(
                 return mask + status.hashCode()
             }
             ITEM_INDEX_STATUS -> return getFieldValue(position, { cursor, indices ->
-                val accountKey = UserKey.valueOf(cursor.getString(indices.account_key))
-                val id = cursor.getString(indices.id)
+                val accountKey = UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
+                val id = cursor.getString(indices[Statuses.STATUS_ID])
                 return@getFieldValue ParcelableStatus.calculateHashCode(accountKey, id).toLong()
             }, { status ->
                 return@getFieldValue status.hashCode().toLong()
@@ -217,7 +229,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusId(position: Int, raw: Boolean): String {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.getString(indices.id)
+            return@getFieldValue cursor.getString(indices[Statuses.STATUS_ID])
         }, { status ->
             return@getFieldValue status.id
         }, "")
@@ -225,7 +237,7 @@ abstract class ParcelableStatusesAdapter(
 
     fun getStatusSortId(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.safeGetLong(indices.sort_id)
+            return@getFieldValue cursor.safeGetLong(indices[Statuses.SORT_ID])
         }, { status ->
             return@getFieldValue status.sort_id
         }, -1L, raw)
@@ -233,7 +245,7 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusTimestamp(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue cursor.safeGetLong(indices.timestamp)
+            return@getFieldValue cursor.safeGetLong(indices[Statuses.STATUS_TIMESTAMP])
         }, { status ->
             return@getFieldValue status.timestamp
         }, -1L)
@@ -241,9 +253,9 @@ abstract class ParcelableStatusesAdapter(
 
     override fun getStatusPositionKey(position: Int, raw: Boolean): Long {
         return getFieldValue(position, { cursor, indices ->
-            val positionKey = cursor.safeGetLong(indices.position_key)
+            val positionKey = cursor.safeGetLong(indices[Statuses.POSITION_KEY])
             if (positionKey > 0) return@getFieldValue positionKey
-            return@getFieldValue cursor.safeGetLong(indices.timestamp)
+            return@getFieldValue cursor.safeGetLong(indices[Statuses.STATUS_TIMESTAMP])
         }, { status ->
             val positionKey = status.position_key
             if (positionKey > 0) return@getFieldValue positionKey
@@ -254,7 +266,7 @@ abstract class ParcelableStatusesAdapter(
     override fun getAccountKey(position: Int, raw: Boolean): UserKey {
         val def: UserKey? = null
         return getFieldValue(position, { cursor, indices ->
-            return@getFieldValue UserKey.valueOf(cursor.getString(indices.account_key))
+            return@getFieldValue UserKey.valueOf(cursor.getString(indices[Statuses.ACCOUNT_KEY]))
         }, { status ->
             return@getFieldValue status.account_key
         }, def, raw)!!
@@ -281,9 +293,6 @@ abstract class ParcelableStatusesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {
-            VIEW_TYPE_STATUS -> {
-                return onCreateStatusViewHolder(parent) as RecyclerView.ViewHolder
-            }
             ITEM_VIEW_TYPE_GAP -> {
                 val view = inflater.inflate(GapViewHolder.layoutResource, parent, false)
                 return GapViewHolder(this, view)
@@ -292,8 +301,16 @@ abstract class ParcelableStatusesAdapter(
                 val view = inflater.inflate(R.layout.list_item_load_indicator, parent, false)
                 return LoadIndicatorViewHolder(view)
             }
+            VIEW_TYPE_STATUS -> {
+                return onCreateStatusViewHolder(parent) as RecyclerView.ViewHolder
+            }
             VIEW_TYPE_EMPTY -> {
                 return EmptyViewHolder(Space(context))
+            }
+            VIEW_TYPE_FILTER_HEADER -> {
+                val view = inflater.inflate(TimelineFilterHeaderViewHolder.layoutResource,
+                        parent, false)
+                return TimelineFilterHeaderViewHolder(this, view)
             }
         }
         throw IllegalStateException("Unknown view type " + viewType)
@@ -306,6 +323,9 @@ abstract class ParcelableStatusesAdapter(
                 val status = getStatus(position, countIdx)
                 (holder as IStatusViewHolder).displayStatus(status, displayInReplyTo = isShowInReplyTo,
                         displayPinned = countIdx == ITEM_INDEX_PINNED_STATUS)
+            }
+            VIEW_TYPE_FILTER_HEADER -> {
+                (holder as TimelineFilterHeaderViewHolder).display(timelineFilter!!)
             }
             ITEM_VIEW_TYPE_GAP -> {
                 val status = getStatus(position)
@@ -332,6 +352,9 @@ abstract class ParcelableStatusesAdapter(
                 } else {
                     return VIEW_TYPE_STATUS
                 }
+            }
+            ITEM_INDEX_FILTER_HEADER -> {
+                return VIEW_TYPE_FILTER_HEADER
             }
         }
         throw AssertionError()
@@ -404,7 +427,7 @@ abstract class ParcelableStatusesAdapter(
     }
 
     private inline fun <T> getFieldValue(position: Int,
-            readCursorValueAction: (cursor: Cursor, indices: ParcelableStatusCursorIndices) -> T,
+            readCursorValueAction: (cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableStatus>) -> T,
             readStatusValueAction: (status: ParcelableStatus) -> T,
             defValue: T, raw: Boolean = false): T {
         if (data is ObjectCursor) {
@@ -414,7 +437,7 @@ abstract class ParcelableStatusesAdapter(
             }
             val cursor = (data as ObjectCursor).cursor
             if (!cursor.safeMoveToPosition(dataPosition)) return defValue
-            val indices = (data as ObjectCursor).indices as ParcelableStatusCursorIndices
+            val indices = (data as ObjectCursor).indices
             return readCursorValueAction(cursor, indices)
         }
         return readStatusValueAction(getStatus(position, raw))
@@ -443,6 +466,7 @@ abstract class ParcelableStatusesAdapter(
 
     private fun updateItemCount() {
         itemCounts[ITEM_INDEX_LOAD_START_INDICATOR] = if (ILoadMoreSupportAdapter.START in loadMoreIndicatorPosition) 1 else 0
+        itemCounts[ITEM_INDEX_FILTER_HEADER] = if (timelineFilter != null) 1 else 0
         itemCounts[ITEM_INDEX_PINNED_STATUS] = pinnedStatuses?.size ?: 0
         itemCounts[ITEM_INDEX_STATUS] = getStatusCount(false)
         itemCounts[ITEM_INDEX_LOAD_END_INDICATOR] = if (ILoadMoreSupportAdapter.END in loadMoreIndicatorPosition) 1 else 0
@@ -451,11 +475,13 @@ abstract class ParcelableStatusesAdapter(
     companion object {
         const val VIEW_TYPE_STATUS = 2
         const val VIEW_TYPE_EMPTY = 3
+        const val VIEW_TYPE_FILTER_HEADER = 4
 
         const val ITEM_INDEX_LOAD_START_INDICATOR = 0
-        const val ITEM_INDEX_PINNED_STATUS = 1
-        const val ITEM_INDEX_STATUS = 2
-        const val ITEM_INDEX_LOAD_END_INDICATOR = 3
+        const val ITEM_INDEX_FILTER_HEADER = 1
+        const val ITEM_INDEX_PINNED_STATUS = 2
+        const val ITEM_INDEX_STATUS = 3
+        const val ITEM_INDEX_LOAD_END_INDICATOR = 4
     }
 
 

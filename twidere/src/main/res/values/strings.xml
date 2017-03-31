@@ -1289,4 +1289,9 @@
     <string name="users_lists_with_name"><xliff:g id="name">%s</xliff:g>\'s lists</string>
     <string name="users_statuses">User\'s tweets</string>
     <string name="hint_search_gif">Search GIF</string>
+    <string name="title_user_timeline_filter">Timeline filter</string>
+    <string name="label_statuses">Tweets</string>
+    <string name="label_statuses_retweets">Tweets and retweets</string>
+    <string name="label_statuses_replies">Tweets and replies</string>
+    <string name="label_statuses_retweets_replies">Tweets, retweets and replies</string>
 </resources>

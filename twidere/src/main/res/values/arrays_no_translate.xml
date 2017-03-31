@@ -103,4 +103,8 @@
         <item>list</item>
         <item>list_timeline</item>
     </string-array>
+    <string-array name="values_user_timeline_filter">
+        <item>replies</item>
+        <item>retweets</item>
+    </string-array>
 </resources>

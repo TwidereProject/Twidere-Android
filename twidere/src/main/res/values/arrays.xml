@@ -80,4 +80,8 @@
         <item>List</item>
         <item>List timeline</item>
     </string-array>
+    <string-array name="entries_user_timeline_filter">
+        <item>Replies</item>
+        <item>Retweets</item>
+    </string-array>
 </resources>

@@ -28,6 +28,7 @@ import org.mariotaku.twidere.model.ParcelableMedia
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.view.CardMediaContainer
+import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 
 /**
  * Created by mariotaku on 15/10/26.
@@ -62,6 +63,8 @@ interface IStatusViewHolder : CardMediaContainer.OnMediaClickListener {
         fun onStatusLongClick(holder: IStatusViewHolder, position: Int): Boolean = false
 
         fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {}
+
+        fun onFilterClick(holder: TimelineFilterHeaderViewHolder) {}
     }
 
 }

@@ -9,9 +9,11 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.TextUtils
 import com.bumptech.glide.Glide
+import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.adapter.StaggeredGridParcelableStatusesAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.extensions.reachingEnd
 import org.mariotaku.twidere.extensions.reachingStart
 import org.mariotaku.twidere.loader.MediaTimelineLoader

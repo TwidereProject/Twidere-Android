@@ -14,6 +14,7 @@ import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import com.bumptech.glide.Glide
+import com.twitter.Validator
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import net.ypresto.androidtranscoder.MediaTranscoder
@@ -36,6 +37,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.getTweetLength
 import org.mariotaku.twidere.extension.model.mediaSizeLimit
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
@@ -217,13 +219,16 @@ class UpdateStatusTask(
             update: ParcelableStatusUpdate,
             pending: PendingStatusUpdate) {
         if (shortener == null) return
+        val validator = Validator()
         stateCallback.onShorteningStatus()
         val sharedShortened = HashMap<UserKey, StatusShortenResult>()
         for (i in 0 until pending.length) {
             val account = update.accounts[i]
             val text = pending.overrideTexts[i]
             val textLimit = account.textLimit
-            if (textLimit >= 0 && text.length <= textLimit) {
+            val ignoreMentions = update.in_reply_to_status != null && account.type ==
+                    AccountType.TWITTER && defaultFeatures.isMentionsCountsInStatus
+            if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions) <= textLimit) {
                 continue
             }
             shortener.waitForService()
@@ -402,6 +407,9 @@ class UpdateStatusTask(
         if (statusUpdate.location != null) {
             status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location))
             status.displayCoordinates(statusUpdate.display_coordinates)
+        }
+        if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
+            status.autoPopulateReplyMetadata(true)
         }
         val mediaIds = pendingUpdate.mediaIds[index]
         if (mediaIds != null) {

@@ -1434,7 +1434,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accountKeys = accountsAdapter.selectedAccountKeys
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
-        val tweetLength = validator.getTweetLength(text, ignoreMentions)
+        val tweetLength = validator.getTweetLength(text, ignoreMentions &&
+                defaultFeatures.isMentionsCountsInStatus)
         val maxLength = statusTextCount.maxLength
         if (accountsAdapter.isSelectionEmpty) {
             editText.error = getString(R.string.message_toast_no_account_selected)
@@ -1491,10 +1492,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun updateTextCount() {
         val am = AccountManager.get(this)
         val text = editText.text?.toString() ?: return
-        val ignoreMentions = accountsAdapter.selectedAccountKeys.all {
+        val ignoreMentions = inReplyToStatus != null && accountsAdapter.selectedAccountKeys.all {
             val account = AccountUtils.findByAccountKey(am, it) ?: return@all false
             return@all account.getAccountType(am) == AccountType.TWITTER
-        }
+        } && defaultFeatures.isMentionsCountsInStatus
         statusTextCount.textCount = validator.getTweetLength(text, ignoreMentions)
     }
 

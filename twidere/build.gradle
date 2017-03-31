@@ -185,7 +185,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:io:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
-    compile 'com.github.mariotaku:KPreferences:0.9.5'
+    compile "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
     compile 'com.github.mariotaku:Chameleon:0.9.16'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
