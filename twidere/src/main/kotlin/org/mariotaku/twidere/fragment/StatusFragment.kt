@@ -1001,8 +1001,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
             val interactUsersAdapter = itemView.countsUsers.adapter as CountsUsersAdapter
             if (statusActivity != null) {
-                interactUsersAdapter.setUsers(statusActivity.retweeters)
-                interactUsersAdapter.setCounts(statusActivity)
+                updateStatusActivity(statusActivity)
             } else {
                 interactUsersAdapter.setUsers(null)
                 interactUsersAdapter.setCounts(status)
@@ -1143,6 +1142,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
             return MenuUtils.handleStatusClick(activity, fragment, fm, manager, twitter,
                     status, item)
+        }
+
+        internal fun updateStatusActivity(activity: StatusActivity) {
+            val adapter = itemView.countsUsers.adapter as CountsUsersAdapter
+            adapter.setUsers(activity.retweeters)
+            adapter.setCounts(activity)
         }
 
         private fun initViews() {
@@ -1501,7 +1506,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override var statusClickListener: StatusClickListener? = null
         private var recyclerView: RecyclerView? = null
-        private var statusViewHolder: DetailStatusViewHolder? = null
+        private var detachedStatusViewHolder: DetailStatusViewHolder? = null
 
         override val itemCounts = ItemCounts(ITEM_TYPES_SUM)
 
@@ -1535,7 +1540,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 }
                 field = value
                 val statusIndex = getIndexStart(ITEM_IDX_STATUS)
-                notifyItemChanged(statusIndex)
+                notifyItemChanged(statusIndex, value)
             }
         var statusAccount: AccountDetails? = null
             internal set
@@ -1692,8 +1697,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder? {
             when (viewType) {
                 VIEW_TYPE_DETAIL_STATUS -> {
-                    if (statusViewHolder != null) {
-                        return statusViewHolder
+                    if (detachedStatusViewHolder != null) {
+                        return detachedStatusViewHolder
                     }
                     val view = inflater.inflate(R.layout.header_status_compact, parent, false)
                     val cardView = view.findViewById(R.id.compact_card)
@@ -1718,6 +1723,29 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 }
             }
             return null
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
+            var handled = false
+            when (holder.itemViewType) {
+                VIEW_TYPE_DETAIL_STATUS -> {
+                    holder as DetailStatusViewHolder
+                    payloads.forEach { it ->
+                        when (it) {
+                            is StatusActivity -> {
+                                holder.updateStatusActivity(it)
+                            }
+                            is ParcelableStatus -> {
+                                holder.displayStatus(statusAccount, status, statusActivity,
+                                        translationResult)
+                            }
+                        }
+                        handled = true
+                    }
+                }
+            }
+            if (handled) return
+            super.onBindViewHolder(holder, position, payloads)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -1758,14 +1786,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
         override fun onViewDetachedFromWindow(holder: ViewHolder?) {
             if (holder is DetailStatusViewHolder) {
-                statusViewHolder = holder as DetailStatusViewHolder?
+                detachedStatusViewHolder = holder as DetailStatusViewHolder?
             }
             super.onViewDetachedFromWindow(holder)
         }
 
         override fun onViewAttachedToWindow(holder: ViewHolder?) {
-            if (holder === statusViewHolder) {
-                statusViewHolder = null
+            if (holder === detachedStatusViewHolder) {
+                detachedStatusViewHolder = null
             }
             super.onViewAttachedToWindow(holder)
         }
@@ -1868,12 +1896,19 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         fun setStatus(status: ParcelableStatus, account: AccountDetails?): Boolean {
-            val old = this.status
+            val oldStatus = this.status
+            val oldAccount = this.statusAccount
+            val changed = oldStatus != status && oldAccount != account
             this.status = status
-            statusAccount = account
-            notifyDataSetChanged()
-            updateItemDecoration()
-            return !CompareUtils.objectEquals(old, status)
+            this.statusAccount = account
+            if (changed) {
+                notifyDataSetChanged()
+                updateItemDecoration()
+            } else {
+                val statusIndex = getIndexStart(ITEM_IDX_STATUS)
+                notifyItemChanged(statusIndex, status)
+            }
+            return changed
         }
 
         fun updateItemDecoration() {
