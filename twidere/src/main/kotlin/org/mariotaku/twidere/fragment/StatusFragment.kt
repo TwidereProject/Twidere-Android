@@ -1351,8 +1351,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                                 }
                             }
                             KEY_FAVORITE_COUNT -> {
-                                val account = statusAdapter.statusAccount ?: return
-                                if (!Utils.isOfficialCredentials(context, account)) return
                                 if (status.is_retweet) {
                                     IntentUtils.openStatusFavoriters(context, status.account_key,
                                             status.retweet_id)

@@ -21,20 +21,20 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.method.POST;
-import org.mariotaku.restfu.annotation.param.KeyValue;
-import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.restfu.annotation.param.Query;
-import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.KeyValue;
+import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Query;
+import org.mariotaku.restfu.http.BodyType;
 
 @SuppressWarnings("RedundantThrows")
-@Queries({@KeyValue(key = "full_text", valueKey = "full_text"),
+@Params({@KeyValue(key = "full_text", valueKey = "full_text"),
         @KeyValue(key = "include_entities", valueKey = "include_entities"),
         @KeyValue(key = "include_cards", valueKey = "include_cards"),
         @KeyValue(key = "cards_platform", valueKey = "cards_platform")})
@@ -56,7 +56,7 @@ public interface DirectMessagesResources {
 
     @POST("/direct_messages/new.json")
     DirectMessage sendDirectMessage(@Param("user_id") String userId, @Param("text") String text,
-                                    @Param("media_id") String mediaId) throws MicroBlogException;
+            @Param("media_id") String mediaId) throws MicroBlogException;
 
     @POST("/direct_messages/new.json")
     DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text)
@@ -64,7 +64,7 @@ public interface DirectMessagesResources {
 
     @POST("/direct_messages/new.json")
     DirectMessage sendDirectMessageToScreenName(@Param("screen_name") String screenName, @Param("text") String text,
-                                                @Param("media_id") String mediaId) throws MicroBlogException;
+            @Param("media_id") String mediaId) throws MicroBlogException;
 
     @GET("/direct_messages/show.json")
     DirectMessage showDirectMessage(@Query("id") String id) throws MicroBlogException;

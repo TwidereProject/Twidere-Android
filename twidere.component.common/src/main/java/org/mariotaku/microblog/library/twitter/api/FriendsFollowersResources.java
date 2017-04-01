@@ -35,6 +35,7 @@ import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
@@ -45,32 +46,32 @@ public interface FriendsFollowersResources {
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User createFriendship(@Param("user_id") String userId) throws MicroBlogException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User createFriendship(@Param("user_id") String userId, @Param("follow") boolean follow) throws MicroBlogException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User createFriendshipByScreenName(@Param("screen_name") String screenName) throws MicroBlogException;
 
     @POST("/friendships/create.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User createFriendshipByScreenName(@Param("screen_name") String screenName, @Param("follow") boolean follow) throws MicroBlogException;
 
     @POST("/friendships/destroy.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User destroyFriendship(@Param("user_id") String userId) throws MicroBlogException;
 
     @POST("/friendships/destroy.json")
     @BodyType(BodyType.FORM)
-    @Queries(template = UserAnnotationTemplate.class)
+    @Params(template = UserAnnotationTemplate.class)
     User destroyFriendshipByScreenName(@Param("screen_name") String screenName) throws MicroBlogException;
 
     @GET("/followers/ids.json")
@@ -103,7 +104,7 @@ public interface FriendsFollowersResources {
 
     @GET("/friends/list.json")
     PageableResponseList<User> getFriendsListByScreenName(@Query("screen_name") String screenName,
-                                                          @Query Paging paging) throws MicroBlogException;
+            @Query Paging paging) throws MicroBlogException;
 
     @GET("/friendships/incoming.json")
     IDs getIncomingFriendships(@Query Paging paging) throws MicroBlogException;
@@ -121,14 +122,14 @@ public interface FriendsFollowersResources {
 
     @GET("/friendships/show.json")
     Relationship showFriendship(@Query("source_id") String sourceId,
-                                @Query("target_id") String targetId) throws MicroBlogException;
+            @Query("target_id") String targetId) throws MicroBlogException;
 
     @GET("/friendships/show.json")
     Relationship showFriendship(@Query("target_id") String targetId) throws MicroBlogException;
 
     @GET("/friendships/show.json")
     Relationship showFriendshipByScreenName(@Query("source_screen_name") String sourceScreenName,
-                                            @Query("target_screen_name") String targetScreenName)
+            @Query("target_screen_name") String targetScreenName)
             throws MicroBlogException;
 
     @POST("/friendships/update.json")
@@ -139,5 +140,5 @@ public interface FriendsFollowersResources {
     @POST("/friendships/update.json")
     @BodyType(BodyType.FORM)
     Relationship updateFriendshipByScreenName(@Param("screen_name") String screenName,
-                                              @Param FriendshipUpdate update) throws MicroBlogException;
+            @Param FriendshipUpdate update) throws MicroBlogException;
 }

@@ -227,7 +227,7 @@ class UpdateStatusTask(
             val text = pending.overrideTexts[i]
             val textLimit = account.textLimit
             val ignoreMentions = update.in_reply_to_status != null && account.type ==
-                    AccountType.TWITTER && defaultFeatures.isMentionsCountsInStatus
+                    AccountType.TWITTER && !defaultFeatures.isMentionsCountsInStatus
             if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions) <= textLimit) {
                 continue
             }

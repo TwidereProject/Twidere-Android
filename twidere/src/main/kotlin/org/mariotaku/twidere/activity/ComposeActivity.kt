@@ -1442,7 +1442,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
         val tweetLength = validator.getTweetLength(text, ignoreMentions &&
-                defaultFeatures.isMentionsCountsInStatus)
+                !defaultFeatures.isMentionsCountsInStatus)
         val maxLength = statusTextCount.maxLength
         if (accountsAdapter.isSelectionEmpty) {
             editText.error = getString(R.string.message_toast_no_account_selected)
@@ -1502,7 +1502,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val ignoreMentions = inReplyToStatus != null && accountsAdapter.selectedAccountKeys.all {
             val account = AccountUtils.findByAccountKey(am, it) ?: return@all false
             return@all account.getAccountType(am) == AccountType.TWITTER
-        } && defaultFeatures.isMentionsCountsInStatus
+        } && !defaultFeatures.isMentionsCountsInStatus
         statusTextCount.textCount = validator.getTweetLength(text, ignoreMentions)
     }
 
@@ -1575,11 +1575,19 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
-    internal class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView), OnClickListener {
+    internal class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView) {
         private val iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
 
         init {
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener {
+                (itemView as CheckableLinearLayout).toggle()
+                adapter.toggleSelection(layoutPosition)
+            }
+            itemView.setOnLongClickListener {
+                (itemView as CheckableLinearLayout).toggle()
+                adapter.setSelection(layoutPosition)
+                return@setOnLongClickListener true
+            }
         }
 
         fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
@@ -1588,12 +1596,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
             iconView.setBorderColor(account.color)
         }
-
-        override fun onClick(v: View) {
-            (itemView as CheckableLinearLayout).toggle()
-            adapter.toggleSelection(layoutPosition)
-        }
-
 
     }
 
@@ -1661,6 +1663,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         internal fun toggleSelection(position: Int) {
             if (accounts == null || position < 0) return
             val account = accounts!![position]
+            selection.put(account.key, true != selection[account.key])
+            activity.notifyAccountSelectionChanged()
+            notifyDataSetChanged()
+        }
+
+        internal fun setSelection(position: Int) {
+            if (accounts == null || position < 0) return
+            val account = accounts!![position]
+            selection.clear()
             selection.put(account.key, true != selection[account.key])
             activity.notifyAccountSelectionChanged()
             notifyDataSetChanged()

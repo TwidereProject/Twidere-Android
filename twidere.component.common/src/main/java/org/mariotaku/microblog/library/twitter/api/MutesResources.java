@@ -30,13 +30,13 @@ import org.mariotaku.microblog.library.twitter.template.UserAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
 
 /**
  * Created by mariotaku on 2017/3/26.
  */
-@Queries(template = UserAnnotationTemplate.class)
+@Params(template = UserAnnotationTemplate.class)
 public interface MutesResources {
 
     @POST("/mutes/users/create.json")

@@ -30,13 +30,14 @@ import org.mariotaku.microblog.library.twitter.model.StatusUpdate;
 import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
+import org.mariotaku.restfu.annotation.param.KeyValue;
 import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Path;
-import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 
 @SuppressWarnings("RedundantThrows")
-@Queries(template = StatusAnnotationTemplate.class)
+@Params(template = StatusAnnotationTemplate.class)
 public interface TweetResources {
     @POST("/statuses/destroy/{id}.json")
     Status destroyStatus(@Path("id") String statusId) throws MicroBlogException;
@@ -57,6 +58,7 @@ public interface TweetResources {
     Status showStatus(@Query("id") String id) throws MicroBlogException;
 
     @POST("/statuses/update.json")
+    @Params({@KeyValue(key = "tweet_mode", valueKey = "tweet_mode")})
     Status updateStatus(@Param StatusUpdate latestStatus) throws MicroBlogException;
 
     @POST("/statuses/lookup.json")

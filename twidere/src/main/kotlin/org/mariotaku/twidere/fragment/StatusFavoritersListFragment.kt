@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.content.Context
 import android.os.Bundle
+import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS_ID
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
@@ -29,11 +30,15 @@ import org.mariotaku.twidere.model.UserKey
 
 class StatusFavoritersListFragment : CursorUsersListFragment() {
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.NONE
+    }
+
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val statusId = args.getString(EXTRA_STATUS_ID)
-        val loader = StatusFavoritersLoader(context, accountKey,
-                statusId, adapter.getData(), false)
+        val loader = StatusFavoritersLoader(context, accountKey, statusId, adapter.getData(), false)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

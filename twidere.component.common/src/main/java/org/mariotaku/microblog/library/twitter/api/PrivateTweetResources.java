@@ -21,20 +21,20 @@
 
 package org.mariotaku.microblog.library.twitter.api;
 
-import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
-import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.param.Path;
-import org.mariotaku.restfu.annotation.param.Queries;
-import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.Paging;
 import org.mariotaku.microblog.library.twitter.model.ResponseList;
 import org.mariotaku.microblog.library.twitter.model.Status;
 import org.mariotaku.microblog.library.twitter.model.StatusActivitySummary;
 import org.mariotaku.microblog.library.twitter.model.TranslationResult;
+import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
+import org.mariotaku.restfu.annotation.method.GET;
+import org.mariotaku.restfu.annotation.param.Params;
+import org.mariotaku.restfu.annotation.param.Path;
+import org.mariotaku.restfu.annotation.param.Query;
 
 @SuppressWarnings("RedundantThrows")
-@Queries(template = StatusAnnotationTemplate.class)
+@Params(template = StatusAnnotationTemplate.class)
 public interface PrivateTweetResources extends PrivateResources {
 
     @GET("/statuses/{id}/activity/summary.json")

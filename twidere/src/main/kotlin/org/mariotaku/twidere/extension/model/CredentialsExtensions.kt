@@ -36,7 +36,14 @@ import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 /**
  * Created by mariotaku on 2016/12/3.
  */
-fun Credentials.getAuthorization(): Authorization {
+fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
+    if (cls != null) {
+        when {
+            TwitterWeb::class.java.isAssignableFrom(cls) -> {
+                return EmptyAuthorization()
+            }
+        }
+    }
     when (this) {
         is OAuthCredentials -> {
             return OAuthAuthorization(consumer_key, consumer_secret, OAuthToken(access_token,
@@ -60,7 +67,7 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
     } else {
         apiUrlFormat = DEFAULT_TWITTER_API_URL_FORMAT
     }
-    val domain: String
+    val domain: String?
     val versionSuffix: String?
     when {
         MicroBlog::class.java.isAssignableFrom(cls) -> {
@@ -95,6 +102,10 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
             domain = "stream"
             versionSuffix = null
         }
+        TwitterWeb::class.java.isAssignableFrom(cls) -> {
+            domain = null
+            versionSuffix = null
+        }
         else -> throw UnsupportedOperationException("Unsupported class $cls")
     }
     val endpointUrl = MicroBlogAPIFactory.getApiUrl(apiUrlFormat, domain, versionSuffix)
@@ -112,7 +123,7 @@ fun Credentials.getEndpoint(cls: Class<*>): Endpoint {
 
 fun <T> Credentials.newMicroBlogInstance(context: Context, @AccountType accountType: String? = null,
         cls: Class<T>): T {
-    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(), accountType,
+    return newMicroBlogInstance(context, getEndpoint(cls), getAuthorization(cls), accountType,
             cls)
 }
 
@@ -174,9 +185,10 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
 
 internal fun Credentials.authorizationHeader(
         uri: Uri,
-        modifiedUri: Uri = TwidereMediaDownloader.getReplacedUri(uri, api_url_format) ?: uri
+        modifiedUri: Uri = TwidereMediaDownloader.getReplacedUri(uri, api_url_format) ?: uri,
+        cls: Class<*>? = null
 ): String {
-    val auth = getAuthorization()
+    val auth = getAuthorization(cls)
     val endpoint: Endpoint
     if (auth is OAuthAuthorization) {
         endpoint = OAuthEndpoint(TwidereMediaDownloader.getEndpoint(modifiedUri),

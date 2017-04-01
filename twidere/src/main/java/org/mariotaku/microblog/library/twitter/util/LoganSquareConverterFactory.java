@@ -23,10 +23,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.Commons_ParameterizedTypeAccessor;
-import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.ParameterizedType;
 import com.fasterxml.jackson.core.JsonParseException;
 
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.ContentType;
@@ -76,11 +77,14 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
         try {
             final Object parsed;
             if (type.rawType == List.class) {
-                parsed = LoganSquare.parseList(response.getBody().stream(), type.typeParameters.get(0).rawType);
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(0).rawType);
+                parsed = mapper.parseList(response.getBody().stream());
             } else if (type.rawType == Map.class) {
-                parsed = LoganSquare.parseMap(response.getBody().stream(), type.typeParameters.get(1).rawType);
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(1).rawType);
+                parsed = mapper.parseMap(response.getBody().stream());
             } else {
-                parsed = LoganSquare.parse(response.getBody().stream(), type);
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type);
+                parsed = mapper.parse(response.getBody().stream());
             }
             if (parsed == null) {
                 throw new IOException("Empty data");
@@ -117,8 +121,21 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
 
         @Override
         public Body convert(Object request) throws IOException, ConvertException, E {
-            return new StringBody(LoganSquare.serialize(request, (ParameterizedType) type),
-                    ContentType.parse("application/json"));
+            final String json;
+            if (type.rawType == List.class) {
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(0).rawType);
+                //noinspection unchecked
+                json = mapper.serialize((List) request);
+            } else if (type.rawType == Map.class) {
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(1).rawType);
+                //noinspection unchecked
+                json = mapper.serialize((Map) request);
+            } else {
+                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type);
+                //noinspection unchecked
+                json = mapper.serialize(request);
+            }
+            return new StringBody(json, ContentType.parse("application/json"));
         }
     }
 }

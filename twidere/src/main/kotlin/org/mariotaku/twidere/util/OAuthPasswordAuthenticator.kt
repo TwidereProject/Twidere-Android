@@ -107,7 +107,7 @@ class OAuthPasswordAuthenticator(
 
     @Throws(IOException::class, LoginVerificationException::class)
     private fun getVerificationData(authorizeResponseData: AuthorizeResponseData,
-                                    challengeResponse: String?): AuthorizeRequestData {
+            challengeResponse: String?): AuthorizeRequestData {
         var response: HttpResponse? = null
         try {
             val data = AuthorizeRequestData()
@@ -149,12 +149,12 @@ class OAuthPasswordAuthenticator(
     private fun parseAuthorizeRequestData(response: HttpResponse, data: AuthorizeRequestData) {
         val handler = object : AbstractSimpleMarkupHandler() {
             internal var isOAuthFormOpened: Boolean = false
-            override fun handleStandaloneElement(elementName: String?, attributes: MutableMap<String, String>?, minimized: Boolean, line: Int, col: Int) {
+            override fun handleStandaloneElement(elementName: String, attributes: MutableMap<String, String>?, minimized: Boolean, line: Int, col: Int) {
                 handleOpenElement(elementName, attributes, line, col)
                 handleCloseElement(elementName, line, col)
             }
 
-            override fun handleOpenElement(elementName: String?, attributes: MutableMap<String, String>?, line: Int, col: Int) {
+            override fun handleOpenElement(elementName: String, attributes: MutableMap<String, String>?, line: Int, col: Int) {
                 when (elementName) {
                     "form" -> {
                         if (attributes != null && "oauth_form" == attributes["id"]) {
@@ -175,7 +175,7 @@ class OAuthPasswordAuthenticator(
                 }
             }
 
-            override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
+            override fun handleCloseElement(elementName: String, line: Int, col: Int) {
                 if ("form" == elementName) {
                     isOAuthFormOpened = false
                 }
@@ -186,8 +186,8 @@ class OAuthPasswordAuthenticator(
 
     @Throws(IOException::class, AuthenticationException::class)
     private fun getAuthorizeResponseData(requestToken: OAuthToken,
-                                         authorizeRequestData: AuthorizeRequestData,
-                                         username: String, password: String): AuthorizeResponseData {
+            authorizeRequestData: AuthorizeRequestData,
+            username: String, password: String): AuthorizeResponseData {
         var response: HttpResponse? = null
         try {
             val data = AuthorizeResponseData()
@@ -214,14 +214,13 @@ class OAuthPasswordAuthenticator(
                 internal var isOAuthPinDivOpened: Boolean = false
                 internal var isChallengeFormOpened: Boolean = false
 
-                override fun handleStandaloneElement(elementName: String?,
-                                                     attributes: MutableMap<String, String>?,
-                                                     minimized: Boolean, line: Int, col: Int) {
+                override fun handleStandaloneElement(elementName: String, attributes: MutableMap<String, String>?,
+                        minimized: Boolean, line: Int, col: Int) {
                     handleOpenElement(elementName, attributes, line, col)
                     handleCloseElement(elementName, line, col)
                 }
 
-                override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
+                override fun handleCloseElement(elementName: String, line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             isOAuthPinDivOpened = false
@@ -232,8 +231,8 @@ class OAuthPasswordAuthenticator(
                     }
                 }
 
-                override fun handleOpenElement(elementName: String?,
-                                               attributes: Map<String, String>?, line: Int, col: Int) {
+                override fun handleOpenElement(elementName: String, attributes: Map<String, String>?,
+                        line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             if (attributes != null && "oauth_pin" == attributes["id"]) {
@@ -442,14 +441,14 @@ class OAuthPasswordAuthenticator(
         fun readOAuthPINFromHtml(reader: Reader, data: OAuthPinData) {
             val handler = object : AbstractSimpleMarkupHandler() {
                 internal var isOAuthPinDivOpened: Boolean = false
-                override fun handleStandaloneElement(elementName: String?,
-                                                     attributes: MutableMap<String, String>?,
-                                                     minimized: Boolean, line: Int, col: Int) {
+                override fun handleStandaloneElement(elementName: String,
+                        attributes: MutableMap<String, String>?,
+                        minimized: Boolean, line: Int, col: Int) {
                     handleOpenElement(elementName, attributes, line, col)
                     handleCloseElement(elementName, line, col)
                 }
 
-                override fun handleOpenElement(elementName: String?, attributes: Map<String, String>?, line: Int, col: Int) {
+                override fun handleOpenElement(elementName: String, attributes: Map<String, String>?, line: Int, col: Int) {
                     when (elementName) {
                         "div" -> {
                             if (attributes != null && "oauth_pin" == attributes["id"]) {
@@ -459,7 +458,7 @@ class OAuthPasswordAuthenticator(
                     }
                 }
 
-                override fun handleCloseElement(elementName: String?, line: Int, col: Int) {
+                override fun handleCloseElement(elementName: String, line: Int, col: Int) {
                     if ("div" == elementName) {
                         isOAuthPinDivOpened = false
                     }

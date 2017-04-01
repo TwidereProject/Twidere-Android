@@ -169,7 +169,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
     }
 
     @NonNull
-    public static String getApiUrl(@NonNull final String pattern, final String domain, String appendPath) {
+    public static String getApiUrl(@NonNull final String pattern, @Nullable final String domain, String appendPath) {
         String urlBase = getApiBaseUrl(pattern, domain);
         if (urlBase.endsWith("/")) {
             urlBase = urlBase.substring(0, urlBase.length() - 1);

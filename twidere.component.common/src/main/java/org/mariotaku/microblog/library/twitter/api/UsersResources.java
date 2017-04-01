@@ -36,13 +36,13 @@ import org.mariotaku.microblog.library.twitter.template.UserAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
-import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 import org.mariotaku.restfu.http.mime.FileBody;
 
 @SuppressWarnings("RedundantThrows")
-@Queries(template = UserAnnotationTemplate.class)
+@Params(template = UserAnnotationTemplate.class)
 public interface UsersResources {
 
     @POST("/blocks/create.json")
@@ -108,8 +108,8 @@ public interface UsersResources {
 
     @POST("/account/update_profile_banner.json")
     ResponseCode updateProfileBannerImage(@Param("banner") FileBody data, @Param("width") int width,
-                                          @Param("height") int height, @Param("offset_left") int offsetLeft,
-                                          @Param("offset_top") int offsetTop)
+            @Param("height") int height, @Param("offset_left") int offsetLeft,
+            @Param("offset_top") int offsetTop)
             throws MicroBlogException;
 
     @POST("/account/update_profile_banner.json")

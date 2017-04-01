@@ -35,12 +35,12 @@ import org.mariotaku.microblog.library.twitter.template.DMAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.annotation.method.POST;
 import org.mariotaku.restfu.annotation.param.Param;
+import org.mariotaku.restfu.annotation.param.Params;
 import org.mariotaku.restfu.annotation.param.Path;
-import org.mariotaku.restfu.annotation.param.Queries;
 import org.mariotaku.restfu.annotation.param.Query;
 import org.mariotaku.restfu.http.BodyType;
 
-@Queries(template = DMAnnotationTemplate.class)
+@Params(template = DMAnnotationTemplate.class)
 public interface PrivateDirectMessagesResources extends PrivateResources {
 
     @POST("/dm/conversation/{conversation_id}/delete.json")
