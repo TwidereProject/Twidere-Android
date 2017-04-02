@@ -819,7 +819,7 @@
   <string name="title_accounts">Comptes</string>
   <string name="title_block_user">Bloquer <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">Utilisateurs bloqués</string>
-  <string name="title_browser_sign_in">Connexion du naviguateur</string>
+  <string name="title_browser_sign_in">Connexion via le navigateur</string>
   <string name="title_compose">Écrire</string>
   <string name="title_dialog_sync_connect_to">Se connecter à&#8230;</string>
   <string name="title_drafts">Brouillons</string>
