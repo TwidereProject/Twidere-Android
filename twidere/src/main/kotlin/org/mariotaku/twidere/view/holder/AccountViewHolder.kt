@@ -63,13 +63,9 @@ class AccountViewHolder(
         name.text = details.user.name
         screenName.text = String.format("@%s", details.user.screen_name)
         setAccountColor(details.color)
-        if (adapter.profileImageEnabled) {
-            profileImage.visibility = View.VISIBLE
-            adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
-                    profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
-        } else {
-            profileImage.visibility = View.GONE
-        }
+        profileImage.visibility = View.VISIBLE
+        adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
+                profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
         accountType.setImageResource(AccountUtils.getAccountTypeIcon(details.type))
         toggle.isChecked = details.activated
         toggle.setOnCheckedChangeListener(adapter.checkedChangeListener)

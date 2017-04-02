@@ -1205,6 +1205,7 @@
     <string name="title_statuses">Tweets</string>
     <string name="title_statuses_and_replies">Tweets &amp; replies</string>
     <string name="title_statuses_scheduling">Tweets scheduling</string>
+    <string name="title_gif_sharing">GIF sharing</string>
     <string name="title_streaming">Streaming</string>
     <string name="title_subscription_name">Name</string>
     <string name="title_subscription_url">URL</string>

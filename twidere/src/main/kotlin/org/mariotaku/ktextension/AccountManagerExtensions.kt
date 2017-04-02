@@ -9,12 +9,13 @@ import android.os.Handler
  */
 
 fun AccountManager.addOnAccountsUpdatedListenerSafe(listener: OnAccountsUpdateListener,
-                                                    handler: Handler? = null,
-                                                    updateImmediately: Boolean = false): Boolean {
+        handler: Handler? = null, updateImmediately: Boolean = false): Boolean {
     try {
         this.addOnAccountsUpdatedListener(listener, handler, updateImmediately)
         return true
     } catch (e: IllegalStateException) {
+        return false
+    } catch (e: IllegalArgumentException) {
         return false
     }
 }
@@ -24,6 +25,8 @@ fun AccountManager.removeOnAccountsUpdatedListenerSafe(listener: OnAccountsUpdat
         this.removeOnAccountsUpdatedListener(listener)
         return true
     } catch (e: IllegalStateException) {
+        return false
+    } catch (e: IllegalArgumentException) {
         return false
     }
 }

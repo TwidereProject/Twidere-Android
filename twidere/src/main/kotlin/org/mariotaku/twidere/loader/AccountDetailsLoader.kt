@@ -16,10 +16,18 @@ class AccountDetailsLoader(
         context: Context,
         val filter: (AccountDetails.() -> Boolean)? = null
 ) : FixedAsyncTaskLoader<List<AccountDetails>>(context) {
+
     private val am: AccountManager = AccountManager.get(context)
-    private val accountUpdateListener = OnAccountsUpdateListener {
-        onContentChanged()
-    }
+
+    private var accountUpdateListener: OnAccountsUpdateListener? = null
+        set(value) {
+            field?.let {
+                am.removeOnAccountsUpdatedListenerSafe(it)
+            }
+            if (value != null) {
+                am.addOnAccountsUpdatedListenerSafe(value, updateImmediately = true)
+            }
+        }
 
     override fun loadInBackground(): List<AccountDetails> {
         return AccountUtils.getAllAccountDetails(am, true).filter {
@@ -30,11 +38,13 @@ class AccountDetailsLoader(
     override fun onReset() {
         super.onReset()
         onStopLoading()
-        am.removeOnAccountsUpdatedListenerSafe(accountUpdateListener)
+        accountUpdateListener = null
     }
 
     override fun onStartLoading() {
-        am.addOnAccountsUpdatedListenerSafe(accountUpdateListener, updateImmediately = true)
+        accountUpdateListener = OnAccountsUpdateListener {
+            onContentChanged()
+        }
         if (takeContentChanged()) {
             forceLoad()
         }
