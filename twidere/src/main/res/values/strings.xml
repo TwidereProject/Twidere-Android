@@ -525,9 +525,13 @@
     <string name="label_background_operation_service">Background operation service</string>
     <string name="label_buffer_accounts">Buffer accounts</string>
     <string name="label_buffer_due_at_no_time">No time</string>
+    <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_g">G</string>
+    <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_pg">PG</string>
+    <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_pg13">PG-13</string>
+    <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
     <string name="label_content_rating_r">R</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
@@ -857,7 +861,7 @@
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
     <string name="preference_title_notification_ringtone">Ringtone</string>
-    <string name="preference_title_override_language">Override language</string>
+    <string name="preference_title_override_language">App language</string>
     <string name="preference_title_portrait">Portrait</string>
     <string name="preference_title_storage">Storage</string>
     <string name="preference_title_streaming_content">Streaming content</string>
