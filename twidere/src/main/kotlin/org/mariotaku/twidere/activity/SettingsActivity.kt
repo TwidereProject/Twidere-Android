@@ -39,6 +39,7 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import kotlinx.android.synthetic.main.activity_settings.*
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
@@ -369,7 +370,11 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
     internal class HeaderEntry(private val title: String) : Entry() {
 
         override fun bind(view: View) {
-            (view.findViewById(android.R.id.title) as TextView).text = title
+            val theme = Chameleon.getOverrideTheme(view.context, view.context)
+            val textView = view.findViewById(android.R.id.title) as TextView
+            textView.setTextColor(ThemeUtils.getOptimalAccentColor(theme.colorAccent,
+                    theme.colorForeground))
+            textView.text = title
         }
     }
 

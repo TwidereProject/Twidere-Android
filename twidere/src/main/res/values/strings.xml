@@ -122,6 +122,7 @@
     <!-- [verb] Used for skip some settings -->
     <string name="action_skip">Skip</string>
     <string name="action_start">Start</string>
+    <string name="action_status_attachment">Tweet attachment</string>
     <string name="action_status_block_users">Block users…</string>
     <string name="action_status_mute_users">Mute users…</string>
     <string name="action_status_schedule">Tweet schedule</string>

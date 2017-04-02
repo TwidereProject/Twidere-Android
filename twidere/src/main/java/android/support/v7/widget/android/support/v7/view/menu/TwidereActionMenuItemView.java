@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 /**
  * Created by mariotaku on 16/3/18.
  */
+@SuppressWarnings("RestrictedApi")
 public class TwidereActionMenuItemView extends ActionMenuItemView {
 
     public TwidereActionMenuItemView(Context context) {

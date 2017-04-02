@@ -6,9 +6,8 @@
 
     <item
         android:id="@+id/status_attachment"
-        android:icon="@drawable/ic_action_add"
-        android:title="@string/action_add"
-        android:visible="true"
+        android:icon="@drawable/ic_action_attachment"
+        android:title="@string/action_status_attachment"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction">
         <menu>

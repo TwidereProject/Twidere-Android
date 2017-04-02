@@ -276,7 +276,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val imageExtensionsIntent = Intent(INTENT_ACTION_EXTENSION_EDIT_IMAGE)
         val mediaMenuItem = menu.findItem(R.id.status_attachment)
         if (mediaMenuItem != null && mediaMenuItem.hasSubMenu()) {
-            MenuUtils.addIntentToMenu(this, mediaMenuItem.subMenu, imageExtensionsIntent, MENU_GROUP_IMAGE_EXTENSION)
+            MenuUtils.addIntentToMenu(this, mediaMenuItem.subMenu, imageExtensionsIntent,
+                    MENU_GROUP_IMAGE_EXTENSION)
         }
         updateViewStyle()
         setMenu()
@@ -1277,8 +1278,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         menu.setItemAvailability(R.id.add_gif, extraFeaturesService.isSupported(
                 ExtraFeaturesService.FEATURE_SHARE_GIF))
 
-        menu.setGroupEnabled(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
-        menu.setGroupVisible(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
+        menu.setGroupAvailability(MENU_GROUP_IMAGE_EXTENSION, hasMedia)
         menu.setItemChecked(R.id.toggle_sensitive, hasMedia && possiblySensitive)
 
         val attachLocation = kPreferences[attachLocationKey]
@@ -1295,6 +1295,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             menu.setMenuItemIcon(R.id.location_submenu, R.drawable.ic_action_location)
         }
 
+        ThemeUtils.wrapMenuIcon(menuBar, MENU_GROUP_IMAGE_EXTENSION)
         ThemeUtils.resetCheatSheet(menuBar)
     }
 

@@ -60,6 +60,7 @@ import org.mariotaku.twidere.preference.ThemeBackgroundPreference;
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo;
 import org.mariotaku.twidere.util.support.ViewSupport;
 
+@SuppressWarnings("RestrictedApi")
 public class ThemeUtils implements Constants {
 
     public static final int ACCENT_COLOR_THRESHOLD = 192;
@@ -74,9 +75,8 @@ public class ThemeUtils implements Constants {
 
 
     public static void applyColorFilterToMenuIcon(final Menu menu, @ColorInt final int color,
-                                                  @ColorInt final int popupColor,
-                                                  @ColorInt final int highlightColor, final Mode mode,
-                                                  final int... excludedGroups) {
+            @ColorInt final int popupColor, @ColorInt final int highlightColor, final Mode mode,
+            final int... excludedGroups) {
         for (int i = 0, j = menu.size(); i < j; i++) {
             final MenuItem item = menu.getItem(i);
             final Drawable icon = item.getIcon();
@@ -558,7 +558,7 @@ public class ThemeUtils implements Constants {
 
     @StyleRes
     public static int getCurrentTheme(@NonNull final Context context, @StyleRes final int lightTheme,
-                                      @StyleRes final int darkTheme) {
+            @StyleRes final int darkTheme) {
         if (TwilightManagerAccessor.INSTANCE.isNight(context)) return darkTheme;
         return lightTheme;
     }
