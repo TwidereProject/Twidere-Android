@@ -1,7 +1,7 @@
 /*
- * Twidere - Twitter client for Android
+ *             Twidere - Twitter client for Android
  *
- *  Copyright (C) 2012-2015 Mariotaku Lee <mariotaku.lee@gmail.com>
+ *  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -17,20 +17,24 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.util
+package org.mariotaku.twidere.extension.text.twitter
 
-import com.rengwuxian.materialedittext.validation.METLengthChecker
+import com.twitter.Extractor
 import com.twitter.Validator
+import org.mariotaku.twidere.model.ParcelableStatus
 
 /**
- * Created by mariotaku on 15/4/29.
+ * Created by mariotaku on 2017/3/31.
  */
-class TwitterValidatorMETLengthChecker(
-        private val validator: Validator
-) : METLengthChecker() {
 
-    override fun getLength(charSequence: CharSequence): Int {
-        return validator.getTweetLength(charSequence.toString())
+
+fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?): Int {
+    if (!ignoreMentions || inReplyTo == null) {
+        return getTweetLength(text)
     }
 
+    val (replyText, _, _) = InternalExtractor.extractReplyTextAndMentions(text, inReplyTo)
+    return getTweetLength(replyText)
 }
+
+private object InternalExtractor : Extractor()

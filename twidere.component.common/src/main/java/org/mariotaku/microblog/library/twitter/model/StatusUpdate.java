@@ -68,6 +68,11 @@ public class StatusUpdate extends SimpleValueMap {
         return this;
     }
 
+    public StatusUpdate excludeReplyUserIds(final String[] ids) {
+        put("exclude_reply_userids", RestFuUtils.toString(ids, ','));
+        return this;
+    }
+
     public StatusUpdate location(final GeoLocation location) {
         remove("lat");
         remove("long");

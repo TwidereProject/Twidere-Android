@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.IStatusShortener;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -40,7 +41,7 @@ import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTEN
 
 public final class StatusShortenerInterface extends AbsServiceInterface<IStatusShortener> {
 
-    protected StatusShortenerInterface(Context context, String shortenerName, Bundle metaData) {
+    private StatusShortenerInterface(Context context, String shortenerName, Bundle metaData) {
         super(context, shortenerName, metaData);
     }
 
@@ -50,8 +51,8 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
     }
 
     public StatusShortenResult shorten(final ParcelableStatusUpdate status,
-                                       final UserKey currentAccountId,
-                                       final String overrideStatusText) {
+            final UserKey currentAccountId,
+            final String overrideStatusText) {
         final IStatusShortener iface = getInterface();
         if (iface == null) return StatusShortenResult.error(1, "Shortener not ready");
         try {
@@ -76,6 +77,7 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
         }
     }
 
+    @Nullable
     public static StatusShortenerInterface getInstance(final Application application, final String shortenerName) {
         if (shortenerName == null) return null;
         final Intent intent = new Intent(INTENT_ACTION_EXTENSION_SHORTEN_STATUS);

@@ -37,10 +37,11 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
-import org.mariotaku.twidere.extension.getTweetLength
 import org.mariotaku.twidere.extension.model.mediaSizeLimit
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
+import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
+import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
@@ -111,6 +112,12 @@ class UpdateStatusTask(
 
         val pendingUpdate = PendingStatusUpdate(update)
 
+        /*
+         * override status text, trim existing reply mentions, and add mentions that not
+         * exists in status text into ignore list
+         */
+        regulateStatusText(update, pendingUpdate)
+
         val result: UpdateStatusResult
         try {
             uploadMedia(uploader, update, info, pendingUpdate)
@@ -137,6 +144,17 @@ class UpdateStatusTask(
             shortener?.unbindService()
         }
         return result
+    }
+
+    private fun regulateStatusText(update: ParcelableStatusUpdate, pending: PendingStatusUpdate) {
+        val inReplyTo = update.in_reply_to_status ?: return
+        for (i in 0 until pending.length) {
+            if (update.accounts[i].type != AccountType.TWITTER) continue
+            val (replyText, _, excludedMentions) = extractor.extractReplyTextAndMentions(
+                    pending.overrideTexts[i], inReplyTo)
+            pending.overrideTexts[i] = replyText
+            pending.excludeReplyUserIds[i] = excludedMentions.map { it.key.id }.toTypedArray()
+        }
     }
 
     private fun deleteOrUpdateDraft(update: ParcelableStatusUpdate, result: UpdateStatusResult,
@@ -226,9 +244,9 @@ class UpdateStatusTask(
             val account = update.accounts[i]
             val text = pending.overrideTexts[i]
             val textLimit = account.textLimit
-            val ignoreMentions = update.in_reply_to_status != null && account.type ==
-                    AccountType.TWITTER && !defaultFeatures.isMentionsCountsInStatus
-            if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions) <= textLimit) {
+            val ignoreMentions = account.type == AccountType.TWITTER
+            if (textLimit >= 0 && validator.getTweetLength(text, ignoreMentions,
+                    update.in_reply_to_status) <= textLimit) {
                 continue
             }
             shortener.waitForService()
@@ -300,13 +318,11 @@ class UpdateStatusTask(
                             fanfouUpdateStatusWithPhoto(microBlog, statusUpdate, pendingUpdate,
                                     pendingUpdate.overrideTexts[i], account.mediaSizeLimit, i)
                         } else {
-                            twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate,
-                                    pendingUpdate.overrideTexts[i], i)
+                            twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate, i)
                         }
                     }
                     else -> {
-                        twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate,
-                                pendingUpdate.overrideTexts[i], i)
+                        twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate, i)
                     }
                 }
                 result.statuses[i] = ParcelableStatusUtils.fromStatus(requestResult,
@@ -392,11 +408,16 @@ class UpdateStatusTask(
 
     @Throws(MicroBlogException::class)
     private fun twitterUpdateStatus(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
-            pendingUpdate: PendingStatusUpdate, overrideText: String,
-            index: Int): Status {
+            pendingUpdate: PendingStatusUpdate, index: Int): Status {
+        val overrideText = pendingUpdate.overrideTexts[index]
         val status = StatusUpdate(overrideText)
-        if (statusUpdate.in_reply_to_status != null) {
-            status.inReplyToStatusId(statusUpdate.in_reply_to_status.id)
+        val inReplyToStatus = statusUpdate.in_reply_to_status
+        if (inReplyToStatus != null) {
+            status.inReplyToStatusId(inReplyToStatus.id)
+            if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
+                status.autoPopulateReplyMetadata(true)
+
+            }
         }
         if (statusUpdate.repost_status_id != null) {
             status.setRepostStatusId(statusUpdate.repost_status_id)
@@ -407,9 +428,6 @@ class UpdateStatusTask(
         if (statusUpdate.location != null) {
             status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location))
             status.displayCoordinates(statusUpdate.display_coordinates)
-        }
-        if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
-            status.autoPopulateReplyMetadata(true)
         }
         val mediaIds = pendingUpdate.mediaIds[index]
         if (mediaIds != null) {
@@ -469,7 +487,8 @@ class UpdateStatusTask(
     private fun getMediaUploader(app: TwidereApplication): MediaUploaderInterface? {
         val uploaderComponent = preferences.getString(KEY_MEDIA_UPLOADER, null)
         if (ServicePickerPreference.isNoneValue(uploaderComponent)) return null
-        val uploader = MediaUploaderInterface.getInstance(app, uploaderComponent) ?: throw UploaderNotFoundException(context.getString(R.string.error_message_media_uploader_not_found))
+        val uploader = MediaUploaderInterface.getInstance(app, uploaderComponent) ?:
+                throw UploaderNotFoundException(context.getString(R.string.error_message_media_uploader_not_found))
         try {
             uploader.checkService { metaData ->
                 if (metaData == null) throw ExtensionVersionMismatchException()
@@ -520,6 +539,7 @@ class UpdateStatusTask(
         var sharedMediaOwners: Array<UserKey>? = null
 
         val overrideTexts: Array<String> = Array(length) { defaultText }
+        val excludeReplyUserIds: Array<Array<String>?> = arrayOfNulls(length)
         val mediaIds: Array<Array<String>?> = arrayOfNulls(length)
 
         val mediaUploadResults: Array<MediaUploadResult?> = arrayOfNulls(length)

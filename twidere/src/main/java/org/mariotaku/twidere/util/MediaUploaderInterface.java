@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 import org.mariotaku.twidere.IMediaUploader;
 import org.mariotaku.twidere.model.MediaUploadResult;
@@ -40,13 +41,14 @@ import java.util.List;
 import static org.mariotaku.twidere.constant.IntentConstants.INTENT_ACTION_EXTENSION_UPLOAD_MEDIA;
 
 public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUploader> {
-    protected MediaUploaderInterface(Context context, String uploaderName, Bundle metaData) {
+
+    private MediaUploaderInterface(Context context, String uploaderName, Bundle metaData) {
         super(context, uploaderName, metaData);
     }
 
     public MediaUploadResult upload(final ParcelableStatusUpdate status,
-                                    final UserKey currentAccountKey,
-                                    final UploaderMediaItem[] media) {
+            final UserKey currentAccountKey,
+            final UploaderMediaItem[] media) {
         final IMediaUploader iface = getInterface();
         if (iface == null) return MediaUploadResult.error(1, "Uploader not ready");
         try {
@@ -77,6 +79,7 @@ public final class MediaUploaderInterface extends AbsServiceInterface<IMediaUplo
         return IMediaUploader.Stub.asInterface(obj);
     }
 
+    @Nullable
     public static MediaUploaderInterface getInstance(final Application application, final String uploaderName) {
         if (uploaderName == null) return null;
         final Intent intent = new Intent(INTENT_ACTION_EXTENSION_UPLOAD_MEDIA);

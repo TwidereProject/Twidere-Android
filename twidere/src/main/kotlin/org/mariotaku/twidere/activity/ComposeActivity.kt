@@ -78,12 +78,12 @@ import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.getTweetLength
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.getAccountUser
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
+import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
 import org.mariotaku.twidere.model.*
@@ -1441,13 +1441,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accountKeys = accountsAdapter.selectedAccountKeys
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
-        val tweetLength = validator.getTweetLength(text, ignoreMentions &&
-                !defaultFeatures.isMentionsCountsInStatus)
+        val tweetLength = validator.getTweetLength(text, ignoreMentions, inReplyToStatus)
         val maxLength = statusTextCount.maxLength
         if (accountsAdapter.isSelectionEmpty) {
             editText.error = getString(R.string.message_toast_no_account_selected)
             return
-        } else if (!hasMedia && (TextUtils.isEmpty(text) || noReplyContent(text))) {
+        } else if (!hasMedia && (tweetLength <= 0 || noReplyContent(text))) {
             editText.error = getString(R.string.error_message_no_content)
             return
         } else if (maxLength > 0 && !statusShortenerUsed && tweetLength > maxLength) {
@@ -1502,8 +1501,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val ignoreMentions = inReplyToStatus != null && accountsAdapter.selectedAccountKeys.all {
             val account = AccountUtils.findByAccountKey(am, it) ?: return@all false
             return@all account.getAccountType(am) == AccountType.TWITTER
-        } && !defaultFeatures.isMentionsCountsInStatus
-        statusTextCount.textCount = validator.getTweetLength(text, ignoreMentions)
+        }
+        statusTextCount.textCount = validator.getTweetLength(text, ignoreMentions, inReplyToStatus)
     }
 
     private fun updateUpdateStatusIcon() {

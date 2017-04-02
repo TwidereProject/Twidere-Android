@@ -28,7 +28,7 @@ class StatusShortenerInterfaceTest {
         val application = context.applicationContext as Application
         val preferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         val shortenerComponent = preferences.getString(TwidereConstants.KEY_STATUS_SHORTENER, null) ?: return
-        val instance = StatusShortenerInterface.getInstance(application, shortenerComponent)
+        val instance = StatusShortenerInterface.getInstance(application, shortenerComponent) ?: return
         instance.checkService { metaData ->
             if (metaData == null) throw UpdateStatusTask.ExtensionVersionMismatchException()
             val extensionVersion = metaData.getString(TwidereConstants.METADATA_KEY_EXTENSION_VERSION_STATUS_SHORTENER)
