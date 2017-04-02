@@ -175,6 +175,10 @@
   <string name="keyword_filter_name">Klíčové slovo: <xliff:g id="name">%s </xliff:g></string>
   <string name="label_auth_type">Typ autentifikace</string>
   <string name="label_background_operation_service">Služba na pozadí</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Poskytovatel databáze pro Twidere</string>
   <string name="label_refresh_service">Obnovit službu</string>
   <string name="label_status_not_available">Tweet není k dispozici</string>

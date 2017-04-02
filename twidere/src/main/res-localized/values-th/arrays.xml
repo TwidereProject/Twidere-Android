@@ -77,7 +77,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>ผู้ใช้</item>
     <item>ไทม์ไลน์ผู้ใช้</item>
-    <item>User Favorites</item>
+    <item>รายการโปรดของผู้ใช้</item>
     <item>รายการ</item>
     <item>ไทม์ไลน์ของรายการ</item>
   </string-array>

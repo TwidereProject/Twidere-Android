@@ -82,6 +82,10 @@
   <string name="in_reply_to_name">Σε απάντηση του <xliff:g id="user_name">%s</xliff:g></string>
   <string name="label_auth_type">Τύπος auth</string>
   <string name="label_background_operation_service">Υπηρεσία λειτουργίας υποβάθρου</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Πάροχος βάσης δεδομένων του Twidere</string>
   <string name="label_refresh_service">Ανανέωση υπηρεσίας</string>
   <string name="label_streaming_service">Υπηρεσία streaming</string>

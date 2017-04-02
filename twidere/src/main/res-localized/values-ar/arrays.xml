@@ -3,34 +3,46 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>الرئيسية</item>
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>التفاعلات</item>
+    <item>الرسائل المباشرة</item>
     <item>التداولات</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>كتابة</item>
     <item>أخذ صورة</item>
-    <item>Add media</item>
+    <item>أضف وسائط</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>التفاعلات</item>
+    <item>الرسائل المباشرة</item>
     <item>التداولات</item>
     <item>عمليات البحث المحفوظة</item>
   </string-array>
   <string-array name="entries_image_sources">
     <item>الكاميرا</item>
     <item>البوم الصور</item>
-    <item>Clipboard</item>
+    <item>الحافظة</item>
+  </string-array>
+  <string-array name="entries_media_preload">
+    <item>وأي فأي</item>
+  </string-array>
+  <string-array name="entries_media_preview_style">
+    <item>قص</item>
+    <item>Scale</item>
+    <item>الحجم الحقيقي</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>الرئيسية</item>
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>التفاعلات</item>
+    <item>الرسائل المباشرة</item>
   </string-array>
   <string-array name="entries_profile_image_style">
     <item>مدوّرة</item>
     <item>مربعة</item>
+  </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 دقائق</item>
@@ -41,6 +53,11 @@
     <item>ساعة</item>
     <item>ساعتان</item>
     <item>4 ساعات</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>ضيقة</item>
+    <item>عادي</item>
+    <item>واسعة</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>أيقونة</item>
@@ -60,7 +77,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>مستخدم</item>
     <item>الخط الزمني للمستخدم</item>
-    <item>User Favorites</item>
+    <item>مفضلات المستخدم</item>
     <item>لائحة</item>
     <item>الخط الزمني للقائمة</item>
   </string-array>

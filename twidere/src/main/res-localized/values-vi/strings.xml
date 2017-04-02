@@ -33,6 +33,10 @@
   <!-- Enhanced (paid) features title -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <!-- GNU social group like https://quitter.se/group/qvitter -->
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted

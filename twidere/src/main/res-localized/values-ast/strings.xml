@@ -17,6 +17,7 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Amestar regla</string>
   <string name="action_add_filters_subscription">Amestar soscripción</string>
+  <string name="action_add_gif">Amestar GIF</string>
   <string name="action_add_media">Amestar mediu</string>
   <string name="action_add_member">Amestar miembru</string>
   <string name="action_add_tab">Amestar llingüeta</string>
@@ -74,6 +75,7 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Préstame</string>
   <string name="action_liking">prestando</string>
+  <string name="action_location">Allugamientu</string>
   <string name="action_manage_in_buffer">Xestionar en Buffer</string>
   <string name="action_mark_as_read">Marcóse como lleíu</string>
   <string name="action_modifying_lists">modificando llistaos</string>
@@ -120,6 +122,7 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Saltar</string>
   <string name="action_start">Aniciar</string>
+  <string name="action_status_attachment">Tuitiar axuntu</string>
   <string name="action_status_block_users">Bloquiar usuarios&#8230;</string>
   <string name="action_status_mute_users">Silenciar usuarios&#8230;</string>
   <string name="action_subscribe">Soscribise</string>
@@ -330,6 +333,7 @@
   <string name="extra_feature_description_filters_import">Importa\'l llistáu de peñeres de bloqueos/silenciaos</string>
   <string name="extra_feature_description_filters_subscription">Soscríbite a peñeres de silenciu y sincronízales automáticamentes</string>
   <string name="extra_feature_description_schedule_status">Planificar tuit (unviar más sero)</string>
+  <string name="extra_feature_description_share_gif">Compartir GIF en tuit</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive… etc</string>
   <string name="extra_feature_title_filters_import">Importación de peñeres</string>
   <string name="extra_feature_title_filters_subscription">Soscripción de peñeres</string>
@@ -372,7 +376,7 @@
   <string name="hashtag">Etiqueta</string>
   <string name="hidden_settings">Axustes anubríos</string>
   <string name="hidden_settings_warning_message">ENXAMÁS NUN camudes estos axustes si nun sabes qué faen, o:\n * Amotiráse al to muxu\n * L\'asturianu va desaniciase nel intre\n * Apaecera\'l mur d\'Algoroma y cometeráte l\'ánima\n * Españará\'l mundiu</string>
-  <string name="hidden_settings_warning_title">AVISU: ¡Estos axustes puen firite!</string>
+  <string name="hidden_settings_warning_title">ALVERTENCIA: ¡Estos axustes puen firite!</string>
   <string name="hide_card_actions">Anubrir aiciones de tarxetes</string>
   <string name="hide_quotes">Anubrir cites</string>
   <string name="hide_replies">Anubrir rempuestes</string>
@@ -386,6 +390,7 @@
   <string name="hint_error_message_no_content">Ensin conteníu</string>
   <string name="hint_message_select_user">Guetar usuarios</string>
   <string name="hint_no_account">Ensin cuentes</string>
+  <string name="hint_search_gif">Guetar GIFs</string>
   <string name="hints">Conseyos</string>
   <string name="home_refresh">Refrescu na llinia temporal d\'aniciu</string>
   <string name="host_mapping_address">Direición (pue ser otra direicón d\'agospiu)</string>
@@ -412,27 +417,43 @@
   <string name="keyboard_shortcut_hint">Primi les tecles</string>
   <string name="keyboard_shortcuts">Atayos de tecláu</string>
   <string name="keyword_filter_name">Pallabra clave: <xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">Cuenta</string>
   <string name="label_account_type">Triba de cuenta</string>
   <string name="label_auth_type">Triba d\'autenticación</string>
   <string name="label_background_operation_service">Serviciu d\'operación de fondu</string>
   <string name="label_buffer_accounts">Cuentes Buffer</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">APTO</string>
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">7</string>
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">12</string>
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">16</string>
   <string name="label_data_provider">Fornidor de base de datos Twidere</string>
   <string name="label_filters_subscription">Soscripción</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> per <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_your_coarse_location">El to allugamientu aproximáu</string>
   <string name="label_media">Mediu</string>
   <string name="label_original_status">Tuit orixinal</string>
+  <string name="label_password">Contraseña</string>
   <string name="label_password_sign_in">Aniciu de sesión per contraseña</string>
   <string name="label_photo">Semeya</string>
   <string name="label_photos">Semeyes</string>
   <string name="label_poll">Encuesta</string>
+  <string name="label_powered_by_giphy">Cola potencia de GIPHY</string>
   <string name="label_refresh_and_sync_service">Refrescu y sincronización</string>
   <string name="label_refresh_service">Refrescar serviciu</string>
   <string name="label_sensitive_content">Conteníu sensible</string>
   <string name="label_status_not_available">Tuit non disponible</string>
+  <string name="label_statuses">Tuits</string>
+  <string name="label_statuses_replies">Tuits y rempuestes</string>
+  <string name="label_statuses_retweets">Tuits y reuits</string>
+  <string name="label_statuses_retweets_replies">Tuits, retuits y rempuestes</string>
   <string name="label_streaming_service">Serviciu de tuits en tiempu real</string>
   <string name="label_translate_from_language">Tornar del <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Torna</string>
+  <string name="label_username">Nome d\'usuariu</string>
   <string name="label_video">Videu</string>
   <string name="label_your_profile_image">La to imaxe de perfil</string>
   <string name="large">Grande</string>
@@ -473,11 +494,13 @@
   <string name="mention_user">Mentar a <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">Mentar <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">Namái menciones</string>
+  <string name="message_account_delete_confirm">Esta cuenta desaniciaráse de Twidere.</string>
   <string name="message_api_data_corrupted">Datos d\'API toyíos.</string>
   <string name="message_api_url_format_help">[DOMINIU]: Dominiu d\'API Twitter.\nExemplu: https://[DOMINIU].twitter.com/ trocaráse por https://api.twitter.com/.</string>
   <string name="message_auto_refresh_confirm">¿Habilitar l\'auto-refrescu pa consiguir tuits nuevos?</string>
   <string name="message_blocked_user">Bloquióse a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_buffer_delete_schedule_confirm">¿Desaniciar esta planificación?</string>
+  <string name="message_buffer_disconnect_confirm">¿Desconeutase de Buffer?</string>
   <string name="message_clear_messages_confirm">¿Llimpiar tolos mensaxes?</string>
   <string name="message_conversation_created">Creóse la conversación.</string>
   <string name="message_destroy_conversation_confirm">¿Dexar esta conversación?</string>
@@ -540,6 +563,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_retweet_cancelled">Encaboxóse\'l retuit</string>
   <string name="message_toast_save_media_no_storage_permission">Precísase\'l permisu d\'almacenamientu pa guardar medios</string>
   <string name="message_toast_saved_to_gallery">Guardóse na galería</string>
+  <string name="message_toast_schedule_future_time_required">La data debería tar nel futuru</string>
   <string name="message_toast_search_deleted">Desanicióse la gueta</string>
   <string name="message_toast_search_name_deleted">Desanicióse la gueta «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>»</string>
   <string name="message_toast_search_name_saved">Guardóse la gueta «<xliff:g example="SearchQuery" id="name">%1$s</xliff:g>»</string>
@@ -604,7 +628,9 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> y otros <xliff:g id="count">%2$d</xliff:g> más mentáronte.</string>
   <!-- Notification method, flashing LED light -->
   <!-- Notification method, ringtone -->
+  <string name="notification_method_ringtone">Timbre</string>
   <!-- Notification method, device vibration -->
+  <string name="notification_method_vibration">Vibración</string>
   <string name="notification_status">Tuit nuevu por <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Tuit nuevu por <xliff:g id="user">%1$s</xliff:g> y <xliff:g id="count">%2$d</xliff:g> más</string>
   <string name="notification_title_new_retweet_by_user"><xliff:g id="user">%1$s</xliff:g> retuitió</string>
@@ -663,7 +689,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_summary_database_item_limit">Llende cimera d\'elementos atroxaos nes bases de datos pa cada cuenta. Afitar a un valor más pequeñu p\'aforrar espaciu y aumentar la velocidá de carga.</string>
   <string name="preference_summary_media_preload_non_metered_network">Precarga medios namái en redes llibres como Wi-Fi</string>
   <string name="preference_summary_streaming_non_metered_network">El fluxu de tuits namái en redes llibres como Wi-Fi</string>
-  <string name="preference_summary_streaming_power_saving">Fluxu de tuita namái al cargar</string>
+  <string name="preference_summary_streaming_power_saving">Fluxu de tuits namái al cargar</string>
   <string name="preference_summary_trends_location">Agora pues afitar l\'allugamientu de mou separtáu na llingüeta d\'axustes.</string>
   <string name="preference_title_accounts">Cuentes</string>
   <string name="preference_title_advanced">Avanzao</string>
@@ -680,6 +706,8 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_title_media_preload_non_metered_network">Precargar en rede llibre</string>
   <string name="preference_title_multi_column_tab_width">Anchor de llingüeta multi-columna</string>
   <string name="preference_title_multi_column_tabs">Llingüetes de multi-columna</string>
+  <string name="preference_title_notification_ringtone">Timbre</string>
+  <string name="preference_title_override_language">Llingua d\'aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Almacenamientu</string>
   <string name="preference_title_streaming_enabled">Habilitar fluxu de tuits</string>
@@ -805,6 +833,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="sensitive_content_warning">Quiciabes esti tuit tenga conteníu sensible, ¿siguir?</string>
   <string name="sent_follow_request_to_user">Unvióse la solicitú de siguimientu a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Direición del sirvidor</string>
+  <string name="set_consumer_key_secret_message">Twidere ta algamando la llende de pases y tendrás de crear un pase nuevu en https://apps.twitter.com/. Dempués apega la clave y secretu de consumidor embaxo.\nSi sigues usando la clave por defeutu, quiciabes nun seyas a aniciar sesión.</string>
   <string name="settings">Axustes</string>
   <string name="settings_interface">Interfaz</string>
   <string name="settings_notifications">Avisos</string>
@@ -892,6 +921,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="timeline_streaming_running">Tán executándose los tuits en tiempu real</string>
   <string name="timeline_sync_service">Serviciu de sincronización de llinia temporal</string>
   <string name="title_about">Tocante a</string>
+  <string name="title_account_delete_confirm">Desaniciu de cuenta</string>
   <string name="title_accounts">Cuentes</string>
   <string name="title_add_or_remove_from_list">Amestar o desaniciar del llistáu</string>
   <string name="title_block_user">Bloquiar a <xliff:g id="name">%s</xliff:g></string>
@@ -932,6 +962,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="title_quick_action">Aición rápida</string>
   <string name="title_scheduled_statuses">Tuits planificaos</string>
   <string name="title_search">Guetar</string>
+  <string name="title_search_gif">Gueta de GIFs</string>
   <string name="title_select_users">Esbillar usuarios</string>
   <string name="title_set_nickname">Afitar nomatu</string>
   <string name="title_sign_in_to_buffer">Aniciar sesión de Buffer</string>

@@ -17,6 +17,7 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Engadir regra</string>
   <string name="action_add_filters_subscription">Engadir suscrición</string>
+  <string name="action_add_gif">Engadir GIF</string>
   <string name="action_add_media">Engadir multimedia</string>
   <string name="action_add_member">Engadir membro</string>
   <string name="action_add_tab">Engadir lapela</string>
@@ -58,7 +59,7 @@
   <string name="action_favoriting">marcando favorito</string>
   <string name="action_filter_import_from_blocked_users">Importar de usuarios bloqueados</string>
   <string name="action_filter_import_from_muted_users">Importar de usuarios silenciados</string>
-  <string name="action_filter_subscriptions_card_manage">Xestionar suscricións</string>
+  <string name="action_filter_subscriptions_card_manage">Xestionar subscricións</string>
   <string name="action_finish">Rematar</string>
   <string name="action_follow">Seguir</string>
   <string name="action_following">seguindo</string>
@@ -73,7 +74,8 @@
   <string name="action_leave_conversation">Deixar conversa</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">Gústame</string>
-  <string name="action_liking">favoritando</string>
+  <string name="action_liking">gustando</string>
+  <string name="action_location">Localización</string>
   <string name="action_manage_in_buffer">Xestionar en Buffer</string>
   <string name="action_mark_as_read">Marcar como lido</string>
   <string name="action_modifying_lists">modificando listas</string>
@@ -96,7 +98,7 @@
   <string name="action_removing_profile_banner_image">borrando imaxe de cabeceira do perfil</string>
   <string name="action_reply">Responder</string>
   <string name="action_report_spam">Denunciar spam</string>
-  <string name="action_reporting_for_spam">reportando por spam</string>
+  <string name="action_reporting_for_spam">denunciando por spam</string>
   <!-- [verb] Restore purchase -->
   <string name="action_restore_purchase">Restaurar</string>
   <string name="action_retry">Tentar de novo</string>
@@ -108,7 +110,7 @@
   <string name="action_saving_search">gardando busca</string>
   <string name="action_search">Busca</string>
   <string name="action_select_all">Seleccionar todo</string>
-  <string name="action_select_none">Selecciona ningún</string>
+  <string name="action_select_none">Seleccionar nada</string>
   <string name="action_select_user">Escoller usuario</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">Chiar</string>
@@ -120,6 +122,7 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Saltar</string>
   <string name="action_start">Empezar</string>
+  <string name="action_status_attachment">Adxunto</string>
   <string name="action_status_block_users">Bloquear usuarios&#8230;</string>
   <string name="action_status_mute_users">Silenciar usuarios&#8230;</string>
   <string name="action_status_schedule">Programar chío</string>
@@ -129,7 +132,7 @@
   <string name="action_sync_connect_to_storage">Conectar</string>
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_disconnect">Desconectar</string>
-  <string name="action_sync_settings">Configuración</string>
+  <string name="action_sync_settings">Axustes</string>
   <string name="action_sync_sync_now">Sincronizar xa</string>
   <string name="action_take_photo">Tirar foto</string>
   <string name="action_toggle">Alternar</string>
@@ -194,7 +197,7 @@
   <string name="add_host_mapping">Engadir host mapping</string>
   <string name="add_image">Engadir imaxe</string>
   <string name="and_N_more">e <xliff:g id="count">%d</xliff:g> máis</string>
-  <string name="api_url_format">Formato URL API</string>
+  <string name="api_url_format">Formato URL da API</string>
   <string name="app_description">A túa propia aplicación Twitter</string>
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
@@ -210,7 +213,7 @@
   <string name="bandwidth_saving_mode">Aforro do largo de banda</string>
   <string name="bandwidth_saving_mode_summary">Desactivar vista previa de multimedia en redes dosificadas</string>
   <string name="belongs_to">Pertence a</string>
-  <string name="block_user_confirm_message">Bloquear a <xliff:g id="name">%s</xliff:g>? Este usuario non poderá seguirte, mencionarte ou enviarte mensaxes directas.</string>
+  <string name="block_user_confirm_message">Bloquear a <xliff:g id="name">%s</xliff:g>? Este usuario non poderá seguirte, mencionarte ou enviarche mensaxes directas.</string>
   <string name="bug_reports">Informe de erros</string>
   <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="builtin_dns_resolver">Built-in DNS resolver</string>
@@ -332,6 +335,7 @@
   <string name="extra_feature_description_filters_import">Importar filtro de lista de bloqueados/silenciados</string>
   <string name="extra_feature_description_filters_subscription">Subscribir a filtros silenciados e sincronizar automaticamente</string>
   <string name="extra_feature_description_schedule_status">Programar chío (enviar máis tarde)</string>
+  <string name="extra_feature_description_share_gif">Compartir GIF nun chío</string>
   <string name="extra_feature_description_sync_data">Sincroniza datos con Dropbox, Google Drive, etc</string>
   <string name="extra_feature_title_filters_import">Importación de filtros</string>
   <string name="extra_feature_title_filters_subscription">Subscrición de filtros</string>
@@ -388,6 +392,7 @@
   <string name="hint_error_message_no_content">Sen contido</string>
   <string name="hint_message_select_user">Buscar usuarios</string>
   <string name="hint_no_account">Sen conta</string>
+  <string name="hint_search_gif">Buscar GIF</string>
   <string name="hints">Pistas</string>
   <string name="home_refresh">Recargar na liña de tempo</string>
   <string name="host_mapping_address">Enderezo (Pode ser outro enderezo host)</string>
@@ -420,23 +425,39 @@
   <string name="label_background_operation_service">Servizo segundo plano</string>
   <string name="label_buffer_accounts">Contas en Buffer</string>
   <string name="label_buffer_due_at_no_time">Sen hora</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">Apto</string>
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">+7</string>
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">+12</string>
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">+16</string>
   <string name="label_data_provider">Provedor de base de datos Twidere</string>
   <string name="label_filters_subscription">Subscrición</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> vía <xliff:g example="api" id="source">%2$s</xliff:g></string>
+  <string name="label_location_coarse">Aproximada (Cidade)</string>
+  <string name="label_location_no_location">Ningunha</string>
+  <string name="label_location_precise">Precisa (Coordenadas)</string>
   <string name="label_location_your_coarse_location">Localización menos exacta</string>
   <string name="label_media">Multimedia</string>
   <string name="label_original_status">Chío orixinal</string>
   <string name="label_password">Contrasinal</string>
-  <string name="label_password_sign_in">Contrasinal</string>
+  <string name="label_password_sign_in">Entrar por contrasinal</string>
   <string name="label_photo">Foto</string>
   <string name="label_photos">Fotos</string>
   <string name="label_poll">Enquisa</string>
+  <string name="label_powered_by_giphy">Powered by GIPHY</string>
   <string name="label_refresh_and_sync_service">Recargar e sincronizar servizo</string>
   <string name="label_refresh_service">Recargar servizo</string>
   <string name="label_schedule_time_buffer_default">Buffer por defecto</string>
   <string name="label_send_at">Enviar a</string>
   <string name="label_sensitive_content">Contido sensible</string>
   <string name="label_status_not_available">Chío non dispoñible</string>
+  <string name="label_statuses">Chíos</string>
+  <string name="label_statuses_replies">Chíos e respostas</string>
+  <string name="label_statuses_retweets">Chíos e rechouchíos</string>
+  <string name="label_statuses_retweets_replies">Chíos, rechouchíos e respostas</string>
   <string name="label_streaming_service">Servizo streaming</string>
   <string name="label_translate_from_language">Traducir do <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Tradución</string>
@@ -507,7 +528,7 @@
   <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
   <string name="message_info_buffer_queue_empty">Non hai cola no Buffer</string>
   <string name="message_join_conversation">Entrada na conversa.</string>
-  <string name="message_permission_request_compose_location">Twidere precisa permiso de ubicación para engadir esta aos chíos.</string>
+  <string name="message_permission_request_compose_location">Twidere precisa permiso de localización para engadir esta aos chíos.</string>
   <string name="message_permission_request_save_media">Twidere precisa permiso de almacenamento para gardar multimedia.</string>
   <string name="message_permission_request_share_media">Twidere precisa permiso de almacenamento para compartir multimedia.</string>
   <string name="message_please_wait">Agarda, por favor.</string>
@@ -523,7 +544,7 @@
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
       ~ periods should be omitted
     -->
-  <string name="message_toast_accepted_users_follow_request"><xliff:g id="user">%s</xliff:g> aceptou pedido de seguimento</string>
+  <string name="message_toast_accepted_users_follow_request">Aceptado o pedido de seguimento de <xliff:g id="user">%s</xliff:g></string>
   <string name="message_toast_added_to_filter">Engadido ao filtro</string>
   <string name="message_toast_added_user_to_list"><xliff:g id="user">%1$s</xliff:g> engadido á lista "<xliff:g id="list">%2$s</xliff:g>\"</string>
   <string name="message_toast_already_logged_in">Xa tes iniciada sesión.</string>
@@ -532,7 +553,7 @@
   <string name="message_toast_duplicate_filter_rule">Regra duplicada</string>
   <string name="message_toast_error_occurred">Ocorreu un erro, por favor, téntao de novo.</string>
   <!-- Toast message for enhanced (paid) features not purchased while trying to restore purchase -->
-  <string name="message_toast_extra_features_not_purchased">Características avanzadas non adquridas</string>
+  <string name="message_toast_extra_features_not_purchased">Características avanzadas non adquiridas</string>
   <string name="message_toast_filters_import_hint">Preme \"+\" para importar</string>
   <string name="message_toast_link_copied_to_clipboard">Ligazón copiada no portapapeis</string>
   <string name="message_toast_livewp_daydream_enabled_message">Aquí hai un pequeno agasallo para ti, atópao na configuración do sistema :)</string>
@@ -607,9 +628,9 @@
   <string name="no_user_found">Non se atopou o usuario</string>
   <string name="no_version_suffix">Sen sufixo de versión</string>
   <string name="none">Ningún</string>
-  <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> envioute unha mensaxe directa.</string>
-  <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> envioute <xliff:g id="messages_count">%2$d</xliff:g> mensaxes directas.</string>
-  <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="users_count">%2$d</xliff:g> enviáronte <xliff:g id="messages_count">%3$d</xliff:g> mensaxes directas.</string>
+  <string name="notification_direct_message"><xliff:g id="user">%s</xliff:g> enviouche unha mensaxe directa.</string>
+  <string name="notification_direct_message_multiple_messages"><xliff:g id="user">%1$s</xliff:g> enviouche <xliff:g id="messages_count">%2$d</xliff:g> mensaxes directas.</string>
+  <string name="notification_direct_message_multiple_users"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="users_count">%2$d</xliff:g> enviáronche <xliff:g id="messages_count">%3$d</xliff:g> mensaxes directas.</string>
   <string name="notification_light_color">Cor do LED</string>
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> mencionoute.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g> mencionáronte.</string>
@@ -635,7 +656,7 @@
   <string name="overwrite">Sobrescribir</string>
   <string name="page_down">Páxina abaixo</string>
   <string name="page_up">Páxina arriba</string>
-  <string name="password_sign_in_twitter_only">Entrada de contrasinal (só Twitter)</string>
+  <string name="password_sign_in_twitter_only">Entrada por contrasinal (só Twitter)</string>
   <string name="pause">Pausa</string>
   <string name="pebble_notifications">Notificacións Pebble</string>
   <string name="pebble_notifications_summary">Enviar Notificacións ao teu Pebble</string>
@@ -675,10 +696,10 @@
   <string name="preference_summary_background_streaming">Preme INICIO no canto de ATRÁS para gardar aberto o streaming</string>
   <string name="preference_summary_chrome_custom_tab">Abre ligazóns en navegador nativo (Powered by Chrome)</string>
   <string name="preference_summary_database_item_limit">Límite máximo de elementos gardados para cada conta, insire un valor menor para salvar espazo e incrementar a velocidade de carga.</string>
-  <string name="preference_summary_media_preload_non_metered_network">Precarga multimedia só en redes libres como Wi-Fi</string>
+  <string name="preference_summary_media_preload_non_metered_network">Pre-carga multimedia só en redes libres como Wi-Fi</string>
   <string name="preference_summary_streaming_non_metered_network">Streaming só en redes libres como Wi-Fi</string>
   <string name="preference_summary_streaming_power_saving">Streaming só en carga</string>
-  <string name="preference_summary_trends_location">Agora podes seleccionar a localización de xeito independente no tabulador de configuración.</string>
+  <string name="preference_summary_trends_location">Agora podes seleccionar a localización de xeito independente na lapela de configuración.</string>
   <string name="preference_title_accounts">Contas</string>
   <string name="preference_title_advanced">Avanzado</string>
   <string name="preference_title_auto_refresh_compatibility_mode">Modo de compatibilidade</string>
@@ -692,10 +713,10 @@
   <string name="preference_title_landscape">Horizontal</string>
   <string name="preference_title_light_font">Fonte suave</string>
   <string name="preference_title_media_preload_non_metered_network">Pre-carga en redes libres</string>
-  <string name="preference_title_multi_column_tab_width">Largo dos tabuladores en varias columnas</string>
-  <string name="preference_title_multi_column_tabs">Tabuladores en varias columnas</string>
+  <string name="preference_title_multi_column_tab_width">Largo das lapelas en varias columnas</string>
+  <string name="preference_title_multi_column_tabs">Lapelas en varias columnas</string>
   <string name="preference_title_notification_ringtone">Son de aviso</string>
-  <string name="preference_title_override_language">Idioma preferente</string>
+  <string name="preference_title_override_language">Idioma da aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Almacenamento</string>
   <string name="preference_title_streaming_content">Contido do streaming</string>
@@ -951,6 +972,7 @@
   <string name="title_quick_action">Acción rápida</string>
   <string name="title_scheduled_statuses">Chíos programados</string>
   <string name="title_search">Buscar</string>
+  <string name="title_search_gif">Buscar GIF</string>
   <string name="title_select_users">Seleccionar usuarios</string>
   <string name="title_set_nickname">Alcume</string>
   <string name="title_sign_in_to_buffer">Entrar no Buffer</string>
@@ -969,6 +991,7 @@
   <string name="title_user_list_memberships">Pertence a</string>
   <string name="title_user_list_ownerships">Creado</string>
   <string name="title_user_list_subscriptions">Subscricións</string>
+  <string name="title_user_timeline_filter">Filtro da liña de tempo</string>
   <string name="title_users_favorited_this">Usuarios que marcaron isto favorito</string>
   <string name="title_users_liked_this">Usuarios que gustaron disto</string>
   <string name="title_users_retweeted_this">Rechouchiado por</string>

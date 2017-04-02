@@ -380,6 +380,10 @@
   <string name="label_account_type">계정 유형</string>
   <string name="label_auth_type">인증 유형</string>
   <string name="label_background_operation_service">백그라운드 동작 서비스</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Twidere 데이터베이스 제공자</string>
   <string name="label_filters_subscription">구독</string>
   <string name="label_location_your_coarse_location">당신이 지나간 곳</string>

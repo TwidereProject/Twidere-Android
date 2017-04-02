@@ -64,10 +64,11 @@ class AccountViewHolder(
         screenName.text = String.format("@%s", details.user.screen_name)
         setAccountColor(details.color)
         if (adapter.profileImageEnabled) {
+            profileImage.visibility = View.VISIBLE
             adapter.requestManager.loadProfileImage(adapter.context, details, adapter.profileImageStyle,
                     profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
         } else {
-            // TODO: display stub image?
+            profileImage.visibility = View.GONE
         }
         accountType.setImageResource(AccountUtils.getAccountTypeIcon(details.type))
         toggle.isChecked = details.activated

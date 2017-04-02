@@ -84,6 +84,10 @@
   <string name="inbox">इनबॉक्स</string>
   <string name="label_auth_type">Auth प्रकार</string>
   <string name="label_background_operation_service">बैकग्राउंड आपरेशन सेवा</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">ट्विदेर डेटाबेस प्रदाता</string>
   <string name="label_refresh_service">रिफ्रेश सर्विस</string>
   <string name="label_streaming_service">स्ट्रीमिंग सर्विस</string>

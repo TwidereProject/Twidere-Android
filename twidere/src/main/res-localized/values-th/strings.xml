@@ -17,6 +17,8 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">เพิ่มกฎ</string>
   <string name="action_add_filters_subscription">เพิ่มการติดตาม</string>
+  <string name="action_add_gif">เพิ่มรูป GIF</string>
+  <string name="action_add_media">เพิ่มรูปภาพ</string>
   <string name="action_add_member">เพิ่มสมาชิก</string>
   <string name="action_add_tab">เพิ่มแถบ</string>
   <string name="action_add_to_filter">เพิ่มไปยังตัวกรอง</string>
@@ -25,13 +27,18 @@
   <!-- [verb] Action for blocking user -->
   <string name="action_block">บล็อค</string>
   <string name="action_blocking">กำลังบล็อค</string>
+  <string name="action_buffer_disconnect">หยุดการเชื่อมต่อบัฟเฟอร์</string>
+  <string name="action_buffer_settings">การตั้งค่า</string>
+  <string name="action_buffer_update_now">โพสทันที</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">ยกเลิกทวีต</string>
   <string name="action_cancelling_like">ยกเลิกการถูกใจ</string>
   <string name="action_center">กึ่งกลาง</string>
   <string name="action_clear">ล้าง</string>
+  <string name="action_clear_messages">ลบข้อความ</string>
   <string name="action_compose">เขียน</string>
   <string name="action_compose_message_convert_to_status">แปลงไปยังทวีต</string>
+  <string name="action_connect_to_buffer">เชื่อมต่อ</string>
   <string name="action_conversation_info">ข้อมูลการสนทนา</string>
   <string name="action_create_conversation">สร้างการสนทนา</string>
   <string name="action_creating_list">กำลังสร้างรายการ</string>
@@ -61,18 +68,26 @@
   <!-- [verb] Perform import action -->
   <string name="action_import">นำเข้า</string>
   <string name="action_import_from">นำเข้าจาก&#8230;</string>
+  <string name="action_invert_selection">เลือกย้อนกลับ</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">ไว้ก่อน</string>
   <string name="action_leave_conversation">ออกจากการสนทนา</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">ถูกใจ</string>
+  <string name="action_liking">ความชอบ</string>
+  <string name="action_location">ตำแหน่งที่ตั้ง</string>
+  <string name="action_manage_in_buffer">จัดการบัฟเฟอร์</string>
+  <string name="action_mark_as_read">ทำเครื่องหมายว่าอ่านแล้ว</string>
   <string name="action_modifying_lists">ปรับแต่งรายการ</string>
   <string name="action_mute">มิ้ว</string>
+  <string name="action_mute_notifications">ปิดเสียงการแจ้งเตือน</string>
   <string name="action_muting">กำลังมิ้ว</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> ถูกบันทึกที่ <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">ถัดไป</string>
   <string name="action_open_in_browser">เปิดในเบราว์เซอร์</string>
   <string name="action_pick_color">เลือกสี</string>
   <string name="action_purchase">ซื้อ</string>
+  <string name="action_purchase_features_pack">ซื้อชุดฟังก์ชั่น</string>
   <string name="action_quote">อ้างอิง</string>
   <string name="action_record_video">อัดวิดีโอ</string>
   <string name="action_refresh">โหลดใหม่</string>
@@ -85,6 +100,7 @@
   <string name="action_report_spam">รายงานสแปม</string>
   <string name="action_reporting_for_spam">กำลังรายงานสแปม</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">เรียกคืน</string>
   <string name="action_retry">ลองอีกครั้ง</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweet">รีทวีต</string>
@@ -106,7 +122,10 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">ข้าม</string>
   <string name="action_start">เริ่มต้น</string>
+  <string name="action_status_attachment">ไฟล์แนบในทวีต</string>
   <string name="action_status_block_users">กำลังบล็อครายชื่อ...</string>
+  <string name="action_status_mute_users">กำลังซ่อนผู้ใช้...</string>
+  <string name="action_status_schedule">ตั้งเวลาทวีต</string>
   <string name="action_subscribe">รับข่าวสาร</string>
   <string name="action_subscribing_to_list">กำลังติดตามรายการ</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -114,6 +133,7 @@
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_disconnect">ยกเลิกการเชื่อมต่อ</string>
   <string name="action_sync_settings">ตั้งค่า</string>
+  <string name="action_sync_sync_now">ซิงค์ตอนนี้</string>
   <string name="action_take_photo">ถ่ายรูป</string>
   <string name="action_toggle">เปิด/ปิด</string>
   <string name="action_translate">ช่วยแปลภาษา</string>
@@ -140,6 +160,39 @@
   <string name="action_view_map">แผนที่</string>
   <string name="activated_accounts">แอคเคาท์ที่เปิดใช้งานอยู่</string>
   <string name="activities_about_me">กิจกรรมที่เกี่ยวกับฉัน</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> ถูกใจ</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจ</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> ถูกใจรีทวีตของคุณ</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจรีทวีตของคุณ</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> กำลังติดตามคุณ</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> กำลังติดตามคุณ</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> ถูกใจ</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจ</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> ถูกใจทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> ถูกใจรีทวีตของคุณ</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> ถูกใจรีทวีตของคุณ</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> เพิ่มคุณในรายการ</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> เพิ่มคุณในรายการ</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> เพิ่มคุณในรายการ <xliff:g id="list">%2$s</xliff:g></string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> แท็กคุณ</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> แท็กคุณ</string>
+  <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> รีทวีต</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีต</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> รีทวีตทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตที่คุณถูกแท็ก</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> รีทวีตทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตทวีตที่กล่าวถึงคุณ</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> รีทวีตรีทวีตของคุณ</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> รีทวีตรีทวีตของคุณ</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> เข้าร่วมทวิตเตอร์</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> และ <xliff:g id="other">%2$s</xliff:g> เข้าร่วมทวิตเตอร์</string>
   <string name="add_account">เพิ่มบัญชี</string>
   <string name="add_host_mapping">เพิ่มการกำหนดโฮสต์</string>
   <string name="add_image">เพิ่มรูปภาพ</string>
@@ -338,6 +391,10 @@
   <string name="keyword_filter_name">คีย์เวิร์ด: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_auth_type">รูปแบบการยืนยันตน</string>
   <string name="label_background_operation_service">การดำเนินการเบื้องหลัง</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
   <string name="label_location_your_coarse_location">ตำแหน่งคร่าวๆ ของคุณ</string>
   <string name="label_media">รูปภาพ</string>

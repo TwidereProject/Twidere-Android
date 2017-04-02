@@ -17,6 +17,8 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Ajouter une règle</string>
   <string name="action_add_filters_subscription">Ajouter un abonnement</string>
+  <string name="action_add_gif">Ajouter un GIF</string>
+  <string name="action_add_media">Ajouter un fichier</string>
   <string name="action_add_member">Ajouter un membre</string>
   <string name="action_add_tab">Ajouter un onglet</string>
   <string name="action_add_to_filter">Ajouter au filtre</string>
@@ -25,13 +27,18 @@
   <!-- [verb] Action for blocking user -->
   <string name="action_block">Bloquer</string>
   <string name="action_blocking">bloquer</string>
+  <string name="action_buffer_disconnect">Déconnexion de Buffer</string>
+  <string name="action_buffer_settings">Paramètres</string>
+  <string name="action_buffer_update_now">Publier maintenant</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">Annuler le retweet</string>
   <string name="action_cancelling_like">annulation du « J\'aime »</string>
   <string name="action_center">Centre</string>
   <string name="action_clear">Effacer</string>
+  <string name="action_clear_messages">Enlever les messages</string>
   <string name="action_compose">Écrire</string>
   <string name="action_compose_message_convert_to_status">Convertir en tweet</string>
+  <string name="action_connect_to_buffer">Se connecter</string>
   <string name="action_conversation_info">Informations de conversation</string>
   <string name="action_create_conversation">Créer conversation</string>
   <string name="action_creating_list">création de liste</string>
@@ -68,11 +75,15 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">J\'aime</string>
   <string name="action_liking">ajout du « J\'aime »</string>
+  <string name="action_location">Emplacement</string>
+  <string name="action_manage_in_buffer">Gérer dans Buffer</string>
+  <string name="action_mark_as_read">Marquer comme lu</string>
   <string name="action_modifying_lists">modification des listes</string>
   <string name="action_mute">Masquer</string>
   <string name="action_mute_notifications">Mise en sourdine des notifications</string>
   <string name="action_muting">mettre en sourdine</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g>, sauvegardé à <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="action_next_step">Suivant</string>
   <string name="action_open_in_browser">Ouvrir dans un navigateur</string>
   <string name="action_pick_color">Choisir une couleur</string>
   <string name="action_purchase">Acheter</string>
@@ -111,8 +122,10 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">Passer</string>
   <string name="action_start">Débuter</string>
+  <string name="action_status_attachment">Pièce jointe au tweet</string>
   <string name="action_status_block_users">Bloquer les utilisateurs&#8230;</string>
   <string name="action_status_mute_users">Mettre les utilisateurs en sourdine&#8230;</string>
+  <string name="action_status_schedule">Tweet programmé</string>
   <string name="action_subscribe">S\'abonner</string>
   <string name="action_subscribing_to_list">abonnement à la liste</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
@@ -147,6 +160,10 @@
   <string name="action_view_map">Carte</string>
   <string name="activated_accounts">Comptes activés</string>
   <string name="activities_about_me">Mes activités</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> a mis en favori</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> et <xliff:g id="other">%2$s</xliff:g> ont mis en favori</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> a mis en favori un tweet qui te mentionne</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> et <xliff:g id="other">%2$s</xliff:g> ont mis en favori un tweet qui te mentionne</string>
   <string name="add_account">Ajouter un compte</string>
   <string name="add_host_mapping">Ajouter un hôte personnalisé</string>
   <string name="add_image">Ajouter une image</string>
@@ -253,6 +270,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">Gestion des Emoji</string>
   <string name="empty_content">Contenu vide</string>
+  <string name="enable_notifications">Activer les notifications</string>
   <string name="enable_retweets">Activer les retweets</string>
   <string name="enable_streaming">Activer le streaming</string>
   <string name="error_info_oauth_timestamp_error">Merci de vérifier la date et l\'heure dans les paramètres systèmes.</string>
@@ -267,6 +285,7 @@
   <string name="error_message_no_content">Aucun contenu</string>
   <string name="error_message_rate_limit">Limite de rafraîchissement de Twitter dépassée, veuillez réessayer de <xliff:g id="time">%s</xliff:g></string>
   <string name="error_message_rate_limit_with_action">Limite de rafraîchissement de Twitter dépassée lors de <xliff:g id="action">%1$s</xliff:g>, veuillez réessayer dans <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="error_message_scheduler_not_available">Programmation du tweet non disponible</string>
   <string name="error_message_status_too_long">Tweet trop long.</string>
   <string name="error_message_tweet_shorten_failed">Le raccourcissement du tweet a échoué.</string>
   <string name="error_message_tweet_shortener_not_found">Le raccourcisseur de tweet est introuvable, il a peut-être été désinstallé.</string>
@@ -285,7 +304,9 @@
   <string name="external_user_host_format">Utilisateur externe venant de <xliff:g id="host">%s</xliff:g></string>
   <string name="extra_configurations">Configurations supplémentaires</string>
   <string name="extra_feature_description_filters_import">Importer la liste de filtres depuis les blocages et \"mutes\"</string>
+  <string name="extra_feature_description_filters_subscription">S\'abonner aux filtres de mise en sourdine et les synchroniser automatiquement</string>
   <string name="extra_feature_description_schedule_status">Tweet programmé (envoyé plus tard)</string>
+  <string name="extra_feature_description_share_gif">Partager un GIF dans le tweet</string>
   <string name="extra_feature_description_sync_data">Synchronisation des données avec Dropbox, Google Drive, etc</string>
   <string name="extra_feature_title_filters_import">Importer des filtres</string>
   <string name="extra_feature_title_filters_subscription">Abonnement à des filtres</string>
@@ -342,6 +363,7 @@
   <string name="hint_error_message_no_content">Aucun contenu</string>
   <string name="hint_message_select_user">Rechercher des utilisateurs</string>
   <string name="hint_no_account">Aucun compte</string>
+  <string name="hint_search_gif">Chercher un GIF</string>
   <string name="hints">Indices</string>
   <string name="home_refresh">Actualiser le fil d\'actualité</string>
   <string name="host_mapping_address">Adresse (peut être l\'adresse d\'un autre hôte)</string>
@@ -368,23 +390,45 @@
   <string name="keyboard_shortcut_hint">Appuyez sur les touches</string>
   <string name="keyboard_shortcuts">Raccourcis clavier</string>
   <string name="keyword_filter_name">Mot-clé : <xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">Compte</string>
   <string name="label_account_type">Type de compte</string>
   <string name="label_auth_type">Type d\'authentification</string>
   <string name="label_background_operation_service">Service en arrière-plan</string>
+  <string name="label_buffer_accounts">Comptes Buffer</string>
+  <string name="label_buffer_due_at_no_time">Pas d\'heure</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Fournisseur de base de donnée pour Twidere</string>
   <string name="label_filters_subscription">Abonnement</string>
+  <string name="label_location_coarse">Vague (ville)</string>
+  <string name="label_location_no_location">Aucun</string>
+  <string name="label_location_precise">Précise (coordonnées)</string>
   <string name="label_location_your_coarse_location">Votre emplacement approximatif</string>
   <string name="label_media">Média</string>
   <string name="label_original_status">Tweet original</string>
+  <string name="label_password">Mot de passe</string>
   <string name="label_password_sign_in">Mot de passe de connection</string>
   <string name="label_photo">Photo</string>
+  <string name="label_photos">Photos</string>
   <string name="label_poll">Sondage</string>
+  <string name="label_powered_by_giphy">Propulsé par GIPHY</string>
   <string name="label_refresh_and_sync_service">Service de Rafraichissement &amp; Synchronisation</string>
   <string name="label_refresh_service">Refraîcher le service</string>
+  <string name="label_schedule_time_buffer_default">Comme configuré par défaut dans Buffer</string>
+  <string name="label_send_at">Envoyer à</string>
+  <string name="label_sensitive_content">Contenu sensible</string>
   <string name="label_status_not_available">Tweet non disponible</string>
+  <string name="label_statuses">Tweets</string>
+  <string name="label_statuses_replies">Tweets et réponses</string>
+  <string name="label_statuses_retweets">Tweets et retweets</string>
+  <string name="label_statuses_retweets_replies">Tweets, retweets et réponses</string>
   <string name="label_streaming_service">Service de streaming</string>
   <string name="label_translate_from_language">Traduction depuis : <xliff:g id="language">%s</xliff:g></string>
   <string name="label_translation">Traduction</string>
+  <string name="label_username">Nom d\'utilisateur</string>
+  <string name="label_video">Vidéo</string>
   <string name="label_your_profile_image">Votre image de profil</string>
   <string name="large">Grand</string>
   <string name="leftside_compose_button">Bouton « Écrire » à gauche</string>
@@ -424,14 +468,20 @@
   <string name="mention_user">Mention <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">Mentionner <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">Mentions uniquement</string>
+  <string name="message_account_delete_confirm">Ce compte sera supprimé de Twidere.</string>
   <string name="message_api_data_corrupted">Données API corrompues.</string>
   <string name="message_api_url_format_help">[DOMAIN] : Domaine de l\'API Twitter.\nExemple : https://[DOMAIN].twitter.com/ doit être remplacé par https://api.twitter.com/.</string>
   <string name="message_auto_refresh_confirm">Activer le rafraîchissement automatique pour récupérer les nouveaux tweets ?</string>
   <string name="message_blocked_user"><xliff:g id="user">%s</xliff:g> bloqué.</string>
+  <string name="message_buffer_delete_schedule_confirm">Supprimer cette programmation ?</string>
+  <string name="message_buffer_disconnect_confirm">Se déconnecter de Buffer ?</string>
+  <string name="message_clear_messages_confirm">Effacer tous les messages ?</string>
   <string name="message_conversation_created">Conversation créée.</string>
   <string name="message_destroy_conversation_confirm">Quitter la conversation ?</string>
   <string name="message_direct_message_deleted">Message supprimé.</string>
   <string name="message_direct_message_sent">Message envoyé.</string>
+  <string name="message_error_buffer_connection_failed">Impossible de se connecter à Buffer</string>
+  <string name="message_error_buffer_media_not_supported">La programmation de médias avec Buffer n\'est pas encore supportée</string>
   <string name="message_error_invalid_account">Certaines données de compte sont corrompues, Twidere va supprimer ces comptes pour éviter de planter.</string>
   <string name="message_format_conversation_avatar_update">L\'avatar de la conversation a été changé</string>
   <string name="message_join_conversation">Conversation jointe.</string>
@@ -439,6 +489,7 @@
   <string name="message_permission_request_save_media">Twidere a besoin que vous autorisiez l\'accès aux fichiers pour sauver les médias.</string>
   <string name="message_permission_request_share_media">Twidere nécessite des autorisations de stockage pour le partage de médias à certaines applications.</string>
   <string name="message_please_wait">Veuillez patienter.</string>
+  <string name="message_status_scheduling_connected_to_buffer">Twidere est maintenant connecté à Buffer</string>
   <string name="message_summary_type_sticker">[Sticker]</string>
   <string name="message_sync_data_connect_hint">Connecter Twidere à un stockage réseau pour synchroniser les données</string>
   <string name="message_sync_data_synced_with_name">Twidere est maintenant synchronisé avec <xliff:g example="ownCloud" id="name">%s</xliff:g></string>
@@ -464,6 +515,7 @@
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">Erreur réseau</string>
   <string name="message_toast_no_account">Aucun compte</string>
+  <string name="message_toast_no_account_permission">Donner la permission d\'accéder au compte est nécessaire</string>
   <string name="message_toast_no_account_selected">Aucun compte sélectionné.</string>
   <string name="message_toast_no_user_selected">Pas d\'utilisateur sélectionné</string>
   <string name="message_toast_press_again_to_close">Appuyer une nouvelle fois pour fermer</string>
@@ -483,6 +535,7 @@
   <string name="message_toast_status_liked">Tweet aimé</string>
   <string name="message_toast_status_retweeted">Retweeté</string>
   <string name="message_toast_status_saved_to_draft">Tweet sauvegardé dans les brouillons.</string>
+  <string name="message_toast_status_scheduled">Tweet programmé</string>
   <string name="message_toast_status_unfavorited">Tweet supprimé des favoris</string>
   <string name="message_toast_status_updated">Tweet envoyé.</string>
   <string name="message_toast_unable_to_load_more_statuses">Impossible de charger les tweets antérieurs</string>
@@ -534,10 +587,14 @@
   <string name="notification_mention"><xliff:g id="user">%s</xliff:g> vous a mentionné.</string>
   <string name="notification_mention_multiple"><xliff:g id="user">%1$s</xliff:g> et <xliff:g id="count">%2$d</xliff:g> autres vous ont mentionné.</string>
   <!-- Notification method, flashing LED light -->
+  <string name="notification_method_light">LED</string>
   <!-- Notification method, ringtone -->
+  <string name="notification_method_ringtone">Son</string>
   <!-- Notification method, device vibration -->
+  <string name="notification_method_vibration">Vibration</string>
   <string name="notification_status">Nouveau tweet de <xliff:g id="user">%s</xliff:g></string>
   <string name="notification_status_multiple">Nouveaux tweets de <xliff:g id="user">%1$s</xliff:g> et <xliff:g id="count">%2$d</xliff:g> autres</string>
+  <string name="notification_title_new_status_by_user">Nouveau tweet de <xliff:g id="user">%1$s</xliff:g></string>
   <string name="notification_type_home">Accueil</string>
   <string name="notification_type_interactions">Interactions</string>
   <string name="notification_type_messages">Messages</string>
@@ -586,6 +643,7 @@
   <string name="preference_randomize_account_name_summary">Interdire d\'autres applications de récupérer votre nom en accédant aux comptes, améliore le respect de la vie privée.</string>
   <string name="preference_randomize_account_rename_accounts_confirm">Renommer les comptes existants ?</string>
   <string name="preference_summary_auto_refresh_power_saving">Arrêter l\'actualisation automatique lorsque la batterie est faible</string>
+  <string name="preference_summary_background_streaming">Appuyez sur le bouton ACCUEIL à la place de RETOUR pour garder le flux ouvert</string>
   <string name="preference_summary_chrome_custom_tab">Ouvrir le lien dans un onglet Chrome</string>
   <string name="preference_summary_database_item_limit">Limite supérieure des articles stockés dans des bases de données pour chaque compte, mettre une petite valeur vous fera gagner de la place et augmentera la vitesse de chargement.</string>
   <string name="preference_summary_media_preload_non_metered_network">Précharger les médias uniquement sur des réseaux sans surcoût comme une connexion Wi-Fi</string>
@@ -600,6 +658,7 @@
   <string name="preference_title_landscape">Paysage</string>
   <string name="preference_title_light_font">Police fine</string>
   <string name="preference_title_media_preload_non_metered_network">Précharger sur les réseaux sans surcoût</string>
+  <string name="preference_title_notification_ringtone">Son</string>
   <string name="preference_title_portrait">Potrait</string>
   <string name="preference_title_storage">Stockage</string>
   <string name="preference_title_streaming_enabled">Activer le streaming</string>
@@ -810,11 +869,13 @@
   <string name="timeline_streaming_running">Stream de la timeline en cours</string>
   <string name="timeline_sync_service">Service de synchronisation de la Timeline</string>
   <string name="title_about">À propos</string>
+  <string name="title_account_delete_confirm">Supprimer le compte</string>
   <string name="title_accounts">Comptes</string>
   <string name="title_add_or_remove_from_list">Ajouter ou supprimer de la liste</string>
   <string name="title_block_user">Bloquer <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">Utilisateurs bloqués</string>
   <string name="title_browser_sign_in">Connexion du naviguateur</string>
+  <string name="title_buffer_settings">Paramètres de Buffer</string>
   <string name="title_compose">Écrire</string>
   <string name="title_conversation">Conversation</string>
   <string name="title_dialog_sync_connect_to">Se connecter à&#8230;</string>
@@ -843,11 +904,16 @@
   <string name="title_nicknames">Surnoms</string>
   <string name="title_open_source_license">Licence open source</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_quick_action">Action rapide</string>
+  <string name="title_scheduled_statuses">Tweets programmés</string>
   <string name="title_search">Rechercher</string>
   <string name="title_select_users">Sélectionner les utilisateurs</string>
   <string name="title_set_nickname">Définir le pseudo</string>
+  <string name="title_sign_in_to_buffer">Connectez-vous à Buffer</string>
   <string name="title_status">Tweet</string>
   <string name="title_statuses">Tweets</string>
+  <string name="title_statuses_and_replies">Tweets &amp; réponses</string>
+  <string name="title_statuses_scheduling">Programmation de tweets</string>
   <string name="title_streaming">Streaming</string>
   <string name="title_subscription_name">Nom</string>
   <string name="title_subscription_url">URL</string>

@@ -278,6 +278,10 @@
   <string name="keyword_filter_name">Stikkord: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_auth_type">Autentiseringstype</string>
   <string name="label_background_operation_service">Bakgrunnstjeneste</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Twidere database leverandør</string>
   <string name="label_media">Media</string>
   <string name="label_original_status">Opprinnelig tweet</string>

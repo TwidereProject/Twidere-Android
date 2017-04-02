@@ -77,7 +77,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>Benutzer</item>
     <item>Benutzer-Zeitleiste</item>
-    <item>User Favorites</item>
+    <item>Nutzer-Favoriten</item>
     <item>Liste</item>
     <item>Zeitleiste anzeigen</item>
   </string-array>

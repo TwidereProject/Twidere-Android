@@ -311,6 +311,10 @@
   <string name="keyboard_shortcuts">Sneltoetsen</string>
   <string name="keyword_filter_name">Trefwoord:<xliff:g id="name">%s</xliff:g></string>
   <string name="label_background_operation_service">Achtergrond activiteiten service.</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Citeer</string>
   <string name="label_location_your_coarse_location">Je grove locatie</string>
   <string name="label_media">Media</string>

@@ -52,6 +52,10 @@
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="just_now">ఇప్పుడే</string>
   <string name="keyboard_shortcut_back">వెనుకకు</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_translation">అనువాదం</string>
   <string name="lists">జాబితాలు</string>
   <string name="media_uploader_default">అప్రమేయం (ట్విట్టర్)</string>

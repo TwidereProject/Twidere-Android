@@ -17,6 +17,7 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">ルールを追加</string>
   <string name="action_add_filters_subscription">購読を追加</string>
+  <string name="action_add_gif">Gifアニメーションを追加</string>
   <string name="action_add_media">メディアを追加</string>
   <string name="action_add_member">ユーザーを追加</string>
   <string name="action_add_tab">タブを追加</string>
@@ -74,6 +75,7 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">いいね</string>
   <string name="action_liking">いいねしています</string>
+  <string name="action_location">場所</string>
   <string name="action_manage_in_buffer">Buffer アプリで管理</string>
   <string name="action_mark_as_read">既読としてマーク</string>
   <string name="action_modifying_lists">リストを修正する</string>
@@ -120,6 +122,7 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">スキップ</string>
   <string name="action_start">開始</string>
+  <string name="action_status_attachment">ツイートの添付ファイル</string>
   <string name="action_status_block_users">ユーザーをブロック&#8230;</string>
   <string name="action_status_mute_users">ユーザーをミュート</string>
   <string name="action_status_schedule">ツイートの予約</string>
@@ -332,6 +335,7 @@
   <string name="extra_feature_description_filters_import">ブロック/ミュートからフィルタリストをインポートする</string>
   <string name="extra_feature_description_filters_subscription">ミュートフィルターを購読し、自動的に同期する</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
+  <string name="extra_feature_description_share_gif">Gifアニメーションをツイートで共有する</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
   <string name="extra_feature_title_filters_import">フィルタのインポート</string>
   <string name="extra_feature_title_filters_subscription">フィルタの購読</string>
@@ -388,6 +392,7 @@
   <string name="hint_error_message_no_content">コンテンツがありません</string>
   <string name="hint_message_select_user">ユーザー検索</string>
   <string name="hint_no_account">アカウント無し</string>
+  <string name="hint_search_gif">Gifアニメーションを検索</string>
   <string name="hints">ヒント</string>
   <string name="home_refresh">ホームTLの更新</string>
   <string name="host_mapping_address">アドレス (他のホストアドレスも可)</string>
@@ -420,9 +425,20 @@
   <string name="label_background_operation_service">バックグラウンド操作サービス</string>
   <string name="label_buffer_accounts">Buffer アカウント</string>
   <string name="label_buffer_due_at_no_time">時刻指定なし</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">G</string>
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">PG</string>
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">PG-13</string>
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">R</string>
   <string name="label_data_provider">Twidere データベースプロバイダ</string>
   <string name="label_filters_subscription">購読</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
+  <string name="label_location_coarse">大まかな位置情報 (市町村)</string>
+  <string name="label_location_no_location">なし</string>
+  <string name="label_location_precise">正確な位置情報 (経緯度)</string>
   <string name="label_location_your_coarse_location">位置情報が不正確です</string>
   <string name="label_media">メディア</string>
   <string name="label_original_status">元のツイート</string>
@@ -431,12 +447,17 @@
   <string name="label_photo">写真</string>
   <string name="label_photos">画像</string>
   <string name="label_poll">投票</string>
+  <string name="label_powered_by_giphy">Powered by GIPHY</string>
   <string name="label_refresh_and_sync_service">更新＆同期サービス</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
   <string name="label_schedule_time_buffer_default">Buffer のデフォルト</string>
   <string name="label_send_at">送信時刻</string>
   <string name="label_sensitive_content">不適切なコンテンツ</string>
   <string name="label_status_not_available">このツイートは利用できません</string>
+  <string name="label_statuses">ツイート</string>
+  <string name="label_statuses_replies">ツイートとリプライ</string>
+  <string name="label_statuses_retweets">ツイートとリツイート</string>
+  <string name="label_statuses_retweets_replies">ツイートとリツイートとリプライ</string>
   <string name="label_streaming_service">ストリーミングサービス</string>
   <string name="label_translate_from_language"><xliff:g id="language">%s</xliff:g>から翻訳</string>
   <string name="label_translation">翻訳</string>
@@ -704,7 +725,7 @@
   <string name="preference_title_multi_column_tab_width">複数カラムの幅</string>
   <string name="preference_title_multi_column_tabs">多列タブ</string>
   <string name="preference_title_notification_ringtone">通知音</string>
-  <string name="preference_title_override_language">設定言語の上書き</string>
+  <string name="preference_title_override_language">言語を追加</string>
   <string name="preference_title_portrait">ポートレイト</string>
   <string name="preference_title_storage">ストレージ</string>
   <string name="preference_title_streaming_content">ストリーミング コンテンツ</string>
@@ -960,6 +981,7 @@
   <string name="title_quick_action">クイック アクション</string>
   <string name="title_scheduled_statuses">予約ツイート</string>
   <string name="title_search">検索</string>
+  <string name="title_search_gif">Gifアニメーション検索</string>
   <string name="title_select_users">ユーザーを選択</string>
   <string name="title_set_nickname">ニックネームの設定</string>
   <string name="title_sign_in_to_buffer">Buffer へサインイン</string>
@@ -978,6 +1000,7 @@
   <string name="title_user_list_memberships">保存されている</string>
   <string name="title_user_list_ownerships">作成者</string>
   <string name="title_user_list_subscriptions">購読</string>
+  <string name="title_user_timeline_filter">タイムラインのフィルター</string>
   <string name="title_users_favorited_this">お気に入りに登録したユーザーを表示</string>
   <string name="title_users_liked_this">いいねしたユーザーを表示</string>
   <string name="title_users_retweeted_this">リツイートしたユーザーを表示</string>

@@ -79,6 +79,10 @@
   <string name="in_reply_to_name">In reply to <xliff:g id="user_name">%s</xliff:g></string>
   <string name="label_auth_type">Auth type</string>
   <string name="label_background_operation_service">Background operation service</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Twidere database provider</string>
   <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
   <string name="label_refresh_service">Refresh service</string>

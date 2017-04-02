@@ -3,6 +3,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="account_options">خيارات الحساب</string>
   <string name="account_type_fanfou">Fanfou</string>
+  <string name="account_type_statusnet">StatusNet</string>
   <string name="account_type_twitter">تويتر</string>
   <!-- [verb] Accept a friend request (follow request) -->
   <string name="action_accept_friend_request">موافق</string>
@@ -14,6 +15,9 @@
   <!-- [verb] Add a member to a message conversation -->
   <string name="action_add_conversation_participant">إضافة عضو</string>
   <!-- [verb] Add mute filter rule -->
+  <string name="action_add_filter_rule">أضف قاعدة</string>
+  <string name="action_add_filters_subscription">أضف إشتراك</string>
+  <string name="action_add_media">أضف وسائط</string>
   <string name="action_add_member">إضافة عضو</string>
   <string name="action_add_tab">إضافة لسان</string>
   <string name="action_add_to_filter">إضافة إلى لائحة الكتم</string>
@@ -22,52 +26,80 @@
   <!-- [verb] Action for blocking user -->
   <string name="action_block">حجب</string>
   <string name="action_blocking">يحظر</string>
+  <string name="action_buffer_settings">الإعدادات</string>
+  <string name="action_buffer_update_now">أنشر الآن</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">إلغاء إعادة التغريد</string>
+  <string name="action_cancelling_like">الغي الإعجاب</string>
   <string name="action_center">الوسط</string>
   <string name="action_clear">محو</string>
   <string name="action_compose">كتابة</string>
+  <string name="action_compose_message_convert_to_status">حول إلى تغريدة</string>
+  <string name="action_connect_to_buffer">إتصال</string>
+  <string name="action_conversation_info">معلومات حول المحادثة</string>
+  <string name="action_create_conversation">انشئ محادثة</string>
   <string name="action_creating_list">ينشئ القائمة</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">حذف</string>
+  <string name="action_delete_messages">إحذف رسائل</string>
   <string name="action_deleting">يحذف</string>
   <string name="action_deleting_search">يحذف البحث</string>
   <string name="action_denying_follow_request">جارِ رفض طلب التتبع</string>
+  <string name="action_dont_restart">لا تعد التشغيل</string>
+  <string name="action_dont_terminate">لا تخرج</string>
   <!-- [verb] Edit image/settings etc. -->
   <string name="action_edit">تعديل</string>
+  <string name="action_edit_conversation_avatar">تعديل الأيقونة</string>
+  <string name="action_edit_conversation_name">تعديل الإسم</string>
+  <string name="action_edit_filter_rule">تعديل القاعدة</string>
   <string name="action_favorite">تفضيل</string>
   <string name="action_favoriting">يفضّل</string>
+  <string name="action_filter_import_from_blocked_users">استيراد من المستخدمين المحظورين</string>
+  <string name="action_filter_subscriptions_card_manage">إدارة الاشتراكات</string>
   <string name="action_finish">إنهاء</string>
   <string name="action_follow">متابعه</string>
   <string name="action_following">يتابع</string>
   <string name="action_getting_status">الحصول على تغريد</string>
+  <string name="action_getting_user_lists">الحصول على قوائم المستخدم</string>
   <!-- [verb] Perform import action -->
+  <string name="action_import">إستيراد</string>
   <string name="action_import_from">استيراد من &#8230;</string>
   <!-- Used for decide something later, like permission request -->
   <string name="action_later">في وقت لاحق</string>
+  <string name="action_leave_conversation">ترك المحادثة</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">اعجاب</string>
+  <string name="action_mark_as_read">وضع علامة كمقروء</string>
   <string name="action_modifying_lists">تعديل القوائم</string>
   <string name="action_mute">كتم</string>
+  <string name="action_mute_notifications">كتم الاشعارات</string>
   <string name="action_muting">يكتم</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s </xliff:g>، المحفوظة في <xliff:g id="time">%2$s </xliff:g></string>
   <string name="action_open_in_browser">فتح بالمستعرض</string>
   <string name="action_pick_color">إختيار لون</string>
+  <string name="action_purchase">شراء</string>
+  <string name="action_purchase_features_pack">شراء حزمة الميزات</string>
   <string name="action_quote">اقتباس:</string>
+  <string name="action_record_video">سجل فيديو</string>
   <string name="action_refresh">تحديث</string>
   <string name="action_refreshing_direct_messages">يحدّث الرسائل الخاصة</string>
   <string name="action_refreshing_home_timeline">يحدّث خط الزمن الرئيس</string>
   <string name="action_refreshing_mentions">يحدّث الإشارات</string>
+  <string name="action_remove_conversation_avatar">إحذف أيقونة</string>
   <string name="action_removing_profile_banner_image">جاري حذف الصورة العلوية للملف الشخصي</string>
   <string name="action_reply">رد</string>
   <string name="action_report_spam">بلغ على أنه بريد مزعج ورسائل احتيال</string>
   <string name="action_reporting_for_spam">يبلّغ عن إزعاج</string>
   <!-- [verb] Restore purchase -->
+  <string name="action_restore_purchase">إسترجاع</string>
+  <string name="action_retry">أعد المحاولة</string>
   <!-- [verb] Action for performing retweet -->
   <string name="action_retweeting">يعيد التغريدة</string>
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">حفظ</string>
   <string name="action_saving_search">يحفظ البحث</string>
+  <string name="action_search">بحث</string>
+  <string name="action_select_all">تعيين الكل</string>
   <string name="action_select_user">إختر المستخدم</string>
   <!-- [verb] Send tweet/message -->
   <string name="action_send">إرسال</string>
@@ -78,10 +110,14 @@
   <string name="action_signing_in">يدخل</string>
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">تخطي</string>
+  <string name="action_start">بدء تشغيل</string>
+  <string name="action_status_block_users">حظر المستخدمين&#8230;</string>
   <string name="action_subscribe">الإشتراك</string>
   <string name="action_subscribing_to_list">يشترك في القائمة</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
+  <string name="action_sync_connect_to_storage">إتصال</string>
   <!-- [verb] Disconnect from network storage -->
+  <string name="action_sync_disconnect">إقطع الإتصال</string>
   <string name="action_sync_settings">الاعدادات</string>
   <string name="action_take_photo">أخذ صورة</string>
   <string name="action_toggle">عكس</string>
@@ -106,6 +142,7 @@
   <string name="action_updating_profile_image">يحدّث صورة الملف الشخصي</string>
   <string name="action_updating_status">إرسال تغريد</string>
   <string name="action_view_map">خريطة</string>
+  <string name="activated_accounts">الحسابات المفعلة</string>
   <string name="activities_about_me">الاحداث المتعلقة بي</string>
   <string name="add_account">اضافة حساب</string>
   <string name="add_host_mapping">إضافة مضيف رسم الخرائط</string>
@@ -115,6 +152,7 @@
   <string name="app_description">برنامجك الخاص لتويتر</string>
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
+  <string name="appearance">المظهر</string>
   <string name="auth_type_basic">الأساسي</string>
   <string name="auth_type_oauth">OAuth</string>
   <string name="auth_type_xauth">xAuth</string>
@@ -124,13 +162,16 @@
   <string name="belongs_to">ينتمي إلى</string>
   <string name="block_user_confirm_message">هل أنت متأكد أنك تريد حظر <xliff:g id="name">%s</xliff:g> ؟ لن يعود قادرًا على متابعتك أو الإشارة إليك أو أن يراسلك مباشرة.</string>
   <string name="bug_reports">تقارير الأخطاء</string>
+  <string name="cache_size_limit">الحد الأقصى لحجم ذاكرة التخزين المؤقت</string>
   <string name="cards">بطاقات</string>
   <string name="clear_cache">حذف الكاش</string>
   <string name="clear_databases">حذف قاعدة البيانات</string>
   <string name="clear_databases_summary">إزالة جميع التغريدات والحسابات والرسائل، لن تفقد بيانات حسابك.</string>
   <string name="clear_search_history">محو سجل البحث</string>
   <string name="click_item_to_configure">اضغط على المحتوى للتكوين</string>
+  <string name="close_accounts_dashboard">إغلاق لوحة الحسابات</string>
   <string name="color">اللون</string>
+  <string name="comment">تعليق</string>
   <string name="compact_cards">بطاقات مختصرة</string>
   <string name="compact_cards_summary">عرض بطاقات أكثر على الشاشة</string>
   <string name="compose_now">اكتب الان</string>
@@ -141,6 +182,7 @@
   <string name="consumer_secret">شفرة الـConsumer secret</string>
   <string name="content">المحتوى</string>
   <string name="content_and_storage">المحتوى &amp; التخزين</string>
+  <string name="content_description_sticker">ملصق</string>
   <string name="content_to_notify">إخطاري عن :</string>
   <string name="content_to_refresh">المحتوى للتحديث</string>
   <string name="contributors_list_summary">إن لم تجد إسمك فراسلنا رجاء على حسابنا.</string>
@@ -149,8 +191,11 @@
   <string name="count_label_retweets">من إعادات التغريد</string>
   <string name="created_by">أنشأها <xliff:g id="created_by">%s</xliff:g></string>
   <string name="created_list">أُنشأت القائمة <xliff:g id="list">%s</xliff:g>.</string>
+  <string name="crop_image">تقطيع الصورة</string>
+  <string name="current_status">التغريدة الحالية</string>
   <string name="custom_host_mapping">تعيين مضيف مخصص</string>
   <string name="custom_host_mapping_summary">استضافة رسم الخرائط مثل/إلخ/استضافات، ولكن لا تتطلب أية أذونات إضافية.</string>
+  <string name="dark_theme">سمة ليلية</string>
   <string name="default_account">الحساب الافتراضي</string>
   <string name="default_api_settings">إعدادات API الإفتراضية</string>
   <string name="default_api_settings_summary">هذه الإعدادات تنطبق فقط على الحسابات المسجلة جديدا</string>
@@ -180,12 +225,19 @@
   <string name="display_sensitive_contents_summary">عرض المحتويات الحساسة دون إشعار في الخط الزمني</string>
   <string name="dns_server">خادم DNS</string>
   <string name="dns_server_summary">تعيين ملقم DNS لطلبات الشبكة.</string>
+  <string name="drafts_hint_messages">سيتم حفظ التغريدات غير المرسلة الخاصة بك هنا</string>
   <string name="edit_api">API تعديل الـ</string>
+  <string name="edit_description">تحرير الوصف</string>
   <string name="edit_draft">تعدبل المسودة</string>
   <string name="edit_tab">تعديل لسان</string>
   <string name="edit_tabs">تحرير علامات التبويب</string>
+  <string name="ellipsis">&#8230;</string>
+  <string name="emoji_support">دعم Emoji</string>
   <string name="empty_content">محتوى فارغ</string>
+  <string name="enable_notifications">تفعيل الاشعارات</string>
+  <string name="error_info_oauth_timestamp_error">الرجاء التحقق من تاريخ النظام الخاص بك وإعدادات الوقت.</string>
   <string name="error_message">خطأ: <xliff:g id="message">%s</xliff:g></string>
+  <string name="error_message_media_message_too_many">وسائط كثيرة جداً</string>
   <string name="error_message_media_upload_failed">فشلت عملية رفع الوسائط.</string>
   <string name="error_message_media_uploader_not_found">رافع الوسائط غير موجود, ربما تم الغاء تثبيته.</string>
   <string name="error_message_message_too_long">الرسالة طويلة.</string>
@@ -197,6 +249,7 @@
   <string name="error_message_tweet_shortener_not_found">لم يتم العثور على مختصِر التغريدات ، ربما تم إلغاء تثبيته.</string>
   <string name="error_message_with_action">خطأ عند <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_title_device_incompatible">جهاز غير متوافق</string>
+  <string name="error_too_many_photos_fanfou">الكثير من الصور</string>
   <string name="error_unknown_error">خطأ: خطأ غير معروف, ربما أنه خلل.</string>
   <string name="exclude_this_host">استبعاد المضيف</string>
   <string name="excluded">مستبعد</string>
@@ -253,14 +306,26 @@
   <string name="keyboard_shortcut_back">العودة</string>
   <string name="keyboard_shortcuts">اختصارات لوحة المفاتيح</string>
   <string name="keyword_filter_name">الكلمة : <xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">الحساب</string>
+  <string name="label_account_type">نوع الحساب</string>
   <string name="label_auth_type">نوع Auth</string>
   <string name="label_background_operation_service">خدمة التشغيل في الخلفية</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">مزود قاعدة بيانات Twidere</string>
+  <string name="label_filters_subscription">الإشتراك</string>
+  <string name="label_media">الوسائط</string>
   <string name="label_original_status">التغريدة الأصلية</string>
+  <string name="label_password">كلمة المرور</string>
   <string name="label_photo">صورة</string>
+  <string name="label_photos">الصور</string>
   <string name="label_poll">استطلاع الرأي</string>
   <string name="label_refresh_service">تحديث الخدمة</string>
   <string name="label_streaming_service">خدمة البث المتواصل</string>
+  <string name="label_username">إسم المستخدم</string>
+  <string name="label_video">فيديو</string>
   <string name="label_your_profile_image">صورة الملف الشخصي</string>
   <string name="large">كبير</string>
   <string name="leftside_compose_button">زر كتابة التغريدة على اليسار</string>
@@ -293,6 +358,7 @@
   <string name="message_blocked_user">حُظِر <xliff:g id="user">%s</xliff:g>.</string>
   <string name="message_direct_message_deleted">حُذفت الرسالة الخاصة.</string>
   <string name="message_direct_message_sent">أُرسلت الرسالة الخاصة.</string>
+  <string name="message_join_conversation">إلتحق بالمحادثة.</string>
   <string name="message_please_wait">يرجى الإنتظار.</string>
   <!--
       ~ Toast messages, according to https://material.io/guidelines/style/writing.html#writing-capitalization-punctuation ,
@@ -355,6 +421,7 @@
   <string name="open_twitter_links">فتح روابط تويتر</string>
   <string name="open_with_account">فتح بحساب آخر</string>
   <string name="other_settings">إعدادات أخرى</string>
+  <string name="pause">تعليق</string>
   <string name="permission_description_accounts">الإطلاع على معلومات الحساب</string>
   <string name="permission_description_direct_messages">قراءة/كتابة/ارسال الرسائل المباشرة</string>
   <string name="permission_description_none">لا يوجد صلاحيات مُحتاجة.</string>
@@ -376,6 +443,7 @@
   <string name="preference_title_advanced">متقدم</string>
   <string name="preference_title_database_item_limit">حد حجم قاعدة البيانات</string>
   <string name="preference_title_landscape">الوضع المائل</string>
+  <string name="preference_title_notification_ringtone">الرنة</string>
   <string name="preference_title_portrait">الوضع المعتدل</string>
   <string name="preference_title_storage">المساحة</string>
   <string name="preference_title_text_size">حجم النص</string>
@@ -384,6 +452,8 @@
   <string name="preload_wifi_only">التحميل المسبق عند إستعمال الواي فاي</string>
   <string name="preview">معاينة</string>
   <string name="preview_images">معاينة الصور</string>
+  <string name="preview_style_crop">قص</string>
+  <string name="preview_style_real_size">الحجم العادي</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">السابق</string>
   <string name="previous_tab">علامة التبويب السابقة</string>
@@ -428,6 +498,7 @@
   <string name="refresh_type_home">الرئيسية</string>
   <string name="refresh_type_messages">الرسائل</string>
   <string name="refresh_type_trends">التداولات</string>
+  <string name="register">تسجيل</string>
   <string name="remember_position">تذكر المكان</string>
   <string name="remember_position_summary">Twidere تذكر مكان القائمة/اللسان قبل إغلاق </string>
   <string name="remove">ازالة</string>
@@ -542,22 +613,31 @@
   <string name="title_compose">كتابة</string>
   <string name="title_conversation">المحادثة</string>
   <string name="title_direct_messages">الرسائل</string>
+  <string name="title_direct_messages_conversation_info">معلومات عن المحادثة</string>
+  <string name="title_direct_messages_conversation_new">محادثة جديدة</string>
   <string name="title_drafts">المسودات</string>
   <string name="title_edit_details">تعديل التفاصيل</string>
   <string name="title_edit_profile">تعديل الملف الشخصي</string>
   <!-- Enhanced (paid) features title -->
   <!-- [noun] Twitter's favorite, in the plural -->
+  <string name="title_favorites">المفضلة</string>
   <string name="title_filters">قواعد الكتم</string>
+  <string name="title_filters_subscription_invalid">الاشتراك غير صالح</string>
   <string name="title_filters_subscription_url">الموقع</string>
   <string name="title_followers">المتابعون</string>
   <string name="title_following">متابَعون</string>
   <string name="title_home">الرئيسية</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">إعجاب</string>
+  <string name="title_manage_filter_subscriptions">تصفية الاشتراكات</string>
   <string name="title_mentions">الإشارات</string>
+  <string name="title_message_conversation_info">معلومات عن المحادثة</string>
   <string name="title_nicknames">أسماء مستعارة</string>
   <string name="title_open_source_license">رخصة المصدر المفتوح</string>
   <string name="title_premium_features_name">تويدر ∞</string>
+  <string name="title_quick_action">إجراء سريع</string>
+  <string name="title_search">بحث</string>
+  <string name="title_select_users">حدد المستخدمين</string>
   <string name="title_set_nickname">تعيين اللقب</string>
   <string name="title_status">تغريدة</string>
   <string name="title_statuses">من التغريدات</string>
@@ -565,6 +645,7 @@
   <string name="title_user">مستخدم</string>
   <string name="title_user_colors">ألوان المستخدم</string>
   <string name="title_user_list_memberships">ينتمي إلى</string>
+  <string name="title_user_list_subscriptions">الاشتراكات</string>
   <string name="title_users_favorited_this">المستخدمون الذين فضلوا التغريدة</string>
   <string name="title_users_liked_this">اعجب المستخدمون</string>
   <string name="title_users_retweeted_this">المستخدمين الذين قاموا بإعادة التغريد</string>
@@ -575,6 +656,7 @@
   <string name="trends_location_summary">تعيين موقع التداولات المحلية.</string>
   <!-- 'Tweet' here is a verb -->
   <string name="twidere_test">تجريب تويدر</string>
+  <string name="type_name_to_search">اكتب اسماً للبحث عنه</string>
   <string name="type_to_compose">اكتب للإرسال</string>
   <string name="unblocked_user">رُفِع الحظر عن <xliff:g id="user">%s</xliff:g>.</string>
   <string name="underline">تسطير</string>
@@ -593,18 +675,25 @@
   <string name="update_status">إرسال التغريدة</string>
   <string name="updated_list_details">تم تحديث لائحة تفاصيل <xliff:g id="list">%s</xliff:g>.</string>
   <string name="updating_status_notification">يرسل التغريدة&#8230;</string>
+  <string name="usage_statistics">إحصائيات الاستخدام</string>
   <string name="usage_statistics_notification_summary">ساعدنا كي نحسن تويدر!</string>
   <string name="user_blocked">تم حظر هذا المستخدم.</string>
   <string name="user_filter_name">المستخدم : <xliff:g id="name">%s</xliff:g></string>
   <string name="user_list">لائحة</string>
   <string name="user_list_details">تفاصيل القائمة</string>
   <!-- User list description -->
+  <string name="user_list_details_description">الوصف</string>
   <!-- User list is public -->
   <string name="user_list_details_is_public">عام</string>
   <!-- User list name -->
+  <string name="user_list_details_name">الاسم</string>
   <string name="user_lists">القوائم</string>
   <string name="user_mentions">الإشارات للمستخدم</string>
+  <string name="user_profile_description">الوصف</string>
+  <string name="user_profile_location">الموقع</string>
+  <string name="user_profile_name">الاسم</string>
   <string name="user_profile_url">الموقع</string>
+  <string name="user_type_protected">محمي</string>
   <string name="user_unblocked">تم إلغاء الحظر عن هذا المستخدم.</string>
   <string name="users_blocked">حظر هؤلاء المستخدمين.</string>
   <string name="users_lists_with_name">قوائم <xliff:g id="name">%s</xliff:g></string>

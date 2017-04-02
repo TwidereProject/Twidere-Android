@@ -191,6 +191,10 @@
   <string name="keyword_filter_name">מילת מפתח: <xliff:g id="name">%s</xliff:g></string>
   <string name="label_auth_type">סוג אימות</string>
   <string name="label_background_operation_service">שירות פעולה ברקע</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">ספק מסד הנתונים של Twidere</string>
   <string name="label_original_status">ציוץ מקורי</string>
   <string name="label_poll">סקר</string>

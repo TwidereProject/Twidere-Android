@@ -61,6 +61,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Suggestions
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.EditTextEnterHandler.EnterListener
 import org.mariotaku.twidere.util.content.ContentResolverUtils
+import org.mariotaku.twidere.view.ProfileImageView
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
 
 /**
@@ -266,6 +267,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     ) : CursorAdapter(activity, null, 0), OnClickListener {
 
         private val profileImageStyle = activity.preferences[profileImageStyleKey]
+        private val profileImageSize = activity.getString(R.string.profile_image_size)
         private val requestManager = Glide.with(activity)
         private val inflater = LayoutInflater.from(activity)
         private val userColorNameManager = activity.userColorNameManager
@@ -284,7 +286,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                 }
                 VIEW_TYPE_USER_SUGGESTION_ITEM, VIEW_TYPE_USER_SCREEN_NAME -> {
                     val view = inflater.inflate(R.layout.list_item_suggestion_user, parent, false)
-                    view.tag = UserViewHolder(view)
+                    view.tag = UserViewHolder(view).apply {
+                        icon.style = profileImageStyle
+                    }
                     return view
                 }
             }
@@ -323,7 +327,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                     holder.text2.text = "@${cursor.getString(indices.summary)}"
                     holder.icon.clearColorFilter()
                     requestManager.loadProfileImage(context, cursor.getString(indices.icon),
-                            profileImageStyle).into(holder.icon)
+                            profileImageStyle, cornerRadius = holder.icon.cornerRadius,
+                            cornerRadiusRatio = holder.icon.cornerRadiusRatio,
+                            size = profileImageSize).into(holder.icon)
                 }
                 VIEW_TYPE_USER_SCREEN_NAME -> {
                     val holder = view.tag as UserViewHolder
@@ -417,17 +423,17 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
         internal class SearchViewHolder(view: View) {
 
-            internal val icon: ImageView = view.findViewById(android.R.id.icon) as ImageView
-            internal val text1: TextView = view.findViewById(android.R.id.text1) as TextView
-            internal val edit_query: View = view.findViewById(R.id.edit_query)
+            internal val icon = view.findViewById(android.R.id.icon) as ImageView
+            internal val text1 = view.findViewById(android.R.id.text1) as TextView
+            internal val edit_query = view.findViewById(R.id.edit_query)
 
         }
 
         internal class UserViewHolder(view: View) {
 
-            internal val icon: ImageView = view.findViewById(android.R.id.icon) as ImageView
-            internal val text1: TextView = view.findViewById(android.R.id.text1) as TextView
-            internal val text2: TextView = view.findViewById(android.R.id.text2) as TextView
+            internal val icon = view.findViewById(android.R.id.icon) as ProfileImageView
+            internal val text1 = view.findViewById(android.R.id.text1) as TextView
+            internal val text2 = view.findViewById(android.R.id.text2) as TextView
 
         }
 

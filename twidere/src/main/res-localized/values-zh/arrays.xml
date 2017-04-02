@@ -10,7 +10,7 @@
   <string-array name="entries_compose_now_action">
     <item>撰寫</item>
     <item>拍照</item>
-    <item>Add media</item>
+    <item>添加多媒體</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
     <item>互動</item>

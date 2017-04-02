@@ -17,6 +17,7 @@
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">添加规则</string>
   <string name="action_add_filters_subscription">添加订阅</string>
+  <string name="action_add_gif">添加 GIF</string>
   <string name="action_add_media">添加媒体</string>
   <string name="action_add_member">添加成员</string>
   <string name="action_add_tab">添加标签页</string>
@@ -74,6 +75,7 @@
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">喜欢</string>
   <string name="action_liking">喜欢</string>
+  <string name="action_location">位置</string>
   <string name="action_manage_in_buffer">在 Buffer 中管理</string>
   <string name="action_mark_as_read">标为已读</string>
   <string name="action_modifying_lists">修改列表</string>
@@ -120,6 +122,7 @@
   <!-- [verb] Used for skip some settings -->
   <string name="action_skip">跳过</string>
   <string name="action_start">开始</string>
+  <string name="action_status_attachment">推文附件</string>
   <string name="action_status_block_users">阻止用户&#8230;</string>
   <string name="action_status_mute_users">隐藏用户&#8230;</string>
   <string name="action_status_schedule">推文排期</string>
@@ -332,6 +335,7 @@
   <string name="extra_feature_description_filters_import">从被隐藏/阻止的用户导入过滤列表</string>
   <string name="extra_feature_description_filters_subscription">订阅到过滤器，并且自动同步</string>
   <string name="extra_feature_description_schedule_status">推文排期（稍后发送）</string>
+  <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">与 Dropbox、Google 云端硬盘等同步数据</string>
   <string name="extra_feature_title_filters_import">过滤器导入</string>
   <string name="extra_feature_title_filters_subscription">过滤器订阅</string>
@@ -388,6 +392,7 @@
   <string name="hint_error_message_no_content">没有内容</string>
   <string name="hint_message_select_user">搜索用户</string>
   <string name="hint_no_account">没有帐号</string>
+  <string name="hint_search_gif">搜索 GIF</string>
   <string name="hints">提示</string>
   <string name="home_refresh">在主页时间线刷新</string>
   <string name="host_mapping_address">地址（可以是另一个主机名）</string>
@@ -420,9 +425,20 @@
   <string name="label_background_operation_service">后台操作服务</string>
   <string name="label_buffer_accounts">Buffer 帐号</string>
   <string name="label_buffer_due_at_no_time">没有定时</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_g">全年龄级</string>
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg">PG 级</string>
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_pg13">PG-13 级</string>
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
+  <string name="label_content_rating_r">限制级</string>
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_filters_subscription">订阅</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> 通过 <xliff:g example="api" id="source">%2$s</xliff:g></string>
+  <string name="label_location_coarse">粗略（城市）</string>
+  <string name="label_location_no_location">无</string>
+  <string name="label_location_precise">精确（坐标）</string>
   <string name="label_location_your_coarse_location">您的大致位置</string>
   <string name="label_media">媒体</string>
   <string name="label_original_status">原推文</string>
@@ -431,12 +447,17 @@
   <string name="label_photo">照片</string>
   <string name="label_photos">照片</string>
   <string name="label_poll">投票</string>
+  <string name="label_powered_by_giphy">由 GIPHY 强力驱动</string>
   <string name="label_refresh_and_sync_service">刷新和同步服务</string>
   <string name="label_refresh_service">刷新服务</string>
   <string name="label_schedule_time_buffer_default">Buffer 默认</string>
   <string name="label_send_at">发送于</string>
   <string name="label_sensitive_content">敏感内容</string>
   <string name="label_status_not_available">推文不可用</string>
+  <string name="label_statuses">推文</string>
+  <string name="label_statuses_replies">推文和回复</string>
+  <string name="label_statuses_retweets">推文和转推</string>
+  <string name="label_statuses_retweets_replies">推文、转发和回复</string>
   <string name="label_streaming_service">实时流服务</string>
   <string name="label_translate_from_language">从 <xliff:g id="language">%s</xliff:g> 翻译</string>
   <string name="label_translation">翻译</string>
@@ -695,7 +716,7 @@
   <string name="preference_title_multi_column_tab_width">多栏标签页宽度</string>
   <string name="preference_title_multi_column_tabs">多栏标签页</string>
   <string name="preference_title_notification_ringtone">铃声</string>
-  <string name="preference_title_override_language">首选语言</string>
+  <string name="preference_title_override_language">应用程序语言</string>
   <string name="preference_title_portrait">纵向模式</string>
   <string name="preference_title_storage">存储</string>
   <string name="preference_title_streaming_content">实时流内容</string>
@@ -951,6 +972,7 @@
   <string name="title_quick_action">快捷操作</string>
   <string name="title_scheduled_statuses">排期的推文</string>
   <string name="title_search">搜索</string>
+  <string name="title_search_gif">搜索 GIF</string>
   <string name="title_select_users">选择用户</string>
   <string name="title_set_nickname">设置昵称</string>
   <string name="title_sign_in_to_buffer">登录到 Buffer</string>
@@ -969,6 +991,7 @@
   <string name="title_user_list_memberships">属于</string>
   <string name="title_user_list_ownerships">创建</string>
   <string name="title_user_list_subscriptions">订阅</string>
+  <string name="title_user_timeline_filter">时间线过滤</string>
   <string name="title_users_favorited_this">收藏这条推文的用户</string>
   <string name="title_users_liked_this">喜欢这条推文的用户</string>
   <string name="title_users_retweeted_this">转推了这条推文的用户</string>

@@ -27,7 +27,7 @@
     <item quantity="other"><xliff:g id="count">%d</xliff:g> 條新資訊</item>
   </plurals>
   <plurals name="N_media">
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> 媒體</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> 多媒體</item>
   </plurals>
   <plurals name="created_at_with_N_tweets_per_day">
     <item quantity="other"><xliff:g id="created_at">%1$s</xliff:g> （每天<xliff:g id="daily_tweet">%2$d</xliff:g>推）</item>

@@ -366,6 +366,10 @@
   <string name="label_account_type">گونهٔ حساب</string>
   <string name="label_auth_type">نوع احراز هویت</string>
   <string name="label_background_operation_service">خدمت عملیات پس‌زمینه</string>
+  <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
+  <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
+  <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">فراهم‌کنندهٔ پایگاه‌دادهٔ تویدر</string>
   <string name="label_filters_subscription">اشتراک</string>
   <string name="label_location_your_coarse_location">مکان نادقیقتان</string>
