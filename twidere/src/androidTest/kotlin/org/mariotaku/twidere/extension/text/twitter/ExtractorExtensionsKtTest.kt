@@ -57,6 +57,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertEquals("lol", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -68,6 +69,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertEquals("@mariotaku lol", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.entitiesContainsAll("mariotaku"))
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -78,6 +80,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertEquals("lol @mariotaku", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.entitiesContainsAll("mariotaku"))
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -89,6 +92,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
             Assert.assertTrue("excludedMentions.containsAll(expectation)",
                     it.excludedMentions.mentionsContainsAll("nixcraft"))
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -103,6 +107,7 @@ class ExtractorExtensionsKtTest {
             })
             Assert.assertTrue("excludedMentions.containsAll(expectation)",
                     it.excludedMentions.mentionsContainsAll("nixcraft"))
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -115,6 +120,7 @@ class ExtractorExtensionsKtTest {
                     it.extraMentions.entitiesContainsAll("mariotaku"))
             Assert.assertTrue("excludedMentions.containsAll(expectation)",
                     it.excludedMentions.mentionsContainsAll("nixcraft"))
+            Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -125,6 +131,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertEquals("@nixcraft lol", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertFalse("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 
@@ -136,6 +143,7 @@ class ExtractorExtensionsKtTest {
             Assert.assertTrue("extraMentions.containsAll(expectation)",
                     it.extraMentions.entitiesContainsAll("mariotaku"))
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertFalse("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
 

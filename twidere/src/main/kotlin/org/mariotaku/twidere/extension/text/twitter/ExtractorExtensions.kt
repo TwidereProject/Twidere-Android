@@ -38,25 +38,38 @@ fun Extractor.extractMentionsAndNonMentionStartIndex(text: String): MentionsAndN
 
 fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableStatus): ReplyTextAndMentions {
     // First extract mentions and 'real text' start index
-    val (mentions, index) = extractMentionsAndNonMentionStartIndex(text)
+    val (textMentions, index) = extractMentionsAndNonMentionStartIndex(text)
+
+    val replyMentions = run {
+        val mentions = inReplyTo.mentions?.toMutableList() ?: mutableListOf()
+        if (inReplyTo.is_retweet) {
+            mentions.add(ParcelableUserMention().also {
+                it.key = inReplyTo.retweeted_by_user_key
+                it.name = inReplyTo.retweeted_by_user_name
+                it.screen_name = inReplyTo.retweeted_by_user_screen_name
+            })
+        }
+        return@run mentions
+    }
 
     // Find mentions that `inReplyTo` doesn't have and add to `extraMentions` list
-    val extraMentions = mentions.filter { entity ->
+
+    val extraMentions = textMentions.filter { entity ->
         if (entity.value.equals(inReplyTo.user_screen_name, ignoreCase = true)) {
             return@filter false
         }
-        return@filter inReplyTo.mentions?.none { mention ->
-            entity.value.equals(mention.screen_name, ignoreCase = true)
-        } ?: true
-    }
-    // Find removed mentions from `inReplyTo` and add to `excludedMentions` list
-    val excludedMentions = inReplyTo.mentions?.filter { mention ->
-        return@filter mentions.none { entity ->
+        return@filter replyMentions.none { mention ->
             entity.value.equals(mention.screen_name, ignoreCase = true)
         }
-    }.orEmpty()
+    }
+    // Find removed mentions from `inReplyTo` and add to `excludedMentions` list
+    val excludedMentions = replyMentions.filter { mention ->
+        return@filter textMentions.none { entity ->
+            entity.value.equals(mention.screen_name, ignoreCase = true)
+        }
+    }
     // Find reply text contains mention to `inReplyTo.user`
-    val mentioningUser = mentions.any {
+    val mentioningUser = textMentions.any {
         it.value.equals(inReplyTo.user_screen_name, ignoreCase = true)
     }
     if (!mentioningUser) {
@@ -65,7 +78,7 @@ fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableSta
          * then this status should be treated at a mention referring to `inReplyTo`, all other mentions
          * counts.
          */
-        return ReplyTextAndMentions(text, emptyList(), emptyList())
+        return ReplyTextAndMentions(text, emptyList(), emptyList(), mentioningUser)
     }
     val overrideText = run {
         val sb = StringBuilder()
@@ -78,7 +91,7 @@ fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableSta
         sb.append(text, index, text.length)
         return@run sb.toString()
     }
-    return ReplyTextAndMentions(overrideText, extraMentions, excludedMentions)
+    return ReplyTextAndMentions(overrideText, extraMentions, excludedMentions, mentioningUser)
 }
 
 data class MentionsAndNonMentionStartIndex(val mentions: List<Extractor.Entity>, val index: Int)
@@ -86,5 +99,6 @@ data class MentionsAndNonMentionStartIndex(val mentions: List<Extractor.Entity>,
 data class ReplyTextAndMentions(
         val replyText: String,
         val extraMentions: List<Extractor.Entity>,
-        val excludedMentions: List<ParcelableUserMention>
+        val excludedMentions: List<ParcelableUserMention>,
+        val replyToOriginalUser: Boolean
 )

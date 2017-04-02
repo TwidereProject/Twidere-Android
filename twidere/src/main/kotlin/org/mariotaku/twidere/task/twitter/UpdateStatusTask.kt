@@ -116,7 +116,7 @@ class UpdateStatusTask(
          * override status text, trim existing reply mentions, and add mentions that not
          * exists in status text into ignore list
          */
-        regulateStatusText(update, pendingUpdate)
+        regulateReplyText(update, pendingUpdate)
 
         val result: UpdateStatusResult
         try {
@@ -146,14 +146,21 @@ class UpdateStatusTask(
         return result
     }
 
-    private fun regulateStatusText(update: ParcelableStatusUpdate, pending: PendingStatusUpdate) {
+    private fun regulateReplyText(update: ParcelableStatusUpdate, pending: PendingStatusUpdate) {
+        if (update.draft_action != Draft.Action.REPLY) return
         val inReplyTo = update.in_reply_to_status ?: return
         for (i in 0 until pending.length) {
             if (update.accounts[i].type != AccountType.TWITTER) continue
-            val (replyText, _, excludedMentions) = extractor.extractReplyTextAndMentions(
-                    pending.overrideTexts[i], inReplyTo)
+            val (replyText, _, excludedMentions, replyToOriginalUser) =
+                    extractor.extractReplyTextAndMentions(pending.overrideTexts[i], inReplyTo)
             pending.overrideTexts[i] = replyText
             pending.excludeReplyUserIds[i] = excludedMentions.map { it.key.id }.toTypedArray()
+            pending.replyToOriginalUser[i] = replyToOriginalUser
+            // Fix status to at least make mentioned user know what status it is
+            if (!replyToOriginalUser && update.attachment_url == null) {
+                update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
+                        inReplyTo.id).toString()
+            }
         }
     }
 
@@ -415,15 +422,18 @@ class UpdateStatusTask(
         if (inReplyToStatus != null) {
             status.inReplyToStatusId(inReplyToStatus.id)
             if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
-                status.autoPopulateReplyMetadata(true)
-
+                val replyToOriginalUser = pendingUpdate.replyToOriginalUser[index]
+                status.autoPopulateReplyMetadata(replyToOriginalUser)
+                if (replyToOriginalUser) {
+                    status.excludeReplyUserIds(pendingUpdate.excludeReplyUserIds[index])
+                }
             }
         }
         if (statusUpdate.repost_status_id != null) {
-            status.setRepostStatusId(statusUpdate.repost_status_id)
+            status.repostStatusId(statusUpdate.repost_status_id)
         }
         if (statusUpdate.attachment_url != null) {
-            status.setAttachmentUrl(statusUpdate.attachment_url)
+            status.attachmentUrl(statusUpdate.attachment_url)
         }
         if (statusUpdate.location != null) {
             status.location(ParcelableLocationUtils.toGeoLocation(statusUpdate.location))
@@ -431,7 +441,7 @@ class UpdateStatusTask(
         }
         val mediaIds = pendingUpdate.mediaIds[index]
         if (mediaIds != null) {
-            status.mediaIds(*mediaIds)
+            status.mediaIds(mediaIds)
         }
         if (statusUpdate.is_possibly_sensitive) {
             status.possiblySensitive(statusUpdate.is_possibly_sensitive)
@@ -540,6 +550,7 @@ class UpdateStatusTask(
 
         val overrideTexts: Array<String> = Array(length) { defaultText }
         val excludeReplyUserIds: Array<Array<String>?> = arrayOfNulls(length)
+        val replyToOriginalUser: BooleanArray = BooleanArray(length)
         val mediaIds: Array<Array<String>?> = arrayOfNulls(length)
 
         val mediaUploadResults: Array<MediaUploadResult?> = arrayOfNulls(length)
