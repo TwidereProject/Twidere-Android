@@ -38,6 +38,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.*
 import android.view.View.OnClickListener
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
@@ -85,7 +86,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         super.onCreate(savedInstanceState)
         hasQrScanner = run {
             val scanIntent = Intent(ACTION_ZXING_SCAN)
-            scanIntent.putExtra("SCAN_MODE", "QR_CODE_MODE")
+            scanIntent.putExtra(EXTRA_ZXING_SCAN_MODE, ZXING_SCAN_MODE_QR_CODE)
             return@run scanIntent.resolveActivity(packageManager) != null
         }
 
@@ -172,8 +173,15 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         when (v) {
             searchSubmit -> {
                 if (searchQuery.empty && hasQrScanner) {
+                    val currentFocus = currentFocus
+                    if (currentFocus === searchQuery) {
+                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+                        currentFocus.clearFocus()
+                    }
+
                     val scanIntent = Intent(ACTION_ZXING_SCAN)
-                    scanIntent.putExtra("SCAN_MODE", "QR_CODE_MODE")
+                    scanIntent.putExtra(EXTRA_ZXING_SCAN_MODE, ZXING_SCAN_MODE_QR_CODE)
                     try {
                         startActivityForResult(scanIntent, REQUEST_SCAN_QR)
                     } catch (e: ActivityNotFoundException) {
@@ -191,7 +199,7 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         when (requestCode) {
             REQUEST_SCAN_QR -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val scanResult = data.getStringExtra("SCAN_RESULT")
+                    val scanResult = data.getStringExtra(EXTRA_ZXING_SCAN_RESULT)
                     val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(scanResult)).apply {
                         `package` = BuildConfig.APPLICATION_ID
                         putExtra(EXTRA_ACCOUNT_KEY, selectedAccountDetails?.key)
@@ -501,6 +509,9 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     companion object {
         const val ACTION_ZXING_SCAN = "com.google.zxing.client.android.SCAN"
+        const val EXTRA_ZXING_SCAN_MODE = "SCAN_MODE"
+        const val EXTRA_ZXING_SCAN_RESULT = "SCAN_RESULT"
+        const val ZXING_SCAN_MODE_QR_CODE = "QR_CODE_MODE"
         const val REQUEST_SCAN_QR = 101
     }
 }
