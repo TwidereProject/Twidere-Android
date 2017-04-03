@@ -189,10 +189,10 @@ dependencies {
     compile 'com.github.mariotaku:Chameleon:0.9.16'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
-    compile 'nl.komponents.kovenant:kovenant:3.3.0'
-    compile 'nl.komponents.kovenant:kovenant-android:3.3.0'
-    compile 'nl.komponents.kovenant:kovenant-functional:3.3.0'
-    compile 'nl.komponents.kovenant:kovenant-combine:3.3.0'
+    compile "nl.komponents.kovenant:kovenant:${libVersions['Kovenant']}"
+    compile "nl.komponents.kovenant:kovenant-android:${libVersions['Kovenant']}"
+    compile "nl.komponents.kovenant:kovenant-functional:${libVersions['Kovenant']}"
+    compile "nl.komponents.kovenant:kovenant-combine:${libVersions['Kovenant']}"
 }
 
 task svgToDrawable(type: SvgDrawableTask) {

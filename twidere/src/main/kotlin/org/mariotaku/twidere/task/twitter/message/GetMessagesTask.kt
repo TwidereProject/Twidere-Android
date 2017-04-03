@@ -214,7 +214,7 @@ class GetMessagesTask(
                     maxId(maxId)
                 }
             }).userInbox
-        }
+        } ?: throw MicroBlogException("Null response data")
         return createDatabaseUpdateData(context, details, response, profileImageSize)
     }
 
