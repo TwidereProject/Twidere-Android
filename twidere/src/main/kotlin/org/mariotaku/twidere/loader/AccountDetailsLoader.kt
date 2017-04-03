@@ -8,6 +8,7 @@ import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
 import org.mariotaku.ktextension.removeOnAccountsUpdatedListenerSafe
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.util.AccountUtils
+import java.lang.ref.WeakReference
 
 /**
  * Created by mariotaku on 2016/12/4.
@@ -42,8 +43,9 @@ class AccountDetailsLoader(
     }
 
     override fun onStartLoading() {
+        val weakThis = WeakReference(this)
         accountUpdateListener = OnAccountsUpdateListener {
-            onContentChanged()
+            weakThis.get()?.onContentChanged()
         }
         if (takeContentChanged()) {
             forceLoad()
