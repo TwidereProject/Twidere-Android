@@ -874,7 +874,7 @@
   <string name="title_add_or_remove_from_list">Ajouter ou supprimer de la liste</string>
   <string name="title_block_user">Bloquer <xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">Utilisateurs bloqués</string>
-  <string name="title_browser_sign_in">Connexion du naviguateur</string>
+  <string name="title_browser_sign_in">Connexion via le navigateur</string>
   <string name="title_buffer_settings">Paramètres de Buffer</string>
   <string name="title_compose">Écrire</string>
   <string name="title_conversation">Conversation</string>
