@@ -20,10 +20,14 @@
 package org.mariotaku.twidere.activity
 
 import android.accounts.AccountManager
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.graphics.PorterDuff.Mode
 import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
@@ -41,6 +45,8 @@ import com.bumptech.glide.Glide
 import jopt.csp.util.SortableIntList
 import kotlinx.android.synthetic.main.activity_quick_search_bar.*
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.empty
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_ACCOUNT_KEY
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_QUERY
@@ -73,6 +79,75 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
 
     private val systemWindowsInsets = Rect()
     private var textChanged: Boolean = false
+    private var hasQrScanner: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        hasQrScanner = run {
+            val scanIntent = Intent(ACTION_ZXING_SCAN)
+            scanIntent.putExtra("SCAN_MODE", "QR_CODE_MODE")
+            return@run scanIntent.resolveActivity(packageManager) != null
+        }
+
+        setContentView(R.layout.activity_quick_search_bar)
+        val am = AccountManager.get(this)
+        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
+        val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
+                requestManager = Glide.with(this))
+        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
+        accountsSpinnerAdapter.addAll(accounts)
+        accountSpinner.adapter = accountsSpinnerAdapter
+        accountSpinner.onItemSelectedListener = this
+        if (savedInstanceState == null) {
+            val intent = intent
+            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+            var index = -1
+            if (accountKey != null) {
+                index = accountsSpinnerAdapter.findPositionByKey(accountKey)
+            }
+            if (index != -1) {
+                accountSpinner.setSelection(index)
+            }
+        }
+        mainContent.setOnFitSystemWindowsListener(this)
+        suggestionsList.adapter = SuggestionsAdapter(this)
+        suggestionsList.onItemClickListener = this
+
+        val listener = SwipeDismissListViewTouchListener(suggestionsList, this)
+        suggestionsList.setOnTouchListener(listener)
+        suggestionsList.setOnScrollListener(listener.makeScrollListener())
+        searchSubmit.setOnClickListener(this)
+
+        EditTextEnterHandler.attach(searchQuery, object : EnterListener {
+            override fun shouldCallListener(): Boolean {
+                return true
+            }
+
+            override fun onHitEnter(): Boolean {
+                doSearch()
+                return true
+            }
+        }, true)
+        searchQuery.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+
+            }
+
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                textChanged = true
+                updateSubmitButton()
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                supportLoaderManager.restartLoader(0, null, this@QuickSearchBarActivity)
+            }
+        })
+
+        supportLoaderManager.initLoader(0, null, this)
+
+        updateSubmitButton()
+    }
 
     override fun canDismiss(position: Int): Boolean {
         val adapter = suggestionsList.adapter as SuggestionsAdapter
@@ -96,7 +171,36 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     override fun onClick(v: View) {
         when (v) {
             searchSubmit -> {
-                doSearch()
+                if (searchQuery.empty && hasQrScanner) {
+                    val scanIntent = Intent(ACTION_ZXING_SCAN)
+                    scanIntent.putExtra("SCAN_MODE", "QR_CODE_MODE")
+                    try {
+                        startActivityForResult(scanIntent, REQUEST_SCAN_QR)
+                    } catch (e: ActivityNotFoundException) {
+                        // Ignore
+                    }
+                } else {
+                    doSearch()
+                }
+
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_SCAN_QR -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    val scanResult = data.getStringExtra("SCAN_RESULT")
+                    val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(scanResult)).apply {
+                        `package` = BuildConfig.APPLICATION_ID
+                        putExtra(EXTRA_ACCOUNT_KEY, selectedAccountDetails?.key)
+                    }
+                    val componentName = viewIntent.resolveActivity(packageManager) ?: return
+                    viewIntent.component = componentName
+                    startActivity(viewIntent)
+                    finish()
+                }
             }
         }
     }
@@ -170,65 +274,6 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_quick_search_bar)
-        val am = AccountManager.get(this)
-        val accounts = AccountUtils.getAllAccountDetails(am, AccountUtils.getAccounts(am), true).toList()
-        val accountsSpinnerAdapter = AccountsSpinnerAdapter(this, R.layout.spinner_item_account_icon,
-                requestManager = Glide.with(this))
-        accountsSpinnerAdapter.setDropDownViewResource(R.layout.list_item_simple_user)
-        accountsSpinnerAdapter.addAll(accounts)
-        accountSpinner.adapter = accountsSpinnerAdapter
-        accountSpinner.onItemSelectedListener = this
-        if (savedInstanceState == null) {
-            val intent = intent
-            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            var index = -1
-            if (accountKey != null) {
-                index = accountsSpinnerAdapter.findPositionByKey(accountKey)
-            }
-            if (index != -1) {
-                accountSpinner.setSelection(index)
-            }
-        }
-        mainContent.setOnFitSystemWindowsListener(this)
-        suggestionsList.adapter = SuggestionsAdapter(this)
-        suggestionsList.onItemClickListener = this
-
-        val listener = SwipeDismissListViewTouchListener(suggestionsList, this)
-        suggestionsList.setOnTouchListener(listener)
-        suggestionsList.setOnScrollListener(listener.makeScrollListener())
-        searchSubmit.setOnClickListener(this)
-
-        EditTextEnterHandler.attach(searchQuery, object : EnterListener {
-            override fun shouldCallListener(): Boolean {
-                return true
-            }
-
-            override fun onHitEnter(): Boolean {
-                doSearch()
-                return true
-            }
-        }, true)
-        searchQuery.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                textChanged = true
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                supportLoaderManager.restartLoader(0, null, this@QuickSearchBarActivity)
-            }
-        })
-
-        supportLoaderManager.initLoader(0, null, this)
-    }
-
     override fun onResume() {
         super.onResume()
         updateWindowAttributes()
@@ -260,6 +305,14 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         searchQuery.setText(query)
         if (query == null) return
         searchQuery.setSelection(query.length)
+    }
+
+    private fun updateSubmitButton() {
+        if (searchQuery.empty && hasQrScanner) {
+            searchSubmit.setImageResource(R.drawable.ic_action_qr_scan)
+        } else {
+            searchSubmit.setImageResource(R.drawable.ic_action_search)
+        }
     }
 
     class SuggestionsAdapter internal constructor(
@@ -446,4 +499,8 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         }
     }
 
+    companion object {
+        const val ACTION_ZXING_SCAN = "com.google.zxing.client.android.SCAN"
+        const val REQUEST_SCAN_QR = 101
+    }
 }

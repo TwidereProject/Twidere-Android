@@ -70,6 +70,13 @@
                         android:inputType="textMultiLine|textLongMessage|textCapSentences"
                         android:padding="@dimen/element_spacing_normal"/>
 
+                    <org.mariotaku.twidere.view.FixedTextView
+                        android:id="@+id/hintLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/element_spacing_normal"
+                        android:textAppearance="?android:textAppearanceSmall"/>
+
                     <org.mariotaku.twidere.view.ExtendedRecyclerView
                         android:id="@+id/attachedMediaPreview"
                         android:layout_width="match_parent"

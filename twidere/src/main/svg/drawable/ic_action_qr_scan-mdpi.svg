@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_action_qr_scan-mdpi</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M0,0 L11,0 L11,11 L0,11 L0,0 Z M21,21 L32,21 L32,32 L21,32 L21,21 Z M21,0 L32,0 L32,11 L21,11 L21,0 Z M0,21 L11,21 L11,32 L0,32 L0,21 Z" id="path-1"></path>
+        <rect id="path-3" x="6" y="6" width="20" height="20" rx="2"></rect>
+        <mask id="mask-4" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="20" height="20" fill="white">
+            <use xlink:href="#path-3"></use>
+        </mask>
+    </defs>
+    <g id="Action-Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_action_qr_scan-mdpi">
+            <polygon id="Shape" points="4 4 28 4 28 28 4 28"></polygon>
+            <rect id="Rectangle-2" fill="#FFFFFF" x="6" y="15" width="20" height="2"></rect>
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="Combined-Shape"></g>
+            <g id="Rectangle-5" mask="url(#mask-2)" stroke-width="4" stroke="#FFFFFF">
+                <use mask="url(#mask-4)" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -191,23 +191,24 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             if (canLoadAllReplies) {
                 adapter.setReplyError(null)
             } else {
-                val error = SpannableStringBuilder.valueOf(
-                        HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)))
-                val dialogSpan: ClickableSpan? = error.getSpans(0, error.length, URLSpan::class.java)
-                        .firstOrNull { "#dialog" == it.url }
-                if (dialogSpan != null) {
-                    val spanStart = error.getSpanStart(dialogSpan)
-                    val spanEnd = error.getSpanEnd(dialogSpan)
-                    error.removeSpan(dialogSpan)
-                    error.setSpan(object : ClickableSpan() {
-                        override fun onClick(widget: View) {
-                            val activity = activity
-                            if (activity == null || activity.isFinishing) return
-                            MessageDialogFragment.show(activity.supportFragmentManager,
-                                    message = getString(R.string.cant_load_all_replies_explanation),
-                                    tag = "cant_load_all_replies_explanation")
-                        }
-                    }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                val error = HtmlSpanBuilder.fromHtml(getString(R.string.cant_load_all_replies_message)).apply {
+                    val dialogSpan = getSpans(0, length, URLSpan::class.java).firstOrNull {
+                        "#dialog" == it.url
+                    }
+                    if (dialogSpan != null) {
+                        val spanStart = getSpanStart(dialogSpan)
+                        val spanEnd = getSpanEnd(dialogSpan)
+                        removeSpan(dialogSpan)
+                        setSpan(object : ClickableSpan() {
+                            override fun onClick(widget: View) {
+                                val activity = activity
+                                if (activity == null || activity.isFinishing) return
+                                MessageDialogFragment.show(activity.supportFragmentManager,
+                                        message = getString(R.string.cant_load_all_replies_explanation),
+                                        tag = "cant_load_all_replies_explanation")
+                            }
+                        }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+                    }
                 }
                 adapter.setReplyError(error)
             }

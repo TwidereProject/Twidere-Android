@@ -477,6 +477,7 @@
     <string name="hint_message_select_user">Search users</string>
     <string name="hint_no_account">No account</string>
     <string name="hint_search_gif">Search GIF</string>
+    <string name="hint_status_reply_to_user_removed">Will be sent as quote tweet because mention to author removed. &lt;a href=\"#dialog\";&gt;Why?&lt;/a&gt;</string>
 
     <string name="hints">Hints</string>
 
@@ -650,6 +651,7 @@
     <string name="message_permission_request_save_media">Twidere needs storage permission for saving media.</string>
     <string name="message_permission_request_share_media">Twidere needs storage permission for sharing media to some apps.</string>
     <string name="message_please_wait">Please wait.</string>
+    <string name="message_status_reply_to_user_removed_explanation">Twitter makes tweet user always be mentioned in a reply. If tweet user was removed, Twidere will send this reply as a quote to preserve context.</string>
     <string name="message_status_scheduling_connect_buffer_hint">Connect to buffer to schedule tweets even in offline</string>
     <string name="message_status_scheduling_connected_to_buffer">Twidere is now connected to buffer</string>
     <string name="message_summary_type_sticker">[Sticker]</string>

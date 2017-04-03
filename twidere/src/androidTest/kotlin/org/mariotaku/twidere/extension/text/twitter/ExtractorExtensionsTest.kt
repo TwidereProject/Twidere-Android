@@ -35,7 +35,7 @@ import org.mariotaku.twidere.test.R
  * Created by mariotaku on 2017/4/2.
  */
 @RunWith(AndroidJUnit4::class)
-class ExtractorExtensionsKtTest {
+class ExtractorExtensionsTest {
 
     private val extractor = Extractor()
     private lateinit var inReplyTo: ParcelableStatus
@@ -53,7 +53,7 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsReplyToAll() {
         // This reply to all users, which is the normal case
-        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft lol", inReplyTo).let {
+        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft @mariotaku lol", inReplyTo).let {
             Assert.assertEquals("lol", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
@@ -65,9 +65,10 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsReplyToAllExtraMentions() {
         // This reply to all users, which is the normal case
-        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft @mariotaku lol", inReplyTo).let {
-            Assert.assertEquals("@mariotaku lol", it.replyText)
-            Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.entitiesContainsAll("mariotaku"))
+        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft @mariotaku @TwidereProject lol", inReplyTo).let {
+            Assert.assertEquals("@TwidereProject lol", it.replyText)
+            Assert.assertTrue("extraMentions.containsAll(TwidereProject)",
+                    it.extraMentions.entitiesContainsAll("TwidereProject"))
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
             Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
@@ -76,9 +77,10 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsReplyToAllSuffixMentions() {
         // This reply to all users, which is the normal case
-        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft lol @mariotaku", inReplyTo).let {
-            Assert.assertEquals("lol @mariotaku", it.replyText)
-            Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.entitiesContainsAll("mariotaku"))
+        extractor.extractReplyTextAndMentions("@t_deyarmin @nixcraft @mariotaku lol @TwidereProject", inReplyTo).let {
+            Assert.assertEquals("lol @TwidereProject", it.replyText)
+            Assert.assertTrue("extraMentions.containsAll(TwidereProject)",
+                    it.extraMentions.entitiesContainsAll("TwidereProject"))
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
             Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
@@ -90,8 +92,8 @@ class ExtractorExtensionsKtTest {
         extractor.extractReplyTextAndMentions("@t_deyarmin lol", inReplyTo).let {
             Assert.assertEquals("lol", it.replyText)
             Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
-            Assert.assertTrue("excludedMentions.containsAll(expectation)",
-                    it.excludedMentions.mentionsContainsAll("nixcraft"))
+            Assert.assertTrue("excludedMentions.containsAll(nixcraft, mariotaku)",
+                    it.excludedMentions.mentionsContainsAll("nixcraft", "mariotaku"))
             Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
@@ -99,14 +101,12 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsAuthorOnlyExtraMentions() {
         // This reply removed @nixcraft and replying to author only
-        extractor.extractReplyTextAndMentions("@t_deyarmin @mariotaku lol", inReplyTo).let {
-            Assert.assertEquals("@mariotaku lol", it.replyText)
-            val extraExpectation = setOf("mariotaku")
-            Assert.assertTrue("extraMentions.containsAll(expectation)", it.extraMentions.all {
-                it.value in extraExpectation
-            })
-            Assert.assertTrue("excludedMentions.containsAll(expectation)",
-                    it.excludedMentions.mentionsContainsAll("nixcraft"))
+        extractor.extractReplyTextAndMentions("@t_deyarmin @TwidereProject lol", inReplyTo).let {
+            Assert.assertEquals("@TwidereProject lol", it.replyText)
+            Assert.assertTrue("extraMentions.containsAll(TwidereProject)",
+                    it.extraMentions.entitiesContainsAll("TwidereProject"))
+            Assert.assertTrue("excludedMentions.containsAll(nixcraft, mariotaku)",
+                    it.excludedMentions.mentionsContainsAll("nixcraft", "mariotaku"))
             Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
@@ -114,12 +114,12 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsAuthorOnlySuffixMention() {
         // This reply removed @nixcraft and replying to author only
-        extractor.extractReplyTextAndMentions("@t_deyarmin lol @mariotaku", inReplyTo).let {
-            Assert.assertEquals("lol @mariotaku", it.replyText)
-            Assert.assertTrue("extraMentions.isEmpty()",
-                    it.extraMentions.entitiesContainsAll("mariotaku"))
-            Assert.assertTrue("excludedMentions.containsAll(expectation)",
-                    it.excludedMentions.mentionsContainsAll("nixcraft"))
+        extractor.extractReplyTextAndMentions("@t_deyarmin lol @TwidereProject", inReplyTo).let {
+            Assert.assertEquals("lol @TwidereProject", it.replyText)
+            Assert.assertTrue("extraMentions.containsAll(TwidereProject)",
+                    it.extraMentions.entitiesContainsAll("TwidereProject"))
+            Assert.assertTrue("excludedMentions.containsAll(nixcraft, mariotaku)",
+                    it.excludedMentions.mentionsContainsAll("nixcraft", "mariotaku"))
             Assert.assertTrue("replyToOriginalUser", it.replyToOriginalUser)
         }
     }
@@ -138,10 +138,32 @@ class ExtractorExtensionsKtTest {
     @Test
     fun testExtractReplyTextAndMentionsNoAuthorExtraMentions() {
         // This reply removed author @t_deyarmin
-        extractor.extractReplyTextAndMentions("@nixcraft @mariotaku lol", inReplyTo).let {
-            Assert.assertEquals("@nixcraft @mariotaku lol", it.replyText)
-            Assert.assertTrue("extraMentions.containsAll(expectation)",
-                    it.extraMentions.entitiesContainsAll("mariotaku"))
+        extractor.extractReplyTextAndMentions("@nixcraft @TwidereProject lol", inReplyTo).let {
+            Assert.assertEquals("@nixcraft @TwidereProject lol", it.replyText)
+            Assert.assertTrue("extraMentions.containsAll(TwidereProject)",
+                    it.extraMentions.entitiesContainsAll("TwidereProject"))
+            Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertFalse("replyToOriginalUser", it.replyToOriginalUser)
+        }
+    }
+
+    @Test
+    fun testExtractReplyTextAndMentionsNoAuthorTextOnly() {
+        // This reply removed author @t_deyarmin
+        extractor.extractReplyTextAndMentions("lol", inReplyTo).let {
+            Assert.assertEquals("lol", it.replyText)
+            Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
+            Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
+            Assert.assertFalse("replyToOriginalUser", it.replyToOriginalUser)
+        }
+    }
+
+    @Test
+    fun testExtractReplyTextAndMentionsNoAuthorEmptyText() {
+        // This reply removed author @t_deyarmin
+        extractor.extractReplyTextAndMentions("", inReplyTo).let {
+            Assert.assertEquals("", it.replyText)
+            Assert.assertTrue("extraMentions.isEmpty()", it.extraMentions.isEmpty())
             Assert.assertTrue("excludedMentions.isEmpty()", it.excludedMentions.isEmpty())
             Assert.assertFalse("replyToOriginalUser", it.replyToOriginalUser)
         }
