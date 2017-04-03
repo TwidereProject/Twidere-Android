@@ -199,12 +199,20 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
         when (requestCode) {
             REQUEST_SCAN_QR -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val scanResult = data.getStringExtra(EXTRA_ZXING_SCAN_RESULT)
+                    val scanResult = data.getStringExtra(EXTRA_ZXING_SCAN_RESULT) ?: run {
+                        Toast.makeText(this, R.string.message_toast_qr_scanner_not_supported,
+                                Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     val viewIntent = Intent(Intent.ACTION_VIEW, Uri.parse(scanResult)).apply {
                         `package` = BuildConfig.APPLICATION_ID
                         putExtra(EXTRA_ACCOUNT_KEY, selectedAccountDetails?.key)
                     }
-                    val componentName = viewIntent.resolveActivity(packageManager) ?: return
+                    val componentName = viewIntent.resolveActivity(packageManager) ?: run {
+                        Toast.makeText(this, R.string.message_toast_qr_scan_link_not_supported,
+                                Toast.LENGTH_SHORT).show()
+                        return
+                    }
                     viewIntent.component = componentName
                     startActivity(viewIntent)
                     finish()

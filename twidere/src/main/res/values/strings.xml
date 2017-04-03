@@ -688,6 +688,8 @@
     <string name="message_toast_notification_enabled_hint">Only available when streaming is on, and not 100% reliable.</string>
     <string name="message_toast_press_again_to_close">Press again to close</string>
     <string name="message_toast_profile_banner_image_updated">Profile banner image updated</string>
+    <string name="message_toast_qr_scan_link_not_supported">Link not supported</string>
+    <string name="message_toast_qr_scanner_not_supported">QR scanner not supported</string>
     <string name="message_toast_retweet_cancelled">Retweet cancelled</string>
     <string name="message_toast_save_media_no_storage_permission">Storage permission is needed to save media</string>
     <string name="message_toast_saved_to_gallery">Saved to gallery</string>
