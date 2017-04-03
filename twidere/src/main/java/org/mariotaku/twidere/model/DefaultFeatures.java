@@ -18,8 +18,6 @@ import org.mariotaku.twidere.util.Utils;
 
 import java.io.IOException;
 
-import static org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_MEDIA_LINK_COUNTS_IN_STATUS;
-
 /**
  * Created by mariotaku on 16/9/9.
  */
@@ -29,12 +27,6 @@ public class DefaultFeatures {
     private final static String REMOTE_SETTINGS_URL = "https://twidere.mariotaku.org/assets/data/default_features.json";
     private static final String KEY_DEFAULT_TWITTER_CONSUMER_KEY = "default_twitter_consumer_key";
     private static final String KEY_DEFAULT_TWITTER_CONSUMER_SECRET = "default_twitter_consumer_secret";
-
-    @JsonField(name = "media_link_counts_in_status")
-    boolean mediaLinkCountsInStatus = false;
-
-    @JsonField(name = "mentions_counts_in_status")
-    boolean mentionsCountsInStatus = false;
 
     @JsonField(name = "default_twitter_consumer_key")
     String defaultTwitterConsumerKey;
@@ -47,14 +39,6 @@ public class DefaultFeatures {
 
     @JsonField(name = "twitter_direct_message_max_participants")
     long twitterDirectMessageMaxParticipants = 50;
-
-    public boolean isMediaLinkCountsInStatus() {
-        return mediaLinkCountsInStatus;
-    }
-
-    public boolean isMentionsCountsInStatus() {
-        return mentionsCountsInStatus;
-    }
 
     public String getDefaultTwitterConsumerKey() {
         return defaultTwitterConsumerKey;
@@ -100,15 +84,12 @@ public class DefaultFeatures {
 
 
     public void load(SharedPreferences preferences) {
-        mediaLinkCountsInStatus = preferences.getBoolean(KEY_MEDIA_LINK_COUNTS_IN_STATUS,
-                mediaLinkCountsInStatus);
         defaultTwitterConsumerKey = preferences.getString(KEY_DEFAULT_TWITTER_CONSUMER_KEY, null);
         defaultTwitterConsumerSecret = preferences.getString(KEY_DEFAULT_TWITTER_CONSUMER_SECRET, null);
     }
 
     public void save(SharedPreferences preferences) {
         final SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(KEY_MEDIA_LINK_COUNTS_IN_STATUS, mediaLinkCountsInStatus);
         editor.putString(KEY_DEFAULT_TWITTER_CONSUMER_KEY, defaultTwitterConsumerKey);
         editor.putString(KEY_DEFAULT_TWITTER_CONSUMER_SECRET, defaultTwitterConsumerSecret);
         editor.apply();
