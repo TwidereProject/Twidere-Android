@@ -8,6 +8,11 @@
         android:title="@string/mention_this_user"
         app:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/qr_code"
+        android:icon="@drawable/ic_action_qr"
+        android:title="@string/action_qr_code"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@id/send_direct_message"
         android:icon="@drawable/ic_action_message"
         android:title="@string/send_direct_message"

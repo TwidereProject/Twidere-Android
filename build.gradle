@@ -59,7 +59,7 @@ subprojects {
                     PickNCrop         : '0.9.24',
                     AndroidGIFDrawable: '1.2.6',
                     KPreferences      : '0.9.6',
-                    Kovenant          : '3.3.0'
+                    Kovenant          : '3.3.0',
             ]
         }
 

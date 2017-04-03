@@ -611,8 +611,26 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             context: Context,
             val firsSyncLoad: Boolean
     ) : FixedAsyncTaskLoader<AccountsInfo>(context) {
+        private val am = AccountManager.get(context)
+
         private var contentObserver: ContentObserver? = null
+            set(value) {
+                field?.let {
+                    context.contentResolver.unregisterContentObserver(it)
+                }
+                if (value != null) {
+                    context.contentResolver.registerContentObserver(Drafts.CONTENT_URI, true, value)
+                }
+            }
         private var accountListener: OnAccountsUpdateListener? = null
+            set(value) {
+                field?.let {
+                    am.removeOnAccountsUpdatedListenerSafe(it)
+                }
+                if (value != null) {
+                    am.addOnAccountsUpdatedListenerSafe(value, updateImmediately = true)
+                }
+            }
 
         private var firstLoad: Boolean
 
@@ -642,14 +660,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             onStopLoading()
 
             // Stop monitoring for changes.
-            if (contentObserver != null) {
-                context.contentResolver.unregisterContentObserver(contentObserver)
-                contentObserver = null
-            }
-            if (accountListener != null) {
-                AccountManager.get(context).removeOnAccountsUpdatedListenerSafe(accountListener!!)
-                accountListener = null
-            }
+            contentObserver = null
+            accountListener = null
         }
 
         /**
@@ -668,13 +680,11 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                         weakLoader.get()?.onContentChanged()
                     }
                 }
-                context.contentResolver.registerContentObserver(Drafts.CONTENT_URI, true, contentObserver)
             }
             if (accountListener == null) {
                 accountListener = OnAccountsUpdateListener {
                     weakLoader.get()?.onContentChanged()
                 }
-                AccountManager.get(context).addOnAccountsUpdatedListenerSafe(accountListener!!, updateImmediately = false)
             }
 
             if (takeContentChanged() || firstLoad) {

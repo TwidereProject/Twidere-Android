@@ -817,6 +817,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
         MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.qr_code, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
 
@@ -1076,6 +1077,16 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 intent.`package` = IntentUtils.getDefaultBrowserPackage(context, uri, true)
                 if (intent.resolveActivity(context.packageManager) != null) {
                     startActivity(intent)
+                }
+                return true
+            }
+            R.id.qr_code -> {
+                executeAfterFragmentResumed {
+                    val df = UserQRDialogFragment()
+                    df.arguments = Bundle {
+                        this[EXTRA_USER] = user
+                    }
+                    df.show(it.childFragmentManager, "user_qr_code")
                 }
                 return true
             }

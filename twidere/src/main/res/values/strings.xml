@@ -88,6 +88,7 @@
     <string name="action_pick_color">Pick color</string>
     <string name="action_purchase">Purchase</string>
     <string name="action_purchase_features_pack">Buy features pack</string>
+    <string name="action_qr_code">QR code</string>
     <string name="action_quote">Quote</string>
     <string name="action_record_video">Record video</string>
     <string name="action_refresh">Refresh</string>
@@ -878,8 +879,11 @@
 
     <string name="preview">Preview</string>
     <string name="preview_images">Preview images</string>
+    <!-- Media will be cropped to fit preview -->
     <string name="preview_style_crop">Crop</string>
-    <string name="preview_style_real_size">Real size</string>
+    <!-- Actual size, media preview will be scaled respectively -->
+    <string name="preview_style_real_size">Actual size</string>
+    <!-- Media will be scaled to fit preview -->
     <string name="preview_style_scale">Scale</string>
 
     <!-- Previous item (tweet, user etc.) -->
