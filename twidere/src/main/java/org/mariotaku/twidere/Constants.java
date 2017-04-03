@@ -36,7 +36,7 @@ public interface Constants extends TwidereConstants {
     String DATABASES_NAME = "twidere.sqlite";
     int DATABASES_VERSION = 182;
 
-    int EXTRA_FEATURES_NOTICE_VERSION = 1;
+    int EXTRA_FEATURES_NOTICE_VERSION = 2;
 
     int MENU_GROUP_STATUS_EXTENSION = 10;
     int MENU_GROUP_COMPOSE_EXTENSION = 11;

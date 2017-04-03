@@ -642,6 +642,7 @@
     <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> added <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
     <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> left</string>
     <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+    <string name="message_gif_sharing_introduction">Search &amp; share GIF by GIPHY</string>
     <string name="message_info_buffer_queue_empty">Buffer queue is empty</string>
     <string name="message_join_conversation">Joined conversation.</string>
     <string name="message_permission_request_compose_location">Twidere needs location permission for adding location to tweets.</string>
@@ -1185,6 +1186,7 @@
     <string name="title_filters_subscription_url">URL</string>
     <string name="title_followers">Followers</string>
     <string name="title_following">Following</string>
+    <string name="title_gif_sharing">GIF sharing</string>
     <string name="title_home">Home</string>
     <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
     <string name="title_likes">Likes</string>
@@ -1205,7 +1207,6 @@
     <string name="title_statuses">Tweets</string>
     <string name="title_statuses_and_replies">Tweets &amp; replies</string>
     <string name="title_statuses_scheduling">Tweets scheduling</string>
-    <string name="title_gif_sharing">GIF sharing</string>
     <string name="title_streaming">Streaming</string>
     <string name="title_subscription_name">Name</string>
     <string name="title_subscription_url">URL</string>
