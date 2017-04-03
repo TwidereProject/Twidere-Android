@@ -31,6 +31,7 @@ import com.bumptech.glide.RequestManager
 import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.rangeOfSize
+import org.mariotaku.ktextension.safeGetLong
 import org.mariotaku.ktextension.safeMoveToPosition
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Activity
@@ -153,7 +154,7 @@ class ParcelableActivitiesAdapter(
             val cursor = (data as ObjectCursor).cursor
             if (!cursor.safeMoveToPosition(dataPosition)) return -1
             val indices = (data as ObjectCursor).indices
-            return cursor.getLong(indices[Activities.TIMESTAMP])
+            return cursor.safeGetLong(indices[Activities.TIMESTAMP])
         }
         return getActivity(adapterPosition, raw).timestamp
     }
@@ -354,10 +355,10 @@ class ParcelableActivitiesAdapter(
         if (timestamp <= 0) return RecyclerView.NO_POSITION
         val range = rangeOfSize(activityStartIndex, getActivityCount(raw))
         if (range.isEmpty()) return RecyclerView.NO_POSITION
-        if (timestamp < getTimestamp(range.last)) {
+        if (timestamp < getTimestamp(range.last, raw)) {
             return range.last
         }
-        return range.indexOfFirst { timestamp >= getTimestamp(it) }
+        return range.indexOfFirst { timestamp >= getTimestamp(it, raw) }
     }
 
     private fun updateItemCount() {
