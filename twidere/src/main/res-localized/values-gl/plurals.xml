@@ -56,7 +56,7 @@
   </plurals>
   <plurals name="N_likes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> gústame</item>
-    <item quantity="other"><xliff:g id="count">%d</xliff:g> gústame</item>
+    <item quantity="other"><xliff:g id="count">%d</xliff:g> gústanme</item>
   </plurals>
   <plurals name="N_votes">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> voto</item>

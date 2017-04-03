@@ -457,7 +457,7 @@
   <string name="label_statuses">推文</string>
   <string name="label_statuses_replies">推文和回复</string>
   <string name="label_statuses_retweets">推文和转推</string>
-  <string name="label_statuses_retweets_replies">推文、转发和回复</string>
+  <string name="label_statuses_retweets_replies">推文、转推和回复</string>
   <string name="label_streaming_service">实时流服务</string>
   <string name="label_translate_from_language">从 <xliff:g id="language">%s</xliff:g> 翻译</string>
   <string name="label_translation">翻译</string>
@@ -526,6 +526,7 @@
   <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> 添加了 <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
   <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> 离开了对话</string>
   <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+  <string name="message_gif_sharing_introduction">搜索并分享 GIF 动画，由 GIPHY 提供支持</string>
   <string name="message_info_buffer_queue_empty">Buffer 列表为空</string>
   <string name="message_join_conversation">加入了对话</string>
   <string name="message_permission_request_compose_location">Twidere 需要权限来向推文添加位置</string>
@@ -533,7 +534,7 @@
   <string name="message_permission_request_share_media">Twidere 需要存储权限来向一些应用分享媒体</string>
   <string name="message_please_wait">请稍等</string>
   <string name="message_status_scheduling_connect_buffer_hint">连接到 Buffer ，即使您没有在线也可以定时发送推文</string>
-  <string name="message_status_scheduling_connected_to_buffer">Twidere 现在连接到 Buffer</string>
+  <string name="message_status_scheduling_connected_to_buffer">Twidere 已经连接到 Buffer</string>
   <string name="message_summary_type_sticker">[贴纸]</string>
   <string name="message_sync_data_connect_hint">将 Twidere 连接到网络存储来同步数据</string>
   <string name="message_sync_data_synced_with_name">Twidere 现在已经和 <xliff:g example="ownCloud" id="name">%s</xliff:g> 同步</string>
@@ -960,6 +961,7 @@
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">关注者</string>
   <string name="title_following">正在关注</string>
+  <string name="title_gif_sharing">GIF 分享</string>
   <string name="title_home">主页</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">喜欢</string>

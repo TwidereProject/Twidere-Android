@@ -3,17 +3,17 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>ホーム</item>
-    <item>みんなの反応</item>
+    <item>つながり</item>
     <item>ダイレクトメッセージ</item>
     <item>トレンド</item>
   </string-array>
   <string-array name="entries_compose_now_action">
-    <item>ツイートする</item>
+    <item>ツイート</item>
     <item>写真を撮る</item>
     <item>メディアを追加</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
-    <item>みんなの反応</item>
+    <item>つながり</item>
     <item>ダイレクトメッセージ</item>
     <item>トレンド</item>
     <item>保存した検索</item>
@@ -33,11 +33,11 @@
   </string-array>
   <string-array name="entries_notification_content">
     <item>ホーム</item>
-    <item>みんなの反応</item>
+    <item>つながり</item>
     <item>ダイレクトメッセージ</item>
   </string-array>
   <string-array name="entries_profile_image_style">
-    <item>丸型</item>
+    <item>円形</item>
     <item>四角</item>
   </string-array>
   <string-array name="entries_proxy_type">
@@ -65,13 +65,13 @@
     <item>アイコンとラベル</item>
   </string-array>
   <string-array name="entries_theme">
-    <item>Light</item>
-    <item>ダーク</item>
+    <item>明るい</item>
+    <item>暗い</item>
     <item>自動</item>
   </string-array>
   <string-array name="entries_theme_background">
     <item>デフォルト</item>
-    <item>白/黒一色</item>
+    <item>モノクロ</item>
     <item>背景透過</item>
   </string-array>
   <string-array name="entries_quick_access_shortcut_types">

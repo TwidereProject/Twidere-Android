@@ -635,17 +635,19 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
             when (requestCode) {
                 AbsStatusesFragment.REQUEST_FAVORITE_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
-                    val accountKey = data.getParcelableExtra<UserKey>(IntentConstants.EXTRA_ACCOUNT_KEY)
-                    val extras = data.getBundleExtra(IntentConstants.EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(IntentConstants.EXTRA_STATUS)
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                     fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
                 }
                 AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
-                    val accountKey = data.getParcelableExtra<UserKey>(IntentConstants.EXTRA_ACCOUNT_KEY)
-                    val extras = data.getBundleExtra(IntentConstants.EXTRA_EXTRAS)
-                    val status = extras.getParcelable<ParcelableStatus>(IntentConstants.EXTRA_STATUS)
-                    RetweetQuoteDialogFragment.show(fragment.childFragmentManager, status, accountKey)
+                    val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+                    val extras = data.getBundleExtra(EXTRA_EXTRAS)
+                    val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+                    fragment.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager, status, accountKey)
+                    }
                 }
             }
         }

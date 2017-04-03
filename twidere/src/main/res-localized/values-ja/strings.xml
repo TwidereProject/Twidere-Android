@@ -21,7 +21,7 @@
   <string name="action_add_media">メディアを追加</string>
   <string name="action_add_member">ユーザーを追加</string>
   <string name="action_add_tab">タブを追加</string>
-  <string name="action_add_to_filter">フィルタに追加</string>
+  <string name="action_add_to_filter">フィルターに追加</string>
   <string name="action_add_to_list">リストに追加</string>
   <string name="action_adding_member">アカウントの追加</string>
   <!-- [verb] Action for blocking user -->
@@ -74,13 +74,13 @@
   <string name="action_leave_conversation">会話を退出</string>
   <!-- [verb] e.g. An action label on a tweet to like this tweet. Formerly Twitter favorite. -->
   <string name="action_like">いいね</string>
-  <string name="action_liking">いいねしています</string>
+  <string name="action_liking">いいね</string>
   <string name="action_location">場所</string>
   <string name="action_manage_in_buffer">Buffer アプリで管理</string>
   <string name="action_mark_as_read">既読としてマーク</string>
   <string name="action_modifying_lists">リストを修正する</string>
   <string name="action_mute">ミュート</string>
-  <string name="action_mute_notifications">通知をミュートにする</string>
+  <string name="action_mute_notifications">通知をミュートする</string>
   <string name="action_muting">ミュート中</string>
   <string name="action_name_saved_at_time"><xliff:g id="action">%1$s</xliff:g> - 保存日時:<xliff:g id="time">%2$s</xliff:g></string>
   <string name="action_next_step">次へ</string>
@@ -124,12 +124,12 @@
   <string name="action_start">開始</string>
   <string name="action_status_attachment">ツイートの添付ファイル</string>
   <string name="action_status_block_users">ユーザーをブロック&#8230;</string>
-  <string name="action_status_mute_users">ユーザーをミュート</string>
+  <string name="action_status_mute_users">ユーザーをミュート&#8230;</string>
   <string name="action_status_schedule">ツイートの予約</string>
-  <string name="action_subscribe">保存</string>
+  <string name="action_subscribe">購読する</string>
   <string name="action_subscribing_to_list">リストの保存</string>
   <!-- [verb] Connect to network storage like Dropbox and Google Drive etc -->
-  <string name="action_sync_connect_to_storage">接続する</string>
+  <string name="action_sync_connect_to_storage">接続</string>
   <!-- [verb] Disconnect from network storage -->
   <string name="action_sync_disconnect">切断</string>
   <string name="action_sync_settings">設定</string>
@@ -149,59 +149,59 @@
   <string name="action_unfollowing">フォローの解除</string>
   <string name="action_unmute">ミュートの解除</string>
   <string name="action_unmuting">ミュート解除中</string>
-  <string name="action_unsubscribe">保存を解除</string>
+  <string name="action_unsubscribe">購読を解除</string>
   <string name="action_unsubscribing_from_list">リストの保存解除</string>
   <string name="action_updating_details">詳細情報の更新</string>
   <string name="action_updating_profile">プロフィールの更新</string>
-  <string name="action_updating_profile_background_image">背景画像の更新</string>
+  <string name="action_updating_profile_background_image">プロフィールの背景画像を更新</string>
   <string name="action_updating_profile_banner_image">ヘッダー画像の更新</string>
   <string name="action_updating_profile_image">プロフィール画像の更新</string>
   <string name="action_updating_status">ツイート送信</string>
   <string name="action_view_map">地図</string>
   <string name="activated_accounts">アクティブアカウント</string>
   <string name="activities_about_me">みんなの反応</string>
-  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g>がお気に入りしました</string>
-  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_mention">あなたがメンションされたツイートを <xliff:g id="user">%s</xliff:g> がお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_mention_multi">あなたがメンションされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをお気に入りに登録しました</string>
-  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをお気に入りに登録しました</string>
-  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> があなたをフォローしました</string>
-  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをフォローしました</string>
-  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_liked_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_liked_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_liked_mention">あなたがメンションされたツイートを <xliff:g id="user">%s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_liked_mention_multi">あなたがメンションされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました</string>
-  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをいいねしました</string>
-  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをいいねしました</string>
-  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> あなたをリストに追加しました</string>
-  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをリストに追加しました</string>
-  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> があなたをリスト <xliff:g id="list">%2$s</xliff:g>に追加しました</string>
-  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> があなたをタグ付けしました</string>
-  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをタグ付けしました</string>
-  <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> がリツイートしました</string>
-  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> リツイートしました</string>
-  <string name="activity_about_me_retweeted_media_tagged">あなたがタグ付けされたツイートを <xliff:g id="user">%s</xliff:g> がリツイートしました</string>
-  <string name="activity_about_me_retweeted_media_tagged_multi">あなたがタグ付けされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がリツイートしました</string>
-  <string name="activity_about_me_retweeted_mention">あなたがメンションされたツイートを <xliff:g id="user">%s</xliff:g> がリツイートしました</string>
-  <string name="activity_about_me_retweeted_mention_multi">あなたがメンションされたツイートを <xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がリツイートしました</string>
-  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをリツイートしました</string>
-  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをリツイートしました</string>
-  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g>が Twitter をはじめました</string>
-  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> が Twitter をはじめました</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g>がお気に入りに登録しました。</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がお気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> があなたのタグ付きツイートをお気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g>  があなたのタグ付きツイートをお気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> があなたがメンションされたツイートを お気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_mention_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたがメンションされたツイートを お気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをお気に入りに登録しました。</string>
+  <string name="activity_about_me_favorited_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたのリツイートをお気に入りに登録しました。</string>
+  <string name="activity_about_me_follow"><xliff:g id="user">%s</xliff:g> があなたをフォローしました。</string>
+  <string name="activity_about_me_follow_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをフォローしました。</string>
+  <string name="activity_about_me_like"><xliff:g id="user">%s</xliff:g> がいいねしました。</string>
+  <string name="activity_about_me_like_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> がいいねしました。</string>
+  <string name="activity_about_me_liked_media_tagged"><xliff:g id="user">%s</xliff:g> があなたのタグ付きツイートをいいねしました。</string>
+  <string name="activity_about_me_liked_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたのタグ付きツイートをいいねしました。</string>
+  <string name="activity_about_me_liked_mention"><xliff:g id="user">%s</xliff:g> があなたがメンションされたツイートをいいねしました。</string>
+  <string name="activity_about_me_liked_mention_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたがメンションされたツイートをいいねしました。</string>
+  <string name="activity_about_me_liked_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをいいねしました。</string>
+  <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> あなたのリツイートをいいねしました。</string>
+  <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> あなたをリストに追加しました。</string>
+  <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをリストに追加しました。</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> があなたをリスト <xliff:g id="list">%2$s</xliff:g>に追加しました。</string>
+  <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> があなたをタグ付けしました。</string>
+  <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたをタグ付けしました。</string>
+  <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> がリツイートしました。</string>
+  <string name="activity_about_me_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> リツイートしました。</string>
+  <string name="activity_about_me_retweeted_media_tagged"><xliff:g id="user">%s</xliff:g> があなたのタグ付きツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたのタグ付きツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_mention"><xliff:g id="user">%s</xliff:g> があなたがメンションされたツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_mention_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたがメンションされたツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_retweet"><xliff:g id="user">%s</xliff:g> があなたのリツイートをリツイートしました。</string>
+  <string name="activity_about_me_retweeted_retweet_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> があなたのリツイートをリツイートしました。</string>
+  <string name="activity_joined_twitter"><xliff:g id="user">%s</xliff:g> が Twitter をはじめました。</string>
+  <string name="activity_joined_twitter_multi"><xliff:g id="user">%1$s</xliff:g> と <xliff:g id="other">%2$s</xliff:g> が Twitter をはじめました。</string>
   <string name="add_account">アカウントを追加</string>
   <string name="add_host_mapping">ホストマッピングを追加</string>
   <string name="add_image">画像を追加</string>
-  <string name="and_N_more">他<xliff:g id="count">%d</xliff:g></string>
+  <string name="and_N_more">他 <xliff:g id="count">%d</xliff:g></string>
   <string name="api_url_format">API URL の形式</string>
   <string name="app_description">あなた自身の Twitter アプリ</string>
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
-  <string name="app_restart_confirm">設定を適用するため、Twidere を再起動します</string>
+  <string name="app_restart_confirm">設定を適用するため、Twidere を再起動します。</string>
   <string name="app_terminate_confirm">設定を適用するため、Twidere を終了します。</string>
   <string name="appearance">外観</string>
   <string name="auth_type_basic">Basic</string>
@@ -210,8 +210,8 @@
   <string name="auth_type_xauth">xAuth</string>
   <string name="auto_refresh">自動更新</string>
   <string name="background">背景</string>
-  <string name="bandwidth_saving_mode">データ使用量の節約モード</string>
-  <string name="bandwidth_saving_mode_summary">従量制課金接続においてメディアのプレビューを無効にします。</string>
+  <string name="bandwidth_saving_mode">データ通信節約モード</string>
+  <string name="bandwidth_saving_mode_summary">従量制通信接続の場合、メディアのプレビューを無効にします。</string>
   <string name="belongs_to">自分が含まれるリスト</string>
   <string name="block_user_confirm_message"><xliff:g id="name">%s</xliff:g> さんをブロックしますか？このユーザーは、あなたをフォローしたり返信やDMを送信したりできなくなります。</string>
   <string name="bug_reports">バグレポート</string>
@@ -279,7 +279,7 @@
   <string name="deny">いいえ</string>
   <string name="destroy_saved_search">保存した検索\"<xliff:g id="name">%s</xliff:g>\"を削除</string>
   <string name="destroy_saved_search_confirm_message">保存した検索 \"<xliff:g id="name">%s</xliff:g>\" を削除しますか？あとで再び保存することもできます。</string>
-  <string name="destroy_status">ツイートの削除</string>
+  <string name="destroy_status">ツイートを削除</string>
   <string name="destroy_status_confirm_message">このツイートを削除しますか？</string>
   <string name="developed_by">開発者</string>
   <string name="discard">破棄</string>

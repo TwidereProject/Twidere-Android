@@ -16,7 +16,7 @@
   <string name="action_add_conversation_participant">Engadir membro</string>
   <!-- [verb] Add mute filter rule -->
   <string name="action_add_filter_rule">Engadir regra</string>
-  <string name="action_add_filters_subscription">Engadir suscrición</string>
+  <string name="action_add_filters_subscription">Engadir subscrición</string>
   <string name="action_add_gif">Engadir GIF</string>
   <string name="action_add_media">Engadir multimedia</string>
   <string name="action_add_member">Engadir membro</string>
@@ -108,7 +108,7 @@
   <!-- [verb] Save settings/files etc. -->
   <string name="action_save">Gardar</string>
   <string name="action_saving_search">gardando busca</string>
-  <string name="action_search">Busca</string>
+  <string name="action_search">Buscar</string>
   <string name="action_select_all">Seleccionar todo</string>
   <string name="action_select_none">Seleccionar nada</string>
   <string name="action_select_user">Escoller usuario</string>
@@ -304,7 +304,7 @@
   <string name="enable_streaming">Habilitar streaming</string>
   <string name="error_info_oauth_timestamp_error">Por favor comproba data e hora da túa configuración.</string>
   <string name="error_message">Erro: <xliff:g id="message">%s</xliff:g></string>
-  <string name="error_message_device_incompatible">Este dispositivo non é compatible con Twidere, recoméndase actualizar á última versión de Android OS.\nAbaixo podes enviar información para axudarme a informar desde problema ao fabricante.</string>
+  <string name="error_message_device_incompatible">Este dispositivo non é compatible con Twidere, recoméndase actualizar á última versión de Android OS.\nAbaixo podes enviar información para axudarme a informar deste problema ao fabricante.</string>
   <string name="error_message_media_message_attachment_not_supported">Non están soportados os adxuntos multimedia nas MD</string>
   <string name="error_message_media_message_too_many">Demasiada multimedia</string>
   <string name="error_message_media_upload_failed">Fallou a subida multimedia.</string>
@@ -317,7 +317,7 @@
   <string name="error_message_scheduler_not_available">Programador de chíos non dispoñible</string>
   <string name="error_message_status_too_long">Chío longo de máis.</string>
   <string name="error_message_tweet_shorten_failed">Fallou o acurte do chío.</string>
-  <string name="error_message_tweet_shortener_not_found">Non se atopou o acurtador de chíos, se cadra desinstalouse.</string>
+  <string name="error_message_tweet_shortener_not_found">Non se atopou xestor para acurtar chíos, se cadra eliminouse.</string>
   <string name="error_message_with_action">Erro mentres <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">A túa aplicación non pode acceder a este recurso.</string>
   <string name="error_no_dm_permission">Sen permiso de mensaxes directas, comproba a configuración da túa aplicación Twitter.</string>
@@ -343,7 +343,7 @@
   <string name="extra_features_description">Apoia Twidere e consegue características avanzadas</string>
   <string name="extra_features_pack_description">Ou compra paquete de características para conseguilas todas (incluídas as de futuros lanzamentos)</string>
   <!-- Enhanced (paid) features title -->
-  <string name="extra_features_restore_purchase_hint">Se xa compraches características avanzadas, podes usar \'Restaurar\' para recuperar a adqusición.</string>
+  <string name="extra_features_restore_purchase_hint">Se xa compraches características avanzadas, podes usar \'Restaurar\' para recuperar a adquisición.</string>
   <string name="fab_visible">Botón de Acción Flotante</string>
   <string name="fab_visible_summary">Amosar o Botón de Acción Flotante</string>
   <string name="fast_image_loading">Carga rápida de imaxe</string>
@@ -377,7 +377,7 @@
   <string name="groups">Grupos</string>
   <string name="hashtag">Hashtag</string>
   <string name="hidden_settings">Agochar configuración</string>
-  <string name="hidden_settings_warning_message">NUNCA cambies esta configuración se non sabes o que é, ou:\n * Matará o teu gato\n * Lanzará armas nucleares en Corea do Norte\n * Mudará TODO Mahou Shoujo en Majo\n * Destruirá o universo</string>
+  <string name="hidden_settings_warning_message">NUNCA cambies esta configuración se non sabes o que é, ou:\n * Matará o teu gato\n * Lanzará armas nucleares en Corea do Norte\n * Mudará A Coruña en LaCoruNeno\n * Destruirá o universo</string>
   <string name="hidden_settings_warning_title">AVISO: Esta configuración pode producir danos!</string>
   <string name="hide_card_actions">Accións de agocho de cartóns</string>
   <string name="hide_quotes">Agochar citas</string>
@@ -589,7 +589,7 @@
   <string name="message_toast_unable_to_load_more_statuses">Incapaz de cargar chíos máis recentes</string>
   <string name="message_toast_user_filters_removed">Eliminado dos filtros</string>
   <string name="message_toast_users_filters_added">Engadido aos filtros</string>
-  <string name="message_toast_wrong_api_key">URL da API ou clave cliente incorrectas, por favor comproba de novo.</string>
+  <string name="message_toast_wrong_api_key">Axustes API incorrectos</string>
   <string name="message_toast_wrong_username_password">Erro no nome de usuario ou contrasinal</string>
   <string name="message_video_too_long">Vídeo longo de máis</string>
   <string name="message_video_too_short">Vídeo curto de máis</string>
@@ -644,7 +644,7 @@
   <string name="notification_status_multiple">Novo chío de <xliff:g id="user">%1$s</xliff:g> e outros <xliff:g id="count">%2$d</xliff:g></string>
   <string name="notification_title_new_retweet_by_user">Rechouchiado por <xliff:g id="user">%1$s</xliff:g></string>
   <string name="notification_title_new_status_by_user">Novo chío de <xliff:g id="user">%1$s</xliff:g></string>
-  <string name="notification_type_home">Inicio</string>
+  <string name="notification_type_home">Liña de tempo</string>
   <string name="notification_type_interactions">Interaccións</string>
   <string name="notification_type_messages">Mensaxes</string>
   <string name="notifications">Notificacións</string>
@@ -722,7 +722,7 @@
   <string name="preference_title_streaming_content">Contido do streaming</string>
   <string name="preference_title_streaming_enabled">Activar streaming</string>
   <string name="preference_title_streaming_non_metered_network">Streaming en redes libres</string>
-  <string name="preference_title_streaming_power_saving">Modo de aforro de batería</string>
+  <string name="preference_title_streaming_power_saving">Modo aforro de batería</string>
   <string name="preference_title_tablet_mode">Modo tablet</string>
   <string name="preference_title_text_size">Tamaño do texto</string>
   <string name="preference_title_translate">Traducir</string>
@@ -775,7 +775,7 @@
   <string name="quote_original_status">Citar chío orixinal</string>
   <string name="quote_protected_status_warning_message">Chío protexido.\n\nOs usuarios protexidos normalmente non queren compartir os seus chíos publicamente.</string>
   <string name="quote_user">Citar <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="rate_limit">Límite de ratio</string>
+  <string name="rate_limit">Cota límite</string>
   <string name="read_from_bottom">Ler desde abaixo</string>
   <string name="read_from_bottom_summary_off">Saltar ao último chío despois de recargar</string>
   <string name="read_from_bottom_summary_on">Gardar posición de lectura despois de recargar</string>
@@ -785,28 +785,28 @@
   <string name="refresh_interval">Intervalo de recarga</string>
   <string name="refresh_on_start">Recargar ao iniciar</string>
   <string name="refresh_on_start_summary">Recargar liña de tempo e mencións ao iniciar.</string>
-  <string name="refresh_type_home">Inicio</string>
+  <string name="refresh_type_home">Liña de tempo</string>
   <string name="refresh_type_interactions">Interaccións</string>
   <string name="refresh_type_messages">Mensaxes</string>
   <string name="refresh_type_trends">Tópicos</string>
   <string name="register">Rexistrar</string>
   <string name="remember_position">Lembrar posición</string>
-  <string name="remember_position_summary">Lembrar posición list/tab antes de pechar Twidere</string>
+  <string name="remember_position_summary">Lembrar posición das listas/lapelas antes de pechar Twidere</string>
   <string name="remove">Eliminar</string>
   <string name="remove_from_filter">Eliminar do filtro</string>
   <string name="remove_sensitive_mark">Eliminar marcado sensible</string>
   <string name="replies">Respostas</string>
   <string name="reply_to">Responder a <xliff:g id="user_name">%s</xliff:g></string>
   <string name="reply_to_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
-  <string name="report_for_spam">Reportar spam</string>
-  <string name="report_usage_statistics_now">Reportar agora estatísticas de uso</string>
-  <string name="report_user">Reportar <xliff:g id="name">%s</xliff:g></string>
-  <string name="report_user_confirm_message">Reportar <xliff:g id="name">%s</xliff:g> por spam? Tamén podes bloquear a este usuario.</string>
-  <string name="reported_user_for_spam">Reportado este usuario por spam.</string>
-  <string name="reported_users_for_spam">Reportados estes usuarios por spam.</string>
+  <string name="report_for_spam">Denunciar spam</string>
+  <string name="report_usage_statistics_now">Aportar agora estatísticas de uso</string>
+  <string name="report_user">Denunciar <xliff:g id="name">%s</xliff:g></string>
+  <string name="report_user_confirm_message">Denunciar <xliff:g id="name">%s</xliff:g> por spam? Tamén podes bloquear a este usuario.</string>
+  <string name="reported_user_for_spam">Denunciado este usuario por spam.</string>
+  <string name="reported_users_for_spam">Denunciados estes usuarios por spam.</string>
   <string name="requested">Pedido</string>
-  <string name="reset_keyboard_shortcuts_confirm">Resetear atallos de teclado aos orixinais?</string>
-  <string name="reset_to_default">Resetear a orixinal</string>
+  <string name="reset_keyboard_shortcuts_confirm">Reiniciar atallos de teclado aos orixinais?</string>
+  <string name="reset_to_default">Reiniciar a orixinal</string>
   <string name="retry_on_network_issue">Con problemas de rede, tentar de novo</string>
   <string name="retry_on_network_issue_summary">Con problemas de rede, tentar recuperar automaticamente</string>
   <string name="retweet_quote_confirm_title">Rechouchiar para os teus seguidores?</string>
@@ -822,7 +822,7 @@
   <string name="saved_searches">Buscas gardadas</string>
   <string name="saved_searches_already_saved_hint">Se cadra xa tes gardada esta busca</string>
   <string name="scheduled_statuses">Chíos programados</string>
-  <string name="scrapyard">Scrapyard</string>
+  <string name="scrapyard">Máis trebellos</string>
   <string name="search_hint">Buscar chíos ou usuarios</string>
   <string name="search_hint_users">Buscar usuarios</string>
   <string name="search_statuses">Buscar chíos</string>
@@ -843,8 +843,8 @@
   <string name="sensitive_content_warning">Este chío pode ter contido sensible, continuar?</string>
   <string name="sent_follow_request_to_user">Petición de seguimento enviada a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="server_address">Enderezo do servidor</string>
-  <string name="set_consumer_key_secret_message">Twidere está chegando ao límite \"token\", terás que crear unha app en https://apps.twitter.com/ e colar abaixo as chaves cliente e secreta.\nSe continúas usando a chave por defecto, é posible que non poidas entrar.</string>
-  <string name="settings">Configuración</string>
+  <string name="set_consumer_key_secret_message">Twidere está chegando á súa cota límite, terás que crear unha app en https://apps.twitter.com/ e colar abaixo as chaves cliente e secreta.\nSe continúas usando a chave por defecto, é posible que non poidas entrar.</string>
+  <string name="settings">Axustes</string>
   <string name="settings_interface">Interface</string>
   <string name="settings_notifications">Notificacións</string>
   <string name="settings_refresh">Recargar</string>
@@ -853,7 +853,7 @@
   <string name="share_format_summary">\"[TITLE]\" = Contido título\n\"[TEXT]\" = Contido texto</string>
   <string name="share_link">Compartir ligazón</string>
   <string name="share_status">Compartir chío</string>
-  <string name="shortener_version_incompatible">Acurtador de chíos incompatible</string>
+  <string name="shortener_version_incompatible">Xestor para acurtar chíos incompatible</string>
   <string name="show_absolute_time">Amosar hora absoluta</string>
   <string name="show_absolute_time_summary">Amosar a hora absoluta nos chíos</string>
   <string name="show_in_timeline">Amosar na liña de tempo</string>
@@ -885,12 +885,12 @@
   <string name="status_not_updated_summary">O chío non se enviou e gardouse nos borradores.</string>
   <string name="status_share_subject_format_with_time">Chío de <xliff:g id="name">%1$s</xliff:g> (@<xliff:g id="screen_name">%2$s</xliff:g>), ás <xliff:g id="time">%3$s</xliff:g></string>
   <string name="status_share_text_format_with_link"><xliff:g id="text">%1$s</xliff:g>\n\n<xliff:g id="link">%2$s</xliff:g></string>
-  <string name="status_shortener">Acurtador de chíos</string>
+  <string name="status_shortener">Xestor para acurtar chíos</string>
   <string name="status_shortener_default">Ningún (Abortar envío)</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Rechouchiar</string>
   <string name="stream_summary_notification_users">Usuarios que habilitaron Notificacións, non 100% fiable.</string>
-  <string name="stream_type_home">LT</string>
+  <string name="stream_type_home">Liña de tempo</string>
   <string name="stream_type_interactions">Interaccións</string>
   <string name="stream_type_messages">Mensaxes</string>
   <string name="stream_type_notification_users">Notificación usuarios habilitados</string>
@@ -908,8 +908,8 @@
   <string name="tab_display_option_icon_and_label">Icona e etiqueta</string>
   <string name="tab_display_option_label">Etiqueta</string>
   <string name="tab_editor_hint_name">Nome</string>
-  <string name="tabs">Tabuladores</string>
-  <string name="tcp_dns_query">TCP DNS Query</string>
+  <string name="tabs">Lapelas</string>
+  <string name="tcp_dns_query">Consulta TCP DNS</string>
   <string name="tcp_dns_query_summary">Usa Protocolo TCP para facer peticións DNS e evitar DNS spoofing.</string>
   <string name="text_copied">Texto copiado no portapapeis.</string>
   <string name="text_size">Tamaño do texto</string>
@@ -929,7 +929,7 @@
   <string name="thumbor_integration">Integración Thumbor</string>
   <string name="time_source"><xliff:g id="time">%1$s</xliff:g> · <xliff:g id="source">%2$s</xliff:g></string>
   <string name="timeline_streaming_running">Streaming na liña de tempo</string>
-  <string name="timeline_sync_service">Servizo de sincronización da Liña de Tempo</string>
+  <string name="timeline_sync_service">Servizo de sincronización da liña de tempo</string>
   <string name="title_about">Acerca de</string>
   <string name="title_account_delete_confirm">Eliminar conta</string>
   <string name="title_accounts">Contas</string>
@@ -960,9 +960,9 @@
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">Seguidores</string>
   <string name="title_following">Seguindo</string>
-  <string name="title_home">Inicio</string>
+  <string name="title_home">Liña de tempo</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
-  <string name="title_likes">Gústame</string>
+  <string name="title_likes">Gústanme</string>
   <string name="title_manage_filter_subscriptions">Filtrar subscricións</string>
   <string name="title_mentions">Mencións</string>
   <string name="title_message_conversation_info">Información de conversa</string>
@@ -984,8 +984,8 @@
   <string name="title_subscription_name">Nome</string>
   <string name="title_subscription_url">URL</string>
   <string name="title_summary_line_format"><xliff:g id="title">%1$s</xliff:g>: <xliff:g id="summary">%2$s</xliff:g></string>
-  <string name="title_sync">Sincroniz. datos</string>
-  <string name="title_sync_settings">Sincronización de axustes</string>
+  <string name="title_sync">Sincronizar datos</string>
+  <string name="title_sync_settings">Axustes de sincronización</string>
   <string name="title_user">Usuario</string>
   <string name="title_user_colors">Cores do usuario</string>
   <string name="title_user_list_memberships">Pertence a</string>
@@ -1005,7 +1005,7 @@
   <string name="tweet_hashtag">Chiar #<xliff:g id="text">%1$s</xliff:g></string>
   <string name="twidere_test">Twidere test</string>
   <string name="type_name_to_search">Introduce nome a buscar</string>
-  <string name="type_to_compose">Tipo a compoñer</string>
+  <string name="type_to_compose">Escribir</string>
   <string name="unblocked_user"><xliff:g id="user">%s</xliff:g> desbloqueado.</string>
   <string name="underline">Subliñar</string>
   <string name="unfollow_user">Deixar de seguir a <xliff:g id="name">%s</xliff:g></string>
@@ -1021,7 +1021,7 @@
   <string name="unsubscribe_from_user_list_confirm_message">Anular subscrición da lista <xliff:g id="name">%s</xliff:g>? Podes volver a subscribirte despois.</string>
   <string name="unsubscribed_from_list">Anulada subscrición da lista \"<xliff:g id="list">%s</xliff:g>\".</string>
   <string name="unsupported_activity_action_summary">Por favor acciona o informe arriba</string>
-  <string name="unsupported_login_verification_type_name"><xliff:g id="name">%1$s</xliff:g> tipo de verificación de entrada no soportada, por favor, informa ao soporte da conta.</string>
+  <string name="unsupported_login_verification_type_name"><xliff:g id="name">%1$s</xliff:g> tipo de verificación de entrada non soportada, por favor, informa ao soporte da conta.</string>
   <string name="update_status">Enviar chío</string>
   <string name="updated_list_details">Detalles da lista \"<xliff:g id="list">%s</xliff:g>\" actualizados.</string>
   <string name="updating_status_notification">Enviando chío&#8230;</string>
