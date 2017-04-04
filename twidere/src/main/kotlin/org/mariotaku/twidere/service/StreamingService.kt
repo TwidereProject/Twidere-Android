@@ -271,6 +271,7 @@ class StreamingService : BaseService() {
                 }
                 val parcelableStatus = ParcelableStatusUtils.fromStatus(status, account.key,
                         account.type, homeInsertGap, profileImageSize)
+                parcelableStatus.account_color = account.color
 
                 val currentTimeMillis = System.currentTimeMillis()
                 if (lastStatusTimestamps[0] >= parcelableStatus.timestamp) {
@@ -313,6 +314,7 @@ class StreamingService : BaseService() {
                     }
                     val curActivity = ParcelableActivityUtils.fromActivity(activity, account.key,
                             account.type, insertGap, profileImageSize)
+                    curActivity.account_color = account.color
                     curActivity.position_key = curActivity.timestamp
                     var updateId = -1L
                     if (curActivity.action !in Activity.Action.MENTION_ACTIONS) {
