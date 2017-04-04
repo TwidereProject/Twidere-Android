@@ -33,7 +33,6 @@
         android:layout_weight="1">
 
         <org.mariotaku.twidere.view.MaxHeightScrollView
-            android:id="@+id/editTextContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="240dp">
@@ -53,7 +52,8 @@
                     android:padding="@dimen/element_spacing_normal"
                     tools:text="In reply to name: A quick brown fox jumps over the lazy dog"/>
 
-                <LinearLayout
+                <org.mariotaku.twidere.view.ExtendedLinearLayout
+                    android:id="@+id/editTextContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="160dp"
@@ -101,7 +101,7 @@
                         app:iabIconWidth="20dp"
                         tools:text="11.4, 51.4"/>
 
-                </LinearLayout>
+                </org.mariotaku.twidere.view.ExtendedLinearLayout>
             </LinearLayout>
         </org.mariotaku.twidere.view.MaxHeightScrollView>
 

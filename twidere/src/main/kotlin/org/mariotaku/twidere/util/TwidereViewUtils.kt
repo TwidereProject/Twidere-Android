@@ -1,6 +1,8 @@
 package org.mariotaku.twidere.util
 
+import android.graphics.RectF
 import android.support.annotation.UiThread
+import android.view.MotionEvent
 import android.view.View
 
 /**
@@ -8,11 +10,14 @@ import android.view.View
  */
 object TwidereViewUtils {
 
+    private val location = IntArray(2)
+    private val rect = RectF()
+
     @UiThread
-    fun hitView(x: Float, y: Float, view: View): Boolean {
-        val location = IntArray(2)
+    fun hitView(event: MotionEvent, view: View): Boolean {
         view.getLocationOnScreen(location)
-        return x in (location[0] until location[0] + view.width)
-                && y in (location[1] until location[1] + view.height)
+        rect.set(location[0].toFloat(), location[1].toFloat(), location[0].toFloat() + view.width,
+                location[1].toFloat() + view.height)
+        return rect.contains(event.rawX, event.rawY)
     }
 }

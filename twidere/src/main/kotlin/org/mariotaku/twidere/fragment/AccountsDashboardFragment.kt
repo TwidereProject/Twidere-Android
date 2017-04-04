@@ -597,7 +597,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
 
     fun shouldDisableDrawerSlide(e: MotionEvent): Boolean {
         if (accountsSelector == null) return false
-        return TwidereViewUtils.hitView(e.rawX, e.rawY, accountsSelector)
+        return TwidereViewUtils.hitView(e, accountsSelector)
     }
 
     internal class AccountSpaceViewHolder(itemView: View) : RecyclerPagerAdapter.ViewHolder(itemView)

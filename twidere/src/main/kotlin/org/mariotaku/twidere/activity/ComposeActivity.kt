@@ -30,6 +30,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.PorterDuff.Mode
+import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.AsyncTask
@@ -54,7 +55,6 @@ import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.twitter.Extractor
@@ -559,13 +559,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
-                val x = ev.rawX
-                val y = ev.rawY
-                if (isAccountSelectorVisible && !TwidereViewUtils.hitView(x, y, accountSelectorButton)) {
+                if (isAccountSelectorVisible && !TwidereViewUtils.hitView(ev, accountSelectorButton)) {
                     var clickedItem = false
                     val layoutManager = accountSelector.layoutManager
                     for (i in 0..layoutManager.childCount - 1) {
-                        if (TwidereViewUtils.hitView(x, y, layoutManager.getChildAt(i))) {
+                        if (TwidereViewUtils.hitView(ev, layoutManager.getChildAt(i))) {
                             clickedItem = true
                             break
                         }
@@ -582,10 +580,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
-            val x = event.rawX
-            val y = event.rawY
             val window = window
-            if (!TwidereViewUtils.hitView(x, y, window.decorView)
+            if (!TwidereViewUtils.hitView(event, window.decorView)
                     && window.peekDecorView() != null && !hasComposingStatus()) {
                 onBackPressed()
                 return true
@@ -833,6 +829,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
         })
         editText.customSelectionActionModeCallback = this
+        editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -1365,6 +1362,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+    override fun onSetAltText(position: Int, altText: String?) {
+        mediaPreviewAdapter.setAltText(position, altText)
+    }
+
     private fun setRecentLocation(location: ParcelableLocation?) {
         if (location != null) {
             val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
@@ -1869,10 +1870,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         internal class NoAddress
     }
 
-    override fun onSetAltText(position: Int, altText: String?) {
-        mediaPreviewAdapter.setAltText(position, altText)
-    }
-
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
         override fun onClick(dialog: DialogInterface, which: Int) {
@@ -1992,6 +1989,38 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (activity == null) return false
             activity.confirmAndUpdateStatus()
             return true
+        }
+    }
+
+    private class ComposeEditTextTouchDelegate(
+            val parentView: View, val delegateView: View
+    ) : TouchDelegate(Rect(), delegateView) {
+
+        private var delegateTargeted: Boolean = false
+
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            var sendToDelegate = false
+            var handled = false
+
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (TwidereViewUtils.hitView(event, parentView)) {
+                        delegateTargeted = true
+                        sendToDelegate = true
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE -> {
+                    sendToDelegate = delegateTargeted
+                }
+                MotionEvent.ACTION_CANCEL -> {
+                    sendToDelegate = delegateTargeted
+                    delegateTargeted = false
+                }
+            }
+            if (sendToDelegate) {
+                handled = delegateView.dispatchTouchEvent(event)
+            }
+            return handled
         }
     }
 
