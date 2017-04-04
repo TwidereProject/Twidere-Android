@@ -17,24 +17,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.extension.text.twitter
+package org.mariotaku.ktextension
 
-import com.twitter.Extractor
-import com.twitter.Validator
-import org.mariotaku.twidere.model.ParcelableStatus
+import android.text.Editable
 
 /**
- * Created by mariotaku on 2017/3/31.
+ * Created by mariotaku on 2017/4/4.
  */
 
-
-fun Validator.getTweetLength(text: String, ignoreMentions: Boolean, inReplyTo: ParcelableStatus?): Int {
-    if (!ignoreMentions || inReplyTo == null) {
-        return getTweetLength(text)
-    }
-
-    val (_, replyText, _, _, _) = InternalExtractor.extractReplyTextAndMentions(text, inReplyTo)
-    return getTweetLength(replyText)
+fun Editable.clearSpans(type: Class<*>) {
+    getSpans(0, length, type).forEach { removeSpan(it) }
 }
-
-private object InternalExtractor : Extractor()

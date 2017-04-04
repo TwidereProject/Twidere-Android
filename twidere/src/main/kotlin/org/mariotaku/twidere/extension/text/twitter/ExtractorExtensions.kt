@@ -78,7 +78,7 @@ fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableSta
          * then this status should be treated at a mention referring to `inReplyTo`, all other mentions
          * counts.
          */
-        return ReplyTextAndMentions(text, emptyList(), emptyList(), mentioningUser)
+        return ReplyTextAndMentions(index, text, emptyList(), emptyList(), mentioningUser)
     }
     val overrideText = run {
         val sb = StringBuilder()
@@ -91,12 +91,13 @@ fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableSta
         sb.append(text, index, text.length)
         return@run sb.toString()
     }
-    return ReplyTextAndMentions(overrideText, extraMentions, excludedMentions, mentioningUser)
+    return ReplyTextAndMentions(index, overrideText, extraMentions, excludedMentions, mentioningUser)
 }
 
 data class MentionsAndNonMentionStartIndex(val mentions: List<Extractor.Entity>, val index: Int)
 
 data class ReplyTextAndMentions(
+        val replyStartIndex: Int,
         val replyText: String,
         val extraMentions: List<Extractor.Entity>,
         val excludedMentions: List<ParcelableUserMention>,

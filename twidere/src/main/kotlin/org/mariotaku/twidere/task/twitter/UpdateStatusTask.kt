@@ -151,7 +151,7 @@ class UpdateStatusTask(
         val inReplyTo = update.in_reply_to_status ?: return
         for (i in 0 until pending.length) {
             if (update.accounts[i].type != AccountType.TWITTER) continue
-            val (replyText, _, excludedMentions, replyToOriginalUser) =
+            val (_, replyText, _, excludedMentions, replyToOriginalUser) =
                     extractor.extractReplyTextAndMentions(pending.overrideTexts[i], inReplyTo)
             pending.overrideTexts[i] = replyText
             pending.excludeReplyUserIds[i] = excludedMentions.map { it.key.id }.toTypedArray()
