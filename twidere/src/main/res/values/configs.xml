@@ -2,4 +2,5 @@
 <resources>
     <bool name="use_job_refresh_service">false</bool>
     <bool name="use_legacy_refresh_service">true</bool>
+    <bool name="support_new_document_intent">false</bool>
 </resources>

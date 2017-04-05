@@ -656,13 +656,6 @@
                 android:resource="@xml/pickncrop__file_paths"/>
         </provider>
 
-        <receiver android:name=".receiver.ConnectivityStateReceiver">
-            <intent-filter>
-                <action
-                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife"/>
-            </intent-filter>
-        </receiver>
         <receiver android:name=".receiver.PowerStateReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>

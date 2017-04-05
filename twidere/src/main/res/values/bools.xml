@@ -7,5 +7,4 @@
     <!-- Config for home screen -->
     <bool name="home_tab_has_multiple_columns">false</bool>
 
-    <bool name="support_new_document_intent">false</bool>
 </resources>

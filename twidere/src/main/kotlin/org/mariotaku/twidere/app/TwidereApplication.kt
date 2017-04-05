@@ -26,6 +26,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.support.multidex.MultiDex
 import com.bumptech.glide.Glide
@@ -49,6 +50,7 @@ import org.mariotaku.twidere.activity.MainActivity
 import org.mariotaku.twidere.activity.MainHondaJOJOActivity
 import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.model.DefaultFeatures
+import org.mariotaku.twidere.receiver.ConnectivityStateReceiver
 import org.mariotaku.twidere.service.StreamingService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.content.TwidereSQLiteOpenHelper
@@ -134,6 +136,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         extraFeaturesService.appStarted()
 
         registerActivityLifecycleCallbacks(activityTracker)
+        registerReceiver(ConnectivityStateReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
 
         listenExternalThemeChange()
 
