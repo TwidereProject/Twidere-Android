@@ -106,6 +106,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.model.applyTo
+import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
@@ -493,7 +494,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
         locationContainer.location.text = user.location
         locationContainer.visibility = if (locationContainer.location.empty) View.GONE else View.VISIBLE
-        urlContainer.url.text = (user.url_expanded?.takeIf(String::isNotEmpty) ?: user.url)?.let {
+        urlContainer.url.text = user.urlPreferred?.let {
             val ssb = SpannableStringBuilder(it)
             ssb.setSpan(TwidereURLSpan(it, highlightStyle = linkHighlightOption), 0, ssb.length,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -563,6 +564,9 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         } else if (profileBirthdayStub == null) {
             profileBirthdayBanner.visibility = View.GONE
         }
+
+        urlContainer.url.movementMethod = null
+
         updateTitleAlpha()
         activity.invalidateOptionsMenu()
         updateSubtitle()
@@ -729,6 +733,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         followersContainer.setOnClickListener(this)
         friendsContainer.setOnClickListener(this)
         errorIcon.setOnClickListener(this)
+        urlContainer.setOnClickListener(this)
         profileBanner.setOnSizeChangedListener(this)
         profileBannerSpace.setOnTouchListener(this)
 
@@ -1246,6 +1251,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             R.id.nameContainer -> {
                 if (user.account_key == user.key) return
                 IntentUtils.openProfileEditor(getActivity(), user.account_key)
+            }
+            R.id.urlContainer -> {
+                val url = user.urlPreferred ?: return
+                OnLinkClickHandler.openLink(context, preferences, url)
             }
             R.id.profileBirthdayBanner -> {
                 hideBirthdayView = true
