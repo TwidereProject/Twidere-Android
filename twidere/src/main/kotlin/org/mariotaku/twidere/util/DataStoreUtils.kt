@@ -390,8 +390,7 @@ object DataStoreUtils {
         if (followingOnly) {
             val projection = arrayOf(Activities.SOURCES)
             val cur = resolver.query(uri, projection, selection.sql, selectionArgs, null) ?: return -1
-            try {
-                val mapper = LoganSquare.mapperFor(UserFollowState::class.java)
+            cur.useCursor { cur ->
                 var total = 0
                 cur.moveToFirst()
                 while (!cur.isAfterLast) {
@@ -399,7 +398,7 @@ object DataStoreUtils {
                     if (TextUtils.isEmpty(string)) continue
                     var hasFollowing = false
                     try {
-                        for (state in mapper.parseList(string)) {
+                        for (state in JsonSerializer.parseList(string, UserFollowState::class.java)) {
                             if (state.is_following) {
                                 hasFollowing = true
                                 break
@@ -415,8 +414,6 @@ object DataStoreUtils {
                     cur.moveToNext()
                 }
                 return total
-            } finally {
-                cur.close()
             }
         }
         return queryCount(resolver, uri, selection.sql, selectionArgs)

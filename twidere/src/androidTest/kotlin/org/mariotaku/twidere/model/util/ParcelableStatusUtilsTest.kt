@@ -2,13 +2,13 @@ package org.mariotaku.twidere.model.util
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.bluelinelabs.logansquare.LoganSquare
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.test.R
+import org.mariotaku.twidere.util.JsonSerializer
 
 /**
  * Created by mariotaku on 2017/1/4.
@@ -23,13 +23,13 @@ class ParcelableStatusUtilsTest {
     fun testFromStatus() {
         val context = InstrumentationRegistry.getContext()
         val status_8754050 = context.resources.openRawResource(R.raw.status_8754050).use {
-            val status = LoganSquare.parse(it, Status::class.java)
+            val status = JsonSerializer.parse(it, Status::class.java)
             return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"),
                     "statusnet", false)
         }
 
         val status_9171447 = context.resources.openRawResource(R.raw.status_9171447).use {
-            val status = LoganSquare.parse(it, Status::class.java)
+            val status = JsonSerializer.parse(it, Status::class.java)
             return@use ParcelableStatusUtils.fromStatus(status, UserKey("1234567", "gnusocial.de"),
                     "statusnet", false)
         }

@@ -8,7 +8,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import okio.ByteString
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.mediaviewer.library.FileCache
 import org.mariotaku.twidere.TwidereConstants.AUTHORITY_TWIDERE_CACHE
 import org.mariotaku.twidere.TwidereConstants.QUERY_PARAM_TYPE
@@ -16,6 +15,7 @@ import org.mariotaku.twidere.annotation.CacheFileType
 import org.mariotaku.twidere.model.CacheMetadata
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.util.BitmapUtils
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.ByteArrayInputStream
 import java.io.FileNotFoundException
@@ -65,8 +65,7 @@ class CacheProvider : ContentProvider() {
         val bytes = fileCache.getExtra(getCacheKey(uri)) ?: return null
         return try {
             ByteArrayInputStream(bytes).use {
-                val mapper = LoganSquareMapperFinder.mapperFor(CacheMetadata::class.java)
-                return@use mapper.parse(it)
+                return@use JsonSerializer.parse(it, CacheMetadata::class.java)
             }
         } catch (e: IOException) {
             null

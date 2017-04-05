@@ -35,7 +35,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -68,7 +67,6 @@ import android.view.Gravity;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
@@ -90,9 +88,7 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
-import org.mariotaku.twidere.graphic.PaddingDrawable;
 import org.mariotaku.twidere.model.AccountDetails;
-import org.mariotaku.twidere.model.AccountPreferences;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
 import org.mariotaku.twidere.model.PebbleMessage;
@@ -137,50 +133,6 @@ public final class Utils implements Constants {
         throw new AssertionError("You are trying to create an instance for this utility class!");
     }
 
-    public static void addIntentToMenuForExtension(final Context context, final Menu menu,
-            final int groupId, final String action,
-            final String parcelableKey, final String parcelableJSONKey,
-            final Parcelable parcelable) {
-        if (context == null || menu == null || action == null || parcelableKey == null || parcelable == null)
-            return;
-        final PackageManager pm = context.getPackageManager();
-        final Resources res = context.getResources();
-        final float density = res.getDisplayMetrics().density;
-        final int padding = Math.round(density * 4);
-        final Intent queryIntent = new Intent(action);
-        queryIntent.setExtrasClassLoader(context.getClassLoader());
-        final List<ResolveInfo> activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA);
-        final String parcelableJson = JsonSerializer.serialize(parcelable);
-        for (final ResolveInfo info : activities) {
-            final Intent intent = new Intent(queryIntent);
-            if (isExtensionUseJSON(info) && parcelableJson != null) {
-                intent.putExtra(parcelableJSONKey, parcelableJson);
-            } else {
-                intent.putExtra(parcelableKey, parcelable);
-            }
-            intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-            final MenuItem item = menu.add(groupId, Menu.NONE, Menu.NONE, info.loadLabel(pm));
-            item.setIntent(intent);
-            final Drawable metaDataDrawable = getMetadataDrawable(pm, info.activityInfo, METADATA_KEY_EXTENSION_ICON);
-            final int actionIconColor = ThemeUtils.getThemeForegroundColor(context);
-            if (metaDataDrawable != null) {
-                metaDataDrawable.mutate();
-                metaDataDrawable.setColorFilter(actionIconColor, Mode.SRC_ATOP);
-                item.setIcon(metaDataDrawable);
-            } else {
-                final Drawable icon = info.loadIcon(pm);
-                final int iw = icon.getIntrinsicWidth(), ih = icon.getIntrinsicHeight();
-                if (iw > 0 && ih > 0) {
-                    final Drawable iconWithPadding = new PaddingDrawable(icon, padding);
-                    iconWithPadding.setBounds(0, 0, iw, ih);
-                    item.setIcon(iconWithPadding);
-                } else {
-                    item.setIcon(icon);
-                }
-            }
-
-        }
-    }
 
     public static void announceForAccessibilityCompat(final Context context, final View view, final CharSequence text,
             final Class<?> cls) {
@@ -878,7 +830,7 @@ public final class Utils implements Constants {
         return orig.replaceAll("\\n+", "\n");
     }
 
-    private static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {
+    static Drawable getMetadataDrawable(final PackageManager pm, final ActivityInfo info, final String key) {
         if (pm == null || info == null || info.metaData == null || key == null || !info.metaData.containsKey(key))
             return null;
         return pm.getDrawable(info.packageName, info.metaData.getInt(key), info.applicationInfo);
@@ -890,7 +842,7 @@ public final class Utils implements Constants {
                 || StatusCodeMessageUtils.containsTwitterError(te.getErrorCode());
     }
 
-    private static boolean isExtensionUseJSON(final ResolveInfo info) {
+    static boolean isExtensionUseJSON(final ResolveInfo info) {
         if (info == null || info.activityInfo == null) return false;
         final ActivityInfo activityInfo = info.activityInfo;
         if (activityInfo.metaData != null && activityInfo.metaData.containsKey(METADATA_KEY_EXTENSION_USE_JSON))
@@ -1016,7 +968,7 @@ public final class Utils implements Constants {
             final Intent intent = new Intent(INTENT_ACTION_PEBBLE_NOTIFICATION);
             intent.putExtra("messageType", "PEBBLE_ALERT");
             intent.putExtra("sender", appName);
-            intent.putExtra("notificationData", JsonSerializer.serialize(messages, PebbleMessage.class));
+            intent.putExtra("notificationData", JsonSerializer.serializeList(messages, PebbleMessage.class));
 
             context.getApplicationContext().sendBroadcast(intent);
         }

@@ -23,13 +23,13 @@ package org.mariotaku.microblog.library.fanfou.model;
 
 import android.support.annotation.NonNull;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.commons.logansquare.JsonStringConverter;
 import org.mariotaku.microblog.library.fanfou.model.util.StreamDateConverter;
 import org.mariotaku.microblog.library.twitter.model.User;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.util.Date;
@@ -71,7 +71,7 @@ public class FanfouStreamObject {
 
     public <T> T getObject(Class<T> cls) throws IOException {
         if (rawObject == null) return null;
-        return LoganSquare.parse(rawObject, cls);
+        return JsonSerializer.parse(rawObject, cls);
     }
 
 }

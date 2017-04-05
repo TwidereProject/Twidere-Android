@@ -3,7 +3,6 @@ package org.mariotaku.twidere.extension.model
 import android.content.Context
 import android.net.Uri
 import android.text.TextUtils
-import com.bluelinelabs.logansquare.LoganSquare
 import org.apache.james.mime4j.dom.Header
 import org.apache.james.mime4j.dom.MessageServiceFactory
 import org.apache.james.mime4j.dom.address.Mailbox
@@ -22,6 +21,7 @@ import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.Draft.Action
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
 import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.collection.NonEmptyHashMap
 import java.io.File
 import java.io.FileOutputStream
@@ -67,7 +67,7 @@ fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
 
     this.action_extras?.let { extras ->
         multipart.addBodyPart(BodyPart().apply {
-            setText(bodyFactory.textBody(LoganSquare.serialize(extras)), "json")
+            setText(bodyFactory.textBody(JsonSerializer.serialize(extras)), "json")
             this.filename = "twidere.action.extras.json"
         })
     }
@@ -215,10 +215,10 @@ private class BodyPartHandler(private val context: Context, private val draft: D
                 "twidere.action.extras.json" -> {
                     draft.action_extras = when (draft.action_type) {
                         "0", "1", Action.UPDATE_STATUS, Action.REPLY, Action.QUOTE -> {
-                            LoganSquare.parse(st, UpdateStatusActionExtras::class.java)
+                            JsonSerializer.parse(st, UpdateStatusActionExtras::class.java)
                         }
                         "2", Action.SEND_DIRECT_MESSAGE -> {
-                            LoganSquare.parse(st, SendDirectMessageActionExtras::class.java)
+                            JsonSerializer.parse(st, SendDirectMessageActionExtras::class.java)
                         }
                         else -> {
                             null

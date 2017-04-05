@@ -22,8 +22,6 @@ package org.mariotaku.microblog.library.twitter.callback;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.DeletionEvent;
 import org.mariotaku.microblog.library.twitter.model.DirectMessage;
@@ -39,6 +37,7 @@ import org.mariotaku.microblog.library.twitter.model.Warning;
 import org.mariotaku.microblog.library.util.CRLFLineReader;
 import org.mariotaku.restfu.callback.RawCallback;
 import org.mariotaku.restfu.http.HttpResponse;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -73,7 +72,7 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
                     connected = true;
                 }
                 if (TextUtils.isEmpty(line)) continue;
-                final TwitterStreamObject object = LoganSquare.parse(line, TwitterStreamObject.class);
+                final TwitterStreamObject object = JsonSerializer.parse(line, TwitterStreamObject.class);
                 if (!handleEvent(object, line)) {
                     onUnhandledEvent(object, line);
                 }
@@ -100,7 +99,7 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
                 return onFriendList(object.getFriends());
             }
             case Type.STATUS: {
-                return onStatus(LoganSquare.parse(json, Status.class));
+                return onStatus(JsonSerializer.parse(json, Status.class));
             }
             case Type.DIRECT_MESSAGE: {
                 return onDirectMessage(object.getDirectMessage());
@@ -125,82 +124,82 @@ public abstract class UserStreamCallback implements RawCallback<MicroBlogExcepti
                 return onScrubGeo(scrubGeo.getUserId(), scrubGeo.getUpToStatusId());
             }
             case Type.FAVORITE: {
-                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                StatusTargetObjectEvent event = JsonSerializer.parse(json, StatusTargetObjectEvent.class);
                 return onFavorite(event.getCreatedAt(), event.getSource(), event.getTarget(),
                         event.getTargetObject());
             }
             case Type.UNFAVORITE: {
-                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                StatusTargetObjectEvent event = JsonSerializer.parse(json, StatusTargetObjectEvent.class);
                 return onUnfavorite(event.getSource(), event.getTarget(), event.getTargetObject());
             }
             case Type.QUOTED_TWEET: {
-                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                StatusTargetObjectEvent event = JsonSerializer.parse(json, StatusTargetObjectEvent.class);
                 return onQuotedTweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
                         event.getTargetObject());
             }
             case Type.RETWEETED_RETWEET: {
-                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                StatusTargetObjectEvent event = JsonSerializer.parse(json, StatusTargetObjectEvent.class);
                 return onRetweetedRetweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
                         event.getTargetObject());
             }
             case Type.FAVORITED_RETWEET: {
-                StatusTargetObjectEvent event = LoganSquare.parse(json, StatusTargetObjectEvent.class);
+                StatusTargetObjectEvent event = JsonSerializer.parse(json, StatusTargetObjectEvent.class);
                 return onFavoritedRetweet(event.getCreatedAt(), event.getSource(), event.getTarget(),
                         event.getTargetObject());
             }
             case Type.FOLLOW: {
-                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                StreamEvent event = JsonSerializer.parse(json, StreamEvent.class);
                 return onFollow(event.getCreatedAt(), event.getSource(), event.getTarget());
             }
             case Type.UNFOLLOW: {
-                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                StreamEvent event = JsonSerializer.parse(json, StreamEvent.class);
                 return onUnfollow(event.getCreatedAt(), event.getSource(), event.getTarget());
             }
             case Type.USER_LIST_MEMBER_ADDED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListMemberAddition(event.getCreatedAt(), event.getSource(),
                         event.getTarget(), event.getTargetObject());
             }
             case Type.USER_LIST_MEMBER_DELETED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListMemberDeletion(event.getCreatedAt(), event.getSource(),
                         event.getTarget(), event.getTargetObject());
             }
             case Type.USER_LIST_SUBSCRIBED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListSubscription(event.getCreatedAt(), event.getSource(),
                         event.getTarget(), event.getTargetObject());
             }
             case Type.USER_LIST_UNSUBSCRIBED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListUnsubscription(event.getCreatedAt(), event.getSource(),
                         event.getTarget(), event.getTargetObject());
             }
             case Type.USER_LIST_CREATED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListCreation(event.getCreatedAt(), event.getSource(),
                         event.getTargetObject());
             }
             case Type.USER_LIST_UPDATED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListUpdate(event.getCreatedAt(), event.getSource(),
                         event.getTargetObject());
             }
             case Type.USER_LIST_DESTROYED: {
-                UserListTargetObjectEvent event = LoganSquare.parse(json, UserListTargetObjectEvent.class);
+                UserListTargetObjectEvent event = JsonSerializer.parse(json, UserListTargetObjectEvent.class);
                 return onUserListDeletion(event.getCreatedAt(), event.getSource(),
                         event.getTargetObject());
             }
             case Type.USER_UPDATE: {
-                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                StreamEvent event = JsonSerializer.parse(json, StreamEvent.class);
                 return onUserProfileUpdate(event.getCreatedAt(), event.getSource());
             }
             case Type.BLOCK: {
-                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                StreamEvent event = JsonSerializer.parse(json, StreamEvent.class);
                 return onBlock(event.getCreatedAt(), event.getSource(), event.getTarget());
             }
             case Type.UNBLOCK: {
-                StreamEvent event = LoganSquare.parse(json, StreamEvent.class);
+                StreamEvent event = JsonSerializer.parse(json, StreamEvent.class);
                 return onUnblock(event.getCreatedAt(), event.getSource(), event.getTarget());
             }
             case Type.DISCONNECTION:

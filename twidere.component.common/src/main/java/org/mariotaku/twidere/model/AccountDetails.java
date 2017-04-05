@@ -27,7 +27,6 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.OnJsonParseComplete;
@@ -45,6 +44,7 @@ import org.mariotaku.twidere.model.account.AccountExtras;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.RGBHexColorConverter;
 import org.mariotaku.twidere.model.util.UserKeyConverter;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 
 import java.io.IOException;
@@ -140,10 +140,10 @@ public class AccountDetails implements Parcelable, Comparable<AccountDetails> {
     @OnPreJsonSerialize
     void onPreJsonSerialize() throws IOException {
         if (credentials != null) {
-            credentials_json = LoganSquare.serialize(credentials);
+            credentials_json = JsonSerializer.serialize(credentials);
         }
         if (extras != null) {
-            extras_json = LoganSquare.serialize(extras);
+            extras_json = JsonSerializer.serialize(extras);
         }
     }
 

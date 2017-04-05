@@ -2,6 +2,7 @@ package org.mariotaku.twidere.util.filter
 
 import android.content.Context
 import org.mariotaku.twidere.util.JsonSerializer
+import java.io.IOException
 
 /**
  * Created by mariotaku on 2017/1/9.
@@ -13,8 +14,11 @@ abstract class LocalFiltersSubscriptionProvider(val context: Context) : FiltersS
             when (name) {
                 "url" -> {
                     if (arguments == null) return null
-                    val argsObj = JsonSerializer.parse(arguments,
-                            UrlFiltersSubscriptionProvider.Arguments::class.java) ?: return null
+                    val argsObj = try {
+                        JsonSerializer.parse(arguments, UrlFiltersSubscriptionProvider.Arguments::class.java)
+                    } catch (e: IOException) {
+                        return null
+                    }
                     return UrlFiltersSubscriptionProvider(context, argsObj)
                 }
             }

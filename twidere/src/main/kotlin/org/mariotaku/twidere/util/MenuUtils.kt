@@ -22,9 +22,11 @@ package org.mariotaku.twidere.util
 import android.accounts.AccountManager
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.PorterDuff
+import android.os.Parcelable
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.annotation.UiThread
@@ -42,8 +44,8 @@ import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
 import org.mariotaku.ktextension.setItemChecked
 import org.mariotaku.ktextension.setMenuItemIcon
-import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.Constants
+import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -63,11 +65,11 @@ import org.mariotaku.twidere.menu.SupportStatusShareProvider
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.task.CreateFavoriteTask
 import org.mariotaku.twidere.task.DestroyFavoriteTask
 import org.mariotaku.twidere.task.RetweetStatusTask
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
+import java.io.IOException
 
 /**
  * Created by mariotaku on 15/4/12.
@@ -205,9 +207,9 @@ object MenuUtils {
             val isOfficialKey = Utils.isOfficialCredentials(context, details)
             setItemAvailability(menu, R.id.translate, isOfficialKey)
         }
-        menu.removeGroup(Constants.MENU_GROUP_STATUS_EXTENSION)
-        Utils.addIntentToMenuForExtension(context, menu, Constants.MENU_GROUP_STATUS_EXTENSION, INTENT_ACTION_EXTENSION_OPEN_STATUS,
-                EXTRA_STATUS, EXTRA_STATUS_JSON, status)
+        menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
+        addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION,
+                INTENT_ACTION_EXTENSION_OPEN_STATUS, EXTRA_STATUS, EXTRA_STATUS_JSON, status)
         val shareItem = menu.findItem(R.id.share)
         val shareProvider = MenuItemCompat.getActionProvider(shareItem)
         if (shareProvider is SupportStatusShareProvider) {
@@ -218,8 +220,8 @@ object MenuUtils {
         } else if (shareItem.hasSubMenu()) {
             val shareSubMenu = shareItem.subMenu
             val shareIntent = Utils.createStatusShareIntent(context, status)
-            shareSubMenu.removeGroup(Constants.MENU_GROUP_STATUS_SHARE)
-            addIntentToMenu(context, shareSubMenu, shareIntent, Constants.MENU_GROUP_STATUS_SHARE)
+            shareSubMenu.removeGroup(MENU_GROUP_STATUS_SHARE)
+            addIntentToMenu(context, shareSubMenu, shareIntent, MENU_GROUP_STATUS_SHARE)
         } else {
             val shareIntent = Utils.createStatusShareIntent(context, status)
             val chooserIntent = Intent.createChooser(shareIntent, context.getString(R.string.share_status))
@@ -357,5 +359,56 @@ object MenuUtils {
             }
         }
         return true
+    }
+
+
+    fun addIntentToMenuForExtension(context: Context?, menu: Menu?,
+            groupId: Int, action: String?,
+            parcelableKey: String?, parcelableJSONKey: String,
+            parcelable: Parcelable?) {
+        if (context == null || menu == null || action == null || parcelableKey == null || parcelable == null)
+            return
+        val pm = context.packageManager
+        val res = context.resources
+        val density = res.displayMetrics.density
+        val padding = Math.round(density * 4)
+        val queryIntent = Intent(action)
+        queryIntent.setExtrasClassLoader(context.classLoader)
+        val activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA)
+        val parcelableJson = try {
+            JsonSerializer.serialize(parcelable)
+        } catch (e: IOException) {
+            null
+        }
+        for (info in activities) {
+            val intent = Intent(queryIntent)
+            if (Utils.isExtensionUseJSON(info) && parcelableJson != null) {
+                intent.putExtra(parcelableJSONKey, parcelableJson)
+            } else {
+                intent.putExtra(parcelableKey, parcelable)
+            }
+            intent.setClassName(info.activityInfo.packageName, info.activityInfo.name)
+            val item = menu.add(groupId, Menu.NONE, Menu.NONE, info.loadLabel(pm))
+            item.intent = intent
+            val metaDataDrawable = Utils.getMetadataDrawable(pm, info.activityInfo, METADATA_KEY_EXTENSION_ICON)
+            val actionIconColor = ThemeUtils.getThemeForegroundColor(context)
+            if (metaDataDrawable != null) {
+                metaDataDrawable.mutate()
+                metaDataDrawable.setColorFilter(actionIconColor, PorterDuff.Mode.SRC_ATOP)
+                item.icon = metaDataDrawable
+            } else {
+                val icon = info.loadIcon(pm)
+                val iw = icon.intrinsicWidth
+                val ih = icon.intrinsicHeight
+                if (iw > 0 && ih > 0) {
+                    val iconWithPadding = PaddingDrawable(icon, padding)
+                    iconWithPadding.setBounds(0, 0, iw, ih)
+                    item.icon = iconWithPadding
+                } else {
+                    item.icon = icon
+                }
+            }
+
+        }
     }
 }

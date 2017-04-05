@@ -14,6 +14,7 @@ import org.mariotaku.twidere.extension.model.parse
 import org.mariotaku.twidere.extension.newPullParser
 import org.mariotaku.twidere.model.FiltersData
 import org.mariotaku.twidere.util.ETagCache
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import java.io.IOException
 import javax.inject.Inject
@@ -101,7 +102,7 @@ class UrlFiltersSubscriptionProvider(context: Context, val arguments: Arguments)
     }
 
     private fun Body.toJsonFilters(): FiltersData? {
-        return LoganSquare.parse(stream(), FiltersData::class.java)
+        return JsonSerializer.parse(stream(), FiltersData::class.java)
     }
 
     private fun Body.toXmlFilters(): FiltersData? {

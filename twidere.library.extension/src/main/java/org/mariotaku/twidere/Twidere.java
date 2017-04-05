@@ -38,8 +38,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ComposingStatus;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -47,6 +45,7 @@ import org.mariotaku.twidere.model.ParcelableUser;
 import org.mariotaku.twidere.model.ParcelableUserList;
 import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.provider.TwidereDataStore.Permissions;
+import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.model.AccountDetailsUtils;
 
 import java.io.IOException;
@@ -192,7 +191,8 @@ public final class Twidere implements TwidereConstants {
         //noinspection WrongConstant
         details.credentials_type = am.getUserData(account, ACCOUNT_USER_DATA_CREDS_TYPE);
         try {
-            details.user = LoganSquare.parse(am.getUserData(account, ACCOUNT_USER_DATA_USER), ParcelableUser.class);
+            details.user = JsonSerializer.parse(am.getUserData(account, ACCOUNT_USER_DATA_USER),
+                    ParcelableUser.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

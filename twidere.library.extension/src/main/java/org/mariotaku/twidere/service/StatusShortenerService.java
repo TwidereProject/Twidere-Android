@@ -28,11 +28,11 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import org.mariotaku.twidere.IStatusShortener;
-import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.StatusShortenResult;
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
+import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -51,8 +51,8 @@ public abstract class StatusShortenerService extends Service {
     }
 
     protected abstract StatusShortenResult shorten(ParcelableStatusUpdate status,
-                                                   UserKey currentAccountKey,
-                                                   String overrideStatusText);
+            UserKey currentAccountKey,
+            String overrideStatusText);
 
     protected abstract boolean callback(StatusShortenResult result, ParcelableStatus status);
 
@@ -71,15 +71,15 @@ public abstract class StatusShortenerService extends Service {
 
         @Override
         public String shorten(final String statusJson, final String currentAccountIdStr,
-                              final String overrideStatusText)
+                final String overrideStatusText)
                 throws RemoteException {
             try {
-                final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
-                        .parse(statusJson);
+                final ParcelableStatusUpdate statusUpdate = JsonSerializer.parse(statusJson,
+                        ParcelableStatusUpdate.class);
                 final UserKey currentAccountId = UserKey.valueOf(currentAccountIdStr);
                 final StatusShortenResult shorten = mService.get().shorten(statusUpdate, currentAccountId,
                         overrideStatusText);
-                return LoganSquareMapperFinder.mapperFor(StatusShortenResult.class).serialize(shorten);
+                return JsonSerializer.serialize(shorten, StatusShortenResult.class);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     throw new RemoteException(e.getMessage());
@@ -92,10 +92,8 @@ public abstract class StatusShortenerService extends Service {
         @Override
         public boolean callback(String resultJson, String statusJson) throws RemoteException {
             try {
-                final StatusShortenResult result = LoganSquareMapperFinder.mapperFor(StatusShortenResult.class)
-                        .parse(resultJson);
-                final ParcelableStatus status = LoganSquareMapperFinder.mapperFor(ParcelableStatus.class)
-                        .parse(statusJson);
+                final StatusShortenResult result = JsonSerializer.parse(resultJson, StatusShortenResult.class);
+                final ParcelableStatus status = JsonSerializer.parse(statusJson, ParcelableStatus.class);
                 return mService.get().callback(result, status);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {

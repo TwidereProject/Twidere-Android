@@ -3,7 +3,6 @@ package org.mariotaku.twidere.util
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.database.sqlite.SQLiteDatabase
-import com.bluelinelabs.logansquare.LoganSquare
 import org.mariotaku.ktextension.HexColorFormat
 import org.mariotaku.ktextension.toHexColor
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -40,7 +39,7 @@ fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
             am.setUserData(account, ACCOUNT_USER_DATA_CREDS_TYPE, credentials.getCredentialsType())
             am.setUserData(account, ACCOUNT_USER_DATA_COLOR, toHexColor(credentials.color, format = HexColorFormat.RGB))
             am.setUserData(account, ACCOUNT_USER_DATA_POSITION, credentials.sort_position)
-            am.setUserData(account, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(credentials.account_user ?: run {
+            am.setUserData(account, ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(credentials.account_user ?: run {
                 val user = ParcelableUser()
                 user.account_key = credentials.account_key
                 user.key = credentials.account_key
@@ -52,7 +51,7 @@ fun migrateAccounts(am: AccountManager, db: SQLiteDatabase) {
                 return@run user
             }))
             am.setUserData(account, ACCOUNT_USER_DATA_EXTRAS, credentials.account_extras)
-            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(credentials.toCredentials()))
+            am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, JsonSerializer.serialize(credentials.toCredentials()))
             cur.moveToNext()
         }
     } finally {

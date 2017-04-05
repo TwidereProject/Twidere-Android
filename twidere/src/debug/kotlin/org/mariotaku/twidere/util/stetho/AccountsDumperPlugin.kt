@@ -25,7 +25,6 @@ import android.content.Context
 import android.util.Base64
 import android.util.Base64InputStream
 import android.util.Base64OutputStream
-import com.bluelinelabs.logansquare.LoganSquare
 import com.facebook.stetho.dumpapp.DumpException
 import com.facebook.stetho.dumpapp.DumperContext
 import com.facebook.stetho.dumpapp.DumperPlugin
@@ -46,6 +45,7 @@ import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.Utils
 import java.io.InputStream
 import java.io.OutputStream
@@ -205,7 +205,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val path = args[1]
             docContext.set(path, value)
             val details = docContext.read("$", Object::class.java)?.let {
-                LoganSquare.parse(it.toString(), AccountDetails::class.java)
+                JsonSerializer.parse(it.toString(), AccountDetails::class.java)
             } ?: return
             details.account.updateDetails(am, details)
             dumpContext.stdout.println("$path = ${docContext.read(path, Object::class.java)?.prettyPrint()}")
@@ -234,7 +234,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val gz = GZIPOutputStream(CipherOutputStream(base64, cipher))
             // write accounts
             val accounts = AccountUtils.getAllAccountDetails(this, true).toList()
-            LoganSquare.serialize(accounts, gz, AccountDetails::class.java)
+            JsonSerializer.serialize(accounts, gz, AccountDetails::class.java)
         }
 
         private fun readAccounts(password: String, input: InputStream): List<AccountDetails> {
@@ -248,7 +248,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
             cipher.init(Cipher.DECRYPT_MODE, secret, IvParameterSpec(iv))
             val gz = GZIPInputStream(CipherInputStream(base64, cipher))
-            return LoganSquare.parseList(gz, AccountDetails::class.java)
+            return JsonSerializer.parseList(gz, AccountDetails::class.java)
         }
 
         private fun AccountManager.importAccounts(allDetails: List<AccountDetails>) {
@@ -289,9 +289,9 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
             am.setUserData(this, ACCOUNT_USER_DATA_ACTIVATED, true.toString())
             am.setUserData(this, ACCOUNT_USER_DATA_COLOR, toHexColor(details.color, format = HexColorFormat.RGB))
 
-            am.setUserData(this, ACCOUNT_USER_DATA_USER, LoganSquare.serialize(details.user))
-            am.setUserData(this, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { LoganSquare.serialize(it) })
-            am.setAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE, LoganSquare.serialize(details.credentials))
+            am.setUserData(this, ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(details.user))
+            am.setUserData(this, ACCOUNT_USER_DATA_EXTRAS, details.extras?.let { JsonSerializer.serialize(it) })
+            am.setAuthToken(this, ACCOUNT_AUTH_TOKEN_TYPE, JsonSerializer.serialize(details.credentials))
         }
 
         private fun AccountManager.docContext(forKey: String): DocumentContext {
@@ -301,7 +301,7 @@ class AccountsDumperPlugin(val context: Context) : DumperPlugin {
                     .jsonProvider(JsonOrgJsonProvider())
                     .mappingProvider(AsIsMappingProvider())
                     .build()
-            return JsonPath.parse(LoganSquare.serialize(details), configuration)
+            return JsonPath.parse(JsonSerializer.serialize(details), configuration)
         }
 
         private fun Any.prettyPrint() = if (this is JSONObject) {

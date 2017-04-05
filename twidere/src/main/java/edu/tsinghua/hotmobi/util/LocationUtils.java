@@ -12,6 +12,8 @@ import org.mariotaku.twidere.util.JsonSerializer;
 import org.mariotaku.twidere.util.Utils;
 import org.mariotaku.twidere.util.dagger.DependencyHolder;
 
+import java.io.IOException;
+
 import edu.tsinghua.hotmobi.HotMobiConstants;
 import edu.tsinghua.hotmobi.HotMobiLogger;
 import edu.tsinghua.hotmobi.model.LatLng;
@@ -30,7 +32,11 @@ public class LocationUtils implements HotMobiConstants, Constants {
         DebugLog.d(HotMobiLogger.LOGTAG, "getting cached location", null);
         final Location location = Utils.getCachedLocation(appContext);
         if (location == null) {
-            return JsonSerializer.parse(prefs.getString(KEY_FALLBACK_CACHED_LOCATION, null), LatLng.class);
+            try {
+                return JsonSerializer.parse(prefs.getString(KEY_FALLBACK_CACHED_LOCATION, null), LatLng.class);
+            } catch (IOException e) {
+                return null;
+            }
         }
         final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         AsyncTask.execute(new Runnable() {

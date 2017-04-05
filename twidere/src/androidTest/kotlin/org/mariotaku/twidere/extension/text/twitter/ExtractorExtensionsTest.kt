@@ -21,7 +21,6 @@ package org.mariotaku.twidere.extension.text.twitter
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.bluelinelabs.logansquare.LoganSquare
 import com.twitter.Extractor
 import org.junit.Assert
 import org.junit.Before
@@ -30,6 +29,7 @@ import org.junit.runner.RunWith
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.test.R
+import org.mariotaku.twidere.util.JsonSerializer
 
 /**
  * Created by mariotaku on 2017/4/2.
@@ -46,7 +46,7 @@ class ExtractorExtensionsTest {
 
         // This is a tweet by @t_deyarmin, mentioning @nixcraft
         inReplyTo = context.resources.openRawResource(R.raw.parcelable_status_848051071444410368).use {
-            LoganSquare.parse(it, ParcelableStatus::class.java)
+            JsonSerializer.parse(it, ParcelableStatus::class.java)
         }
     }
 

@@ -32,8 +32,8 @@ import org.mariotaku.twidere.model.MediaUploadResult;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableStatusUpdate;
 import org.mariotaku.twidere.model.UploaderMediaItem;
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.twidere.model.UserKey;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -54,7 +54,7 @@ public abstract class MediaUploaderService extends Service {
     }
 
     protected abstract MediaUploadResult upload(ParcelableStatusUpdate status,
-                                                UserKey currentAccount, UploaderMediaItem[] media);
+            UserKey currentAccount, UploaderMediaItem[] media);
 
     protected abstract boolean callback(MediaUploadResult result, ParcelableStatus status);
 
@@ -74,14 +74,12 @@ public abstract class MediaUploaderService extends Service {
         @Override
         public String upload(String statusJson, String currentAccount, String mediaJson) throws RemoteException {
             try {
-                final ParcelableStatusUpdate statusUpdate = LoganSquareMapperFinder.mapperFor(ParcelableStatusUpdate.class)
-                        .parse(statusJson);
-                final List<UploaderMediaItem> media = LoganSquareMapperFinder.mapperFor(UploaderMediaItem.class)
-                        .parseList(mediaJson);
+                final ParcelableStatusUpdate statusUpdate = JsonSerializer.parse(statusJson, ParcelableStatusUpdate.class);
+                final List<UploaderMediaItem> media = JsonSerializer.parseList(mediaJson, UploaderMediaItem.class);
                 final MediaUploadResult shorten = mService.get().upload(statusUpdate,
                         UserKey.valueOf(currentAccount),
                         media.toArray(new UploaderMediaItem[media.size()]));
-                return LoganSquareMapperFinder.mapperFor(MediaUploadResult.class).serialize(shorten);
+                return JsonSerializer.serialize(shorten, MediaUploadResult.class);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                     throw new RemoteException(e.getMessage());
@@ -94,10 +92,8 @@ public abstract class MediaUploaderService extends Service {
         @Override
         public boolean callback(String resultJson, String statusJson) throws RemoteException {
             try {
-                final MediaUploadResult result = LoganSquareMapperFinder.mapperFor(MediaUploadResult.class)
-                        .parse(resultJson);
-                final ParcelableStatus status = LoganSquareMapperFinder.mapperFor(ParcelableStatus.class)
-                        .parse(statusJson);
+                final MediaUploadResult result = JsonSerializer.parse(resultJson, MediaUploadResult.class);
+                final ParcelableStatus status = JsonSerializer.parse(statusJson, ParcelableStatus.class);
                 return mService.get().callback(result, status);
             } catch (IOException e) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {

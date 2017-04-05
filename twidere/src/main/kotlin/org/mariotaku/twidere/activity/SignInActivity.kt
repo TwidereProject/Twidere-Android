@@ -774,12 +774,12 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDi
             action(ACCOUNT_USER_DATA_ACTIVATED, true.toString())
             action(ACCOUNT_USER_DATA_COLOR, toHexColor(color, format = HexColorFormat.RGB))
 
-            action(ACCOUNT_USER_DATA_USER, LoganSquare.serialize(user))
-            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { LoganSquare.serialize(it) })
+            action(ACCOUNT_USER_DATA_USER, JsonSerializer.serialize(user))
+            action(ACCOUNT_USER_DATA_EXTRAS, typeExtras.second?.let { JsonSerializer.serialize(it) })
         }
 
         private fun writeAuthToken(am: AccountManager, account: Account) {
-            val authToken = LoganSquare.serialize(credentials)
+            val authToken = JsonSerializer.serialize(credentials)
             am.setAuthToken(account, ACCOUNT_AUTH_TOKEN_TYPE, authToken)
         }
 

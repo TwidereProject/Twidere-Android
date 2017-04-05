@@ -25,10 +25,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.model.ParcelableMessage.MessageType;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 
@@ -42,14 +42,14 @@ public abstract class MessageExtras implements Parcelable {
         if (json == null) return null;
         switch (messageType) {
             case MessageType.STICKER:
-                return LoganSquare.parse(json, StickerExtras.class);
+                return JsonSerializer.parse(json, StickerExtras.class);
             case MessageType.JOIN_CONVERSATION:
             case MessageType.PARTICIPANTS_LEAVE:
             case MessageType.PARTICIPANTS_JOIN:
-                return LoganSquare.parse(json, UserArrayExtras.class);
+                return JsonSerializer.parse(json, UserArrayExtras.class);
             case MessageType.CONVERSATION_NAME_UPDATE:
             case MessageType.CONVERSATION_AVATAR_UPDATE:
-                return LoganSquare.parse(json, ConversationInfoUpdatedExtras.class);
+                return JsonSerializer.parse(json, ConversationInfoUpdatedExtras.class);
         }
         return null;
     }

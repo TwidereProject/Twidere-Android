@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.bluelinelabs.logansquare.LoganSquare
 import com.bumptech.glide.Glide
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.mariotaku.restfu.annotation.method.GET
@@ -27,6 +26,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.setSelectedItem
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.account.cred.Credentials
+import org.mariotaku.twidere.util.JsonSerializer
 import org.mariotaku.twidere.util.ParseUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.view.ConsumerKeySecretValidator
@@ -205,7 +205,7 @@ class APIEditorDialogFragment : BaseDialogFragment() {
                             return null
                         }
                         // Save to cache
-                        return LoganSquare.parseList(response.body.stream(), CustomAPIConfig::class.java)
+                        return JsonSerializer.parseList(response.body.stream(), CustomAPIConfig::class.java)
                     }
                 } catch (e: IOException) {
                     // Ignore

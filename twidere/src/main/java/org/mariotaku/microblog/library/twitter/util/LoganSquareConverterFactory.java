@@ -23,11 +23,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
 import com.bluelinelabs.logansquare.Commons_ParameterizedTypeAccessor;
-import com.bluelinelabs.logansquare.JsonMapper;
 import com.bluelinelabs.logansquare.ParameterizedType;
 import com.fasterxml.jackson.core.JsonParseException;
 
-import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
 import org.mariotaku.restfu.RestConverter;
 import org.mariotaku.restfu.http.ContentType;
@@ -35,6 +33,7 @@ import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.restfu.http.mime.Body;
 import org.mariotaku.restfu.http.mime.SimpleBody;
 import org.mariotaku.restfu.http.mime.StringBody;
+import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -77,14 +76,13 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
         try {
             final Object parsed;
             if (type.rawType == List.class) {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(0).rawType);
-                parsed = mapper.parseList(response.getBody().stream());
+                final Class cls = type.typeParameters.get(0).rawType;
+                parsed = JsonSerializer.parseList(response.getBody().stream(), cls);
             } else if (type.rawType == Map.class) {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(1).rawType);
-                parsed = mapper.parseMap(response.getBody().stream());
+                final Class cls = type.typeParameters.get(1).rawType;
+                parsed = JsonSerializer.parseMap(response.getBody().stream(), cls);
             } else {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type);
-                parsed = mapper.parse(response.getBody().stream());
+                parsed = JsonSerializer.parse(response.getBody().stream(), type);
             }
             if (parsed == null) {
                 throw new IOException("Empty data");
@@ -123,17 +121,16 @@ public class LoganSquareConverterFactory<E extends Exception> extends RestConver
         public Body convert(Object request) throws IOException, ConvertException, E {
             final String json;
             if (type.rawType == List.class) {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(0).rawType);
+                final Class<?> cls = type.typeParameters.get(0).rawType;
                 //noinspection unchecked
-                json = mapper.serialize((List) request);
+                json = JsonSerializer.serializeList((List) request, cls);
             } else if (type.rawType == Map.class) {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type.typeParameters.get(1).rawType);
+                final Class<?> cls = type.typeParameters.get(1).rawType;
                 //noinspection unchecked
-                json = mapper.serialize((Map) request);
+                json = JsonSerializer.serializeMap((Map) request, cls);
             } else {
-                final JsonMapper mapper = LoganSquareMapperFinder.mapperFor(type);
                 //noinspection unchecked
-                json = mapper.serialize(request);
+                json = JsonSerializer.serialize(request, (ParameterizedType) type);
             }
             return new StringBody(json, ContentType.parse("application/json"));
         }

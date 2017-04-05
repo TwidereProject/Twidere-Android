@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.util.cache
 
-import com.bluelinelabs.logansquare.LoganSquare
 import com.bumptech.glide.disklrucache.DiskLruCache
 import org.mariotaku.twidere.BuildConfig
+import org.mariotaku.twidere.util.JsonSerializer
 import java.io.File
 import java.io.IOException
 
@@ -39,7 +39,7 @@ class JsonCache(val cacheDir: File) {
 
     fun <T> getList(key: String, cls: Class<T>): List<T>? {
         return cache?.get(key)?.getFile(0)?.inputStream()?.use {
-            LoganSquare.parseList(it, cls)
+            JsonSerializer.parseList(it, cls)
         }
     }
 
@@ -47,7 +47,7 @@ class JsonCache(val cacheDir: File) {
         val editor = cache?.edit(key) ?: return
         try {
             editor.getFile(0)?.outputStream()?.use {
-                LoganSquare.serialize(list, it, cls)
+                JsonSerializer.serialize(list, it, cls)
             }
             editor.commit()
         } finally {
