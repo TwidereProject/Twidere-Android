@@ -219,7 +219,7 @@
   <string name="builtin_dns_resolver">組み込みDNSリゾルバ</string>
   <string name="cache_size_limit">キャッシュサイズ制限</string>
   <string name="cant_load_all_replies_explanation">Twitterは、サードパーティのTwitterクライアントに制限を設けています。そのため、Twidereはツイートへの返信にアクセスすることができず、すべての返信を読み込むことができない場合があります。</string>
-  <string name="cant_load_all_replies_message">すべての返信を表示できないことがあります。&lt;a href=\"#dialog\";&gt;理由を表示&lt;/a&gt;</string>
+  <string name="cant_load_all_replies_message">すべての返信を読み込むことができません。&lt;a href=\"#dialog\";&gt;理由を表示&lt;/a&gt;</string>
   <string name="cards">カード</string>
   <string name="clear_cache">キャッシュを消去</string>
   <string name="clear_cache_summary">保存されていたメディアのキャッシュをクリアしました。</string>
@@ -238,7 +238,7 @@
   <string name="compact_cards_summary">画面あたりのカード表示数を増やせます。</string>
   <string name="compose_now">Tweet Now</string>
   <string name="compose_now_action">Tweet Nowアクション</string>
-  <string name="compose_now_summary">ホームキーを上にスワイプしたときに出るGoogle NowショートカットをTweet Nowアクションに変更します。</string>
+  <string name="compose_now_summary">ホームキーを上にスワイプしたときに出るGoogle Nowショートカットを「ツイートする」に変更します。</string>
   <string name="conflicts_with_name"><xliff:g id="name">%s</xliff:g> と競合</string>
   <string name="connection_timeout">接続タイムアウト</string>
   <string name="consumer_key">Consumer key</string>
@@ -286,16 +286,16 @@
   <string name="display_sensitive_contents">不適切な内容を表示</string>
   <string name="display_sensitive_contents_summary">プロンプトを表示せずに不適切な可能性のある内容を表示します。</string>
   <string name="dns_server">DNS サーバー</string>
-  <string name="dns_server_summary">ネットワーク要件に使用されるDNSサーバーを設定します。</string>
+  <string name="dns_server_summary">通信に使用するDNSサーバーを設定します。</string>
   <string name="draft_saved">下書きを保存</string>
-  <string name="drafts_hint_messages">未送信のツイートが保存されます</string>
+  <string name="drafts_hint_messages">未送信のツイートが保存されます。</string>
   <string name="drawer_toggle">ドロワーの切り替え</string>
   <string name="edit_api">APIを編集</string>
   <string name="edit_description">説明を編集</string>
   <string name="edit_draft">下書きを編集</string>
-  <string name="edit_media">メディアの編集</string>
+  <string name="edit_media">メディアを編集</string>
   <string name="edit_tab">タブを編集</string>
-  <string name="edit_tabs">タブの編集</string>
+  <string name="edit_tabs">タブを編集</string>
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">絵文字のサポート</string>
   <string name="empty_content">コンテンツなし</string>
@@ -319,7 +319,7 @@
   <string name="error_message_tweet_shorten_failed">ツイートを短縮できません。</string>
   <string name="error_message_tweet_shortener_not_found">ツイート短縮サービスが見つかりません。</string>
   <string name="error_message_with_action"><xliff:g id="action">%1$s</xliff:g>中のエラー: <xliff:g id="message">%2$s</xliff:g></string>
-  <string name="error_no_access_for_credentials">アプリケーションはこのリソースにアクセスできませんでした。「非公開APIの使用を強制する」が有効になっていませんか？</string>
+  <string name="error_no_access_for_credentials">アプリケーションはこのリソースにアクセスできませんでした。</string>
   <string name="error_no_dm_permission">ダイレクトメッセージのアクセス許可がありません。Twitter アプリケーションのアクセス許可設定を確認してください。</string>
   <string name="error_title_device_incompatible">デバイスには互換性がありません</string>
   <string name="error_too_many_photos_fanfou">写真が多すぎます</string>
@@ -332,13 +332,13 @@
   <string name="external_group_host_format"><xliff:g id="host">%s</xliff:g> の外部グループ</string>
   <string name="external_user_host_format"><xliff:g id="host">%s</xliff:g>の外部ユーザー</string>
   <string name="extra_configurations">追加設定</string>
-  <string name="extra_feature_description_filters_import">ブロック/ミュートからフィルタリストをインポートする</string>
+  <string name="extra_feature_description_filters_import">ブロック/ミュート 一覧からフィルタリストをインポートする</string>
   <string name="extra_feature_description_filters_subscription">ミュートフィルターを購読し、自動的に同期する</string>
   <string name="extra_feature_description_schedule_status">予約ツイート (あとで送る)</string>
   <string name="extra_feature_description_share_gif">Gifアニメーションをツイートで共有する</string>
   <string name="extra_feature_description_sync_data">データを Dropbox や Google ドライブなどで同期</string>
-  <string name="extra_feature_title_filters_import">フィルタのインポート</string>
-  <string name="extra_feature_title_filters_subscription">フィルタの購読</string>
+  <string name="extra_feature_title_filters_import">フィルターをインポートする</string>
+  <string name="extra_feature_title_filters_subscription">フィルターを購読する</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">Twidere を支援して追加機能を取得する</string>
   <string name="extra_features_pack_description">または、追加機能パックを購入して、すべての機能 (将来追加される機能を含む) を手に入れましょう</string>
@@ -348,8 +348,8 @@
   <string name="fab_visible_summary">フローティングアクションボタンを表示します</string>
   <string name="fast_image_loading">高速画像読み込み</string>
   <string name="fast_image_loading_summary">有効にすると画像を高速に読み込みます。\n画像が読み込めない場合は無効にしてください。</string>
-  <string name="filter_everywhere">すべての場所でフィルタする</string>
-  <string name="filter_everywhere_description">Twidere 上の次の場所でフィルタされます。\n  ・このユーザのツイート\n  ・このユーザに対する返信\n  ・このユーザのリツイート/引用リツイート</string>
+  <string name="filter_everywhere">すべての場所にフィルターを適用する。</string>
+  <string name="filter_everywhere_description">Twidere 上の次の場所にフィルターを適用します。\n  ・ユーザーのツイート\n  ・ユーザーのメンション\n  ・ユーザーのリツイート/引用リツイート</string>
   <string name="filter_type_keywords">キーワード</string>
   <string name="filter_type_links">リンク</string>
   <string name="filter_type_sources">クライアント</string>
@@ -360,17 +360,17 @@
   <string name="following_only">フォロー中のみ</string>
   <string name="following_only_summary">フォローしているユーザーからの通知だけを表示するようにします。</string>
   <string name="following_you">あなたをフォロー中</string>
-  <string name="follows">保存している</string>
+  <string name="follows">フォロー</string>
   <string name="font">フォント</string>
   <string name="font_family">フォントファミリー</string>
-  <string name="from_camera">カメラ</string>
-  <string name="from_gallery">ギャラリー</string>
+  <string name="from_camera">カメラから</string>
+  <string name="from_gallery">ギャラリーから</string>
   <string name="from_name"><xliff:g id="name">%1$s</xliff:g>さんから</string>
   <string name="from_name_and_N_others"><xliff:g id="name">%1$s</xliff:g>さんと他<xliff:g id="name">%2$d</xliff:g>人から</string>
   <string name="from_name_and_name"><xliff:g id="name">%1$s</xliff:g>さんと<xliff:g id="name">%2$s</xliff:g>さんから</string>
   <string name="function">機能</string>
   <string name="general">基本</string>
-  <string name="getting_location">位置を取得しています</string>
+  <string name="getting_location">位置情報を取得しています</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="group">グループ</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
@@ -389,7 +389,7 @@
   <string name="hint_accounts_dashboard_title">アカウント・ダッシュボード</string>
   <string name="hint_conversation_name">会話の名前</string>
   <string name="hint_empty_filters_subscriptions">購読なし</string>
-  <string name="hint_error_message_no_content">コンテンツがありません</string>
+  <string name="hint_error_message_no_content">コンテンツなし</string>
   <string name="hint_message_select_user">ユーザー検索</string>
   <string name="hint_no_account">アカウント無し</string>
   <string name="hint_search_gif">Gifアニメーションを検索</string>
@@ -408,7 +408,7 @@
   <string name="inbox">受信箱</string>
   <string name="incoming_friendships">保留中のフォローリクエスト</string>
   <string name="input_text">テキストを入力</string>
-  <string name="interactions">みんなの反応</string>
+  <string name="interactions">つながり</string>
   <string name="invalid_consumer_key">無効なコンシューマーキーです</string>
   <string name="invalid_consumer_secret">無効なコンシューマーシークレットです</string>
   <string name="invalid_list_name">英数字で始まり、英数字と「-」と「_」だけを含む名前にしてください。</string>
@@ -535,6 +535,7 @@
   <string name="message_format_sender_time">
         <xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g>
     </string>
+  <string name="message_gif_sharing_introduction">GIPHY を利用した GIF の検索と共有</string>
   <string name="message_info_buffer_queue_empty">Buffer のキューは空です。</string>
   <string name="message_join_conversation">会話に参加しました。</string>
   <string name="message_permission_request_compose_location">位置情報の権限は、ツイートに位置情報を追加するために必要です。</string>
@@ -739,8 +740,11 @@
   <string name="preload_wifi_only">Wi-Fi接続時のみ先読み</string>
   <string name="preview">プレビュー</string>
   <string name="preview_images">プレビュー画像</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">切り取り</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">実際のサイズ</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">拡大縮小</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">前</string>
@@ -969,6 +973,7 @@
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">フォロワー</string>
   <string name="title_following">フォロー中</string>
+  <string name="title_gif_sharing">GIF の共有</string>
   <string name="title_home">ホーム</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">いいね</string>

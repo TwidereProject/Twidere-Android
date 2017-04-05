@@ -452,8 +452,11 @@
   <string name="preload_wifi_only">التحميل المسبق عند إستعمال الواي فاي</string>
   <string name="preview">معاينة</string>
   <string name="preview_images">معاينة الصور</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">قص</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">الحجم العادي</string>
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">السابق</string>
   <string name="previous_tab">علامة التبويب السابقة</string>

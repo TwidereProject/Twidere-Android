@@ -106,6 +106,9 @@
   <string name="preference_title_advanced">Advanced</string>
   <string name="preference_title_database_item_limit">Database size limit</string>
   <string name="preference_title_storage">Storage</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="profile_background_color">Background colour</string>
   <string name="profile_link_color_main_color">Link colour (main colour)</string>

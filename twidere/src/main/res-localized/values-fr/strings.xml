@@ -726,8 +726,11 @@
   <string name="preload_wifi_only">Précharger seulement en Wi-Fi</string>
   <string name="preview">Prévisualiser</string>
   <string name="preview_images">Prévisualisation des images</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Rogner</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">Taille réelle</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Mettre à l\'echelle</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Précédent</string>

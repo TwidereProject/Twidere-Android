@@ -483,7 +483,10 @@
   <string name="preload_wifi_only">Lataa etukäteen vain Wi-Fi-yhteydellä</string>
   <string name="preview">Esikatselu</string>
   <string name="preview_images">Esikatsele kuvia</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Rajaa</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Skaalaa</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Edellinen</string>

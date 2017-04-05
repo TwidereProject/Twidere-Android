@@ -720,8 +720,11 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preload_wifi_only">Precargar usando namái Wi-Fi</string>
   <string name="preview">Previsualización</string>
   <string name="preview_images">Previsualización d\'imáxenes</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Retayar</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">Tamañu real</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Escalar</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Anterior</string>

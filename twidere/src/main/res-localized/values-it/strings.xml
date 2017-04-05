@@ -482,7 +482,10 @@
   <string name="preload_wifi_only">Precarica solo se in Wi-Fi</string>
   <string name="preview">Anteprima</string>
   <string name="preview_images">Anteprima immagini</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Ritaglia</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Scala</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Precedente</string>

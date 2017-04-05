@@ -5,7 +5,7 @@
     <item>Liña de tempo</item>
     <item>Interaccións</item>
     <item>Mensaxes directas</item>
-    <item>Tópicos</item>
+    <item>Tendencias</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>Escribir chío</item>
@@ -15,7 +15,7 @@
   <string-array name="entries_home_refresh_content">
     <item>Interaccións</item>
     <item>Mensaxes directas</item>
-    <item>Tópicos</item>
+    <item>Tendencias</item>
     <item>Buscas gardadas</item>
   </string-array>
   <string-array name="entries_image_sources">

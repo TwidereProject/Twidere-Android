@@ -638,8 +638,11 @@
   <string name="preload_wifi_only">와이파이에서만 미리 불러오기</string>
   <string name="preview">미리보기</string>
   <string name="preview_images">이미지 미리보기</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">자르기</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">실제 크기</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">비율 조정</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">이전</string>

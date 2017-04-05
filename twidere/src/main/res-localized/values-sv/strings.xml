@@ -291,6 +291,9 @@
   <string name="preference_title_trends_location">Trenders platser</string>
   <string name="preview">Förhandsgranskning</string>
   <string name="preview_images">Förhandsgranska bilder</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Föregående</string>
   <string name="profile_image">Profilbild</string>

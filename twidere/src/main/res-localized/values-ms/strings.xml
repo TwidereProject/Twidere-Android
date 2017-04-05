@@ -118,6 +118,9 @@
   <string name="preference_title_storage">Storan</string>
   <string name="preference_title_text_size">Saiz teks</string>
   <string name="preview">Pratonton</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Sebelum</string>
   <string name="profile">Profil</string>

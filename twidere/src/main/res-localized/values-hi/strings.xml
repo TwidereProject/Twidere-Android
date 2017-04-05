@@ -121,6 +121,9 @@
   <string name="preference_title_storage">भंडारण</string>
   <string name="preference_title_text_size">टेक्स्ट का माप</string>
   <string name="preference_title_trends_location">रुझान स्थान</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">ट्विदेर</string>

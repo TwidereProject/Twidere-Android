@@ -285,6 +285,9 @@
   <string name="preference_title_translate">תרגם</string>
   <string name="preload_wifi_only">טעינה מוקדמת באמצעות Wi-Fi בלבד</string>
   <string name="preview">תצוגה מקדימה</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">הקודם</string>
   <string name="profile_background_color">צבע רקע</string>

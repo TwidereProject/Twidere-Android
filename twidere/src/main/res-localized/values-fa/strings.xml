@@ -622,8 +622,11 @@
   <string name="preload_wifi_only">فقط با Wi-Fi پیش بارگذاری کن</string>
   <string name="preview">پیش‌نمایش</string>
   <string name="preview_images">پیش‌نمایش تصاویر</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">بریدن</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">اندازهٔ واقعی</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">مقیاس</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">قبلی</string>

@@ -58,6 +58,9 @@
   <string name="overwrite">Suprascrie</string>
   <string name="pause">Pauză</string>
   <string name="play">Redare</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>

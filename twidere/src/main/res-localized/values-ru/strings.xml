@@ -564,8 +564,11 @@
   <string name="preload_wifi_only">Предзагружать только по Wi-Fi</string>
   <string name="preview">Предпросмотр</string>
   <string name="preview_images">Предпросмотр изображений</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Адаптировать</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">Реальный размер</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Масштабировать</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Предыдущий</string>

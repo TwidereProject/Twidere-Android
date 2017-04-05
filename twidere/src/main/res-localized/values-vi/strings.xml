@@ -47,6 +47,9 @@
   <!-- Notification method, flashing LED light -->
   <!-- Notification method, ringtone -->
   <!-- Notification method, device vibration -->
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->

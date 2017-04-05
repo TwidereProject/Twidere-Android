@@ -495,7 +495,10 @@
   <string name="preload_wifi_only">Preload alleen via Wi-Fi</string>
   <string name="preview">Voorbeeld</string>
   <string name="preview_images">Voorbeeldafbeeldingen</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Bijsnijden</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Schalen</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Vorige</string>

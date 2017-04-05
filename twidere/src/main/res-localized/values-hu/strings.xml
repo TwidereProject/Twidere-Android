@@ -495,7 +495,10 @@
   <string name="preload_wifi_only">Előtöltés csak Wi-Fi használata esetén</string>
   <string name="preview">Előnézet</string>
   <string name="preview_images">Képek előnézete</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Levágás</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Átméretezés</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Előző</string>

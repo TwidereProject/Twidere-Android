@@ -496,7 +496,10 @@
   <string name="preload_wifi_only">Yalnız Wi-Fi kullanarak önyükleme yap</string>
   <string name="preview">Önizleme</string>
   <string name="preview_images">Resim önizleme</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Kırp</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Ölçekle</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Önceki</string>

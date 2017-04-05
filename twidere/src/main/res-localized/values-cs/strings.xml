@@ -251,7 +251,10 @@
   <string name="preference_title_text_size">Velikost textu</string>
   <string name="preference_title_translate">Překlad</string>
   <string name="preview">Náhled</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Oříznout</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Měřítko</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Předchozí</string>

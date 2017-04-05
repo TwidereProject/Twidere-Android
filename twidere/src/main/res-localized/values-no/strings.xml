@@ -438,7 +438,10 @@
   <string name="preload_wifi_only">Forhåndslast bare med Wi-Fi</string>
   <string name="preview">Forhåndsvisning</string>
   <string name="preview_images">Forhåndsvis bilder</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Beskjær</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Skaler</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Forrige</string>

@@ -88,6 +88,7 @@
   <string name="action_pick_color">选取颜色</string>
   <string name="action_purchase">购买</string>
   <string name="action_purchase_features_pack">购买功能包</string>
+  <string name="action_qr_code">二维码</string>
   <string name="action_quote">引用</string>
   <string name="action_record_video">录像</string>
   <string name="action_refresh">刷新</string>
@@ -393,6 +394,7 @@
   <string name="hint_message_select_user">搜索用户</string>
   <string name="hint_no_account">没有帐号</string>
   <string name="hint_search_gif">搜索 GIF</string>
+  <string name="hint_status_reply_to_user_removed">这条回复将会以引用的形式发送，因为推文作者的提及被移除了。&lt;a href=\"#dialog\";&gt;为什么？&lt;/a&gt;</string>
   <string name="hints">提示</string>
   <string name="home_refresh">在主页时间线刷新</string>
   <string name="host_mapping_address">地址（可以是另一个主机名）</string>
@@ -502,7 +504,7 @@
   <string name="mention_user">提及 <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">提及 <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">仅提及</string>
-  <string name="message_account_delete_confirm">这个帐号将会从 Twidere 中删除。</string>
+  <string name="message_account_delete_confirm">这个帐号将被从 Twidere 中删除。</string>
   <string name="message_api_data_corrupted">API 数据损坏</string>
   <string name="message_api_url_format_help">[DOMAIN]：Twitter API 域名\n举例： https://[DOMAIN].twitter.com/ 会被替换成 https://api.twitter.com/ 。</string>
   <string name="message_auto_refresh_confirm">启用自动刷新以自动获取新推文？</string>
@@ -533,6 +535,7 @@
   <string name="message_permission_request_save_media">Twidere 需要存储权限来保存媒体</string>
   <string name="message_permission_request_share_media">Twidere 需要存储权限来向一些应用分享媒体</string>
   <string name="message_please_wait">请稍等</string>
+  <string name="message_status_reply_to_user_removed_explanation">Twitter 使推文作者总在回复中被提及，如果推文作者的提及被移除，Twidere 将会把这条回复以引用的形式发送，以保留上下文信息。</string>
   <string name="message_status_scheduling_connect_buffer_hint">连接到 Buffer ，即使您没有在线也可以定时发送推文</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere 已经连接到 Buffer</string>
   <string name="message_summary_type_sticker">[贴纸]</string>
@@ -568,6 +571,8 @@
   <string name="message_toast_notification_enabled_hint">仅在实时流开启时可用，且不是 100% 可靠</string>
   <string name="message_toast_press_again_to_close">再次按下以关闭</string>
   <string name="message_toast_profile_banner_image_updated">个人资料横幅图片已更新</string>
+  <string name="message_toast_qr_scan_link_not_supported">不支持这个链接</string>
+  <string name="message_toast_qr_scanner_not_supported">不支持这个二维码扫描器</string>
   <string name="message_toast_retweet_cancelled">转推已取消</string>
   <string name="message_toast_save_media_no_storage_permission">需要存储访问权限来保存媒体</string>
   <string name="message_toast_saved_to_gallery">已保存到相册</string>
@@ -727,12 +732,15 @@
   <string name="preference_title_tablet_mode">平板模式</string>
   <string name="preference_title_text_size">文字尺寸</string>
   <string name="preference_title_translate">翻译</string>
-  <string name="preference_title_trends_location">本地趋势的位置</string>
+  <string name="preference_title_trends_location">本地话题的位置</string>
   <string name="preload_wifi_only">仅使用Wi-Fi预加载</string>
   <string name="preview">预览</string>
   <string name="preview_images">推文预览图片</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">裁剪</string>
+  <!-- Actual size, media preview will be scaled respectively -->
   <string name="preview_style_real_size">实际大小</string>
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">缩放</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">上一条</string>

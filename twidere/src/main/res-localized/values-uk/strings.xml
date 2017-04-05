@@ -497,7 +497,10 @@
   <string name="preload_wifi_only">Попереднє завантаження лише через wi-fi</string>
   <string name="preview">Перегляд</string>
   <string name="preview_images">Перегляд зображень</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Обрізати</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Масштабувати</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Попередній</string>

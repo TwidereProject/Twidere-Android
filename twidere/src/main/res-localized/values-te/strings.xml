@@ -77,6 +77,9 @@
   <string name="other_settings">ఇతర అమరికలు</string>
   <string name="preference_title_accounts">ఖాతాలు</string>
   <string name="preview">మునుజూపు</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <string name="profile_link_color_main_color">లంకె రంగు (ముఖ్య రంగు)</string>
   <string name="profile_text_color">పాఠ్యపు రంగు</string>

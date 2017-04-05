@@ -419,7 +419,10 @@
   <string name="preload_wifi_only">Predpregled sam preko Wi-Fi</string>
   <string name="preview">Prepregled</string>
   <string name="preview_images">Slike predpregleda</string>
+  <!-- Media will be cropped to fit preview -->
   <string name="preview_style_crop">Obreži</string>
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <string name="preview_style_scale">Skaliraj</string>
   <!-- Previous item (tweet, user etc.) -->
   <string name="previous_item">Prethodno</string>

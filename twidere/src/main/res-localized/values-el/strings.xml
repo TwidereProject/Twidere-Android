@@ -110,6 +110,9 @@
   <string name="preference_summary_database_item_limit">Ανώτατο όριο αντικειμένων αποθηκευμένων στις βάσεις δεδομένων για κάθε λογαριασμό, επιλέξτε μικρότερη τιμή για εξοικονόμηση χώρου και αύξηση της ταχύτητας φόρτωσης.</string>
   <string name="preference_title_database_item_limit">Όριο μεγέθους βάσης δεδομένων</string>
   <string name="preference_title_storage">Αποθήκευση</string>
+  <!-- Media will be cropped to fit preview -->
+  <!-- Actual size, media preview will be scaled respectively -->
+  <!-- Media will be scaled to fit preview -->
   <!-- Previous item (tweet, user etc.) -->
   <!-- Normally you don't need to translate this -->
   <string name="provider_default">Twidere</string>
