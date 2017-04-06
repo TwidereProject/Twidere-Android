@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.adapter.ParcelableUserListsAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter.IndicatorPosition
@@ -157,6 +158,16 @@ abstract class ParcelableUserListsFragment : AbsContentListRecyclerViewFragment<
     }
 
     override fun onUserListLongClick(holder: UserListViewHolder, position: Int): Boolean {
+        return true
+    }
+
+    override fun triggerRefresh(): Boolean {
+        adapter.setData(null)
+        val loaderArgs = Bundle(arguments).apply {
+            this[EXTRA_FROM_USER] = true
+        }
+        loaderManager.restartLoader(0, loaderArgs, this)
+        showProgress()
         return true
     }
 
