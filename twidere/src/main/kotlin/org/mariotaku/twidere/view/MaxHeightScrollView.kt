@@ -38,7 +38,13 @@ class MaxHeightScrollView(context: Context, attrs: AttributeSet? = null) : Scrol
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val hSpec = if (maxHeight >= 0) {
-            View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST)
+            val measuredHeight = MeasureSpec.getSize(heightMeasureSpec)
+            if (measuredHeight > 0) {
+                View.MeasureSpec.makeMeasureSpec(Math.min(measuredHeight, maxHeight),
+                        View.MeasureSpec.AT_MOST)
+            } else {
+                maxHeight
+            }
         } else {
             heightMeasureSpec
         }

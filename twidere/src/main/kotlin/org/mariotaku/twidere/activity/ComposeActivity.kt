@@ -2010,7 +2010,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (TwidereViewUtils.hitView(event, parentView)) {
+                    if (TwidereViewUtils.hitView(event, delegateView)) {
+                        delegateTargeted = false
+                        sendToDelegate = false
+                    } else if (TwidereViewUtils.hitView(event, parentView)) {
                         delegateTargeted = true
                         sendToDelegate = true
                     }
