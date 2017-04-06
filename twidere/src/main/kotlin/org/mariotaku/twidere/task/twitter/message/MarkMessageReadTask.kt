@@ -67,15 +67,7 @@ class MarkMessageReadTask(
         val lastReadEvent = conversation?.let {
             return@let performMarkRead(context, microBlog, account, conversation)
         } ?: return false
-        val values = ContentValues()
-        values.put(Conversations.LAST_READ_ID, lastReadEvent.first)
-        values.put(Conversations.LAST_READ_TIMESTAMP, lastReadEvent.second)
-        val updateWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
-                Expression.equalsArgs(Conversations.CONVERSATION_ID),
-                Expression.lesserThanArgs(Conversations.LAST_READ_TIMESTAMP)).sql
-        val updateWhereArgs = arrayOf(accountKey.toString(), conversationId,
-                lastReadEvent.second.toString())
-        context.contentResolver.update(Conversations.CONTENT_URI, values, updateWhere, updateWhereArgs)
+        updateLocalLastRead(context.contentResolver, accountKey, conversationId, lastReadEvent)
         return true
     }
 
@@ -111,6 +103,18 @@ class MarkMessageReadTask(
             return Pair(message.id, message.timestamp)
         }
 
+        internal fun updateLocalLastRead(cr: ContentResolver, accountKey: UserKey,
+                conversationId: String, lastRead: Pair<String, Long>) {
+            val values = ContentValues()
+            values.put(Conversations.LAST_READ_ID, lastRead.first)
+            values.put(Conversations.LAST_READ_TIMESTAMP, lastRead.second)
+            val updateWhere = Expression.and(Expression.equalsArgs(Conversations.ACCOUNT_KEY),
+                    Expression.equalsArgs(Conversations.CONVERSATION_ID),
+                    Expression.lesserThanArgs(Conversations.LAST_READ_TIMESTAMP)).sql
+            val updateWhereArgs = arrayOf(accountKey.toString(), conversationId,
+                    lastRead.second.toString())
+            cr.update(Conversations.CONTENT_URI, values, updateWhere, updateWhereArgs)
+        }
 
         private fun ContentResolver.findRecentMessage(accountKey: UserKey, conversationId: String): ParcelableMessage? {
             val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),

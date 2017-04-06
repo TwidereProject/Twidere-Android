@@ -29,6 +29,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
 import org.mariotaku.twidere.task.ExceptionHandlingAbstractTask
@@ -63,7 +64,10 @@ class BatchMarkMessageReadTask(
             cur.forEachRow { cur, _ ->
                 val conversation = indices.newObject(cur)
                 try {
-                    MarkMessageReadTask.performMarkRead(context, microBlog, account, conversation)
+                    val lastReadEvent = MarkMessageReadTask.performMarkRead(context, microBlog,
+                            account, conversation) ?: return@forEachRow false
+                    MarkMessageReadTask.updateLocalLastRead(cr, account.key, conversation.id,
+                            lastReadEvent)
                     return@forEachRow true
                 } catch (e: MicroBlogException) {
                     return@forEachRow false
@@ -73,4 +77,7 @@ class BatchMarkMessageReadTask(
         return true
     }
 
+    override fun onSucceed(callback: Unit?, result: Boolean) {
+        bus.post(UnreadCountUpdatedEvent(-1))
+    }
 }
