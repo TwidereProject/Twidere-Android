@@ -167,7 +167,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
         super.triggerRefresh()
         val accountKeys = accountKeys
         val statusStartIndex = adapter.statusStartIndex
-        if (statusStartIndex >= 0) {
+        if (statusStartIndex >= 0 && adapter.getStatusCount(true) > 0) {
             val firstStatus = adapter.getStatus(statusStartIndex, true)
             val sinceIds = Array(accountKeys.size) {
                 return@Array if (firstStatus.account_key == accountKeys[it]) firstStatus.id else null

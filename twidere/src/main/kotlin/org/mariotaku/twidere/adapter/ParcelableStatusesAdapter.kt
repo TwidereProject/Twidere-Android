@@ -415,7 +415,7 @@ abstract class ParcelableStatusesAdapter(
         var sum = 0
         for (i in 0 until itemCounts.size) {
             sum += when (i) {
-                ITEM_INDEX_STATUS -> data!!.size
+                ITEM_INDEX_STATUS -> data?.size ?: 0
                 else -> itemCounts[i]
             }
             if (position < sum) {
