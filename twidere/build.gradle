@@ -36,8 +36,8 @@ android {
         applicationId "org.mariotaku.twidere"
         minSdkVersion project.properties['overrideMinSdkVersion'] ?: 14
         targetSdkVersion 25
-        versionCode 313
-        versionName '3.4.51'
+        versionCode 314
+        versionName '3.4.52'
         multiDexEnabled true
 
         buildConfigField 'boolean', 'LEAK_CANARY_ENABLED', 'Boolean.parseBoolean("true")'
@@ -92,7 +92,7 @@ repositories {
 dependencies {
 //    wearApp project(':twidere.wear')
     kapt "com.bluelinelabs:logansquare-compiler:${libVersions['LoganSquare']}"
-    kapt 'com.hannesdorfmann.parcelableplease:processor:1.0.2'
+    kapt "com.hannesdorfmann.parcelableplease:processor:${libVersions['ParcelablePlease']}"
     kapt 'com.google.dagger:dagger-compiler:2.8'
     kapt "com.github.mariotaku.ObjectCursor:processor:${libVersions['ObjectCursor']}"
 
@@ -160,7 +160,7 @@ dependencies {
     compile "org.apache.james:apache-mime4j-storage:${libVersions['Mime4J']}"
     compile "com.bluelinelabs:logansquare:${libVersions['LoganSquare']}"
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.hannesdorfmann.parcelableplease:annotation:1.0.2'
+    compile "com.hannesdorfmann.parcelableplease:annotation:${libVersions['ParcelablePlease']}"
     compile "com.github.mariotaku:PickNCrop:${libVersions['PickNCrop']}"
     compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
     compile "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"

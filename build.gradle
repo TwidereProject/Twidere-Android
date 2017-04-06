@@ -60,6 +60,7 @@ subprojects {
                     AndroidGIFDrawable: '1.2.6',
                     KPreferences      : '0.9.6',
                     Kovenant          : '3.3.0',
+                    ParcelablePlease  : '1.0.2',
             ]
         }
 

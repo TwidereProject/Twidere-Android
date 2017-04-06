@@ -27,18 +27,24 @@
   <!-- [verb] Action for blocking user -->
   <string name="action_block">封鎖</string>
   <string name="action_blocking">封鎖</string>
+  <string name="action_buffer_disconnect">從 Buffer 斷開連接</string>
+  <string name="action_buffer_settings">設定</string>
+  <string name="action_buffer_update_now">立即發佈</string>
   <!-- [verb] Action for cancelling (deleting) a retweet-->
   <string name="action_cancel_retweet">取消轉推</string>
   <string name="action_cancelling_like">取消喜歡</string>
   <string name="action_center">置中</string>
   <string name="action_clear">清除</string>
+  <string name="action_clear_messages">清空訊息</string>
   <string name="action_compose">撰寫</string>
   <string name="action_compose_message_convert_to_status">轉換為推文</string>
+  <string name="action_connect_to_buffer">連接</string>
   <string name="action_conversation_info">對話資訊</string>
   <string name="action_create_conversation">創建對話</string>
   <string name="action_creating_list">建立列表</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
   <string name="action_delete">刪除</string>
+  <string name="action_delete_messages">刪除訊息</string>
   <string name="action_deleting">刪除</string>
   <string name="action_deleting_search">刪除搜尋</string>
   <string name="action_denying_follow_request">拒絕關注請求</string>
@@ -70,6 +76,8 @@
   <string name="action_like">喜歡</string>
   <string name="action_liking">喜歡</string>
   <string name="action_location">位置</string>
+  <string name="action_manage_in_buffer">在 Buffer 中管理</string>
+  <string name="action_mark_as_read">標記為已讀</string>
   <string name="action_modifying_lists">修改列表</string>
   <string name="action_mute">靜音</string>
   <string name="action_mute_notifications">靜音通知</string>
@@ -80,6 +88,7 @@
   <string name="action_pick_color">選取顏色</string>
   <string name="action_purchase">購買</string>
   <string name="action_purchase_features_pack">購買功能包</string>
+  <string name="action_qr_code">QR 碼</string>
   <string name="action_quote">引用</string>
   <string name="action_record_video">錄影</string>
   <string name="action_refresh">更新</string>
@@ -160,7 +169,7 @@
   <!-- App name, normally you don't need to translate this. -->
   <string name="app_name">Twidere</string>
   <string name="app_restart_confirm">Twidere將重啟應用設定。</string>
-  <string name="app_terminate_confirm">Twidere 將退出以應用設置。</string>
+  <string name="app_terminate_confirm">Twidere 將退出以應用設定。</string>
   <string name="appearance">外觀</string>
   <string name="auth_type_basic">Basic</string>
   <string name="auth_type_oauth">OAuth</string>
@@ -202,6 +211,7 @@
   <string name="consumer_secret">Consumer secret</string>
   <string name="content">內容</string>
   <string name="content_and_storage">內容與儲存</string>
+  <string name="content_description_sticker">貼紙</string>
   <string name="content_to_notify">通知的內容</string>
   <string name="content_to_refresh">更新的內容</string>
   <string name="contributors_list_summary">如果您沒有看到您的名字，請聯繫我們的專案帳號</string>
@@ -255,6 +265,7 @@
   <string name="ellipsis">&#8230;</string>
   <string name="emoji_support">支援表情符號</string>
   <string name="empty_content">空內容</string>
+  <string name="enable_notifications">啟用通知</string>
   <string name="enable_retweets">啟用轉推</string>
   <string name="enable_streaming">啟用實時流</string>
   <string name="error_info_oauth_timestamp_error">請檢查您的系統日期與時間設定。</string>
@@ -377,14 +388,22 @@
   <!-- Restricted. Under 17 requires accompanying parent or adult guardian. http://www.mpaa.org/film-ratings/ -->
   <string name="label_data_provider">Twidere 資料庫存儲</string>
   <string name="label_filters_subscription">訂閱</string>
+  <string name="label_location_coarse">粗略（城市）</string>
+  <string name="label_location_no_location">無</string>
+  <string name="label_location_precise">精確（座標）</string>
   <string name="label_location_your_coarse_location">您的大致位置</string>
   <string name="label_media">多媒體</string>
   <string name="label_original_status">原推文</string>
+  <string name="label_password">密碼</string>
   <string name="label_password_sign_in">使用密碼登入</string>
   <string name="label_photo">照片</string>
+  <string name="label_photos">照片</string>
   <string name="label_poll">投票</string>
+  <string name="label_powered_by_giphy">由 GIPHY 強力驅動</string>
   <string name="label_refresh_and_sync_service">刷新和同步服務</string>
   <string name="label_refresh_service">刷新服務</string>
+  <string name="label_schedule_time_buffer_default">Buffer 預設</string>
+  <string name="label_send_at">發送於</string>
   <string name="label_status_not_available">推文不可用</string>
   <string name="label_statuses">推文</string>
   <string name="label_streaming_service">實時流服務</string>
@@ -590,6 +609,7 @@
   <string name="preference_randomize_account_name_summary">不準其他應用程式透過您的名字讀取帳號，改善隱私。</string>
   <string name="preference_randomize_account_rename_accounts_confirm">重新命名已有的帳號?</string>
   <string name="preference_summary_auto_refresh_power_saving">電量低時停止自動更新</string>
+  <string name="preference_summary_background_streaming">按 HOME 鍵而不是 BACK 鍵使實時流保持開啓</string>
   <string name="preference_summary_chrome_custom_tab">在 Chrome 分頁開啟連結</string>
   <string name="preference_summary_database_item_limit">每個帳號在資料庫中保存的推文/私訊條目上限，降低數值可以節省更多存儲空間以及加快載入的速度</string>
   <string name="preference_title_accounts">帳號</string>
@@ -820,6 +840,7 @@
   <string name="title_block_user">封鎖<xliff:g id="name">%s</xliff:g></string>
   <string name="title_blocked_users">已封鎖的使用者</string>
   <string name="title_browser_sign_in">瀏覽器登入</string>
+  <string name="title_buffer_settings">Buffer 設定</string>
   <string name="title_compose">撰寫</string>
   <string name="title_conversation">對話</string>
   <string name="title_dialog_sync_connect_to">連接到...</string>
@@ -861,6 +882,7 @@
   <string name="title_user_list_memberships">屬於</string>
   <string name="title_user_list_ownerships">新增</string>
   <string name="title_user_list_subscriptions">訂閱</string>
+  <string name="title_user_timeline_filter">時間軸過濾</string>
   <string name="title_users_favorited_this">收藏這條推文的用戶</string>
   <string name="title_users_liked_this">喜歡它的使用者</string>
   <string name="title_users_retweeted_this">轉推了這條推文的用戶</string>

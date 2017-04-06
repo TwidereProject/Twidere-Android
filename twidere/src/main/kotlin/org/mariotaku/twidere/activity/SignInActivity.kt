@@ -105,7 +105,8 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-class SignInActivity : BaseActivity(), OnClickListener, TextWatcher, APIEditorDialogFragment.APIEditorCallback {
+class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
+        APIEditorDialogFragment.APIEditorCallback {
     private lateinit var apiConfig: CustomAPIConfig
     private var apiChangeTimestamp: Long = 0
     private var signInTask: AbstractSignInTask? = null

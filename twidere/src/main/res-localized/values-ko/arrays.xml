@@ -77,7 +77,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>사용자</item>
     <item>사용자 타임라인</item>
-    <item>User Favorites</item>
+    <item>사용자 즐겨찾기</item>
     <item>리스트</item>
     <item>타임라인</item>
   </string-array>
