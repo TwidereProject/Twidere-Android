@@ -106,8 +106,8 @@ abstract class GetStatusesTask(
                     sinceId = null
                 }
                 val statuses = getStatuses(microBlog, paging)
-                val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId, sinceSortId,
-                        maxSortId, loadItemLimit, false)
+                val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId,
+                        sinceSortId, maxSortId, loadItemLimit, false)
                 // TODO cache related data and preload
                 val cacheTask = CacheUsersStatusesTask(context, accountKey, details.type, statuses)
                 TaskStarter.execute(cacheTask)

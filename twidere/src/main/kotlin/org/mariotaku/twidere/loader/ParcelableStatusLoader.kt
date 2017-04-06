@@ -85,7 +85,7 @@ class ParcelableStatusLoader(
                 // Delete all deleted status
                 val cr = context.contentResolver
                 DataStoreUtils.deleteStatus(cr, accountKey, statusId, null)
-                deleteActivityStatus(cr, accountKey, statusId, null)
+                cr.deleteActivityStatus(accountKey, statusId, null)
             }
             return SingleResponse(e)
         }

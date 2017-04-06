@@ -21,6 +21,7 @@ package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
 import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -64,7 +65,7 @@ class MarkMessageReadTask(
         val microBlog = account.newMicroBlogInstance(context, cls = MicroBlog::class.java)
         val conversation = DataStoreUtils.findMessageConversation(context, accountKey, conversationId)
         val lastReadEvent = conversation?.let {
-            return@let performMarkRead(microBlog, account, conversation)
+            return@let performMarkRead(context, microBlog, account, conversation)
         } ?: return false
         val values = ContentValues()
         values.put(Conversations.LAST_READ_ID, lastReadEvent.first)
@@ -82,53 +83,59 @@ class MarkMessageReadTask(
         bus.post(UnreadCountUpdatedEvent(-1))
     }
 
-    private fun performMarkRead(microBlog: MicroBlog, account: AccountDetails,
-            conversation: ParcelableMessageConversation): Pair<String, Long>? {
-        when (account.type) {
-            AccountType.TWITTER -> {
-                if (account.isOfficial(context)) {
-                    val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
-                        val message = findRecentMessage(accountKey, conversationId) ?: return null
-                        return@run Pair(message.id, message.timestamp)
-                    }
-                    if (conversation.last_read_timestamp > event.second) {
-                        // Local is newer, ignore network request
-                        return event
-                    }
-                    if (microBlog.markDmRead(conversation.id, event.first).isSuccessful) {
-                        return event
+
+    companion object {
+
+        @Throws(MicroBlogException::class)
+        internal fun performMarkRead(context: Context, microBlog: MicroBlog, account: AccountDetails,
+                conversation: ParcelableMessageConversation): Pair<String, Long>? {
+            val cr = context.contentResolver
+            when (account.type) {
+                AccountType.TWITTER -> {
+                    if (account.isOfficial(context)) {
+                        val event = (conversation.conversation_extras as? TwitterOfficialConversationExtras)?.maxReadEvent ?: run {
+                            val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
+                            return@run Pair(message.id, message.timestamp)
+                        }
+                        if (conversation.last_read_timestamp > event.second) {
+                            // Local is newer, ignore network request
+                            return event
+                        }
+                        if (microBlog.markDmRead(conversation.id, event.first).isSuccessful) {
+                            return event
+                        }
                     }
                 }
             }
+            val message = cr.findRecentMessage(account.key, conversation.id) ?: return null
+            return Pair(message.id, message.timestamp)
         }
-        val message = findRecentMessage(accountKey, conversationId) ?: return null
-        return Pair(message.id, message.timestamp)
-    }
 
 
-    private fun findRecentMessage(accountKey: UserKey, conversationId: String): ParcelableMessage? {
-        val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
-                Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
-        val whereArgs = arrayOf(accountKey.toString(), conversationId)
-        @SuppressLint("Recycle")
-        val cur = context.contentResolver.query(Messages.CONTENT_URI, Messages.COLUMNS,
-                where, whereArgs, OrderBy(Messages.LOCAL_TIMESTAMP, false).sql) ?: return null
-        try {
-            if (cur.moveToFirst()) {
-                val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)
-                return indices.newObject(cur)
+        private fun ContentResolver.findRecentMessage(accountKey: UserKey, conversationId: String): ParcelableMessage? {
+            val where = Expression.and(Expression.equalsArgs(Messages.ACCOUNT_KEY),
+                    Expression.equalsArgs(Messages.CONVERSATION_ID)).sql
+            val whereArgs = arrayOf(accountKey.toString(), conversationId)
+            @SuppressLint("Recycle")
+            val cur = query(Messages.CONTENT_URI, Messages.COLUMNS,
+                    where, whereArgs, OrderBy(Messages.LOCAL_TIMESTAMP, false).sql) ?: return null
+            try {
+                if (cur.moveToFirst()) {
+                    val indices = ObjectCursor.indicesFrom(cur, ParcelableMessage::class.java)
+                    return indices.newObject(cur)
+                }
+            } finally {
+                cur.close()
             }
-        } finally {
-            cur.close()
+            return null
         }
-        return null
+
+        private val TwitterOfficialConversationExtras.maxReadEvent: Pair<String, Long>?
+            get() {
+                val id = maxEntryId ?: return null
+                if (maxEntryTimestamp < 0) return null
+                return Pair(id, maxEntryTimestamp)
+            }
+
     }
-
-    private val TwitterOfficialConversationExtras.maxReadEvent: Pair<String, Long>?
-        get() {
-            val id = maxEntryId ?: return null
-            if (maxEntryTimestamp < 0) return null
-            return Pair(id, maxEntryTimestamp)
-        }
-
 }

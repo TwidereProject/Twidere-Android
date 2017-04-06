@@ -83,7 +83,7 @@ class CreateFavoriteTask(
             for (uri in DataStoreUtils.STATUSES_URIS) {
                 resolver.update(uri, values, statusWhere, statusWhereArgs)
             }
-            updateActivityStatus(resolver, accountKey, statusId) { activity ->
+            resolver.updateActivityStatus(accountKey, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 for (statusesArray in statusesMatrix) {
                     if (statusesArray == null) continue

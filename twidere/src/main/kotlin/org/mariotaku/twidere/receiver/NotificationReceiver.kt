@@ -22,17 +22,14 @@ package org.mariotaku.twidere.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.text.TextUtils
-import edu.tsinghua.hotmobi.model.NotificationEvent
+import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.ktextension.toLong
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.constant.IntentConstants.BROADCAST_NOTIFICATION_DELETED
-import org.mariotaku.twidere.model.Tab
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.util.UriExtraUtils
+import org.mariotaku.twidere.task.twitter.message.BatchMarkMessageReadTask
 import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 
@@ -50,39 +47,30 @@ class NotificationReceiver : BroadcastReceiver() {
                 @NotificationType
                 val notificationType = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE)
                 val accountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY)?.let(UserKey::valueOf)
-                val itemId = UriExtraUtils.getExtra(uri, "item_id").toLong(-1)
-                val itemUserId = UriExtraUtils.getExtra(uri, "item_user_id").toLong(-1)
-                val itemUserFollowing = UriExtraUtils.getExtra(uri, "item_user_following")?.toBoolean() ?: false
-                val timestamp = uri.getQueryParameter(QUERY_PARAM_TIMESTAMP)?.toLong() ?: -1
-                if (CustomTabType.NOTIFICATIONS_TIMELINE == Tab.getTypeAlias(notificationType)
-                        && accountKey != null && itemId != -1L && timestamp != -1L) {
-                    val logger = holder.hotMobiLogger
-                    logger.log(accountKey, NotificationEvent.deleted(context, timestamp, notificationType, accountKey,
-                            itemId, itemUserId, itemUserFollowing))
-                }
-                val manager = holder.readStateManager
                 val paramReadPosition = uri.getQueryParameter(QUERY_PARAM_READ_POSITION)
-                @ReadPositionTag
-                val tag = getPositionTag(notificationType)
-
-                if (tag != null && !TextUtils.isEmpty(paramReadPosition)) {
-                    manager.setPosition(Utils.getReadPositionTagWithAccount(tag, accountKey),
-                            paramReadPosition.toLong(-1))
+                when (notificationType) {
+                    NotificationType.HOME_TIMELINE -> {
+                        val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE,
+                                accountKey)
+                        val manager = holder.readStateManager
+                        manager.setPosition(positionTag, paramReadPosition.toLong(-1))
+                    }
+                    NotificationType.INTERACTIONS -> {
+                        val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME,
+                                accountKey)
+                        val manager = holder.readStateManager
+                        manager.setPosition(positionTag, paramReadPosition.toLong(-1))
+                    }
+                    NotificationType.DIRECT_MESSAGES -> {
+                        if (accountKey == null) return
+                        val appContext = context.applicationContext
+                        val task = BatchMarkMessageReadTask(appContext, accountKey,
+                                paramReadPosition.toLong(-1))
+                        TaskStarter.execute(task)
+                    }
                 }
             }
         }
     }
 
-    @ReadPositionTag
-    private fun getPositionTag(@NotificationType type: String?): String? {
-        if (type == null) return null
-        when (type) {
-            NotificationType.HOME_TIMELINE -> return ReadPositionTag.HOME_TIMELINE
-            NotificationType.INTERACTIONS -> return ReadPositionTag.ACTIVITIES_ABOUT_ME
-            NotificationType.DIRECT_MESSAGES -> {
-                return ReadPositionTag.DIRECT_MESSAGES
-            }
-        }
-        return null
-    }
 }

@@ -55,7 +55,7 @@ public class SystemHosts {
                     final String host = scanner.next();
                     if (host.startsWith("#")) break;
                     if (TextUtils.equals(hostToResolve, host)) {
-                        final InetAddress resolved = TwidereDns.getResolvedIPAddress(host, address);
+                        final InetAddress resolved = TwidereDns.Companion.getResolvedIPAddress(host, address);
                         if (resolved != null) return Collections.singletonList(resolved);
                     }
                 }

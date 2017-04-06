@@ -46,7 +46,7 @@ class DestroyStatusTask(
         } finally {
             if (deleteStatus) {
                 DataStoreUtils.deleteStatus(context.contentResolver, accountKey, statusId, status)
-                deleteActivityStatus(context.contentResolver, accountKey, statusId, status)
+                context.contentResolver.deleteActivityStatus(accountKey, statusId, status)
             }
         }
     }

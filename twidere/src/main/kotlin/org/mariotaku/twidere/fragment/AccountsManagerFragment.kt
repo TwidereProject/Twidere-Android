@@ -220,7 +220,7 @@ class AccountsManagerFragment : BaseFragment(), LoaderManager.LoaderCallbacks<Li
             when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     val accountKey = account.getAccountKey(am)
-                    deleteAccountData(resolver, accountKey)
+                    resolver.deleteAccountData(accountKey)
                     am.removeAccountSupport(account)
                 }
             }

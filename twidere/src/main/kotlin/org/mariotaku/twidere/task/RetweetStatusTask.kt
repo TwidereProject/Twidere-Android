@@ -68,7 +68,7 @@ class RetweetStatusTask(
             for (uri in DataStoreUtils.STATUSES_URIS) {
                 resolver.update(uri, values, where.sql, whereArgs)
             }
-            updateActivityStatus(resolver, accountKey, statusId) { activity ->
+            resolver.updateActivityStatus(accountKey, statusId) { activity ->
                 val statusesMatrix = arrayOf(activity.target_statuses, activity.target_object_statuses)
                 activity.status_my_retweet_id = result.my_retweet_id
                 for (statusesArray in statusesMatrix) {

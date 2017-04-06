@@ -118,6 +118,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String AUTHORITY_RETWEETS_OF_ME = "retweets_of_me";
     String AUTHORITY_MUTES_USERS = "mutes_users";
     String AUTHORITY_INTERACTIONS = "interactions";
+    String AUTHORITY_NOTIFICATIONS = "notifications";
     String AUTHORITY_ACCOUNTS = "accounts";
     String AUTHORITY_DRAFTS = "drafts";
     String AUTHORITY_FILTERS = "filters";
@@ -155,7 +156,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_FINISH_ONLY = "finish_only";
     String QUERY_PARAM_NEW_ITEMS_COUNT = "new_items_count";
     String QUERY_PARAM_CONVERSATION_ID = "conversation_id";
-    String QUERY_PARAM_READ_POSITION = "param_read_position";
+    String QUERY_PARAM_READ_POSITION = "read_position";
     String QUERY_PARAM_LIMIT = "limit";
     String QUERY_PARAM_EXTRA = "extra";
     String QUERY_PARAM_TIMESTAMP = "timestamp";

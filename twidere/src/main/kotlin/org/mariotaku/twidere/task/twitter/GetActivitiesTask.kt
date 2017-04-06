@@ -86,8 +86,8 @@ abstract class GetActivitiesTask(
             // We should delete old activities has intersection with new items
             try {
                 val activities = getActivities(microBlog, credentials, paging)
-                val storeResult = storeActivities(cr, loadItemLimit, credentials, noItemsBefore, activities, sinceId,
-                        maxId, false)
+                val storeResult = storeActivities(cr, loadItemLimit, credentials, noItemsBefore,
+                        activities, sinceId, maxId, false)
                 if (saveReadPosition) {
                     saveReadPosition(accountKey, credentials, microBlog)
                 }

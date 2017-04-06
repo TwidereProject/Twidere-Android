@@ -68,3 +68,22 @@ inline fun <R> Cursor.useCursor(block: (Cursor) -> R): R {
 
 val Cursor.isEmpty: Boolean
     get() = count == 0
+
+
+/**
+ * @param limit -1 for no limit
+ * @return Remaining count, -1 if no rows present
+ */
+inline fun Cursor.forEachRow(limit: Int = -1, action: (cur: Cursor, pos: Int) -> Boolean): Int {
+    moveToFirst()
+    var current = 0
+    while (!isAfterLast) {
+        @Suppress("ConvertTwoComparisonsToRangeCheck")
+        if (limit >= 0 && current >= limit) break
+        if (action(this, current)) {
+            current++
+        }
+        moveToNext()
+    }
+    return count - position
+}

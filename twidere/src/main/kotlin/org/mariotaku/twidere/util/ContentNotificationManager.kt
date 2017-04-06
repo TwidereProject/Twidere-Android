@@ -24,11 +24,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.database.Cursor
 import android.media.AudioManager
 import android.net.Uri
 import android.support.v4.app.NotificationCompat
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.forEachRow
 import org.mariotaku.ktextension.isEmpty
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.Activity
@@ -80,10 +80,10 @@ class ContentNotificationManager(
         val accountKey = pref.accountKey
         val resources = context.resources
         val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey))
+                Expression.greaterThanArgs(Statuses.POSITION_KEY))
+        val selectionArgs = arrayOf(accountKey.toString(), minPositionKey.toString())
         val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
                 selection)
-        val selectionArgs = arrayOf(accountKey.toString())
         val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
         val statusProjection = arrayOf(Statuses.POSITION_KEY)
 
@@ -105,7 +105,11 @@ class ContentNotificationManager(
             if (statusesCount == 0 || usersCount == 0) return
             val statusIndices = ObjectCursor.indicesFrom(statusCursor, ParcelableStatus::class.java)
             val userIndices = ObjectCursor.indicesFrom(userCursor, ParcelableStatus::class.java)
-            val positionKey = if (statusCursor.moveToFirst()) statusCursor.getLong(statusIndices[Statuses.POSITION_KEY]) else -1L
+            val positionKey = if (statusCursor.moveToFirst()) {
+                statusCursor.getLong(statusIndices[Statuses.POSITION_KEY])
+            } else {
+                -1L
+            }
             val notificationTitle = resources.getQuantityString(R.plurals.N_new_statuses,
                     statusesCount, statusesCount)
             val notificationContent: String
@@ -184,12 +188,17 @@ class ContentNotificationManager(
             style.setSummaryText(accountName)
             val ci = ObjectCursor.indicesFrom(c, ParcelableActivity::class.java)
 
-            var timestamp: Long = -1
+            var timestamp = -1L
+            var newMaxPositionKey = -1L
             val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
             var consumed = 0
             val remaining = c.forEachRow(5) { cur, _ ->
-
                 val activity = ci.newObject(cur)
+
+                if (newMaxPositionKey == -1L) {
+                    newMaxPositionKey = activity.position_key
+                }
+
                 if (pref.isNotificationMentionsOnly && activity.action !in Activity.Action.MENTION_ACTIONS) {
                     return@forEachRow false
                 }
@@ -239,6 +248,8 @@ class ContentNotificationManager(
             builder.setNumber(displayCount)
             builder.setContentIntent(getContentIntent(context, CustomTabType.NOTIFICATIONS_TIMELINE,
                     NotificationType.INTERACTIONS, accountKey, timestamp))
+            builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.INTERACTIONS,
+                    accountKey, newMaxPositionKey, false))
             if (timestamp != -1L) {
                 builder.setDeleteIntent(getMarkReadDeleteIntent(context,
                         NotificationType.INTERACTIONS, accountKey, timestamp, false))
@@ -267,7 +278,11 @@ class ContentNotificationManager(
             val indices = ObjectCursor.indicesFrom(cur, ParcelableMessageConversation::class.java)
 
             var messageSum: Int = 0
+            var newLastReadTimestamp = -1L
             cur.forEachRow { cur, _ ->
+                if (newLastReadTimestamp != -1L) {
+                    newLastReadTimestamp = cur.getLong(indices[Conversations.LAST_READ_TIMESTAMP])
+                }
                 messageSum += cur.getInt(indices[Conversations.UNREAD_COUNT])
                 return@forEachRow true
             }
@@ -286,6 +301,9 @@ class ContentNotificationManager(
             builder.setContentTitle(notificationTitle)
             builder.setContentIntent(getContentIntent(context, CustomTabType.DIRECT_MESSAGES,
                     NotificationType.DIRECT_MESSAGES, accountKey, 0))
+            builder.setDeleteIntent(getMarkReadDeleteIntent(context, NotificationType.DIRECT_MESSAGES,
+                    accountKey, newLastReadTimestamp, false))
+
             val remaining = cur.forEachRow(5) { cur, pos ->
                 val conversation = indices.newObject(cur)
                 if (conversation.notificationDisabled) return@forEachRow false
@@ -311,22 +329,35 @@ class ContentNotificationManager(
     }
 
 
-    /**
-     * @param limit -1 for no limit
-     * @return Remaining count, -1 if no rows present
-     */
-    private inline fun Cursor.forEachRow(limit: Int = -1, action: (cur: Cursor, pos: Int) -> Boolean): Int {
-        moveToFirst()
-        var current = 0
-        while (!isAfterLast) {
-            @Suppress("ConvertTwoComparisonsToRangeCheck")
-            if (limit >= 0 && current >= limit) break
-            if (action(this, current)) {
-                current++
-            }
-            moveToNext()
+    fun showUserNotification(accountKey: UserKey, status: Status, userKey: UserKey) {
+        // Build favorited user notifications
+        val userDisplayName = userColorNameManager.getDisplayName(status.user,
+                preferences[nameFirstKey])
+        val statusUri = LinkCreator.getTwidereStatusLink(accountKey, status.id)
+        val builder = NotificationCompat.Builder(context)
+        builder.color = userColorNameManager.getUserColor(userKey)
+        builder.setAutoCancel(true)
+        builder.setWhen(status.createdAt?.time ?: 0)
+        builder.setSmallIcon(R.drawable.ic_stat_twitter)
+        builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+        if (status.isRetweetedByMe) {
+            builder.setContentTitle(context.getString(R.string.notification_title_new_retweet_by_user, userDisplayName))
+            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status.retweetedStatus).text)
+        } else {
+            builder.setContentTitle(context.getString(R.string.notification_title_new_status_by_user, userDisplayName))
+            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status).text)
         }
-        return count - position
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, Intent(Intent.ACTION_VIEW, statusUri).apply {
+            setClass(context, LinkHandlerActivity::class.java)
+        }, PendingIntent.FLAG_UPDATE_CURRENT))
+
+        val tag = "$accountKey:$userKey:${status.id}"
+        notificationManager.notify(tag, NOTIFICATION_ID_USER_NOTIFICATION, builder.build())
+    }
+
+    fun updatePreferences() {
+        nameFirst = preferences[nameFirstKey]
+        useStarForLikes = preferences[iWantMyStarsBackKey]
     }
 
     private fun applyNotificationPreferences(builder: NotificationCompat.Builder, pref: AccountPreferences, defaultFlags: Int) {
@@ -355,7 +386,6 @@ class ContentNotificationManager(
         return !activityTracker.isHomeActivityStarted
     }
 
-
     private fun getContentIntent(context: Context, @CustomTabType type: String,
             @NotificationType notificationType: String, accountKey: UserKey?, readPosition: Long): PendingIntent {
         // Setup click intent
@@ -376,65 +406,28 @@ class ContentNotificationManager(
         return PendingIntent.getActivity(context, 0, homeIntent, 0)
     }
 
-    fun updatePreferences() {
-        nameFirst = preferences[nameFirstKey]
-        useStarForLikes = preferences[iWantMyStarsBackKey]
-    }
-
     private fun getMarkReadDeleteIntent(context: Context, @NotificationType type: String,
             accountKey: UserKey?, position: Long,
             extraUserFollowing: Boolean): PendingIntent {
-        return getMarkReadDeleteIntent(context, type, accountKey, position, -1, -1, extraUserFollowing)
+        return getMarkReadDeleteIntent(context, type, accountKey, position)
     }
 
     private fun getMarkReadDeleteIntent(context: Context, @NotificationType type: String,
-            accountKey: UserKey?, position: Long,
-            extraId: Long, extraUserId: Long,
-            extraUserFollowing: Boolean): PendingIntent {
+            accountKey: UserKey?, position: Long): PendingIntent {
         // Setup delete intent
         val intent = Intent(context, NotificationReceiver::class.java)
         intent.action = IntentConstants.BROADCAST_NOTIFICATION_DELETED
         val linkBuilder = Uri.Builder()
         linkBuilder.scheme(SCHEME_TWIDERE)
-        linkBuilder.authority(AUTHORITY_INTERACTIONS)
+        linkBuilder.authority(AUTHORITY_NOTIFICATIONS)
         linkBuilder.appendPath(type)
         if (accountKey != null) {
             linkBuilder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         linkBuilder.appendQueryParameter(QUERY_PARAM_READ_POSITION, position.toString())
-        linkBuilder.appendQueryParameter(QUERY_PARAM_TIMESTAMP, System.currentTimeMillis().toString())
         linkBuilder.appendQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE, type)
 
-        UriExtraUtils.addExtra(linkBuilder, "item_id", extraId)
-        UriExtraUtils.addExtra(linkBuilder, "item_user_id", extraUserId)
-        UriExtraUtils.addExtra(linkBuilder, "item_user_following", extraUserFollowing)
         intent.data = linkBuilder.build()
         return PendingIntent.getBroadcast(context, 0, intent, 0)
-    }
-
-    fun showUserNotification(accountKey: UserKey, status: Status, userKey: UserKey) {
-        // Build favorited user notifications
-        val userDisplayName = userColorNameManager.getDisplayName(status.user,
-                preferences[nameFirstKey])
-        val statusUri = LinkCreator.getTwidereStatusLink(accountKey, status.id)
-        val builder = NotificationCompat.Builder(context)
-        builder.color = userColorNameManager.getUserColor(userKey)
-        builder.setAutoCancel(true)
-        builder.setWhen(status.createdAt?.time ?: 0)
-        builder.setSmallIcon(R.drawable.ic_stat_twitter)
-        builder.setCategory(NotificationCompat.CATEGORY_SOCIAL)
-        if (status.isRetweetedByMe) {
-            builder.setContentTitle(context.getString(R.string.notification_title_new_retweet_by_user, userDisplayName))
-            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status.retweetedStatus).text)
-        } else {
-            builder.setContentTitle(context.getString(R.string.notification_title_new_status_by_user, userDisplayName))
-            builder.setContentText(InternalTwitterContentUtils.formatStatusTextWithIndices(status).text)
-        }
-        builder.setContentIntent(PendingIntent.getActivity(context, 0, Intent(Intent.ACTION_VIEW, statusUri).apply {
-            setClass(context, LinkHandlerActivity::class.java)
-        }, PendingIntent.FLAG_UPDATE_CURRENT))
-
-        val tag = "$accountKey:$userKey:${status.id}"
-        notificationManager.notify(tag, NOTIFICATION_ID_USER_NOTIFICATION, builder.build())
     }
 }

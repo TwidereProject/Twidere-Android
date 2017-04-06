@@ -32,8 +32,7 @@ import java.io.IOException
  * Created by mariotaku on 2016/12/24.
  */
 
-fun buildStatusFilterWhereClause(preferences: SharedPreferences,
-        table: String,
+fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
         extraSelection: Expression?): Expression {
     val filteredUsersQuery = SQLQueryBuilder
             .select(Column(Table(Filters.Users.TABLE_NAME), Filters.Users.USER_KEY))
@@ -116,20 +115,20 @@ fun deleteDrafts(context: Context, draftIds: LongArray): Int {
     return context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
 }
 
-fun deleteAccountData(resolver: ContentResolver, accountKey: UserKey) {
+fun ContentResolver.deleteAccountData(accountKey: UserKey) {
     val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
     val whereArgs = arrayOf(accountKey.toString())
     // Also delete tweets related to the account we previously
     // deleted.
-    resolver.delete(Statuses.CONTENT_URI, where, whereArgs)
-    resolver.delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
-    resolver.delete(Messages.CONTENT_URI, where, whereArgs)
-    resolver.delete(Messages.Conversations.CONTENT_URI, where, whereArgs)
+    delete(Statuses.CONTENT_URI, where, whereArgs)
+    delete(Activities.AboutMe.CONTENT_URI, where, whereArgs)
+    delete(Messages.CONTENT_URI, where, whereArgs)
+    delete(Conversations.CONTENT_URI, where, whereArgs)
 }
 
 
-fun deleteActivityStatus(cr: ContentResolver, accountKey: UserKey,
-        statusId: String, result: ParcelableStatus?) {
+fun ContentResolver.deleteActivityStatus(accountKey: UserKey, statusId: String,
+        result: ParcelableStatus?) {
 
     val host = accountKey.host
     val deleteWhere: String
@@ -159,8 +158,8 @@ fun deleteActivityStatus(cr: ContentResolver, accountKey: UserKey,
         updateWhereArgs = arrayOf(statusId)
     }
     for (uri in ACTIVITIES_URIS) {
-        cr.delete(uri, deleteWhere, deleteWhereArgs)
-        updateActivity(cr, uri, updateWhere, updateWhereArgs) { activity ->
+        delete(uri, deleteWhere, deleteWhereArgs)
+        updateActivity(uri, updateWhere, updateWhereArgs) { activity ->
             activity.status_my_retweet_id = null
             arrayOf(activity.target_statuses, activity.target_object_statuses).filterNotNull().forEach {
                 for (status in it) {
@@ -178,9 +177,7 @@ fun deleteActivityStatus(cr: ContentResolver, accountKey: UserKey,
     }
 }
 
-fun updateActivityStatus(resolver: ContentResolver,
-        accountKey: UserKey,
-        statusId: String,
+fun ContentResolver.updateActivityStatus(accountKey: UserKey, statusId: String,
         action: (ParcelableActivity) -> Unit) {
     val activityWhere = Expression.and(
             Expression.equalsArgs(Activities.ACCOUNT_KEY),
@@ -191,16 +188,15 @@ fun updateActivityStatus(resolver: ContentResolver,
     ).sql
     val activityWhereArgs = arrayOf(accountKey.toString(), statusId, statusId)
     for (uri in ACTIVITIES_URIS) {
-        updateActivity(resolver, uri, activityWhere, activityWhereArgs, action)
+        updateActivity(uri, activityWhere, activityWhereArgs, action)
     }
 }
 
 
 @WorkerThread
-fun updateActivity(cr: ContentResolver, uri: Uri,
-        where: String?, whereArgs: Array<String>?,
-        action: (ParcelableActivity) -> Unit) {
-    val c = cr.query(uri, Activities.COLUMNS, where, whereArgs, null) ?: return
+fun ContentResolver.updateActivity(uri: Uri, where: String?,
+        whereArgs: Array<String>?, action: (ParcelableActivity) -> Unit) {
+    val c = query(uri, Activities.COLUMNS, where, whereArgs, null) ?: return
     val values = LongSparseArray<ContentValues>()
     try {
         val ci = ObjectCursor.indicesFrom(c, ParcelableActivity::class.java)
@@ -221,11 +217,12 @@ fun updateActivity(cr: ContentResolver, uri: Uri,
     val updateWhereArgs = arrayOfNulls<String>(1)
     for (i in 0 until values.size()) {
         updateWhereArgs[0] = values.keyAt(i).toString()
-        cr.update(uri, values.valueAt(i), updateWhere, updateWhereArgs)
+        update(uri, values.valueAt(i), updateWhere, updateWhereArgs)
     }
 }
 
-fun ContentResolver.getUnreadMessagesEntriesCursor(projection: Array<Columns.Column>, accountKeys: Array<UserKey>): Cursor? {
+fun ContentResolver.getUnreadMessagesEntriesCursor(projection: Array<Columns.Column>,
+        accountKeys: Array<UserKey>, timestampBefore: Long = -1): Cursor? {
     val qb = SQLQueryBuilder.select(Columns(*projection))
     qb.from(Table(Conversations.TABLE_NAME))
     qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
@@ -234,15 +231,27 @@ fun ContentResolver.getUnreadMessagesEntriesCursor(projection: Array<Columns.Col
                     Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
             )
     ))
-    qb.where(Expression.and(
+    val whereConditions = arrayOf(
             Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
                     accountKeys.size),
             Expression.lesserThan(Column(Table(Conversations.TABLE_NAME), Conversations.LAST_READ_TIMESTAMP),
                     Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP))
-    ))
+    )
+    if (timestampBefore >= 0) {
+        val beforeCondition = Expression.greaterThan(Column(Table(Conversations.TABLE_NAME),
+                Conversations.LAST_READ_TIMESTAMP), RawSQLLang("?"))
+        qb.where(Expression.and(*(whereConditions + beforeCondition)))
+    } else {
+        qb.where(Expression.and(*whereConditions))
+    }
     qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
     qb.orderBy(OrderBy(arrayOf(Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP),
             Column(Table(Conversations.TABLE_NAME), Conversations.SORT_ID)), booleanArrayOf(false, false)))
-    val selectionArgs = accountKeys.toStringArray()
+
+    val selectionArgs = if (timestampBefore >= 0) {
+        accountKeys.toStringArray() + timestampBefore.toString()
+    } else {
+        accountKeys.toStringArray()
+    }
     return rawQuery(qb.buildSQL(), selectionArgs)
 }
