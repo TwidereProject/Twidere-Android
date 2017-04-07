@@ -39,6 +39,8 @@ interface IUsersAdapter<in Data> : IContentAdapter {
 
     val simpleLayout: Boolean
 
+    val showFollow: Boolean
+
     fun setData(data: Data?): Boolean
 
     fun getUser(position: Int): ParcelableUser?

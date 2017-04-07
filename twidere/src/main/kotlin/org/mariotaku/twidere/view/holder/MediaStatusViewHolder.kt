@@ -57,9 +57,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
 
     override fun displayStatus(status: ParcelableStatus, displayInReplyTo: Boolean,
             displayPinned: Boolean) {
-        val media = status.media ?: return
-        if (media.isEmpty()) return
-        val firstMedia = media[0]
+        val context = itemView.context
 
         var displayEnd = -1
         if (status.extras.display_text_range != null) {
@@ -71,16 +69,18 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
         } else {
             mediaTextView.text = status.text_unescaped
         }
+        adapter.requestManager.loadProfileImage(context, status,
+                adapter.profileImageStyle, profileImageView.cornerRadius,
+                profileImageView.cornerRadiusRatio).into(profileImageView)
+
+        val firstMedia = status.media?.firstOrNull() ?: return
 
         aspectRatioSource.setSize(firstMedia.width, firstMedia.height)
         mediaImageContainer.tag = firstMedia
         mediaImageContainer.requestLayout()
 
         mediaImageView.setHasPlayIcon(ParcelableMediaUtils.hasPlayIcon(firstMedia.type))
-        val context = itemView.context
-        adapter.requestManager.loadProfileImage(context, status,
-                adapter.profileImageStyle, profileImageView.cornerRadius,
-                profileImageView.cornerRadiusRatio).into(profileImageView)
+
         // TODO image loaded event and credentials
         adapter.requestManager.load(firstMedia.preview_url).into(mediaImageView)
     }

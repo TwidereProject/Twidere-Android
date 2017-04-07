@@ -174,8 +174,11 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
         @Referral
         get() = null
 
-    protected val simpleLayout: Boolean
+    protected open val simpleLayout: Boolean
         get() = arguments.getBoolean(EXTRA_SIMPLE_LAYOUT)
+
+    protected open val showFollow: Boolean
+        get() = true
 
     override fun onUserLongClick(holder: UserViewHolder, position: Int): Boolean {
         return true

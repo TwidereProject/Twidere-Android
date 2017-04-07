@@ -85,9 +85,6 @@ class MediaTimelineLoader(
                     val result = ResponseList<Status>()
                     microBlog.search(query).filterTo(result) { status ->
                         val user = status.user
-                        if (status.mediaEntities.isNullOrEmpty()) {
-                            return@filterTo false
-                        }
                         return@filterTo user.id == userKey?.id
                                 || user.screenName.equals(this.screenName, ignoreCase = true)
                     }
@@ -110,6 +107,7 @@ class MediaTimelineLoader(
 
     @WorkerThread
     override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
+        if (status.media.isNullOrEmpty()) return false
         val retweetUserId = if (status.is_retweet) status.user_key else null
         return !isMyTimeline && InternalTwitterContentUtils.isFiltered(database, retweetUserId,
                 status.text_plain, status.quoted_text_plain, status.spans, status.quoted_spans,

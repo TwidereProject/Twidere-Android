@@ -115,58 +115,61 @@ object ParcelableMediaUtils {
             mediaEntities: Array<MediaEntity>?, extendedMediaEntities: Array<MediaEntity>?,
             accountKey: UserKey, accountType: String): Array<ParcelableMedia> {
         if (card == null) return emptyArray()
-        val name = card.name
-        if ("animated_gif" == name || "player" == name) {
-            val media = ParcelableMedia()
-            val playerStreamUrl = card.getBindingValue("player_stream_url")
-            media.card = card.toParcelable(accountKey, accountType)
-            val appUrlResolved = card.getBindingValue("app_url_resolved") as CardEntity.StringValue
-            media.url = if (checkUrl(appUrlResolved)) appUrlResolved.value else card.url
-            if ("animated_gif" == name) {
-                media.media_url = (playerStreamUrl as CardEntity.StringValue).value
-                media.type = ParcelableMedia.Type.CARD_ANIMATED_GIF
-            } else if (playerStreamUrl is CardEntity.StringValue) {
-                media.media_url = playerStreamUrl.value
-                media.type = ParcelableMedia.Type.VIDEO
-            } else {
-                val playerUrl = card.getBindingValue("player_url") as? CardEntity.StringValue
-                if (playerUrl != null) {
-                    media.media_url = playerUrl.value
+        when (card.name) {
+            "animated_gif", "player" -> {
+                val media = ParcelableMedia()
+                val playerStreamUrl = card.getBindingValue("player_stream_url")
+                media.card = card.toParcelable(accountKey, accountType)
+                val appUrlResolved = card.getBindingValue("app_url_resolved") as? CardEntity.StringValue
+                media.url = appUrlResolved?.takeIf { it.checkUrl() }?.value ?: card.url
+                if (playerStreamUrl is CardEntity.StringValue) {
+                    media.media_url = playerStreamUrl.value
+                    if ("animated_gif" == card.name) {
+                        media.type = ParcelableMedia.Type.CARD_ANIMATED_GIF
+                    } else {
+                        media.type = ParcelableMedia.Type.VIDEO
+                    }
+                } else {
+                    val playerUrl = card.getBindingValue("player_url") as? CardEntity.StringValue
+                    if (playerUrl != null) {
+                        media.media_url = playerUrl.value
+                    }
+                    media.type = ParcelableMedia.Type.EXTERNAL_PLAYER
                 }
-                media.type = ParcelableMedia.Type.EXTERNAL_PLAYER
+                val playerImage = card.getBindingValue("player_image")
+                if (playerImage is CardEntity.ImageValue) {
+                    media.preview_url = playerImage.url
+                    media.width = playerImage.width
+                    media.height = playerImage.height
+                }
+                val playerWidth = card.getBindingValue("player_width")
+                val playerHeight = card.getBindingValue("player_height")
+                if (playerWidth is CardEntity.StringValue && playerHeight is CardEntity.StringValue) {
+                    media.width = playerWidth.value.toIntOr(-1)
+                    media.height = playerHeight.value.toIntOr(-1)
+                }
+                writeLinkInfo(media, urlEntities, mediaEntities, extendedMediaEntities)
+                return arrayOf(media)
             }
-            val playerImage = card.getBindingValue("player_image")
-            if (playerImage is CardEntity.ImageValue) {
-                media.preview_url = playerImage.url
-                media.width = playerImage.width
-                media.height = playerImage.height
-            }
-            val playerWidth = card.getBindingValue("player_width")
-            val playerHeight = card.getBindingValue("player_height")
-            if (playerWidth is CardEntity.StringValue && playerHeight is CardEntity.StringValue) {
-                media.width = playerWidth.value.toIntOr(-1)
-                media.height = playerHeight.value.toIntOr(-1)
-            }
-            writeLinkInfo(media, urlEntities, mediaEntities, extendedMediaEntities)
-            return arrayOf(media)
-        } else if ("summary_large_image" == name) {
-            val photoImageFullSize = card.getBindingValue("photo_image_full_size") as? CardEntity.ImageValue ?: return emptyArray()
+            "summary_large_image" -> {
+                val photoImageFullSize = card.getBindingValue("photo_image_full_size") as? CardEntity.ImageValue ?: return emptyArray()
 
-            val media = ParcelableMedia()
-            media.url = card.url
-            media.card = card.toParcelable(accountKey, accountType)
-            media.type = ParcelableMedia.Type.IMAGE
-            media.media_url = photoImageFullSize.url
-            media.width = photoImageFullSize.width
-            media.height = photoImageFullSize.height
-            media.open_browser = true
-            val summaryPhotoImage = card.getBindingValue("summary_photo_image")
-            if (summaryPhotoImage is CardEntity.ImageValue) {
-                media.preview_url = summaryPhotoImage.url
+                val media = ParcelableMedia()
+                media.url = card.url
+                media.card = card.toParcelable(accountKey, accountType)
+                media.type = ParcelableMedia.Type.IMAGE
+                media.media_url = photoImageFullSize.url
+                media.width = photoImageFullSize.width
+                media.height = photoImageFullSize.height
+                media.open_browser = true
+                val summaryPhotoImage = card.getBindingValue("summary_photo_image")
+                if (summaryPhotoImage is CardEntity.ImageValue) {
+                    media.preview_url = summaryPhotoImage.url
+                }
+                return arrayOf(media)
             }
-            return arrayOf(media)
+            else -> return emptyArray()
         }
-        return emptyArray()
     }
 
     private fun writeLinkInfo(media: ParcelableMedia, vararg entities: Array<out UrlEntity>?) {
@@ -184,10 +187,10 @@ object ParcelableMediaUtils {
         }
     }
 
-    private fun checkUrl(value: CardEntity.StringValue?): Boolean {
-        if (value == null) return false
-        val valueString = value.value
-        return valueString != null && (valueString.startsWith("http://") || valueString.startsWith("https://"))
+    @JvmStatic
+    private fun CardEntity.StringValue.checkUrl(): Boolean {
+        val value = this.value ?: return false
+        return value != null && (value.startsWith("http://") || value.startsWith("https://"))
     }
 
     fun getTypeInt(type: String): Int {

@@ -58,6 +58,7 @@ class DummyItemAdapter(
     override var showAccountsColor: Boolean = false
     override var useStarsForLikes: Boolean = false
     override var simpleLayout: Boolean = false
+    override var showFollow: Boolean = true
 
     private var showCardActions: Boolean = false
     private var showingActionCardPosition = RecyclerView.NO_POSITION

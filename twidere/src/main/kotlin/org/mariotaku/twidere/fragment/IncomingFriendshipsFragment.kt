@@ -34,9 +34,10 @@ import org.mariotaku.twidere.util.Utils
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
 class IncomingFriendshipsFragment : CursorUsersListFragment(), IUsersAdapter.RequestClickListener {
+    override val showFollow: Boolean = false
 
     override fun onCreateUsersLoader(context: Context, args: Bundle,
-                                     fromUser: Boolean): CursorSupportUsersLoader {
+            fromUser: Boolean): CursorSupportUsersLoader {
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val loader = IncomingFriendshipsLoader(context, accountKey, adapter.getData(), fromUser)
         loader.cursor = nextCursor
