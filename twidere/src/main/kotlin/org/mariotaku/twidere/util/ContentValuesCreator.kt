@@ -35,8 +35,7 @@ object ContentValuesCreator {
 
     fun createCachedUser(user: User, accountType: String, profileImageSize: String = "normal"): ContentValues {
         return ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java)
-                .create(ParcelableUserUtils.fromUser(user, null, accountType,
-                        profileImageSize = profileImageSize))
+                .create(ParcelableUserUtils.fromUser(user, accountType, profileImageSize = profileImageSize))
     }
 
     fun createFilteredUser(status: ParcelableStatus): ContentValues {

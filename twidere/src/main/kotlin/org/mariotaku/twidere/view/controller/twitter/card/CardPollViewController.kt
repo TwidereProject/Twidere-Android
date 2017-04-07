@@ -158,7 +158,9 @@ class CardPollViewController : ContainerView.ViewController() {
                                         card.account_key, true) ?: return null
                                 val caps = details.newMicroBlogInstance(context, cls = TwitterCaps::class.java)
                                 try {
-                                    val cardEntity = caps.sendPassThrough(cardDataMap).card
+                                    val cardEntity = caps.sendPassThrough(cardDataMap).card ?: run {
+                                        return null
+                                    }
                                     return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
                                             card.account_key, details.type)
                                 } catch (e: MicroBlogException) {

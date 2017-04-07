@@ -163,9 +163,11 @@ object ParcelableStatusUtils {
         result.is_possibly_sensitive = status.isPossiblySensitive
         result.mentions = ParcelableUserMentionUtils.fromUserMentionEntities(user,
                 status.userMentionEntities)
-        result.card = ParcelableCardEntityUtils.fromCardEntity(status.card, accountKey, accountType)
+        result.card = status.card?.let {
+            ParcelableCardEntityUtils.fromCardEntity(it, accountKey, accountType)
+        }
+        result.card_name = result.card?.name
         result.place_full_name = getPlaceFullName(status)
-        result.card_name = if (result.card != null) result.card!!.name else null
         result.lang = status.lang
 
         return result

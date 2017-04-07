@@ -106,6 +106,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.model.applyTo
+import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
@@ -1223,9 +1224,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])
             }
             R.id.profileBanner -> {
-                val bannerUrl = ParcelableUserUtils.getProfileBannerUrl(user) ?: return
-                val url = getBestBannerUrl(bannerUrl,
-                        Integer.MAX_VALUE)
+                val url = user.getBestProfileBanner(Integer.MAX_VALUE) ?: return
                 val profileBanner = ParcelableMediaUtils.image(url)
                 profileBanner.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileBanner)

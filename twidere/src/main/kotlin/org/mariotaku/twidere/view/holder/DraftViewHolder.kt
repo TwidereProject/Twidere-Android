@@ -27,6 +27,8 @@ import kotlinx.android.synthetic.main.list_item_draft.view.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
+import org.mariotaku.twidere.model.ParcelableMedia
+import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
 import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.DataStoreUtils
@@ -48,7 +50,7 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT,
             Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                val media = ParcelableMediaUtils.fromMediaUpdates(draft.media)
+                val media = draft.media?.map(::ParcelableMedia)?.toTypedArray()
                 mediaPreviewContainer.visibility = View.VISIBLE
                 mediaPreviewContainer.displayMedia(requestManager = requestManager,
                         media = media)
