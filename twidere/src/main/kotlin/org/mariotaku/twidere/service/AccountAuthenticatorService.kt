@@ -4,7 +4,6 @@ import android.accounts.AbstractAccountAuthenticator
 import android.accounts.Account
 import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle

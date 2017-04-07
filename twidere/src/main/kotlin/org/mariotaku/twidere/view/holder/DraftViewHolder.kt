@@ -28,9 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.ParcelableMediaUpdate
 import org.mariotaku.twidere.model.draft.StatusObjectExtras
-import org.mariotaku.twidere.model.util.ParcelableMediaUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 

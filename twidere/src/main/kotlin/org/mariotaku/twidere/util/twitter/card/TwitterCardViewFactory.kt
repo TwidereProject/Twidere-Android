@@ -19,9 +19,9 @@
 
 package org.mariotaku.twidere.util.twitter.card
 
+import org.mariotaku.twidere.extension.model.getString
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import org.mariotaku.twidere.util.TwitterCardUtils
 import org.mariotaku.twidere.view.ContainerView
 import org.mariotaku.twidere.view.controller.twitter.card.CardBrowserViewController
@@ -69,7 +69,7 @@ abstract class TwitterCardViewFactory {
         }
 
         private fun createGenericPlayerFragment(card: ParcelableCardEntity): ContainerView.ViewController? {
-            val playerUrl = ParcelableCardEntityUtils.getString(card, "player_url") ?: return null
+            val playerUrl = card.getString("player_url") ?: return null
             return CardBrowserViewController.show(playerUrl)
         }
     }

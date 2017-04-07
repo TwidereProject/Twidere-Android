@@ -38,7 +38,6 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import okhttp3.Dns
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -169,7 +168,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                         val map = permissionsManager.all
                         val callingPackages = pm.getPackagesForUid(Binder.getCallingUid())
                         for ((key, value) in map) {
-                            if (ArrayUtils.contains(callingPackages, key)) {
+                            if (key in callingPackages) {
                                 c.addRow(arrayOf<Any>(key, value))
                             }
                         }

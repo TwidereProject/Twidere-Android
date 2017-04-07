@@ -28,7 +28,6 @@ import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
-import org.mariotaku.twidere.task.twitter.GetStatusesTask
 import org.mariotaku.twidere.util.ErrorInfoStore
 
 /**

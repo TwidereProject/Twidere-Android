@@ -1,7 +1,6 @@
 package org.mariotaku.twidere.service
 
 import android.accounts.Account
-import android.app.Service
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder

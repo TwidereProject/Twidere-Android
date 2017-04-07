@@ -15,7 +15,6 @@ import org.mariotaku.twidere.model.event.ProfileUpdatedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.DebugLog
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterWrapper
 import org.mariotaku.twidere.util.Utils
 import java.io.IOException

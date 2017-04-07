@@ -3,7 +3,7 @@ package org.mariotaku.twidere.util
 import android.content.Context
 import android.text.TextUtils.isEmpty
 import okhttp3.*
-import org.apache.commons.lang3.math.NumberUtils
+import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.restfu.okhttp3.OkHttpRestClient
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
@@ -77,7 +77,7 @@ object HttpClientFactory {
         private fun configProxy(builder: OkHttpClient.Builder) {
             val proxyType = prefs.getString(KEY_PROXY_TYPE, null)
             val proxyHost = prefs.getString(KEY_PROXY_HOST, null)
-            val proxyPort = NumberUtils.toInt(prefs.getString(KEY_PROXY_PORT, null), -1)
+            val proxyPort = prefs.getString(KEY_PROXY_PORT, null).toIntOr(-1)
             if (!isEmpty(proxyHost) && proxyPort in (0..65535)) {
                 val type = getProxyType(proxyType)
                 if (type != Proxy.Type.DIRECT) {

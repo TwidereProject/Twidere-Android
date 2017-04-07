@@ -19,8 +19,6 @@ import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
-import org.apache.commons.lang3.ArrayUtils
-import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -367,7 +365,7 @@ class UpdateStatusTask(
     @Throws(UploadException::class)
     private fun uploadMediaWithDefaultProvider(update: ParcelableStatusUpdate, pendingUpdate: PendingStatusUpdate) {
         // Return empty array if no media attached
-        if (ArrayUtils.isEmpty(update.media)) return
+        if (update.media.isNullOrEmpty()) return
         val ownersList = update.accounts.filter {
             AccountType.TWITTER == it.type
         }.map(AccountDetails::key)
@@ -920,10 +918,10 @@ class UpdateStatusTask(
                 if (extractedMimeType != null) {
                     mediaType = extractedMimeType
                 }
-                geometry.x = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH).toInt(-1)
-                geometry.y = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT).toInt(-1)
-                duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLong(-1)
-                framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDouble(-1.0)
+                geometry.x = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH).toIntOr(-1)
+                geometry.y = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT).toIntOr(-1)
+                duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION).toLongOr(-1)
+                framerate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE).toDoubleOr(-1.0)
 
                 size = resolver.openFileDescriptor(mediaUri, "r").use { it.statSize }
             } catch (e: Exception) {
@@ -1001,7 +999,7 @@ class UpdateStatusTask(
             val resolver = context.contentResolver
             val creator = ObjectCursor.valuesCreatorFrom(Draft::class.java)
             val draftUri = resolver.insert(Drafts.CONTENT_URI, creator.create(draft)) ?: return -1
-            return NumberUtils.toLong(draftUri.lastPathSegment, -1)
+            return draftUri.lastPathSegment.toLongOr(-1)
         }
 
         fun deleteDraft(context: Context, id: Long) {

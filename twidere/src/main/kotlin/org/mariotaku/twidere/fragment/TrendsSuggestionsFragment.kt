@@ -34,8 +34,7 @@ import kotlinx.android.synthetic.main.fragment_content_listview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
-import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.TwidereConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.adapter.TrendsAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_EXTRAS
@@ -46,7 +45,6 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.TrendsRefreshedEvent
 import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras
 import org.mariotaku.twidere.provider.TwidereDataStore.CachedTrends
-import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.IntentUtils.openTweetSearch
 import org.mariotaku.twidere.util.Utils
 

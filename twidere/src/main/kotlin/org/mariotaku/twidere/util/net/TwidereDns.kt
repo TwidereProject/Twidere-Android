@@ -25,7 +25,7 @@ import android.util.Log
 import android.util.TimingLogger
 import okhttp3.Dns
 import org.apache.commons.lang3.StringUtils
-import org.mariotaku.ktextension.toInt
+import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
@@ -200,7 +200,7 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
                 if (!isValidIpAddress(segs[0])) return@mapNotNull null
                 return@mapNotNull SimpleResolver(segs[0]).apply {
                     if (segs.size == 2) {
-                        val port = segs[1].toInt(-1)
+                        val port = segs[1].toIntOr(-1)
                         if (port in 0..65535) {
                             setPort(port)
                         }

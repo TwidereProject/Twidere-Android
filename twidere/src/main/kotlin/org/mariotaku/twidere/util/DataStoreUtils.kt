@@ -29,8 +29,6 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
-import com.bluelinelabs.logansquare.LoganSquare
-import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.StringUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.useCursor
@@ -720,7 +718,9 @@ object DataStoreUtils {
                 val keyString = cur.getString(cur.getColumnIndex(keyField))
                 if (keyString != null) {
                     val accountKey = UserKey.valueOf(keyString)
-                    val arrayIdx = ArrayUtils.indexOf(keys, accountKey)
+                    val arrayIdx = keys.indexOfFirst {
+                        accountKey == it
+                    }
                     if (arrayIdx >= 0) {
                         creator.assign(resultArray, arrayIdx, cur, colIdx)
                     }

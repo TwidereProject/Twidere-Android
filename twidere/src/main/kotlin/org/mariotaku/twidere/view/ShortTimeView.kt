@@ -20,19 +20,15 @@
 package org.mariotaku.twidere.view
 
 import android.content.Context
-import android.os.Handler
 import android.os.SystemClock
 import android.support.v7.widget.AppCompatTextView
 import android.text.TextUtils
 import android.text.format.DateUtils
 import android.util.AttributeSet
-
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
-
-import java.lang.ref.WeakReference
-
 import org.mariotaku.twidere.util.Utils.formatSameDayTime
+import java.lang.ref.WeakReference
 
 class ShortTimeView(
         context: Context,

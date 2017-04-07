@@ -32,19 +32,18 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.layout_twitter_card_poll.view.*
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
-import org.apache.commons.lang3.math.NumberUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.TwitterCaps
 import org.mariotaku.microblog.library.twitter.model.CardDataMap
 import org.mariotaku.twidere.Constants.LOGTAG
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.extension.model.newMicroBlogInstance
+import org.mariotaku.twidere.extension.model.*
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.util.AccountUtils
-import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.TwitterCardUtils
 import org.mariotaku.twidere.util.support.ViewSupport
@@ -104,8 +103,7 @@ class CardPollViewController : ContainerView.ViewController() {
             if (cardResponse == null || cardResponse.name == null) {
                 throw IllegalStateException()
             }
-            return@task ParcelableCardEntityUtils.fromCardEntity(cardResponse, details.key,
-                    details.type)
+            return@task cardResponse.toParcelable(details.key, details.type)
         }.successUi { data ->
             weakThis.get()?.displayPoll(data, status)
         }
@@ -116,15 +114,15 @@ class CardPollViewController : ContainerView.ViewController() {
         fetchedCard = card
         val choicesCount = TwitterCardUtils.getChoicesCount(card)
         var votesSum = 0
-        val countsAreFinal = ParcelableCardEntityUtils.getAsBoolean(card, "counts_are_final", false)
-        val selectedChoice = ParcelableCardEntityUtils.getAsInteger(card, "selected_choice", -1)
-        val endDatetimeUtc = ParcelableCardEntityUtils.getAsDate(card, "end_datetime_utc", Date())
+        val countsAreFinal = card.getAsBoolean("counts_are_final", false)
+        val selectedChoice = card.getAsInteger("selected_choice", -1)
+        val endDatetimeUtc = card.getAsDate("end_datetime_utc", Date())
         val hasChoice = selectedChoice != -1
         val isMyPoll = status.account_key == status.user_key
         val showResult = countsAreFinal || isMyPoll || hasChoice
         for (i in 0..choicesCount - 1) {
             val choiceIndex = i + 1
-            votesSum += ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0)
+            votesSum += card.getAsInteger("choice${choiceIndex}_count", 0)
         }
 
         val clickListener = object : View.OnClickListener {
@@ -141,7 +139,7 @@ class CardPollViewController : ContainerView.ViewController() {
                     choiceRadioButton.isChecked = checked
                     if (checked) {
                         val cardData = CardDataMap()
-                        cardData.putLong("original_tweet_id", NumberUtils.toLong(status.id))
+                        cardData.putLong("original_tweet_id", status.id.toLongOr(-1L))
                         cardData.putString("card_uri", card.url)
                         cardData.putString("cards_platform", MicroBlogAPIFactory.CARDS_PLATFORM_ANDROID_12)
                         cardData.putString("response_card_name", card.name)
@@ -161,8 +159,7 @@ class CardPollViewController : ContainerView.ViewController() {
                                     val cardEntity = caps.sendPassThrough(cardDataMap).card ?: run {
                                         return null
                                     }
-                                    return ParcelableCardEntityUtils.fromCardEntity(cardEntity,
-                                            card.account_key, details.type)
+                                    return cardEntity.toParcelable(card.account_key, details.type)
                                 } catch (e: MicroBlogException) {
                                     Log.w(LOGTAG, e)
                                 }
@@ -188,8 +185,8 @@ class CardPollViewController : ContainerView.ViewController() {
             val choiceRadioButton = pollItem.findViewById(R.id.choice_button) as RadioButton
 
             val choiceIndex = i + 1
-            val label = ParcelableCardEntityUtils.getAsString(card, "choice" + choiceIndex + "_label", null)
-            val value = ParcelableCardEntityUtils.getAsInteger(card, "choice" + choiceIndex + "_count", 0)
+            val label = card.getAsString("choice${choiceIndex}_label", null)
+            val value = card.getAsInteger("choice${choiceIndex}_count", 0)
             if (label == null) throw NullPointerException()
             val choicePercent = if (votesSum == 0) 0f else value / votesSum.toFloat()
             choiceLabelView.text = label

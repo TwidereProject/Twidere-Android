@@ -1,7 +1,10 @@
 package org.mariotaku.twidere.extension.model
 
+import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 
 /**
  * Created by mariotaku on 2017/1/7.
@@ -29,3 +32,8 @@ val ParcelableStatus.referenced_users: Array<ParcelableUser>
         }
         return resultList.toTypedArray()
     }
+
+
+fun Array<Status>.toParcelables(accountKey: UserKey, accountType: String, profileImageSize: String) = Array(size) { i ->
+    ParcelableStatusUtils.fromStatus(this[i], accountKey, accountType, false, profileImageSize)
+}

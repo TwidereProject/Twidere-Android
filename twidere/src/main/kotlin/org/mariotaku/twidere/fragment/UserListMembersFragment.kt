@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.UserListMembersLoader

@@ -60,7 +60,6 @@ import com.bumptech.glide.Glide
 import com.twitter.Extractor
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.activity_compose.*
-import org.apache.commons.lang3.ArrayUtils
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
@@ -254,7 +253,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             setLabel(intent)
             val selectedAccountIds = accountsAdapter.selectedAccountKeys
-            if (ArrayUtils.isEmpty(selectedAccountIds)) {
+            if (selectedAccountIds.isNullOrEmpty()) {
                 val idsInPrefs: Array<UserKey> = kPreferences[composeAccountsKey] ?: emptyArray()
                 val intersection: Array<UserKey> = defaultAccountIds.intersect(listOf(*idsInPrefs)).toTypedArray()
 
@@ -1194,11 +1193,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun notifyAccountSelectionChanged() {
         displaySelectedAccountsIcon()
         val accounts = accountsAdapter.selectedAccounts
-        if (ArrayUtils.isEmpty(accounts)) {
-            editText.accountKey = Utils.getDefaultAccountKey(this)
-        } else {
-            editText.accountKey = accounts[0].key
-        }
+        editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
         setMenu()
     }

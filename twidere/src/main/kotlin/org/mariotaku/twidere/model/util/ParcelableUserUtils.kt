@@ -88,12 +88,6 @@ object ParcelableUserUtils {
         return obj
     }
 
-    fun fromUsers(users: Array<User>, accountKey: UserKey, accountType: String,
-            profileImageSize: String = "normal"): Array<ParcelableUser>? {
-        return users.map {
-            fromUser(it, accountKey, accountType, profileImageSize = profileImageSize)
-        }.toTypedArray()
-    }
 
     fun parseColor(colorString: String?): Int {
         if (colorString == null) return 0

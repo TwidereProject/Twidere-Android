@@ -49,7 +49,6 @@ import android.view.View.OnClickListener
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.bluelinelabs.logansquare.LoganSquare
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import nl.komponents.kovenant.combine.and
 import nl.komponents.kovenant.task

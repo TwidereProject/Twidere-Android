@@ -50,13 +50,6 @@ object ParcelableUserListUtils {
         return obj
     }
 
-    fun fromUserLists(userLists: Array<UserList>?, accountKey: UserKey,
-            profileImageSize: String = "normal"): Array<ParcelableUserList>? {
-        if (userLists == null) return emptyArray()
-        val size = userLists.size
-        return Array(size) { from(userLists[it], accountKey, profileImageSize = profileImageSize) }
-    }
-
     fun check(userList: ParcelableUserList, accountKey: UserKey, listId: String?,
             userKey: UserKey?, screenName: String?, listName: String?): Boolean {
         if (userList.account_key != accountKey) return false

@@ -42,7 +42,7 @@ import android.view.Window
 import kotlinx.android.synthetic.main.activity_link_handler.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.toDouble
+import org.mariotaku.ktextension.toDoubleOr
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
@@ -559,8 +559,8 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_MAP -> {
                 accountRequired = false
                 if (!args.containsKey(EXTRA_LATITUDE) && !args.containsKey(EXTRA_LONGITUDE)) {
-                    val lat = uri.getQueryParameter(QUERY_PARAM_LAT).toDouble(Double.NaN)
-                    val lng = uri.getQueryParameter(QUERY_PARAM_LNG).toDouble(Double.NaN)
+                    val lat = uri.getQueryParameter(QUERY_PARAM_LAT).toDoubleOr(Double.NaN)
+                    val lng = uri.getQueryParameter(QUERY_PARAM_LNG).toDoubleOr(Double.NaN)
                     if (lat.isNaN() || lng.isNaN()) return null
                     args.putDouble(EXTRA_LATITUDE, lat)
                     args.putDouble(EXTRA_LONGITUDE, lng)

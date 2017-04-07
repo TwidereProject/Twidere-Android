@@ -7,7 +7,7 @@ import android.text.TextUtils
 import org.apache.commons.lang3.LocaleUtils
 import org.mariotaku.kpreferences.*
 import org.mariotaku.ktextension.bcp47Tag
-import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
@@ -160,7 +160,7 @@ object linkHighlightOptionKey : KSimpleKey<Int>(KEY_LINK_HIGHLIGHT_OPTION, VALUE
 
 object refreshIntervalKey : KSimpleKey<Long>(KEY_REFRESH_INTERVAL, 15) {
     override fun read(preferences: SharedPreferences): Long {
-        return preferences.getString(key, null).toLong(def)
+        return preferences.getString(key, null).toLongOr(def)
     }
 
     override fun write(editor: SharedPreferences.Editor, value: Long): Boolean {

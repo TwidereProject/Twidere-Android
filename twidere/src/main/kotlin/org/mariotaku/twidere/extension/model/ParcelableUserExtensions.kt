@@ -19,8 +19,11 @@
 
 package org.mariotaku.twidere.extension.model
 
+import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.TwidereConstants.USER_TYPE_FANFOU_COM
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.ParcelableUserUtils
 import org.mariotaku.twidere.util.InternalTwitterContentUtils
 
 fun ParcelableUser.getBestProfileBanner(width: Int): String? {
@@ -34,3 +37,10 @@ fun ParcelableUser.getBestProfileBanner(width: Int): String? {
 }
 
 val ParcelableUser.urlPreferred: String? get() = url_expanded?.takeIf(String::isNotEmpty) ?: url
+
+
+fun Array<User>.toParcelables(accountKey: UserKey, accountType: String, profileImageSize: String = "normal"): Array<ParcelableUser>? {
+    return map {
+        ParcelableUserUtils.fromUser(it, accountKey, accountType, profileImageSize = profileImageSize)
+    }.toTypedArray()
+}

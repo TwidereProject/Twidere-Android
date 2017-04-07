@@ -2,7 +2,6 @@ package org.mariotaku.twidere.util.filter
 
 import android.content.Context
 import android.net.Uri
-import com.bluelinelabs.logansquare.LoganSquare
 import com.bluelinelabs.logansquare.annotation.JsonField
 import com.bluelinelabs.logansquare.annotation.JsonObject
 import org.mariotaku.restfu.annotation.method.GET

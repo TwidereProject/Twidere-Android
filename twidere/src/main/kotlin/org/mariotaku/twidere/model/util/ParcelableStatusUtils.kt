@@ -4,6 +4,7 @@ import android.text.Spanned
 import android.text.style.URLSpan
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.extension.model.api.getProfileImageOfSize
+import org.mariotaku.twidere.extension.model.toParcelable
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.ParcelableStatus.FilterFlags
 import org.mariotaku.twidere.util.HtmlSpanBuilder
@@ -163,9 +164,7 @@ object ParcelableStatusUtils {
         result.is_possibly_sensitive = status.isPossiblySensitive
         result.mentions = ParcelableUserMentionUtils.fromUserMentionEntities(user,
                 status.userMentionEntities)
-        result.card = status.card?.let {
-            ParcelableCardEntityUtils.fromCardEntity(it, accountKey, accountType)
-        }
+        result.card = status.card?.toParcelable(accountKey, accountType)
         result.card_name = result.card?.name
         result.place_full_name = getPlaceFullName(status)
         result.lang = status.lang
@@ -206,14 +205,6 @@ object ParcelableStatusUtils {
             }
         }
         return UserKey(inReplyToUserId, accountKey.host)
-    }
-
-    fun fromStatuses(statuses: Array<Status>?, accountKey: UserKey, accountType: String,
-            profileImageSize: String): Array<ParcelableStatus>? {
-        if (statuses == null) return null
-        return Array(statuses.size) { i ->
-            fromStatus(statuses[i], accountKey, accountType, false, profileImageSize)
-        }
     }
 
     private fun getPlaceFullName(status: Status): String? {

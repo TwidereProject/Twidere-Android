@@ -28,7 +28,6 @@ import org.mariotaku.microblog.library.twitter.model.User
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.util.DataStoreUtils
 
 class MutesUsersLoader(

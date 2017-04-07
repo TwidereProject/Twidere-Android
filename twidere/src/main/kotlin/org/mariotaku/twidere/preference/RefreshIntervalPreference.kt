@@ -7,7 +7,7 @@ import android.os.Build
 import android.support.v7.preference.PreferenceManager
 import android.util.AttributeSet
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import java.util.concurrent.TimeUnit
 
@@ -42,7 +42,7 @@ class RefreshIntervalPreference(
         var index: Int = -1
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !sharedPreferences[autoRefreshCompatibilityModeKey]) {
             index = valuesBackup.indexOfFirst {
-                val intervalMinutes = it.toString().toLong(-1L)
+                val intervalMinutes = it.toString().toLongOr(-1L)
                 if (intervalMinutes < 0) return@indexOfFirst false
                 return@indexOfFirst TimeUnit.MINUTES.toMillis(intervalMinutes) >= JobInfo.getMinPeriodMillis()
             }
@@ -56,8 +56,8 @@ class RefreshIntervalPreference(
             entryValues = valuesBackup
             entries = entriesBackup
         }
-        val valueMinutes = value.toLong(-1)
-        val minValue = entryValues.firstOrNull()?.toString().toLong(-1)
+        val valueMinutes = value.toLongOr(-1)
+        val minValue = entryValues.firstOrNull()?.toString().toLongOr(-1)
         if (valueMinutes > 0 && valueMinutes < minValue) {
             value = minValue.toString()
         }

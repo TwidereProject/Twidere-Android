@@ -22,8 +22,8 @@ package org.mariotaku.twidere.task.twitter.message
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
-import org.mariotaku.ktextension.toInt
-import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toIntOr
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -224,7 +224,7 @@ class GetMessagesTask(
         val accountKey = details.key
         val accountType = details.type
         val cursor = param.cursors?.get(index)
-        val page = cursor?.substringAfter("page:").toInt(-1)
+        val page = cursor?.substringAfter("page:").toIntOr(-1)
         val result = microBlog.getConversationList(Paging().apply {
             count(60)
             if (page >= 0) {
@@ -529,10 +529,10 @@ class GetMessagesTask(
 
 
         private fun Map<String, List<ParcelableMessage>>.findLastReadTimestamp(conversationId: String, lastReadEventId: String?): Long {
-            val longEventId = lastReadEventId.toLong(-1)
+            val longEventId = lastReadEventId.toLongOr(-1L)
             return this[conversationId]?.filter { message ->
                 if (message.id == lastReadEventId) return@filter true
-                if (longEventId > 0 && longEventId >= message.id.toLong(-1)) return@filter true
+                if (longEventId > 0 && longEventId >= message.id.toLongOr(-1L)) return@filter true
                 return@filter false
             }?.maxBy(ParcelableMessage::message_timestamp)?.message_timestamp ?: -1
         }

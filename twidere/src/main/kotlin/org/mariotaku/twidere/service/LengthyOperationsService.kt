@@ -44,7 +44,7 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.ManualTaskStarter
 import org.mariotaku.ktextension.configure
-import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -116,7 +116,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     private fun handleSendDraftIntent(intent: Intent) {
         val uri = intent.data ?: return
         notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
-        val draftId = uri.lastPathSegment.toLong(-1)
+        val draftId = uri.lastPathSegment.toLongOr(-1L)
         if (draftId == -1L) return
         val where = Expression.equals(Drafts._ID, draftId)
         @SuppressLint("Recycle")
@@ -166,7 +166,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
     private fun handleDiscardDraftIntent(intent: Intent) {
         val data = intent.data ?: return
         task {
-            if (deleteDrafts(this, longArrayOf(data.lastPathSegment.toLong(-1))) < 1) {
+            if (deleteDrafts(this, longArrayOf(data.lastPathSegment.toLongOr(-1L))) < 1) {
                 throw IOException()
             }
             return@task data

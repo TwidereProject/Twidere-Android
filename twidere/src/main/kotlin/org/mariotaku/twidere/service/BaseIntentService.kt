@@ -3,7 +3,10 @@ package org.mariotaku.twidere.service
 import android.app.IntentService
 import com.twitter.Extractor
 import com.twitter.Validator
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.AsyncTwitterWrapper
+import org.mariotaku.twidere.util.NotificationManagerWrapper
+import org.mariotaku.twidere.util.SharedPreferencesWrapper
+import org.mariotaku.twidere.util.UserColorNameManager
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import javax.inject.Inject
 

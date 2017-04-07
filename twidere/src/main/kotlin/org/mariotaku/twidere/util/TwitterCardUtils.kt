@@ -21,10 +21,10 @@ package org.mariotaku.twidere.util
 
 import android.graphics.Point
 import android.text.TextUtils
-import org.apache.commons.lang3.math.NumberUtils
+import org.mariotaku.twidere.extension.model.getAsInteger
+import org.mariotaku.twidere.extension.model.getString
 import org.mariotaku.twidere.model.ParcelableCardEntity
 import org.mariotaku.twidere.model.ParcelableStatus
-import org.mariotaku.twidere.model.util.ParcelableCardEntityUtils
 import java.util.regex.Pattern
 
 /**
@@ -39,8 +39,8 @@ object TwitterCardUtils {
     const val CARD_NAME_ANIMATED_GIF = "animated_gif"
 
     fun getCardSize(card: ParcelableCardEntity): Point? {
-        val playerWidth = ParcelableCardEntityUtils.getAsInteger(card, "player_width", -1)
-        val playerHeight = ParcelableCardEntityUtils.getAsInteger(card, "player_height", -1)
+        val playerWidth = card.getAsInteger("player_width", -1)
+        val playerHeight = card.getAsInteger("player_height", -1)
         if (playerWidth > 0 && playerHeight > 0) {
             return Point(playerWidth, playerHeight)
         }
@@ -52,7 +52,7 @@ object TwitterCardUtils {
         when (status.card_name) {
             CARD_NAME_PLAYER -> {
                 status.media?.let { mediaArray ->
-                    val appUrlResolved = ParcelableCardEntityUtils.getString(card, "app_url_resolved")
+                    val appUrlResolved = card.getString("app_url_resolved")
                     val cardUrl = card.url
                     mediaArray.forEach {
                         if (it.url == appUrlResolved || it.url == cardUrl) {
@@ -60,7 +60,7 @@ object TwitterCardUtils {
                         }
                     }
                 }
-                return TextUtils.isEmpty(ParcelableCardEntityUtils.getString(card, "player_stream_url"))
+                return TextUtils.isEmpty(card.getString("player_stream_url"))
             }
             CARD_NAME_AUDIO -> {
                 return true
@@ -75,7 +75,7 @@ object TwitterCardUtils {
     fun getChoicesCount(card: ParcelableCardEntity): Int {
         val matcher = PATTERN_POLL_TEXT_ONLY.matcher(card.name)
         if (!matcher.matches()) throw IllegalStateException()
-        return NumberUtils.toInt(matcher.group(1))
+        return matcher.group(1).toInt()
     }
 
     fun isPoll(card: ParcelableCardEntity): Boolean {

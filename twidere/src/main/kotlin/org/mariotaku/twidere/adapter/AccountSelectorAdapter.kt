@@ -27,9 +27,9 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.profileImageStyleKey
 import org.mariotaku.twidere.fragment.AccountsDashboardFragment
-import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.view.holder.AccountProfileImageViewHolder
+import org.mariotaku.twidere.view.transformer.AccountsSelectorTransformer
 import java.util.*
 
 class AccountSelectorAdapter(

@@ -23,7 +23,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import org.mariotaku.abstask.library.TaskStarter
-import org.mariotaku.ktextension.toLong
+import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.NotificationType
 import org.mariotaku.twidere.annotation.ReadPositionTag
@@ -53,19 +53,19 @@ class NotificationReceiver : BroadcastReceiver() {
                         val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE,
                                 accountKey)
                         val manager = holder.readStateManager
-                        manager.setPosition(positionTag, paramReadPosition.toLong(-1))
+                        manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
                     }
                     NotificationType.INTERACTIONS -> {
                         val positionTag = Utils.getReadPositionTagWithAccount(ReadPositionTag.ACTIVITIES_ABOUT_ME,
                                 accountKey)
                         val manager = holder.readStateManager
-                        manager.setPosition(positionTag, paramReadPosition.toLong(-1))
+                        manager.setPosition(positionTag, paramReadPosition.toLongOr(-1L))
                     }
                     NotificationType.DIRECT_MESSAGES -> {
                         if (accountKey == null) return
                         val appContext = context.applicationContext
                         val task = BatchMarkMessageReadTask(appContext, accountKey,
-                                paramReadPosition.toLong(-1))
+                                paramReadPosition.toLongOr(-1L))
                         TaskStarter.execute(task)
                     }
                 }

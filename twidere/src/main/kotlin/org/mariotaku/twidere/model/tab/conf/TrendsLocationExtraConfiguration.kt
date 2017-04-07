@@ -13,7 +13,6 @@ import org.mariotaku.twidere.activity.TrendsLocationSelectorActivity
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_ACCOUNT_KEY
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_LOCATION
-import org.mariotaku.twidere.fragment.CustomTabsFragment
 import org.mariotaku.twidere.fragment.CustomTabsFragment.TabEditorDialogFragment
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.tab.TabConfiguration
