@@ -35,7 +35,6 @@ import android.widget.*
 import android.widget.AbsListView.MultiChoiceModeListener
 import android.widget.CompoundButton.OnCheckedChangeListener
 import kotlinx.android.synthetic.main.fragment_content_listview.*
-import org.apache.commons.lang3.StringUtils
 import org.mariotaku.twidere.Constants
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
@@ -108,7 +107,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         val args = Bundle()
         args.putString(EXTRA_HOST, host)
         args.putString(EXTRA_ADDRESS, address)
-        args.putBoolean(EXTRA_EXCLUDED, StringUtils.equals(host, address))
+        args.putBoolean(EXTRA_EXCLUDED, host == address)
         args.putBoolean(EXTRA_EDIT_MODE, true)
         val df = AddMappingDialogFragment()
         df.arguments = args
@@ -126,7 +125,7 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
     }
 
     override fun onItemCheckedStateChanged(mode: ActionMode, position: Int, id: Long,
-                                           checked: Boolean) {
+            checked: Boolean) {
         updateTitle(mode)
     }
 

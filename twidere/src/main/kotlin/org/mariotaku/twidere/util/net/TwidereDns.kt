@@ -24,7 +24,6 @@ import android.content.SharedPreferences
 import android.util.Log
 import android.util.TimingLogger
 import okhttp3.Dns
-import org.apache.commons.lang3.StringUtils
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.HOST_MAPPING_PREFERENCES_NAME
@@ -233,7 +232,7 @@ class TwidereDns(context: Context, private val preferences: SharedPreferences) :
 
         private fun hostMatches(host: String?, rule: String?): Boolean {
             if (rule == null || host == null) return false
-            if (rule.startsWith(".")) return StringUtils.endsWithIgnoreCase(host, rule)
+            if (rule.startsWith(".")) return host.endsWith(rule, ignoreCase = true)
             return host.equals(rule, ignoreCase = true)
         }
 

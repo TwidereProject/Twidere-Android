@@ -29,7 +29,6 @@ import android.os.Parcelable
 import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
-import org.apache.commons.lang3.StringUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -518,7 +517,7 @@ object DataStoreUtils {
         val am = AccountManager.get(context)
         for (account in AccountUtils.getAccounts(am)) {
             val user = account.getAccountUser(am)
-            if (StringUtils.equalsIgnoreCase(screenName, user.screen_name)) {
+            if (screenName.equals(user.screen_name, ignoreCase = true)) {
                 return user.key
             }
         }
