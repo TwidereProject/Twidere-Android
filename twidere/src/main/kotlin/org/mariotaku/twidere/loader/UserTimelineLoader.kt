@@ -125,6 +125,7 @@ class UserTimelineLoader(
                 status.quoted_source, null, status.quoted_user_key)
     }
 
+    @Throws(IOException::class)
     private fun showStatusNetExternalTimeline(profileUrl: String, paging: Paging): List<Status> {
         val holder = DependencyHolder.get(context)
         val client = holder.restHttpClient
