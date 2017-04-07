@@ -97,6 +97,7 @@ abstract class ParcelableUsersFragment : AbsContentListRecyclerViewFragment<Parc
     override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
         val adapter = ParcelableUsersAdapter(context, Glide.with(this))
         adapter.simpleLayout = simpleLayout
+        adapter.showFollow = showFollow
         adapter.friendshipClickListener = this
         return adapter
     }
