@@ -43,6 +43,7 @@ import android.view.View.OnClickListener
 import android.widget.CheckBox
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.squareup.otto.Subscribe
+import org.mariotaku.kpreferences.get
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
@@ -51,6 +52,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
 import org.mariotaku.twidere.activity.UserSelectorActivity
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
+import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.iface.IBaseFragment.SystemWindowsInsetsCallback
 import org.mariotaku.twidere.fragment.iface.SupportFragmentCallback
@@ -278,9 +280,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             }
             R.id.profileImage -> {
                 val userList = this.userList ?: return
-                IntentUtils.openUserProfile(activity, userList.account_key,
-                        userList.user_key, userList.user_screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                        null, null)
+                IntentUtils.openUserProfile(activity, userList.account_key, userList.user_key,
+                        userList.user_screen_name, null, preferences[newDocumentApiKey], null, null)
             }
         }
 
@@ -298,7 +299,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableUserList>>,
-                                data: SingleResponse<ParcelableUserList>?) {
+            data: SingleResponse<ParcelableUserList>?) {
         if (data == null) return
         if (activity == null) return
         if (data.hasData()) {

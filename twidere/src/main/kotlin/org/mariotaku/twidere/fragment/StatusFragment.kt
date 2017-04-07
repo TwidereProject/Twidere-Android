@@ -357,8 +357,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {
         val status = adapter.getStatus(position)
         IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                status.user_screen_name, preferences[newDocumentApiKey], Referral.TIMELINE_STATUS,
-                null)
+                status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                preferences[newDocumentApiKey], Referral.TIMELINE_STATUS, null)
     }
 
     override fun onMediaClick(view: View, current: ParcelableMedia, accountKey: UserKey?, id: Long) {
@@ -1106,15 +1106,14 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.profileContainer -> {
                     val activity = fragment.activity
                     IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                            status.user_screen_name, preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.STATUS,
-                            null)
+                            status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                            preferences[newDocumentApiKey], Referral.STATUS, null)
                 }
                 retweetedByView -> {
                     if (status.retweet_id != null) {
                         IntentUtils.openUserProfile(adapter.context, status.account_key,
                                 status.retweeted_by_user_key, status.retweeted_by_user_screen_name,
-                                preferences.getBoolean(KEY_NEW_DOCUMENT_API), Referral.STATUS,
-                                null)
+                                null, preferences[newDocumentApiKey], Referral.STATUS, null)
                     }
                 }
                 locationView -> {

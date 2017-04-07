@@ -29,6 +29,8 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.userTimelineFilterKey
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.loader.UserTimelineLoader
@@ -108,11 +110,12 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
         val sinceId = args.getString(EXTRA_SINCE_ID)
         val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
+        val profileUrl = args.getString(EXTRA_PROFILE_URL)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         val pinnedIds = if (adapter.hasPinnedStatuses) null else pinnedStatusIds
-        return UserTimelineLoader(context, accountKey, userKey, screenName, sinceId, maxId, data,
-                savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds,
+        return UserTimelineLoader(context, accountKey, userKey, screenName, profileUrl, sinceId,
+                maxId, data, savedStatusesFileArgs, tabPosition, fromUser, loadingMore, pinnedIds,
                 timelineFilter as? UserTimelineFilter)
     }
 

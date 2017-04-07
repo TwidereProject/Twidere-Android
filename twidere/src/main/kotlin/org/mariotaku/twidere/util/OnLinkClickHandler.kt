@@ -63,8 +63,8 @@ open class OnLinkClickHandler(
 
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
-                IntentUtils.openUserProfile(context, accountKey, null, link, preferences[newDocumentApiKey],
-                        Referral.USER_MENTION, null)
+                IntentUtils.openUserProfile(context, accountKey, null, link, null,
+                        preferences[newDocumentApiKey], Referral.USER_MENTION, null)
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
@@ -115,9 +115,8 @@ open class OnLinkClickHandler(
                 return true
             }
             TwidereLinkify.LINK_TYPE_USER_ID -> {
-                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, preferences[newDocumentApiKey],
-                        Referral.USER_MENTION,
-                        null)
+                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(link), null, null,
+                        preferences[newDocumentApiKey], Referral.USER_MENTION, null)
                 return true
             }
         }
@@ -173,9 +172,8 @@ open class OnLinkClickHandler(
                     id = id.substring(1)
                 }
                 val screenName = orig.substring(1, length)
-                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id),
-                        screenName, preferences[newDocumentApiKey], Referral.USER_MENTION,
-                        null)
+                IntentUtils.openUserProfile(context, accountKey, UserKey.valueOf(id), screenName,
+                        null, preferences[newDocumentApiKey], Referral.USER_MENTION, null)
                 return true
             }
         } else if (TwidereLinkify.isHashSymbol(ch) && TwidereLinkify.isHashSymbol(orig[length - 1])) {

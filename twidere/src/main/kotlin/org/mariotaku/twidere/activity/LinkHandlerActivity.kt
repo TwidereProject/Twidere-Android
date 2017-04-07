@@ -577,14 +577,21 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_USER -> {
                 fragment = UserFragment()
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
-                val paramUserKey = Utils.getUserKeyParam(uri)?.let(UserKey::valueOf) ?: args.getParcelable(EXTRA_USER_KEY)
+                val paramProfileUrl = uri.getQueryParameter(QUERY_PARAM_PROFILE_URL)
+                val paramUserKey = Utils.getUserKeyParam(uri)?.let(UserKey::valueOf)
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName)
                 }
-                args.putParcelable(EXTRA_USER_KEY, paramUserKey)
+                if (!args.containsKey(EXTRA_USER_KEY)) {
+                    args.putParcelable(EXTRA_USER_KEY, paramUserKey)
+                }
+                if (!args.containsKey(EXTRA_PROFILE_URL)) {
+                    args.putString(EXTRA_PROFILE_URL, paramProfileUrl)
+                }
                 if (paramUserKey != null) {
                     userHost = paramUserKey.host
                 }
+
                 args.putString(EXTRA_REFERRAL, intent.getStringExtra(EXTRA_REFERRAL))
             }
             LINK_ID_USER_LIST_MEMBERSHIPS -> {
@@ -601,12 +608,16 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
             LINK_ID_USER_TIMELINE -> {
                 fragment = UserTimelineFragment()
                 val paramScreenName = uri.getQueryParameter(QUERY_PARAM_SCREEN_NAME)
+                val paramProfileUrl = uri.getQueryParameter(QUERY_PARAM_PROFILE_URL)
                 val paramUserKey = Utils.getUserKeyParam(uri)?.let(UserKey::valueOf)
                 if (!args.containsKey(EXTRA_SCREEN_NAME)) {
                     args.putString(EXTRA_SCREEN_NAME, paramScreenName)
                 }
                 if (!args.containsKey(EXTRA_USER_KEY)) {
                     args.putParcelable(EXTRA_USER_KEY, paramUserKey)
+                }
+                if (!args.containsKey(EXTRA_PROFILE_URL)) {
+                    args.putString(EXTRA_PROFILE_URL, paramProfileUrl)
                 }
                 if (TextUtils.isEmpty(paramScreenName) && paramUserKey == null) return null
             }

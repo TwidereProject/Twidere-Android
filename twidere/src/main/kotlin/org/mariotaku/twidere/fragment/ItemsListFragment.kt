@@ -94,15 +94,15 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
                 val activity = activity
                 val status = dummyItemAdapter.getStatus(position)
                 IntentUtils.openUserProfile(activity, status.account_key, status.user_key,
-                        status.user_screen_name, preferences[newDocumentApiKey])
+                        status.user_screen_name, status.extras?.user_statusnet_profile_url,
+                        preferences[newDocumentApiKey])
             }
         }
         dummyItemAdapter.userClickListener = object : IUsersAdapter.SimpleUserClickListener() {
             override fun onUserClick(holder: UserViewHolder, position: Int) {
                 val user = dummyItemAdapter.getUser(position) ?: return
-                IntentUtils.openUserProfile(getContext(), user, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                        Referral.TIMELINE_STATUS,
-                        null)
+                IntentUtils.openUserProfile(getContext(), user, preferences[newDocumentApiKey],
+                        Referral.TIMELINE_STATUS, null)
             }
         }
         return adapter

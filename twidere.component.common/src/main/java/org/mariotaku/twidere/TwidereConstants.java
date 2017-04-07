@@ -142,6 +142,7 @@ public interface TwidereConstants extends SharedPreferenceConstants, IntentConst
     String QUERY_PARAM_GROUP_ID = "group_id";
     String QUERY_PARAM_GROUP_NAME = "group_name";
     String QUERY_PARAM_SCREEN_NAME = "screen_name";
+    String QUERY_PARAM_PROFILE_URL = "profile_url";
     String QUERY_PARAM_LIST_NAME = "list_name";
     String QUERY_PARAM_QUERY = "query";
     String QUERY_PARAM_TYPE = "type";

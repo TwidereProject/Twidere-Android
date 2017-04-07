@@ -675,7 +675,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     @Referral
                     val referral = arguments.getString(EXTRA_REFERRAL)
                     IntentUtils.openUserProfile(activity, accountKey, user.key, user.screen_name,
-                            preferences.getBoolean(KEY_NEW_DOCUMENT_API), referral, null)
+                            user.extras.statusnet_profile_url, preferences[newDocumentApiKey],
+                            referral, null)
                 }
             }
         }
@@ -1278,8 +1279,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val user = user ?: return false
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {
-                IntentUtils.openUserProfile(activity, user.account_key, null, link, preferences.getBoolean(KEY_NEW_DOCUMENT_API),
-                        Referral.USER_MENTION, null)
+                IntentUtils.openUserProfile(activity, user.account_key, null, link, null,
+                        preferences[newDocumentApiKey], Referral.USER_MENTION, null)
                 return true
             }
             TwidereLinkify.LINK_TYPE_HASHTAG -> {
@@ -1446,11 +1447,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
             tabArgs.putParcelable(EXTRA_USER_KEY, user.key)
             tabArgs.putString(EXTRA_SCREEN_NAME, user.screen_name)
+            tabArgs.putString(EXTRA_PROFILE_URL, user.extras?.statusnet_profile_url)
         } else {
             userKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
             tabArgs.putParcelable(EXTRA_ACCOUNT_KEY, userKey)
             tabArgs.putParcelable(EXTRA_USER_KEY, args.getParcelable<Parcelable>(EXTRA_USER_KEY))
             tabArgs.putString(EXTRA_SCREEN_NAME, args.getString(EXTRA_SCREEN_NAME))
+            tabArgs.putString(EXTRA_PROFILE_URL, args.getString(EXTRA_PROFILE_URL))
         }
         pagerAdapter.add(cls = UserTimelineFragment::class.java, args = Bundle(tabArgs).apply {
             this[UserTimelineFragment.EXTRA_ENABLE_TIMELINE_FILTER] = true
