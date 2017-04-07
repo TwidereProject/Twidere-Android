@@ -40,11 +40,15 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.annotation.UiThread
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.LoaderManager.LoaderCallbacks
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.support.v4.content.Loader
 import android.support.v4.content.res.ResourcesCompat
@@ -284,7 +288,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             return
         }
         if (user.account_key.maybeEquals(user.key)) {
-            followContainer.follow.setText(R.string.action_edit)
+            setFollowEditButton(R.drawable.ic_action_edit, R.color.material_light_blue,
+                    R.string.action_edit)
             followContainer.follow.visibility = View.VISIBLE
             relationship = userRelationship
             return
@@ -311,17 +316,21 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             pagesContent.visibility = View.VISIBLE
         }
         if (userRelationship.blocking) {
-            followContainer.follow.setText(R.string.action_unblock)
+            setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
+                    R.string.action_unblock)
         } else if (userRelationship.blocked_by) {
-            followContainer.follow.setText(R.string.action_block)
+            setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
+                    R.string.action_block)
         } else if (userRelationship.following) {
-            followContainer.follow.setText(R.string.action_unfollow)
+            setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
+                    R.string.action_unfollow)
         } else if (user.is_follow_request_sent) {
-            followContainer.follow.setText(R.string.requested)
+            setFollowEditButton(R.drawable.ic_action_time, R.color.material_light_blue,
+                    R.string.label_follow_request_sent)
         } else {
-            followContainer.follow.setText(R.string.action_follow)
+            setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
+                    R.string.action_follow)
         }
-        followContainer.follow.compoundDrawablePadding = Math.round(followContainer.follow.textSize * 0.25f)
         followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
 
         val resolver = context.applicationContext.contentResolver
@@ -1529,6 +1538,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         updateTitleAlpha()
     }
 
+    override var controlBarOffset: Float
+        get() = 0f
+        set(value) = Unit //Ignore
+
+    override val controlBarHeight: Int
+        get() = 0
+
+
+    override val shouldInitLoader: Boolean
+        get() = user != null
+
     private fun updateTitleAlpha() {
         val location = IntArray(2)
         profileNameContainer.name.getLocationInWindow(location)
@@ -1544,16 +1564,18 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
     }
 
-    override var controlBarOffset: Float
-        get() = 0f
-        set(value) = Unit //Ignore
+    private fun ParcelableRelationship.check(user: ParcelableUser): Boolean {
+        if (account_key != user.account_key) {
+            return false
+        }
+        return user.extras != null && TextUtils.equals(user_key.id, user.extras.unique_id) || TextUtils.equals(user_key.id, user.key.id)
+    }
 
-
-    override val controlBarHeight: Int
-        get() = 0
-
-    override val shouldInitLoader: Boolean
-        get() = user != null
+    private fun setFollowEditButton(@DrawableRes icon: Int, @ColorRes color: Int, @StringRes label: Int) {
+        followContainer.follow.setImageResource(icon)
+        ViewCompat.setBackgroundTintList(followContainer.follow, ContextCompat.getColorStateList(context, color))
+        followContainer.follow.contentDescription = getString(label)
+    }
 
     private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {
 
@@ -1619,6 +1641,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     }
 
+
     internal class UserRelationshipLoader(
             context: Context,
             private val accountKey: UserKey?,
@@ -1665,14 +1688,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         override fun onStartLoading() {
             forceLoad()
         }
-    }
-
-
-    private fun ParcelableRelationship.check(user: ParcelableUser): Boolean {
-        if (account_key != user.account_key) {
-            return false
-        }
-        return user.extras != null && TextUtils.equals(user_key.id, user.extras.unique_id) || TextUtils.equals(user_key.id, user.key.id)
     }
 
     class AddRemoveUserListDialogFragment : BaseDialogFragment() {

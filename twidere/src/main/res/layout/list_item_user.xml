@@ -105,7 +105,6 @@
             android:orientation="horizontal"
             tools:visibility="visible">
 
-
             <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/unmute"
                 style="?buttonStyleSmall"

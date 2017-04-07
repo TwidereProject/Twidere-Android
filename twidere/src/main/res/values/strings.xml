@@ -537,6 +537,7 @@
     <string name="label_content_rating_r">R</string>
     <string name="label_data_provider">Twidere database provider</string>
     <string name="label_filters_subscription">Subscription</string>
+    <string name="label_follow_request_sent">Follow request sent</string>
     <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
     <string name="label_location_coarse">Coarse (City)</string>
     <string name="label_location_no_location">None</string>

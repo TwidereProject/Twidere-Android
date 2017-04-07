@@ -65,13 +65,17 @@
             android:minHeight="@dimen/element_size_normal"
             android:minWidth="@dimen/element_size_normal">
 
-            <Button
+            <org.mariotaku.twidere.view.IconActionButton
                 android:id="@+id/follow"
+                style="?buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                tools:text="@string/action_follow"
+                app:iabColor="@android:color/transparent"
+                tools:backgroundTint="@color/color_stateful_follow"
+                tools:contentDescription="@string/action_follow"
+                tools:src="@drawable/ic_action_add"
                 tools:visibility="visible"/>
 
             <ProgressBar
