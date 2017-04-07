@@ -23,13 +23,13 @@ import org.mariotaku.microblog.library.twitter.annotation.StreamWith;
 import org.mariotaku.microblog.library.twitter.callback.UserStreamCallback;
 import org.mariotaku.microblog.library.twitter.template.StatusAnnotationTemplate;
 import org.mariotaku.restfu.annotation.method.GET;
-import org.mariotaku.restfu.annotation.param.Queries;
+import org.mariotaku.restfu.annotation.param.Params;
 
 /**
  * Twitter UserStream API
  * Created by mariotaku on 15/5/26.
  */
-@Queries(template = StatusAnnotationTemplate.class)
+@Params(template = StatusAnnotationTemplate.class)
 public interface TwitterUserStream {
 
     @GET("/user.json")
