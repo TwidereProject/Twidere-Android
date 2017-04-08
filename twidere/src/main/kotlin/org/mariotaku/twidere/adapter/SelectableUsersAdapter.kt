@@ -100,13 +100,13 @@ class SelectableUsersAdapter(
         val countIndex = itemCounts.getItemCountIndex(position)
         when (countIndex) {
             ITEM_TYPE_START_INDICATOR, ITEM_TYPE_END_INDICATOR -> return (countIndex.toLong() shl 32)
-            ITEM_TYPE_USER -> return (countIndex.toLong() shl 32) or getUser(position)!!.hashCode().toLong()
+            ITEM_TYPE_USER -> return (countIndex.toLong() shl 32) or getUser(position).hashCode().toLong()
         }
         throw UnsupportedOperationException("Unsupported countIndex $countIndex, position $position")
     }
 
     private fun bindUser(holder: SelectableUserViewHolder, position: Int) {
-        holder.displayUser(getUser(position)!!)
+        holder.displayUser(getUser(position))
     }
 
     private fun updateItemCounts() {
@@ -116,8 +116,8 @@ class SelectableUsersAdapter(
         itemCounts[ITEM_TYPE_END_INDICATOR] = if (position and ILoadMoreSupportAdapter.END != 0L) 1 else 0
     }
 
-    fun getUser(position: Int): ParcelableUser? {
-        return data?.getOrNull(position - itemCounts.getItemStartPosition(1))
+    fun getUser(position: Int): ParcelableUser {
+        return data!![position - itemCounts.getItemStartPosition(1)]
     }
 
     val userStartIndex: Int
@@ -131,7 +131,7 @@ class SelectableUsersAdapter(
         }
 
     fun getUserKey(position: Int): UserKey {
-        return getUser(position)!!.key
+        return getUser(position).key
     }
 
     val userCount: Int
