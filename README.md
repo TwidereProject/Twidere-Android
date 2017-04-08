@@ -13,7 +13,7 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Customizable Material Design
 * Night mode
 * Customizable tabs
-* Tweet with photos, videos and GIFs
+* Tweet with photos and videos
 * Powerful mute filters
 * Multiple account support
 * Custom API settings
@@ -24,6 +24,8 @@ Material Design ready and feature rich Twitter app for Android 4.0+
 * Data sync with your cloud drive (Dropbox, Google Drive)
 * Filters subscription
 * Filters import
+* Schedule tweets even when you're offline by [Buffer](https://buffer.com/)
+* Search & share GIFs by [GIPHY](https://giphy.com/)
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" height="80">](https://play.google.com/store/apps/details?id=org.mariotaku.twidere)
 [<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/repository/browse/?fdid=org.mariotaku.twidere)
