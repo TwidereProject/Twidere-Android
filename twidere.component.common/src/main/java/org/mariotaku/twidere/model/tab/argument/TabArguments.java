@@ -26,13 +26,13 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
 import org.mariotaku.twidere.TwidereConstants;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.model.UserKey;
-import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -102,17 +102,17 @@ public class TabArguments implements TwidereConstants {
             case CustomTabType.NOTIFICATIONS_TIMELINE:
             case CustomTabType.DIRECT_MESSAGES:
             case CustomTabType.TRENDS_SUGGESTIONS: {
-                return JsonSerializer.parse(json, TabArguments.class);
+                return LoganSquare.parse(json, TabArguments.class);
             }
             case CustomTabType.USER_TIMELINE:
             case CustomTabType.FAVORITES: {
-                return JsonSerializer.parse(json, UserArguments.class);
+                return LoganSquare.parse(json, UserArguments.class);
             }
             case CustomTabType.LIST_TIMELINE: {
-                return JsonSerializer.parse(json, UserListArguments.class);
+                return LoganSquare.parse(json, UserListArguments.class);
             }
             case CustomTabType.SEARCH_STATUSES: {
-                return JsonSerializer.parse(json, TextQueryArguments.class);
+                return LoganSquare.parse(json, TextQueryArguments.class);
             }
         }
         return null;

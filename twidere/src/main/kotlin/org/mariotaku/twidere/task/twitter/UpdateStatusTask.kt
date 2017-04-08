@@ -43,7 +43,6 @@ import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
 import org.mariotaku.twidere.model.analyzer.UpdateStatus
-import org.mariotaku.twidere.model.draft.UpdateStatusActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
@@ -528,13 +527,7 @@ class UpdateStatusTask(
             this.location = statusUpdate.location
             this.media = statusUpdate.media
             this.timestamp = System.currentTimeMillis()
-            this.action_extras = UpdateStatusActionExtras().apply {
-                inReplyToStatus = statusUpdate.in_reply_to_status
-                isPossiblySensitive = statusUpdate.is_possibly_sensitive
-                isRepostStatusId = statusUpdate.repost_status_id
-                displayCoordinates = statusUpdate.display_coordinates
-                attachmentUrl = statusUpdate.attachment_url
-            }
+            this.action_extras = statusUpdate.draft_extras
         }
     }
 

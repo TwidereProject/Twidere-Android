@@ -18,7 +18,7 @@ import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.SingleResponse
 import org.mariotaku.twidere.model.UserKey
-import org.mariotaku.twidere.model.draft.StatusObjectExtras
+import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.event.FavoriteTaskEvent
 import org.mariotaku.twidere.model.event.StatusListChangedEvent
 import org.mariotaku.twidere.model.util.AccountUtils
@@ -45,7 +45,7 @@ class CreateFavoriteTask(
     override fun doLongOperation(params: Any?): SingleResponse<ParcelableStatus> {
         val draftId = UpdateStatusTask.saveDraft(context, Draft.Action.FAVORITE) {
             this@saveDraft.account_keys = arrayOf(accountKey)
-            this@saveDraft.action_extras = StatusObjectExtras().apply {
+            this@saveDraft.action_extras = StatusObjectActionExtras().apply {
                 this@apply.status = this@CreateFavoriteTask.status
             }
         }

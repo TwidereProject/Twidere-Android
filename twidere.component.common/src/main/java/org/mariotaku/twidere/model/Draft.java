@@ -35,7 +35,7 @@ import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
 import org.mariotaku.twidere.model.draft.ActionExtras;
-import org.mariotaku.twidere.model.util.DraftExtrasConverter;
+import org.mariotaku.twidere.model.util.DraftExtrasFieldConverter;
 import org.mariotaku.twidere.model.util.UserKeysCursorFieldConverter;
 import org.mariotaku.twidere.provider.TwidereDataStore;
 import org.mariotaku.twidere.provider.TwidereDataStore.Drafts;
@@ -73,7 +73,7 @@ public class Draft implements Parcelable {
     public String action_type;
     @Nullable
     @ParcelableThisPlease
-    @CursorField(value = Drafts.ACTION_EXTRAS, converter = DraftExtrasConverter.class)
+    @CursorField(value = Drafts.ACTION_EXTRAS, converter = DraftExtrasFieldConverter.class)
     public ActionExtras action_extras;
     @Nullable
     @ParcelableThisPlease

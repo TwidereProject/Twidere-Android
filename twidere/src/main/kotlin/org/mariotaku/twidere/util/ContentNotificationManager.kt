@@ -35,6 +35,7 @@ import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.sqliteqb.library.Columns.Column
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.HomeActivity
@@ -50,10 +51,10 @@ import org.mariotaku.twidere.extension.model.notificationDisabled
 import org.mariotaku.twidere.extension.rawQuery
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableActivityUtils
-import org.mariotaku.twidere.provider.TwidereDataStore.Activities
+import org.mariotaku.twidere.provider.TwidereDataStore.*
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages.Conversations
-import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.receiver.NotificationReceiver
+import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.database.FilterQueryBuilder
 import org.oshkimaadziig.george.androidutils.SpanFormatter
 import java.io.IOException
@@ -353,6 +354,53 @@ class ContentNotificationManager(
 
         val tag = "$accountKey:$userKey:${status.id}"
         notificationManager.notify(tag, NOTIFICATION_ID_USER_NOTIFICATION, builder.build())
+    }
+
+    fun showDraft(draftUri: Uri): Long {
+        val draftId = draftUri.lastPathSegment.toLongOrNull() ?: return -1
+        val where = Expression.equals(Drafts._ID, draftId)
+        val c = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql,
+                null, null) ?: return -1
+        val i = ObjectCursor.indicesFrom(c, Draft::class.java)
+        val item: Draft
+        try {
+            if (!c.moveToFirst()) return -1
+            item = i.newObject(c)
+        } catch (e: IOException) {
+            return -1
+        } finally {
+            c.close()
+        }
+        val title = context.getString(R.string.status_not_updated)
+        val message = context.getString(R.string.status_not_updated_summary)
+        val intent = Intent()
+        intent.`package` = BuildConfig.APPLICATION_ID
+        val uriBuilder = Uri.Builder()
+        uriBuilder.scheme(SCHEME_TWIDERE)
+        uriBuilder.authority(AUTHORITY_DRAFTS)
+        intent.data = uriBuilder.build()
+        val nb = NotificationCompat.Builder(context)
+        nb.setTicker(message)
+        nb.setContentTitle(title)
+        nb.setContentText(item.text)
+        nb.setAutoCancel(true)
+        nb.setWhen(System.currentTimeMillis())
+        nb.setSmallIcon(R.drawable.ic_stat_draft)
+        val discardIntent = Intent(context, LengthyOperationsService::class.java)
+        discardIntent.action = INTENT_ACTION_DISCARD_DRAFT
+        discardIntent.data = draftUri
+        nb.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard),
+                PendingIntent.getService(context, 0, discardIntent, PendingIntent.FLAG_ONE_SHOT))
+
+        val sendIntent = Intent(context, LengthyOperationsService::class.java)
+        sendIntent.action = INTENT_ACTION_SEND_DRAFT
+        sendIntent.data = draftUri
+        nb.addAction(R.drawable.ic_action_send, context.getString(R.string.action_send),
+                PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+        nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT))
+        notificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS, nb.build())
+        return draftId
     }
 
     fun updatePreferences() {

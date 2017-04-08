@@ -34,6 +34,10 @@ fun Menu.setGroupAvailability(groupId: Int, available: Boolean) {
     setGroupVisible(groupId, available)
 }
 
+fun Menu.isItemChecked(id: Int): Boolean {
+    return findItem(id)?.isChecked ?: false
+}
+
 fun Menu.setItemChecked(id: Int, checked: Boolean) {
     findItem(id)?.isChecked = checked
 }

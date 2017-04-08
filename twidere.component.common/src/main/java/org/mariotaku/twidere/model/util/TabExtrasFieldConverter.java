@@ -25,11 +25,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
 import org.mariotaku.twidere.model.Tab;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
-import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -48,6 +49,6 @@ public class TabExtrasFieldConverter implements CursorFieldConverter<TabExtras> 
     @Override
     public void writeField(ContentValues values, TabExtras object, String columnName, ParameterizedType fieldType) throws IOException {
         if (object == null) return;
-        values.put(columnName, JsonSerializer.serialize(object));
+        values.put(columnName, LoganSquare.serialize(object));
     }
 }

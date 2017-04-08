@@ -19,10 +19,8 @@
 
 package org.mariotaku.twidere.provider
 
-import android.app.PendingIntent
 import android.content.ContentProvider
 import android.content.ContentValues
-import android.content.Intent
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.database.SQLException
@@ -33,35 +31,28 @@ import android.os.Binder
 import android.os.Handler
 import android.os.Looper
 import android.os.Process
-import android.provider.BaseColumns
-import android.support.v4.app.NotificationCompat
 import android.support.v4.text.BidiFormatter
 import com.squareup.otto.Bus
 import okhttp3.Dns
 import org.mariotaku.ktextension.isNullOrEmpty
 import org.mariotaku.ktextension.toNulls
-import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Columns.Column
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.sqliteqb.library.RawItemArray
-import org.mariotaku.twidere.BuildConfig
-import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.CustomTabType
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.model.AccountPreferences
-import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.UnreadCountUpdatedEvent
 import org.mariotaku.twidere.provider.TwidereDataStore.*
-import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.*
 import org.mariotaku.twidere.util.SQLiteDatabaseWrapper.LazyLoadCallback
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.database.CachedUsersQueryBuilder
 import org.mariotaku.twidere.util.database.SuggestionsCursorCreator
-import java.io.IOException
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import javax.inject.Inject
@@ -345,62 +336,21 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
 
     private fun deleteInternal(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
         val tableId = DataStoreUtils.getTableId(uri)
-        val table = DataStoreUtils.getTableNameById(tableId) ?: return 0
-        val result = databaseWrapper.delete(table, selection, selectionArgs)
-        if (result > 0) {
-            onDatabaseUpdated(tableId, uri)
+        when (tableId) {
+            VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
+                notificationManager.cancel(uri.toString(), NOTIFICATION_ID_DRAFTS)
+                return 1
+            }
+            else -> {
+                val table = DataStoreUtils.getTableNameById(tableId) ?: return 0
+                val result = databaseWrapper.delete(table, selection, selectionArgs)
+                if (result > 0) {
+                    onDatabaseUpdated(tableId, uri)
+                }
+                onItemDeleted(uri, tableId)
+                return result
+            }
         }
-        return result
-    }
-
-    private fun showDraftNotification(values: ContentValues?): Long {
-        val context = context
-        if (values == null || context == null) return -1
-        val draftId = values.getAsLong(BaseColumns._ID) ?: return -1
-        val where = Expression.equals(Drafts._ID, draftId)
-        val c = context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where.sql, null, null) ?: return -1
-        val i = ObjectCursor.indicesFrom(c, Draft::class.java)
-        val item: Draft
-        try {
-            if (!c.moveToFirst()) return -1
-            item = i.newObject(c)
-        } catch (e: IOException) {
-            return -1
-        } finally {
-            c.close()
-        }
-        val title = context.getString(R.string.status_not_updated)
-        val message = context.getString(R.string.status_not_updated_summary)
-        val intent = Intent()
-        intent.`package` = BuildConfig.APPLICATION_ID
-        val uriBuilder = Uri.Builder()
-        uriBuilder.scheme(SCHEME_TWIDERE)
-        uriBuilder.authority(AUTHORITY_DRAFTS)
-        intent.data = uriBuilder.build()
-        val nb = NotificationCompat.Builder(context)
-        nb.setTicker(message)
-        nb.setContentTitle(title)
-        nb.setContentText(item.text)
-        nb.setAutoCancel(true)
-        nb.setWhen(System.currentTimeMillis())
-        nb.setSmallIcon(R.drawable.ic_stat_draft)
-        val discardIntent = Intent(context, LengthyOperationsService::class.java)
-        discardIntent.action = INTENT_ACTION_DISCARD_DRAFT
-        val draftUri = Uri.withAppendedPath(Drafts.CONTENT_URI, draftId.toString())
-        discardIntent.data = draftUri
-        nb.addAction(R.drawable.ic_action_delete, context.getString(R.string.discard), PendingIntent.getService(context, 0,
-                discardIntent, PendingIntent.FLAG_ONE_SHOT))
-
-        val sendIntent = Intent(context, LengthyOperationsService::class.java)
-        sendIntent.action = INTENT_ACTION_SEND_DRAFT
-        sendIntent.data = draftUri
-        nb.addAction(R.drawable.ic_action_send, context.getString(R.string.action_send),
-                PendingIntent.getService(context, 0, sendIntent, PendingIntent.FLAG_ONE_SHOT))
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-        nb.setContentIntent(PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT))
-        notificationManager.notify(draftUri.toString(), NOTIFICATION_ID_DRAFTS,
-                nb.build())
-        return draftId
     }
 
 
@@ -452,7 +402,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 }
             }
             VIRTUAL_TABLE_ID_DRAFTS_NOTIFICATIONS -> {
-                rowId = showDraftNotification(values)
+                rowId = contentNotificationManager.showDraft(uri)
             }
             else -> {
                 val conflictAlgorithm = getConflictAlgorithm(tableId)
@@ -468,7 +418,7 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
         }
         onDatabaseUpdated(tableId, uri)
         onNewItemsInserted(uri, tableId, arrayOf(values))
-        return Uri.withAppendedPath(uri, rowId.toString())
+        return uri.withAppendedPath(rowId.toString())
     }
 
     private fun updateInternal(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
@@ -498,6 +448,9 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
     private fun onDatabaseUpdated(tableId: Int, uri: Uri?) {
         if (uri == null) return
         notifyContentObserver(uri)
+    }
+
+    private fun onItemDeleted(uri: Uri, tableId: Int) {
     }
 
     private fun onNewItemsInserted(uri: Uri, tableId: Int, valuesArray: Array<ContentValues?>?) {

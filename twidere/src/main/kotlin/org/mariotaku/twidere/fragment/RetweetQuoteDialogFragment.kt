@@ -25,6 +25,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.BaseColumns
 import android.support.annotation.CheckResult
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
@@ -33,16 +34,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.twitter.Validator
-import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.*
+import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
@@ -50,7 +48,9 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.model.*
+import org.mariotaku.twidere.model.draft.QuoteStatusActionExtras
 import org.mariotaku.twidere.model.util.AccountUtils
+import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.EditTextEnterHandler
@@ -60,9 +60,29 @@ import org.mariotaku.twidere.view.ColorLabelRelativeLayout
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
 import org.mariotaku.twidere.view.holder.StatusViewHolder
+import java.util.*
 
 class RetweetQuoteDialogFragment : BaseDialogFragment() {
     private lateinit var popupMenu: PopupMenu
+
+    private val PopupMenu.quoteOriginalStatus get() = menu.isItemChecked(R.id.quote_original_status)
+    private val Dialog.itemContent get() = findViewById(R.id.itemContent) as ColorLabelRelativeLayout
+    private val Dialog.textCountView get() = findViewById(R.id.commentTextCount) as StatusTextCountView
+    private val Dialog.itemMenu get() = findViewById(R.id.itemMenu) as ImageButton
+    private val Dialog.actionButtons get() = findViewById(R.id.actionButtons) as LinearLayout
+    private val Dialog.commentContainer get() = findViewById(R.id.commentContainer) as RelativeLayout
+    private val Dialog.editComment get() = findViewById(R.id.editComment) as ComposeEditText
+    private val Dialog.commentMenu get() = findViewById(R.id.commentMenu) as ImageButton
+
+
+    private val status: ParcelableStatus
+        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
+
+    private val accountKey: UserKey
+        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY) ?: status.account_key
+
+    private val text: String?
+        get() = arguments.getString(EXTRA_TEXT)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
@@ -87,34 +107,27 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         }
 
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            it as AlertDialog
-            it.applyTheme()
-            val itemContent = it.findViewById(R.id.itemContent) as ColorLabelRelativeLayout
-            val textCountView = it.findViewById(R.id.commentTextCount) as StatusTextCountView
-            val itemMenu = it.findViewById(R.id.itemMenu) as ImageButton
-            val actionButtons = it.findViewById(R.id.actionButtons) as LinearLayout
-            val commentContainer = it.findViewById(R.id.commentContainer) as RelativeLayout
-            val editComment = it.findViewById(R.id.editComment) as ComposeEditText
-            val commentMenu = it.findViewById(R.id.commentMenu) as ImageButton
+        dialog.setOnShowListener { dialog ->
+            dialog as AlertDialog
+            dialog.applyTheme()
 
             val adapter = DummyItemAdapter(context, requestManager = Glide.with(this))
             adapter.setShouldShowAccountsColor(true)
-            val holder = StatusViewHolder(adapter, itemContent)
+            val holder = StatusViewHolder(adapter, dialog.itemContent)
             holder.displayStatus(status = status, displayInReplyTo = false)
 
-            textCountView.maxLength = details.textLimit
+            dialog.textCountView.maxLength = details.textLimit
 
-            itemMenu.visibility = View.GONE
-            actionButtons.visibility = View.GONE
-            itemContent.isFocusable = false
+            dialog.itemMenu.visibility = View.GONE
+            dialog.actionButtons.visibility = View.GONE
+            dialog.itemContent.isFocusable = false
             val useQuote = useQuote(!status.user_is_protected, details)
 
-            commentContainer.visibility = if (useQuote) View.VISIBLE else View.GONE
-            editComment.accountKey = details.key
+            dialog.commentContainer.visibility = if (useQuote) View.VISIBLE else View.GONE
+            dialog.editComment.accountKey = details.key
 
             val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
-            val enterHandler = EditTextEnterHandler.attach(editComment, object : EditTextEnterHandler.EnterListener {
+            val enterHandler = EditTextEnterHandler.attach(dialog.editComment, object : EditTextEnterHandler.EnterListener {
                 override fun shouldCallListener(): Boolean {
                     return true
                 }
@@ -141,7 +154,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                 }
             })
 
-            popupMenu = PopupMenu(context, commentMenu, Gravity.NO_GRAVITY,
+            popupMenu = PopupMenu(context, dialog.commentMenu, Gravity.NO_GRAVITY,
                     R.attr.actionOverflowMenuStyle, 0).apply {
                 inflate(R.menu.menu_dialog_comment)
                 menu.setItemAvailability(R.id.quote_original_status, status.retweet_id != null || status.quoted_id != null)
@@ -153,13 +166,13 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                     false
                 })
             }
-            commentMenu.setOnClickListener { popupMenu.show() }
-            commentMenu.setOnTouchListener(popupMenu.dragToOpenListener)
-            commentMenu.visibility = if (popupMenu.menu.hasVisibleItems()) View.VISIBLE else View.GONE
+            dialog.commentMenu.setOnClickListener { popupMenu.show() }
+            dialog.commentMenu.setOnTouchListener(popupMenu.dragToOpenListener)
+            dialog.commentMenu.visibility = if (popupMenu.menu.hasVisibleItems()) View.VISIBLE else View.GONE
 
-            it.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 var dismissDialog = false
-                if (editComment.length() > 0) {
+                if (dialog.editComment.length() > 0) {
                     dismissDialog = retweetOrQuote(details, status, SHOW_PROTECTED_CONFIRM)
                 } else if (isMyRetweet(status)) {
                     twitterWrapper.cancelRetweetAsync(details.key, status.id, status.my_retweet_id)
@@ -174,9 +187,34 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                 }
             }
 
-            updateTextCount(it, editComment.text, status, details)
+            if (savedInstanceState == null) {
+                dialog.editComment.setText(text)
+            }
+            dialog.editComment.setSelection(dialog.editComment.length())
+
+            updateTextCount(dialog, dialog.editComment.text, status, details)
         }
         return dialog
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        if (dialog !is Dialog) return
+        if (dialog.editComment.empty) return
+        dialog.saveToDrafts()
+        Toast.makeText(context, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
+        finishRetweetQuoteActivity()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        finishRetweetQuoteActivity()
+    }
+
+    private fun finishRetweetQuoteActivity() {
+        val activity = this.activity
+        if (activity is RetweetQuoteDialogActivity && !activity.isFinishing) {
+            activity.finish()
+        }
     }
 
     private fun updateTextCount(dialog: DialogInterface, s: CharSequence, status: ParcelableStatus,
@@ -197,15 +235,8 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             positiveButton.isEnabled = !status.user_is_protected
         }
         val textCountView = dialog.findViewById(R.id.commentTextCount) as StatusTextCountView
-        val am = AccountManager.get(context)
         textCountView.textCount = validator.getTweetLength(s.toString())
     }
-
-    private val status: ParcelableStatus
-        get() = arguments.getParcelable<ParcelableStatus>(EXTRA_STATUS)
-
-    private val accountKey: UserKey
-        get() = arguments.getParcelable(EXTRA_ACCOUNT_KEY) ?: status.account_key
 
     @CheckResult
     private fun retweetOrQuote(account: AccountDetails, status: ParcelableStatus,
@@ -214,10 +245,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         val dialog = dialog ?: return false
         val editComment = dialog.findViewById(R.id.editComment) as EditText
         if (useQuote(editComment.length() > 0, account)) {
-            val menu = popupMenu.menu
-            val itemQuoteOriginalStatus = menu.findItem(R.id.quote_original_status)
-            val statusLink: Uri
-            val quoteOriginalStatus = itemQuoteOriginalStatus.isChecked
+            val quoteOriginalStatus = popupMenu.quoteOriginalStatus
 
             var commentText: String
             val update = ParcelableStatusUpdate()
@@ -247,10 +275,10 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
                     }
                 }
                 else -> {
-                    if (!status.is_quote || !quoteOriginalStatus) {
-                        statusLink = LinkCreator.getStatusWebLink(status)
+                    val statusLink = if (!status.is_quote || !quoteOriginalStatus) {
+                        LinkCreator.getStatusWebLink(status)
                     } else {
-                        statusLink = LinkCreator.getQuotedStatusWebLink(status)
+                        LinkCreator.getQuotedStatusWebLink(status)
                     }
                     update.attachment_url = statusLink.toString()
                     commentText = editingComment
@@ -258,6 +286,11 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
             }
             update.text = commentText
             update.is_possibly_sensitive = status.is_possibly_sensitive
+            update.draft_action = Draft.Action.QUOTE
+            update.draft_extras = QuoteStatusActionExtras().apply {
+                this.status = status
+                this.isQuoteOriginalStatus = quoteOriginalStatus
+            }
             LengthyOperationsService.updateStatusesAsync(context, Draft.Action.QUOTE, update)
         } else {
             twitter.retweetStatusAsync(account.key, status)
@@ -269,6 +302,33 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         return preCondition || AccountType.FANFOU == account.type
     }
 
+
+    private fun Dialog.saveToDrafts() {
+        val text = dialog.editComment.text.toString()
+        val draft = Draft()
+        draft.unique_id = UUID.randomUUID().toString()
+        draft.action_type = Draft.Action.QUOTE
+        draft.account_keys = arrayOf(accountKey)
+        draft.text = text
+        draft.timestamp = System.currentTimeMillis()
+        draft.action_extras = QuoteStatusActionExtras().apply {
+            this.status = this@RetweetQuoteDialogFragment.status
+            this.isQuoteOriginalStatus = popupMenu.quoteOriginalStatus
+        }
+        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
+        val contentResolver = context.contentResolver
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        displayNewDraftNotification(draftUri)
+    }
+
+
+    private fun displayNewDraftNotification(draftUri: Uri) {
+        val contentResolver = context.contentResolver
+        val values = ContentValues {
+            this[BaseColumns._ID] = draftUri.lastPathSegment
+        }
+        contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, values)
+    }
 
     class QuoteProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
 
@@ -322,11 +382,13 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         val FRAGMENT_TAG = "retweet_quote"
         private val SHOW_PROTECTED_CONFIRM = java.lang.Boolean.parseBoolean("false")
 
-        fun show(fm: FragmentManager, status: ParcelableStatus, accountKey: UserKey? = null): RetweetQuoteDialogFragment {
+        fun show(fm: FragmentManager, status: ParcelableStatus, accountKey: UserKey? = null,
+                text: String? = null): RetweetQuoteDialogFragment {
             val f = RetweetQuoteDialogFragment()
             f.arguments = Bundle {
                 this[EXTRA_STATUS] = status
                 this[EXTRA_ACCOUNT_KEY] = accountKey
+                this[EXTRA_TEXT] = text
             }
             f.show(fm, FRAGMENT_TAG)
             return f

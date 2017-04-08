@@ -25,10 +25,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+
 import org.mariotaku.library.objectcursor.converter.CursorFieldConverter;
 import org.mariotaku.twidere.model.message.MessageExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Messages;
-import org.mariotaku.twidere.util.JsonSerializer;
 
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
@@ -47,6 +48,6 @@ public class MessageExtrasConverter implements CursorFieldConverter<MessageExtra
     @Override
     public void writeField(ContentValues values, MessageExtras object, String columnName, ParameterizedType fieldType) throws IOException {
         if (object == null) return;
-        values.put(columnName, JsonSerializer.serialize(object));
+        values.put(columnName, LoganSquare.serialize(object));
     }
 }

@@ -43,7 +43,10 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.argument.TabArguments;
+import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
+import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
+import org.mariotaku.twidere.model.tab.extra.TrendsTabExtras;
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs;
 
 import java.io.IOException;
@@ -116,13 +119,26 @@ public class CustomTabUtils implements Constants {
         }
     }
 
+
+    /**
+     * Remember to make this method correspond to {@link TabExtras#parse(String, String)}
+     *
+     * @see TabExtras#parse(String, String)
+     */
     @Nullable
     public static TabExtras newTabExtras(@NonNull @CustomTabType String type) {
-        try {
-            return TabExtras.parse(type, "{}");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        switch (type) {
+            case CustomTabType.NOTIFICATIONS_TIMELINE: {
+                return new InteractionsTabExtras();
+            }
+            case CustomTabType.HOME_TIMELINE: {
+                return new HomeTabExtras();
+            }
+            case CustomTabType.TRENDS_SUGGESTIONS: {
+                return new TrendsTabExtras();
+            }
         }
+        return null;
     }
 
     @Nullable

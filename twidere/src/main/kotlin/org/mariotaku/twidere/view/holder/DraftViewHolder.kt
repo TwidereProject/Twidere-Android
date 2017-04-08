@@ -28,7 +28,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
 import org.mariotaku.twidere.model.ParcelableMedia
-import org.mariotaku.twidere.model.draft.StatusObjectExtras
+import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.Utils
 
@@ -54,7 +54,7 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                         media = media)
             }
             Draft.Action.FAVORITE, Draft.Action.RETWEET -> {
-                val extras = draft.action_extras as? StatusObjectExtras
+                val extras = draft.action_extras as? StatusObjectActionExtras
                 if (extras != null) {
                     summaryText = extras.status.text_unescaped
                 }

@@ -36,9 +36,28 @@ import org.mariotaku.twidere.model.ParcelableStatus;
 
 @ParcelablePlease
 @JsonObject
-public class StatusObjectExtras implements ActionExtras, Parcelable {
+public class QuoteStatusActionExtras implements ActionExtras, Parcelable {
+
     @JsonField(name = "status")
-    public ParcelableStatus status;
+    ParcelableStatus status;
+    @JsonField(name = "quote_original_status")
+    boolean quoteOriginalStatus;
+
+    public ParcelableStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(final ParcelableStatus status) {
+        this.status = status;
+    }
+
+    public boolean isQuoteOriginalStatus() {
+        return quoteOriginalStatus;
+    }
+
+    public void setQuoteOriginalStatus(final boolean quoteOriginalStatus) {
+        this.quoteOriginalStatus = quoteOriginalStatus;
+    }
 
     @Override
     public int describeContents() {
@@ -47,18 +66,18 @@ public class StatusObjectExtras implements ActionExtras, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        StatusObjectExtrasParcelablePlease.writeToParcel(this, dest, flags);
+        QuoteStatusActionExtrasParcelablePlease.writeToParcel(this, dest, flags);
     }
 
-    public static final Creator<StatusObjectExtras> CREATOR = new Creator<StatusObjectExtras>() {
-        public StatusObjectExtras createFromParcel(Parcel source) {
-            StatusObjectExtras target = new StatusObjectExtras();
-            StatusObjectExtrasParcelablePlease.readFromParcel(target, source);
+    public static final Creator<QuoteStatusActionExtras> CREATOR = new Creator<QuoteStatusActionExtras>() {
+        public QuoteStatusActionExtras createFromParcel(Parcel source) {
+            QuoteStatusActionExtras target = new QuoteStatusActionExtras();
+            QuoteStatusActionExtrasParcelablePlease.readFromParcel(target, source);
             return target;
         }
 
-        public StatusObjectExtras[] newArray(int size) {
-            return new StatusObjectExtras[size];
+        public QuoteStatusActionExtras[] newArray(int size) {
+            return new QuoteStatusActionExtras[size];
         }
     };
 }

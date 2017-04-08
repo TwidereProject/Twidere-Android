@@ -554,6 +554,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.HomeActivity"/>
         </activity>
+        <activity
+            android:name=".activity.content.RetweetQuoteDialogActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
 
         <service
             android:name=".service.LegacyTaskService"

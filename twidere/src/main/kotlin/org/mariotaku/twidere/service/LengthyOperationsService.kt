@@ -60,7 +60,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.draft.SendDirectMessageActionExtras
-import org.mariotaku.twidere.model.draft.StatusObjectExtras
+import org.mariotaku.twidere.model.draft.StatusObjectActionExtras
 import org.mariotaku.twidere.model.schedule.ScheduleInfo
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableStatusUpdateUtils
@@ -390,7 +390,7 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
 
     private fun <T> performStatusAction(draft: Draft, action: (accountKey: UserKey, status: ParcelableStatus) -> AbstractTask<*, T, *>): Boolean {
         val accountKey = draft.account_keys?.firstOrNull() ?: return false
-        val status = (draft.action_extras as? StatusObjectExtras)?.status ?: return false
+        val status = (draft.action_extras as? StatusObjectActionExtras)?.status ?: return false
         val task = action(accountKey, status)
         invokeBeforeExecute(task)
         val result = ManualTaskStarter.invokeExecute(task)
