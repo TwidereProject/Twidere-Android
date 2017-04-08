@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
+import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
@@ -13,7 +14,6 @@ import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
-import com.bumptech.glide.Glide
 import com.twitter.Validator
 import edu.tsinghua.hotmobi.HotMobiLogger
 import edu.tsinghua.hotmobi.model.MediaUploadEvent
@@ -804,50 +804,6 @@ class UpdateStatusTask(
         }
 
 
-        private fun imageStream(
-                context: Context,
-                resolver: ContentResolver,
-                mediaUri: Uri,
-                defaultType: String?,
-                sizeLimit: SizeLimit
-        ): MediaStreamData? {
-            var mediaType = defaultType
-            val o = BitmapFactory.Options()
-            o.inJustDecodeBounds = true
-            BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
-            if (o.outMimeType != null) {
-                mediaType = o.outMimeType
-            }
-            val size = Point(o.outWidth, o.outHeight)
-            val imageLimit = sizeLimit.image
-            o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
-                    imageLimit.maxWidth, imageLimit.maxHeight)
-            o.inJustDecodeBounds = false
-            if (o.outWidth > 0 && o.outHeight > 0 && mediaType != "image/gif") {
-
-                val bitmap = Glide.with(context).load(mediaUri).asBitmap().into(o.outWidth, o.outHeight).get()
-
-                if (bitmap != null) {
-                    size.set(bitmap.width, bitmap.height)
-                    val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mediaType)
-                    val tempFile = File.createTempFile("twidere__scaled_image_", ".$ext", context.cacheDir)
-                    tempFile.outputStream().use { os ->
-                        when (mediaType) {
-                            "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
-                            }
-                            else -> {
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
-                            }
-                        }
-                    }
-                    return MediaStreamData(ContentLengthInputStream(tempFile), mediaType, size,
-                            null, listOf(FileMediaDeletionItem(tempFile)))
-                }
-            }
-            return null
-        }
-
         @Throws(IOException::class, MicroBlogException::class)
         private fun uploadMediaChucked(upload: TwitterUpload, body: Body,
                 ownerIds: Array<String>?): MediaUploadResponse {
@@ -894,6 +850,73 @@ class UpdateStatusTask(
                 MediaUploadResponse.ProcessingInfo.State.PENDING, MediaUploadResponse.ProcessingInfo.State.IN_PROGRESS -> return true
                 else -> return false
             }
+        }
+
+        private fun imageStream(
+                context: Context,
+                resolver: ContentResolver,
+                mediaUri: Uri,
+                defaultType: String?,
+                sizeLimit: SizeLimit
+        ): MediaStreamData? {
+            var mediaType = defaultType
+            val o = BitmapFactory.Options()
+            o.inJustDecodeBounds = true
+            BitmapFactoryUtils.decodeUri(resolver, mediaUri, null, o)
+            // Try to use decoded media type
+            if (o.outMimeType != null) {
+                mediaType = o.outMimeType
+            }
+            // Skip if media is GIF
+            if (o.outWidth <= 0 || o.outHeight <= 0 || mediaType == "image/gif") {
+                return null
+            }
+
+            val imageLimit = sizeLimit.image
+            if (imageLimit.check(o.outWidth, o.outHeight)) {
+                return null
+            }
+
+            o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
+                    imageLimit.maxWidth, imageLimit.maxHeight)
+            o.inJustDecodeBounds = false
+            // Do actual image decoding
+            val bitmap = context.contentResolver.openInputStream(mediaUri).use {
+                BitmapFactory.decodeStream(it, null, o)
+            } ?: return null
+
+            val size = Point(bitmap.width, bitmap.height)
+            val ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(mediaType)
+            val tempFile = File.createTempFile("twidere__scaled_image_", ".$ext", context.cacheDir)
+
+            when (mediaType) {
+                "image/png", "image/x-png", "image/webp", "image-x-webp" -> {
+                    tempFile.outputStream().use { os ->
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
+                    }
+                }
+                "image/jpeg" -> {
+                    val origExif = context.contentResolver.openInputStream(mediaUri)
+                            .use(::ExifInterface)
+                    tempFile.outputStream().use { os ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                    }
+                    val orientation = origExif.getAttribute(ExifInterface.TAG_ORIENTATION)
+                    if (orientation != null) {
+                        ExifInterface(tempFile.absolutePath).apply {
+                            setAttribute(ExifInterface.TAG_ORIENTATION, orientation)
+                            saveAttributes()
+                        }
+                    }
+                }
+                else -> {
+                    tempFile.outputStream().use { os ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, os)
+                    }
+                }
+            }
+            return MediaStreamData(ContentLengthInputStream(tempFile), mediaType, size,
+                    null, listOf(FileMediaDeletionItem(tempFile)))
         }
 
         private fun videoStream(
@@ -1008,6 +1031,10 @@ class UpdateStatusTask(
             context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
         }
 
+        fun AccountExtras.ImageLimit.check(width: Int, height: Int): Boolean {
+            return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
+                    && width <= this.maxHeight)
+        }
     }
 
 }
