@@ -47,6 +47,8 @@
         android:layout_below="@+id/profileBannerSpace"
         android:layout_toEndOf="@+id/profileImage"
         android:layout_toRightOf="@+id/profileImage"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:minWidth="48dp"
         android:orientation="vertical"
         android:paddingBottom="@dimen/element_spacing_xsmall"
@@ -58,10 +60,12 @@
         <FrameLayout
             android:id="@+id/followContainer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/element_size_normal"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:minHeight="@dimen/element_size_normal"
             android:minWidth="@dimen/element_size_normal">
 
@@ -69,7 +73,7 @@
                 android:id="@+id/follow"
                 style="?buttonStyleSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 app:iabColor="@android:color/transparent"
@@ -88,7 +92,6 @@
                 tools:indeterminateDrawable="@android:color/transparent"/>
 
         </FrameLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"

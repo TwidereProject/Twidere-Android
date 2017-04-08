@@ -10,6 +10,7 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder;
 import org.mariotaku.restfu.annotation.method.GET;
 import org.mariotaku.restfu.http.HttpRequest;
 import org.mariotaku.restfu.http.HttpResponse;
@@ -61,7 +62,7 @@ public class DefaultFeatures {
         HttpRequest request = new HttpRequest.Builder().method(GET.METHOD).url(REMOTE_SETTINGS_URL).build();
         final HttpResponse response = client.newCall(request).execute();
         try {
-            final JsonMapper<DefaultFeatures> mapper = LoganSquare.mapperFor(DefaultFeatures.class);
+            final JsonMapper<DefaultFeatures> mapper = LoganSquareMapperFinder.mapperFor(DefaultFeatures.class);
             final JsonParser jsonParser = LoganSquare.JSON_FACTORY.createParser(response.getBody().stream());
             if (jsonParser.getCurrentToken() == null) {
                 jsonParser.nextToken();
