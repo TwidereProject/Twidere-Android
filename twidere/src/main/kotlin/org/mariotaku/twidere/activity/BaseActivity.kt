@@ -26,6 +26,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.Rect
 import android.nfc.NfcAdapter
 import android.os.Bundle
@@ -51,6 +52,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.restfu.http.RestHttpClient
 import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.TwidereConstants.SHARED_PREFERENCES_NAME
+import org.mariotaku.twidere.TwidereConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.activity.iface.IBaseActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity
 import org.mariotaku.twidere.activity.iface.IThemedActivity
@@ -129,10 +131,18 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
         val theme = Chameleon.Theme.from(this)
         theme.colorAccent = ThemeUtils.getUserAccentColor(this)
         theme.colorPrimary = ThemeUtils.getUserAccentColor(this)
+        val backgroundOption = themeBackgroundOption
         if (theme.isToolbarColored) {
             theme.colorToolbar = theme.colorPrimary
+        } else if (backgroundOption == VALUE_THEME_BACKGROUND_SOLID) {
+            theme.colorToolbar = if (ThemeUtils.isLightTheme(this)) {
+                Color.WHITE
+            } else {
+                Color.BLACK
+            }
         }
-        if (ThemeUtils.isTransparentBackground(themeBackgroundOption)) {
+
+        if (ThemeUtils.isTransparentBackground(backgroundOption)) {
             theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
                     ThemeUtils.getActionBarAlpha(themePreferences[themeBackgroundAlphaKey]))
         }

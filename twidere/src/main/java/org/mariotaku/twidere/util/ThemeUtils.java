@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.TwilightManagerAccessor;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
@@ -100,19 +101,32 @@ public class ThemeUtils implements Constants {
         }
     }
 
-    public static void applyWindowBackground(@NonNull Context context, @NonNull Window window, String option, int alpha) {
+    public static void applyWindowBackground(@NonNull Context context, @NonNull Window window,
+            String backgroundOption, int alpha) {
         if (isWindowFloating(context)) {
             window.setBackgroundDrawable(getWindowBackground(context));
-        } else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(option)) {
+        } else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(backgroundOption)) {
             window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
             window.setBackgroundDrawable(getWindowBackgroundFromThemeApplyAlpha(context, alpha));
-        } else if (VALUE_THEME_BACKGROUND_SOLID.equals(option)) {
+        } else if (VALUE_THEME_BACKGROUND_SOLID.equals(backgroundOption)) {
             window.setBackgroundDrawable(new ColorDrawable(isLightTheme(context) ? Color.WHITE : Color.BLACK));
         } else {
             window.setBackgroundDrawable(getWindowBackground(context));
         }
     }
 
+    public static int getThemeBackgroundColor(@NonNull final Context context, String backgroundOption,
+            int alpha) {
+        if (isWindowFloating(context)) {
+            return getThemeBackgroundColor(context);
+        } else if (VALUE_THEME_BACKGROUND_TRANSPARENT.equals(backgroundOption)) {
+            return ColorUtils.setAlphaComponent(getThemeBackgroundColor(context), alpha);
+        } else if (VALUE_THEME_BACKGROUND_SOLID.equals(backgroundOption)) {
+            return isLightTheme(context) ? Color.WHITE : Color.BLACK;
+        } else {
+            return getThemeBackgroundColor(context);
+        }
+    }
 
     public static int getCardBackgroundColor(final Context context, String backgroundOption, int themeAlpha) {
         final TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.cardItemBackgroundColor});
