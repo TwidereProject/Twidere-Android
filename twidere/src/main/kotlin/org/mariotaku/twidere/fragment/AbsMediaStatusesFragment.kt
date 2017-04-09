@@ -31,6 +31,7 @@ import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.extension.reachingEnd
 import org.mariotaku.twidere.extension.reachingStart
+import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.IntentUtils
@@ -130,11 +131,21 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
         IntentUtils.openStatus(context, status.account_key, status.quoted_id)
     }
 
+    protected open fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
+            data: List<ParcelableStatus>?, changed: Boolean): Boolean {
+        if (loader !is MicroBlogAPIStatusesLoader) return false
+        val maxId = loader.maxId?.takeIf(String::isNotEmpty)
+        val sinceId = loader.sinceId?.takeIf(String::isNotEmpty)
+        if (sinceId == null && maxId != null) {
+            if (data != null && !data.isEmpty()) {
+                return changed
+            }
+        }
+        return true
+    }
+
     protected abstract fun onCreateStatusesLoader(context: Context, args: Bundle,
             fromUser: Boolean): Loader<List<ParcelableStatus>?>
-
-    protected abstract fun hasMoreData(loader: Loader<List<ParcelableStatus>?>,
-            data: List<ParcelableStatus>?, changed: Boolean): Boolean
 
     protected abstract fun getStatuses(maxId: String?, sinceId: String?): Int
 

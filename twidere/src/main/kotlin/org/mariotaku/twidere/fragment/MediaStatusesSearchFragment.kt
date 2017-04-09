@@ -23,7 +23,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.TwidereConstants.*
-import org.mariotaku.twidere.loader.MediaStatusesSearchLoader
 import org.mariotaku.twidere.loader.TweetSearchLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.Utils
@@ -46,19 +45,6 @@ class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return TweetSearchLoader(activity, accountKey, query, sinceId, maxId, page, adapter.getData(),
                 null, tabPosition, fromUser, makeGap, loadingMore)
-    }
-
-    override fun hasMoreData(loader: Loader<List<ParcelableStatus>?>, data: List<ParcelableStatus>?,
-            changed: Boolean): Boolean {
-        if (loader !is MediaStatusesSearchLoader) return false
-        val maxId = loader.maxId?.takeIf(String::isNotEmpty)
-        val sinceId = loader.sinceId?.takeIf(String::isNotEmpty)
-        if (sinceId != null && maxId != null) {
-            if (data != null && !data.isEmpty()) {
-                return changed
-            }
-        }
-        return false
     }
 
     override fun getStatuses(maxId: String?, sinceId: String?): Int {
