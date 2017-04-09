@@ -25,14 +25,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.support.v4.view.ViewPager.OnPageChangeListener
+import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.TextView
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.ComposeActivity
 import org.mariotaku.twidere.activity.LinkHandlerActivity
+import org.mariotaku.twidere.activity.QuickSearchBarActivity
 import org.mariotaku.twidere.activity.iface.IControlBarActivity.ControlBarOffsetListener
 import org.mariotaku.twidere.adapter.SupportTabsAdapter
 import org.mariotaku.twidere.extension.model.getAccountType
@@ -46,8 +50,11 @@ import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.RecentSearchProvider
 import org.mariotaku.twidere.provider.TwidereDataStore.SearchHistory
 import org.mariotaku.twidere.util.Analyzer
+import org.mariotaku.twidere.util.ThemeUtils
 
-class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, SupportFragmentCallback, SystemWindowsInsetsCallback, ControlBarOffsetListener, OnPageChangeListener, LinkHandlerActivity.HideUiOnScroll {
+class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, SupportFragmentCallback,
+        SystemWindowsInsetsCallback, ControlBarOffsetListener, OnPageChangeListener,
+        LinkHandlerActivity.HideUiOnScroll {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -64,6 +71,37 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
             Analyzer.log(Search(query, accountKey.let {
                 AccountUtils.findByAccountKey(am, it)
             }?.getAccountType(am)))
+        }
+
+        val activity = this.activity
+        if (activity is AppCompatActivity) {
+            val actionBar = activity.supportActionBar
+            val theme = Chameleon.getOverrideTheme(context, activity)
+            if (actionBar != null) {
+                actionBar.setCustomView(R.layout.layout_actionbar_search)
+                actionBar.setDisplayShowTitleEnabled(false)
+                actionBar.setDisplayShowCustomEnabled(true)
+                val customView = actionBar.customView
+                val editQuery = customView.findViewById(R.id.editQuery) as TextView
+                editQuery.setTextColor(ThemeUtils.getColorDependent(theme.colorToolbar))
+                editQuery.text = query
+                customView.setOnClickListener {
+                    val searchIntent = Intent(context, QuickSearchBarActivity::class.java).apply {
+                        putExtra(EXTRA_QUERY, query)
+                    }
+                    startActivityForResult(searchIntent, REQUEST_OPEN_SEARCH)
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            REQUEST_OPEN_SEARCH -> {
+                if (resultCode == QuickSearchBarActivity.RESULT_SEARCH_PERFORMED) {
+                    activity?.finish()
+                }
+            }
         }
     }
 
@@ -120,5 +158,8 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
                 name = getString(R.string.search_type_users), icon = DrawableHolder.resource(R.drawable.ic_action_user))
     }
 
+    companion object {
+        const val REQUEST_OPEN_SEARCH = 101
+    }
 
 }

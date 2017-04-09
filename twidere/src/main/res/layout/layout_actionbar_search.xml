@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~             Twidere - Twitter client for Android
+  ~
+  ~  Copyright (C) 2012-2017 Mariotaku Lee <mariotaku.lee@gmail.com>
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_edit_text_actionbar_search"
+    android:orientation="vertical">
+
+    <org.mariotaku.twidere.view.FixedTextView
+        android:id="@+id/editQuery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/element_spacing_small"
+        android:layout_marginLeft="@dimen/element_spacing_normal"
+        android:layout_marginRight="@dimen/element_spacing_normal"
+        android:layout_marginTop="@dimen/element_spacing_small"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:minHeight="32dp"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="?android:textColorPrimary"
+        tools:text="Search query"/>
+</FrameLayout>
