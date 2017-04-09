@@ -184,7 +184,7 @@
     <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> liked your retweet</string>
     <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> added you to list</string>
     <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> added you to their lists</string>
-    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list <xliff:g id="list">%2$s</xliff:g></string>
+    <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> added you to list \"<xliff:g id="list">%2$s</xliff:g>\"</string>
     <string name="activity_about_me_media_tagged"><xliff:g id="user">%s</xliff:g> tagged you</string>
     <string name="activity_about_me_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> and <xliff:g id="other">%2$s</xliff:g> tagged you</string>
     <string name="activity_about_me_retweet"><xliff:g id="user">%s</xliff:g> retweeted</string>
@@ -268,7 +268,7 @@
     <string name="compose_now_action">Compose Now action</string>
     <string name="compose_now_summary">Replaces Google Now shortcut for Compose screen</string>
 
-    <string name="conflicts_with_name">Conflicts with <xliff:g id="name">%s</xliff:g></string>
+    <string name="conflicts_with_name">Conflicts with \"<xliff:g id="name">%s</xliff:g>\"</string>
 
     <string name="connection_timeout">Connection timeout</string>
 
@@ -1270,8 +1270,8 @@
 
     <string name="unread_count">Unread count</string>
 
-    <string name="unsubscribe_from_user_list">Unsubscribe from list <xliff:g id="name">%s</xliff:g></string>
-    <string name="unsubscribe_from_user_list_confirm_message">Unsubscribe from list <xliff:g id="name">%s</xliff:g>? You can re-subscribe to this list later.</string>
+    <string name="unsubscribe_from_user_list">Unsubscribe from list \"<xliff:g id="name">%s</xliff:g>\"</string>
+    <string name="unsubscribe_from_user_list_confirm_message">Unsubscribe from list \"<xliff:g id="name">%s</xliff:g>\"? You can re-subscribe to this list later.</string>
 
     <string name="unsubscribed_from_list">Unsubscribed from list \"<xliff:g id="list">%s</xliff:g>\".</string>
 

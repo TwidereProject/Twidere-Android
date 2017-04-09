@@ -437,6 +437,7 @@
   <string name="label_content_rating_r">限制级</string>
   <string name="label_data_provider">Twidere 数据库存储</string>
   <string name="label_filters_subscription">订阅</string>
+  <string name="label_follow_request_sent">已发送关注请求</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> 通过 <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">粗略（城市）</string>
   <string name="label_location_no_location">无</string>
@@ -836,6 +837,7 @@
   <string name="search_hint_users">搜索用户</string>
   <string name="search_statuses">搜索推文</string>
   <string name="search_type_statuses">推文</string>
+  <string name="search_type_media">媒体</string>
   <string name="search_type_users">用户</string>
   <string name="security_key">密钥</string>
   <string name="select_account">选择帐号</string>

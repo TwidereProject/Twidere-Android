@@ -15,8 +15,8 @@
     <item quantity="other">Borrados <xliff:g id="count">%1$d</xliff:g> usuarios da lista "<xliff:g id="list">%2$s</xliff:g>\".</item>
   </plurals>
   <plurals name="delete_N_users_from_list_confirm">
-    <item quantity="one">Borrado <xliff:g id="count">%1$d</xliff:g> usuario da lista "<xliff:g id="list">%2$s</xliff:g>\"?</item>
-    <item quantity="other">Borrados <xliff:g id="count">%1$d</xliff:g> usuarios da lista "<xliff:g id="list">%2$s</xliff:g>\"?</item>
+    <item quantity="one">Borrar <xliff:g id="count">%1$d</xliff:g> usuario da lista "<xliff:g id="list">%2$s</xliff:g>\"?</item>
+    <item quantity="other">Borrar <xliff:g id="count">%1$d</xliff:g> usuarios da lista "<xliff:g id="list">%2$s</xliff:g>\"?</item>
   </plurals>
   <plurals name="N_new_statuses">
     <item quantity="one"><xliff:g id="count">%d</xliff:g> novo chío</item>

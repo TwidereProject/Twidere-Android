@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse Proxy</item>
+    <item>反向代理</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -54,6 +54,11 @@
     <item>1小時</item>
     <item>2小時</item>
     <item>4小時</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>較窄</item>
+    <item>普通</item>
+    <item>較寬</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>圖示</item>
@@ -76,5 +81,9 @@
     <item>使用者的收藏</item>
     <item>列表</item>
     <item>列表時間軸</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>回覆</item>
+    <item>轉推</item>
   </string-array>
 </resources>

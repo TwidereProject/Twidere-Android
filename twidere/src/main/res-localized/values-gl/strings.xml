@@ -39,7 +39,7 @@
   <string name="action_compose">Escribir chío</string>
   <string name="action_compose_message_convert_to_status">Converter en chío</string>
   <string name="action_connect_to_buffer">Conectar</string>
-  <string name="action_conversation_info">Información de conversa</string>
+  <string name="action_conversation_info">Información da conversa</string>
   <string name="action_create_conversation">Iniciar conversa</string>
   <string name="action_creating_list">creando lista</string>
   <!-- [verb] Action for deleting a file or a twitter object like tweet-->
@@ -161,8 +161,8 @@
   <string name="action_view_map">Mapa</string>
   <string name="activated_accounts">Contas activadas</string>
   <string name="activities_about_me">Actividade sobre min</string>
-  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> marcado favorito</string>
-  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> marcados favoritos</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> marcou favorito</string>
+  <string name="activity_about_me_favorite_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> marcaron favoritos</string>
   <string name="activity_about_me_favorited_media_tagged"><xliff:g id="user">%s</xliff:g> marcou favorito un chío no que fuches etiquetado</string>
   <string name="activity_about_me_favorited_media_tagged_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> marcaron favorito un chío no que fuches etiquetado</string>
   <string name="activity_about_me_favorited_mention"><xliff:g id="user">%s</xliff:g> marcou favorito un chío no que fuches mencionado</string>
@@ -181,7 +181,7 @@
   <string name="activity_about_me_liked_retweet_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> gustaron do teu rechouchío</string>
   <string name="activity_about_me_list_member_added"><xliff:g id="user">%s</xliff:g> engadiute á lista</string>
   <string name="activity_about_me_list_member_added_multi"><xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g> engadíronte ás súas listas</string>
-  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> engadiute á lista <xliff:g id="list">%2$s</xliff:g>\"</string>
+  <string name="activity_about_me_list_member_added_with_name"><xliff:g id="user">%1$s</xliff:g> engadiute á lista <xliff:g id="list">%2$s</xliff:g></string>
   <string name="activity_about_me_media_tagged">Fuches etiquetado por <xliff:g id="user">%s</xliff:g></string>
   <string name="activity_about_me_media_tagged_multi">Fuches etiquetado por <xliff:g id="user">%1$s</xliff:g> e <xliff:g id="other">%2$s</xliff:g></string>
   <string name="activity_about_me_retweet">Rechouchiou <xliff:g id="user">%s</xliff:g></string>
@@ -219,7 +219,7 @@
   <string name="bug_reports_summary">Powered by Fabric</string>
   <string name="builtin_dns_resolver">Resolver Built-in DNS</string>
   <string name="cache_size_limit">Tamaño límite da caché</string>
-  <string name="cant_load_all_replies_explanation">Twitter limita aplicacións de terceiros e o acceso de Twidere ás respostas dun chío, é polo que non hai garantía de poder cargar todas as respostas.</string>
+  <string name="cant_load_all_replies_explanation">Twitter limita ás aplicacións de terceiros e o acceso de Twidere ás respostas dun chío, é polo que non hai garantía de poder cargar todas as respostas.</string>
   <string name="cant_load_all_replies_message">Non se poden cargar todas as respostas. &lt;a href=\"#dialog\";&gt; Por que?&lt;/a&gt;</string>
   <string name="cards">Cartóns</string>
   <string name="clear_cache">Limpar caché</string>
@@ -243,7 +243,7 @@
   <string name="conflicts_with_name">Conflictos con <xliff:g id="name">%s</xliff:g></string>
   <string name="connection_timeout">Esgotouse o tempo de conexión</string>
   <string name="consumer_key">Clave cliente</string>
-  <string name="consumer_secret">Consumer secret</string>
+  <string name="consumer_secret">Chave secreta cliente</string>
   <string name="content">Contido</string>
   <string name="content_and_storage">Contido e almacenamento</string>
   <string name="content_description_sticker">Sticker</string>
@@ -262,19 +262,19 @@
   <string name="dark_theme">Tema escuro</string>
   <string name="default_account">Conta por defecto</string>
   <string name="default_api_settings">Valores API por defecto</string>
-  <string name="default_api_settings_summary">Valores só aplicables a contas conectadas de novo</string>
+  <string name="default_api_settings_summary">Estes valores aplicaranse ao conectar de novo as contas</string>
   <string name="default_ringtone">Son de aviso por defecto</string>
   <string name="delete_conversation">Borrar conversa</string>
   <string name="delete_conversation_confirm_message">Borrar todas as mensaxes desta conversa?</string>
-  <string name="delete_drafts_confirm">Borrar borradores seleccionados?</string>
+  <string name="delete_drafts_confirm">Eliminar borradores seleccionados?</string>
   <string name="delete_message_confirm_message">Borrar esta mensaxe?</string>
-  <string name="delete_user">Borrar o usuario <xliff:g id="name">%s</xliff:g></string>
-  <string name="delete_user_confirm_message">Borrar <xliff:g id="name">%s</xliff:g>? Isto non se pode desfacer.</string>
+  <string name="delete_user">Eliminar o usuario <xliff:g id="name">%s</xliff:g></string>
+  <string name="delete_user_confirm_message">Eliminar a <xliff:g id="name">%s</xliff:g>? Isto non se pode desfacer.</string>
   <string name="delete_user_from_list_confirm">Borrar a <xliff:g id="user">%1$s</xliff:g> da lista "<xliff:g id="list">%2$s</xliff:g>\"?</string>
-  <string name="delete_user_list">Borrar lista <xliff:g id="name">%s</xliff:g></string>
-  <string name="delete_user_list_confirm_message">Borrar a lista <xliff:g id="name">%s</xliff:g>? Isto non se pode desfacer.</string>
-  <string name="delete_users">Borrar usuarios</string>
-  <string name="deleted_list">Borrada a lista \"<xliff:g id="list">%s</xliff:g>\".</string>
+  <string name="delete_user_list">Eliminar lista <xliff:g id="name">%s</xliff:g></string>
+  <string name="delete_user_list_confirm_message">Eliminar a lista <xliff:g id="name">%s</xliff:g>? Isto non se pode desfacer.</string>
+  <string name="delete_users">Eliminar usuarios</string>
+  <string name="deleted_list">Lista \"<xliff:g id="list">%s</xliff:g>\" eliminada.</string>
   <string name="deleted_user_from_list">Borraches a <xliff:g id="user">%1$s</xliff:g> da lista "<xliff:g id="list">%2$s</xliff:g>\".</string>
   <string name="denied_users_follow_request">Denegar pedido de seguimento de <xliff:g id="user">%s</xliff:g>.</string>
   <string name="deny">Denegar</string>
@@ -313,15 +313,15 @@
   <string name="error_message_message_too_long">Mensaxe longa de máis.</string>
   <string name="error_message_message_too_many_participants">Demasiados participantes</string>
   <string name="error_message_no_content">Sen contido</string>
-  <string name="error_message_rate_limit">Excedido o límite do Twitter, téntao de novo <xliff:g id="time">%s</xliff:g></string>
-  <string name="error_message_rate_limit_with_action">Excedido o límite do Twitter mentres <xliff:g id="action">%1$s</xliff:g>, téntao de novo <xliff:g id="time">%2$s</xliff:g></string>
+  <string name="error_message_rate_limit">Excedido o límite do Twitter, téntao de novo en <xliff:g id="time">%s</xliff:g></string>
+  <string name="error_message_rate_limit_with_action">Excedido o límite do Twitter mentres <xliff:g id="action">%1$s</xliff:g>, téntao de novo en <xliff:g id="time">%2$s</xliff:g></string>
   <string name="error_message_scheduler_not_available">Programador de chíos non dispoñible</string>
   <string name="error_message_status_too_long">Chío longo de máis.</string>
   <string name="error_message_tweet_shorten_failed">Fallou o acurte do chío.</string>
   <string name="error_message_tweet_shortener_not_found">Non se atopou xestor para acurtar chíos, se cadra eliminouse.</string>
   <string name="error_message_with_action">Erro mentres <xliff:g id="action">%1$s</xliff:g>: <xliff:g id="message">%2$s</xliff:g></string>
   <string name="error_no_access_for_credentials">A túa aplicación non pode acceder a este recurso.</string>
-  <string name="error_no_dm_permission">Sen permiso de mensaxes directas, compróbao na configuración da túa aplicación Twitter.</string>
+  <string name="error_no_dm_permission">Sen permiso de mensaxes directas, compróbao nos axustes da túa aplicación Twitter.</string>
   <string name="error_title_device_incompatible">Dispositivo non compatible</string>
   <string name="error_too_many_photos_fanfou">Demasiadas fotos</string>
   <string name="error_unknown_error">Erro: Erro descoñecido, probablemente isto sexa un bug.</string>
@@ -332,7 +332,7 @@
   <string name="extensions">Extensións</string>
   <string name="external_group_host_format">Grupo externo en <xliff:g id="host">%s</xliff:g></string>
   <string name="external_user_host_format">Usuario externo en <xliff:g id="host">%s</xliff:g></string>
-  <string name="extra_configurations">Configuración extra</string>
+  <string name="extra_configurations">Axustes extra</string>
   <string name="extra_feature_description_filters_import">Importar filtro de lista de bloqueados/silenciados</string>
   <string name="extra_feature_description_filters_subscription">Subscribir a filtros silenciados e sincronizar automaticamente</string>
   <string name="extra_feature_description_schedule_status">Programar chío (enviar máis tarde)</string>
@@ -350,7 +350,7 @@
   <string name="fast_image_loading">Carga rápida de imaxe</string>
   <string name="fast_image_loading_summary">Activar para cargar máis rápido as imaxes, desactivar se non se amosa algunha imaxe.</string>
   <string name="filter_everywhere">Filtrar en todo</string>
-  <string name="filter_everywhere_description">Isto filtrarase en Twidere:\n  ·Chíos do usuario\n  ·Chíos mencionando este usuario\n  ·Rechouchíos/Citas deste usuario</string>
+  <string name="filter_everywhere_description">Twidere vai filtrar isto:\n  ·Chíos deste usuario\n  ·Chíos mencionando este usuario\n  ·Rechouchíos/Citas deste usuario</string>
   <string name="filter_type_keywords">Palabras clave</string>
   <string name="filter_type_links">Ligazóns</string>
   <string name="filter_type_sources">Fontes</string>
@@ -359,7 +359,7 @@
   <string name="follow_request_sent">Petición de seguimento enviada</string>
   <string name="followed_user">Seguiches a <xliff:g id="user">%s</xliff:g>.</string>
   <string name="following_only">Só dos que segues</string>
-  <string name="following_only_summary">Amosar notificacións só de usuarios que segues.</string>
+  <string name="following_only_summary">Amosar só notificacións de usuarios que segues.</string>
   <string name="following_you">Seguíndote</string>
   <string name="follows">Segue</string>
   <string name="font">Fonte</string>
@@ -376,11 +376,11 @@
   <string name="group">Grupo</string>
   <!-- GNU social group like https://quitter.se/group/qvitter -->
   <string name="groups">Grupos</string>
-  <string name="hashtag">Hashtag</string>
-  <string name="hidden_settings">Agochar axustes</string>
-  <string name="hidden_settings_warning_message">NUNCA cambies esta configuración se non sabes o que é, ou:\n * Matará o teu gato\n * Lanzará armas nucleares en Corea do Norte\n * Mudará A Coruña en LaCoruNeno\n * Destruirá o universo</string>
+  <string name="hashtag">Etiqueta</string>
+  <string name="hidden_settings">Axustes agochados</string>
+  <string name="hidden_settings_warning_message">NUNCA cambies estes axustes se non sabes o que son ou:\n * Vai deixar de chover en Santiago\n * Desaparecerán as tapas en Lugo\n * Van mudar A Coruña en LaCoruNeno\n * Destruirán o universo</string>
   <string name="hidden_settings_warning_title">AVISO: Estes axustes poden producir danos!</string>
-  <string name="hide_card_actions">Accións de agocho de cartóns</string>
+  <string name="hide_card_actions">Agochar accións nos cartóns</string>
   <string name="hide_quotes">Agochar citas</string>
   <string name="hide_replies">Agochar respostas</string>
   <string name="hide_retweets">Agochar rechouchíos</string>
@@ -397,13 +397,13 @@
   <string name="hint_status_reply_to_user_removed">Enviarase como cita porque a mención a chío de usuario eliminouse. &lt;a href=\"#dialog\";&gt;Why?&lt;/a&gt;</string>
   <string name="hints">Pistas</string>
   <string name="home_refresh">Recargar na liña de tempo</string>
-  <string name="host_mapping_address">Enderezo (Pode ser outro enderezo host)</string>
+  <string name="host_mapping_address">Enderezo (pode ser outro enderezo host)</string>
   <string name="host_mapping_host">Host</string>
   <string name="i_want_my_stars_back">As miñas estrelas de volta!</string>
   <string name="i_want_my_stars_back_summary">Usar favorito (★) no canto de gústame (♥︎)</string>
   <string name="icon">Icona</string>
   <string name="icon_restored_message">Icona restaurada!</string>
-  <string name="import_export_settings">Axustes Importar/Exportar</string>
+  <string name="import_export_settings">Importar/Exportar axustes</string>
   <string name="import_settings">Importar axustes</string>
   <string name="import_settings_type_dialog_title">Importar axustes&#8230;</string>
   <string name="in_reply_to_name">En resposta a <xliff:g id="user_name">%s</xliff:g></string>
@@ -413,7 +413,7 @@
   <string name="interactions">Interaccións</string>
   <string name="invalid_consumer_key">Clave cliente non válida</string>
   <string name="invalid_consumer_secret">Clave secreta non válida</string>
-  <string name="invalid_list_name">Debe empezar cunha letra e só pode conter letras, números, \"-\", ou \"_\".</string>
+  <string name="invalid_list_name">Debe empezar con letra e só pode conter letras, números, \"-\", ou \"_\".</string>
   <string name="invalid_tab">Lapela non válida</string>
   <string name="jump_to_top">Saltar ao principio</string>
   <string name="just_now">Xusto agora</string>
@@ -424,8 +424,8 @@
   <string name="label_account">Conta</string>
   <string name="label_account_type">Tipo de conta</string>
   <string name="label_auth_type">Tipo Auth</string>
-  <string name="label_background_operation_service">Servizo segundo plano</string>
-  <string name="label_buffer_accounts">Contas en Buffer</string>
+  <string name="label_background_operation_service">Servizo en segundo plano</string>
+  <string name="label_buffer_accounts">Contas no Buffer</string>
   <string name="label_buffer_due_at_no_time">Sen hora</string>
   <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
   <string name="label_content_rating_g">Apto</string>
@@ -437,6 +437,7 @@
   <string name="label_content_rating_r">+16</string>
   <string name="label_data_provider">Provedor de base de datos Twidere</string>
   <string name="label_filters_subscription">Subscrición</string>
+  <string name="label_follow_request_sent">Petición de seguimento enviada</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> vía <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">Aproximada (Cidade)</string>
   <string name="label_location_no_location">Ningunha</string>
@@ -470,20 +471,20 @@
   <string name="leftside_compose_button">Botón de escribir no lado esquerdo</string>
   <string name="leftside_compose_button_summary">Colocar o botón de escribir chío na esquerda.</string>
   <string name="link_highlight_option">Opcións de destaque de ligazóns</string>
-  <string name="link_to_quoted_status">Ligazón a chío citado</string>
-  <string name="list_members">Listar membros</string>
-  <string name="list_subscribers">Listar subscritores</string>
-  <string name="list_timeline">Listar liña de tempo</string>
+  <string name="link_to_quoted_status">Ligazón ao chío citado</string>
+  <string name="list_members">Lista de membros</string>
+  <string name="list_subscribers">Lista de subscritores</string>
+  <string name="list_timeline">Lista na liña de tempo</string>
   <string name="listed">Listado</string>
   <string name="lists">Listas</string>
-  <string name="lists_following_user">Listas seguindo este usuario</string>
-  <string name="lists_following_user_with_name">Seguindo listas <xliff:g id="name">%s</xliff:g></string>
+  <string name="lists_following_user">Listas seguindo a este usuario</string>
+  <string name="lists_following_user_with_name">Listas que seguen a <xliff:g id="name">%s</xliff:g></string>
   <string name="load_defaults">Cargar por defecto</string>
   <string name="load_item_limit">Límite de chíos a cargar</string>
   <string name="load_item_limit_summary">Selecciona o límite de chíos por carga.</string>
   <string name="load_media">Cargar multimedia</string>
   <string name="load_more">Cargar máis</string>
-  <string name="load_more_from_top">Cargar arriba</string>
+  <string name="load_more_from_top">Cargar máis desde arriba</string>
   <string name="load_more_from_top_summary">Útil se prefires ler de abaixo arriba</string>
   <string name="location_countrywide">Todo o país</string>
   <string name="login_challenge_retype_email_hint">Introduce de novo o correo-e asociado á túa conta de Twitter.</string>
@@ -497,11 +498,11 @@
   <string name="media_preload">Pre-carga multimedia</string>
   <string name="media_preview">Vista previa multimedia</string>
   <string name="media_preview_style">Estilo da vista previa multimedia</string>
-  <string name="media_uploader">Xestor subida multimedia</string>
+  <string name="media_uploader">Xestor de subida multimedia</string>
   <string name="media_uploader_default">Por defecto (Twitter)</string>
   <string name="members">Membros</string>
-  <string name="mention_this_user">Menciona este usuario</string>
-  <string name="mention_user">Mencionar <xliff:g id="user">%s</xliff:g></string>
+  <string name="mention_this_user">Menciona a este usuario</string>
+  <string name="mention_user">Mencionar a <xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">Menciona <xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">Só mencións</string>
   <string name="message_account_delete_confirm">Esta conta eliminarase do Twidere.</string>

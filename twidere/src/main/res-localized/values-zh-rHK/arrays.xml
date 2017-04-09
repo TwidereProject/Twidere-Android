@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse Proxy</item>
+    <item>反向代理</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -81,5 +81,9 @@
     <item>用戶最愛</item>
     <item>列表</item>
     <item>列表時間綫</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>回覆</item>
+    <item>轉推</item>
   </string-array>
 </resources>

@@ -843,6 +843,7 @@
   <string name="search_hint_users">ユーザー検索</string>
   <string name="search_statuses">ツイートの検索</string>
   <string name="search_type_statuses">ツイート</string>
+  <string name="search_type_media">メディア</string>
   <string name="search_type_users">ユーザー</string>
   <string name="security_key">セキュリティーキー</string>
   <string name="select_account">アカウントを選択</string>
@@ -1035,7 +1036,7 @@
   <string name="unmuted_user"><xliff:g id="name">%s</xliff:g>さんのミュートを解除しました</string>
   <string name="unread_count">未読数の表示</string>
   <string name="unsubscribe_from_user_list">リスト<xliff:g id="name">%s</xliff:g>の保存を解除</string>
-  <string name="unsubscribe_from_user_list_confirm_message">リスト<xliff:g id="name">%s</xliff:g>の購読を解除しますか？あとで再び購読することもできます。</string>
+  <string name="unsubscribe_from_user_list_confirm_message">リスト<xliff:g id="name">%s</xliff:g>の購読を解除しますか? 後で購読し直すことも出来ます。</string>
   <string name="unsubscribed_from_list">リスト\"<xliff:g id="list">%s</xliff:g>\"の保存を解除しました。</string>
   <string name="unsupported_activity_action_summary">上記のアクションを報告してください</string>
   <string name="unsupported_login_verification_type_name"><xliff:g id="name">%1$s</xliff:g>でのログイン認証はサポートされていません。これをサポートするために、アカウントを報告してください。</string>
