@@ -171,14 +171,14 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             KEY_DNS_SERVER, KEY_TCP_DNS_QUERY, KEY_BUILTIN_DNS_RESOLVER -> {
                 reloadDnsSettings()
             }
-            KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET, KEY_API_URL_FORMAT, KEY_CREDENTIALS_TYPE,
-            KEY_SAME_OAUTH_SIGNING_URL, KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
+            KEY_CREDENTIALS_TYPE, KEY_API_URL_FORMAT, KEY_CONSUMER_KEY, KEY_CONSUMER_SECRET,
+            KEY_SAME_OAUTH_SIGNING_URL -> {
                 preferences[apiLastChangeKey] = System.currentTimeMillis()
             }
             KEY_EMOJI_SUPPORT -> {
                 externalThemeManager.reloadEmojiPreferences()
             }
-            KEY_THUMBOR_ADDRESS, KEY_THUMBOR_ENABLED, KEY_THUMBOR_SECURITY_KEY -> {
+            KEY_THUMBOR_ENABLED, KEY_THUMBOR_ADDRESS, KEY_THUMBOR_SECURITY_KEY -> {
                 thumbor.reloadSettings(preferences)
             }
             KEY_MEDIA_PRELOAD, KEY_PRELOAD_WIFI_ONLY -> {

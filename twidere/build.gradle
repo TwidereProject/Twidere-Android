@@ -186,7 +186,7 @@ dependencies {
     compile "com.github.mariotaku.CommonsLibrary:text:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku.CommonsLibrary:text-kotlin:${libVersions['MariotakuCommons']}"
     compile "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
-    compile 'com.github.mariotaku:Chameleon:0.9.16'
+    compile "com.github.mariotaku:Chameleon:${libVersions['Chameleon']}"
     compile 'com.github.mariotaku.QR-Code-generator:core:fcab3ea7f4'
     compile 'com.github.mariotaku.QR-Code-generator:android:fcab3ea7f4'
 

@@ -160,6 +160,7 @@
   <string name="action_view_map">地圖</string>
   <string name="activated_accounts">已啟用的帳號</string>
   <string name="activities_about_me">關於我的活動</string>
+  <string name="activity_about_me_favorite"><xliff:g id="user">%s</xliff:g> 收藏了</string>
   <string name="add_account">新增帳號</string>
   <string name="add_host_mapping">新增主機名對應</string>
   <string name="add_image">新增圖片</string>
@@ -300,6 +301,8 @@
   <string name="extra_feature_description_schedule_status">定期發推 (稍候傳送)</string>
   <string name="extra_feature_description_share_gif">在推文中分享 GIF</string>
   <string name="extra_feature_description_sync_data">透過 Dropbox 或 Google Drive 等同步資料</string>
+  <string name="extra_feature_title_filters_import">過濾器匯入</string>
+  <string name="extra_feature_title_filters_subscription">過濾器訂閱</string>
   <!-- Enhanced (paid) features description -->
   <string name="extra_features_description">支持 Twidere 並且得到強化功能</string>
   <string name="extra_features_pack_description">或是購買功能包大補帖 (包含之後新增功能)</string>
@@ -346,7 +349,7 @@
   <string name="hide_retweets">隱藏轉推</string>
   <string name="highlight">高亮</string>
   <string name="highlight_and_underline">高亮和底線</string>
-  <string name="hint_accounts_dashboard_message">從屏幕邊緣滑動來打開帳號面板</string>
+  <string name="hint_accounts_dashboard_message">從屏幕邊緣滑動來打開帳號儀表板</string>
   <string name="hint_accounts_dashboard_title">帳號面板</string>
   <string name="hint_empty_filters_subscriptions">沒有訂閱</string>
   <string name="hint_error_message_no_content">沒有內容</string>
@@ -379,9 +382,12 @@
   <string name="keyboard_shortcut_hint">按下按鍵</string>
   <string name="keyboard_shortcuts">快捷鍵</string>
   <string name="keyword_filter_name">關鍵詞：<xliff:g id="name">%s</xliff:g></string>
+  <string name="label_account">帳號</string>
   <string name="label_account_type">帳號類型</string>
   <string name="label_auth_type">驗證方式</string>
   <string name="label_background_operation_service">後台操作服務</string>
+  <string name="label_buffer_accounts">Buffer 帳號</string>
+  <string name="label_buffer_due_at_no_time">沒有定時</string>
   <!-- General Audiences. All ages admitted. http://www.mpaa.org/film-ratings/ -->
   <!-- Parental Guidance Suggested. Some material may not be suitable for children. http://www.mpaa.org/film-ratings/ -->
   <!-- Parents Strongly Cautioned. Some material may be inappropriate for children under 13. http://www.mpaa.org/film-ratings/ -->
@@ -409,6 +415,7 @@
   <string name="label_streaming_service">實時流服務</string>
   <string name="label_translate_from_language">從 <xliff:g id="language">%s</xliff:g> 翻譯</string>
   <string name="label_translation">翻譯</string>
+  <string name="label_video">影片</string>
   <string name="label_your_profile_image">您的頭像</string>
   <string name="large">大尺寸</string>
   <string name="leftside_compose_button">左側撰寫按鈕</string>
@@ -448,6 +455,7 @@
   <string name="mention_user">提及<xliff:g id="user">%s</xliff:g></string>
   <string name="mention_user_name">提及<xliff:g id="name">%1$s</xliff:g></string>
   <string name="mentions_only">僅提到</string>
+  <string name="message_account_delete_confirm">這個帳號將從 Twidere 中刪除。</string>
   <string name="message_api_data_corrupted">API 資料毀損</string>
   <string name="message_api_url_format_help">[DOMAIN]：Twitter API 域名\n舉例： https://[DOMAIN].twitter.com/ 會被替換成 https://api.twitter.com/ 。</string>
   <string name="message_auto_refresh_confirm">開啟自動更新自動取得新推文?</string>
@@ -487,7 +495,7 @@
   <!-- Toast message for network errors -->
   <string name="message_toast_network_error">網路錯誤</string>
   <string name="message_toast_no_account">沒有帳號</string>
-  <string name="message_toast_no_account_permission">需要 account 權限</string>
+  <string name="message_toast_no_account_permission">需要帳號權限</string>
   <string name="message_toast_no_account_selected">沒有選擇帳號</string>
   <string name="message_toast_no_user_selected">沒有選擇使用者</string>
   <string name="message_toast_press_again_to_close">再次按下以關閉</string>
@@ -622,6 +630,7 @@
   <string name="preference_title_filter_subscriptions">過濾器訂閱</string>
   <string name="preference_title_landscape">橫向模式</string>
   <string name="preference_title_light_font">輕量級字體</string>
+  <string name="preference_title_override_language">應用程式語言</string>
   <string name="preference_title_portrait">縱向模式</string>
   <string name="preference_title_storage">儲存</string>
   <string name="preference_title_streaming_enabled">啟用實時流</string>
@@ -835,6 +844,7 @@
   <string name="timeline_streaming_running">時間軸實時流正在運行</string>
   <string name="timeline_sync_service">時間軸同步服務</string>
   <string name="title_about">關於</string>
+  <string name="title_account_delete_confirm">刪除帳號</string>
   <string name="title_accounts">帳號</string>
   <string name="title_add_or_remove_from_list">從列表新增或移除</string>
   <string name="title_block_user">封鎖<xliff:g id="name">%s</xliff:g></string>

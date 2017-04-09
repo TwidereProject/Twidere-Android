@@ -88,6 +88,7 @@
   <string name="action_pick_color">Escoyer color</string>
   <string name="action_purchase">Mercar</string>
   <string name="action_purchase_features_pack">Mercar carauterístiques</string>
+  <string name="action_qr_code">Códigu QR</string>
   <string name="action_quote">Citar</string>
   <string name="action_record_video">Grabar videu</string>
   <string name="action_refresh">Refrescar</string>
@@ -519,6 +520,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_format_participants_join_added"><xliff:g example="Sender" id="sender">%1$s</xliff:g> amestó a <xliff:g example="Recipient" id="recipient">%2$s</xliff:g></string>
   <string name="message_format_participants_leave"><xliff:g example="User" id="name">%1$s</xliff:g> coló</string>
   <string name="message_format_sender_time"><xliff:g example="User" id="sender">%1$s</xliff:g> · <xliff:g example="12:00" id="time">%2$s</xliff:g></string>
+  <string name="message_gif_sharing_introduction">Gueta y comparti GIFs de GIPHY</string>
   <string name="message_info_buffer_queue_empty">La cola de Buffer ta balera</string>
   <string name="message_join_conversation">Xunióse a la conversación.</string>
   <string name="message_permission_request_compose_location">Twidere precisa\'l permisu d\'allugamientu p\'amestar l\'allugamientu a los tuits.</string>
@@ -560,6 +562,8 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="message_toast_notification_enabled_hint">El fluxu de tuits namái ta disponible cuando ta activáu pero nun ye 100% fiable.</string>
   <string name="message_toast_press_again_to_close">Volvi primir pa zarrar</string>
   <string name="message_toast_profile_banner_image_updated">Anovóse la imaxe de la pancarta del perfil</string>
+  <string name="message_toast_qr_scan_link_not_supported">Nun se sofita l\'enllaz</string>
+  <string name="message_toast_qr_scanner_not_supported">Nun se sofita l\'escáner QR</string>
   <string name="message_toast_retweet_cancelled">Encaboxóse\'l retuit</string>
   <string name="message_toast_save_media_no_storage_permission">Precísase\'l permisu d\'almacenamientu pa guardar medios</string>
   <string name="message_toast_saved_to_gallery">Guardóse na galería</string>
@@ -710,6 +714,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="preference_title_override_language">Llingua d\'aplicación</string>
   <string name="preference_title_portrait">Vertical</string>
   <string name="preference_title_storage">Almacenamientu</string>
+  <string name="preference_title_streaming_content">Conteníu de fluxu</string>
   <string name="preference_title_streaming_enabled">Habilitar fluxu de tuits</string>
   <string name="preference_title_streaming_non_metered_network">Fluxu de tuits en rede llibre</string>
   <string name="preference_title_streaming_power_saving">Mou d\'aforru d\'enerxía</string>
@@ -953,6 +958,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="title_filters_subscription_url">URL</string>
   <string name="title_followers">Siguidores</string>
   <string name="title_following">Siguiendo</string>
+  <string name="title_gif_sharing">Compartición de GIFs</string>
   <string name="title_home">Aniciu</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">Préstames</string>

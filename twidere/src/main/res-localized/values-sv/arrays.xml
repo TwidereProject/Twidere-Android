@@ -3,45 +3,82 @@
 <resources>
   <string-array name="entries_auto_refresh_content">
     <item>Hem</item>
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>Interaktioner</item>
+    <item>Direktmeddelanden</item>
     <item>Trender</item>
   </string-array>
   <string-array name="entries_compose_now_action">
     <item>Skriv</item>
     <item>Ta foto</item>
-    <item>Add media</item>
+    <item>Lägg till media</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>Interaktioner</item>
+    <item>Direktmeddelanden</item>
     <item>Trender</item>
     <item>Sparade sökningar</item>
   </string-array>
+  <string-array name="entries_image_sources">
+    <item>Kamera</item>
+    <item>Galleri</item>
+    <item>Urklipp</item>
+  </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
+  </string-array>
+  <string-array name="entries_media_preview_style">
+    <item>Beskär</item>
+    <item>Skala</item>
+    <item>Originalstorlek</item>
+  </string-array>
   <string-array name="entries_notification_content">
     <item>Hem</item>
-    <item>Interactions</item>
-    <item>Direct messages</item>
+    <item>Interaktioner</item>
+    <item>Direktmeddelanden</item>
+  </string-array>
+  <string-array name="entries_profile_image_style">
+    <item>Rund</item>
+    <item>Fyrkantig</item>
+  </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <item>Reverse Proxy</item>
+    <!--<item>SOCKS</item>-->
+  </string-array>
+  <string-array name="entries_refresh_interval">
+    <item>3 minuter</item>
+    <item>5 minuter</item>
+    <item>10 minuter</item>
+    <item>15 minuter</item>
+    <item>30 minuter</item>
+    <item>1 timme</item>
+    <item>2 timmar</item>
+    <item>4 timmar</item>
   </string-array>
   <string-array name="entries_tab_column_width">
-    <item>Narrow</item>
+    <item>Smal</item>
     <item>Normal</item>
-    <item>Wide</item>
+    <item>Bred</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>Ikon</item>
-    <item>Label</item>
-    <item>Icon and label</item>
+    <item>Etikett</item>
+    <item>Ikon och etikett</item>
   </string-array>
   <string-array name="entries_theme">
     <item>Ljus</item>
     <item>Mörk</item>
     <item>Automatisk</item>
   </string-array>
+  <string-array name="entries_theme_background">
+    <item>Standard</item>
+    <item>Äkta vit/svart</item>
+    <item>Transparent</item>
+  </string-array>
   <string-array name="entries_quick_access_shortcut_types">
     <item>Användare</item>
-    <item>User timeline</item>
-    <item>User Favorites</item>
+    <item>Användartidslinje</item>
+    <item>Användarfavoriter</item>
     <item>Lista</item>
     <item>Lista tidslinjen</item>
   </string-array>

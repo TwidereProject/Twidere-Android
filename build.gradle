@@ -61,6 +61,7 @@ subprojects {
                     KPreferences      : '0.9.6',
                     Kovenant          : '3.3.0',
                     ParcelablePlease  : '1.0.2',
+                    Chameleon         : '0.9.17',
             ]
         }
 

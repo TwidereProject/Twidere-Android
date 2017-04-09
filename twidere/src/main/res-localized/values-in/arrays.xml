@@ -10,7 +10,7 @@
   <string-array name="entries_compose_now_action">
     <item>撰寫</item>
     <item>拍照</item>
-    <item>Add media</item>
+    <item>Tambahkan media</item>
   </string-array>
   <string-array name="entries_home_refresh_content">
     <item>互動</item>
@@ -19,14 +19,17 @@
     <item>Pencarian yang tersimpan</item>
   </string-array>
   <string-array name="entries_image_sources">
-    <item>相機</item>
+    <item>Kamera</item>
     <item>相簿</item>
     <item>剪貼簿</item>
+  </string-array>
+  <string-array name="entries_media_preload">
+    <item>Wi-Fi</item>
   </string-array>
   <string-array name="entries_media_preview_style">
     <item>裁剪</item>
     <item>縮放</item>
-    <item>Real size</item>
+    <item>Ukuran sebenarnya</item>
   </string-array>
   <string-array name="entries_notification_content">
     <item>首頁</item>
@@ -37,6 +40,11 @@
     <item>圓形</item>
     <item>方形</item>
   </string-array>
+  <string-array name="entries_proxy_type">
+    <item>HTTP</item>
+    <item>Reverse Proxy</item>
+    <!--<item>SOCKS</item>-->
+  </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 menit</item>
     <item>5 menit</item>
@@ -46,6 +54,11 @@
     <item>1 jam</item>
     <item>2 jam</item>
     <item>4 jam</item>
+  </string-array>
+  <string-array name="entries_tab_column_width">
+    <item>Sempit</item>
+    <item>Normal</item>
+    <item>Lebar</item>
   </string-array>
   <string-array name="entries_tab_display_option">
     <item>圖示</item>
@@ -65,7 +78,7 @@
   <string-array name="entries_quick_access_shortcut_types">
     <item>用戶</item>
     <item>Timeline pengguna</item>
-    <item>User Favorites</item>
+    <item>Favorit Pengguna</item>
     <item>Daftar</item>
     <item>Daftarkan timeline</item>
   </string-array>

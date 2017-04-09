@@ -88,6 +88,7 @@
   <string name="action_pick_color">色を選択</string>
   <string name="action_purchase">購入</string>
   <string name="action_purchase_features_pack">追加機能パックを購入する</string>
+  <string name="action_qr_code">QRコード</string>
   <string name="action_quote">引用</string>
   <string name="action_record_video">動画を録画</string>
   <string name="action_refresh">更新</string>
@@ -577,6 +578,8 @@
   <string name="message_toast_notification_enabled_hint">ストリーミングが音のときにのみ利用できますが、100% の信頼性はありません。</string>
   <string name="message_toast_press_again_to_close">閉じるにはもう一度押して下さい</string>
   <string name="message_toast_profile_banner_image_updated">ヘッダー画像を更新しました</string>
+  <string name="message_toast_qr_scan_link_not_supported">リンクはサポートされていません</string>
+  <string name="message_toast_qr_scanner_not_supported">QRスキャナーはサポートされていません</string>
   <string name="message_toast_retweet_cancelled">リツイートをキャンセルしました。</string>
   <string name="message_toast_save_media_no_storage_permission">ストレージアクセス許可は、メディアを保存するために必要とされます。</string>
   <string name="message_toast_saved_to_gallery">ギャラリーに保存しました</string>
