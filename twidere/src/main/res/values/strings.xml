@@ -1021,6 +1021,7 @@
     <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
     <string name="search_type_statuses">Tweets</string>
+    <string name="search_type_media">Media</string>
     <string name="search_type_users">Users</string>
 
     <string name="security_key">Security key</string>

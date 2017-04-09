@@ -40,9 +40,8 @@ open class StatusesSearchFragment : ParcelableStatusesFragment() {
     @TimelineType
     override val timelineType: String = TimelineType.SEARCH
 
-    override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+    override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
+            Loader<List<ParcelableStatus>?> {
         refreshing = true
         val accountKey = Utils.getAccountKey(context, args)
         val maxId = args.getString(EXTRA_MAX_ID)
