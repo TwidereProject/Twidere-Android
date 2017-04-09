@@ -945,15 +945,17 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 startActivity(intent)
             }
             R.id.send_direct_message -> {
-                val builder = Uri.Builder()
-                builder.scheme(SCHEME_TWIDERE)
-                builder.authority(AUTHORITY_MESSAGES)
-                builder.path(PATH_MESSAGES_CONVERSATION_NEW)
-                builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString())
-                builder.appendQueryParameter(QUERY_PARAM_USER_KEY, user.key.toString())
+                val am = AccountManager.get(activity)
+                val builder = Uri.Builder().apply {
+                    scheme(SCHEME_TWIDERE)
+                    authority(AUTHORITY_MESSAGES)
+                    path(PATH_MESSAGES_CONVERSATION_NEW)
+                    appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, user.account_key.toString())
+                }
                 val intent = Intent(Intent.ACTION_VIEW, builder.build())
-                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(AccountManager.get(activity), user.account_key, true))
-                intent.putExtra(EXTRA_USER, user)
+                intent.putExtra(EXTRA_ACCOUNT, AccountUtils.getAccountDetails(am, user.account_key,
+                        true))
+                intent.putExtra(EXTRA_USERS, arrayOf(user))
                 startActivity(intent)
             }
             R.id.set_color -> {

@@ -31,15 +31,14 @@ import android.support.v4.content.Loader
 import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.text.style.ReplacementSpan
 import android.view.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_messages_conversation_new.*
 import org.mariotaku.kpreferences.get
-import org.mariotaku.ktextension.Bundle
-import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.setItemAvailability
+import org.mariotaku.ktextension.*
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.R
@@ -47,6 +46,7 @@ import org.mariotaku.twidere.adapter.SelectableUsersAdapter
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.model.isOfficial
+import org.mariotaku.twidere.extension.text.appendCompat
 import org.mariotaku.twidere.fragment.BaseFragment
 import org.mariotaku.twidere.loader.CacheUserSearchLoader
 import org.mariotaku.twidere.model.ParcelableMessageConversation
@@ -71,10 +71,23 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)
     }
 
-    private val selectedRecipients: List<ParcelableUser>
+    private var selectedRecipients: List<ParcelableUser>
         get() {
             val text = editParticipants.editableText ?: return emptyList()
             return text.getSpans(0, text.length, ParticipantSpan::class.java).map(ParticipantSpan::user)
+        }
+        set(value) {
+            val roundRadius = resources.getDimension(R.dimen.element_spacing_xsmall)
+            val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
+            val nameFirst = preferences[nameFirstKey]
+            editParticipants.text = SpannableStringBuilder().apply {
+                value.forEach { user ->
+                    val displayName = userColorNameManager.getDisplayName(user, nameFirst)
+                    val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
+                    appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    append(" ")
+                }
+            }
         }
 
     private var loaderInitialized: Boolean = false
@@ -141,7 +154,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         val spanPadding = resources.getDimension(R.dimen.element_spacing_xsmall)
         usersAdapter.itemCheckedListener = itemChecked@ { pos, checked ->
             val text: Editable = editParticipants.editableText ?: return@itemChecked false
-            val user = usersAdapter.getUser(pos) ?: return@itemChecked false
+            val user = usersAdapter.getUser(pos)
             if (checked) {
                 text.getSpans(0, text.length, PendingQuerySpan::class.java).forEach { pending ->
                     val start = text.getSpanStart(pending)
@@ -152,10 +165,8 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
                 }
                 val displayName = userColorNameManager.getDisplayName(user, nameFirst)
                 val span = ParticipantSpan(user, displayName, roundRadius, spanPadding)
-                val start = text.length
-                text.append("${user.screen_name} ")
-                val end = text.length - 1
-                text.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                text.appendCompat(user.screen_name, span, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                text.append(" ")
             } else {
                 text.getSpans(0, text.length, ParticipantSpan::class.java).forEach { span ->
                     if (user != span.user) {
@@ -174,6 +185,14 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
             editParticipants.clearComposingText()
             updateCheckState()
             return@itemChecked true
+        }
+
+        if (savedInstanceState == null) {
+            val users = arguments.getNullableTypedArray(EXTRA_USERS, ParcelableUser.CREATOR)
+            if (users != null) {
+                selectedRecipients = users.toList()
+                editParticipants.setSelection(editParticipants.length())
+            }
         }
     }
 
