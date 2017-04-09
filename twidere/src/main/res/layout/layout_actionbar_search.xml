@@ -18,18 +18,24 @@
   ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_edit_text_actionbar_search"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:layout_height="@dimen/element_size_normal">
 
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@+id/editQuery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/element_spacing_small"
         android:layout_marginLeft="@dimen/element_spacing_normal"
         android:layout_marginRight="@dimen/element_spacing_normal"
@@ -41,4 +47,4 @@
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="?android:textColorPrimary"
         tools:text="Search query"/>
-</FrameLayout>
+</RelativeLayout>
