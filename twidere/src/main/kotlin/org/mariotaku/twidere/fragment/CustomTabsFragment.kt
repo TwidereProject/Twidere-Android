@@ -378,9 +378,9 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 val valuesCreator = ObjectCursor.valuesCreatorFrom(Tab::class.java)
                 when (tag) {
                     TAG_EDIT_TAB -> {
-                        val where = Expression.equalsArgs(Tabs._ID).sql
-                        val whereArgs = arrayOf(tab.id.toString())
-                        context.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab), where, whereArgs)
+                        val where = Expression.equals(Tabs._ID, tab.id).sql
+                        context.contentResolver.update(Tabs.CONTENT_URI, valuesCreator.create(tab),
+                                where, null)
                     }
                     TAG_ADD_TAB -> {
                         context.contentResolver.insert(Tabs.CONTENT_URI, valuesCreator.create(tab))

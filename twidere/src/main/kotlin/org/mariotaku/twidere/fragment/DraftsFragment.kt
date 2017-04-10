@@ -211,13 +211,10 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
             }
         }
         if (deleteDraft) {
-            val draftIdString = draft._id.toString()
-            val where = Expression.equalsArgs(Drafts._ID).sql
-            val whereArgs = arrayOf(draftIdString)
-
             val cr = context.contentResolver
-            cr.delete(Drafts.CONTENT_URI, where, whereArgs)
-            cr.delete(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftIdString), null, null)
+            cr.delete(Drafts.CONTENT_URI, Expression.equals(Drafts._ID, draft._id).sql, null)
+            cr.delete(Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draft._id.toString()),
+                    null, null)
         }
     }
 

@@ -542,9 +542,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 val resolver = context.contentResolver
                 val values = ContentValues()
                 values.put(Statuses.IS_GAP, 1)
-                val where = Expression.equalsArgs(Statuses._ID).sql
-                val whereArgs = arrayOf(status._id.toString())
-                resolver.update(contentUri, values, where, whereArgs)
+                val where = Expression.equals(Statuses._ID, status._id).sql
+                resolver.update(contentUri, values, where, null)
                 return true
             }
             else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,

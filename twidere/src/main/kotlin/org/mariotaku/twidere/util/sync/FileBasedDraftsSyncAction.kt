@@ -132,9 +132,10 @@ abstract class FileBasedDraftsSyncAction<RemoteFileInfo>(val context: Context) :
             for (index in 0 until updateLocalInfoList.size()) {
                 val draft = Draft()
                 if (draft.loadFromRemote(updateLocalInfoList.valueAt(index))) {
-                    val where = Expression.equalsArgs(Drafts._ID).sql
-                    val whereArgs = arrayOf(updateLocalInfoList.keyAt(index).toString())
-                    context.contentResolver.update(Drafts.CONTENT_URI, creator.create(draft), where, whereArgs)
+                    val _id = updateLocalInfoList.keyAt(index)
+                    val where = Expression.equals(Drafts._ID, _id).sql
+                    context.contentResolver.update(Drafts.CONTENT_URI, creator.create(draft), where,
+                            null)
                 }
             }
         }

@@ -81,8 +81,8 @@ class ContentNotificationManager(
         val accountKey = pref.accountKey
         val resources = context.resources
         val selection = Expression.and(Expression.equalsArgs(Statuses.ACCOUNT_KEY),
-                Expression.greaterThanArgs(Statuses.POSITION_KEY))
-        val selectionArgs = arrayOf(accountKey.toString(), minPositionKey.toString())
+                Expression.greaterThan(Statuses.POSITION_KEY, minPositionKey))
+        val selectionArgs = arrayOf(accountKey.toString())
         val filteredSelection = buildStatusFilterWhereClause(preferences, Statuses.TABLE_NAME,
                 selection)
         val userProjection = arrayOf(Statuses.USER_KEY, Statuses.USER_NAME, Statuses.USER_SCREEN_NAME)
@@ -165,9 +165,9 @@ class ContentNotificationManager(
         val accountKey = pref.accountKey
         val where = Expression.and(
                 Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                Expression.greaterThanArgs(Activities.POSITION_KEY)
+                Expression.greaterThan(Activities.POSITION_KEY, position)
         ).sql
-        val whereArgs = arrayOf(accountKey.toString(), position.toString())
+        val whereArgs = arrayOf(accountKey.toString())
         @SuppressLint("Recycle")
         val c = cr.query(Activities.AboutMe.CONTENT_URI, Activities.COLUMNS, where, whereArgs,
                 OrderBy(Activities.TIMESTAMP, false).sql) ?: return
@@ -272,7 +272,9 @@ class ContentNotificationManager(
         val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
             TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()
-        val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey)) ?: return
+        val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
+        val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey),
+                extraHaving = unreadHaving) ?: return
         try {
             if (cur.isEmpty) return
 
@@ -281,12 +283,15 @@ class ContentNotificationManager(
             var messageSum: Int = 0
             var newLastReadTimestamp = -1L
             cur.forEachRow { cur, _ ->
+                val unreadCount = cur.getInt(indices[Conversations.UNREAD_COUNT])
+                if (unreadCount <= 0) return@forEachRow false
                 if (newLastReadTimestamp != -1L) {
                     newLastReadTimestamp = cur.getLong(indices[Conversations.LAST_READ_TIMESTAMP])
                 }
-                messageSum += cur.getInt(indices[Conversations.UNREAD_COUNT])
+                messageSum += unreadCount
                 return@forEachRow true
             }
+            if (messageSum == 0) return
 
             val builder = NotificationCompat.Builder(context)
             applyNotificationPreferences(builder, pref, pref.directMessagesNotificationType)

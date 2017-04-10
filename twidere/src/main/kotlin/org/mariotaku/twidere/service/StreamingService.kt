@@ -350,9 +350,8 @@ class StreamingService : BaseService() {
                             .create(curActivity)
                     val resolver = context.contentResolver
                     if (updateId > 0) {
-                        val where = Expression.equalsArgs(Activities._ID).sql
-                        val whereArgs = arrayOf(updateId.toString())
-                        resolver.update(Activities.AboutMe.CONTENT_URI, values, where, whereArgs)
+                        val where = Expression.equals(Activities._ID, updateId).sql
+                        resolver.update(Activities.AboutMe.CONTENT_URI, values, where, null)
                         curActivity._id = updateId
                     } else {
                         val uri = resolver.insert(Activities.AboutMe.CONTENT_URI, values)
@@ -387,8 +386,8 @@ class StreamingService : BaseService() {
                 val userKey = UserKeyUtils.fromUser(user)
                 val where = Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                         Expression.equalsArgs(CachedRelationships.USER_KEY),
-                        Expression.equalsArgs(CachedRelationships.NOTIFICATIONS_ENABLED)).sql
-                val whereArgs = arrayOf(account.key.toString(), userKey.toString(), "1")
+                        Expression.equals(CachedRelationships.NOTIFICATIONS_ENABLED, 1)).sql
+                val whereArgs = arrayOf(account.key.toString(), userKey.toString())
                 if (DataStoreUtils.queryCount(context.contentResolver, CachedRelationships.CONTENT_URI,
                         where, whereArgs) <= 0) return
 

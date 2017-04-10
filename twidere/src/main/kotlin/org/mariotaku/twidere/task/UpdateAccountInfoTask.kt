@@ -78,10 +78,9 @@ class UpdateAccountInfoTask(
                 }
                 tabsCursor.moveToNext()
             }
-            val where = Expression.equalsArgs(Tabs._ID).sql
             for (i in 0 until values.size()) {
-                val whereArgs = arrayOf(values.keyAt(i).toString())
-                resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, whereArgs)
+                val where = Expression.equals(Tabs._ID, values.keyAt(i)).sql
+                resolver.update(Tabs.CONTENT_URI, values.valueAt(i), where, null)
             }
         } catch (e: IOException) {
             // Ignore

@@ -213,45 +213,55 @@ fun ContentResolver.updateActivity(uri: Uri, where: String?,
     } finally {
         c.close()
     }
-    val updateWhere = Expression.equalsArgs(Activities._ID).sql
-    val updateWhereArgs = arrayOfNulls<String>(1)
     for (i in 0 until values.size()) {
-        updateWhereArgs[0] = values.keyAt(i).toString()
-        update(uri, values.valueAt(i), updateWhere, updateWhereArgs)
+        val updateWhere = Expression.equals(Activities._ID, values.keyAt(i)).sql
+        update(uri, values.valueAt(i), updateWhere, null)
     }
 }
 
 fun ContentResolver.getUnreadMessagesEntriesCursor(projection: Array<Columns.Column>,
-        accountKeys: Array<UserKey>, timestampBefore: Long = -1): Cursor? {
+        accountKeys: Array<UserKey>, extraWhere: Expression? = null,
+        extraWhereArgs: Array<String>? = null, extraHaving: Expression? = null,
+        extraHavingArgs: Array<String>? = null): Cursor? {
     val qb = SQLQueryBuilder.select(Columns(*projection))
     qb.from(Table(Conversations.TABLE_NAME))
     qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-            Expression.equals(
-                    Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
-                    Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+            Expression.and(
+                    Expression.equals(
+                            Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
+                            Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                    ),
+                    Expression.equals(
+                            Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
+                            Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY)
+                    )
             )
     ))
     val whereConditions = arrayOf(
             Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
                     accountKeys.size),
+            Expression.notEqualsArgs(Column(Table(Conversations.TABLE_NAME), Conversations.IS_OUTGOING)),
             Expression.lesserThan(Column(Table(Conversations.TABLE_NAME), Conversations.LAST_READ_TIMESTAMP),
                     Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP))
     )
-    if (timestampBefore >= 0) {
-        val beforeCondition = Expression.greaterThan(Column(Table(Conversations.TABLE_NAME),
-                Conversations.LAST_READ_TIMESTAMP), RawSQLLang("?"))
-        qb.where(Expression.and(*(whereConditions + beforeCondition)))
+    if (extraWhere != null) {
+        qb.where(Expression.and(*(whereConditions + extraWhere)))
     } else {
         qb.where(Expression.and(*whereConditions))
     }
     qb.groupBy(Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID))
+    if (extraHaving != null) {
+        qb.having(extraHaving)
+    }
     qb.orderBy(OrderBy(arrayOf(Column(Table(Conversations.TABLE_NAME), Conversations.LOCAL_TIMESTAMP),
             Column(Table(Conversations.TABLE_NAME), Conversations.SORT_ID)), booleanArrayOf(false, false)))
 
-    val selectionArgs = if (timestampBefore >= 0) {
-        accountKeys.toStringArray() + timestampBefore.toString()
-    } else {
-        accountKeys.toStringArray()
+    var selectionArgs = accountKeys.toStringArray() + "1"
+    if (extraWhereArgs != null) {
+        selectionArgs += extraWhereArgs
+    }
+    if (extraHavingArgs != null) {
+        selectionArgs += extraHavingArgs
     }
     return rawQuery(qb.buildSQL(), selectionArgs)
 }

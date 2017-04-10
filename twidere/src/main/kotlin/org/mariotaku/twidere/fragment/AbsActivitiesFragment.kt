@@ -541,9 +541,9 @@ abstract class AbsActivitiesFragment protected constructor() :
                         val resolver = context.contentResolver
                         val values = ContentValues()
                         values.put(Activities.IS_GAP, 1)
-                        val where = Expression.equalsArgs(Activities._ID).sql
-                        val whereArgs = arrayOf(adapter.getActivity(position)._id.toString())
-                        resolver.update(contentUri, values, where, whereArgs)
+                        val _id = adapter.getActivity(position)._id
+                        val where = Expression.equals(Activities._ID, _id).sql
+                        resolver.update(contentUri, values, where, null)
                         return true
                     }
                     else -> MenuUtils.handleStatusClick(activity, this, fragmentManager,

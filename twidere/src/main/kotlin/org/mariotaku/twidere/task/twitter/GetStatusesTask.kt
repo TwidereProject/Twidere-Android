@@ -191,7 +191,7 @@ abstract class GetStatusesTask(
         var olderCount = -1
         if (minPositionKey > 0) {
             olderCount = DataStoreUtils.getStatusesCount(context, preferences, uri, null,
-                    minPositionKey, Statuses.POSITION_KEY, false, arrayOf(accountKey))
+                    Statuses.POSITION_KEY, minPositionKey, false, arrayOf(accountKey))
         }
         val rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs)
 

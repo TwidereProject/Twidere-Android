@@ -163,8 +163,7 @@ class UpdateStatusTask(
 
     private fun deleteOrUpdateDraft(update: ParcelableStatusUpdate, result: UpdateStatusResult,
             draftId: Long) {
-        val where = Expression.equalsArgs(Drafts._ID).sql
-        val whereArgs = arrayOf(draftId.toString())
+        val where = Expression.equals(Drafts._ID, draftId).sql
         var hasError = false
         val failedAccounts = ArrayList<UserKey>()
         for (i in update.accounts.indices) {
@@ -178,10 +177,10 @@ class UpdateStatusTask(
         if (hasError) {
             val values = ContentValues()
             values.put(Drafts.ACCOUNT_KEYS, failedAccounts.joinToString(","))
-            cr.update(Drafts.CONTENT_URI, values, where, whereArgs)
+            cr.update(Drafts.CONTENT_URI, values, where, null)
             // TODO show error message
         } else {
-            cr.delete(Drafts.CONTENT_URI, where, whereArgs)
+            cr.delete(Drafts.CONTENT_URI, where, null)
         }
     }
 
@@ -1019,9 +1018,8 @@ class UpdateStatusTask(
         }
 
         fun deleteDraft(context: Context, id: Long) {
-            val where = Expression.equalsArgs(Drafts._ID).sql
-            val whereArgs = arrayOf(id.toString())
-            context.contentResolver.delete(Drafts.CONTENT_URI, where, whereArgs)
+            val where = Expression.equals(Drafts._ID, id).sql
+            context.contentResolver.delete(Drafts.CONTENT_URI, where, null)
         }
 
         fun AccountExtras.ImageLimit.check(width: Int, height: Int): Boolean {

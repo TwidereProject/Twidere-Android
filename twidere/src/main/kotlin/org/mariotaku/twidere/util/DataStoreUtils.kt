@@ -317,7 +317,7 @@ object DataStoreUtils {
     }
 
     fun getStatusesCount(context: Context, preferences: SharedPreferences, uri: Uri,
-            extraArgs: Bundle?, compare: Long, compareColumn: String, greaterThan: Boolean,
+            extraArgs: Bundle?, compareColumn: String, compare: Long, greaterThan: Boolean,
             accountKeys: Array<UserKey>?): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
 
@@ -330,11 +330,10 @@ object DataStoreUtils {
         }
 
         if (greaterThan) {
-            expressions.add(Expression.greaterThanArgs(compareColumn))
+            expressions.add(Expression.greaterThan(compareColumn, compare))
         } else {
-            expressions.add(Expression.lesserThanArgs(compareColumn))
+            expressions.add(Expression.lesserThan(compareColumn, compare))
         }
-        expressionArgs.add(compare.toString())
 
         expressions.add(buildStatusFilterWhereClause(preferences, getTableNameByUri(uri)!!, null))
 
@@ -349,38 +348,39 @@ object DataStoreUtils {
         return queryCount(context.contentResolver, uri, selection.sql, expressionArgs.toTypedArray())
     }
 
-    fun getActivitiesCount(context: Context, uri: Uri, compare: Long,
-            compareColumn: String, greaterThan: Boolean, accountKeys: Array<UserKey>?): Int {
+    fun getActivitiesCount(context: Context, uri: Uri, compareColumn: String,
+            compare: Long, greaterThan: Boolean, accountKeys: Array<UserKey>?): Int {
         val keys = accountKeys ?: getActivatedAccountKeys(context)
         val selection = Expression.and(
                 Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size),
-                if (greaterThan) Expression.greaterThanArgs(compareColumn) else Expression.lesserThanArgs(compareColumn),
+                if (greaterThan) {
+                    Expression.greaterThan(compareColumn, compare)
+                } else {
+                    Expression.lesserThan(compareColumn, compare)
+                },
                 buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null)
         )
         val whereArgs = arrayListOf<String>()
         keys.mapTo(whereArgs) { it.toString() }
-        whereArgs.add(compare.toString())
         return queryCount(context.contentResolver, uri, selection.sql, whereArgs.toTypedArray())
     }
 
     fun getActivitiesCount(context: Context, uri: Uri,
             extraWhere: Expression?, extraWhereArgs: Array<String>?,
-            since: Long, sinceColumn: String, followingOnly: Boolean,
+            sinceColumn: String, since: Long, followingOnly: Boolean,
             accountKeys: Array<UserKey>?): Int {
         val keys = (accountKeys ?: getActivatedAccountKeys(context)).map { it.toString() }.toTypedArray()
         val expressions = ArrayList<Expression>()
         expressions.add(Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size))
-        expressions.add(Expression.greaterThanArgs(sinceColumn))
+        expressions.add(Expression.greaterThan(sinceColumn, since))
         expressions.add(buildActivityFilterWhereClause(getTableNameByUri(uri)!!, null))
         if (extraWhere != null) {
             expressions.add(extraWhere)
         }
         val selection = Expression.and(*expressions.toTypedArray())
-        val selectionArgs: Array<String>
+        var selectionArgs = keys
         if (extraWhereArgs != null) {
-            selectionArgs = keys + since.toString() + extraWhereArgs
-        } else {
-            selectionArgs = keys + since.toString()
+            selectionArgs += extraWhereArgs
         }
         // If followingOnly option is on, we have to iterate over items
         val resolver = context.contentResolver
@@ -832,7 +832,7 @@ object DataStoreUtils {
             }
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
-                since, sinceColumn, followingOnly, accountIds)
+                sinceColumn, since, followingOnly, accountIds)
     }
 
     fun addToFilter(context: Context, users: Collection<ParcelableUser>, filterAnywhere: Boolean) {

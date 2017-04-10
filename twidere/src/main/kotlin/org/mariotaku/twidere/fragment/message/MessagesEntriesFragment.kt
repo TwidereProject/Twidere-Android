@@ -101,9 +101,14 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
         val qb = SQLQueryBuilder.select(Columns(*projection))
         qb.from(Table(Conversations.TABLE_NAME))
         qb.join(Join(false, Join.Operation.LEFT_OUTER, Table(Messages.TABLE_NAME),
-                Expression.equals(
-                        Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
-                        Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                Expression.and(
+                        Expression.equals(
+                                Column(Table(Conversations.TABLE_NAME), Conversations.CONVERSATION_ID),
+                                Column(Table(Messages.TABLE_NAME), Messages.CONVERSATION_ID)
+                        ),
+                        Expression.equals(
+                                Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY),
+                                Column(Table(Messages.TABLE_NAME), Messages.ACCOUNT_KEY))
                 )
         ))
         qb.where(Expression.inArgs(Column(Table(Conversations.TABLE_NAME), Conversations.ACCOUNT_KEY), accountKeys.size))

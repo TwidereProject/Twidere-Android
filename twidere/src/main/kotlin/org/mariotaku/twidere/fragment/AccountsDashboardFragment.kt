@@ -638,12 +638,12 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         }
 
         override fun loadInBackground(): AccountsInfo {
-            return loadAccountsInfo()
+            return loadAccountsInfo(true)
         }
 
         override fun onForceLoad() {
             if (firsSyncLoad && firstLoad) {
-                deliverResult(loadAccountsInfo())
+                deliverResult(loadAccountsInfo(false))
                 return
             }
             super.onForceLoad()
@@ -702,9 +702,14 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
             cancelLoad()
         }
 
-        private fun loadAccountsInfo(): AccountsInfo {
+        private fun loadAccountsInfo(loadFromDb: Boolean): AccountsInfo {
             val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), true)
-            val draftsCount = DataStoreUtils.queryCount(context.contentResolver, Drafts.CONTENT_URI_UNSENT, null, null)
+            val draftsCount = if (loadFromDb) {
+                DataStoreUtils.queryCount(context.contentResolver, Drafts.CONTENT_URI_UNSENT, null,
+                        null)
+            } else {
+                -1
+            }
             return AccountsInfo(accounts, draftsCount)
         }
     }

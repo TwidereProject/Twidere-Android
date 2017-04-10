@@ -157,16 +157,17 @@ abstract class GetActivitiesTask(
         }
         var olderCount = -1
         if (minPositionKey > 0) {
-            olderCount = DataStoreUtils.getActivitiesCount(context, contentUri, minPositionKey,
-                    Activities.POSITION_KEY, false, arrayOf(details.key))
+            olderCount = DataStoreUtils.getActivitiesCount(context, contentUri, Activities.POSITION_KEY,
+                    minPositionKey, false, arrayOf(details.key))
         }
         val writeUri = UriUtils.appendQueryParameters(contentUri, QUERY_PARAM_NOTIFY_CHANGE, notify)
         if (deleteBound[0] > 0 && deleteBound[1] > 0) {
             val where = Expression.and(
                     Expression.equalsArgs(Activities.ACCOUNT_KEY),
-                    Expression.greaterEqualsArgs(Activities.MIN_SORT_POSITION),
-                    Expression.lesserEqualsArgs(Activities.MAX_SORT_POSITION))
-            val whereArgs = arrayOf(details.key.toString(), deleteBound[0].toString(), deleteBound[1].toString())
+                    Expression.greaterEquals(Activities.MIN_SORT_POSITION, deleteBound[0]),
+                    Expression.lesserEquals(Activities.MAX_SORT_POSITION, deleteBound[1])
+            )
+            val whereArgs = arrayOf(details.key.toString())
             // First item after gap doesn't count
             val localDeleted = if (maxId != null && sinceId == null) 1 else 0
             val rowsDeleted = cr.delete(writeUri, where.sql, whereArgs) - localDeleted
@@ -186,9 +187,8 @@ abstract class GetActivitiesTask(
                 if (params.extraId != -1L) {
                     val noGapValues = ContentValues()
                     noGapValues.put(Activities.IS_GAP, false)
-                    val noGapWhere = Expression.equalsArgs(Activities._ID).sql
-                    val noGapWhereArgs = arrayOf(params.extraId.toString())
-                    cr.update(writeUri, noGapValues, noGapWhere, noGapWhereArgs)
+                    val noGapWhere = Expression.equals(Activities._ID, params.extraId).sql
+                    cr.update(writeUri, noGapValues, noGapWhere, null)
                 }
             } else {
                 return GetStatusesTask.ERROR_LOAD_GAP

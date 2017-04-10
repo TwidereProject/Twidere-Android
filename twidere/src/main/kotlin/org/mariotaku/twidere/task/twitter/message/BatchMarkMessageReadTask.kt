@@ -26,6 +26,9 @@ import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
+import org.mariotaku.sqliteqb.library.Columns
+import org.mariotaku.sqliteqb.library.Expression
+import org.mariotaku.sqliteqb.library.Table
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.model.ParcelableMessageConversation
 import org.mariotaku.twidere.model.UserKey
@@ -50,11 +53,15 @@ class BatchMarkMessageReadTask(
 
     override fun onExecute(params: Unit?): Boolean {
         val cr = context.contentResolver
-        val projection = Conversations.COLUMNS.map {
+        val projection = (Conversations.COLUMNS + Conversations.UNREAD_COUNT).map {
             TwidereQueryBuilder.mapConversationsProjection(it)
         }.toTypedArray()
+
+        val unreadWhere = Expression.greaterThan(Columns.Column(Table(Conversations.TABLE_NAME),
+                Conversations.LAST_READ_TIMESTAMP), markTimestampBefore)
+        val unreadHaving = Expression.greaterThan(Conversations.UNREAD_COUNT, 0)
         val cur = cr.getUnreadMessagesEntriesCursor(projection, arrayOf(accountKey),
-                markTimestampBefore) ?: return false
+                unreadWhere, null, unreadHaving, null) ?: return false
 
         val account = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?:
                 throw MicroBlogException("No account")
