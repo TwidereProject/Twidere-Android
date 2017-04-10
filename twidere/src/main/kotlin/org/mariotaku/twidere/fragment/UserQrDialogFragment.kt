@@ -39,9 +39,8 @@ import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
-import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereColorUtils
@@ -67,8 +66,8 @@ class UserQrDialogFragment : BaseDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val weakThis = WeakReference(this)
-        val deferred = Glide.with(context.applicationContext).loadProfileImage(context, user, 0,
-                size = ProfileImageSize.ORIGINAL).into(DeferredTarget())
+        val deferred = Glide.with(context.applicationContext).loadOriginalProfileImage(context,
+                user, 0).into(DeferredTarget())
         promiseOnUi {
             val fragment = weakThis.get() ?: return@promiseOnUi
             fragment.qrView.visibility = View.INVISIBLE

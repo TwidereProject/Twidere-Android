@@ -80,7 +80,7 @@ object ParcelableUserUtils {
         extras.followed_by = user.isFollowedBy == true
         extras.muting = user.isMuting == true
         extras.statusnet_profile_url = user.statusnetProfileUrl
-        extras.profile_image_url_original = user.profileImageUrlOriginal
+        extras.profile_image_url_original = user.profileImageUrlOriginal ?: user.profileImageUrlLarge
         extras.pinned_status_ids = user.pinnedTweetIds
         extras.groups_count = user.groupsCount
         extras.unique_id = user.uniqueId

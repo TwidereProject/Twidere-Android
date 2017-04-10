@@ -24,7 +24,7 @@ import org.mariotaku.twidere.util.Utils
 
 fun User.getProfileImageOfSize(size: String): String {
     if ("normal" != size) {
-        val larger = profileImageUrlProfileSize ?: profileImageUrlLarge
+        val larger = profileImageUrlLarge
         if (larger != null) return larger
     }
     val profileImage = profileImageUrlHttps ?: profileImageUrl

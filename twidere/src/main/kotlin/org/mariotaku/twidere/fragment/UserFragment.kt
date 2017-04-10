@@ -112,6 +112,7 @@ import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileBanner
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getBestProfileBanner
+import org.mariotaku.twidere.extension.model.originalProfileImage
 import org.mariotaku.twidere.extension.model.urlPreferred
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.StatusesFragmentDelegate
 import org.mariotaku.twidere.fragment.UserTimelineFragment.UserTimelineFragmentDelegate
@@ -1228,7 +1229,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 }
             }
             R.id.profileImage -> {
-                val url = Utils.getOriginalTwitterProfileImage(user.profile_image_url)
+                val url = user.originalProfileImage ?: return
                 val profileImage = ParcelableMediaUtils.image(url)
                 profileImage.type = ParcelableMedia.Type.IMAGE
                 val media = arrayOf(profileImage)
