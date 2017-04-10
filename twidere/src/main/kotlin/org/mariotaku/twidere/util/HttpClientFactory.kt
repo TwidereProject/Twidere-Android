@@ -153,7 +153,7 @@ object HttpClientFactory {
      * `[PATH]`, `[/PATH]`, `[QUERY]`, `[?QUERY]`, `[FRAGMENT]`, `[#FRAGMENT]` will be empty when
      * it's null, values and base64-encoded will be string `"null"`.
      *
-     * A valid format might looks like
+     * A valid format looks like
      *
      * `https://proxy.com/[SCHEME]/[AUTHORITY]/[PATH][?QUERY][#FRAGMENT]`,
      *
