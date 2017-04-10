@@ -52,10 +52,10 @@ import org.mariotaku.uniqr.UniqR
 import java.lang.ref.WeakReference
 
 /**
+ * Display QR code to user
  * Created by mariotaku on 2017/4/3.
  */
-
-class UserQRDialogFragment : BaseDialogFragment() {
+class UserQrDialogFragment : BaseDialogFragment() {
 
     private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)
 
@@ -63,12 +63,12 @@ class UserQRDialogFragment : BaseDialogFragment() {
         return inflater.inflate(R.layout.fragment_user_qr, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val weakThis = WeakReference(this)
-        val deferred = Glide.with(this).loadProfileImage(context, user, 0, 0f, 0f,
-                ProfileImageSize.ORIGINAL).into(DeferredTarget())
+        val deferred = Glide.with(context.applicationContext).loadProfileImage(context, user, 0,
+                size = ProfileImageSize.ORIGINAL).into(DeferredTarget())
         promiseOnUi {
             val fragment = weakThis.get() ?: return@promiseOnUi
             fragment.qrView.visibility = View.INVISIBLE
@@ -88,8 +88,8 @@ class UserQRDialogFragment : BaseDialogFragment() {
                 return@run QrCodeData(QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true))
             }
             val uniqr = UniqR(AndroidPlatform(), background, qrData)
-            uniqr.setScale(3)
-            uniqr.setQrPatternColor(palette.patternColor)
+            uniqr.scale = 3
+            uniqr.qrPatternColor = palette.patternColor
             val result = uniqr.build().produceResult()
             background.recycle()
             return@then result

@@ -1100,7 +1100,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
             R.id.qr_code -> {
                 executeAfterFragmentResumed {
-                    val df = UserQRDialogFragment()
+                    val df = UserQrDialogFragment()
                     df.arguments = Bundle {
                         this[EXTRA_USER] = user
                     }
