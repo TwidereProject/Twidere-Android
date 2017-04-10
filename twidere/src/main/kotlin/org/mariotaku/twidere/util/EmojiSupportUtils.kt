@@ -42,7 +42,7 @@ object EmojiSupportUtils {
     }
 
     fun applyEmoji(manager: ExternalThemeManager, text: Spannable,
-                   textStart: Int = 0, textLength: Int = text.length) {
+            textStart: Int = 0, textLength: Int = text.length) {
         val emoji = manager.emoji
         if (emoji == null || !emoji.isSupported) return
         val array = CodePointArray(text)

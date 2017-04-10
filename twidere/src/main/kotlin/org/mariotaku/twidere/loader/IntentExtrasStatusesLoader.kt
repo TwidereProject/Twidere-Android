@@ -27,7 +27,7 @@ import org.mariotaku.twidere.model.ParcelableStatus
 import java.util.*
 
 class IntentExtrasStatusesLoader(context: Context, private val mExtras: Bundle?,
-                                 data: List<ParcelableStatus>, fromUser: Boolean) : ParcelableStatusesLoader(context, data, -1, fromUser) {
+        data: List<ParcelableStatus>, fromUser: Boolean) : ParcelableStatusesLoader(context, data, -1, fromUser) {
 
     override fun loadInBackground(): ListResponse<ParcelableStatus> {
         if (mExtras != null && mExtras.containsKey(EXTRA_STATUSES)) {

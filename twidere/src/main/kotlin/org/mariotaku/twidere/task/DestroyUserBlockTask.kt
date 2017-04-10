@@ -21,7 +21,7 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails,
-                         args: AbsFriendshipOperationTask.Arguments): User {
+            args: AbsFriendshipOperationTask.Arguments): User {
         when (details.type) {
             AccountType.FANFOU -> {
                 return twitter.destroyFanfouBlock(args.userKey.id)
@@ -31,8 +31,8 @@ class DestroyUserBlockTask(context: Context) : AbsFriendshipOperationTask(contex
     }
 
     override fun succeededWorker(twitter: MicroBlog,
-                                 details: AccountDetails,
-                                 args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+            details: AccountDetails,
+            args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         // I bet you don't want to see this user in your auto complete list.
         val values = ContentValues()

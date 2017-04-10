@@ -33,6 +33,7 @@ class LoadIndicatorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun setLoadProgressVisible(visible: Boolean) {
         loadProgress.visibility = if (visible) View.VISIBLE else View.GONE
     }
+
     companion object {
         const val layoutResource = R.layout.list_item_load_indicator
     }

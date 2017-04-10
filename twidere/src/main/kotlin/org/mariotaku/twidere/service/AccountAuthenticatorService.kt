@@ -31,8 +31,8 @@ class AccountAuthenticatorService : BaseService() {
     internal class TwidereAccountAuthenticator(val context: Context) : AbstractAccountAuthenticator(context) {
 
         override fun addAccount(response: AccountAuthenticatorResponse, accountType: String,
-                                authTokenType: String?, requiredFeatures: Array<String>?,
-                                options: Bundle?): Bundle {
+                authTokenType: String?, requiredFeatures: Array<String>?,
+                options: Bundle?): Bundle {
             val intent = Intent(context, SignInActivity::class.java)
             intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
             val result = Bundle()
@@ -80,7 +80,7 @@ class AccountAuthenticatorService : BaseService() {
         }
 
         override fun updateCredentials(response: AccountAuthenticatorResponse, account: Account,
-                                       authTokenType: String, options: Bundle?): Bundle {
+                authTokenType: String, options: Bundle?): Bundle {
             val result = Bundle()
             result[AccountManager.KEY_BOOLEAN_RESULT] = true
             return result

@@ -55,8 +55,8 @@ class MediaTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             details: AccountDetails,
-                             paging: Paging): ResponseList<Status> {
+            details: AccountDetails,
+            paging: Paging): ResponseList<Status> {
         val context = context
         when (details.type) {
             AccountType.TWITTER -> {

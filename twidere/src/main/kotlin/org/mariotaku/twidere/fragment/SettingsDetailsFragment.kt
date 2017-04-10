@@ -75,7 +75,7 @@ class SettingsDetailsFragment : BasePreferenceFragment(), OnSharedPreferenceChan
                 SettingsActivity.setShouldRestart(activity)
             } else if (extras.containsKey(EXTRA_SHOULD_RECREATE)) {
                 SettingsActivity.setShouldRecreate(activity)
-            }else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
+            } else if (extras.containsKey(EXTRA_SHOULD_TERMINATE)) {
                 SettingsActivity.setShouldTerminate(activity)
             }
             if (extras.containsKey(EXTRA_RECREATE_ACTIVITY)) {

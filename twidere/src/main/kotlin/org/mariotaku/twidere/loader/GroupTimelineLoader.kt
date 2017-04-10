@@ -49,8 +49,8 @@ class GroupTimelineLoader(
 
     @Throws(MicroBlogException::class)
     override fun getStatuses(microBlog: MicroBlog,
-                             details: AccountDetails,
-                             paging: Paging): ResponseList<Status> {
+            details: AccountDetails,
+            paging: Paging): ResponseList<Status> {
         when {
             groupId != null -> {
                 return microBlog.getGroupStatuses(groupId, paging)

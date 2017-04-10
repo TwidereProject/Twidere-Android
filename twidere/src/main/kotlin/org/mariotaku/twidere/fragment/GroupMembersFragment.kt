@@ -29,7 +29,7 @@ import org.mariotaku.twidere.model.UserKey
 class GroupMembersFragment : CursorUsersListFragment() {
 
     override fun onCreateUsersLoader(context: Context,
-                                     args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
+            args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)

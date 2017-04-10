@@ -33,8 +33,8 @@ import java.util.*
 class UserMentionsFragment : StatusesSearchFragment() {
 
     override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+            args: Bundle,
+            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
         val maxId = args.getString(EXTRA_MAX_ID)

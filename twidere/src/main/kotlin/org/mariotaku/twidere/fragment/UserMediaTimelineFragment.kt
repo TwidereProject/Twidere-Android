@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v4.content.Loader
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.loader.MediaTimelineLoader
-import org.mariotaku.twidere.loader.MicroBlogAPIStatusesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 

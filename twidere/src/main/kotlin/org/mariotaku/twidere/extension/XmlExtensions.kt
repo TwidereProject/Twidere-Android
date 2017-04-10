@@ -19,7 +19,7 @@ fun InputStream.newPullParser(charset: Charset = Charset.defaultCharset()): XmlP
 
 @Throws(IOException::class)
 fun OutputStream.newSerializer(charset: Charset = Charset.defaultCharset(),
-                               indent: Boolean = true): XmlSerializer {
+        indent: Boolean = true): XmlSerializer {
     val serializer = Xml.newSerializer()
     serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", indent)
     serializer.setOutput(OutputStreamWriter(this, charset))

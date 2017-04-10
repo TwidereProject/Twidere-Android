@@ -37,7 +37,7 @@ class StatusAdapterLinkClickHandler<D>(context: Context, preferences: SharedPref
     private var adapter: IStatusesAdapter<D>? = null
 
     override fun openMedia(accountKey: UserKey, extraId: Long, sensitive: Boolean,
-                           link: String, start: Int, end: Int) {
+            link: String, start: Int, end: Int) {
         if (extraId == RecyclerView.NO_POSITION.toLong()) return
         val status = adapter!!.getStatus(extraId.toInt())
         val media = ParcelableMediaUtils.getAllMedia(status)

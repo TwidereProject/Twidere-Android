@@ -65,7 +65,7 @@ class FileSelectorActivity : BaseActivity(), FileSelectorDialogFragment.Callback
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+            grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_REQUEST_PERMISSIONS) {
             executeAfterFragmentResumed {

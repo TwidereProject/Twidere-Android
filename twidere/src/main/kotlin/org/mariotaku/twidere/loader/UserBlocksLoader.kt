@@ -41,8 +41,8 @@ class UserBlocksLoader(
 
     @Throws(MicroBlogException::class)
     override fun getCursoredUsers(twitter: MicroBlog,
-                                  details: AccountDetails,
-                                  paging: Paging): List<User> {
+            details: AccountDetails,
+            paging: Paging): List<User> {
         when (details.type) {
             AccountType.FANFOU -> {
                 return twitter.getFanfouBlocking(paging)

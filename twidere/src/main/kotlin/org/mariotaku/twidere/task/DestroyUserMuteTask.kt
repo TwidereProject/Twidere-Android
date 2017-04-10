@@ -20,13 +20,13 @@ class DestroyUserMuteTask(context: Context) : AbsFriendshipOperationTask(context
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails,
-                         args: AbsFriendshipOperationTask.Arguments): User {
+            args: AbsFriendshipOperationTask.Arguments): User {
         return twitter.destroyMute(args.userKey.id)
     }
 
     override fun succeededWorker(twitter: MicroBlog,
-                                 details: AccountDetails,
-                                 args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+            details: AccountDetails,
+            args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         // I bet you don't want to see this user in your auto complete list.
         val values = ContentValues()

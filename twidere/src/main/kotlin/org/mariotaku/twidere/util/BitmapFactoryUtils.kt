@@ -15,7 +15,7 @@ object BitmapFactoryUtils {
 
     @Throws(IOException::class)
     fun decodeUri(contentResolver: ContentResolver, uri: Uri, outPadding: Rect?,
-                  opts: BitmapFactory.Options?, close: Boolean = true): Bitmap? {
+            opts: BitmapFactory.Options?, close: Boolean = true): Bitmap? {
         var st: InputStream? = null
         try {
             st = contentResolver.openInputStream(uri)

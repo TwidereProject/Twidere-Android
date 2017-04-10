@@ -28,7 +28,7 @@ class AccountSyncService : BaseService() {
 
     internal class SyncAdapter(context: Context, autoInitialize: Boolean) : AbstractThreadedSyncAdapter(context, autoInitialize) {
         override fun onPerformSync(account: Account, extras: Bundle, authority: String,
-                                   provider: ContentProviderClient, syncResult: SyncResult) {
+                provider: ContentProviderClient, syncResult: SyncResult) {
         }
     }
 

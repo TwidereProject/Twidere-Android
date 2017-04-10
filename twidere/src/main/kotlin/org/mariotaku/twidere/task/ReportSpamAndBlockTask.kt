@@ -14,7 +14,7 @@ class ReportSpamAndBlockTask(context: Context) : CreateUserBlockTask(context) {
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails,
-                         args: AbsFriendshipOperationTask.Arguments): User {
+            args: AbsFriendshipOperationTask.Arguments): User {
         return twitter.reportSpam(args.userKey.id)
     }
 }

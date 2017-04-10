@@ -94,7 +94,7 @@ class DeleteUserListMembersDialogFragment : BaseDialogFragment(), DialogInterfac
         val FRAGMENT_TAG = "destroy_user_list_member"
 
         fun show(fm: FragmentManager, userList: ParcelableUserList,
-                 vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {
+                vararg users: ParcelableUser): DeleteUserListMembersDialogFragment {
             val args = Bundle()
             args.putParcelable(EXTRA_USER_LIST, userList)
             args.putParcelableArray(EXTRA_USERS, users)

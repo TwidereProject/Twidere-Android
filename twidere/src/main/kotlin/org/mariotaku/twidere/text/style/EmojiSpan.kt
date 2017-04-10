@@ -39,7 +39,7 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDra
     }
 
     override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int,
-                         fm: Paint.FontMetricsInt?): Int {
+            fm: Paint.FontMetricsInt?): Int {
         val drawable = getDrawable() ?: return 0
         paint.getFontMetrics(fontMetrics)
         val textHeightPx = Math.round(fontMetrics.descent - fontMetrics.ascent)
@@ -59,8 +59,8 @@ class EmojiSpan(private val drawable: Drawable) : DynamicDrawableSpan(DynamicDra
 
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int,
-                      end: Int, x: Float, top: Int, y: Int, bottom: Int,
-                      paint: Paint) {
+            end: Int, x: Float, top: Int, y: Int, bottom: Int,
+            paint: Paint) {
         val b = getDrawable() ?: return
         canvas.save()
         canvas.translate(x, y.toFloat())

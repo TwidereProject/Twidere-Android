@@ -36,7 +36,7 @@ class DestroyStatusTask(
         var deleteStatus: Boolean = false
         try {
             status = ParcelableStatusUtils.fromStatus(microBlog.destroyStatus(statusId),
-                    accountKey, details.type,false)
+                    accountKey, details.type, false)
             ParcelableStatusUtils.updateExtraInformation(status, details)
             deleteStatus = true
             return SingleResponse(status)

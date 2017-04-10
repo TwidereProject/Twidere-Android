@@ -27,7 +27,7 @@ open class CreateUserBlockTask(
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails,
-                         args: Arguments): User {
+            args: Arguments): User {
         when (details.type) {
             AccountType.FANFOU -> {
                 return twitter.createFanfouBlock(args.userKey.id)
@@ -37,7 +37,7 @@ open class CreateUserBlockTask(
     }
 
     override fun succeededWorker(twitter: MicroBlog, details: AccountDetails, args: Arguments,
-                                 user: ParcelableUser) {
+            user: ParcelableUser) {
         val resolver = context.contentResolver
         Utils.setLastSeen(context, args.userKey, -1)
         for (uri in DataStoreUtils.STATUSES_URIS) {

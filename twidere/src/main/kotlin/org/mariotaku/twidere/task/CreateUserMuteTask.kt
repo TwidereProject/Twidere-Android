@@ -25,13 +25,13 @@ class CreateUserMuteTask(
 
     @Throws(MicroBlogException::class)
     override fun perform(twitter: MicroBlog, details: AccountDetails,
-                         args: AbsFriendshipOperationTask.Arguments): User {
+            args: AbsFriendshipOperationTask.Arguments): User {
         return twitter.createMute(args.userKey.id)
     }
 
     override fun succeededWorker(twitter: MicroBlog,
-                                 details: AccountDetails,
-                                 args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
+            details: AccountDetails,
+            args: AbsFriendshipOperationTask.Arguments, user: ParcelableUser) {
         val resolver = context.contentResolver
         Utils.setLastSeen(context, args.userKey, -1)
         for (uri in DataStoreUtils.STATUSES_URIS) {

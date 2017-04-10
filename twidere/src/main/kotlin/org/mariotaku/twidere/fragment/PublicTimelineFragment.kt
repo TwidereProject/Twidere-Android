@@ -39,8 +39,8 @@ class PublicTimelineFragment : ParcelableStatusesFragment() {
         get() = TimelineType.OTHER
 
     override fun onCreateStatusesLoader(context: Context,
-                                        args: Bundle,
-                                        fromUser: Boolean): Loader<List<ParcelableStatus>?> {
+            args: Bundle,
+            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         refreshing = true
         val data = adapterData
         val accountKey = Utils.getAccountKey(context, args)
