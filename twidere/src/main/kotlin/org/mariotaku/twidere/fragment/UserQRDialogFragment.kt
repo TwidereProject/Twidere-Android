@@ -19,24 +19,37 @@
 
 package org.mariotaku.twidere.fragment
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.support.v7.graphics.Palette
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import io.nayuki.qrcodegen.QrCode
-import io.nayuki.qrcodegen.QrCodeAndroid
+import io.nayuki.qrcodegen.QrSegment
 import kotlinx.android.synthetic.main.fragment_user_qr.*
+import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.then
+import nl.komponents.kovenant.ui.failUi
+import nl.komponents.kovenant.ui.promiseOnUi
+import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.R
+import org.mariotaku.twidere.annotation.ProfileImageSize
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.LinkCreator
+import org.mariotaku.twidere.util.TwidereColorUtils
+import org.mariotaku.twidere.util.glide.DeferredTarget
+import org.mariotaku.twidere.util.qr.QrCodeData
+import org.mariotaku.uniqr.AndroidPlatform
+import org.mariotaku.uniqr.UniqR
+import java.lang.ref.WeakReference
 
 /**
  * Created by mariotaku on 2017/4/3.
@@ -52,16 +65,72 @@ class UserQRDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val qrCode = QrCode.encodeText(LinkCreator.getUserWebLink(user).toString(), QrCode.Ecc.HIGH)
-        val bitmap = QrCodeAndroid.toBitmap(qrCode, 1, 0, Bitmap.Config.ARGB_8888)
-        val profileImageSize = getString(R.string.profile_image_size)
-        qrView.setImageDrawable(BitmapDrawable(resources, bitmap).apply {
-            this.setAntiAlias(false)
-            this.isFilterBitmap = false
-        })
-        profileImage.setShapeBackground(Color.WHITE)
-        Glide.with(this).loadProfileImage(context, user, profileImage.style, profileImage.cornerRadius,
-                profileImage.cornerRadiusRatio, profileImageSize).into(profileImage)
+
+        val weakThis = WeakReference(this)
+        val deferred = Glide.with(this).loadProfileImage(context, user, 0, 0f, 0f,
+                ProfileImageSize.ORIGINAL).into(DeferredTarget())
+        promiseOnUi {
+            val fragment = weakThis.get() ?: return@promiseOnUi
+            fragment.qrView.visibility = View.INVISIBLE
+            fragment.qrProgress.visibility = View.VISIBLE
+        } and deferred.promise.then { drawable ->
+            val fragment = weakThis.get() ?: throw InterruptedException()
+            val background = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
+                    Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(background)
+            drawable.setBounds(0, 0, background.width, background.height)
+            drawable.draw(canvas)
+
+            val palette = Palette.from(background).generate()
+
+            val qrData = run {
+                val segments = QrSegment.makeSegments(LinkCreator.getUserWebLink(fragment.user).toString())
+                return@run QrCodeData(QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true))
+            }
+            val uniqr = UniqR(AndroidPlatform(), background, qrData)
+            uniqr.setScale(3)
+            uniqr.setQrPatternColor(palette.patternColor)
+            val result = uniqr.build().produceResult()
+            background.recycle()
+            return@then result
+        }.successUi { bitmap ->
+            val fragment = weakThis.get() ?: return@successUi
+            fragment.qrView.visibility = View.VISIBLE
+            fragment.qrProgress.visibility = View.GONE
+            fragment.qrView.setImageDrawable(BitmapDrawable(fragment.resources, bitmap).apply {
+                this.setAntiAlias(false)
+                this.isFilterBitmap = false
+            })
+        }.failUi {
+            val fragment = weakThis.get() ?: return@failUi
+            Toast.makeText(fragment.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
+            fragment.dismiss()
+        }
     }
 
+    companion object {
+        private fun getOptimalPatternColor(color: Int): Int {
+            val yiq = IntArray(3)
+            TwidereColorUtils.colorToYIQ(color, yiq)
+            if (yiq[0] > 72) {
+                yiq[0] = 72
+                return TwidereColorUtils.YIQToColor(Color.alpha(color), yiq)
+            }
+            return color
+        }
+
+        private val Palette.patternColor: Int get() {
+            var color = getDarkVibrantColor(0)
+            if (color == 0) {
+                color = getDominantColor(0)
+            }
+            if (color == 0) {
+                color = getDarkMutedColor(0)
+            }
+            if (color == 0) {
+                return Color.BLACK
+            }
+            return getOptimalPatternColor(color)
+        }
+    }
 }

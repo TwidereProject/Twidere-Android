@@ -87,6 +87,7 @@ import org.mariotaku.sqliteqb.library.Selectable;
 import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
+import org.mariotaku.twidere.annotation.ProfileImageSize;
 import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableStatus;
@@ -563,6 +564,9 @@ public final class Utils implements Constants {
 
 
     public static String getTwitterProfileImageOfSize(@NonNull final String url, @NonNull final String size) {
+        if (ProfileImageSize.ORIGINAL.equals(size)) {
+            return getOriginalTwitterProfileImage(url);
+        }
         final Matcher matcher = PATTERN_TWITTER_PROFILE_IMAGES.matcher(url);
         if (matcher.matches()) {
             return matcher.replaceFirst("$1$2/profile_images/$3/$4_" + size + "$6");

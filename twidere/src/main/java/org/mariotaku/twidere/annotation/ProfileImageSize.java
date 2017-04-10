@@ -19,12 +19,16 @@
 
 package org.mariotaku.twidere.annotation;
 
+import android.support.annotation.StringDef;
+
 /**
  * Created by mariotaku on 2017/3/6.
  */
-
+@StringDef({ProfileImageSize.NORMAL, ProfileImageSize.BIGGER, ProfileImageSize.REASONABLY_SMALL,
+        ProfileImageSize.ORIGINAL})
 public @interface ProfileImageSize {
     String REASONABLY_SMALL = "reasonably_small";
     String BIGGER = "bigger";
     String NORMAL = "normal";
+    String ORIGINAL = "original";
 }

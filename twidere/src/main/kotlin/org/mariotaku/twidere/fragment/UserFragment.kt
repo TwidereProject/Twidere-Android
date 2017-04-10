@@ -94,6 +94,7 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.FriendshipUpdate
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.UserList
+import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
@@ -832,7 +833,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
         MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.qr_code, isMyself)
+        MenuUtils.setItemAvailability(menu, R.id.qr_code, isMyself || BuildConfig.DEBUG)
         MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
         MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
 

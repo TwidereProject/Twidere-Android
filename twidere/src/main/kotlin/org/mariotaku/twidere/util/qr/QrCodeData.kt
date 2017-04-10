@@ -17,35 +17,25 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.mariotaku.twidere.graphic
+package org.mariotaku.twidere.util.qr
 
-import android.graphics.Canvas
-import android.graphics.ColorFilter
-import android.graphics.PixelFormat
-import android.graphics.drawable.Drawable
 import io.nayuki.qrcodegen.QrCode
+import org.mariotaku.uniqr.QrData
 
 /**
- * Created by mariotaku on 2017/4/3.
+ * Created by mariotaku on 2017/4/10.
  */
+data class QrCodeData(private val qrCode: QrCode) : QrData {
 
-class QrCodeDrawable(val qrCode: QrCode) : Drawable() {
-    override fun draw(canvas: Canvas) {
-        for (x in 0 until qrCode.size) {
-            for (y in 0 until qrCode.size) {
-
-            }
-        }
+    override fun getSize(): Int {
+        return qrCode.size
     }
 
-    override fun getOpacity() = PixelFormat.OPAQUE
-
-    override fun setAlpha(alpha: Int) {
-        // NO-OP
+    override fun getVersion(): Int {
+        return qrCode.version
     }
 
-    override fun setColorFilter(colorFilter: ColorFilter?) {
-        // NO-OP
+    override fun get(x: Int, y: Int): Boolean {
+        return qrCode.getModule(x, y) == 1
     }
-
 }

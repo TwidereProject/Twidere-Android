@@ -62,6 +62,7 @@ subprojects {
                     Kovenant          : '3.3.0',
                     ParcelablePlease  : '1.0.2',
                     Chameleon         : '0.9.17',
+                    UniqR             : '0.9',
             ]
         }
 
