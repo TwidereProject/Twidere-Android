@@ -55,9 +55,9 @@ public class StatusUpdate extends SimpleValueMap {
 
     public StatusUpdate excludeReplyUserIds(@Nullable final String[] ids) {
         if (ids == null) {
-            remove("exclude_reply_userids");
+            remove("exclude_reply_user_ids");
         } else {
-            put("exclude_reply_userids", RestFuUtils.toString(ids, ','));
+            put("exclude_reply_user_ids", RestFuUtils.toString(ids, ','));
         }
         return this;
     }

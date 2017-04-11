@@ -25,6 +25,7 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.account.cred.Credentials;
 import org.mariotaku.twidere.model.util.AccountUtils;
 import org.mariotaku.twidere.util.api.TwitterAndroidExtraHeaders;
+import org.mariotaku.twidere.util.api.TwitterMacExtraHeaders;
 import org.mariotaku.twidere.util.api.UserAgentExtraHeaders;
 
 import java.util.List;
@@ -176,7 +177,7 @@ public class MicroBlogAPIFactory implements TwidereConstants {
                 return new UserAgentExtraHeaders("Twitter/6.75.2 CFNetwork/811.4.18 Darwin/16.5.0");
             }
             case TWITTER_FOR_MAC: {
-                return new UserAgentExtraHeaders("Twitter-Mac/5002734 Mac/10.12.3 (;x86_64)");
+                return TwitterMacExtraHeaders.INSTANCE;
             }
             case TWEETDECK: {
                 return new UserAgentExtraHeaders(UserAgentUtils.getDefaultUserAgentStringSafe(context));
