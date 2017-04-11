@@ -316,18 +316,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             REQUEST_EXTENSION_COMPOSE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    val text = data.getStringExtra(EXTRA_TEXT)
-                    val append = data.getStringExtra(EXTRA_APPEND_TEXT)
-                    val imageUri = data.getParcelableExtra<Uri>(EXTRA_IMAGE_URI)
+                    val text = data.getCharSequenceExtra(Intent.EXTRA_TEXT)
                     if (text != null) {
-                        editText.setText(text)
-                    } else if (append != null) {
-                        editText.append(append)
+                        val editable = editText.editableText
+                        if (editable == null || data.getBooleanExtra(EXTRA_IS_REPLACE_MODE, false)) {
+                            editText.setText(text)
+                        } else {
+                            editable.replace(editText.selectionStart, editText.selectionEnd, text)
+                        }
+                        setMenu()
+                        updateTextCount()
                     }
-                    if (imageUri != null) {
-                    }
-                    setMenu()
-                    updateTextCount()
+
+                    val src = MediaPickerActivity.getMediaUris(data)
+                    TaskStarter.execute(AddMediaTask(this, src, false, false))
                 }
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
