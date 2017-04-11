@@ -92,10 +92,6 @@ abstract class MicroBlogAPIStatusesLoader(
                 return ListResponse.getListInstance<ParcelableStatus>(MicroBlogException("No Account"))
         val accountType = details.type
 
-        var data: MutableList<ParcelableStatus>? = data
-        if (data == null) {
-            data = CopyOnWriteArrayList<ParcelableStatus>()
-        }
         if (isFirstLoad && tabPosition >= 0) {
             val cached = cachedData
             if (cached != null) {

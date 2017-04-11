@@ -33,6 +33,7 @@ import android.database.ContentObserver
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.RectF
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
@@ -51,6 +52,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.header_drawer_account_selector.view.*
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.ktextension.addOnAccountsUpdatedListenerSafe
@@ -114,7 +116,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     private val profileContainer by lazy { accountsHeader.profileContainer }
     private val noAccountContainer by lazy { accountsHeader.noAccountContainer }
 
-    private var accountActionProvider: AccountToggleProvider? = null
+    private lateinit var accountActionProvider: AccountToggleProvider
 
     private var switchAccountAnimationPlaying: Boolean = false
     private var useStarsForLikes: Boolean = false
@@ -152,14 +154,16 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         floatingProfileImageSnapshot.style = profileImageStyle
         accountProfileImageView.style = profileImageStyle
 
-        val menuInflater = SupportMenuInflater(context)
-        menuInflater.inflate(R.menu.action_dashboard_timeline_toggle, accountDashboardMenu.menu)
+        SupportMenuInflater(context).inflate(R.menu.action_dashboard_timeline_toggle,
+                accountDashboardMenu.menu)
+        accountActionProvider = MenuItemCompat.getActionProvider(
+                accountDashboardMenu.menu.findItem(R.id.select_account)) as AccountToggleProvider
         accountDashboardMenu.setOnMenuItemClickListener(OnMenuItemClickListener { item ->
             if (item.groupId == AccountToggleProvider.MENU_GROUP) {
-                val accounts = accountActionProvider!!.accounts
+                val accounts = accountActionProvider.accounts
                 val account = accounts[item.order]
                 val newActivated = !account.activated
-                accountActionProvider!!.setAccountActivated(account.key, newActivated)
+                accountActionProvider.setAccountActivated(account.key, newActivated)
                 account.account.setActivated(AccountManager.get(context), newActivated)
                 return@OnMenuItemClickListener true
             } else {
@@ -289,8 +293,6 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     private fun updateAccountProviderData(data: AccountsInfo) {
-        val menu = accountDashboardMenu.menu
-        accountActionProvider = MenuItemCompat.getActionProvider(menu.findItem(R.id.select_account)) as AccountToggleProvider
         val accounts = data.accounts
         if (accounts.isNotEmpty()) {
             noAccountContainer.visibility = View.GONE
@@ -306,10 +308,8 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val defaultAccount = accounts.firstOrNull { it.key.maybeEquals(defaultKey) }
         accountsAdapter.selectedAccount = defaultAccount
 
-        if (accountActionProvider != null) {
-            accountActionProvider!!.isExclusive = false
-            accountActionProvider!!.accounts = accounts
-        }
+        accountActionProvider.isExclusive = false
+        accountActionProvider.accounts = accounts
         updateAccountActions()
         val currentAccount = accountsAdapter.selectedAccount
         if (currentAccount != null) {
@@ -503,8 +503,17 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         val defWidth = res.displayMetrics.widthPixels
         val width = if (bannerWidth > 0) bannerWidth else defWidth
         val bannerView = accountProfileBanner.nextView as ImageView
+        val user = account.user
+        val fallbackBanner = if (user.link_color != 0) {
+            ColorDrawable(user.link_color)
+        } else if (user.account_color != 0) {
+            ColorDrawable(user.account_color)
+        } else {
+            ColorDrawable(Chameleon.getOverrideTheme(activity, activity).colorPrimary)
+        }
 
-        Glide.with(this).loadProfileBanner(context, account.user, width).into(bannerView)
+        Glide.with(this).loadProfileBanner(context, account.user, width).fallback(fallbackBanner)
+                .into(bannerView)
     }
 
     private fun displayCurrentAccount(profileImageSnapshot: Drawable?) {

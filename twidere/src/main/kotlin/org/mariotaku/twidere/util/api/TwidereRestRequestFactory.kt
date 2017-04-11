@@ -35,7 +35,7 @@ class TwidereRestRequestFactory(
 ) : RestRequest.Factory<MicroBlogException> {
 
     override fun create(restMethod: RestMethod<MicroBlogException>,
-            factory: RestConverter.Factory<MicroBlogException>, valuePool: ValueMap): RestRequest {
+            factory: RestConverter.Factory<MicroBlogException>, valuePool: ValueMap?): RestRequest {
         val method = restMethod.method
         val path = restMethod.path
         val headers = restMethod.getHeaders(valuePool)
