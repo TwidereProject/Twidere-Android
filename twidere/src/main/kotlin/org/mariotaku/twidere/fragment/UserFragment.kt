@@ -29,6 +29,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Outline
+import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -1579,9 +1580,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     }
 
     private fun setFollowEditButton(@DrawableRes icon: Int, @ColorRes color: Int, @StringRes label: Int) {
-        followContainer.follow.setImageResource(icon)
-        ViewCompat.setBackgroundTintList(followContainer.follow, ContextCompat.getColorStateList(context, color))
-        followContainer.follow.contentDescription = getString(label)
+        val followButton = followContainer.follow
+        followButton.setImageResource(icon)
+        ViewCompat.setBackgroundTintMode(followButton, PorterDuff.Mode.SRC_ATOP)
+        ViewCompat.setBackgroundTintList(followButton, ContextCompat.getColorStateList(context, color))
+        followButton.contentDescription = getString(label)
     }
 
     private class ActionBarDrawable(shadow: Drawable) : LayerDrawable(arrayOf(shadow, ActionBarColorDrawable.create(true))) {
