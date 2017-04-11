@@ -147,11 +147,18 @@ class UpdateStatusTask(
         if (update.draft_action != Draft.Action.REPLY) return
         val inReplyTo = update.in_reply_to_status ?: return
         for (i in 0 until pending.length) {
-            if (update.accounts[i].type != AccountType.TWITTER) continue
-            val (_, replyText, _, excludedMentions, replyToOriginalUser) =
+            val details = update.accounts[i]
+            if (details.type != AccountType.TWITTER) continue
+            val (_, replyText, extraMentions, excludedMentions, replyToOriginalUser) =
                     extractor.extractReplyTextAndMentions(pending.overrideTexts[i], inReplyTo)
             pending.overrideTexts[i] = replyText
-            pending.excludeReplyUserIds[i] = excludedMentions.map { it.key.id }.toTypedArray()
+            pending.excludeReplyUserIds[i] = excludedMentions.mapNotNull { mention ->
+                // Remove account mention that is not appeared in `extraMentions`
+                if (details.key == mention.key && extraMentions.none {
+                    it.value.equals(mention.screen_name, ignoreCase = true)
+                }) return@mapNotNull null
+                return@mapNotNull mention.key.id
+            }.toTypedArray()
             pending.replyToOriginalUser[i] = replyToOriginalUser
             // Fix status to at least make mentioned user know what status it is
             if (!replyToOriginalUser && update.attachment_url == null) {
