@@ -22,37 +22,35 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
     android:layout_gravity="bottom"
-    android:clickable="true"
-    android:orientation="horizontal">
+    android:layout_height="?actionBarSize"
+    android:clickable="true">
 
     <FrameLayout
         android:id="@+id/playPauseContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <ImageButton
             android:id="@id/exo_play"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/exo_controls_play_description"
-            android:minWidth="@dimen/element_size_normal"
             android:src="@drawable/ic_action_play_arrow"
             tools:visibility="visible"/>
 
         <ImageButton
             android:id="@id/exo_pause"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:contentDescription="@string/exo_controls_pause_description"
-            android:minWidth="@dimen/element_size_normal"
             android:src="@drawable/ic_action_pause"
             tools:visibility="gone"/>
     </FrameLayout>
@@ -63,7 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/exo_progress"
         android:layout_alignStart="@id/exo_progress"
-        android:layout_below="@id/exo_progress"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/element_spacing_xsmall"
+        android:layout_marginLeft="@dimen/element_spacing_small"
+        android:layout_marginStart="@dimen/element_spacing_small"
         android:gravity="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/text_size_extra_small"
@@ -83,10 +84,13 @@
     <org.mariotaku.twidere.view.FixedTextView
         android:id="@id/exo_duration"
         android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@id/exo_progress"
         android:layout_alignRight="@id/exo_progress"
-        android:layout_below="@id/exo_progress"
+        android:layout_marginBottom="@dimen/element_spacing_xsmall"
+        android:layout_marginEnd="@dimen/element_spacing_small"
+        android:layout_marginRight="@dimen/element_spacing_small"
         android:gravity="center"
         android:textColor="?android:textColorPrimary"
         android:textSize="@dimen/text_size_extra_small"
@@ -94,10 +98,11 @@
 
     <ImageButton
         android:id="@+id/volumeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/element_size_normal"
+        android:layout_height="@dimen/element_size_normal"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:background="?selectableItemBackgroundBorderless"
         android:clickable="true"
         android:contentDescription="@string/action_mute"
