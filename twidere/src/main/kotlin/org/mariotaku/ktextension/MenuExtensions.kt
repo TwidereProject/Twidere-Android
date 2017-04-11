@@ -22,6 +22,7 @@ package org.mariotaku.ktextension
 import android.graphics.drawable.Drawable
 import android.support.v4.view.MenuItemCompat
 import android.view.Menu
+import android.view.SubMenu
 
 fun Menu.setItemAvailability(id: Int, available: Boolean) {
     val item = findItem(id) ?: return
@@ -58,4 +59,8 @@ fun Menu.setMenuItemShowAsActionFlags(id: Int, flags: Int) {
     val item = findItem(id) ?: return
     item.setShowAsActionFlags(flags)
     MenuItemCompat.setShowAsAction(item, flags)
+}
+
+fun Menu.findSubmenu(id: Int): SubMenu? {
+    return findItem(id)?.subMenu
 }

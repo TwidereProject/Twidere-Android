@@ -66,7 +66,8 @@ public final class Twidere implements TwidereConstants {
     public static void setComposeExtensionResult(@NonNull final Activity activity,
             @Nullable final String text, final boolean isReplacementMode, @Nullable Uri[] media) {
         final Intent intent = new Intent();
-        intent.putExtra(Intent.EXTRA_TEXT, isReplacementMode);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+        intent.putExtra(EXTRA_IS_REPLACE_MODE, isReplacementMode);
 
         if (media != null && media.length > 0) {
             intent.setData(media[0]);

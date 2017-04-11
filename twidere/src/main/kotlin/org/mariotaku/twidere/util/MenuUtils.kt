@@ -95,9 +95,8 @@ object MenuUtils {
         item.setTitle(icon)
     }
 
-    fun addIntentToMenu(context: Context?, menu: Menu?, queryIntent: Intent?,
+    fun addIntentToMenu(context: Context, menu: Menu, queryIntent: Intent,
             groupId: Int = Menu.NONE) {
-        if (context == null || menu == null || queryIntent == null) return
         val pm = context.packageManager
         val res = context.resources
         val density = res.displayMetrics.density

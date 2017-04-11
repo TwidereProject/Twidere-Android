@@ -274,11 +274,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
 
         val composeExtensionsIntent = Intent(INTENT_ACTION_EXTENSION_COMPOSE)
-        MenuUtils.addIntentToMenu(this, menu, composeExtensionsIntent, MENU_GROUP_COMPOSE_EXTENSION)
         val imageExtensionsIntent = Intent(INTENT_ACTION_EXTENSION_EDIT_IMAGE)
         val mediaMenuItem = menu.findItem(R.id.status_attachment)
         if (mediaMenuItem != null && mediaMenuItem.hasSubMenu()) {
-            MenuUtils.addIntentToMenu(this, mediaMenuItem.subMenu, imageExtensionsIntent,
+            val subMenu = mediaMenuItem.subMenu
+            MenuUtils.addIntentToMenu(this, subMenu, composeExtensionsIntent,
+                    MENU_GROUP_COMPOSE_EXTENSION)
+            MenuUtils.addIntentToMenu(this, subMenu, imageExtensionsIntent,
                     MENU_GROUP_IMAGE_EXTENSION)
         }
         updateViewStyle()
@@ -329,7 +331,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                     }
 
                     val src = MediaPickerActivity.getMediaUris(data)
-                    TaskStarter.execute(AddMediaTask(this, src, false, false))
+                    if (src.isNotNullOrEmpty()) {
+                        TaskStarter.execute(AddMediaTask(this, src, false, false))
+                    }
                 }
             }
             REQUEST_PURCHASE_EXTRA_FEATURES -> {
@@ -703,23 +707,24 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val intent = item.intent ?: return
         try {
             val action = intent.action
-            if (INTENT_ACTION_EXTENSION_COMPOSE == action) {
-                val accountKeys = accountsAdapter.selectedAccountKeys
-                intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
-                intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
-                if (accountKeys.isNotEmpty()) {
-                    val accountKey = accountKeys.first()
-                    intent.putExtra(EXTRA_NAME, DataStoreUtils.getAccountName(this, accountKey))
-                    intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(this, accountKey))
+            when (action) {
+                INTENT_ACTION_EXTENSION_COMPOSE -> {
+                    val accountKeys = accountsAdapter.selectedAccountKeys
+                    intent.putExtra(EXTRA_TEXT, ParseUtils.parseString(editText.text))
+                    intent.putExtra(EXTRA_ACCOUNT_KEYS, accountKeys)
+                    if (accountKeys.isNotEmpty()) {
+                        val accountKey = accountKeys.first()
+                        intent.putExtra(EXTRA_NAME, DataStoreUtils.getAccountName(this, accountKey))
+                        intent.putExtra(EXTRA_SCREEN_NAME, DataStoreUtils.getAccountScreenName(this, accountKey))
+                    }
+                    inReplyToStatus?.let {
+                        intent.putExtra(EXTRA_IN_REPLY_TO_ID, it.id)
+                        intent.putExtra(EXTRA_IN_REPLY_TO_NAME, it.user_name)
+                        intent.putExtra(EXTRA_IN_REPLY_TO_SCREEN_NAME, it.user_screen_name)
+                    }
+                    startActivityForResult(intent, REQUEST_EXTENSION_COMPOSE)
                 }
-                inReplyToStatus?.let {
-                    intent.putExtra(EXTRA_IN_REPLY_TO_ID, it.id)
-                    intent.putExtra(EXTRA_IN_REPLY_TO_NAME, it.user_name)
-                    intent.putExtra(EXTRA_IN_REPLY_TO_SCREEN_NAME, it.user_screen_name)
-                }
-                startActivityForResult(intent, REQUEST_EXTENSION_COMPOSE)
-            } else {
-                startActivity(intent)
+                else -> startActivity(intent)
             }
         } catch (e: ActivityNotFoundException) {
             Analyzer.logException(e)
