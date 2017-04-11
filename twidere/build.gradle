@@ -142,6 +142,7 @@ dependencies {
     compile "com.android.support:customtabs:${libVersions['SupportLib']}"
     compile "com.android.support:design:${libVersions['SupportLib']}"
     compile "com.android.support:percent:${libVersions['SupportLib']}"
+    compile "com.android.support:exifinterface:${libVersions['SupportLib']}"
     compile "com.twitter:twitter-text:${libVersions['TwitterText']}"
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.6.0'
     compile 'com.squareup:otto:1.3.8'

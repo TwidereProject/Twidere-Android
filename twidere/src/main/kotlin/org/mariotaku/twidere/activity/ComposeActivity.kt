@@ -74,7 +74,6 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
-import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
@@ -151,6 +150,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var nameFirst: Boolean = false
     private var draftUniqueId: String? = null
     private var shouldSkipDraft: Boolean = false
+    private var ignoreMentions: Boolean = false
     private var scheduleInfo: ScheduleInfo? = null
         set(value) {
             field = value
@@ -558,13 +558,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         when (ev.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 if (isAccountSelectorVisible && !TwidereViewUtils.hitView(ev, accountSelectorButton)) {
-                    var clickedItem = false
                     val layoutManager = accountSelector.layoutManager
-                    for (i in 0..layoutManager.childCount - 1) {
-                        if (TwidereViewUtils.hitView(ev, layoutManager.getChildAt(i))) {
-                            clickedItem = true
-                            break
-                        }
+                    val clickedItem = (0 until layoutManager.childCount).any {
+                        TwidereViewUtils.hitView(ev, layoutManager.getChildAt(it))
                     }
                     if (!clickedItem) {
                         isAccountSelectorVisible = false
@@ -1087,7 +1083,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val am = AccountManager.get(this)
         val details = AccountUtils.getAccountDetails(am, status.account_key, false) ?: return false
         val accountUser = details.user
-        var selectionStart = 0
         val mentions = ArrayList<String>()
         if (details.type == AccountType.TWITTER) {
             // For Twitter, status user should always be the first
@@ -1096,7 +1091,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             // If replying status from current user, just exclude it's screen name from selection.
             editText.append("@${status.user_screen_name} ")
         }
-        selectionStart = editText.length()
+        var selectionStart = editText.length()
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             mentions.add(status.retweeted_by_user_screen_name)
         }
@@ -1193,6 +1188,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accounts = accountsAdapter.selectedAccounts
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
+        ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
         setMenu()
     }
 
@@ -1507,13 +1503,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateTextCount() {
-        val am = AccountManager.get(this)
         val editable = editText.editableText ?: return
         val inReplyTo = inReplyToStatus
-        val ignoreMentions = accountsAdapter.selectedAccountKeys.all {
-            val account = AccountUtils.findByAccountKey(am, it) ?: return@all false
-            return@all account.getAccountType(am) == AccountType.TWITTER
-        }
         val text = editable.toString()
         val mentionColor = ThemeUtils.getColorFromAttribute(this, android.R.attr.textColorSecondary, 0)
         if (inReplyTo != null && ignoreMentions) {
@@ -1777,11 +1768,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     internal class DiscardTweetTask(activity: ComposeActivity) : AsyncTask<Any, Any, Unit>() {
 
         private val activityRef = WeakReference(activity)
-        private val media: List<ParcelableMediaUpdate>
-
-        init {
-            this.media = activity.mediaList
-        }
+        private val media = activity.mediaList
 
         override fun doInBackground(vararg params: Any) {
             val activity = activityRef.get() ?: return

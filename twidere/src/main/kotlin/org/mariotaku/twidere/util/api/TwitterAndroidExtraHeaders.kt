@@ -27,7 +27,12 @@ import java.util.*
 /**
  * Created by mariotaku on 2017/2/25.
  */
-class TwitterAndroidExtraHeaders : ExtraHeaders {
+object TwitterAndroidExtraHeaders : ExtraHeaders {
+
+    const val clientName = "TwitterAndroid"
+    const val versionName = "6.41.0"
+    const val apiVersion = "5"
+    const val internalVersionName = "7160062-r-930"
 
     override fun get(): List<Pair<String, String>> {
         val result = ArrayList<Pair<String, String>>()
@@ -50,10 +55,4 @@ class TwitterAndroidExtraHeaders : ExtraHeaders {
         return "$clientName/$versionName ($internalVersionName) $model/$sdkRelease ($manufacturer;$model;$brand;$product;0;;0)"
     }
 
-    companion object {
-        const val clientName = "TwitterAndroid"
-        const val versionName = "6.35.0"
-        const val apiVersion = "5"
-        const val internalVersionName = "6160050-r-918"
-    }
 }

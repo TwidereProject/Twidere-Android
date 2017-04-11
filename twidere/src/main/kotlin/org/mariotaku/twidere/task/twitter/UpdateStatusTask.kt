@@ -6,12 +6,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Point
-import android.media.ExifInterface
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.support.annotation.UiThread
 import android.support.annotation.WorkerThread
+import android.support.media.ExifInterface
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import com.twitter.Validator
@@ -427,8 +427,9 @@ class UpdateStatusTask(
             if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
                 val replyToOriginalUser = pendingUpdate.replyToOriginalUser[index]
                 status.autoPopulateReplyMetadata(replyToOriginalUser)
-                if (replyToOriginalUser) {
-                    status.excludeReplyUserIds(pendingUpdate.excludeReplyUserIds[index])
+                val excludeReplyIds = pendingUpdate.excludeReplyUserIds[index]
+                if (replyToOriginalUser && excludeReplyIds.isNotNullOrEmpty()) {
+                    status.excludeReplyUserIds(excludeReplyIds)
                 }
             }
         }
