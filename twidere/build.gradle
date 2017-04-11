@@ -165,6 +165,7 @@ dependencies {
     compile "com.github.mariotaku:PickNCrop:${libVersions['PickNCrop']}"
     compile "com.github.mariotaku.RestFu:library:${libVersions['RestFu']}"
     compile "com.github.mariotaku.RestFu:okhttp3:${libVersions['RestFu']}"
+    compile "com.github.mariotaku.RestFu:logansquare:${libVersions['RestFu']}"
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.lnikkila:extendedtouchview:0.1.0'
     compile 'com.google.dagger:dagger:2.8'
@@ -189,7 +190,7 @@ dependencies {
     compile "com.github.mariotaku:KPreferences:${libVersions['KPreferences']}"
     compile "com.github.mariotaku:Chameleon:${libVersions['Chameleon']}"
     compile 'com.github.mariotaku.QR-Code-generator:core:fcab3ea7f4'
-    compile 'com.github.mariotaku.UniqR:android:0.9'
+    compile "com.github.mariotaku.UniqR:android:${libVersions['UniqR']}"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:${libVersions['Kotlin']}"
     compile "nl.komponents.kovenant:kovenant:${libVersions['Kovenant']}"

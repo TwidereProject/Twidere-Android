@@ -9,7 +9,6 @@ import org.mariotaku.microblog.library.fanfou.FanfouStream
 import org.mariotaku.microblog.library.twitter.*
 import org.mariotaku.microblog.library.twitter.auth.BasicAuthorization
 import org.mariotaku.microblog.library.twitter.auth.EmptyAuthorization
-import org.mariotaku.microblog.library.twitter.util.TwitterConverterFactory
 import org.mariotaku.restfu.RestAPIFactory
 import org.mariotaku.restfu.RestRequest
 import org.mariotaku.restfu.http.Authorization
@@ -29,11 +28,13 @@ import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sFanfouConstantPool
 import org.mariotaku.twidere.util.MicroBlogAPIFactory.sTwitterConstantPool
 import org.mariotaku.twidere.util.TwitterContentUtils
-import org.mariotaku.twidere.util.api.UserAgentExtraHeaders
+import org.mariotaku.twidere.util.api.*
 import org.mariotaku.twidere.util.dagger.DependencyHolder
 import org.mariotaku.twidere.util.media.TwidereMediaDownloader
 
 /**
+ * Creates [MicroBlog] instances
+ *
  * Created by mariotaku on 2016/12/3.
  */
 fun Credentials.getAuthorization(cls: Class<*>?): Authorization {
@@ -175,11 +176,10 @@ fun <T> newMicroBlogInstance(context: Context, endpoint: Endpoint, auth: Authori
             }
         }
     }
-    val converterFactory = TwitterConverterFactory()
-    factory.setRestConverterFactory(converterFactory)
-    factory.setRestRequestFactory(MicroBlogAPIFactory.TwidereRestRequestFactory(extraRequestParams))
-    factory.setHttpRequestFactory(MicroBlogAPIFactory.TwidereHttpRequestFactory(extraHeaders))
-    factory.setExceptionFactory(MicroBlogAPIFactory.TwidereExceptionFactory(converterFactory))
+    factory.setRestConverterFactory(TwitterConverterFactory)
+    factory.setExceptionFactory(TwidereExceptionFactory)
+    factory.setRestRequestFactory(TwidereRestRequestFactory(extraRequestParams))
+    factory.setHttpRequestFactory(TwidereHttpRequestFactory(extraHeaders))
     return factory.build<T>(cls)
 }
 

@@ -1520,6 +1520,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val textAndMentions = extractor.extractReplyTextAndMentions(text, inReplyTo)
             if (textAndMentions.replyToOriginalUser) {
                 hintLabel.visibility = View.GONE
+                editable.clearSpans(MentionColorSpan::class.java)
                 editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             } else {

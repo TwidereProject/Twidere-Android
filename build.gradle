@@ -36,7 +36,7 @@ subprojects {
                     Kotlin            : '1.1.1',
                     SupportLib        : '25.3.1',
                     MariotakuCommons  : '0.9.13',
-                    RestFu            : '0.9.44',
+                    RestFu            : '0.9.47',
                     ObjectCursor      : '0.9.16',
                     PlayServices      : '10.2.1',
                     MapsUtils         : '0.4.4',
@@ -62,7 +62,7 @@ subprojects {
                     Kovenant          : '3.3.0',
                     ParcelablePlease  : '1.0.2',
                     Chameleon         : '0.9.17',
-                    UniqR             : '0.9',
+                    UniqR             : '0.9.1',
                     SQLiteQB          : '0.9.15',
             ]
         }
