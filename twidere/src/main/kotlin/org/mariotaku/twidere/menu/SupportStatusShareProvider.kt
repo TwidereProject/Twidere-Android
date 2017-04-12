@@ -23,7 +23,6 @@ import android.content.Context
 import android.support.v4.view.ActionProvider
 import android.view.MenuItem
 import android.view.SubMenu
-import android.view.View
 import org.mariotaku.twidere.Constants.MENU_GROUP_STATUS_SHARE
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.util.MenuUtils
