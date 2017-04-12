@@ -8,6 +8,8 @@ import android.text.TextUtils
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
+import org.mariotaku.twidere.activity.content.FavoriteConfirmDialogActivity
+import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
 import org.mariotaku.twidere.app.TwidereApplication
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
@@ -276,14 +278,27 @@ class WebLinkHandlerActivity : Activity() {
                 handledIntent.putExtra(Intent.EXTRA_TEXT, sb.toString())
                 return Pair(handledIntent, true)
             }
-            "favorite", "retweet" -> {
+            "retweet" -> {
                 val tweetId = uri.getQueryParameter("tweet_id") ?: return Pair(null, false)
-                return Pair(IntentUtils.status(null, tweetId), true)
+                val accountHost = USER_TYPE_TWITTER_COM
+                val intent = Intent(this, RetweetQuoteDialogActivity::class.java)
+                intent.putExtra(EXTRA_STATUS_ID, tweetId)
+                intent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
+                return Pair(intent, true)
+            }
+            "favorite", "like" -> {
+                val tweetId = uri.getQueryParameter("tweet_id") ?: return Pair(null, false)
+                val accountHost = USER_TYPE_TWITTER_COM
+                val intent = Intent(this, FavoriteConfirmDialogActivity::class.java)
+                intent.putExtra(EXTRA_STATUS_ID, tweetId)
+                intent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
+                return Pair(intent, true)
             }
             "user", "follow" -> {
                 val userKey = uri.getQueryParameter("user_id")?.let { UserKey(it, "twitter.com") }
                 val screenName = uri.getQueryParameter("screen_name")
-                return Pair(IntentUtils.userProfile(null, userKey, screenName), true)
+                return Pair(IntentUtils.userProfile(null, userKey, screenName,
+                        accountHost = USER_TYPE_TWITTER_COM), true)
             }
         }
         return Pair(null, false)

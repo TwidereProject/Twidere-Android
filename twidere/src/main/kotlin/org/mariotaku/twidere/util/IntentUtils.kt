@@ -17,6 +17,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -77,13 +78,15 @@ object IntentUtils {
     }
 
     fun userProfile(accountKey: UserKey?, userKey: UserKey?, screenName: String?,
-            @Referral referral: String? = null, profileUrl: String? = null): Intent {
+            @Referral referral: String? = null, profileUrl: String? = null,
+            accountHost: String? = accountKey?.host ?: userKey?.host): Intent {
         val uri = LinkCreator.getTwidereUserLink(accountKey, userKey, screenName)
         val intent = Intent(Intent.ACTION_VIEW, uri)
         if (referral != null) {
             intent.putExtra(EXTRA_REFERRAL, referral)
         }
         intent.putExtra(EXTRA_PROFILE_URL, profileUrl)
+        intent.putExtra(EXTRA_ACCOUNT_HOST, accountHost)
         return intent
     }
 

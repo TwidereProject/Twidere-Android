@@ -19,9 +19,6 @@
 
 package org.mariotaku.twidere.activity.content
 
-import android.os.Bundle
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -31,21 +28,12 @@ import org.mariotaku.twidere.model.UserKey
  *
  * Created by mariotaku on 2017/4/12.
  */
-class FavoriteConfirmDialogActivity : BaseActivity() {
+class FavoriteConfirmDialogActivity : AbsStatusDialogActivity() {
 
-    private val status: ParcelableStatus
-        get() = intent.getParcelableExtra(EXTRA_STATUS)
-
-    private val statusId: String
-        get() = intent.getStringExtra(EXTRA_STATUS_ID)
-
-    private val accountKey: UserKey?
-        get() = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            FavoriteConfirmDialogFragment.show(supportFragmentManager, accountKey, statusId, status)
+    override fun showDialogFragment(accountKey: UserKey, statusId: String, status: ParcelableStatus?) {
+        executeAfterFragmentResumed {
+            FavoriteConfirmDialogFragment.show(it.supportFragmentManager, accountKey, statusId, status)
         }
     }
+
 }

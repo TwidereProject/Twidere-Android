@@ -94,7 +94,7 @@
                 android:id="@+id/loadProgress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="96dp">
+                android:minHeight="@dimen/element_size_mlarge">
 
                 <ProgressBar
                     android:layout_width="wrap_content"

@@ -19,9 +19,7 @@
 
 package org.mariotaku.twidere.activity.content
 
-import android.os.Bundle
-import org.mariotaku.twidere.activity.BaseActivity
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_TEXT
 import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
@@ -31,25 +29,17 @@ import org.mariotaku.twidere.model.UserKey
  *
  * Created by mariotaku on 2017/4/8.
  */
-class RetweetQuoteDialogActivity : BaseActivity() {
-
-    private val status: ParcelableStatus
-        get() = intent.getParcelableExtra(EXTRA_STATUS)
-
-    private val statusId: String
-        get() = intent.getStringExtra(EXTRA_STATUS_ID)
-
-    private val accountKey: UserKey?
-        get() = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY)
+class RetweetQuoteDialogActivity : AbsStatusDialogActivity() {
 
     private val text: String?
         get() = intent.getStringExtra(EXTRA_TEXT)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            RetweetQuoteDialogFragment.show(supportFragmentManager, accountKey, statusId, status,
-                    text)
+    override fun showDialogFragment(accountKey: UserKey, statusId: String, status: ParcelableStatus?) {
+        val text = this.text
+        executeAfterFragmentResumed {
+            RetweetQuoteDialogFragment.show(it.supportFragmentManager, accountKey, statusId,
+                    status, text)
         }
     }
+
 }
