@@ -346,7 +346,7 @@ class UpdateStatusTask(
 
     @Throws(MicroBlogException::class, UploadException::class)
     private fun fanfouUpdateStatusWithPhoto(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
-            pendingUpdate: PendingStatusUpdate, sizeLimit: SizeLimit, updateIndex: Int): Status {
+            pendingUpdate: PendingStatusUpdate, sizeLimit: SizeLimit?, updateIndex: Int): Status {
         if (statusUpdate.media.size > 1) {
             throw MicroBlogException(context.getString(R.string.error_too_many_photos_fanfou))
         }
@@ -767,13 +767,13 @@ class UpdateStatusTask(
                 return@run null
             }
 
-            val data = if (sizeLimit != null) when (type) {
+            val data = when (type) {
                 ParcelableMedia.Type.IMAGE -> imageStream(context, resolver, mediaUri, mediaType,
-                        sizeLimit)
+                        sizeLimit?.image)
                 ParcelableMedia.Type.VIDEO -> videoStream(context, resolver, mediaUri, mediaType,
-                        sizeLimit, chucked)
+                        sizeLimit?.video, chucked)
                 else -> null
-            } else null
+            }
 
             val cis = data?.stream ?: run {
                 val st = resolver.openInputStream(mediaUri) ?: throw FileNotFoundException(mediaUri.toString())
@@ -849,7 +849,7 @@ class UpdateStatusTask(
                 resolver: ContentResolver,
                 mediaUri: Uri,
                 defaultType: String?,
-                sizeLimit: SizeLimit
+                imageLimit: AccountExtras.ImageLimit?
         ): MediaStreamData? {
             var mediaType = defaultType
             val o = BitmapFactory.Options()
@@ -864,13 +864,11 @@ class UpdateStatusTask(
                 return null
             }
 
-            val imageLimit = sizeLimit.image
-            if (imageLimit.check(o.outWidth, o.outHeight)) {
-                return null
+            if (imageLimit != null) {
+                if (imageLimit.checkGeomentry(o.outWidth, o.outHeight)) return null
+                o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
+                        imageLimit.maxWidth, imageLimit.maxHeight)
             }
-
-            o.inSampleSize = Utils.calculateInSampleSize(o.outWidth, o.outHeight,
-                    imageLimit.maxWidth, imageLimit.maxHeight)
             o.inJustDecodeBounds = false
             // Do actual image decoding
             val bitmap = context.contentResolver.openInputStream(mediaUri).use {
@@ -916,11 +914,10 @@ class UpdateStatusTask(
                 resolver: ContentResolver,
                 mediaUri: Uri,
                 defaultType: String?,
-                sizeLimit: SizeLimit,
+                videoLimit: AccountExtras.VideoLimit?,
                 chucked: Boolean
         ): MediaStreamData? {
             var mediaType = defaultType
-            val videoLimit = sizeLimit.video
             val geometry = Point()
             var duration = -1L
             var framerate = -1.0
@@ -945,20 +942,22 @@ class UpdateStatusTask(
                 retriever.releaseSafe()
             }
 
-            if (geometry.x > 0 && geometry.y > 0 && videoLimit.checkGeometry(geometry.x, geometry.y)
-                    && framerate > 0 && videoLimit.checkFrameRate(framerate)
-                    && size > 0 && videoLimit.checkSize(size, chucked)) {
-                // Size valid, upload directly
-                DebugLog.d(LOGTAG, "Upload video directly")
-                return null
-            }
+            if (videoLimit != null) {
+                if (geometry.x > 0 && geometry.y > 0 && videoLimit.checkGeometry(geometry.x, geometry.y)
+                        && framerate > 0 && videoLimit.checkFrameRate(framerate)
+                        && size > 0 && videoLimit.checkSize(size, chucked)) {
+                    // Size valid, upload directly
+                    DebugLog.d(LOGTAG, "Upload video directly")
+                    return null
+                }
 
-            if (!videoLimit.checkMinDuration(duration, chucked)) {
-                throw UploadException(context.getString(R.string.message_video_too_short))
-            }
+                if (!videoLimit.checkMinDuration(duration, chucked)) {
+                    throw UploadException(context.getString(R.string.message_video_too_short))
+                }
 
-            if (!videoLimit.checkMaxDuration(duration, chucked)) {
-                throw UploadException(context.getString(R.string.message_video_too_long))
+                if (!videoLimit.checkMaxDuration(duration, chucked)) {
+                    throw UploadException(context.getString(R.string.message_video_too_long))
+                }
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -1022,7 +1021,8 @@ class UpdateStatusTask(
             context.contentResolver.delete(Drafts.CONTENT_URI, where, null)
         }
 
-        fun AccountExtras.ImageLimit.check(width: Int, height: Int): Boolean {
+        fun AccountExtras.ImageLimit.checkGeomentry(width: Int, height: Int): Boolean {
+            if (this.maxWidth <= 0 || this.maxHeight <= 0) return true
             return (width <= this.maxWidth && height <= this.maxHeight) || (height <= this.maxWidth
                     && width <= this.maxHeight)
         }

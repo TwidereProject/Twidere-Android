@@ -237,6 +237,7 @@ public interface AccountExtras extends Parcelable {
 
         @SuppressWarnings("RedundantIfStatement")
         public boolean checkGeometry(int width, int height) {
+            if (minWidth <= 0 || maxWidth <= 0) return false;
             // Check w & h
             boolean widthValid = inRange(width, getMinWidth(), getMaxWidth());
             boolean heightValid = inRange(height, getMinHeight(), getMaxHeight());

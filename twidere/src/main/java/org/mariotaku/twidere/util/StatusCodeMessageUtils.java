@@ -22,6 +22,7 @@ package org.mariotaku.twidere.util;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.SparseIntArray;
 
 import org.mariotaku.microblog.library.MicroBlogException;
@@ -114,23 +115,34 @@ public class StatusCodeMessageUtils {
     }
 
 
-    private static DisplayErrorInfo getErrorInfo(final Context context, final int statusCode, final int errorCode) {
-        if (containsHttpStatus(statusCode)) return getHttpStatusInfo(context, statusCode);
+    @Nullable
+    private static DisplayErrorInfo getErrorInfo(@NonNull final Context context, final int statusCode,
+            @Nullable final ErrorInfo[] errors) {
+        int errorCode = -1;
+        if (errors != null) for (ErrorInfo error : errors) {
+            errorCode = error.getCode();
+            if (errorCode > 0) break;
+            String message = error.getMessage();
+            if (!TextUtils.isEmpty(message)) {
+                return new DisplayErrorInfo(0, R.drawable.ic_info_error_generic, message);
+            }
+        }
         if (containsTwitterError(errorCode)) return getTwitterErrorInfo(context, errorCode);
+        if (containsHttpStatus(statusCode)) return getHttpStatusInfo(context, statusCode);
         return null;
     }
 
 
     @NonNull
     public static DisplayErrorInfo getMicroBlogErrorInfo(final Context context, final MicroBlogException te) {
-        final DisplayErrorInfo errorInfo = getErrorInfo(context, te.getStatusCode(), te.getErrorCode());
+        final DisplayErrorInfo errorInfo = getErrorInfo(context, te.getStatusCode(), te.getErrors());
         if (errorInfo != null) return errorInfo;
         return new DisplayErrorInfo(0, R.drawable.ic_info_error_generic, te.getMessage());
     }
 
     @Nullable
     public static String getMicroBlogErrorMessage(final Context context, final MicroBlogException te) {
-        final DisplayErrorInfo errorInfo = getErrorInfo(context, te.getStatusCode(), te.getErrorCode());
+        final DisplayErrorInfo errorInfo = getErrorInfo(context, te.getStatusCode(), te.getErrors());
         if (errorInfo != null) return errorInfo.getMessage();
         return te.getMessage();
     }

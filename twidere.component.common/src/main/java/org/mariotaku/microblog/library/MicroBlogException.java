@@ -24,13 +24,13 @@ package org.mariotaku.microblog.library;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 
-import org.mariotaku.restfu.http.HttpRequest;
-import org.mariotaku.restfu.http.HttpResponse;
 import org.mariotaku.microblog.library.twitter.http.HttpResponseCode;
 import org.mariotaku.microblog.library.twitter.model.ErrorInfo;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
 import org.mariotaku.microblog.library.twitter.model.TwitterResponse;
 import org.mariotaku.microblog.library.twitter.util.InternalParseUtil;
+import org.mariotaku.restfu.http.HttpRequest;
+import org.mariotaku.restfu.http.HttpResponse;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -84,7 +84,7 @@ public class MicroBlogException extends Exception implements TwitterResponse, Ht
 
 
     public ErrorInfo[] getErrors() {
-        if (errors != null && errorMessage != null && requestPath != null) {
+        if (errors == null && errorMessage != null && requestPath != null) {
             return new ErrorInfo[]{new SingleErrorInfo(errorMessage, requestPath)};
         }
         return errors;
