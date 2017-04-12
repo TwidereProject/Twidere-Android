@@ -32,7 +32,7 @@ import org.mariotaku.twidere.model.UserKey
 
 class UserListMembersLoader(
         context: Context,
-        accountKey: UserKey,
+        accountKey: UserKey?,
         private val listId: String?,
         private val userKey: UserKey?,
         private val screenName: String?,

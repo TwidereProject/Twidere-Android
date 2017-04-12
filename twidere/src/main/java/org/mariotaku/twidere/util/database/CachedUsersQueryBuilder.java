@@ -61,15 +61,15 @@ public final class CachedUsersQueryBuilder {
             final UserKey accountKey) {
         final SQLSelectQuery.Builder qb = new SQLSelectQuery.Builder();
         qb.select(select).from(new Tables(TwidereDataStore.CachedUsers.TABLE_NAME));
-        final Columns.Column relationshipsUserId = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
+        final Columns.Column relationshipsUserKey = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
                 CachedRelationships.USER_KEY);
-        final Columns.Column usersUserId = new Columns.Column(new Table(TwidereDataStore.CachedUsers.TABLE_NAME),
+        final Columns.Column usersUserKey = new Columns.Column(new Table(TwidereDataStore.CachedUsers.TABLE_NAME),
                 CachedRelationships.USER_KEY);
-        final Columns.Column relationshipsAccountId = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
+        final Columns.Column relationshipsAccountKey = new Columns.Column(new Table(CachedRelationships.TABLE_NAME),
                 CachedRelationships.ACCOUNT_KEY);
         final Expression on = Expression.and(
-                Expression.equals(relationshipsUserId, usersUserId),
-                Expression.equalsArgs(relationshipsAccountId.getSQL())
+                Expression.equals(relationshipsUserKey, usersUserKey),
+                Expression.equalsArgs(relationshipsAccountKey.getSQL())
         );
         qb.join(new Join(false, Join.Operation.LEFT, new Table(CachedRelationships.TABLE_NAME), on));
         final Expression userTypeExpression;

@@ -75,8 +75,10 @@ public class FriendshipTaskEvent {
         return "FriendshipTaskEvent{" +
                 "action=" + action +
                 ", finished=" + finished +
-                ", mAccountKey=" + accountKey +
-                ", userId=" + userKey +
+                ", succeeded=" + succeeded +
+                ", accountKey=" + accountKey +
+                ", userKey=" + userKey +
+                ", user=" + user +
                 '}';
     }
 

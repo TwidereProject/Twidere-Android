@@ -51,8 +51,8 @@ class UserTimelineFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
-            val accountKey = Utils.getAccountKey(context, arguments)!!
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val accountKey = Utils.getAccountKey(context, arguments)
+            val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
             val screenName = arguments.getString(EXTRA_SCREEN_NAME)
             val result = ArrayList<String>()
             result.add(AUTHORITY_USER_TIMELINE)

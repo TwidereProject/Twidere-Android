@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 class UserTimelineLoader(
         context: Context,
-        accountId: UserKey?,
+        accountKey: UserKey?,
         private val userKey: UserKey?,
         private val screenName: String?,
         private val profileUrl: String?,
@@ -65,7 +65,7 @@ class UserTimelineLoader(
         loadingMore: Boolean,
         val pinnedStatusIds: Array<String>?,
         val timelineFilter: UserTimelineFilter? = null
-) : MicroBlogAPIStatusesLoader(context, accountId, sinceId, maxId, -1, data, savedStatusesArgs,
+) : MicroBlogAPIStatusesLoader(context, accountKey, sinceId, maxId, -1, data, savedStatusesArgs,
         tabPosition, fromUser, loadingMore) {
 
     private val pinnedStatusesRef = AtomicReference<List<ParcelableStatus>>()
@@ -116,11 +116,10 @@ class UserTimelineLoader(
 
     @WorkerThread
     override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
-        val accountId = accountKey
-        if (accountId != null && userKey != null && TextUtils.equals(accountId.id, userKey.id))
+        if (accountKey != null && userKey != null && TextUtils.equals(accountKey.id, userKey.id))
             return false
-        val retweetUserId = if (status.is_retweet) status.user_key else null
-        return InternalTwitterContentUtils.isFiltered(database, retweetUserId, status.text_plain,
+        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
+        return InternalTwitterContentUtils.isFiltered(database, retweetUserKey, status.text_plain,
                 status.quoted_text_plain, status.spans, status.quoted_spans, status.source,
                 status.quoted_source, null, status.quoted_user_key)
     }

@@ -45,12 +45,12 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableGroup>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val groupId = args.getString(EXTRA_GROUP_ID)
         val groupName = args.getString(EXTRA_GROUP_NAME)
         val omitIntentExtra = args.getBoolean(EXTRA_OMIT_INTENT_EXTRA, true)
-        return ParcelableGroupLoader(context, omitIntentExtra, arguments, accountKey,
-                groupId, groupName)
+        return ParcelableGroupLoader(context, omitIntentExtra, arguments, accountKey, groupId,
+                groupName)
     }
 
     override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableGroup>>, data: SingleResponse<ParcelableGroup>) {
@@ -94,31 +94,32 @@ class GroupFragment : AbsToolbarTabPagesFragment(), LoaderCallbacks<SingleRespon
             context: Context,
             private val omitIntentExtra: Boolean,
             private val extras: Bundle?,
-            private val accountKey: UserKey,
+            private val accountKey: UserKey?,
             private val groupId: String?,
             private val groupName: String?
     ) : FixedAsyncTaskLoader<SingleResponse<ParcelableGroup>>(context) {
 
         override fun loadInBackground(): SingleResponse<ParcelableGroup> {
             if (!omitIntentExtra && extras != null) {
-                val cache = extras.getParcelable<ParcelableGroup>(EXTRA_GROUP)
-                if (cache != null) return SingleResponse.getInstance(cache)
+                val cache = extras.getParcelable<ParcelableGroup?>(EXTRA_GROUP)
+                if (cache != null) return SingleResponse(cache)
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey
-            ) ?: return SingleResponse.getInstance<ParcelableGroup>()
             try {
+                if (accountKey == null) throw MicroBlogException("No account")
+                val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
+                        throw MicroBlogException("No account")
                 val group: Group
                 if (groupId != null) {
                     group = twitter.showGroup(groupId)
                 } else if (groupName != null) {
                     group = twitter.showGroupByName(groupName)
                 } else {
-                    return SingleResponse.getInstance<ParcelableGroup>()
+                    return SingleResponse()
                 }
                 return SingleResponse.getInstance(ParcelableGroupUtils.from(group, accountKey, 0,
                         group.isMember))
             } catch (e: MicroBlogException) {
-                return SingleResponse.getInstance<ParcelableGroup>(e)
+                return SingleResponse(e)
             }
 
         }

@@ -17,7 +17,6 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.MediaViewerActivity
 import org.mariotaku.twidere.annotation.Referral
-import org.mariotaku.twidere.constant.IntentConstants
 import org.mariotaku.twidere.fragment.SensitiveContentWarningDialogFragment
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.util.ParcelableLocationUtils
@@ -483,20 +482,20 @@ object IntentUtils {
     }
 
     fun openUserListDetails(context: Context, accountKey: UserKey?, listId: String?,
-            userId: UserKey?, screenName: String?, listName: String?) {
-        context.startActivity(userListDetails(accountKey, listId, userId, screenName, listName))
+            userKey: UserKey?, screenName: String?, listName: String?) {
+        context.startActivity(userListDetails(accountKey, listId, userKey, screenName, listName))
     }
 
-    fun userListDetails(accountKey: UserKey?, listId: String?, userId: UserKey?, screenName: String?,
-            listName: String?): Intent {
+    fun userListDetails(accountKey: UserKey?, listId: String?, userKey: UserKey?,
+            screenName: String?, listName: String?): Intent {
         return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST,
-                accountKey, listId, userId, screenName, listName))
+                accountKey, listId, userKey, screenName, listName))
     }
 
-    fun userListTimeline(accountKey: UserKey?, listId: String?, userId: UserKey?, screenName: String?,
-            listName: String?): Intent {
+    fun userListTimeline(accountKey: UserKey?, listId: String?, userKey: UserKey?,
+            screenName: String?, listName: String?): Intent {
         return Intent(Intent.ACTION_VIEW, getTwidereUserListRelatedLink(AUTHORITY_USER_LIST_TIMELINE,
-                accountKey, listId, userId, screenName, listName))
+                accountKey, listId, userKey, screenName, listName))
     }
 
     fun openUserListDetails(context: Context, userList: ParcelableUserList) {
@@ -556,9 +555,7 @@ object IntentUtils {
     }
 
 
-    fun openUserGroups(context: Context,
-            accountKey: UserKey?,
-            userId: UserKey?,
+    fun openUserGroups(context: Context, accountKey: UserKey?, userKey: UserKey?,
             screenName: String?) {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
@@ -566,8 +563,8 @@ object IntentUtils {
         if (accountKey != null) {
             builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
-        if (userId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userId.toString())
+        if (userKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)
@@ -639,13 +636,13 @@ object IntentUtils {
         return intent
     }
 
-    fun openProfileEditor(context: Context, accountId: UserKey?) {
+    fun openProfileEditor(context: Context, accountKey: UserKey?) {
         val intent = Intent()
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(AUTHORITY_PROFILE_EDITOR)
-        if (accountId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString())
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         intent.data = builder.build()
         intent.`package` = BuildConfig.APPLICATION_ID

@@ -53,7 +53,7 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
     }
 
     @NonNull
-    public UserKey[] getActivatedAccountIds() {
+    public UserKey[] getActivatedAccountKeys() {
         if (mAccounts == null) return new UserKey[0];
         UserKey[] temp = new UserKey[mAccounts.length];
         int len = 0;
@@ -110,10 +110,10 @@ public class AccountToggleProvider extends ActionProvider implements TwidereCons
         }
     }
 
-    public void setAccountActivated(UserKey accountId, boolean isChecked) {
+    public void setAccountActivated(@NonNull UserKey accountKey, boolean isChecked) {
         if (mAccounts == null) return;
         for (final AccountDetails account : mAccounts) {
-            if (account.key == accountId) {
+            if (accountKey.equals(account.key)) {
                 account.activated = isChecked;
             }
         }

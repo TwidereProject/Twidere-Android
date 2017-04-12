@@ -40,7 +40,7 @@ abstract class FanfouTimelineStreamCallback(
             handled = handled or onHomeTimeline(status)
         }
         if (target?.id == accountId) {
-            handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.status(status, accountId))
         }
         return handled
     }

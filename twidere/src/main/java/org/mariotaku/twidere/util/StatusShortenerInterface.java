@@ -51,13 +51,12 @@ public final class StatusShortenerInterface extends AbsServiceInterface<IStatusS
     }
 
     public StatusShortenResult shorten(final ParcelableStatusUpdate status,
-            final UserKey currentAccountId,
-            final String overrideStatusText) {
+            final UserKey currentAccountKey, final String overrideStatusText) {
         final IStatusShortener iface = getInterface();
         if (iface == null) return StatusShortenResult.error(1, "Shortener not ready");
         try {
             final String statusJson = JsonSerializer.serialize(status, ParcelableStatusUpdate.class);
-            final String resultJson = iface.shorten(statusJson, currentAccountId.toString(),
+            final String resultJson = iface.shorten(statusJson, currentAccountKey.toString(),
                     overrideStatusText);
             return JsonSerializer.parse(resultJson, StatusShortenResult.class);
         } catch (final Exception e) {

@@ -70,7 +70,7 @@ class ParcelableActivitiesAdapter(
     private val eventListener: EventListener
     private var data: List<ParcelableActivity>? = null
     private var activityAdapterListener: ActivityAdapterListener? = null
-    private var filteredUserIds: Array<UserKey>? = null
+    private var filteredUserKeys: Array<UserKey>? = null
     private val gapLoadingIds: MutableSet<ObjectId> = HashSet()
 
     var followingOnly: Boolean = false
@@ -181,7 +181,7 @@ class ParcelableActivitiesAdapter(
 
     override fun setData(data: List<ParcelableActivity>?) {
         if (data is CursorActivitiesFragment.CursorActivitiesLoader.ActivityCursor) {
-            filteredUserIds = data.filteredUserIds
+            filteredUserKeys = data.filteredUserIds
         }
         this.data = data
         gapLoadingIds.clear()
@@ -293,7 +293,7 @@ class ParcelableActivitiesAdapter(
                     Activity.Action.MEDIA_TAGGED, Activity.Action.RETWEETED_MEDIA_TAGGED,
                     Activity.Action.FAVORITED_MEDIA_TAGGED, Activity.Action.JOINED_TWITTER -> {
                         if (mentionsOnly) return ITEM_VIEW_TYPE_EMPTY
-                        filteredUserIds?.let {
+                        filteredUserKeys?.let {
                             ParcelableActivityUtils.initAfterFilteredSourceIds(activity, it, followingOnly)
                             if (activity.after_filtered_source_ids.isEmpty()) {
                                 return ITEM_VIEW_TYPE_EMPTY

@@ -688,7 +688,7 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
                 val tab = adapter.get(i)
                 if (tabType == Tab.getTypeAlias(tab.type)) {
                     val args = tab.args
-                    if (args != null && CustomTabUtils.hasAccountId(this, args,
+                    if (args != null && CustomTabUtils.hasAccountKey(this, args,
                             activatedAccountKeys, accountKey)) {
                         initialTab = i
                         break

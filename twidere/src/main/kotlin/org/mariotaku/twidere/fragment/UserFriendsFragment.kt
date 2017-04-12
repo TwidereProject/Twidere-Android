@@ -31,11 +31,11 @@ class UserFriendsFragment : CursorUsersListFragment() {
 
     override fun onCreateUsersLoader(context: Context,
             args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val loader = UserFriendsLoader(context, accountKey, userKey,
-                screenName, adapter.getData(), fromUser)
+        val loader = UserFriendsLoader(context, accountKey, userKey, screenName, adapter.getData(),
+                fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader

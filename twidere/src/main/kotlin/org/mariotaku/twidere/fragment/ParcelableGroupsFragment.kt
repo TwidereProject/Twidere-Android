@@ -67,10 +67,7 @@ abstract class ParcelableGroupsFragment : AbsContentListRecyclerViewFragment<Par
     }
 
     protected val accountKey: UserKey?
-        get() {
-            val args = arguments
-            return args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        }
+        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
 
     protected fun hasMoreData(data: List<ParcelableGroup>?): Boolean {
         return data == null || !data.isEmpty()

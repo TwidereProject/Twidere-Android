@@ -346,8 +346,8 @@ abstract class CursorActivitiesFragment : AbsActivitiesFragment() {
             projection, selection, selectionArgs, sortOrder, fromUser) {
 
         override fun createObjectCursor(cursor: Cursor, indices: ObjectCursor.CursorIndices<ParcelableActivity>): ObjectCursor<ParcelableActivity> {
-            val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
-            return ActivityCursor(cursor, indices, filteredUserIds)
+            val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context)
+            return ActivityCursor(cursor, indices, filteredUserKeys)
         }
 
         class ActivityCursor(cursor: Cursor, indies: ObjectCursor.CursorIndices<ParcelableActivity>,

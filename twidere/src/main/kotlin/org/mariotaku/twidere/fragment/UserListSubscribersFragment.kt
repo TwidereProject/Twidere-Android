@@ -30,8 +30,8 @@ class UserListSubscribersFragment : CursorUsersListFragment() {
 
     override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
         val listId = args.getString(EXTRA_LIST_ID)
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val listName = args.getString(EXTRA_LIST_NAME)
         val loader = UserListSubscribersLoader(context, accountKey,

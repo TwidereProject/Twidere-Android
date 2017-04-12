@@ -132,8 +132,8 @@ class CreateFavoriteTask(
 
         private val creatingFavoriteIds = ArrayIntList()
 
-        fun isCreatingFavorite(accountId: UserKey?, statusId: String?): Boolean {
-            return creatingFavoriteIds.contains(calculateHashCode(accountId, statusId))
+        fun isCreatingFavorite(accountKey: UserKey?, statusId: String?): Boolean {
+            return creatingFavoriteIds.contains(calculateHashCode(accountKey, statusId))
         }
     }
 

@@ -30,12 +30,8 @@ import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.DataStoreUtils
 
-class UserBlocksLoader(
-        context: Context,
-        accountKey: UserKey,
-        data: List<ParcelableUser>?,
-        fromUser: Boolean
-) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
+class UserBlocksLoader(context: Context, accountKey: UserKey?, data: List<ParcelableUser>?,
+        fromUser: Boolean) : CursorSupportUsersLoader(context, accountKey, data, fromUser) {
 
     private var filteredUsers: Array<UserKey>? = null
 
@@ -52,7 +48,7 @@ class UserBlocksLoader(
     }
 
     override fun onLoadInBackground(): List<ParcelableUser> {
-        filteredUsers = DataStoreUtils.getFilteredUserIds(context)
+        filteredUsers = DataStoreUtils.getFilteredUserKeys(context)
         return super.onLoadInBackground()
     }
 

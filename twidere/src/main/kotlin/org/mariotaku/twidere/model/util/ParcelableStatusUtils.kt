@@ -124,7 +124,7 @@ object ParcelableStatusUtils {
         result.in_reply_to_name = getInReplyToName(status)
         result.in_reply_to_screen_name = status.inReplyToScreenName
         result.in_reply_to_status_id = status.inReplyToStatusId
-        result.in_reply_to_user_key = getInReplyToUserId(status, accountKey)
+        result.in_reply_to_user_key = getInReplyToUserKey(status, accountKey)
 
         val user = status.user
         result.user_key = UserKeyUtils.fromUser(user)
@@ -188,7 +188,7 @@ object ParcelableStatusUtils {
         return text.contains("<") && text.contains(">")
     }
 
-    private fun getInReplyToUserId(status: Status, accountKey: UserKey): UserKey? {
+    private fun getInReplyToUserKey(status: Status, accountKey: UserKey): UserKey? {
         val inReplyToUserId = status.inReplyToUserId ?: return null
         val entities = status.userMentionEntities
         if (entities != null) {

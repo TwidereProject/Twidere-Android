@@ -29,10 +29,9 @@ import org.mariotaku.twidere.model.event.FriendshipTaskEvent
 
 class MutesUsersListFragment : CursorUsersListFragment() {
 
-    override fun onCreateUsersLoader(context: Context,
-            args: Bundle,
-            fromUser: Boolean): CursorSupportUsersLoader {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+    override fun onCreateUsersLoader(context: Context, args: Bundle, fromUser: Boolean):
+            CursorSupportUsersLoader {
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val loader = MutesUsersLoader(context, accountKey, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage

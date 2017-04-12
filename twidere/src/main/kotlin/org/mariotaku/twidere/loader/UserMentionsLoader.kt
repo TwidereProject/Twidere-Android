@@ -28,7 +28,7 @@ import org.mariotaku.twidere.model.UserKey
 
 class UserMentionsLoader(
         context: Context,
-        accountId: UserKey,
+        accountKey: UserKey?,
         screenName: String,
         maxId: String?,
         sinceId: String?,
@@ -39,7 +39,7 @@ class UserMentionsLoader(
         fromUser: Boolean,
         makeGap: Boolean,
         loadingMore: Boolean
-) : TweetSearchLoader(context, accountId, screenName, sinceId, maxId, page, data, savedStatusesArgs,
+) : TweetSearchLoader(context, accountKey, screenName, sinceId, maxId, page, data, savedStatusesArgs,
         tabPosition, fromUser, makeGap, loadingMore) {
 
     override fun processQuery(details: AccountDetails, query: String): String {

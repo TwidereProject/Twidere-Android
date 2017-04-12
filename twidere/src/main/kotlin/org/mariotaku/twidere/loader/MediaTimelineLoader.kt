@@ -108,8 +108,8 @@ class MediaTimelineLoader(
     @WorkerThread
     override fun shouldFilterStatus(database: SQLiteDatabase, status: ParcelableStatus): Boolean {
         if (status.media.isNullOrEmpty()) return false
-        val retweetUserId = if (status.is_retweet) status.user_key else null
-        return !isMyTimeline && InternalTwitterContentUtils.isFiltered(database, retweetUserId,
+        val retweetUserKey = status.user_key.takeIf { status.is_retweet }
+        return !isMyTimeline && InternalTwitterContentUtils.isFiltered(database, retweetUserKey,
                 status.text_plain, status.quoted_text_plain, status.spans, status.quoted_spans,
                 status.source, status.quoted_source, null, status.quoted_user_key)
     }

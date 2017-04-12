@@ -191,7 +191,7 @@ class ContentNotificationManager(
 
             var timestamp = -1L
             var newMaxPositionKey = -1L
-            val filteredUserIds = DataStoreUtils.getFilteredUserIds(context)
+            val filteredUserKeys = DataStoreUtils.getFilteredUserKeys(context)
             var consumed = 0
             val remaining = c.forEachRow(5) { cur, _ ->
                 val activity = ci.newObject(cur)
@@ -206,7 +206,7 @@ class ContentNotificationManager(
                 if (activity.status_id != null && FilterQueryBuilder.isFiltered(cr, activity)) {
                     return@forEachRow false
                 }
-                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserIds,
+                ParcelableActivityUtils.initAfterFilteredSourceIds(activity, filteredUserKeys,
                         pref.isNotificationFollowingOnly)
                 val sources = ParcelableActivityUtils.getAfterFilteredSources(activity)
 

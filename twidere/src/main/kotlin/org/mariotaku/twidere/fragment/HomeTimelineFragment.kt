@@ -63,9 +63,8 @@ class HomeTimelineFragment : CursorStatusesFragment() {
         super.setUserVisibleHint(isVisibleToUser)
         val context = context
         if (isVisibleToUser && context != null) {
-            for (accountId in accountKeys) {
-                val tag = "home_" + accountId
-                notificationManager.cancel(tag, NOTIFICATION_ID_HOME_TIMELINE)
+            accountKeys.forEach { accountKey ->
+                notificationManager.cancel("home_$accountKey", NOTIFICATION_ID_HOME_TIMELINE)
             }
         }
     }

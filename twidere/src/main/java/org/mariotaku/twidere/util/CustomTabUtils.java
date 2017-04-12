@@ -186,7 +186,7 @@ public class CustomTabUtils implements Constants {
         return TabConfiguration.ofType(Tab.getTypeAlias(tabType)) != null;
     }
 
-    public static boolean hasAccountId(final Context context, @NonNull final Bundle args,
+    public static boolean hasAccountKey(final Context context, @NonNull final Bundle args,
             final UserKey[] activatedAccountKeys, UserKey accountKey) {
         final UserKey[] accountKeys = Utils.getAccountKeys(context, args);
         if (accountKeys != null) {

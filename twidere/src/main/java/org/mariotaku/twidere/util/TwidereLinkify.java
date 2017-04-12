@@ -164,8 +164,8 @@ public final class TwidereLinkify implements Constants {
         mHighlightOption = style;
     }
 
-    private boolean addCashtagLinks(final Spannable spannable, final UserKey accountKey, final long extraId,
-                                    final OnLinkClickListener listener, final int highlightOption) {
+    private boolean addCashtagLinks(final Spannable spannable, final UserKey accountKey,
+            final long extraId, final OnLinkClickListener listener, final int highlightOption) {
         boolean hasMatches = false;
         for (final Entity entity : mExtractor.extractCashtagsWithIndices(spannable.toString())) {
             final int start = entity.getStart();
@@ -177,13 +177,13 @@ public final class TwidereLinkify implements Constants {
         return hasMatches;
     }
 
-    private boolean addHashtagLinks(final Spannable spannable, final UserKey accountId, final long extraId,
-                                    final OnLinkClickListener listener, final int highlightOption) {
+    private boolean addHashtagLinks(final Spannable spannable, final UserKey accountKey,
+            final long extraId, final OnLinkClickListener listener, final int highlightOption) {
         boolean hasMatches = false;
         for (final Entity entity : mExtractor.extractHashtagsWithIndices(spannable.toString())) {
             final int start = entity.getStart();
             final int end = entity.getEnd();
-            applyLink(entity.getValue(), null, start, end, spannable, accountId, extraId,
+            applyLink(entity.getValue(), null, start, end, spannable, accountKey, extraId,
                     LINK_TYPE_HASHTAG, false, highlightOption, listener);
             hasMatches = true;
         }
@@ -193,8 +193,9 @@ public final class TwidereLinkify implements Constants {
     /**
      * Applies a regex to the text of a TextView turning the matches into links.
      */
-    private void addLinks(final Spannable string, @Nullable final UserKey accountKey, final long extraId, final int type,
-                          final boolean sensitive, final OnLinkClickListener listener, final int highlightOption) {
+    private void addLinks(final Spannable string, @Nullable final UserKey accountKey,
+            final long extraId, final int type, final boolean sensitive,
+            final OnLinkClickListener listener, final int highlightOption) {
         switch (type) {
             case LINK_TYPE_MENTION: {
                 addMentionOrListLinks(string, accountKey, extraId, highlightOption, listener);

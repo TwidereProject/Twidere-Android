@@ -30,13 +30,11 @@ import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.MicroBlogAPIFactory
 
-class SavedSearchesLoader(
-        context: Context,
-        private val accountId: UserKey
-) : FixedAsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
+class SavedSearchesLoader(context: Context, private val accountKey: UserKey) :
+        FixedAsyncTaskLoader<ResponseList<SavedSearch>>(context), Constants {
 
     override fun loadInBackground(): ResponseList<SavedSearch>? {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return null
+        val twitter = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return null
         try {
             return twitter.savedSearches
         } catch (e: MicroBlogException) {

@@ -25,7 +25,6 @@ import android.content.DialogInterface.OnClickListener
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
-import android.text.TextUtils
 import android.widget.EditText
 import org.mariotaku.ktextension.empty
 import org.mariotaku.twidere.R
@@ -37,32 +36,30 @@ import org.mariotaku.twidere.model.UserKey
 class SetUserNicknameDialogFragment : BaseDialogFragment(), OnClickListener {
 
     override fun onClick(dialog: DialogInterface, which: Int) {
-        val args = arguments!!
         val editName = (dialog as AlertDialog).findViewById(R.id.editName) as EditText
-        val userId = args.getParcelable<UserKey>(EXTRA_USER_KEY)!!
+        val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 if (editName.empty) {
-                    userColorNameManager.clearUserNickname(userId)
+                    userColorNameManager.clearUserNickname(userKey)
                 } else {
-                    userColorNameManager.setUserNickname(userId, editName.text.toString())
+                    userColorNameManager.setUserNickname(userKey, editName.text.toString())
                 }
             }
             DialogInterface.BUTTON_NEUTRAL -> {
-                userColorNameManager.clearUserNickname(userId)
+                userColorNameManager.clearUserNickname(userKey)
             }
         }
 
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val args = arguments
-        val nick: String? = args.getString(EXTRA_NAME)
+        val nick = arguments.getString(EXTRA_NAME)
         val context = activity
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.title_set_nickname)
         builder.setPositiveButton(android.R.string.ok, this)
-        if (!TextUtils.isEmpty(nick)) {
+        if (!nick.isNullOrEmpty()) {
             builder.setNeutralButton(R.string.action_clear, this)
         }
         builder.setNegativeButton(android.R.string.cancel, null)

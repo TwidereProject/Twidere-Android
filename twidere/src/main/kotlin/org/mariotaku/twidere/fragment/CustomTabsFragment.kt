@@ -135,16 +135,16 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu)
         val context = this.context
-        val accountIds = DataStoreUtils.getAccountKeys(context)
+        val accountKeys = DataStoreUtils.getAccountKeys(context)
         val itemAdd = menu.findItem(R.id.add_submenu)
         val theme = Chameleon.getOverrideTheme(context, context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
             val subMenu = itemAdd.subMenu
             subMenu.clear()
             for ((type, conf) in TabConfiguration.all()) {
-                val accountIdRequired = (conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_REQUIRED) != 0
+                val accountRequired = TabConfiguration.FLAG_ACCOUNT_REQUIRED in conf.accountFlags
                 val subItem = subMenu.add(0, 0, conf.sortPosition, conf.name.createString(context))
-                val disabledByNoAccount = accountIdRequired && accountIds.isEmpty()
+                val disabledByNoAccount = accountRequired && accountKeys.isEmpty()
                 val disabledByDuplicateTab = conf.isSingleTab && CustomTabUtils.isTabAdded(context, type)
                 val shouldDisable = disabledByDuplicateTab || disabledByNoAccount
                 subItem.isVisible = !shouldDisable
@@ -281,13 +281,13 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
 
             val editMode = tag == TAG_EDIT_TAB
 
-            val hasAccount = conf.accountFlags and TabConfiguration.FLAG_HAS_ACCOUNT != 0
-            val accountMutable = conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_MUTABLE != 0
+            val hasAccount = TabConfiguration.FLAG_HAS_ACCOUNT in conf.accountFlags
+            val accountMutable = TabConfiguration.FLAG_ACCOUNT_MUTABLE in conf.accountFlags
             if (hasAccount && (accountMutable || !editMode)) {
                 accountContainer.visibility = View.VISIBLE
-                val accountIdRequired = conf.accountFlags and TabConfiguration.FLAG_ACCOUNT_REQUIRED != 0
+                val accountRequired = TabConfiguration.FLAG_ACCOUNT_REQUIRED in conf.accountFlags
                 accountsAdapter.clear()
-                if (!accountIdRequired) {
+                if (!accountRequired) {
                     accountsAdapter.add(AccountDetails.dummy())
                 }
                 val officialKeyOnly = arguments.getBoolean(EXTRA_OFFICIAL_KEY_ONLY, false)

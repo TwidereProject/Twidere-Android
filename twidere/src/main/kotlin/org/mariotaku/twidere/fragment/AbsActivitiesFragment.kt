@@ -302,10 +302,10 @@ abstract class AbsActivitiesFragment protected constructor() :
                 return
             }
         }
-        val accountIds = arrayOf(activity.account_key)
+        val accountKeys = arrayOf(activity.account_key)
         val maxIds = arrayOf(activity.min_position)
         val maxSortIds = longArrayOf(activity.min_sort_position)
-        getActivities(BaseRefreshTaskParam(accountKeys = accountIds, maxIds = maxIds,
+        getActivities(BaseRefreshTaskParam(accountKeys = accountKeys, maxIds = maxIds,
                 sinceIds = null, maxSortIds = maxSortIds, sinceSortIds = null).also {
             it.extraId = activity._id
         })

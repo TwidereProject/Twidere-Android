@@ -228,11 +228,11 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor?> {
-        val accountId = selectedAccountDetails?.key
+        val accountKey = selectedAccountDetails?.key
         val builder = Suggestions.Search.CONTENT_URI.buildUpon()
         builder.appendQueryParameter(QUERY_PARAM_QUERY, ParseUtils.parseString(searchQuery.text))
-        if (accountId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountId.toString())
+        if (accountKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_KEY, accountKey.toString())
         }
         return CursorLoader(this, builder.build(), Suggestions.Search.COLUMNS, null, null, null)
     }

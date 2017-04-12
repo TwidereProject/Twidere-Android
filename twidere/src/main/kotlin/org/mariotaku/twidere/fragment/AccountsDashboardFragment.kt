@@ -382,10 +382,10 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
         menu.setItemAvailability(R.id.public_timeline, hasPublicTimeline)
     }
 
-    private fun hasAccountInTab(tab: SupportTabSpec, accountId: UserKey, isActivated: Boolean): Boolean {
+    private fun hasAccountInTab(tab: SupportTabSpec, accountKey: UserKey, isActivated: Boolean): Boolean {
         if (tab.args == null) return false
         val accountKeys = Utils.getAccountKeys(context, tab.args) ?: return isActivated
-        return accountKeys.contains(accountId)
+        return accountKey in accountKeys
     }
 
     private fun closeAccountsDrawer() {

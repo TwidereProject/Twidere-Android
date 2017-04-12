@@ -45,7 +45,7 @@ class MutesUsersLoader(
     }
 
     override fun onLoadInBackground(): List<ParcelableUser> {
-        filteredUsers = DataStoreUtils.getFilteredUserIds(context)
+        filteredUsers = DataStoreUtils.getFilteredUserKeys(context)
         return super.onLoadInBackground()
     }
 

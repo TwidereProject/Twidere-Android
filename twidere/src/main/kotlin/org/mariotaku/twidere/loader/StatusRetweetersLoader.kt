@@ -30,7 +30,7 @@ import org.mariotaku.twidere.model.UserKey
 
 class StatusRetweetersLoader(
         context: Context,
-        accountKey: UserKey,
+        accountKey: UserKey?,
         private val statusId: String,
         data: List<ParcelableUser>?,
         fromUser: Boolean

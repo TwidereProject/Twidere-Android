@@ -41,8 +41,18 @@ import java.lang.ref.WeakReference
 
 class ImagePageFragment : SubsampleImageViewerFragment() {
 
+
+    private val media: ParcelableMedia?
+        get() = arguments.getParcelable<ParcelableMedia?>(EXTRA_MEDIA)
+
+    private val accountKey: UserKey?
+        get() = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+
+    private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy {
+        return@lazy SizedResultCreator(context)
+    }
+
     private var mediaLoadState: Int = 0
-    private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy { SizedResultCreator(context) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -57,13 +67,13 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     }
 
     override fun getDownloadUri(): Uri? {
-        return media.media_url?.let(Uri::parse)
+        return media?.media_url?.let(Uri::parse)
     }
 
     override fun getDownloadExtra(): Any? {
         val mediaExtra = MediaExtra()
         mediaExtra.accountKey = accountKey
-        mediaExtra.fallbackUrl = media.preview_url
+        mediaExtra.fallbackUrl = media?.preview_url
         mediaExtra.isSkipUrlReplacing = mediaExtra.fallbackUrl != downloadUri?.toString()
         return mediaExtra
     }
@@ -106,12 +116,6 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
     override fun getResultCreator(): CacheDownloadLoader.ResultCreator? {
         return sizedResultCreator
     }
-
-    private val media: ParcelableMedia
-        get() = arguments.getParcelable<ParcelableMedia>(EXTRA_MEDIA)
-
-    private val accountKey: UserKey
-        get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
 
     internal class SizedResult(cacheUri: Uri, val width: Int, val height: Int) : CacheDownloadLoader.Result(cacheUri, null)
 

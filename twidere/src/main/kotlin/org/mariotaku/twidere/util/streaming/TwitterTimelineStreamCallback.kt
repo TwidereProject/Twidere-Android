@@ -45,13 +45,13 @@ abstract class TwitterTimelineStreamCallback(val accountId: String) : SimpleUser
         }
         if (status.inReplyToUserId == accountId) {
             // Reply
-            handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.status(status, accountId))
         } else if (userId != accountId && status.retweetedStatus?.user?.id == accountId) {
             // Retweet
             handled = handled or onActivityAboutMe(InternalActivityCreator.retweet(status))
         } else if (status.userMentionEntities?.find { it.id == accountId } != null) {
             // Mention
-            handled = handled or onActivityAboutMe(InternalActivityCreator.status(accountId, status))
+            handled = handled or onActivityAboutMe(InternalActivityCreator.status(status, accountId))
         }
         onAllStatus(status)
         return handled

@@ -26,7 +26,7 @@ import java.util.*
  */
 
 object InternalActivityCreator {
-    fun status(accountId: String, status: Status): Activity {
+    fun status(status: Status, accountId: String): Activity {
         val activity = Activity()
 
         activity.minPosition = status.getId()

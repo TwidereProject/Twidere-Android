@@ -45,13 +45,13 @@ class UserListMembersFragment : CursorUsersListFragment() {
 
     override fun onCreateUsersLoader(context: Context,
             args: Bundle, fromUser: Boolean): CursorSupportUsersLoader {
-        val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val listId = args.getString(EXTRA_LIST_ID)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val listName = args.getString(EXTRA_LIST_NAME)
-        val loader = UserListMembersLoader(context, accountId, listId,
-                userKey, screenName, listName, adapter.getData(), fromUser)
+        val loader = UserListMembersLoader(context, accountKey, listId, userKey, screenName,
+                listName, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
         return loader
@@ -83,10 +83,9 @@ class UserListMembersFragment : CursorUsersListFragment() {
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         if (!userVisibleHint || menuInfo == null) return
-        val args = arguments
-        val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        if (accountId == null || accountId != userKey) return
+        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
+        if (accountKey == null || accountKey != userKey) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         inflater.inflate(R.menu.action_user_list_member, menu)
@@ -120,13 +119,12 @@ class UserListMembersFragment : CursorUsersListFragment() {
     @Subscribe
     fun onUserListMembersChanged(event: UserListMembersChangedEvent) {
         val userList = event.userList
-        val args = arguments
-        val accountId = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val listId = args.getString(EXTRA_LIST_ID)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-        val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val listName = args.getString(EXTRA_LIST_NAME)
-        if (!ParcelableUserListUtils.check(userList, accountId, listId, userKey, screenName, listName)) {
+        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return
+        val listId = arguments.getString(EXTRA_LIST_ID)
+        val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
+        val screenName = arguments.getString(EXTRA_SCREEN_NAME)
+        val listName = arguments.getString(EXTRA_LIST_NAME)
+        if (!ParcelableUserListUtils.check(userList, accountKey, listId, userKey, screenName, listName)) {
             return
         }
         when (event.action) {

@@ -382,10 +382,11 @@ class TwidereDataProvider : ContentProvider(), LazyLoadCallback {
                 var updated = false
                 if (values != null) {
                     val accountKey = values.getAsString(CachedRelationships.ACCOUNT_KEY)
-                    val userId = values.getAsString(CachedRelationships.USER_KEY)
+                    val userKey = values.getAsString(CachedRelationships.USER_KEY)
                     val where = Expression.and(Expression.equalsArgs(CachedRelationships.ACCOUNT_KEY),
                             Expression.equalsArgs(CachedRelationships.USER_KEY))
-                    if (databaseWrapper.update(table, values, where.sql, arrayOf(accountKey, userId)) > 0) {
+                    if (databaseWrapper.update(table, values, where.sql, arrayOf(accountKey,
+                            userKey)) > 0) {
                         val projection = arrayOf(CachedRelationships._ID)
                         val c = databaseWrapper.query(table, projection, where.sql, null,
                                 null, null, null)

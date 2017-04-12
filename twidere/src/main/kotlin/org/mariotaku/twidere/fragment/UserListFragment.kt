@@ -289,8 +289,8 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
     }
 
     override fun onCreateLoader(id: Int, args: Bundle): Loader<SingleResponse<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val listId = args.getString(EXTRA_LIST_ID)
         val listName = args.getString(EXTRA_LIST_NAME)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
@@ -385,7 +385,7 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             context: Context,
             private val omitIntentExtra: Boolean,
             private val extras: Bundle?,
-            private val accountKey: UserKey,
+            private val accountKey: UserKey?,
             private val listId: String?,
             private val listName: String?,
             private val userKey: UserKey?,
@@ -397,9 +397,10 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
                 val cache = extras.getParcelable<ParcelableUserList>(EXTRA_USER_LIST)
                 if (cache != null) return SingleResponse(cache)
             }
-            val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
-                    ?: return SingleResponse(MicroBlogException("No account"))
             try {
+                if (accountKey == null) throw MicroBlogException("No account")
+                val twitter = MicroBlogAPIFactory.getInstance(context, accountKey)
+                        ?: throw MicroBlogException("No account")
                 val list: UserList
                 when {
                     listId != null -> {

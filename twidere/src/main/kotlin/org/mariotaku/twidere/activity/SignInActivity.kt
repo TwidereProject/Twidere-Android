@@ -612,7 +612,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val apiUser = twitter.verifyCredentials()
             var color = analyseUserProfileColor(apiUser)
             val typeExtras = SignInActivity.detectAccountType(twitter, apiUser, apiConfig.type)
-            val userId = apiUser.id!!
+            val userId = apiUser.id
             val accountKey = UserKey(userId, UserKeyUtils.getUserHost(apiUser))
             val user = ParcelableUserUtils.fromUser(apiUser, accountKey, typeExtras.first,
                     profileImageSize = profileImageSize)
@@ -849,9 +849,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val authenticator = OAuthPasswordAuthenticator(oauth,
                     verificationCallback, userAgent)
             val accessToken = authenticator.getOAuthAccessToken(username, password)
-            val userId = accessToken.userId!!
-            return getOAuthSignInResponse(activity, accessToken, userId,
-                    Credentials.Type.OAUTH)
+            val userId = accessToken.userId
+            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.OAUTH)
         }
 
         @Throws(MicroBlogException::class)
@@ -864,8 +863,7 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
             val oauth = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                     accountType = apiConfig.type, cls = TwitterOAuth::class.java)
             val accessToken = oauth.getAccessToken(username, password)
-            var userId: String? = accessToken.userId
-            if (userId == null) {
+            val userId = accessToken.userId ?: run {
                 // Trying to fix up userId if accessToken doesn't contain one.
                 auth = OAuthAuthorization(apiConfig.consumerKey,
                         apiConfig.consumerSecret, accessToken)
@@ -873,9 +871,9 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
                         apiConfig.isNoVersionSuffix)
                 val microBlog = newMicroBlogInstance(activity, endpoint = endpoint, auth = auth,
                         accountType = apiConfig.type, cls = MicroBlog::class.java)
-                userId = microBlog.verifyCredentials().id
+                return@run microBlog.verifyCredentials().id
             }
-            return getOAuthSignInResponse(activity, accessToken, userId!!, Credentials.Type.XAUTH)
+            return getOAuthSignInResponse(activity, accessToken, userId, Credentials.Type.XAUTH)
         }
 
         @Throws(MicroBlogException::class, OAuthPasswordAuthenticator.AuthenticationException::class)

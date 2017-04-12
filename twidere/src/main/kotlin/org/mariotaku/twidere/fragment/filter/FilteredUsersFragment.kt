@@ -172,10 +172,10 @@ class FilteredUsersFragment : BaseFiltersFragment() {
 
             icon.visibility = View.GONE
 
-            val userId = UserKey.valueOf(cursor.getString(indices[Filters.Users.USER_KEY]))
+            val userKey = UserKey.valueOf(cursor.getString(indices[Filters.Users.USER_KEY]))
             val name = cursor.getString(indices[Filters.Users.NAME])
             val screenName = cursor.getString(indices[Filters.Users.SCREEN_NAME])
-            val displayName = userColorNameManager.getDisplayName(userId, name, screenName,
+            val displayName = userColorNameManager.getDisplayName(userKey, name, screenName,
                     nameFirst)
             text1.text = displayName
 
@@ -189,7 +189,7 @@ class FilteredUsersFragment : BaseFiltersFragment() {
                 ssb.setSpan(EmojiSpan(drawable), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             text1.text = ssb
-            text2.text = userId.host
+            text2.text = userKey.host
         }
 
         override fun swapCursor(c: Cursor?): Cursor? {

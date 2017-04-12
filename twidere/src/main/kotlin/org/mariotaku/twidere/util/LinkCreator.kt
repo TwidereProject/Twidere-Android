@@ -67,7 +67,7 @@ object LinkCreator {
     }
 
     fun getTwidereUserListRelatedLink(authority: String, accountKey: UserKey?, listId: String?,
-            userId: UserKey?, screenName: String?, listName: String?): Uri {
+            userKey: UserKey?, screenName: String?, listName: String?): Uri {
         val builder = Uri.Builder()
         builder.scheme(SCHEME_TWIDERE)
         builder.authority(authority)
@@ -77,8 +77,8 @@ object LinkCreator {
         if (listId != null) {
             builder.appendQueryParameter(QUERY_PARAM_LIST_ID, listId)
         }
-        if (userId != null) {
-            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userId.toString())
+        if (userKey != null) {
+            builder.appendQueryParameter(QUERY_PARAM_USER_KEY, userKey.toString())
         }
         if (screenName != null) {
             builder.appendQueryParameter(QUERY_PARAM_SCREEN_NAME, screenName)

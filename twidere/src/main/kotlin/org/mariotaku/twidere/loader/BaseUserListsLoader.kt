@@ -19,6 +19,7 @@
 
 package org.mariotaku.twidere.loader
 
+import android.accounts.AccountManager
 import android.content.Context
 import android.support.v4.content.FixedAsyncTaskLoader
 import android.util.Log
@@ -32,11 +33,12 @@ import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.loadItemLimitKey
+import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.loader.iface.ICursorSupportLoader
 import org.mariotaku.twidere.model.ParcelableUserList
 import org.mariotaku.twidere.model.UserKey
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
-import org.mariotaku.twidere.util.MicroBlogAPIFactory
 import org.mariotaku.twidere.util.SharedPreferencesWrapper
 import org.mariotaku.twidere.util.collection.NoDuplicatesArrayList
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
@@ -46,7 +48,7 @@ import javax.inject.Inject
 
 abstract class BaseUserListsLoader(
         context: Context,
-        protected val accountId: UserKey,
+        protected val accountKey: UserKey?,
         override val cursor: Long,
         data: List<ParcelableUserList>?
 ) : FixedAsyncTaskLoader<List<ParcelableUserList>>(context), ICursorSupportLoader {
@@ -71,9 +73,12 @@ abstract class BaseUserListsLoader(
     abstract fun getUserLists(twitter: MicroBlog, paging: Paging): List<UserList>
 
     override fun loadInBackground(): List<ParcelableUserList> {
-        val twitter = MicroBlogAPIFactory.getInstance(context, accountId) ?: return data
+        if (accountKey == null) return emptyList()
         var listLoaded: List<UserList>? = null
         try {
+            val am = AccountManager.get(context)
+            val details = AccountUtils.getAccountDetails(am, accountKey, true) ?: return data
+            val twitter = details.newMicroBlogInstance(context, MicroBlog::class.java)
             val paging = Paging()
             paging.count(preferences[loadItemLimitKey].coerceIn(0, 100))
             if (cursor > 0) {
@@ -92,13 +97,13 @@ abstract class BaseUserListsLoader(
                 val dataSize = data.size
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(list, accountId, (dataSize + i).toLong(),
+                    data.add(ParcelableUserListUtils.from(list, accountKey, (dataSize + i).toLong(),
                             isFollowing(list), profileImageSize))
                 }
             } else {
                 for (i in 0..listSize - 1) {
                     val list = listLoaded[i]
-                    data.add(ParcelableUserListUtils.from(listLoaded[i], accountId, i.toLong(),
+                    data.add(ParcelableUserListUtils.from(listLoaded[i], accountKey, i.toLong(),
                             isFollowing(list), profileImageSize))
                 }
             }

@@ -30,8 +30,8 @@ import org.mariotaku.twidere.model.UserKey
 class UserListSubscriptionsFragment : ParcelableUserListsFragment() {
 
     override fun onCreateUserListsLoader(context: Context, args: Bundle, fromUser: Boolean): Loader<List<ParcelableUserList>> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val cursor = args.getLong(EXTRA_NEXT_CURSOR, -1)
         return UserListSubscriptionsLoader(activity, accountKey, userKey, screenName, cursor, data)

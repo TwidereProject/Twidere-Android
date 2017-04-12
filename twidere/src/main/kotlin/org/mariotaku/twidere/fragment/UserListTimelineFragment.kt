@@ -39,7 +39,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
         get() {
             val accountKey = Utils.getAccountKey(context, arguments)
             val listId = arguments.getString(EXTRA_LIST_ID)
-            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
             val screenName = arguments.getString(EXTRA_SCREEN_NAME)
             val listName = arguments.getString(EXTRA_LIST_NAME)
             val result = ArrayList<String>()
@@ -70,7 +70,7 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
             if (listId != null) {
                 sb.append(listId)
             } else if (listName != null) {
-                val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+                val userKey = arguments.getParcelable<UserKey?>(EXTRA_USER_KEY)
                 val screenName = arguments.getString(EXTRA_SCREEN_NAME)
                 if (userKey != null) {
                     sb.append(userKey)
@@ -90,13 +90,13 @@ class UserListTimelineFragment : ParcelableStatusesFragment() {
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
         refreshing = true
-        val listId = args.getString(EXTRA_LIST_ID)
         val accountKey = Utils.getAccountKey(context, args)
+        val listId = args.getString(EXTRA_LIST_ID)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
+        val listName = args.getString(EXTRA_LIST_NAME)
         val maxId = args.getString(EXTRA_MAX_ID)
         val sinceId = args.getString(EXTRA_SINCE_ID)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
-        val listName = args.getString(EXTRA_LIST_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
         return UserListTimelineLoader(activity, accountKey, listId, userKey, screenName,

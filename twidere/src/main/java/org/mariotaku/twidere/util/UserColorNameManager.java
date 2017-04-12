@@ -133,9 +133,9 @@ public class UserColorNameManager {
         return getDisplayName(status.user_key, status.user_name, status.user_screen_name, nameFirst);
     }
 
-    public String getDisplayName(@NonNull final UserKey userId, final String name,
+    public String getDisplayName(@NonNull final UserKey userKey, final String name,
                                  final String screenName, final boolean nameFirst) {
-        return getDisplayName(userId.toString(), name, screenName, nameFirst);
+        return getDisplayName(userKey.toString(), name, screenName, nameFirst);
     }
 
     public String getDisplayName(@NonNull final String userId, final String name,
@@ -144,8 +144,8 @@ public class UserColorNameManager {
         return decideDisplayName(nick, name, screenName, nameFirst);
     }
 
-    public int getUserColor(@NonNull final UserKey userId) {
-        return getUserColor(userId.toString());
+    public int getUserColor(@NonNull final UserKey userKey) {
+        return getUserColor(userKey.toString());
     }
 
     public int getUserColor(@NonNull final String userId) {
@@ -163,8 +163,8 @@ public class UserColorNameManager {
     }
 
     @Nullable
-    public String getUserNickname(@NonNull final UserKey userId, final String name) {
-        final String nick = getUserNickname(userId);
+    public String getUserNickname(@NonNull final UserKey userKey, final String name) {
+        final String nick = getUserNickname(userKey);
         return decideNickname(nick, name);
     }
 
@@ -192,11 +192,11 @@ public class UserColorNameManager {
     }
 
     public interface UserColorChangedListener {
-        void onUserColorChanged(@NonNull UserKey userId, int color);
+        void onUserColorChanged(@NonNull UserKey userKey, int color);
     }
 
     public interface UserNicknameChangedListener {
-        void onUserNicknameChanged(@NonNull UserKey userId, String nick);
+        void onUserNicknameChanged(@NonNull UserKey userKey, String nick);
     }
 
     private static final class OnColorPreferenceChangeListener implements OnSharedPreferenceChangeListener {
@@ -209,9 +209,9 @@ public class UserColorNameManager {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
-            final UserKey userId = UserKey.valueOf(key);
+            final UserKey userKey = UserKey.valueOf(key);
             if (mListener != null) {
-                mListener.onUserColorChanged(userId, preferences.getInt(key, 0));
+                mListener.onUserColorChanged(userKey, preferences.getInt(key, 0));
             }
         }
 
@@ -227,9 +227,9 @@ public class UserColorNameManager {
 
         @Override
         public void onSharedPreferenceChanged(final SharedPreferences preferences, final String key) {
-            final UserKey userId = UserKey.valueOf(key);
+            final UserKey userKey = UserKey.valueOf(key);
             if (mListener != null) {
-                mListener.onUserNicknameChanged(userId, preferences.getString(key, null));
+                mListener.onUserNicknameChanged(userKey, preferences.getString(key, null));
             }
         }
 

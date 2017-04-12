@@ -240,8 +240,8 @@ abstract class CursorStatusesFragment : AbsStatusesFragment() {
         super.setUserVisibleHint(isVisibleToUser)
         val context = context
         if (context != null && isVisibleToUser) {
-            for (accountId in accountKeys) {
-                twitterWrapper.clearNotificationAsync(notificationType, accountId)
+            for (accountKey in accountKeys) {
+                twitterWrapper.clearNotificationAsync(notificationType, accountKey)
             }
         }
     }

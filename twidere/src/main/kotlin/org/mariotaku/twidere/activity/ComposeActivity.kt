@@ -197,7 +197,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return
         }
         val accountDetails = AccountUtils.getAllAccountDetails(am, accounts, true)
-        val defaultAccountIds = accountDetails.map(AccountDetails::key).toTypedArray()
+        val defaultAccountKeys = accountDetails.map(AccountDetails::key).toTypedArray()
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
         accountSelectorButton.setOnClickListener(this)
@@ -226,7 +226,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (savedInstanceState != null) {
             // Restore from previous saved state
             val selected = savedInstanceState.getTypedArray(EXTRA_ACCOUNT_KEYS, UserKey.CREATOR)
-            accountsAdapter.setSelectedAccountIds(*selected)
+            accountsAdapter.setSelectedAccountKeys(*selected)
             possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
             val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
             if (mediaList != null) {
@@ -251,15 +251,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 handleDefaultIntent(intent)
             }
             setLabel(intent)
-            val selectedAccountIds = accountsAdapter.selectedAccountKeys
-            if (selectedAccountIds.isNullOrEmpty()) {
+            val selectedAccountKeys = accountsAdapter.selectedAccountKeys
+            if (selectedAccountKeys.isNullOrEmpty()) {
                 val idsInPrefs: Array<UserKey> = kPreferences[composeAccountsKey] ?: emptyArray()
-                val intersection: Array<UserKey> = defaultAccountIds.intersect(listOf(*idsInPrefs)).toTypedArray()
+                val intersection: Array<UserKey> = defaultAccountKeys.intersect(listOf(*idsInPrefs)).toTypedArray()
 
                 if (intersection.isEmpty()) {
-                    accountsAdapter.setSelectedAccountIds(*defaultAccountIds)
+                    accountsAdapter.setSelectedAccountKeys(*defaultAccountKeys)
                 } else {
-                    accountsAdapter.setSelectedAccountIds(*intersection)
+                    accountsAdapter.setSelectedAccountKeys(*intersection)
                 }
             }
             originalText = ParseUtils.parseString(editText.text)
@@ -888,17 +888,17 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun handleDefaultIntent(intent: Intent?): Boolean {
         if (intent == null) return false
         val action = intent.action
-        val hasAccountIds: Boolean
+        val hasAccountKeys: Boolean
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
             val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
-            accountsAdapter.setSelectedAccountIds(*accountKeys)
-            hasAccountIds = true
+            accountsAdapter.setSelectedAccountKeys(*accountKeys)
+            hasAccountKeys = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
             val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter.setSelectedAccountIds(accountKey)
-            hasAccountIds = true
+            accountsAdapter.setSelectedAccountKeys(accountKey)
+            hasAccountKeys = true
         } else {
-            hasAccountIds = false
+            hasAccountKeys = false
         }
         if (Intent.ACTION_SEND == action) {
             shouldSaveAccounts = false
@@ -915,7 +915,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 TaskStarter.execute(AddMediaTask(this, src, true, false))
             }
         } else {
-            shouldSaveAccounts = !hasAccountIds
+            shouldSaveAccounts = !hasAccountKeys
             val data = intent.data
             if (data != null) {
                 val src = arrayOf(data)
@@ -936,7 +936,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(draft.text)
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        accountsAdapter.setSelectedAccountIds(*draft.account_keys ?: emptyArray())
+        accountsAdapter.setSelectedAccountKeys(*draft.account_keys ?: emptyArray())
         if (draft.media != null) {
             addMedia(Arrays.asList(*draft.media))
         }
@@ -1048,7 +1048,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(String.format("@%s ", user.screen_name))
         val selection_end = editText.length()
         editText.setSelection(selection_end)
-        accountsAdapter.setSelectedAccountIds(user.account_key)
+        accountsAdapter.setSelectedAccountKeys(user.account_key)
         return true
     }
 
@@ -1056,7 +1056,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status == null) return false
         editText.setText(Utils.getQuoteStatus(this, status))
         editText.setSelection(0)
-        accountsAdapter.setSelectedAccountIds(status.account_key)
+        accountsAdapter.setSelectedAccountKeys(status.account_key)
         showQuoteLabel(status)
         return true
     }
@@ -1138,7 +1138,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
-        accountsAdapter.setSelectedAccountIds(status.account_key)
+        accountsAdapter.setSelectedAccountKeys(status.account_key)
         showReplyLabel(status)
         return true
     }
@@ -1156,15 +1156,15 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
-    private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountId: UserKey?,
+    private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountKey: UserKey?,
             inReplyToStatus: ParcelableStatus): Boolean {
-        if (screenNames == null || screenNames.isEmpty() || accountId == null) return false
-        val myScreenName = DataStoreUtils.getAccountScreenName(this, accountId)
+        if (screenNames == null || screenNames.isEmpty() || accountKey == null) return false
+        val myScreenName = DataStoreUtils.getAccountScreenName(this, accountKey)
         if (TextUtils.isEmpty(myScreenName)) return false
         screenNames.filterNot { it.equals(myScreenName, ignoreCase = true) }
                 .forEach { editText.append("@$it ") }
         editText.setSelection(editText.length())
-        accountsAdapter.setSelectedAccountIds(accountId)
+        accountsAdapter.setSelectedAccountKeys(accountKey)
         this.inReplyToStatus = inReplyToStatus
         return true
     }
@@ -1667,7 +1667,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                         .toTypedArray()
             }
 
-        fun setSelectedAccountIds(vararg accountKeys: UserKey) {
+        fun setSelectedAccountKeys(vararg accountKeys: UserKey) {
             selection.clear()
             for (accountKey in accountKeys) {
                 selection.put(accountKey, true)

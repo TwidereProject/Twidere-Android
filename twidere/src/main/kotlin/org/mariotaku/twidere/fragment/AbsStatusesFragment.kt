@@ -344,10 +344,10 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val status = adapter.getStatus(position)
         DebugLog.v(msg = "Load activity gap $status")
         adapter.addGapLoadingId(ObjectId(status.account_key, status.id))
-        val accountIds = arrayOf(status.account_key)
+        val accountKeys = arrayOf(status.account_key)
         val maxIds = arrayOf<String?>(status.id)
         val maxSortIds = longArrayOf(status.sort_id)
-        getStatuses(BaseRefreshTaskParam(accountKeys = accountIds, maxIds = maxIds, sinceIds = null,
+        getStatuses(BaseRefreshTaskParam(accountKeys = accountKeys, maxIds = maxIds, sinceIds = null,
                 maxSortIds = maxSortIds, sinceSortIds = null))
     }
 

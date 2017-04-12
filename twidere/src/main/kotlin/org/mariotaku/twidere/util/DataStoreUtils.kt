@@ -256,9 +256,9 @@ object DataStoreUtils {
         }, accountKeys)
     }
 
-    fun getStatusCount(context: Context, uri: Uri, accountId: UserKey): Int {
+    fun getStatusCount(context: Context, uri: Uri, accountKey: UserKey): Int {
         val where = Expression.equalsArgs(AccountSupportColumns.ACCOUNT_KEY).sql
-        val whereArgs = arrayOf(accountId.toString())
+        val whereArgs = arrayOf(accountKey.toString())
         return queryCount(context.contentResolver, uri, where, whereArgs)
     }
 
@@ -270,7 +270,7 @@ object DataStoreUtils {
 
 
     @SuppressLint("Recycle")
-    fun getFilteredUserIds(context: Context?): Array<UserKey> {
+    fun getFilteredUserKeys(context: Context?): Array<UserKey> {
         if (context == null) return emptyArray()
         val resolver = context.contentResolver
         val projection = arrayOf(Filters.Users.USER_KEY)
@@ -814,8 +814,8 @@ object DataStoreUtils {
         }
     }
 
-    fun getInteractionsCount(context: Context, extraArgs: Bundle?,
-            accountIds: Array<UserKey>, since: Long, sinceColumn: String): Int {
+    fun getInteractionsCount(context: Context, extraArgs: Bundle?, accountKeys: Array<UserKey>,
+            since: Long, sinceColumn: String): Int {
         var extraWhere: Expression? = null
         var extraWhereArgs: Array<String>? = null
         var followingOnly = false
@@ -832,7 +832,7 @@ object DataStoreUtils {
             }
         }
         return getActivitiesCount(context, Activities.AboutMe.CONTENT_URI, extraWhere, extraWhereArgs,
-                sinceColumn, since, followingOnly, accountIds)
+                sinceColumn, since, followingOnly, accountKeys)
     }
 
     fun addToFilter(context: Context, users: Collection<ParcelableUser>, filterAnywhere: Boolean) {

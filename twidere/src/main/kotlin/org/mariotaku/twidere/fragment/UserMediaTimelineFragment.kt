@@ -15,10 +15,10 @@ class UserMediaTimelineFragment : AbsMediaStatusesFragment() {
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
+        val userKey = args.getParcelable<UserKey?>(EXTRA_USER_KEY)
         val maxId = args.getString(EXTRA_MAX_ID)
         val sinceId = args.getString(EXTRA_SINCE_ID)
-        val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
         val screenName = args.getString(EXTRA_SCREEN_NAME)
         val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
         val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)

@@ -46,7 +46,7 @@ abstract class GetActivitiesTask(
 
     override fun doLongOperation(param: RefreshTaskParam): List<TwitterListResponse<Activity>> {
         if (param.shouldAbort) return emptyList()
-        val accountIds = param.accountKeys
+        val accountKeys = param.accountKeys
         val maxIds = param.maxIds
         val maxSortIds = param.maxSortIds
         val sinceIds = param.sinceIds
@@ -54,8 +54,8 @@ abstract class GetActivitiesTask(
         val result = ArrayList<TwitterListResponse<Activity>>()
         val loadItemLimit = preferences[loadItemLimitKey]
         var saveReadPosition = false
-        for (i in accountIds.indices) {
-            val accountKey = accountIds[i]
+        for (i in accountKeys.indices) {
+            val accountKey = accountKeys[i]
             val noItemsBefore = DataStoreUtils.getActivitiesCount(context, contentUri, accountKey) <= 0
             val credentials = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true) ?: continue
             val microBlog = credentials.newMicroBlogInstance(context = context, cls = MicroBlog::class.java)

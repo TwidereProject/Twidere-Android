@@ -119,25 +119,28 @@ class MultiSelectEventHandler(
             R.id.mute_user -> {
                 val resolver = activity.contentResolver
                 val valuesList = ArrayList<ContentValues>()
-                val userIds = HashSet<UserKey>()
-                for (`object` in selectedItems) {
-                    if (`object` is ParcelableStatus) {
-                        userIds.add(`object`.user_key)
-                        valuesList.add(ContentValuesCreator.createFilteredUser(`object`))
-                    } else if (`object` is ParcelableUser) {
-                        userIds.add(`object`.key)
-                        valuesList.add(ContentValuesCreator.createFilteredUser(`object`))
+                val userKeys = HashSet<UserKey>()
+                for (selectedItem in selectedItems) {
+                    when (selectedItem) {
+                        is ParcelableStatus -> {
+                            userKeys.add(selectedItem.user_key)
+                            valuesList.add(ContentValuesCreator.createFilteredUser(selectedItem))
+                        }
+                        is ParcelableUser -> {
+                            userKeys.add(selectedItem.key)
+                            valuesList.add(ContentValuesCreator.createFilteredUser(selectedItem))
+                        }
                     }
                 }
                 ContentResolverUtils.bulkDelete(resolver, Filters.Users.CONTENT_URI,
-                        Filters.Users.USER_KEY, false, userIds, null, null)
+                        Filters.Users.USER_KEY, false, userKeys, null, null)
                 ContentResolverUtils.bulkInsert(resolver, Filters.Users.CONTENT_URI, valuesList)
                 Toast.makeText(activity, R.string.message_toast_users_filters_added, Toast.LENGTH_SHORT).show()
                 mode.finish()
             }
             R.id.block -> {
                 val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems))
+                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
                 if (accountKey != null && userIds != null) {
                     twitterWrapper.createMultiBlockAsync(accountKey, userIds)
                 }
@@ -145,7 +148,7 @@ class MultiSelectEventHandler(
             }
             R.id.report_spam -> {
                 val accountKey = multiSelectManager.accountKey
-                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserIds(selectedItems))
+                val userIds = UserKey.getIds(MultiSelectManager.getSelectedUserKeys(selectedItems))
                 if (accountKey != null && userIds != null) {
                     twitterWrapper.reportMultiSpam(accountKey, userIds)
                 }
@@ -157,7 +160,7 @@ class MultiSelectEventHandler(
             if (intent == null || !intent.hasExtra(EXTRA_ACCOUNT)) return false
             val account: AccountDetails = intent.getParcelableExtra(EXTRA_ACCOUNT)
             multiSelectManager.accountKey = account.key
-            accountActionProvider?.selectedAccountIds = arrayOf(account.key)
+            accountActionProvider?.selectedAccountKeys = arrayOf(account.key)
             mode.invalidate()
         }
         return true
@@ -166,7 +169,7 @@ class MultiSelectEventHandler(
     override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
         mode.menuInflater.inflate(R.menu.action_multi_select_contents, menu)
         accountActionProvider = menu.findItem(R.id.select_account).actionProvider as AccountActionProvider
-        accountActionProvider?.selectedAccountIds = arrayOf(multiSelectManager.firstSelectAccountKey)
+        accountActionProvider?.selectedAccountKeys = arrayOf(multiSelectManager.firstSelectAccountKey)
         return true
     }
 

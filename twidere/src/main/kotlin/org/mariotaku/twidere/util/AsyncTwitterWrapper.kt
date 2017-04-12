@@ -231,8 +231,8 @@ class AsyncTwitterWrapper(
         return true
     }
 
-    fun getLocalTrendsAsync(accountId: UserKey, woeId: Int) {
-        val task = GetTrendsTask(context, accountId, woeId)
+    fun getLocalTrendsAsync(accountKey: UserKey, woeId: Int) {
+        val task = GetTrendsTask(context, accountKey, woeId)
         TaskStarter.execute<Any, Unit, Any>(task)
     }
 
@@ -252,8 +252,8 @@ class AsyncTwitterWrapper(
         return sendingDraftIds.toArray()
     }
 
-    fun isDestroyingStatus(accountId: UserKey?, statusId: String?): Boolean {
-        return destroyingStatusIds.contains(calculateHashCode(accountId, statusId))
+    fun isDestroyingStatus(accountKey: UserKey?, statusId: String?): Boolean {
+        return destroyingStatusIds.contains(calculateHashCode(accountKey, statusId))
     }
 
     fun isStatusTimelineRefreshing(uri: Uri): Boolean {
@@ -376,9 +376,9 @@ class AsyncTwitterWrapper(
             override val exceptionClass = MicroBlogException::class.java
 
             override fun onExecute(params: Any?) {
-                for (accountId in accountKeys) {
-                    val microBlog = MicroBlogAPIFactory.getInstance(context, accountId) ?: continue
-                    if (!Utils.isOfficialCredentials(context, accountId)) continue
+                for (accountKey in accountKeys) {
+                    val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
+                    if (!Utils.isOfficialCredentials(context, accountKey)) continue
                     microBlog.setActivitiesAboutMeUnread(cursor)
                 }
             }
@@ -386,16 +386,16 @@ class AsyncTwitterWrapper(
         TaskStarter.execute(task)
     }
 
-    fun addUpdatingRelationshipId(accountKey: UserKey, userId: UserKey) {
-        updatingRelationshipIds.add(ParcelableUser.calculateHashCode(accountKey, userId))
+    fun addUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {
+        updatingRelationshipIds.add(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
-    fun removeUpdatingRelationshipId(accountKey: UserKey, userId: UserKey) {
-        updatingRelationshipIds.removeElement(ParcelableUser.calculateHashCode(accountKey, userId))
+    fun removeUpdatingRelationshipId(accountKey: UserKey, userKey: UserKey) {
+        updatingRelationshipIds.removeElement(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
-    fun isUpdatingRelationship(accountId: UserKey, userId: UserKey): Boolean {
-        return updatingRelationshipIds.contains(ParcelableUser.calculateHashCode(accountId, userId))
+    fun isUpdatingRelationship(accountKey: UserKey, userKey: UserKey): Boolean {
+        return updatingRelationshipIds.contains(ParcelableUser.calculateHashCode(accountKey, userKey))
     }
 
     internal inner class CreateMultiBlockTask(
@@ -553,8 +553,8 @@ class AsyncTwitterWrapper(
         override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
             val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
             try {
-                val userIds = users.map { it.key }.toTypedArray()
-                val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userIds))
+                val userKeys = users.map { it.key }.toTypedArray()
+                val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userKeys))
                 val list = ParcelableUserListUtils.from(userList, accountKey)
                 return SingleResponse.getInstance(list)
             } catch (e: MicroBlogException) {
@@ -657,8 +657,8 @@ class AsyncTwitterWrapper(
 
     companion object {
 
-        fun calculateHashCode(accountId: UserKey?, statusId: String?): Int {
-            return (accountId?.hashCode() ?: 0) xor (statusId?.hashCode() ?: 0)
+        fun calculateHashCode(accountKey: UserKey?, statusId: String?): Int {
+            return (accountKey?.hashCode() ?: 0) xor (statusId?.hashCode() ?: 0)
         }
 
         fun <T : Response<*>> getException(responses: List<T>): Exception? {
