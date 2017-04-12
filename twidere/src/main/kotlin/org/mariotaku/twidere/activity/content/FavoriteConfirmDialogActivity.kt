@@ -22,16 +22,16 @@ package org.mariotaku.twidere.activity.content
 import android.os.Bundle
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
+import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
 /**
- * Opens [RetweetQuoteDialogFragment] to retweet/quote a status
+ * Opens [FavoriteConfirmDialogFragment] to favorite a status
  *
- * Created by mariotaku on 2017/4/8.
+ * Created by mariotaku on 2017/4/12.
  */
-class RetweetQuoteDialogActivity : BaseActivity() {
+class FavoriteConfirmDialogActivity : BaseActivity() {
 
     private val status: ParcelableStatus
         get() = intent.getParcelableExtra(EXTRA_STATUS)
@@ -42,14 +42,10 @@ class RetweetQuoteDialogActivity : BaseActivity() {
     private val accountKey: UserKey?
         get() = intent.getParcelableExtra(EXTRA_ACCOUNT_KEY)
 
-    private val text: String?
-        get() = intent.getStringExtra(EXTRA_TEXT)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            RetweetQuoteDialogFragment.show(supportFragmentManager, accountKey, statusId, status,
-                    text)
+            FavoriteConfirmDialogFragment.show(supportFragmentManager, accountKey, statusId, status)
         }
     }
 }

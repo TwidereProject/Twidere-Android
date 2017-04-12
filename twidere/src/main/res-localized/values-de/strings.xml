@@ -812,7 +812,7 @@
   <string name="reset_to_default">Auf Standard zurücksetzen</string>
   <string name="retry_on_network_issue">Versuche es bei Netzwerkproblemen erneut</string>
   <string name="retry_on_network_issue_summary">Versuche, es automatisch bei Netzwerkproblemen wiederherzustellen</string>
-  <string name="retweet_quote_confirm_title">An deine Follower retweeten?</string>
+  <string name="title_retweet_quote_confirm">An deine Follower retweeten?</string>
   <string name="retweeted_by_count">Retweetet von <xliff:g id="retweet_count">%d</xliff:g> Benutzern</string>
   <string name="retweeted_by_name">Retweetet von <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetet von <xliff:g id="user_name">%1$s</xliff:g> und <xliff:g id="retweet_count">%2$d</xliff:g> weiteren</string>

@@ -575,7 +575,7 @@
   <string name="reset_to_default">Standaardinstellingen herstellen</string>
   <string name="retry_on_network_issue">Opnieuw proberen bij netwerkproblemen</string>
   <string name="retry_on_network_issue_summary">Probeer automatisch te herstellen na netwerkproblemen</string>
-  <string name="retweet_quote_confirm_title">Retweeten naar je volgers?</string>
+  <string name="title_retweet_quote_confirm">Retweeten naar je volgers?</string>
   <string name="retweeted_by_count">Geretweet door <xliff:g id="retweet_count">%d</xliff:g> gebruikers</string>
   <string name="retweeted_by_name">Geretweet door <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Geretweet door <xliff:g id="user_name">%1$s</xliff:g> en <xliff:g id="retweet_count">%2$d</xliff:g> anderen</string>

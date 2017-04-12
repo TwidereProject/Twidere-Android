@@ -66,6 +66,7 @@ import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.applyFontFamily
 import org.mariotaku.ktextension.contains
 import org.mariotaku.ktextension.findPositionByItemId
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -94,7 +95,6 @@ import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
-import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.loader.ConversationLoader
 import org.mariotaku.twidere.loader.ParcelableStatusLoader
 import org.mariotaku.twidere.menu.FavoriteItemProvider
@@ -320,7 +320,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     override fun onItemActionClick(holder: ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
-        handleActionClick(holder as StatusViewHolder, status, id)
+        handleActionClick(this@StatusFragment, id, status, holder as StatusViewHolder)
     }
 
 
@@ -382,28 +382,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (position == -1) return false
         val status = adapter.getStatus(position)
         val action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState) ?: return false
-        when (action) {
-            ACTION_STATUS_REPLY -> {
-                val intent = Intent(INTENT_ACTION_REPLY)
-                intent.putExtra(EXTRA_STATUS, status)
-                startActivity(intent)
-                return true
-            }
-            ACTION_STATUS_RETWEET -> {
-                RetweetQuoteDialogFragment.show(fragmentManager, status)
-                return true
-            }
-            ACTION_STATUS_FAVORITE -> {
-                val twitter = twitterWrapper
-                if (status.is_favorite) {
-                    twitter.destroyFavoriteAsync(status.account_key, status.id)
-                } else {
-                    twitter.createFavoriteAsync(status.account_key, status)
-                }
-                return true
-            }
-        }
-        return false
+        return AbsStatusesFragment.handleKeyboardShortcutAction(this, action, status, position)
     }
 
     override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
@@ -478,7 +457,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        MenuUtils.setItemAvailability(menu, R.id.current_status, adapter.status != null)
+        menu.setItemAvailability(R.id.current_status, adapter.status != null)
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -616,7 +595,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         if (position == null) return
         val adapterPosition = adapter.findPositionByItemId(position.statusId)
         if (adapterPosition < 0) return
-        //TODO maintain read position
         layoutManager.scrollToPositionWithOffset(adapterPosition, position.offsetTop)
     }
 
@@ -624,10 +602,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         statusContent.visibility = if (state == STATE_LOADED) View.VISIBLE else View.GONE
         progressContainer.visibility = if (state == STATE_LOADING) View.VISIBLE else View.GONE
         errorContainer.visibility = if (state == STATE_ERROR) View.VISIBLE else View.GONE
-    }
-
-    private fun showConversationError(exception: Exception) {
-
     }
 
     override fun onStart() {
@@ -650,8 +624,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         val status = adapter.getStatus(contextMenuInfo.position)
         val inflater = MenuInflater(context)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper,
-                userColorNameManager)
+        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
+                status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -671,7 +645,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             return true
         }
         return MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                userColorNameManager, twitterWrapper, status, item)
+                preferences, userColorNameManager, twitterWrapper, status, item)
     }
 
     @Subscribe
@@ -820,7 +794,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
                 itemView.quotedView.visibility = View.VISIBLE
 
-                val originalIdAvailable = !TextUtils.isEmpty(status.quoted_id)
                 val quoteContentAvailable = status.quoted_text_plain != null && status.quoted_text_unescaped != null
 
                 if (quoteContentAvailable) {
@@ -1034,8 +1007,8 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 itemView.twitterCard.visibility = View.GONE
             }
 
-            MenuUtils.setupForStatus(context, fragment.preferences, itemView.menuBar.menu, status,
-                    adapter.statusAccount!!, twitter, colorNameManager)
+            MenuUtils.setupForStatus(context, itemView.menuBar.menu, fragment.preferences, twitter,
+                    colorNameManager, status, adapter.statusAccount!!)
 
 
             val lang = status.lang
@@ -1109,16 +1082,12 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             if (layoutPosition < 0) return false
             val fragment = adapter.fragment
             val status = adapter.getStatus(layoutPosition)
+            val preferences = fragment.preferences
             val twitter = fragment.twitterWrapper
             val manager = fragment.userColorNameManager
             val activity = fragment.activity
-            val fm = fragment.fragmentManager
-            if (item.itemId == R.id.retweet) {
-                RetweetQuoteDialogFragment.show(fm, status)
-                return true
-            }
-            return MenuUtils.handleStatusClick(activity, fragment, fm, manager, twitter,
-                    status, item)
+            return MenuUtils.handleStatusClick(activity, fragment, fragment.childFragmentManager,
+                    preferences, manager, twitter, status, item)
         }
 
         internal fun updateStatusActivity(activity: StatusActivity) {
@@ -1128,7 +1097,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         }
 
         private fun initViews() {
-            //            menuBar.setOnMenuItemClickListener(this);
             itemView.menuBar.setOnMenuItemClickListener(this)
             val fragment = adapter.fragment
             val activity = fragment.activity
@@ -2112,15 +2080,10 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             val paging = Paging()
             paging.setCount(10)
             val activitySummary = StatusActivity(statusId, emptyList())
-            val retweeters = ArrayList<ParcelableUser>()
             try {
-                for (status in twitter.getRetweets(statusId, paging)) {
-                    val user = ParcelableUserUtils.fromUser(status.user, accountKey, details.type)
-                    if (!DataStoreUtils.isFilteringUser(context, user.key.toString())) {
-                        retweeters.add(user)
-                    }
-                }
-                activitySummary.retweeters = retweeters
+                activitySummary.retweeters = twitter.getRetweets(statusId, paging)
+                        .filterNot { DataStoreUtils.isFilteringUser(context, UserKeyUtils.fromUser(it.user)) }
+                        .map { ParcelableUserUtils.fromUser(it.user, accountKey, details.type) }
                 val countValues = ContentValues()
                 val status = twitter.showStatus(statusId)
                 activitySummary.favoriteCount = status.favoriteCount

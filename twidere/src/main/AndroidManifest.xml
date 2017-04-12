@@ -557,6 +557,9 @@
         <activity
             android:name=".activity.content.RetweetQuoteDialogActivity"
             android:theme="@style/Theme.Twidere.NoDisplay"/>
+        <activity
+            android:name=".activity.content.FavoriteConfirmDialogActivity"
+            android:theme="@style/Theme.Twidere.NoDisplay"/>
 
         <service
             android:name=".service.LegacyTaskService"
@@ -628,7 +631,6 @@
                 <action android:name="android.service.dreams.DreamService"/>
             </intent-filter>
         </service>
-        <service android:name="edu.tsinghua.hotmobi.UploadLogsService"/>
 
         <provider
             android:name=".provider.TwidereDataProvider"

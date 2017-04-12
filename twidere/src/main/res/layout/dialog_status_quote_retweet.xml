@@ -84,7 +84,24 @@
                 android:src="@drawable/ic_action_more_vertical"/>
         </RelativeLayout>
 
-        <include layout="@layout/list_item_status"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/list_item_status"/>
+
+            <FrameLayout
+                android:id="@+id/loadProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="96dp">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </FrameLayout>
+        </FrameLayout>
     </LinearLayout>
 
 </ScrollView>

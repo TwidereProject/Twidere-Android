@@ -577,7 +577,7 @@
   <string name="reset_to_default">Varsayılana dön</string>
   <string name="retry_on_network_issue">Ağ sorunu üzerinde yeniden deneyin</string>
   <string name="retry_on_network_issue_summary">Ağ sorununu otomatik kurtarmayı yeniden deneyin</string>
-  <string name="retweet_quote_confirm_title">Takipçilerine retweetle?</string>
+  <string name="title_retweet_quote_confirm">Takipçilerine retweetle?</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> kullanıcı bunu retweet etti</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>

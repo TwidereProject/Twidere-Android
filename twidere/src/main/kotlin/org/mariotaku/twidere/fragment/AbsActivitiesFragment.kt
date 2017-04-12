@@ -50,7 +50,7 @@ import org.mariotaku.twidere.adapter.ParcelableActivitiesAdapter.Companion.ITEM_
 import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
-import org.mariotaku.twidere.constant.IntentConstants.*
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_FROM_USER
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.constant.displaySensitiveContentsKey
 import org.mariotaku.twidere.constant.newDocumentApiKey
@@ -58,8 +58,6 @@ import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.id
-import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
-import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share
@@ -148,28 +146,8 @@ abstract class AbsActivitiesFragment protected constructor() :
                 action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState)
             }
             if (action == null) return false
-            when (action) {
-                ACTION_STATUS_REPLY -> {
-                    val intent = Intent(INTENT_ACTION_REPLY)
-                    intent.putExtra(EXTRA_STATUS, status)
-                    startActivity(intent)
-                    return true
-                }
-                ACTION_STATUS_RETWEET -> {
-                    RetweetQuoteDialogFragment.show(fragmentManager, status)
-                    return true
-                }
-                ACTION_STATUS_FAVORITE -> {
-                    val twitter = twitterWrapper
-                    if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        val holder = recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
-                        holder.playLikeAnimation(DefaultOnLikedListener(twitter, status))
-                    }
-                    return true
-                }
-            }
+            return AbsStatusesFragment.handleKeyboardShortcutAction(this, action, status,
+                    position)
         }
         return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
@@ -181,7 +159,8 @@ abstract class AbsActivitiesFragment protected constructor() :
         }
     }
 
-    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+    override fun isKeyboardShortcutHandled(handler: KeyboardShortcutsHandler, keyCode: Int,
+            event: KeyEvent, metaState: Int): Boolean {
         var action = handler.getKeyAction(CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
         if (ACTION_NAVIGATION_REFRESH == action) {
             return true
@@ -196,8 +175,8 @@ abstract class AbsActivitiesFragment protected constructor() :
         return navigationHelper.isKeyboardShortcutHandled(handler, keyCode, event, metaState)
     }
 
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int, repeatCount: Int,
-            event: KeyEvent, metaState: Int): Boolean {
+    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
         return navigationHelper.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
     }
 
@@ -341,25 +320,7 @@ abstract class AbsActivitiesFragment protected constructor() :
 
     override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
         val status = getActivityStatus(position) ?: return
-        val activity = activity
-        when (id) {
-            R.id.reply -> {
-                val intent = Intent(INTENT_ACTION_REPLY)
-                intent.`package` = activity.packageName
-                intent.putExtra(EXTRA_STATUS, status)
-                activity.startActivity(intent)
-            }
-            R.id.retweet -> {
-                RetweetQuoteDialogFragment.show(fragmentManager, status)
-            }
-            R.id.favorite -> {
-                if (status.is_favorite) {
-                    twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
-                } else {
-                    holder.playLikeAnimation(DefaultOnLikedListener(twitterWrapper, status))
-                }
-            }
-        }
+        AbsStatusesFragment.handleActionClick(this, id, status, holder as StatusViewHolder)
     }
 
     override fun onStatusActionLongClick(holder: IStatusViewHolder, id: Int, position: Int): Boolean {
@@ -505,8 +466,8 @@ abstract class AbsActivitiesFragment protected constructor() :
             ITEM_VIEW_TYPE_STATUS -> {
                 val status = getActivityStatus(position) ?: return
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper,
-                        userColorNameManager)
+                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
+                        status)
             }
         }
     }
@@ -540,7 +501,7 @@ abstract class AbsActivitiesFragment protected constructor() :
                         return true
                     }
                     else -> MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                            userColorNameManager, twitterWrapper, status, item)
+                            preferences, userColorNameManager, twitterWrapper, status, item)
                 }
             }
         }

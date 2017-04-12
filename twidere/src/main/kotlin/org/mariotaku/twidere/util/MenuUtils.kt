@@ -24,11 +24,10 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.PorterDuff
 import android.os.Parcelable
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.support.annotation.UiThread
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -42,18 +41,18 @@ import android.view.MenuItem
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
 import org.mariotaku.ktextension.set
-import org.mariotaku.ktextension.setItemChecked
-import org.mariotaku.ktextension.setMenuItemIcon
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.AccountSelectorActivity
+import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.activity.ColorPickerDialogActivity
-import org.mariotaku.twidere.constant.SharedPreferenceConstants
+import org.mariotaku.twidere.constant.favoriteConfirmationKey
+import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
-import org.mariotaku.twidere.fragment.AbsStatusesFragment
-import org.mariotaku.twidere.fragment.AddStatusFilterDialogFragment
-import org.mariotaku.twidere.fragment.DestroyStatusDialogFragment
-import org.mariotaku.twidere.fragment.SetUserNicknameDialogFragment
+import org.mariotaku.twidere.fragment.*
+import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
+import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.fragment.status.BlockStatusUsersDialogFragment
 import org.mariotaku.twidere.fragment.status.MuteStatusUsersDialogFragment
 import org.mariotaku.twidere.graphic.ActionIconDrawable
@@ -73,27 +72,6 @@ import java.io.IOException
  * Created by mariotaku on 15/4/12.
  */
 object MenuUtils {
-
-    fun setItemAvailability(menu: Menu?, id: Int, available: Boolean) {
-        if (menu == null) return
-        val item = menu.findItem(id) ?: return
-        item.isVisible = available
-        item.isEnabled = available
-    }
-
-    fun setItemChecked(menu: Menu?, id: Int, checked: Boolean) {
-        menu?.setItemChecked(id, checked)
-    }
-
-    fun setMenuItemIcon(menu: Menu?, id: Int, @DrawableRes icon: Int) {
-        menu?.setMenuItemIcon(id, icon)
-    }
-
-    fun setMenuItemTitle(menu: Menu?, id: Int, @StringRes icon: Int) {
-        if (menu == null) return
-        val item = menu.findItem(id) ?: return
-        item.setTitle(icon)
-    }
 
     fun addIntentToMenu(context: Context, menu: Menu, queryIntent: Intent,
             groupId: Int = Menu.NONE) {
@@ -120,29 +98,21 @@ object MenuUtils {
         }
     }
 
-    fun setupForStatus(context: Context,
-            preferences: SharedPreferencesWrapper,
-            menu: Menu,
-            status: ParcelableStatus,
-            twitter: AsyncTwitterWrapper,
-            manager: UserColorNameManager) {
+    fun setupForStatus(context: Context, menu: Menu, preferences: SharedPreferences,
+            twitter: AsyncTwitterWrapper, manager: UserColorNameManager, status: ParcelableStatus) {
         val account = AccountUtils.getAccountDetails(AccountManager.get(context),
                 status.account_key, true) ?: return
-        setupForStatus(context, preferences, menu, status, account, twitter, manager)
+        setupForStatus(context, menu, preferences, twitter, manager, status, account)
     }
 
     @UiThread
-    fun setupForStatus(context: Context,
-            preferences: SharedPreferencesWrapper,
-            menu: Menu,
-            status: ParcelableStatus,
-            details: AccountDetails,
-            twitter: AsyncTwitterWrapper,
-            manager: UserColorNameManager) {
+    fun setupForStatus(context: Context, menu: Menu, preferences: SharedPreferences,
+            twitter: AsyncTwitterWrapper, manager: UserColorNameManager, status: ParcelableStatus,
+            details: AccountDetails) {
         if (menu is ContextMenu) {
-            menu.setHeaderTitle(context.getString(R.string.status_menu_title_format,
-                    manager.getDisplayName(status.user_key, status.user_name, status.user_screen_name,
-                            preferences[nameFirstKey]),
+            val displayName = manager.getDisplayName(status.user_key, status.user_name,
+                    status.user_screen_name, preferences[nameFirstKey])
+            menu.setHeaderTitle(context.getString(R.string.status_menu_title_format, displayName,
                     status.text_unescaped))
         }
         val retweetHighlight = ContextCompat.getColor(context, R.color.highlight_retweet)
@@ -176,7 +146,7 @@ object MenuUtils {
                 isFavorite = status.is_favorite
             }
             val provider = MenuItemCompat.getActionProvider(favorite)
-            val useStar = preferences.getBoolean(SharedPreferenceConstants.KEY_I_WANT_MY_STARS_BACK)
+            val useStar = preferences[iWantMyStarsBackKey]
             if (provider is FavoriteItemProvider) {
                 provider.setIsFavorite(favorite, isFavorite)
             } else {
@@ -202,7 +172,7 @@ object MenuUtils {
         val translate = menu.findItem(R.id.translate)
         if (translate != null) {
             val isOfficialKey = Utils.isOfficialCredentials(context, details)
-            setItemAvailability(menu, R.id.translate, isOfficialKey)
+            menu.setItemAvailability(R.id.translate, isOfficialKey)
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
         addIntentToMenuForExtension(context, menu, MENU_GROUP_STATUS_EXTENSION,
@@ -227,13 +197,9 @@ object MenuUtils {
 
     }
 
-    fun handleStatusClick(context: Context,
-            fragment: Fragment?,
-            fm: FragmentManager,
-            colorNameManager: UserColorNameManager,
-            twitter: AsyncTwitterWrapper,
-            status: ParcelableStatus,
-            item: MenuItem): Boolean {
+    fun handleStatusClick(context: Context, fragment: Fragment?, fm: FragmentManager,
+            preferences: SharedPreferences, colorNameManager: UserColorNameManager,
+            twitter: AsyncTwitterWrapper, status: ParcelableStatus, item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.copy -> {
                 if (ClipboardUtils.setText(context, status.text_plain)) {
@@ -241,10 +207,19 @@ object MenuUtils {
                 }
             }
             R.id.retweet -> {
-                if (Utils.isMyRetweet(status)) {
-                    twitter.cancelRetweetAsync(status.account_key, status.id, status.my_retweet_id)
+                if (fragment is BaseFragment) {
+                    fragment.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager, status.account_key,
+                                status.id, status)
+                    }
+                } else if (context is BaseActivity) {
+                    context.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.supportFragmentManager, status.account_key,
+                                status.id, status)
+                    }
                 } else {
-                    twitter.retweetStatusAsync(status.account_key, status)
+                    RetweetQuoteDialogFragment.show(fm, status.account_key,
+                            status.id, status)
                 }
             }
             R.id.quote -> {
@@ -258,7 +233,22 @@ object MenuUtils {
                 context.startActivity(intent)
             }
             R.id.favorite -> {
-                if (status.is_favorite) {
+                if (preferences[favoriteConfirmationKey]) {
+                    if (fragment is BaseFragment) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                    } else if (context is BaseActivity) {
+                        context.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.supportFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                    } else {
+                        FavoriteConfirmDialogFragment.show(fm, status.account_key, status.id,
+                                status)
+                    }
+                } else if (status.is_favorite) {
                     twitter.destroyFavoriteAsync(status.account_key, status.id)
                 } else {
                     val provider = MenuItemCompat.getActionProvider(item)
@@ -359,12 +349,8 @@ object MenuUtils {
     }
 
 
-    fun addIntentToMenuForExtension(context: Context?, menu: Menu?,
-            groupId: Int, action: String?,
-            parcelableKey: String?, parcelableJSONKey: String,
-            parcelable: Parcelable?) {
-        if (context == null || menu == null || action == null || parcelableKey == null || parcelable == null)
-            return
+    fun addIntentToMenuForExtension(context: Context, menu: Menu, groupId: Int, action: String,
+            parcelableKey: String, jsonKey: String, obj: Parcelable) {
         val pm = context.packageManager
         val res = context.resources
         val density = res.displayMetrics.density
@@ -373,16 +359,16 @@ object MenuUtils {
         queryIntent.setExtrasClassLoader(context.classLoader)
         val activities = pm.queryIntentActivities(queryIntent, PackageManager.GET_META_DATA)
         val parcelableJson = try {
-            JsonSerializer.serialize(parcelable)
+            JsonSerializer.serialize(obj)
         } catch (e: IOException) {
             null
         }
         for (info in activities) {
             val intent = Intent(queryIntent)
             if (Utils.isExtensionUseJSON(info) && parcelableJson != null) {
-                intent.putExtra(parcelableJSONKey, parcelableJson)
+                intent.putExtra(jsonKey, parcelableJson)
             } else {
-                intent.putExtra(parcelableKey, parcelable)
+                intent.putExtra(parcelableKey, obj)
             }
             intent.setClassName(info.activityInfo.packageName, info.activityInfo.name)
             val item = menu.add(groupId, Menu.NONE, Menu.NONE, info.loadLabel(pm))

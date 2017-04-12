@@ -825,7 +825,7 @@
   <string name="reset_to_default">初期化する</string>
   <string name="retry_on_network_issue">ネットワークに問題がある場合に再接続</string>
   <string name="retry_on_network_issue_summary">ネットワークに問題が生じている場合に、自動的に接続を回復しようと試みます</string>
-  <string name="retweet_quote_confirm_title">フォロワーにリツイートしますか？</string>
+  <string name="title_retweet_quote_confirm">フォロワーにリツイートしますか？</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g>人のリツイート</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>さんのリツイート</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>さんと他<xliff:g id="retweet_count">%2$d</xliff:g>人のリツイート</string>

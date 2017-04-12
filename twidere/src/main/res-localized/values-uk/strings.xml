@@ -578,7 +578,7 @@
   <string name="reset_to_default">Скидання налаштувань до усталених</string>
   <string name="retry_on_network_issue">Повторити спробу при мережевій проблемі</string>
   <string name="retry_on_network_issue_summary">Спробувати автоматично відновитися після мережевих проблем</string>
-  <string name="retweet_quote_confirm_title">Ретвітнути вашим читачам?</string>
+  <string name="title_retweet_quote_confirm">Ретвітнути вашим читачам?</string>
   <string name="retweeted_by_count">Ретвітнули <xliff:g id="retweet_count">%d</xliff:g> користувачі</string>
   <string name="retweeted_by_name">Ретвітнув(ла) <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Ретвітнув(ла) <xliff:g id="user_name">%1$s</xliff:g> і ще <xliff:g id="retweet_count">%2$d</xliff:g> інших</string>

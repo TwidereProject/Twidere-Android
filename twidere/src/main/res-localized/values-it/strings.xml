@@ -557,7 +557,7 @@
   <string name="reset_keyboard_shortcuts_confirm">Resettare le scorciatoie da tastiera ai valori di default?</string>
   <string name="reset_to_default">Ripristina come da default</string>
   <string name="retry_on_network_issue">Riprova se si verifica un errore di rete</string>
-  <string name="retweet_quote_confirm_title">Retweet ai tuoi followers?</string>
+  <string name="title_retweet_quote_confirm">Retweet ai tuoi followers?</string>
   <string name="retweeted_by_count">ReTweettato da <xliff:g id="retweet_count">%d</xliff:g> utenti</string>
   <string name="retweeted_by_name">ReTweettato da <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">ReTweettato da <xliff:g id="user_name">%1$s</xliff:g> e altri <xliff:g id="retweet_count">%2$d</xliff:g></string>

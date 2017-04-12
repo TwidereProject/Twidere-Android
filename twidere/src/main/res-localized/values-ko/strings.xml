@@ -729,7 +729,7 @@
   <string name="reset_to_default">기본값으로 초기화</string>
   <string name="retry_on_network_issue">네트워크 문제 발생 시 재시도</string>
   <string name="retry_on_network_issue_summary">네트워크 문제를 자동으로 복구 시도</string>
-  <string name="retweet_quote_confirm_title">팔로워들에게 리트윗할까요?</string>
+  <string name="title_retweet_quote_confirm">팔로워들에게 리트윗할까요?</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g>명이 리트윗했습니다</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> 님이 리트윗했습니다</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> 님과 다른 <xliff:g id="retweet_count">%2$d</xliff:g>명이 리트윗했습니다</string>

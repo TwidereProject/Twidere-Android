@@ -574,7 +574,7 @@
   <string name="reset_to_default">Beállítás alapértelmezettre</string>
   <string name="retry_on_network_issue">Újraindítás hálózati hiba esetén</string>
   <string name="retry_on_network_issue_summary">Automatikus helyreállítási kísérlet hálózati hiba esetén</string>
-  <string name="retweet_quote_confirm_title">Retweeteled a követőidnek?</string>
+  <string name="title_retweet_quote_confirm">Retweeteled a követőidnek?</string>
   <string name="retweeted_by_count">Retweetelte <xliff:g id="retweet_count">%d</xliff:g> felhasználó</string>
   <string name="retweeted_by_name">Retweetelte <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetelte <xliff:g id="user_name">%1$s</xliff:g> és még <xliff:g id="retweet_count">%2$d</xliff:g> felhasználó</string>

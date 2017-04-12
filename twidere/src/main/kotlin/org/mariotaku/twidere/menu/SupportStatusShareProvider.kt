@@ -35,18 +35,18 @@ import org.mariotaku.twidere.util.Utils.createStatusShareIntent
 class SupportStatusShareProvider(context: Context) : ActionProvider(context) {
     var status: ParcelableStatus? = null
 
-    override fun onCreateActionView(): View? = null
+    override fun onCreateActionView() = null
 
-    override fun onCreateActionView(forItem: MenuItem?): View? = null
+    override fun onCreateActionView(forItem: MenuItem) = null
 
-    override fun onPerformDefaultAction(): Boolean = true
+    override fun onPerformDefaultAction() = true
 
-    override fun hasSubMenu(): Boolean = true
+    override fun hasSubMenu() = true
 
-    override fun onPrepareSubMenu(subMenu: SubMenu?) {
+    override fun onPrepareSubMenu(subMenu: SubMenu) {
         val status = status ?: return
         val shareIntent = createStatusShareIntent(context, status)
-        subMenu!!.removeGroup(MENU_GROUP_STATUS_SHARE)
+        subMenu.removeGroup(MENU_GROUP_STATUS_SHARE)
         MenuUtils.addIntentToMenu(context, subMenu, shareIntent, MENU_GROUP_STATUS_SHARE)
     }
 

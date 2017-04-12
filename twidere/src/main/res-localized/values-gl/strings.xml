@@ -819,7 +819,7 @@
   <string name="reset_to_default">Reiniciar a orixinal</string>
   <string name="retry_on_network_issue">Con problemas de rede, tentar de novo</string>
   <string name="retry_on_network_issue_summary">Con problemas de rede, tentar recuperar automaticamente</string>
-  <string name="retweet_quote_confirm_title">Rechouchiar para os teus seguidores?</string>
+  <string name="title_retweet_quote_confirm">Rechouchiar para os teus seguidores?</string>
   <string name="retweeted_by_count">Rechouchiado por <xliff:g id="retweet_count">%d</xliff:g> usuarios</string>
   <string name="retweeted_by_name">Rechouchiado por <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Rechouchiado por <xliff:g id="user_name">%1$s</xliff:g> e outros <xliff:g id="retweet_count">%2$d</xliff:g></string>

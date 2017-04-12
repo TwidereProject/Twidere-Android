@@ -101,8 +101,8 @@ class ExtensionsListFragment : AbsContentListViewFragment<ExtensionsAdapter>(),
 
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val adapterMenuInfo = item!!.menuInfo as AdapterContextMenuInfo
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val adapterMenuInfo = item.menuInfo as AdapterContextMenuInfo
         val extensionInfo = adapter.getItem(adapterMenuInfo.position)
         when (item.itemId) {
             R.id.settings -> {

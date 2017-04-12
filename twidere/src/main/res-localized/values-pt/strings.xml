@@ -615,7 +615,7 @@
   <string name="reset_to_default">Resetado para predefinição</string>
   <string name="retry_on_network_issue">Tentar novamente quando um erro de rede acontecer</string>
   <string name="retry_on_network_issue_summary">Tentar recuperar de um erro de rede automaticamente</string>
-  <string name="retweet_quote_confirm_title">Retweetar para os seus seguidores?</string>
+  <string name="title_retweet_quote_confirm">Retweetar para os seus seguidores?</string>
   <string name="retweeted_by_count">Retweetado por <xliff:g id="retweet_count">%d</xliff:g> usuários</string>
   <string name="retweeted_by_name">Retweetado por <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetado por <xliff:g id="user_name">%1$s</xliff:g> e <xliff:g id="retweet_count">%2$d</xliff:g> outros</string>

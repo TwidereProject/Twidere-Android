@@ -98,8 +98,8 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_host_mapping, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_host_mapping, menu)
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -114,8 +114,8 @@ class HostMappingsListFragment : AbsContentListViewFragment<HostMappingsListFrag
         df.show(fragmentManager, "add_mapping")
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.add -> {
                 val df = AddMappingDialogFragment()
                 df.show(fragmentManager, "add_mapping")

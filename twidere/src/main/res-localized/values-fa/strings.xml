@@ -704,7 +704,7 @@
   <string name="reset_to_default">بازنشانی به پیش‌گزیده</string>
   <string name="retry_on_network_issue">تلاش دوباره هنگام مشکل شبکه</string>
   <string name="retry_on_network_issue_summary">تلاش برای بازیابی خودکار از مشکل شبکه</string>
-  <string name="retweet_quote_confirm_title">بازتوییت برای دنبال‌کننده‌ها؟</string>
+  <string name="title_retweet_quote_confirm">بازتوییت برای دنبال‌کننده‌ها؟</string>
   <string name="retweeted_by_count">بازتوییت شده توسّط <xliff:g id="retweet_count">%d</xliff:g> کاربر</string>
   <string name="retweeted_by_name">بازتوییت شده توسّط <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">بازتوییت شده توسّط <xliff:g id="user_name">%1$s</xliff:g> و <xliff:g id="retweet_count">%2$d</xliff:g> نفر دیگر</string>

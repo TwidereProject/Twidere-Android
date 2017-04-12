@@ -852,6 +852,8 @@
     <string name="preference_summary_streaming_non_metered_network">Streaming only on free networks like Wi-Fi</string>
     <string name="preference_summary_streaming_power_saving">Streaming only when charging</string>
     <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
+    <string name="preference_summary_favorite_confirmation">Show confirmation before favoriting a tweet</string>
+    <string name="preference_summary_like_confirmation">Show confirmation before liking a tweet</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
@@ -859,11 +861,13 @@
     <string name="preference_title_background_streaming">Background streaming</string>
     <string name="preference_title_chrome_custom_tab">In-app browser</string>
     <string name="preference_title_database_item_limit">Database size limit</string>
+    <string name="preference_title_favorite_confirmation">Favorite confirmation</string>
     <string name="preference_title_filter_manage_subscriptions">Manage</string>
     <string name="preference_title_filter_subscriptions">Filter subscriptions</string>
     <string name="preference_title_floating_detailed_view">Floating detailed view</string>
     <string name="preference_title_landscape">Landscape</string>
     <string name="preference_title_light_font">Light font</string>
+    <string name="preference_title_like_confirmation">Like confirmation</string>
     <string name="preference_title_media_preload_non_metered_network">Preload on free network</string>
     <string name="preference_title_multi_column_tab_width">Multi column tab width</string>
     <string name="preference_title_multi_column_tabs">Multi column tabs</string>
@@ -992,8 +996,6 @@
     <string name="retry_on_network_issue">Retry on network issue</string>
     <string name="retry_on_network_issue_summary">Try recover from network issue automatically</string>
 
-    <string name="retweet_quote_confirm_title">Retweet to your followers?</string>
-
     <string name="retweeted_by_count">Retweeted by <xliff:g id="retweet_count">%d</xliff:g> users</string>
     <string name="retweeted_by_name">Retweeted by <xliff:g id="user_name">%s</xliff:g></string>
     <string name="retweeted_by_name_with_count">Retweeted by <xliff:g id="user_name">%1$s</xliff:g> and <xliff:g id="retweet_count">%2$d</xliff:g> others</string>
@@ -1020,8 +1022,8 @@
     <string name="search_hint">Search tweets or users</string>
     <string name="search_hint_users">Search users</string>
     <string name="search_statuses">Search Tweets</string>
-    <string name="search_type_statuses">Tweets</string>
     <string name="search_type_media">Media</string>
+    <string name="search_type_statuses">Tweets</string>
     <string name="search_type_users">Users</string>
 
     <string name="security_key">Security key</string>
@@ -1189,6 +1191,7 @@
     <string name="title_error_invalid_account">Invalid account</string>
     <!-- Enhanced (paid) features title -->
     <string name="title_extra_features">Enhanced features</string>
+    <string name="title_favorite_confirm">Favorite this tweet?</string>
     <!-- [noun] Twitter's favorite, in the plural -->
     <string name="title_favorites">Favorites</string>
     <string name="title_filters">Filters</string>
@@ -1207,6 +1210,7 @@
     <string name="title_open_source_license">Open source license</string>
     <string name="title_premium_features_name">Twidere ∞</string>
     <string name="title_quick_action">Quick action</string>
+    <string name="title_retweet_quote_confirm">Retweet to your followers?</string>
     <string name="title_scheduled_statuses">Scheduled tweets</string>
     <string name="title_search">Search</string>
     <string name="title_search_gif">Search GIF</string>

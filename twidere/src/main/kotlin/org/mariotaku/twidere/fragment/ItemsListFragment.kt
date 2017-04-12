@@ -60,7 +60,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
 
             override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
                 val status = dummyItemAdapter.getStatus(position)
-                handleActionClick(holder as StatusViewHolder, status, id)
+                handleActionClick(this@ItemsListFragment, id, status, holder as StatusViewHolder)
             }
 
             override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
@@ -135,15 +135,15 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
                 val dummyAdapter = adapter.dummyAdapter
                 val status = dummyAdapter.getStatus(contextMenuInfo.position)
                 inflater.inflate(R.menu.action_status, menu)
-                MenuUtils.setupForStatus(context, preferences, menu, status,
-                        twitterWrapper, userColorNameManager)
+                MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper,
+                        userColorNameManager, status)
             }
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
-        val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val position = contextMenuInfo.position
         when (adapter.getItemViewType(position)) {
             VariousItemsAdapter.VIEW_TYPE_STATUS -> {
@@ -156,7 +156,7 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
                     return true
                 }
                 return MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                        userColorNameManager, twitterWrapper, status, item)
+                        preferences, userColorNameManager, twitterWrapper, status, item)
             }
         }
         return false

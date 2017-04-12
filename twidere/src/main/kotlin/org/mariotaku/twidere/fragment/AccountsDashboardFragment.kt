@@ -377,9 +377,9 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
                 hasPublicTimeline = true
             }
         }
-        MenuUtils.setItemAvailability(menu, R.id.groups, hasGroups)
-        MenuUtils.setItemAvailability(menu, R.id.lists, hasLists)
-        MenuUtils.setItemAvailability(menu, R.id.public_timeline, hasPublicTimeline)
+        menu.setItemAvailability(R.id.groups, hasGroups)
+        menu.setItemAvailability(R.id.lists, hasLists)
+        menu.setItemAvailability(R.id.public_timeline, hasPublicTimeline)
     }
 
     private fun hasAccountInTab(tab: SupportTabSpec, accountId: UserKey, isActivated: Boolean): Boolean {

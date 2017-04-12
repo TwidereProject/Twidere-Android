@@ -569,7 +569,7 @@
   <string name="reset_to_default">Reinicia als valors per defecte</string>
   <string name="retry_on_network_issue">Torna a provar en errors de connexió</string>
   <string name="retry_on_network_issue_summary">Prova de recuperar-te automàticament d\'errors de xarxa</string>
-  <string name="retweet_quote_confirm_title">Retweet als teus seguidors?</string>
+  <string name="title_retweet_quote_confirm">Retweet als teus seguidors?</string>
   <string name="retweeted_by_count">Repiulat per <xliff:g id="retweet_count">%d</xliff:g> usuaris</string>
   <string name="retweeted_by_name">Repiulat per <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Repiulat per <xliff:g id="user_name">%1$s</xliff:g> i <xliff:g id="retweet_count">%2$d</xliff:g> més</string>

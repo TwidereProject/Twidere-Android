@@ -46,13 +46,11 @@ import org.mariotaku.twidere.adapter.decorator.ExtendedDividerItemDecoration
 import org.mariotaku.twidere.adapter.iface.ILoadMoreSupportAdapter
 import org.mariotaku.twidere.annotation.ReadPositionTag
 import org.mariotaku.twidere.annotation.Referral
+import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
-import org.mariotaku.twidere.constant.displaySensitiveContentsKey
-import org.mariotaku.twidere.constant.newDocumentApiKey
-import org.mariotaku.twidere.constant.readFromBottomKey
-import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
@@ -202,30 +200,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 action = handler.getKeyAction(CONTEXT_TAG_STATUS, keyCode, event, metaState)
             }
             if (action == null) return false
-            when (action) {
-                ACTION_STATUS_REPLY -> {
-                    val intent = Intent(INTENT_ACTION_REPLY)
-                    intent.putExtra(EXTRA_STATUS, status)
-                    startActivity(intent)
-                    return true
-                }
-                ACTION_STATUS_RETWEET -> {
-                    executeAfterFragmentResumed {
-                        RetweetQuoteDialogFragment.show(fragmentManager, status)
-                    }
-                    return true
-                }
-                ACTION_STATUS_FAVORITE -> {
-                    val twitter = twitterWrapper
-                    if (status.is_favorite) {
-                        twitter.destroyFavoriteAsync(status.account_key, status.id)
-                    } else {
-                        val holder = recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
-                        holder.playLikeAnimation(DefaultOnLikedListener(twitter, status))
-                    }
-                    return true
-                }
-            }
+            return handleKeyboardShortcutAction(this, action, status, position)
         }
         return navigationHelper.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
     }
@@ -393,7 +368,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
     override fun onItemActionClick(holder: RecyclerView.ViewHolder, id: Int, position: Int) {
         val status = adapter.getStatus(position)
-        handleActionClick(holder as StatusViewHolder, status, id)
+        handleActionClick(this@AbsStatusesFragment, id, status, holder as StatusViewHolder)
     }
 
     override fun onItemActionLongClick(holder: RecyclerView.ViewHolder, id: Int, position: Int): Boolean {
@@ -517,8 +492,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
         val status = adapter.getStatus(contextMenuInfo!!.position)
         inflater.inflate(R.menu.action_status, menu)
-        MenuUtils.setupForStatus(context, preferences, menu, status, twitterWrapper,
-                userColorNameManager)
+        MenuUtils.setupForStatus(context, menu, preferences, twitterWrapper, userColorNameManager,
+                status)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -546,7 +521,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 return true
             }
             else -> return MenuUtils.handleStatusClick(activity, this, fragmentManager,
-                    userColorNameManager, twitterWrapper, status, item)
+                    preferences, userColorNameManager, twitterWrapper, status, item)
         }
     }
 
@@ -581,24 +556,31 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         const val REQUEST_FAVORITE_SELECT_ACCOUNT = 101
         const val REQUEST_RETWEET_SELECT_ACCOUNT = 102
 
-        fun BaseFragment.handleActionClick(holder: StatusViewHolder, status: ParcelableStatus, id: Int) {
+        fun handleActionClick(fragment: BaseFragment, id: Int, status: ParcelableStatus,
+                holder: StatusViewHolder) {
             when (id) {
                 R.id.reply -> {
                     val intent = Intent(INTENT_ACTION_REPLY)
-                    intent.`package` = context.packageName
+                    intent.`package` = fragment.context.packageName
                     intent.putExtra(EXTRA_STATUS, status)
-                    startActivity(intent)
+                    fragment.startActivity(intent)
                 }
                 R.id.retweet -> {
-                    executeAfterFragmentResumed { fragment ->
-                        RetweetQuoteDialogFragment.show(fragment.childFragmentManager, status)
+                    fragment.executeAfterFragmentResumed { fragment ->
+                        RetweetQuoteDialogFragment.show(fragment.childFragmentManager,
+                                status.account_key, status.id, status)
                     }
                 }
                 R.id.favorite -> {
-                    if (status.is_favorite) {
-                        twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                    if (fragment.preferences[favoriteConfirmationKey]) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                    } else if (status.is_favorite) {
+                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
                     } else {
-                        holder.playLikeAnimation(DefaultOnLikedListener(twitterWrapper, status))
+                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
                     }
                 }
             }
@@ -627,7 +609,14 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     val accountKey = data.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
                     val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
-                    fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
+                    if (fragment.preferences[favoriteConfirmationKey]) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    accountKey, status.id, status)
+                        }
+                    } else {
+                        fragment.twitterWrapper.createFavoriteAsync(accountKey, status)
+                    }
                 }
                 AbsStatusesFragment.REQUEST_RETWEET_SELECT_ACCOUNT -> {
                     if (resultCode != Activity.RESULT_OK || data == null) return
@@ -635,7 +624,8 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                     val extras = data.getBundleExtra(EXTRA_EXTRAS)
                     val status = extras.getParcelable<ParcelableStatus>(EXTRA_STATUS)
                     fragment.executeAfterFragmentResumed {
-                        RetweetQuoteDialogFragment.show(it.childFragmentManager, status, accountKey)
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager, accountKey,
+                                status.id, status)
                     }
                 }
             }
@@ -651,6 +641,41 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
                 this[EXTRA_ID] = itemId
             })
             return intent
+        }
+
+
+        fun handleKeyboardShortcutAction(fragment: BaseFragment, action: String,
+                status: ParcelableStatus, position: Int): Boolean {
+            when (action) {
+                ACTION_STATUS_REPLY -> {
+                    val intent = Intent(INTENT_ACTION_REPLY)
+                    intent.putExtra(EXTRA_STATUS, status)
+                    fragment.startActivity(intent)
+                    return true
+                }
+                ACTION_STATUS_RETWEET -> {
+                    fragment.executeAfterFragmentResumed {
+                        RetweetQuoteDialogFragment.show(it.childFragmentManager,
+                                status.account_key, status.id, status)
+                    }
+                    return true
+                }
+                ACTION_STATUS_FAVORITE -> {
+                    if (fragment.preferences[favoriteConfirmationKey]) {
+                        fragment.executeAfterFragmentResumed {
+                            FavoriteConfirmDialogFragment.show(it.childFragmentManager,
+                                    status.account_key, status.id, status)
+                        }
+                    } else if (status.is_favorite) {
+                        fragment.twitterWrapper.destroyFavoriteAsync(status.account_key, status.id)
+                    } else {
+                        val holder = fragment.recyclerView.findViewHolderForLayoutPosition(position) as StatusViewHolder
+                        holder.playLikeAnimation(DefaultOnLikedListener(fragment.twitterWrapper, status))
+                    }
+                    return true
+                }
+            }
+            return false
         }
 
     }

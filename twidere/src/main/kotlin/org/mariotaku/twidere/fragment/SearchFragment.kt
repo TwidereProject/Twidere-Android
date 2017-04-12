@@ -125,8 +125,8 @@ class SearchFragment : AbsToolbarTabPagesFragment(), RefreshScrollTopInterface, 
         item.title = getString(R.string.tweet_hashtag, query)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.save -> {
                 val twitter = twitterWrapper
                 val args = arguments

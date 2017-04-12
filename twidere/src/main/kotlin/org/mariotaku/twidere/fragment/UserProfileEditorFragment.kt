@@ -151,8 +151,8 @@ class UserProfileEditorFragment : BaseFragment(), OnSizeChangedListener, TextWat
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_profile_editor, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_profile_editor, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

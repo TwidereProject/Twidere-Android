@@ -808,7 +808,7 @@
   <string name="reset_to_default">Réinitialiser par défaut</string>
   <string name="retry_on_network_issue">Ré-essayer en cas de problème réseau</string>
   <string name="retry_on_network_issue_summary">Récupérer automatiquement en cas d\'erreur réseau</string>
-  <string name="retweet_quote_confirm_title">Retweeter à vos followers ?</string>
+  <string name="title_retweet_quote_confirm">Retweeter à vos followers ?</string>
   <string name="retweeted_by_count">Retweeté par <xliff:g id="retweet_count">%d</xliff:g> utilisateurs</string>
   <string name="retweeted_by_name">Retweeté par <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweeté par <xliff:g id="user_name">%1$s</xliff:g> et <xliff:g id="retweet_count">%2$d</xliff:g> autres</string>

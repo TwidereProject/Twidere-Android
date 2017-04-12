@@ -821,13 +821,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                     user.name, user.screen_name, nameFirst)
             mentionItem.title = getString(R.string.mention_user_name, displayName)
         }
-        MenuUtils.setItemAvailability(menu, R.id.mention, !isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.qr_code, isMyself || BuildConfig.DEBUG)
-        MenuUtils.setItemAvailability(menu, R.id.incoming_friendships, isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.saved_searches, isMyself)
+        menu.setItemAvailability(R.id.mention, !isMyself)
+        menu.setItemAvailability(R.id.qr_code, isMyself || BuildConfig.DEBUG)
+        menu.setItemAvailability(R.id.incoming_friendships, isMyself)
+        menu.setItemAvailability(R.id.saved_searches, isMyself)
 
-        MenuUtils.setItemAvailability(menu, R.id.blocked_users, isMyself)
-        MenuUtils.setItemAvailability(menu, R.id.block, !isMyself)
+        menu.setItemAvailability(R.id.blocked_users, isMyself)
+        menu.setItemAvailability(R.id.block, !isMyself)
 
 
         val isTwitter: Boolean
@@ -838,11 +838,11 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             isTwitter = false
         }
 
-        MenuUtils.setItemAvailability(menu, R.id.add_to_list, isTwitter)
-        MenuUtils.setItemAvailability(menu, R.id.mute_user, !isMyself && isTwitter)
-        MenuUtils.setItemAvailability(menu, R.id.muted_users, isMyself && isTwitter)
-        MenuUtils.setItemAvailability(menu, R.id.report_spam, !isMyself && isTwitter)
-        MenuUtils.setItemAvailability(menu, R.id.enable_retweets, !isMyself && isTwitter)
+        menu.setItemAvailability(R.id.add_to_list, isTwitter)
+        menu.setItemAvailability(R.id.mute_user, !isMyself && isTwitter)
+        menu.setItemAvailability(R.id.muted_users, isMyself && isTwitter)
+        menu.setItemAvailability(R.id.report_spam, !isMyself && isTwitter)
+        menu.setItemAvailability(R.id.enable_retweets, !isMyself && isTwitter)
 
         if (relationship != null) {
             menu.findItem(R.id.add_to_filter)?.apply {
@@ -850,12 +850,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
 
             if (isMyself) {
-                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
-                MenuUtils.setItemAvailability(menu, R.id.enable_notifications, false)
+                menu.setItemAvailability(R.id.send_direct_message, false)
+                menu.setItemAvailability(R.id.enable_notifications, false)
             } else {
-                MenuUtils.setItemAvailability(menu, R.id.send_direct_message, relationship.can_dm)
-                MenuUtils.setItemAvailability(menu, R.id.block, true)
-                MenuUtils.setItemAvailability(menu, R.id.enable_notifications, isTwitter && relationship.following)
+                menu.setItemAvailability(R.id.send_direct_message, relationship.can_dm)
+                menu.setItemAvailability(R.id.block, true)
+                menu.setItemAvailability(R.id.enable_notifications, isTwitter && relationship.following)
 
                 menu.findItem(R.id.block)?.apply {
                     ActionIconDrawable.setMenuHighlight(this, TwidereMenuInfo(relationship.blocking))
@@ -873,8 +873,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             }
 
         } else {
-            MenuUtils.setItemAvailability(menu, R.id.send_direct_message, false)
-            MenuUtils.setItemAvailability(menu, R.id.enable_notifications, false)
+            menu.setItemAvailability(R.id.send_direct_message, false)
+            menu.setItemAvailability(R.id.enable_notifications, false)
         }
         val intent = Intent(INTENT_ACTION_EXTENSION_OPEN_USER)
         val extras = Bundle()

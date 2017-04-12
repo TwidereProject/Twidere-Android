@@ -559,7 +559,7 @@
   <string name="reset_keyboard_shortcuts_confirm">Resetoidaanko näppäimistöoikotiet oletuksiin?</string>
   <string name="reset_to_default">Resetoi oletuksiin</string>
   <string name="retry_on_network_issue">Yritä uudelleen kohdatessa verkko-ongelmia</string>
-  <string name="retweet_quote_confirm_title">Haluatko uudelleentwiitata seuraajillesi?</string>
+  <string name="title_retweet_quote_confirm">Haluatko uudelleentwiitata seuraajillesi?</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> käyttäjää uudelleentwiittasivat</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> uudelleentwiittasi</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ja <xliff:g id="retweet_count">%2$d</xliff:g> muuta uudelleentwiittasivat</string>

@@ -63,10 +63,14 @@ import org.mariotaku.twidere.view.StatusTextCountView
 import org.mariotaku.twidere.view.holder.StatusViewHolder
 import java.util.*
 
+/**
+ * Asks user to retweet/quote a status.
+ */
 class RetweetQuoteDialogFragment : BaseDialogFragment() {
     private lateinit var popupMenu: PopupMenu
 
     private val PopupMenu.quoteOriginalStatus get() = menu.isItemChecked(R.id.quote_original_status)
+    private val Dialog.loadProgress get() = findViewById(R.id.loadProgress)
     private val Dialog.itemContent get() = findViewById(R.id.itemContent) as ColorLabelRelativeLayout
     private val Dialog.textCountView get() = findViewById(R.id.commentTextCount) as StatusTextCountView
     private val Dialog.itemMenu get() = findViewById(R.id.itemMenu) as ImageButton
@@ -90,12 +94,15 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         val accountKey = this.accountKey
         val details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true)!!
         val status = this.status.apply {
+            if (account_key != accountKey) {
+                my_retweet_id = null
+            }
             account_key = details.key
             account_color = details.color
         }
 
         builder.setView(R.layout.dialog_status_quote_retweet)
-        builder.setTitle(R.string.retweet_quote_confirm_title)
+        builder.setTitle(R.string.title_retweet_quote_confirm)
         builder.setPositiveButton(R.string.action_retweet, null)
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.setNeutralButton(R.string.action_quote) { _, _ ->
@@ -119,6 +126,7 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
 
             dialog.textCountView.maxLength = details.textLimit
 
+            dialog.loadProgress.visibility = View.GONE
             dialog.itemMenu.visibility = View.GONE
             dialog.actionButtons.visibility = View.GONE
             dialog.itemContent.isFocusable = false
@@ -383,12 +391,13 @@ class RetweetQuoteDialogFragment : BaseDialogFragment() {
         val FRAGMENT_TAG = "retweet_quote"
         private val SHOW_PROTECTED_CONFIRM = java.lang.Boolean.parseBoolean("false")
 
-        fun show(fm: FragmentManager, status: ParcelableStatus, accountKey: UserKey? = null,
-                text: String? = null): RetweetQuoteDialogFragment {
+        fun show(fm: FragmentManager, accountKey: UserKey? = null, statusId: String,
+                status: ParcelableStatus?, text: String? = null): RetweetQuoteDialogFragment {
             val f = RetweetQuoteDialogFragment()
             f.arguments = Bundle {
-                this[EXTRA_STATUS] = status
                 this[EXTRA_ACCOUNT_KEY] = accountKey
+                this[EXTRA_STATUS_ID] = statusId
+                this[EXTRA_STATUS] = status
                 this[EXTRA_TEXT] = text
             }
             f.show(fm, FRAGMENT_TAG)

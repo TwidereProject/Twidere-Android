@@ -502,7 +502,7 @@
   <string name="requested">Forespurt</string>
   <string name="reset_keyboard_shortcuts_confirm">Tilbakestill hurtigtaster til standard?</string>
   <string name="reset_to_default">Tilbakestill til standard</string>
-  <string name="retweet_quote_confirm_title">Retweet til følgerne dine?</string>
+  <string name="title_retweet_quote_confirm">Retweet til følgerne dine?</string>
   <string name="retweeted_by_count">Retweetet av <xliff:g id="retweet_count">%d</xliff:g> brukere</string>
   <string name="retweeted_by_name">Retweetet av <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetet av <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>

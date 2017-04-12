@@ -94,10 +94,10 @@ class UserListMembersFragment : CursorUsersListFragment() {
         menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
         if (!userVisibleHint) return false
         val userList = userList ?: return false
-        val contextMenuInfo = item!!.menuInfo as ExtendedRecyclerView.ContextMenuInfo
+        val contextMenuInfo = item.menuInfo as ExtendedRecyclerView.ContextMenuInfo
         val user = adapter.getUser(contextMenuInfo.position) ?: return false
         when (item.itemId) {
             R.id.delete_from_list -> {

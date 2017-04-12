@@ -44,6 +44,7 @@ import android.widget.CheckBox
 import com.rengwuxian.materialedittext.MaterialEditText
 import com.squareup.otto.Subscribe
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.UserList
 import org.mariotaku.microblog.library.twitter.model.UserListUpdate
@@ -176,21 +177,21 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
         super.onDestroyView()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_user_list, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_user_list, menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu?) {
+    override fun onPrepareOptionsMenu(menu: Menu) {
         val userList = this.userList
-        MenuUtils.setItemAvailability(menu, R.id.info, userList != null)
-        menu!!.removeGroup(MENU_GROUP_USER_LIST_EXTENSION)
+        menu.setItemAvailability(R.id.info, userList != null)
+        menu.removeGroup(MENU_GROUP_USER_LIST_EXTENSION)
         if (userList != null) {
             val isMyList = userList.user_key == userList.account_key
             val isFollowing = userList.is_following
-            MenuUtils.setItemAvailability(menu, R.id.edit, isMyList)
-            MenuUtils.setItemAvailability(menu, R.id.follow, !isMyList)
-            MenuUtils.setItemAvailability(menu, R.id.add, isMyList)
-            MenuUtils.setItemAvailability(menu, R.id.delete, isMyList)
+            menu.setItemAvailability(R.id.edit, isMyList)
+            menu.setItemAvailability(R.id.follow, !isMyList)
+            menu.setItemAvailability(R.id.add, isMyList)
+            menu.setItemAvailability(R.id.delete, isMyList)
             val followItem = menu.findItem(R.id.follow)
             if (isFollowing) {
                 followItem.setIcon(R.drawable.ic_action_cancel)
@@ -204,17 +205,17 @@ class UserListFragment : AbsToolbarTabPagesFragment(), OnClickListener,
             extensionsIntent.putExtra(EXTRA_USER_LIST, userList)
             MenuUtils.addIntentToMenu(activity, menu, extensionsIntent, MENU_GROUP_USER_LIST_EXTENSION)
         } else {
-            MenuUtils.setItemAvailability(menu, R.id.edit, false)
-            MenuUtils.setItemAvailability(menu, R.id.follow, false)
-            MenuUtils.setItemAvailability(menu, R.id.add, false)
-            MenuUtils.setItemAvailability(menu, R.id.delete, false)
+            menu.setItemAvailability(R.id.edit, false)
+            menu.setItemAvailability(R.id.follow, false)
+            menu.setItemAvailability(R.id.add, false)
+            menu.setItemAvailability(R.id.delete, false)
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val twitter = twitterWrapper
         val userList = userList ?: return false
-        when (item!!.itemId) {
+        when (item.itemId) {
             R.id.add -> {
                 if (userList.user_key != userList.account_key) return false
                 val intent = Intent(INTENT_ACTION_SELECT_USER)

@@ -818,7 +818,7 @@
   <string name="reset_to_default">เรียกคืนค่าเริ่มต้น</string>
   <string name="retry_on_network_issue">แก้ปัญหาเครือข่ายอีกครั้ง</string>
   <string name="retry_on_network_issue_summary">พยายามแก้ปัญหาเครือข่ายอัตโนมัติ</string>
-  <string name="retweet_quote_confirm_title">รีทวีตหรือไม่</string>
+  <string name="title_retweet_quote_confirm">รีทวีตหรือไม่</string>
   <string name="retweeted_by_count">รีทวีตโดยผู้ใช้ <xliff:g id="retweet_count">%d</xliff:g> คน</string>
   <string name="retweeted_by_name">รีทวีตโดย <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">รีทวีตโดย <xliff:g id="user_name">%1$s</xliff:g> และอีก <xliff:g id="retweet_count">%2$d</xliff:g> คน</string>

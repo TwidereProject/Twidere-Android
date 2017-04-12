@@ -41,6 +41,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_media_viewer.*
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.checkAllSelfPermissionsGranted
+import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.toTypedArray
 import org.mariotaku.mediaviewer.library.*
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment.EXTRA_MEDIA_URI
@@ -59,7 +60,10 @@ import org.mariotaku.twidere.provider.CacheProvider
 import org.mariotaku.twidere.provider.ShareProvider
 import org.mariotaku.twidere.task.SaveFileTask
 import org.mariotaku.twidere.task.SaveMediaToGalleryTask
-import org.mariotaku.twidere.util.*
+import org.mariotaku.twidere.util.AsyncTaskUtils
+import org.mariotaku.twidere.util.IntentUtils
+import org.mariotaku.twidere.util.PermissionUtils
+import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.support.WindowSupport
 import org.mariotaku.twidere.view.viewer.MediaSwipeCloseContainer
@@ -175,9 +179,9 @@ class MediaViewerActivity : BaseActivity(), IMediaViewerActivity, MediaSwipeClos
         if (obj.isDetached || obj.host == null) return false
         val running = obj.isMediaLoading
         val downloaded = obj.isMediaLoaded
-        MenuUtils.setItemAvailability(menu, R.id.refresh, !running && !downloaded)
-        MenuUtils.setItemAvailability(menu, R.id.share, !running && downloaded)
-        MenuUtils.setItemAvailability(menu, R.id.save, !running && downloaded)
+        menu.setItemAvailability(R.id.refresh, !running && !downloaded)
+        menu.setItemAvailability(R.id.share, !running && downloaded)
+        menu.setItemAvailability(R.id.save, !running && downloaded)
         return true
     }
 
