@@ -72,8 +72,6 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.UserEvent
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.fragment_user.view.*
 import kotlinx.android.synthetic.main.header_user.*
@@ -111,6 +109,7 @@ import org.mariotaku.twidere.constant.KeyboardShortcutConstants.*
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
 import org.mariotaku.twidere.extension.loadProfileBanner
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getBestProfileBanner
 import org.mariotaku.twidere.extension.model.originalProfileImage
@@ -181,7 +180,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     private var previousTabItemIsDark: Int = 0
     private var previousActionBarItemIsDark: Int = 0
     private var hideBirthdayView: Boolean = false
-    private var userEvent: UserEvent? = null
 
     private val friendshipLoaderCallbacks = object : LoaderCallbacks<SingleResponse<ParcelableRelationship>> {
 
@@ -548,7 +546,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val requestManager = Glide.with(this)
         requestManager.loadProfileBanner(context, user, width).into(profileBanner)
         requestManager.loadOriginalProfileImage(context, user, profileImage.style,
-                profileImage.cornerRadius, profileImage.cornerRadiusRatio).into(profileImage)
+                profileImage.cornerRadius, profileImage.cornerRadiusRatio)
+                .thumbnail(requestManager.loadProfileImage(context, user, profileImage.style,
+                        profileImage.cornerRadius, profileImage.cornerRadiusRatio,
+                        getString(R.string.profile_image_size))).into(profileImage)
         val relationship = relationship
         if (relationship == null) {
             getFriendship()
@@ -776,24 +777,10 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override fun onStart() {
         super.onStart()
         bus.register(this)
-
-        @Referral
-        val referral = arguments.getString(EXTRA_REFERRAL)
-        val context = context
-        if (userEvent == null) {
-            userEvent = UserEvent.create(context, referral)
-        } else {
-            userEvent!!.markStart(context)
-        }
     }
 
     override fun onStop() {
         val context = context
-        if (userEvent != null && context != null && user != null) {
-            userEvent!!.setUser(user!!)
-            userEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log(userEvent!!)
-        }
         bus.unregister(this)
         super.onStop()
     }
@@ -1233,6 +1220,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 val url = user.originalProfileImage ?: return
                 val profileImage = ParcelableMediaUtils.image(url)
                 profileImage.type = ParcelableMedia.Type.IMAGE
+                profileImage.preview_url = user.profile_image_url
                 val media = arrayOf(profileImage)
                 IntentUtils.openMedia(activity, user.account_key, media, null, false,
                         preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey])

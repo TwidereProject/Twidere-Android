@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.loader.PublicTimelineLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -33,10 +32,6 @@ import java.util.*
  * Created by mariotaku on 14/12/2.
  */
 class PublicTimelineFragment : ParcelableStatusesFragment() {
-
-    override val timelineType: String
-        @TimelineType
-        get() = TimelineType.OTHER
 
     override fun onCreateStatusesLoader(context: Context,
             args: Bundle,

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.loader.UserFavoritesLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -38,10 +37,9 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
-            val args = arguments!!
-            val accountKey = Utils.getAccountKey(context, args)!!
-            val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val screenName = args.getString(EXTRA_SCREEN_NAME)
+            val accountKey = Utils.getAccountKey(context, arguments)
+            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
             val result = ArrayList<String>()
             result.add(AUTHORITY_USER_FAVORITES)
             result.add("account=$accountKey")
@@ -57,13 +55,12 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
-            val args = arguments!!
-            val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+            val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             val sb = StringBuilder("user_favorites_")
             if (tabPosition < 0) return null
 
-            val userKey = args.getParcelable<UserKey>(EXTRA_USER_KEY)
-            val screenName = args.getString(EXTRA_SCREEN_NAME)
+            val userKey = arguments.getParcelable<UserKey>(EXTRA_USER_KEY)
+            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
             if (userKey != null) {
                 sb.append(userKey)
             } else if (screenName != null) {
@@ -73,10 +70,6 @@ class UserFavoritesFragment : ParcelableStatusesFragment() {
             }
             return sb.toString()
         }
-
-
-    @TimelineType
-    override val timelineType: String = TimelineType.OTHER
 
     override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
             Loader<List<ParcelableStatus>?> {

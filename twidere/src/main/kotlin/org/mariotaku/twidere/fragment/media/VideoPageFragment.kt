@@ -40,8 +40,6 @@ import android.widget.ProgressBar
 import android.widget.SeekBar
 import android.widget.TextView
 import com.commonsware.cwac.layouts.AspectLockedFrameLayout.AspectRatioSource
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaDownloadEvent
 import kotlinx.android.synthetic.main.layout_media_viewer_texture_video_view.*
 import kotlinx.android.synthetic.main.layout_media_viewer_video_overlay.*
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
@@ -73,7 +71,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     private var positionBackup: Int = -1
 
     private var videoProgressRunnable: VideoPlayProgressRunnable? = null
-    private var mediaDownloadEvent: MediaDownloadEvent? = null
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -298,36 +295,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
         return inflater.inflate(R.layout.layout_media_viewer_texture_video_view, container, false)
     }
 
-
-    override fun onDownloadRequested(nonce: Long) {
-        super.onDownloadRequested(nonce)
-        val context = context
-        if (context != null) {
-            mediaDownloadEvent = MediaDownloadEvent.create(context, media, nonce)
-        } else {
-            mediaDownloadEvent = null
-        }
-    }
-
-    override fun onDownloadStart(total: Long, nonce: Long) {
-        super.onDownloadStart(total, nonce)
-        mediaDownloadEvent?.let {
-            if (it.nonce == nonce) {
-                it.setOpenedTime(System.currentTimeMillis())
-                it.setSize(total)
-            }
-        }
-    }
-
-    override fun onDownloadFinished(nonce: Long) {
-        super.onDownloadFinished(nonce)
-        if (mediaDownloadEvent != null && mediaDownloadEvent!!.nonce == nonce) {
-            mediaDownloadEvent!!.markEnd()
-            HotMobiLogger.getInstance(context).log(accountKey, mediaDownloadEvent!!)
-            mediaDownloadEvent = null
-        }
-    }
-
     override fun fitSystemWindows(insets: Rect) {
         val lp = videoControl.layoutParams
         if (lp is ViewGroup.MarginLayoutParams) {
@@ -338,7 +305,6 @@ class VideoPageFragment : CacheDownloadMediaViewerFragment(), IBaseFragment<Vide
     }
 
     override fun executeAfterFragmentResumed(useHandler: Boolean, action: (VideoPageFragment) -> Unit) = TODO()
-
 
     private fun updatePlayerState() {
         val playing = videoView.isPlaying

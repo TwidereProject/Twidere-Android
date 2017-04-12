@@ -34,8 +34,6 @@ import android.support.v7.widget.RecyclerView.OnScrollListener
 import android.view.*
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaEvent
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.coerceInOr
@@ -338,13 +336,7 @@ abstract class AbsActivitiesFragment protected constructor() :
         IntentUtils.openMedia(activity, status, media, preferences[newDocumentApiKey],
                 preferences[displaySensitiveContentsKey],
                 null)
-        // BEGIN HotMobi
-        val event = MediaEvent.create(activity, status, media, timelineType, adapter.mediaPreviewEnabled)
-        HotMobiLogger.getInstance(activity).log(status.account_key, event)
-        // END HotMobi
     }
-
-    protected abstract val timelineType: String
 
     override fun onStatusActionClick(holder: IStatusViewHolder, id: Int, position: Int) {
         val status = getActivityStatus(position) ?: return

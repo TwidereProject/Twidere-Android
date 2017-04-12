@@ -30,10 +30,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.target.Target
 import io.nayuki.qrcodegen.QrCode
 import io.nayuki.qrcodegen.QrSegment
 import kotlinx.android.synthetic.main.fragment_user_qr.*
+import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.combine.and
+import nl.komponents.kovenant.task
 import nl.komponents.kovenant.then
 import nl.komponents.kovenant.ui.failUi
 import nl.komponents.kovenant.ui.promiseOnUi
@@ -41,14 +45,15 @@ import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.extension.loadOriginalProfileImage
+import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.util.LinkCreator
 import org.mariotaku.twidere.util.TwidereColorUtils
-import org.mariotaku.twidere.util.glide.DeferredTarget
 import org.mariotaku.twidere.util.qr.QrCodeData
 import org.mariotaku.uniqr.AndroidPlatform
 import org.mariotaku.uniqr.UniqR
 import java.lang.ref.WeakReference
+import java.util.concurrent.ExecutionException
 
 /**
  * Display QR code to user
@@ -64,15 +69,13 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val weakThis = WeakReference(this)
-        val deferred = Glide.with(context.applicationContext).loadOriginalProfileImage(context,
-                user, 0).into(DeferredTarget())
+
         promiseOnUi {
-            val fragment = weakThis.get() ?: return@promiseOnUi
+            val fragment = weakThis.get()?.takeIf { it.view != null } ?: return@promiseOnUi
             fragment.qrView.visibility = View.INVISIBLE
             fragment.qrProgress.visibility = View.VISIBLE
-        } and deferred.promise.then { drawable ->
+        } and loadProfileImage().then { drawable ->
             val fragment = weakThis.get() ?: throw InterruptedException()
             val background = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
                     Bitmap.Config.ARGB_8888)
@@ -82,18 +85,17 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
             val palette = Palette.from(background).generate()
 
-            val qrData = run {
-                val segments = QrSegment.makeSegments(LinkCreator.getUserWebLink(fragment.user).toString())
-                return@run QrCodeData(QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true))
-            }
-            val uniqr = UniqR(AndroidPlatform(), background, qrData)
+            val link = LinkCreator.getUserWebLink(fragment.user)
+            val segments = QrSegment.makeSegments(link.toString())
+            val qrCode = QrCode.encodeSegments(segments, QrCode.Ecc.HIGH, 5, 40, -1, true)
+            val uniqr = UniqR(AndroidPlatform(), background, QrCodeData(qrCode))
             uniqr.scale = 3
             uniqr.qrPatternColor = palette.patternColor
             val result = uniqr.build().produceResult()
             background.recycle()
             return@then result
         }.successUi { bitmap ->
-            val fragment = weakThis.get() ?: return@successUi
+            val fragment = weakThis.get()?.takeIf { it.view != null } ?: return@successUi
             fragment.qrView.visibility = View.VISIBLE
             fragment.qrProgress.visibility = View.GONE
             fragment.qrView.setImageDrawable(BitmapDrawable(fragment.resources, bitmap).apply {
@@ -101,9 +103,27 @@ class UserQrDialogFragment : BaseDialogFragment() {
                 this.isFilterBitmap = false
             })
         }.failUi {
-            val fragment = weakThis.get() ?: return@failUi
+            val fragment = weakThis.get()?.takeIf { it.dialog != null } ?: return@failUi
             Toast.makeText(fragment.context, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
             fragment.dismiss()
+        }
+    }
+
+    private fun loadProfileImage(): Promise<GlideDrawable, Exception> {
+        val profileImageSize = getString(R.string.profile_image_size)
+        val context = context.applicationContext
+        val requestManager = Glide.with(context)
+        val user = this.user
+        return task {
+            try {
+                return@task requestManager.loadOriginalProfileImage(context, user, 0)
+                        .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
+            } catch (e: ExecutionException) {
+                // Ignore
+            }
+            // Return fallback profile image
+            return@task requestManager.loadProfileImage(context, user, 0, size = profileImageSize)
+                    .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
         }
     }
 
@@ -111,8 +131,8 @@ class UserQrDialogFragment : BaseDialogFragment() {
         private fun getOptimalPatternColor(color: Int): Int {
             val yiq = IntArray(3)
             TwidereColorUtils.colorToYIQ(color, yiq)
-            if (yiq[0] > 72) {
-                yiq[0] = 72
+            if (yiq[0] > 128) {
+                yiq[0] = 128
                 return TwidereColorUtils.YIQToColor(Color.alpha(color), yiq)
             }
             return color

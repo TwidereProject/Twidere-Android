@@ -15,8 +15,6 @@ import android.support.media.ExifInterface
 import android.text.TextUtils
 import android.webkit.MimeTypeMap
 import com.twitter.Validator
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaUploadEvent
 import net.ypresto.androidtranscoder.MediaTranscoder
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets
 import org.mariotaku.ktextension.*
@@ -60,6 +58,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**
+ * Update status
+ *
  * Created by mariotaku on 16/5/22.
  */
 class UpdateStatusTask(
@@ -326,7 +326,7 @@ class UpdateStatusTask(
                         if (statusUpdate.media.isNotNullOrEmpty()) {
                             // Fanfou only allow one photo
                             fanfouUpdateStatusWithPhoto(microBlog, statusUpdate, pendingUpdate,
-                                    pendingUpdate.overrideTexts[i], account.mediaSizeLimit, i)
+                                    account.mediaSizeLimit, i)
                         } else {
                             twitterUpdateStatus(microBlog, statusUpdate, pendingUpdate, i)
                         }
@@ -346,8 +346,7 @@ class UpdateStatusTask(
 
     @Throws(MicroBlogException::class, UploadException::class)
     private fun fanfouUpdateStatusWithPhoto(microBlog: MicroBlog, statusUpdate: ParcelableStatusUpdate,
-            pendingUpdate: PendingStatusUpdate, overrideText: String,
-            sizeLimit: SizeLimit, updateIndex: Int): Status {
+            pendingUpdate: PendingStatusUpdate, sizeLimit: SizeLimit, updateIndex: Int): Status {
         if (statusUpdate.media.size > 1) {
             throw MicroBlogException(context.getString(R.string.error_too_many_photos_fanfou))
         }
@@ -355,8 +354,8 @@ class UpdateStatusTask(
         try {
             return getBodyFromMedia(context, media, sizeLimit, false, ContentLengthInputStream.ReadListener { length, position ->
                 stateCallback.onUploadingProgressChanged(-1, position, length)
-            }).use { mediaBody ->
-                val photoUpdate = PhotoStatusUpdate(mediaBody.body, pendingUpdate.overrideTexts[updateIndex])
+            }).use { (body) ->
+                val photoUpdate = PhotoStatusUpdate(body, pendingUpdate.overrideTexts[updateIndex])
                 return@use microBlog.uploadPhoto(photoUpdate)
             }
         } catch (e: IOException) {
@@ -718,18 +717,11 @@ class UpdateStatusTask(
                             ContentLengthInputStream.ReadListener { length, position ->
                                 callback?.onUploadingProgressChanged(index, position, length)
                             })
-                    val mediaUploadEvent = MediaUploadEvent.create(context, media)
-                    mediaUploadEvent.setFileSize(body.body.length())
-                    body.geometry?.let { geometry ->
-                        mediaUploadEvent.setGeometry(geometry.x, geometry.y)
-                    }
                     if (chucked) {
                         resp = uploadMediaChucked(upload, body.body, ownerIds)
                     } else {
                         resp = upload.uploadMedia(body.body, ownerIds)
                     }
-                    mediaUploadEvent.markEnd()
-                    HotMobiLogger.getInstance(context).log(mediaUploadEvent)
                 } catch (e: IOException) {
                     throw UploadException(e).apply {
                         this.deleteAlways = deleteAlways

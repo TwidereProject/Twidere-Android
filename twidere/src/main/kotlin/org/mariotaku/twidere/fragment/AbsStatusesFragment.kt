@@ -91,8 +91,6 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         }
     }
 
-    protected abstract val timelineType: String
-
     protected abstract val accountKeys: Array<UserKey>
 
     protected var adapterData: List<ParcelableStatus>?

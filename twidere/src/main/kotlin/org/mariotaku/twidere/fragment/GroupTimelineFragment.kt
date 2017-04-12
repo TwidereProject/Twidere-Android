@@ -26,7 +26,6 @@ import android.support.v4.content.Loader
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.activity.ComposeActivity
@@ -39,56 +38,11 @@ import java.util.*
  * Created by mariotaku on 14/12/2.
  */
 class GroupTimelineFragment : ParcelableStatusesFragment() {
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        setHasOptionsMenu(true)
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_group_timeline, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.compose -> {
-                val args = arguments
-                val accountKey = Utils.getAccountKey(context, args)
-                val groupName = args.getString(EXTRA_GROUP_NAME)
-                if (groupName != null) {
-                    val intent = Intent(activity, ComposeActivity::class.java)
-                    intent.action = INTENT_ACTION_COMPOSE
-                    intent.putExtra(Intent.EXTRA_TEXT, "!$groupName ")
-                    intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
-                    startActivity(intent)
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateStatusesLoader(context: Context,
-            args: Bundle,
-            fromUser: Boolean): Loader<List<ParcelableStatus>?> {
-        refreshing = true
-        val accountKey = Utils.getAccountKey(context, args)
-        val groupId = args.getString(EXTRA_GROUP_ID)
-        val groupName = args.getString(EXTRA_GROUP_NAME)
-        val maxId = args.getString(EXTRA_MAX_ID)
-        val sinceId = args.getString(EXTRA_SINCE_ID)
-        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
-        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
-        return GroupTimelineLoader(activity, accountKey, groupId, groupName, sinceId,
-                maxId, adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
-    }
-
     override val savedStatusesFileArgs: Array<String>?
         get() {
-            val args = arguments!!
-            val accountKey = Utils.getAccountKey(context, args)!!
-            val groupId = args.getString(EXTRA_GROUP_ID)
-            val groupName = args.getString(EXTRA_GROUP_NAME)
+            val accountKey = Utils.getAccountKey(context, arguments)!!
+            val groupId = arguments.getString(EXTRA_GROUP_ID)
+            val groupName = arguments.getString(EXTRA_GROUP_NAME)
             val result = ArrayList<String>()
             result.add(AUTHORITY_GROUP_TIMELINE)
             result.add("account=$accountKey")
@@ -104,12 +58,11 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
-            val args = arguments!!
-            val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+            val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             val sb = StringBuilder("group_")
             if (tabPosition < 0) return null
-            val groupId = args.getString(EXTRA_GROUP_ID)
-            val groupName = args.getString(EXTRA_GROUP_NAME)
+            val groupId = arguments.getString(EXTRA_GROUP_ID)
+            val groupName = arguments.getString(EXTRA_GROUP_NAME)
             if (groupId != null) {
                 sb.append(groupId)
             } else if (groupName != null) {
@@ -118,8 +71,46 @@ class GroupTimelineFragment : ParcelableStatusesFragment() {
             return sb.toString()
         }
 
-    override val timelineType: String
-        @TimelineType
-        get() = TimelineType.OTHER
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_group_timeline, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.compose -> {
+                val accountKey = Utils.getAccountKey(context, arguments)
+                val groupName = arguments.getString(EXTRA_GROUP_NAME)
+                if (groupName != null) {
+                    val intent = Intent(activity, ComposeActivity::class.java)
+                    intent.action = INTENT_ACTION_COMPOSE
+                    intent.putExtra(Intent.EXTRA_TEXT, "!$groupName ")
+                    intent.putExtra(EXTRA_ACCOUNT_KEY, accountKey)
+                    startActivity(intent)
+                }
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateStatusesLoader(context: Context, args: Bundle, fromUser: Boolean):
+            Loader<List<ParcelableStatus>?> {
+        refreshing = true
+        val accountKey = Utils.getAccountKey(context, args)
+        val groupId = args.getString(EXTRA_GROUP_ID)
+        val groupName = args.getString(EXTRA_GROUP_NAME)
+        val maxId = args.getString(EXTRA_MAX_ID)
+        val sinceId = args.getString(EXTRA_SINCE_ID)
+        val tabPosition = args.getInt(EXTRA_TAB_POSITION, -1)
+        val loadingMore = args.getBoolean(EXTRA_LOADING_MORE, false)
+        return GroupTimelineLoader(activity, accountKey, groupId, groupName, sinceId,
+                maxId, adapterData, savedStatusesFileArgs, tabPosition, fromUser, loadingMore)
+    }
 
 }

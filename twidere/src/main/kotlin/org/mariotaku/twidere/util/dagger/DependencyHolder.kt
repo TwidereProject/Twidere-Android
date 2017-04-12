@@ -21,7 +21,6 @@ package org.mariotaku.twidere.util.dagger
 
 import android.content.Context
 import com.twitter.Validator
-import edu.tsinghua.hotmobi.HotMobiLogger
 import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
@@ -37,9 +36,6 @@ import javax.inject.Inject
  * Created by mariotaku on 15/12/31.
  */
 class DependencyHolder internal constructor(context: Context) {
-    @Inject
-    lateinit var hotMobiLogger: HotMobiLogger
-        internal set
     @Inject
     lateinit var readStateManager: ReadStateManager
         internal set

@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.loader.UserMentionsLoader
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -31,6 +30,17 @@ import org.mariotaku.twidere.util.Utils
 import java.util.*
 
 class UserMentionsFragment : StatusesSearchFragment() {
+
+    override val savedStatusesFileArgs: Array<String>?
+        get() {
+            val accountKey = Utils.getAccountKey(context, arguments)
+            val screenName = arguments.getString(EXTRA_SCREEN_NAME)
+            val result = ArrayList<String>()
+            result.add(AUTHORITY_USER_MENTIONS)
+            result.add("account=$accountKey")
+            result.add("screen_name=$screenName")
+            return result.toTypedArray()
+        }
 
     override fun onCreateStatusesLoader(context: Context,
             args: Bundle,
@@ -47,18 +57,4 @@ class UserMentionsFragment : StatusesSearchFragment() {
                 adapterData, savedStatusesFileArgs, tabPosition, fromUser, makeGap, loadingMore)
     }
 
-
-    override val savedStatusesFileArgs: Array<String>?
-        get() {
-            val args = arguments!!
-            val accountKey = Utils.getAccountKey(context, args)!!
-            val screenName = args.getString(EXTRA_SCREEN_NAME)!!
-            val result = ArrayList<String>()
-            result.add(AUTHORITY_USER_MENTIONS)
-            result.add("account=$accountKey")
-            result.add("screen_name=$screenName")
-            return result.toTypedArray()
-        }
-    @TimelineType
-    override val timelineType: String = TimelineType.OTHER
 }

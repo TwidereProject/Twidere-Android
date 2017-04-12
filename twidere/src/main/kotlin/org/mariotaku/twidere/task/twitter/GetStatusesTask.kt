@@ -4,8 +4,6 @@ import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.RefreshEvent
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.toLongOr
@@ -50,8 +48,6 @@ abstract class GetStatusesTask(
     abstract fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status>
 
     protected abstract val contentUri: Uri
-
-    protected abstract val timelineType: String
 
     protected abstract val errorInfoKey: String
 
@@ -194,11 +190,6 @@ abstract class GetStatusesTask(
                     Statuses.POSITION_KEY, minPositionKey, false, arrayOf(accountKey))
         }
         val rowsDeleted = resolver.delete(writeUri, deleteWhere, deleteWhereArgs)
-
-        // BEGIN HotMobi
-        val event = RefreshEvent.create(context, statusIds, timelineType)
-        HotMobiLogger.getInstance(context).log(accountKey, event)
-        // END HotMobi
 
         // Insert a gap.
         val deletedOldGap = rowsDeleted > 0 && maxId in statusIds

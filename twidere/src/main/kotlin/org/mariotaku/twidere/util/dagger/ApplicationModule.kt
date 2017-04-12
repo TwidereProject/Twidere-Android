@@ -37,7 +37,6 @@ import com.twitter.Extractor
 import com.twitter.Validator
 import dagger.Module
 import dagger.Provides
-import edu.tsinghua.hotmobi.HotMobiLogger
 import okhttp3.Cache
 import okhttp3.ConnectionPool
 import okhttp3.Dns
@@ -286,12 +285,6 @@ class ApplicationModule(private val application: Application) {
         val features = DefaultFeatures()
         features.load(preferences)
         return features
-    }
-
-    @Provides
-    @Singleton
-    fun hotMobiLogger(): HotMobiLogger {
-        return HotMobiLogger(application)
     }
 
     @Provides

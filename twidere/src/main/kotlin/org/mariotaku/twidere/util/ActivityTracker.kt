@@ -23,10 +23,7 @@ package org.mariotaku.twidere.util
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.SessionEvent
 import org.apache.commons.collections.primitives.ArrayIntList
-import org.mariotaku.twidere.BuildConfig
 import org.mariotaku.twidere.activity.HomeActivity
 
 /**
@@ -35,8 +32,6 @@ import org.mariotaku.twidere.activity.HomeActivity
 class ActivityTracker : Application.ActivityLifecycleCallbacks {
 
     private val internalStack = ArrayIntList()
-
-    private var sessionEvent: SessionEvent? = null
 
     var isHomeActivityStarted: Boolean = false
         private set
@@ -65,15 +60,10 @@ class ActivityTracker : Application.ActivityLifecycleCallbacks {
         if (activity is HomeActivity) {
             isHomeActivityStarted = true
         }
-        // BEGIN HotMobi
-        if (sessionEvent == null && BuildConfig.HOTMOBI_LOG_ENABLED) {
-            sessionEvent = SessionEvent.create(activity)
-        }
-        // END HotMobi
     }
 
     override fun onActivityResumed(activity: Activity) {
-
+        Analyzer.activityResumed(activity)
     }
 
     override fun onActivityPaused(activity: Activity) {
@@ -85,14 +75,6 @@ class ActivityTracker : Application.ActivityLifecycleCallbacks {
         if (activity is HomeActivity) {
             isHomeActivityStarted = false
         }
-        // BEGIN HotMobi
-        val event = sessionEvent
-        if (event != null && !isSwitchingInSameTask(hashCode)) {
-            event.markEnd()
-            HotMobiLogger.getInstance(activity).log(event, SessionEvent::dumpPreferences)
-            sessionEvent = null
-        }
-        // END HotMobi
 
         internalStack.removeElement(hashCode)
     }

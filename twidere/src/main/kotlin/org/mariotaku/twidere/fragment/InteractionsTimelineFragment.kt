@@ -22,7 +22,6 @@ package org.mariotaku.twidere.fragment
 import android.content.Context
 import android.net.Uri
 import com.bumptech.glide.Glide
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.microblog.library.twitter.model.Activity
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_INTERACTIONS_TIMELINE
@@ -41,10 +40,6 @@ class InteractionsTimelineFragment : CursorActivitiesFragment() {
         twitterWrapper.getActivitiesAboutMeAsync(param)
         return true
     }
-
-    override val timelineType: String
-        @TimelineType
-        get() = TimelineType.INTERACTIONS
 
     override val errorInfoKey: String
         get() = ErrorInfoStore.KEY_INTERACTIONS

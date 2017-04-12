@@ -24,7 +24,6 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.Loader
 import android.support.v7.app.AlertDialog
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
 import org.mariotaku.twidere.R
@@ -41,11 +40,11 @@ import org.mariotaku.twidere.view.holder.TimelineFilterHeaderViewHolder
 import java.util.*
 
 /**
+ * User timeline
+ *
  * Created by mariotaku on 14/12/2.
  */
 class UserTimelineFragment : ParcelableStatusesFragment() {
-
-    override val timelineType: String = TimelineType.USER
 
     val pinnedStatusIds: Array<String>?
         get() = (parentFragment as? UserTimelineFragmentDelegate)?.pinnedStatusIds

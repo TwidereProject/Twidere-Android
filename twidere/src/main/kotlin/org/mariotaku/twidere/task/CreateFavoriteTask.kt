@@ -3,9 +3,6 @@ package org.mariotaku.twidere.task
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.TimelineType
-import edu.tsinghua.hotmobi.model.TweetEvent
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -122,11 +119,6 @@ class CreateFavoriteTask(
             val status = result.data
             taskEvent.status = status
             taskEvent.isSucceeded = true
-            // BEGIN HotMobi
-            val tweetEvent = TweetEvent.create(context, status, TimelineType.OTHER)
-            tweetEvent.action = TweetEvent.Action.FAVORITE
-            HotMobiLogger.getInstance(context).log(accountKey, tweetEvent)
-            // END HotMobi
         } else {
             taskEvent.isSucceeded = false
             Utils.showErrorMessage(context, R.string.action_favoriting, result.exception, true)

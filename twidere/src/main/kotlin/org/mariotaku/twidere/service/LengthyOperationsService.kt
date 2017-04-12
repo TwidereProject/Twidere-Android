@@ -36,9 +36,6 @@ import android.support.v4.app.NotificationCompat.Builder
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.TimelineType
-import edu.tsinghua.hotmobi.model.TweetEvent
 import nl.komponents.kovenant.task
 import nl.komponents.kovenant.ui.successUi
 import org.mariotaku.abstask.library.AbstractTask
@@ -319,15 +316,6 @@ class LengthyOperationsService : BaseIntentService("lengthy_operations") {
                 contentResolver.insert(Drafts.CONTENT_URI_NOTIFICATIONS, configure(ContentValues()) {
                     put(BaseColumns._ID, result.draftId)
                 })
-            }
-            for (status in result.statuses) {
-                if (status == null) continue
-                val event = TweetEvent.create(context, status, TimelineType.OTHER)
-                event.action = TweetEvent.Action.TWEET
-                if (item.in_reply_to_status != null && item.in_reply_to_status.user_is_protected) {
-                    event.inReplyToId = item.in_reply_to_status.id
-                }
-                HotMobiLogger.getInstance(context).log(status.account_key, event)
             }
         }
         if (preferences.getBoolean(KEY_REFRESH_AFTER_TWEET)) {

@@ -154,7 +154,6 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
         }
 
         setupActionBarOption()
-        Utils.logOpenNotificationFromUri(this, uri)
         if (transactionRequired) {
             val ft = supportFragmentManager.beginTransaction()
             ft.replace(contentFragmentId, fragment, "content_fragment")

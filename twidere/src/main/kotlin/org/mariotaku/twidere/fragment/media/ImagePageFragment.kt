@@ -28,8 +28,6 @@ import android.os.Bundle
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.davemorrissey.labs.subscaleview.decoder.SkiaImageDecoder
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaDownloadEvent
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.subsampleimageview.SubsampleImageViewerFragment
 import org.mariotaku.twidere.TwidereConstants.*
@@ -44,7 +42,6 @@ import java.lang.ref.WeakReference
 class ImagePageFragment : SubsampleImageViewerFragment() {
 
     private var mediaLoadState: Int = 0
-    private var mediaDownloadEvent: MediaDownloadEvent? = null
     private val sizedResultCreator: CacheDownloadLoader.ResultCreator by lazy { SizedResultCreator(context) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,16 +56,15 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
         }
     }
 
+    override fun getDownloadUri(): Uri? {
+        return media.media_url?.let(Uri::parse)
+    }
+
     override fun getDownloadExtra(): Any? {
         val mediaExtra = MediaExtra()
         mediaExtra.accountKey = accountKey
-        val origDownloadUri = super.getDownloadUri()
-        val downloadUri = downloadUri
-        if (origDownloadUri != null && downloadUri != null) {
-            val fallbackUrl = origDownloadUri.toString()
-            mediaExtra.fallbackUrl = fallbackUrl
-            mediaExtra.isSkipUrlReplacing = fallbackUrl != downloadUri.toString()
-        }
+        mediaExtra.fallbackUrl = media.preview_url
+        mediaExtra.isSkipUrlReplacing = mediaExtra.fallbackUrl != downloadUri?.toString()
         return mediaExtra
     }
 
@@ -116,33 +112,6 @@ class ImagePageFragment : SubsampleImageViewerFragment() {
 
     private val accountKey: UserKey
         get() = arguments.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-
-    override fun onDownloadRequested(nonce: Long) {
-        super.onDownloadRequested(nonce)
-        val context = context
-        if (context != null) {
-            mediaDownloadEvent = MediaDownloadEvent.create(context, media, nonce)
-        } else {
-            mediaDownloadEvent = null
-        }
-    }
-
-    override fun onDownloadStart(total: Long, nonce: Long) {
-        super.onDownloadStart(total, nonce)
-        if (mediaDownloadEvent?.nonce == nonce) {
-            mediaDownloadEvent?.setOpenedTime(System.currentTimeMillis())
-            mediaDownloadEvent?.setSize(total)
-        }
-    }
-
-    override fun onDownloadFinished(nonce: Long) {
-        super.onDownloadFinished(nonce)
-        if (mediaDownloadEvent?.nonce == nonce) {
-            mediaDownloadEvent?.markEnd()
-            HotMobiLogger.getInstance(context).log(accountKey, mediaDownloadEvent!!)
-            mediaDownloadEvent = null
-        }
-    }
 
     internal class SizedResult(cacheUri: Uri, val width: Int, val height: Int) : CacheDownloadLoader.Result(cacheUri, null)
 

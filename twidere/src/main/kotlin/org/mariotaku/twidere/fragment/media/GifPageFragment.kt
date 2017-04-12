@@ -24,8 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaDownloadEvent
 import kotlinx.android.synthetic.main.layout_media_viewer_gif.*
 import org.mariotaku.mediaviewer.library.CacheDownloadLoader
 import org.mariotaku.mediaviewer.library.CacheDownloadMediaViewerFragment
@@ -39,8 +37,6 @@ import org.mariotaku.twidere.model.UserKey
 import pl.droidsonroids.gif.InputSource
 
 class GifPageFragment : CacheDownloadMediaViewerFragment() {
-
-    private var mediaDownloadEvent: MediaDownloadEvent? = null
 
     private val media: ParcelableMedia
         get() = arguments.getParcelable(EXTRA_MEDIA)
@@ -84,32 +80,4 @@ class GifPageFragment : CacheDownloadMediaViewerFragment() {
         gifView?.setInputSource(null)
     }
 
-    override fun onDownloadRequested(nonce: Long) {
-        super.onDownloadRequested(nonce)
-        val context = context
-        if (context != null) {
-            mediaDownloadEvent = MediaDownloadEvent.create(context, media, nonce)
-        } else {
-            mediaDownloadEvent = null
-        }
-    }
-
-    override fun onDownloadStart(total: Long, nonce: Long) {
-        super.onDownloadStart(total, nonce)
-        val event = mediaDownloadEvent
-        if (event != null && event.nonce == nonce) {
-            event.setOpenedTime(System.currentTimeMillis())
-            event.setSize(total)
-        }
-    }
-
-    override fun onDownloadFinished(nonce: Long) {
-        super.onDownloadFinished(nonce)
-        val event = mediaDownloadEvent
-        if (event != null && event.nonce == nonce) {
-            event.markEnd()
-            HotMobiLogger.getInstance(context).log(accountKey, event)
-            mediaDownloadEvent = null
-        }
-    }
 }

@@ -21,7 +21,6 @@ package org.mariotaku.twidere.task.twitter
 
 import android.content.Context
 import android.net.Uri
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
@@ -42,10 +41,6 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
 
     override val contentUri: Uri
         get() = Statuses.CONTENT_URI
-
-    @TimelineType
-    override val timelineType: String
-        get() = TimelineType.HOME
 
     override val errorInfoKey: String
         get() = ErrorInfoStore.KEY_HOME_TIMELINE

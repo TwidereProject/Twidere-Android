@@ -35,10 +35,12 @@ class DeferredTarget<R>(private val deferredInstance: Deferred<R, Exception> = d
     val promise: Promise<R, Exception> get() = deferredInstance.promise
 
     override fun onLoadFailed(e: Exception, errorDrawable: Drawable?) {
+        if (deferredInstance.promise.isDone()) return
         deferredInstance.reject(e)
     }
 
     override fun onResourceReady(resource: R, glideAnimation: GlideAnimation<in R>) {
+        if (deferredInstance.promise.isDone()) return
         deferredInstance.resolve(resource)
     }
 

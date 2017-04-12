@@ -58,11 +58,6 @@ import android.widget.Space
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.squareup.otto.Subscribe
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaEvent
-import edu.tsinghua.hotmobi.model.TimelineType
-import edu.tsinghua.hotmobi.model.TranslateEvent
-import edu.tsinghua.hotmobi.model.TweetEvent
 import kotlinx.android.synthetic.main.adapter_item_status_count_label.view.*
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.header_status_common.view.*
@@ -145,7 +140,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private var mActivityLoaderInitialized: Boolean = false
     private var hasMoreConversation = true
-    private var statusEvent: TweetEvent? = null
+
     // Listeners
     private val conversationsLoaderCallback = object : LoaderCallbacks<List<ParcelableStatus>> {
         override fun onCreateLoader(id: Int, args: Bundle): Loader<List<ParcelableStatus>> {
@@ -369,12 +364,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
         } else if (status.media != null) {
             IntentUtils.openMediaDirectly(activity, accountKey, status.media!!, current,
                     newDocument = preferences[newDocumentApiKey], status = status)
-        } else return
-        // BEGIN HotMobi
-        val event = MediaEvent.create(activity, status, current, TimelineType.OTHER,
-                adapter.mediaPreviewEnabled)
-        HotMobiLogger.getInstance(activity).log(status.account_key, event)
-        // END HotMobi
+        }
     }
 
     override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler,
@@ -461,14 +451,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     layoutManager.scrollToPositionWithOffset(position, 0)
                 }
 
-                val event = TweetEvent.create(activity, status, TimelineType.OTHER)
-                event.action = TweetEvent.Action.OPEN
-                if (details != null) {
-                    event.isHasTranslateFeature = Utils.isOfficialCredentials(context, details)
-                } else {
-                    event.isHasTranslateFeature = false
-                }
-                statusEvent = event
                 Analyzer.log(StatusView(details?.type, status.media_type).apply {
                     this.type = StatusView.getStatusType(status)
                     this.source = HtmlEscapeHelper.toPlainText(status.source)
@@ -488,10 +470,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
     }
 
     override fun onLoaderReset(loader: Loader<SingleResponse<ParcelableStatus>>) {
-        val event = statusEvent ?: return
-        event.markEnd()
-        val accountKey = UserKey(event.accountId, event.accountHost)
-        HotMobiLogger.getInstance(activity).log(accountKey, event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -612,12 +590,6 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
     private fun displayTranslation(translation: TranslationResult) {
         adapter.translationResult = translation
-        val status = this.status
-        val context = this.context ?: return
-        if (status != null) {
-            val event = TranslateEvent.create(context, status, translation.translatedLang)
-            HotMobiLogger.getInstance(context).log(status.account_key, event)
-        }
     }
 
     private fun saveReadPosition(): ReadPosition? {

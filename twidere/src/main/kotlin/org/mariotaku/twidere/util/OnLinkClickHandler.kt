@@ -26,8 +26,6 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.BadParcelableException
 import android.support.customtabs.CustomTabsIntent
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.LinkEvent
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
@@ -54,12 +52,6 @@ open class OnLinkClickHandler(
             extraId: Long, type: Int, sensitive: Boolean,
             start: Int, end: Int): Boolean {
         if (manager != null && manager.isActive) return false
-        if (!isPrivateData) {
-            // BEGIN HotMobi
-            val event = LinkEvent.create(context, link, type)
-            HotMobiLogger.getInstance(context).log(accountKey, event)
-            // END HotMobi
-        }
 
         when (type) {
             TwidereLinkify.LINK_TYPE_MENTION -> {

@@ -13,9 +13,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.MediaEvent
-import edu.tsinghua.hotmobi.model.TimelineType
 import kotlinx.android.synthetic.main.fragment_content_recyclerview.*
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
@@ -82,11 +79,6 @@ class ItemsListFragment : AbsContentListRecyclerViewFragment<VariousItemsAdapter
                 val status = dummyItemAdapter.getStatus(statusPosition)
                 IntentUtils.openMedia(activity, status, current, preferences[newDocumentApiKey], preferences[displaySensitiveContentsKey],
                         null)
-                // BEGIN HotMobi
-                val event = MediaEvent.create(activity, status, current,
-                        TimelineType.OTHER, dummyItemAdapter.mediaPreviewEnabled)
-                HotMobiLogger.getInstance(activity).log(status.account_key, event)
-                // END HotMobi
             }
 
             override fun onUserProfileClick(holder: IStatusViewHolder, position: Int) {

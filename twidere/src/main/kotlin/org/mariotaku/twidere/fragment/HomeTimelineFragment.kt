@@ -20,7 +20,6 @@
 package org.mariotaku.twidere.fragment
 
 import android.net.Uri
-import edu.tsinghua.hotmobi.model.TimelineType
 import org.mariotaku.sqliteqb.library.Expression
 import org.mariotaku.twidere.TwidereConstants.NOTIFICATION_ID_HOME_TIMELINE
 import org.mariotaku.twidere.annotation.ReadPositionTag
@@ -87,8 +86,6 @@ class HomeTimelineFragment : CursorStatusesFragment() {
         }
         return super.processWhere(where, whereArgs)
     }
-
-    override val timelineType: String = TimelineType.HOME
 
     override val readPositionTag: String = ReadPositionTag.HOME_TIMELINE
 

@@ -74,7 +74,6 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONException;
 import org.mariotaku.microblog.library.MicroBlogException;
 import org.mariotaku.microblog.library.twitter.model.RateLimitStatus;
@@ -109,9 +108,6 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import edu.tsinghua.hotmobi.HotMobiLogger;
-import edu.tsinghua.hotmobi.model.NotificationEvent;
 
 import static org.mariotaku.twidere.util.TwidereLinkify.PATTERN_TWITTER_PROFILE_IMAGES;
 
@@ -900,26 +896,6 @@ public final class Utils implements Constants {
             }
         }
         return null;
-    }
-
-    public static boolean isStreamingEnabled() {
-        return Boolean.parseBoolean("false");
-    }
-
-    public static void logOpenNotificationFromUri(Context context, Uri uri) {
-        if (!uri.getBooleanQueryParameter(QUERY_PARAM_FROM_NOTIFICATION, false)) return;
-        final String type = uri.getQueryParameter(QUERY_PARAM_NOTIFICATION_TYPE);
-        final String paramAccountKey = uri.getQueryParameter(QUERY_PARAM_ACCOUNT_KEY);
-        final UserKey accountKey = paramAccountKey != null ? UserKey.valueOf(paramAccountKey) : null;
-        final long itemId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_id"), -1);
-        final long itemUserId = NumberUtils.toLong(UriExtraUtils.getExtra(uri, "item_user_id"), -1);
-        final boolean itemUserFollowing = Boolean.parseBoolean(UriExtraUtils.getExtra(uri, "item_user_following"));
-        final long timestamp = NumberUtils.toLong(uri.getQueryParameter(QUERY_PARAM_TIMESTAMP), -1);
-        if (!NotificationEvent.isSupported(type) || accountKey == null || itemId < 0 || timestamp < 0)
-            return;
-        final NotificationEvent event = NotificationEvent.open(context, timestamp, type,
-                accountKey.getId(), itemId, itemUserId, itemUserFollowing);
-        HotMobiLogger.getInstance(context).log(accountKey, event);
     }
 
     public static int getNotificationId(int baseId, @Nullable UserKey accountId) {

@@ -3,9 +3,6 @@ package org.mariotaku.twidere.task
 import android.accounts.AccountManager
 import android.content.ContentValues
 import android.content.Context
-import edu.tsinghua.hotmobi.HotMobiLogger
-import edu.tsinghua.hotmobi.model.TimelineType
-import edu.tsinghua.hotmobi.model.TweetEvent
 import org.apache.commons.collections.primitives.ArrayIntList
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
@@ -27,6 +24,8 @@ import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.util.*
 
 /**
+ * Retweet status
+ *
  * Created by mariotaku on 2017/2/7.
  */
 class RetweetStatusTask(
@@ -108,12 +107,6 @@ class RetweetStatusTask(
         creatingRetweetIds.removeElement(AsyncTwitterWrapper.calculateHashCode(accountKey, statusId))
         if (result.hasData()) {
             val status = result.data
-            // BEGIN HotMobi
-            val event = TweetEvent.create(context, status, TimelineType.OTHER)
-            event.action = TweetEvent.Action.RETWEET
-            HotMobiLogger.getInstance(context).log(accountKey, event)
-            // END HotMobi
-
             bus.post(StatusRetweetedEvent(status))
         } else {
             Utils.showErrorMessage(context, R.string.action_retweeting, result.exception, true)
