@@ -53,6 +53,7 @@ import org.mariotaku.twidere.constant.newDocumentApiKey
 import org.mariotaku.twidere.constant.readFromBottomKey
 import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.graphic.like.LikeAnimationDrawable
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*

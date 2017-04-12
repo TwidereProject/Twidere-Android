@@ -59,6 +59,7 @@ import org.mariotaku.twidere.constant.rememberPositionKey
 import org.mariotaku.twidere.extension.model.getAccountType
 import org.mariotaku.twidere.extension.model.id
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.DefaultOnLikedListener
+import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.loader.iface.IExtendedLoader
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.analyzer.Share

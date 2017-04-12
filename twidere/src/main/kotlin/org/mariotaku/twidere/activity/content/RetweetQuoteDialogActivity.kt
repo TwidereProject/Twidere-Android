@@ -22,7 +22,7 @@ package org.mariotaku.twidere.activity.content
 import android.os.Bundle
 import org.mariotaku.twidere.activity.BaseActivity
 import org.mariotaku.twidere.constant.IntentConstants.*
-import org.mariotaku.twidere.fragment.RetweetQuoteDialogFragment
+import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.UserKey
 
