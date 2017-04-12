@@ -189,7 +189,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
             statusContentUpperSpace.visibility = View.VISIBLE
         }
 
-        val skipLinksInText = status.extras != null && status.extras.support_entities
+        val skipLinksInText = status.extras?.support_entities ?: false
         if (status.is_quote) {
 
             quotedView.visibility = View.VISIBLE
@@ -205,10 +205,7 @@ class StatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: View)
                         status.quoted_user_name)
                 quotedNameView.screenName = "@${status.quoted_user_screen_name}"
 
-                var quotedDisplayEnd = -1
-                if (status.extras.quoted_display_text_range != null) {
-                    quotedDisplayEnd = status.extras.quoted_display_text_range!![1]
-                }
+                val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                 val quotedText: CharSequence
                 if (adapter.linkHighlightingStyle != VALUE_LINK_HIGHLIGHT_OPTION_CODE_NONE) {
                     quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)

@@ -30,17 +30,17 @@ object ParcelableStatusUtils {
     fun fromStatus(orig: Status, accountKey: UserKey, accountType: String, isGap: Boolean = false,
             profileImageSize: String = "normal"): ParcelableStatus {
         val result = ParcelableStatus()
+        val extras = ParcelableStatus.Extras()
         result.is_gap = isGap
         result.account_key = accountKey
         result.id = orig.id
         result.sort_id = orig.sortId
         result.timestamp = getTime(orig.createdAt)
 
-        result.extras = ParcelableStatus.Extras()
-        result.extras.external_url = orig.inferExternalUrl()
-        result.extras.support_entities = orig.entities != null
-        result.extras.statusnet_conversation_id = orig.statusnetConversationId
-        result.extras.conversation_id = orig.conversationId
+        extras.external_url = orig.inferExternalUrl()
+        extras.support_entities = orig.entities != null
+        extras.statusnet_conversation_id = orig.statusnetConversationId
+        extras.conversation_id = orig.conversationId
         result.is_pinned_status = orig.user.pinnedTweetIds?.contains(orig.id) ?: false
 
         val retweetedStatus = orig.retweetedStatus
@@ -57,7 +57,7 @@ object ParcelableStatusUtils {
             result.retweeted_by_user_screen_name = retweetUser.screenName
             result.retweeted_by_user_profile_image = retweetUser.getProfileImageOfSize(profileImageSize)
 
-            result.extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
+            extras.retweeted_external_url = retweetedStatus.inferExternalUrl()
 
             if (retweetUser.isBlocking == true) {
                 result.addFilterFlag(FilterFlags.BLOCKING_USER)
@@ -81,7 +81,7 @@ object ParcelableStatusUtils {
         if (quoted != null) {
             val quotedUser = quoted.user
             result.quoted_id = quoted.id
-            result.extras.quoted_external_url = quoted.inferExternalUrl()
+            extras.quoted_external_url = quoted.inferExternalUrl()
 
             val quotedText = quoted.htmlText
             // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
@@ -96,7 +96,7 @@ object ParcelableStatusUtils {
                 result.quoted_text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(quotedText)
                 result.quoted_text_unescaped = textWithIndices.text
                 result.quoted_spans = textWithIndices.spans
-                result.extras.quoted_display_text_range = textWithIndices.range
+                extras.quoted_display_text_range = textWithIndices.range
             }
 
             result.quoted_timestamp = quoted.createdAt.time
@@ -134,8 +134,8 @@ object ParcelableStatusUtils {
         result.user_is_protected = user.isProtected
         result.user_is_verified = user.isVerified
         result.user_is_following = user.isFollowing == true
-        result.extras.user_statusnet_profile_url = user.statusnetProfileUrl
-        result.extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
+        extras.user_statusnet_profile_url = user.statusnetProfileUrl
+        extras.user_profile_image_url_fallback = user.profileImageUrlHttps ?: user.profileImageUrl
         val text = status.htmlText
         // Twitter will escape <> to &lt;&gt;, so if a status contains those symbols unescaped
         // We should treat this as an html
@@ -149,7 +149,7 @@ object ParcelableStatusUtils {
             result.text_unescaped = textWithIndices.text
             result.text_plain = InternalTwitterContentUtils.unescapeTwitterStatusText(text)
             result.spans = textWithIndices.spans
-            result.extras.display_text_range = textWithIndices.range
+            extras.display_text_range = textWithIndices.range
         }
 
         result.media = ParcelableMediaUtils.fromStatus(status, accountKey, accountType)
@@ -168,7 +168,7 @@ object ParcelableStatusUtils {
         result.card_name = result.card?.name
         result.place_full_name = getPlaceFullName(status)
         result.lang = status.lang
-
+        result.extras = extras
         return result
     }
 

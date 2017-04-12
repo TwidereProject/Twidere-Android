@@ -29,6 +29,7 @@ import android.database.Cursor
 import android.graphics.Paint
 import android.graphics.PorterDuff.Mode
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.LoaderManager.LoaderCallbacks
 import android.support.v4.content.CursorLoader
 import android.support.v4.content.Loader
@@ -154,7 +155,8 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                 subItem.icon = icon
                 val weakFragment = WeakReference(this)
                 subItem.setOnMenuItemClickListener {
-                    val fragment = weakFragment.get() ?: return@setOnMenuItemClickListener false
+                    val fragment = weakFragment.get()?.takeUnless(Fragment::isDetached) ?:
+                            return@setOnMenuItemClickListener false
                     val adapter = fragment.adapter
                     val fm = fragment.childFragmentManager
 

@@ -20,13 +20,14 @@
 package org.mariotaku.twidere.util
 
 import android.net.Uri
-import android.text.TextUtils
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
 import org.mariotaku.twidere.model.UserKey
 
 /**
+ * Creates links for sharing
+ *
  * Created by mariotaku on 15/3/14.
  */
 object LinkCreator {
@@ -99,8 +100,8 @@ object LinkCreator {
     }
 
     fun getStatusWebLink(status: ParcelableStatus): Uri {
-        if (status.extras != null && !TextUtils.isEmpty(status.extras.external_url)) {
-            return Uri.parse(status.extras.external_url)
+        status.extras?.external_url?.takeIf(String::isNotEmpty)?.let {
+            return Uri.parse(it)
         }
         if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             return getFanfouStatusLink(status.id)
@@ -109,11 +110,13 @@ object LinkCreator {
     }
 
     fun getQuotedStatusWebLink(status: ParcelableStatus): Uri {
-        if (status.extras != null) {
-            if (!TextUtils.isEmpty(status.extras.quoted_external_url)) {
-                return Uri.parse(status.extras.quoted_external_url)
-            } else if (!TextUtils.isEmpty(status.extras.external_url)) {
-                return Uri.parse(status.extras.external_url)
+        val extras = status.extras
+        if (extras != null) {
+            extras.quoted_external_url?.takeIf(String::isNotEmpty)?.let {
+                return Uri.parse(it)
+            }
+            extras.external_url?.takeIf(String::isNotEmpty)?.let {
+                return Uri.parse(it)
             }
         }
         if (USER_TYPE_FANFOU_COM == status.account_key.host) {

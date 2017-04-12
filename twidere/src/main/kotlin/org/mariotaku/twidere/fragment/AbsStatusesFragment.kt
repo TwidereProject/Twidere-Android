@@ -432,7 +432,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         val status = adapter.getStatus(position)
         val intent = IntentUtils.userProfile(status.account_key, status.user_key,
                 status.user_screen_name, Referral.TIMELINE_STATUS,
-                status.extras.user_statusnet_profile_url)
+                status.extras?.user_statusnet_profile_url)
         IntentUtils.applyNewDocument(intent, preferences[newDocumentApiKey])
         startActivity(intent)
     }

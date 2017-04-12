@@ -59,10 +59,7 @@ class MediaStatusViewHolder(private val adapter: IStatusesAdapter<*>, itemView: 
             displayPinned: Boolean) {
         val context = itemView.context
 
-        var displayEnd = -1
-        if (status.extras.display_text_range != null) {
-            displayEnd = status.extras.display_text_range!![1]
-        }
+        val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
 
         if (displayEnd >= 0) {
             mediaTextView.text = status.text_unescaped.subSequence(0, displayEnd)

@@ -24,6 +24,14 @@ fun Cursor.safeGetLong(columnIndex: Int, def: Long = -1): Long {
     }
 }
 
+fun Cursor.safeGetInt(columnIndex: Int, def: Int = -1): Int {
+    try {
+        return getInt(columnIndex)
+    } catch(e: IllegalStateException) {
+        return def
+    }
+}
+
 fun <T> Cursor.map(indices: ObjectCursor.CursorIndices<T>): List<T> {
     val list = ArrayList<T>()
     moveToFirst()

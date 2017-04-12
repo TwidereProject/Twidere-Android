@@ -63,6 +63,10 @@ class UserQrDialogFragment : BaseDialogFragment() {
 
     private val user: ParcelableUser get() = arguments.getParcelable(EXTRA_USER)
 
+    init {
+        setStyle(STYLE_NO_TITLE, 0)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_user_qr, container, false)
     }

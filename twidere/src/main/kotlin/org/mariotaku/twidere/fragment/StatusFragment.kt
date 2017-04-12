@@ -789,7 +789,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             itemView.profileContainer.drawEnd(status.account_color)
 
             val layoutPosition = layoutPosition
-            val skipLinksInText = status.extras != null && status.extras.support_entities
+            val skipLinksInText = status.extras?.support_entities ?: false
             if (status.is_quote) {
 
                 itemView.quotedView.visibility = View.VISIBLE
@@ -806,11 +806,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     itemView.quotedName.updateText(formatter)
 
 
-                    var quotedDisplayEnd = -1
-                    if (status.extras.quoted_display_text_range != null) {
-                        quotedDisplayEnd = status.extras.quoted_display_text_range!![1]
-                    }
-
+                    val quotedDisplayEnd = status.extras?.quoted_display_text_range?.getOrNull(1) ?: -1
                     val quotedText = SpannableStringBuilder.valueOf(status.quoted_text_unescaped)
                     status.quoted_spans?.applyTo(quotedText)
                     linkify.applyAllLinks(quotedText, status.account_key, layoutPosition.toLong(),
@@ -911,11 +907,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
             }
             itemView.timeSource.movementMethod = LinkMovementMethod.getInstance()
 
-            var displayEnd = -1
-            if (status.extras.display_text_range != null) {
-                displayEnd = status.extras.display_text_range!![1]
-            }
-
+            val displayEnd = status.extras?.display_text_range?.getOrNull(1) ?: -1
             val text = SpannableStringBuilder.valueOf(status.text_unescaped).apply {
                 status.spans?.applyTo(this)
                 linkify.applyAllLinks(this, status.account_key, layoutPosition.toLong(),

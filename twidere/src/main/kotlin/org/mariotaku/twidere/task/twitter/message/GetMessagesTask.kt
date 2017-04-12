@@ -22,6 +22,7 @@ package org.mariotaku.twidere.task.twitter.message
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.useCursor
@@ -67,7 +68,11 @@ class GetMessagesTask(
         val accountKeys = param.accountKeys
         val am = android.accounts.AccountManager.get(context)
         accountKeys.forEachIndexed { i, accountKey ->
-            val details = getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
+            val details = try {
+                getAccountDetails(am, accountKey, true) ?: return@forEachIndexed
+            } catch (e: LoganSquareMapperFinder.ClassLoaderDeadLockException) {
+                return
+            }
             val microBlog = details.newMicroBlogInstance(context, cls = MicroBlog::class.java)
             val messages = try {
                 getMessages(microBlog, details, param, i)

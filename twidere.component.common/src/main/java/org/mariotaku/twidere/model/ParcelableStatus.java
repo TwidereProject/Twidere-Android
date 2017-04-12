@@ -308,6 +308,7 @@ public class ParcelableStatus implements Parcelable, Comparable<ParcelableStatus
     @ParcelableThisPlease
     @JsonField(name = "extras")
     @CursorField(value = Statuses.EXTRAS, converter = LoganSquareCursorFieldConverter.class)
+    @Nullable
     public Extras extras;
     @ParcelableThisPlease
     @JsonField(name = "spans")

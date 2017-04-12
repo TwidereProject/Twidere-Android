@@ -71,8 +71,8 @@ class ConversationLoader(
             }
             AccountType.STATUSNET -> {
                 canLoadAllReplies = true
-                if (status.extras != null && status.extras.statusnet_conversation_id != null) {
-                    return microBlog.getStatusNetConversation(status.extras.statusnet_conversation_id, paging)
+                status.extras?.statusnet_conversation_id?.let {
+                    return microBlog.getStatusNetConversation(it, paging)
                 }
             }
             AccountType.FANFOU -> {
