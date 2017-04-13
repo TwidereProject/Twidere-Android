@@ -21,6 +21,7 @@ package org.mariotaku.twidere.fragment
 
 import android.accounts.AccountManager
 import android.animation.ArgbEvaluator
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
@@ -158,6 +159,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
     override val toolbar: Toolbar
         get() = profileContentContainer.toolbar
 
+    override val pinnedStatusIds: Array<String>?
+        get() = user?.extras?.pinned_status_ids
 
     private lateinit var profileBirthdayBanner: View
     private lateinit var actionBarBackground: ActionBarDrawable
@@ -206,8 +209,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         override fun onLoadFinished(loader: Loader<SingleResponse<ParcelableRelationship>>,
                 data: SingleResponse<ParcelableRelationship>) {
             followProgress.visibility = View.GONE
-            val relationship = data.data
-            displayRelationship(user, relationship)
+            displayRelationship(data.data)
             updateOptionsMenuVisibility()
         }
 
@@ -275,38 +277,35 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         }
 
     }
-    override val pinnedStatusIds: Array<String>?
-        get() = user?.extras?.pinned_status_ids
 
     private fun updateOptionsMenuVisibility() {
         setHasOptionsMenu(user != null && relationship != null)
     }
 
-    private fun displayRelationship(user: ParcelableUser?,
-            userRelationship: ParcelableRelationship?) {
-        if (user == null) {
-            relationship = null
+    private fun displayRelationship(relationship: ParcelableRelationship?) {
+        val user = this.user ?: run {
+            this.relationship = null
             return
         }
-        if (user.account_key.maybeEquals(user.key)) {
+        if (user.key.maybeEquals(user.account_key)) {
             setFollowEditButton(R.drawable.ic_action_edit, R.color.material_light_blue,
                     R.string.action_edit)
             followContainer.follow.visibility = View.VISIBLE
-            relationship = userRelationship
+            this.relationship = relationship
             return
         }
-        if (userRelationship == null || !userRelationship.check(user)) {
-            relationship = null
+        if (relationship == null || !relationship.check(user)) {
+            this.relationship = null
             return
         } else {
-            relationship = userRelationship
+            this.relationship = relationship
         }
         activity.invalidateOptionsMenu()
-        if (userRelationship.blocked_by) {
+        if (relationship.blocked_by) {
             pagesErrorContainer.visibility = View.GONE
             pagesErrorText.text = null
             pagesContent.visibility = View.VISIBLE
-        } else if (!userRelationship.following && user.is_protected) {
+        } else if (!relationship.following && user.is_protected) {
             pagesErrorContainer.visibility = View.VISIBLE
             pagesErrorText.setText(R.string.user_protected_summary)
             pagesErrorIcon.setImageResource(R.drawable.ic_info_locked)
@@ -316,13 +315,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             pagesErrorText.text = null
             pagesContent.visibility = View.VISIBLE
         }
-        if (userRelationship.blocking) {
+        if (relationship.blocking) {
             setFollowEditButton(R.drawable.ic_action_block, R.color.material_red,
                     R.string.action_unblock)
-        } else if (userRelationship.blocked_by) {
+        } else if (relationship.blocked_by) {
             setFollowEditButton(R.drawable.ic_action_block, R.color.material_grey,
                     R.string.action_block)
-        } else if (userRelationship.following) {
+        } else if (relationship.following) {
             setFollowEditButton(R.drawable.ic_action_confirm, R.color.material_light_blue,
                     R.string.action_unfollow)
         } else if (user.is_follow_request_sent) {
@@ -332,12 +331,12 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             setFollowEditButton(R.drawable.ic_action_add, android.R.color.white,
                     R.string.action_follow)
         }
-        followingYouIndicator.visibility = if (userRelationship.followed_by) View.VISIBLE else View.GONE
+        followingYouIndicator.visibility = if (relationship.followed_by) View.VISIBLE else View.GONE
 
         val resolver = context.applicationContext.contentResolver
         task {
             resolver.insert(CachedUsers.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableUser::class.java).create(user))
-            resolver.insert(CachedRelationships.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(userRelationship))
+            resolver.insert(CachedRelationships.CONTENT_URI, ObjectCursor.valuesCreatorFrom(ParcelableRelationship::class.java).create(relationship))
         }
         followContainer.follow.visibility = View.VISIBLE
     }
@@ -375,46 +374,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
 
     override fun onPageSelected(position: Int) {
         updateSubtitle()
-    }
-
-    private fun updateSubtitle() {
-        val activity = activity as AppCompatActivity
-        val actionBar = activity.supportActionBar ?: return
-        val user = this.user
-        if (user == null) {
-            actionBar.subtitle = null
-            return
-        }
-        val spec = pagerAdapter.get(viewPager.currentItem)
-        assert(spec.type != null)
-        when (spec.type) {
-            TAB_TYPE_STATUSES, TAB_TYPE_STATUSES_WITH_REPLIES -> {
-                actionBar.subtitle = resources.getQuantityString(R.plurals.N_statuses,
-                        user.statuses_count.toInt(), user.statuses_count)
-            }
-            TAB_TYPE_MEDIA -> {
-                if (user.media_count < 0) {
-                    actionBar.setSubtitle(R.string.recent_media)
-                } else {
-                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_media,
-                            user.media_count.toInt(), user.media_count)
-                }
-            }
-            TAB_TYPE_FAVORITES -> {
-                if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
-                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_favorites,
-                            user.favorites_count.toInt(), user.favorites_count)
-                } else {
-                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_likes,
-                            user.favorites_count.toInt(), user.favorites_count)
-
-                }
-            }
-            else -> {
-                actionBar.subtitle = null
-            }
-        }
-        updateTitleAlpha()
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -487,6 +446,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             profileType.setImageDrawable(null)
             profileType.visibility = View.GONE
         }
+        @SuppressLint("SetTextI18n")
         profileNameContainer.screenName.text = "@${user.screen_name}"
         val linkHighlightOption = preferences[linkHighlightOptionKey]
         val linkify = TwidereLinkify(this, linkHighlightOption)
@@ -776,14 +736,13 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         getUserInfo(accountKey, userKey, screenName, false)
     }
 
-
     override fun onStart() {
         super.onStart()
         bus.register(this)
     }
 
+
     override fun onStop() {
-        val context = context
         bus.unregister(this)
         super.onStop()
     }
@@ -1149,6 +1108,46 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
             keyCode: Int, repeatCount: Int,
             event: KeyEvent, metaState: Int): Boolean {
         return handleFragmentKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+    }
+
+    private fun updateSubtitle() {
+        val activity = activity as AppCompatActivity
+        val actionBar = activity.supportActionBar ?: return
+        val user = this.user
+        if (user == null) {
+            actionBar.subtitle = null
+            return
+        }
+        val spec = pagerAdapter.get(viewPager.currentItem)
+        assert(spec.type != null)
+        when (spec.type) {
+            TAB_TYPE_STATUSES, TAB_TYPE_STATUSES_WITH_REPLIES -> {
+                actionBar.subtitle = resources.getQuantityString(R.plurals.N_statuses,
+                        user.statuses_count.toInt(), user.statuses_count)
+            }
+            TAB_TYPE_MEDIA -> {
+                if (user.media_count < 0) {
+                    actionBar.setSubtitle(R.string.recent_media)
+                } else {
+                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_media,
+                            user.media_count.toInt(), user.media_count)
+                }
+            }
+            TAB_TYPE_FAVORITES -> {
+                if (preferences.getBoolean(KEY_I_WANT_MY_STARS_BACK)) {
+                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_favorites,
+                            user.favorites_count.toInt(), user.favorites_count)
+                } else {
+                    actionBar.subtitle = resources.getQuantityString(R.plurals.N_likes,
+                            user.favorites_count.toInt(), user.favorites_count)
+
+                }
+            }
+            else -> {
+                actionBar.subtitle = null
+            }
+        }
+        updateTitleAlpha()
     }
 
     private fun handleFragmentKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler,

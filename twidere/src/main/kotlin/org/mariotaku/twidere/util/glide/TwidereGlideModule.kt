@@ -49,7 +49,7 @@ class TwidereGlideModule : GlideModule {
         val conf = HttpClientFactory.HttpClientConfiguration(holder.preferences)
         val thumbor = holder.thumbor
         HttpClientFactory.initOkHttpClient(conf, builder, holder.dns, holder.connectionPool, holder.cache)
-        val userAgent = UserAgentUtils.getDefaultUserAgentStringSafe(context) ?: ""
+        val userAgent = UserAgentUtils.getDefaultUserAgentString(context)
         builder.addInterceptor(ModifyRequestInterceptor(ThumborModifier(thumbor), UserAgentModifier(userAgent)))
         val client = builder.build()
         glide.register(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(client))
@@ -78,10 +78,12 @@ class TwidereGlideModule : GlideModule {
 
     }
 
-    class UserAgentModifier(val userAgent: String) : ModifyRequestInterceptor.RequestModifier {
+    class UserAgentModifier(val userAgent: String?) : ModifyRequestInterceptor.RequestModifier {
 
         override fun modify(original: Request, builder: Request.Builder): Boolean {
-            builder.header("User-Agent", userAgent)
+            if (userAgent != null) {
+                builder.header("User-Agent", userAgent)
+            }
             return true
         }
 

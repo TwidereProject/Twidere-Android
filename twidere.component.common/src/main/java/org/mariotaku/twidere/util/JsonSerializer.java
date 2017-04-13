@@ -40,9 +40,6 @@ import java.util.Map;
  */
 public class JsonSerializer {
 
-    static {
-    }
-
     private JsonSerializer() {
     }
 
