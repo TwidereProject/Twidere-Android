@@ -22,7 +22,9 @@ package org.mariotaku.twidere.service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import org.mariotaku.kpreferences.get
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.TaskServiceRunner.Companion.ACTION_REFRESH_DIRECT_MESSAGES
@@ -36,10 +38,17 @@ class LegacyTaskService : BaseService() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.d(LOGTAG, "LegacyTaskService created")
         GeneralComponentHelper.build(this).inject(this)
     }
 
+    override fun onDestroy() {
+        Log.d(LOGTAG, "LegacyTaskService destroyed")
+        super.onDestroy()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(LOGTAG, "LegacyTaskService received $intent")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
                 !preferences[autoRefreshCompatibilityModeKey]) return START_NOT_STICKY
         val action = intent?.action ?: return START_NOT_STICKY

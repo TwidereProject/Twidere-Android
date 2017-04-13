@@ -24,7 +24,9 @@ import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
+import android.util.Log
 import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.annotation.AutoRefreshType
 import org.mariotaku.twidere.constant.autoRefreshCompatibilityModeKey
 import org.mariotaku.twidere.util.Analyzer
@@ -47,10 +49,17 @@ class JobTaskService : JobService() {
 
     override fun onCreate() {
         super.onCreate()
+        Log.d(LOGTAG, "JobTaskService started")
         GeneralComponentHelper.build(this).inject(this)
     }
 
+    override fun onDestroy() {
+        Log.d(LOGTAG, "JobTaskService destroyed")
+        super.onDestroy()
+    }
+
     override fun onStartJob(params: JobParameters): Boolean {
+        Log.d(LOGTAG, "LegacyTaskService received job $params")
         if (kPreferences[autoRefreshCompatibilityModeKey]) return false
         val action = getTaskAction(params.jobId) ?: return false
         return taskServiceRunner.runTask(action) {
