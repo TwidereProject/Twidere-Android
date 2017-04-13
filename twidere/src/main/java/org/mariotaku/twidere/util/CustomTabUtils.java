@@ -43,6 +43,9 @@ import org.mariotaku.twidere.model.UserKey;
 import org.mariotaku.twidere.model.tab.DrawableHolder;
 import org.mariotaku.twidere.model.tab.TabConfiguration;
 import org.mariotaku.twidere.model.tab.argument.TabArguments;
+import org.mariotaku.twidere.model.tab.argument.TextQueryArguments;
+import org.mariotaku.twidere.model.tab.argument.UserArguments;
+import org.mariotaku.twidere.model.tab.argument.UserListArguments;
 import org.mariotaku.twidere.model.tab.extra.HomeTabExtras;
 import org.mariotaku.twidere.model.tab.extra.InteractionsTabExtras;
 import org.mariotaku.twidere.model.tab.extra.TabExtras;
@@ -110,13 +113,33 @@ public class CustomTabUtils implements Constants {
         return specs;
     }
 
+    /**
+     * Remember to make this method correspond to {@link TabArguments#parse(String, String)}
+     *
+     * @see TabArguments#parse(String, String)
+     */
     @Nullable
     public static TabArguments newTabArguments(@NonNull @CustomTabType String type) {
-        try {
-            return TabArguments.parse(type, "{}");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        switch (type) {
+            case CustomTabType.HOME_TIMELINE:
+            case CustomTabType.NOTIFICATIONS_TIMELINE:
+            case CustomTabType.DIRECT_MESSAGES:
+            case CustomTabType.TRENDS_SUGGESTIONS:
+            case CustomTabType.PUBLIC_TIMELINE: {
+                return new TabArguments();
+            }
+            case CustomTabType.USER_TIMELINE:
+            case CustomTabType.FAVORITES: {
+                return new UserArguments();
+            }
+            case CustomTabType.LIST_TIMELINE: {
+                return new UserListArguments();
+            }
+            case CustomTabType.SEARCH_STATUSES: {
+                return new TextQueryArguments();
+            }
         }
+        return null;
     }
 
 

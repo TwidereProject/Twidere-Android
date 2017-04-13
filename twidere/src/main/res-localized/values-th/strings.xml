@@ -774,7 +774,7 @@
   <string name="proxy_summary">ใช้ Proxy กับทุกการเชื่อมต่อ</string>
   <string name="proxy_type">รูปแบบ Proxy</string>
   <string name="proxy_username">Proxy username</string>
-  <string name="public_timeline">หน้าหลักสาธารณะ</string>
+  <string name="title_public_timeline">หน้าหลักสาธารณะ</string>
   <string name="query">สอบถาม</string>
   <string name="quick_send">ใช้ปุ่ม Enter เพื่อส่งทวีต</string>
   <string name="quick_send_summary">ส่งทวีตเมื่อกด Enter</string>

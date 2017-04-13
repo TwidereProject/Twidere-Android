@@ -778,7 +778,7 @@
   <string name="proxy_summary">為所有網絡請求使用代理</string>
   <string name="proxy_type">代理伺服器類型</string>
   <string name="proxy_username">代理伺服器帳號</string>
-  <string name="public_timeline">公開時間軸</string>
+  <string name="title_public_timeline">公開時間軸</string>
   <string name="query">查詢</string>
   <string name="quick_send">按「輸入」發送</string>
   <string name="quick_send_summary">按「輸入」發送推文</string>

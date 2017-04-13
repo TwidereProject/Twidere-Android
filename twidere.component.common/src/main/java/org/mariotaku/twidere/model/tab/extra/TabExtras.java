@@ -44,6 +44,9 @@ public abstract class TabExtras implements Parcelable {
 
     }
 
+    /**
+     * Remember to make this method correspond to {@code CustomTabUtils#newTabExtras(String)}
+     */
     @Nullable
     public static TabExtras parse(@NonNull @CustomTabType String type, @Nullable String json) throws IOException {
         if (json == null) return null;

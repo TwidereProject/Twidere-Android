@@ -282,7 +282,7 @@
   <string name="proxy_summary">Použít proxy server pro všechny síťové požadavky.</string>
   <string name="proxy_type">Typ proxy serveru</string>
   <string name="proxy_username">Uživatelské jméno serveru proxy</string>
-  <string name="public_timeline">Veřejná časová osa</string>
+  <string name="title_public_timeline">Veřejná časová osa</string>
   <string name="quick_send">Stisknout \"Enter\" pro odeslání</string>
   <string name="quote_format">Formát poznámky</string>
   <string name="quote_format_summary">\"[TEXT]\" = Text tweetu\n\"[NAME]\" = Jméno uživatele</string>

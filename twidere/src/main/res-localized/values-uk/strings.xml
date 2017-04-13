@@ -534,7 +534,7 @@
   <string name="proxy_summary">Використовувати Http проксі для всіх мережевих запитів.</string>
   <string name="proxy_type">Тип проксі</string>
   <string name="proxy_username">Ім\'я користувача проксі</string>
-  <string name="public_timeline">Публічна стрічка</string>
+  <string name="title_public_timeline">Публічна стрічка</string>
   <string name="query">Запит</string>
   <string name="quick_send">Натисніть Enter для надсилання</string>
   <string name="quick_send_summary">Надсилати твіт натисканням Enter.</string>

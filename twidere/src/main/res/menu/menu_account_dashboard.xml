@@ -36,7 +36,7 @@
         <item
             android:id="@id/public_timeline"
             android:icon="@drawable/ic_action_quote"
-            android:title="@string/public_timeline"/>
+            android:title="@string/title_public_timeline"/>
     </group>
     <group
         android:id="@+id/app_menu"

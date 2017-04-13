@@ -457,7 +457,7 @@ class LinkHandlerActivity : BaseActivity(), SystemWindowsInsetsCallback, IContro
                 title = getString(R.string.interactions)
             }
             LINK_ID_PUBLIC_TIMELINE -> {
-                title = getString(R.string.public_timeline)
+                title = getString(R.string.title_public_timeline)
             }
             LINK_ID_FILTERS_IMPORT_BLOCKS -> {
                 title = getString(R.string.title_select_users)

@@ -104,7 +104,7 @@ abstract class ParcelableStatusesFragment : AbsStatusesFragment() {
                 args.putInt(EXTRA_PAGE, param.page)
             }
         }
-        loaderManager.restartLoader(0, args, this)
+        loaderManager.restartLoader(loaderId, args, this)
         return true
     }
 

@@ -68,7 +68,6 @@ import org.mariotaku.twidere.model.tab.iface.AccountCallback
 import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.Tabs
 import org.mariotaku.twidere.util.CustomTabUtils
-import org.mariotaku.twidere.util.DataStoreUtils
 import org.mariotaku.twidere.util.ThemeUtils
 import org.mariotaku.twidere.view.holder.TwoLineWithIconViewHolder
 import java.lang.ref.WeakReference
@@ -136,7 +135,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_custom_tabs, menu)
         val context = this.context
-        val accountKeys = DataStoreUtils.getAccountKeys(context)
+        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(context), false)
         val itemAdd = menu.findItem(R.id.add_submenu)
         val theme = Chameleon.getOverrideTheme(context, context)
         if (itemAdd != null && itemAdd.hasSubMenu()) {
@@ -145,7 +144,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
             for ((type, conf) in TabConfiguration.all()) {
                 val accountRequired = TabConfiguration.FLAG_ACCOUNT_REQUIRED in conf.accountFlags
                 val subItem = subMenu.add(0, 0, conf.sortPosition, conf.name.createString(context))
-                val disabledByNoAccount = accountRequired && accountKeys.isEmpty()
+                val disabledByNoAccount = accountRequired && accounts.none(conf::checkAccountAvailability)
                 val disabledByDuplicateTab = conf.isSingleTab && CustomTabUtils.isTabAdded(context, type)
                 val shouldDisable = disabledByDuplicateTab || disabledByNoAccount
                 subItem.isVisible = !shouldDisable
@@ -297,7 +296,7 @@ class CustomTabsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, MultiChoice
                     if (officialKeyOnly && !it.isOfficial(context)) {
                         return@filter false
                     }
-                    return@filter true
+                    return@filter conf.checkAccountAvailability(it)
                 })
                 accountsAdapter.setDummyItemText(R.string.activated_accounts)
 

@@ -602,7 +602,7 @@
   <string name="proxy_summary">Проксировать все сетевые запросы.</string>
   <string name="proxy_type">Тип прокси</string>
   <string name="proxy_username">Логин прокси</string>
-  <string name="public_timeline">Публичная лента</string>
+  <string name="title_public_timeline">Публичная лента</string>
   <string name="query">Запрос</string>
   <string name="quick_send">Нажмите «Enter» для отправки</string>
   <string name="quick_send_summary">Отправлять твит по нажатию «Enter».</string>

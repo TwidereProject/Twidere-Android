@@ -848,12 +848,12 @@
     <string name="preference_summary_background_streaming">Press HOME instead of BACK to keep streaming open</string>
     <string name="preference_summary_chrome_custom_tab">Open links with in-app browser (Powered by Chrome)</string>
     <string name="preference_summary_database_item_limit">Upper limit of items stored in databases for each account, set to a smaller value to save space and increase loading speed.</string>
+    <string name="preference_summary_favorite_confirmation">Show confirmation before favoriting a tweet</string>
+    <string name="preference_summary_like_confirmation">Show confirmation before liking a tweet</string>
     <string name="preference_summary_media_preload_non_metered_network">Preload media only on free networks like Wi-Fi</string>
     <string name="preference_summary_streaming_non_metered_network">Streaming only on free networks like Wi-Fi</string>
     <string name="preference_summary_streaming_power_saving">Streaming only when charging</string>
     <string name="preference_summary_trends_location">Now you can set location separately in tab settings.</string>
-    <string name="preference_summary_favorite_confirmation">Show confirmation before favoriting a tweet</string>
-    <string name="preference_summary_like_confirmation">Show confirmation before liking a tweet</string>
     <string name="preference_title_accounts">Accounts</string>
     <string name="preference_title_advanced">Advanced</string>
     <string name="preference_title_auto_refresh_compatibility_mode">Compatibility mode</string>
@@ -933,8 +933,6 @@
     <string name="proxy_summary">Use proxy for all network requests.</string>
     <string name="proxy_type">Proxy type</string>
     <string name="proxy_username">Proxy username</string>
-
-    <string name="public_timeline">Public timeline</string>
 
     <string name="query">Query</string>
 
@@ -1204,11 +1202,13 @@
     <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
     <string name="title_likes">Likes</string>
     <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
+    <string name="title_media_timeline">Media timeline</string>
     <string name="title_mentions">Mentions</string>
     <string name="title_message_conversation_info">Conversation info</string>
     <string name="title_nicknames">Nicknames</string>
     <string name="title_open_source_license">Open source license</string>
     <string name="title_premium_features_name">Twidere ∞</string>
+    <string name="title_public_timeline">Public timeline</string>
     <string name="title_quick_action">Quick action</string>
     <string name="title_retweet_quote_confirm">Retweet to your followers?</string>
     <string name="title_scheduled_statuses">Scheduled tweets</string>

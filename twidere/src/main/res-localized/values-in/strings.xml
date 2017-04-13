@@ -588,7 +588,7 @@
   <string name="proxy_summary">Gunakan proxy untuk semua permintaan jaringan.</string>
   <string name="proxy_type">Tipe proxy</string>
   <string name="proxy_username">Nama pengguna proxy</string>
-  <string name="public_timeline">Linimasa publik</string>
+  <string name="title_public_timeline">Linimasa publik</string>
   <string name="query">Menanyakan</string>
   <string name="quick_send">Tekan \"Enter\" untuk Mengirim</string>
   <string name="quick_send_summary">Kirim tweet saat menekan \"Enter\".</string>

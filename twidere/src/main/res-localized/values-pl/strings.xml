@@ -529,7 +529,7 @@
   <string name="proxy_summary">Użyj serwera pośredniczącego do wszystkich żądań.</string>
   <string name="proxy_type">Typ serwera pośredniczącego</string>
   <string name="proxy_username">Nazwa użytkownika</string>
-  <string name="public_timeline">Publiczna oś czasu</string>
+  <string name="title_public_timeline">Publiczna oś czasu</string>
   <string name="query">Zapytanie</string>
   <string name="quick_send">\"Enter\" wysyła</string>
   <string name="quick_send_summary">Wyślij tweeta wciskając \"Enter\".</string>

@@ -525,7 +525,7 @@
   <string name="proxy_summary">Utilitza el proxy per a totes les solicituds de xarxa.</string>
   <string name="proxy_type">Tipus de servidor intermediari</string>
   <string name="proxy_username">Nom d\'usuari del servidor intermediari</string>
-  <string name="public_timeline">Cronologia pública</string>
+  <string name="title_public_timeline">Cronologia pública</string>
   <string name="query">Consulta</string>
   <string name="quick_send">Premeu «Retorn» per enviar</string>
   <string name="quick_send_summary">Envia la piulada quan es premi «Retorn».</string>

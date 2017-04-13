@@ -781,7 +781,7 @@
   <string name="proxy_summary">すべてのネットワーク要件においてプロキシを使用します。</string>
   <string name="proxy_type">プロキシの種類</string>
   <string name="proxy_username">プロキシのユーザー名</string>
-  <string name="public_timeline">公開タイムライン</string>
+  <string name="title_public_timeline">公開タイムライン</string>
   <string name="query">クエリ</string>
   <string name="quick_send">エンターキーで送信</string>
   <string name="quick_send_summary">エンターキーを押すと送信します。</string>

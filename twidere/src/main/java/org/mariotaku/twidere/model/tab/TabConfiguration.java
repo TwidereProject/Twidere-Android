@@ -19,6 +19,7 @@ import org.mariotaku.twidere.model.tab.impl.FavoriteTimelineTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.HomeTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.InteractionsTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.MessagesTabConfiguration;
+import org.mariotaku.twidere.model.tab.impl.PublicTimelineTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.SearchTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.TrendsTabConfiguration;
 import org.mariotaku.twidere.model.tab.impl.UserListTimelineTabConfiguration;
@@ -73,10 +74,8 @@ public abstract class TabConfiguration {
         return false;
     }
 
-    @IntDef(value = {FLAG_HAS_ACCOUNT, FLAG_ACCOUNT_REQUIRED, FLAG_ACCOUNT_MULTIPLE,
-            FLAG_ACCOUNT_MUTABLE}, flag = true)
-    protected @interface AccountFlags {
-
+    public boolean checkAccountAvailability(@NonNull AccountDetails details) {
+        return true;
     }
 
     @NonNull
@@ -98,7 +97,8 @@ public abstract class TabConfiguration {
                 CustomTabType.FAVORITES,
                 CustomTabType.USER_TIMELINE,
                 CustomTabType.SEARCH_STATUSES,
-                CustomTabType.LIST_TIMELINE
+                CustomTabType.LIST_TIMELINE,
+                CustomTabType.PUBLIC_TIMELINE,
         };
     }
 
@@ -121,8 +121,16 @@ public abstract class TabConfiguration {
                 return new TrendsTabConfiguration();
             case CustomTabType.SEARCH_STATUSES:
                 return new SearchTabConfiguration();
+            case CustomTabType.PUBLIC_TIMELINE:
+                return new PublicTimelineTabConfiguration();
         }
         return null;
+    }
+
+    @IntDef(value = {FLAG_HAS_ACCOUNT, FLAG_ACCOUNT_REQUIRED, FLAG_ACCOUNT_MULTIPLE,
+            FLAG_ACCOUNT_MUTABLE}, flag = true)
+    protected @interface AccountFlags {
+
     }
 
     public static abstract class ExtraConfiguration {

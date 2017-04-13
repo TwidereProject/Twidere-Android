@@ -533,7 +533,7 @@
   <string name="proxy_summary">Tüm ağ istekleri için proxy kullanır.</string>
   <string name="proxy_type">Proxy türü</string>
   <string name="proxy_username">Proxy kullanıcı adı</string>
-  <string name="public_timeline">Genel zaman çizelgesi</string>
+  <string name="title_public_timeline">Genel zaman çizelgesi</string>
   <string name="query">Sorgu</string>
   <string name="quick_send">Göndermek İçin \"Enter\"a Basın</string>
   <string name="quick_send_summary">\"Enter\"a basıldığında tweet\'i gönder.</string>

@@ -75,11 +75,14 @@ class MessagesEntriesFragment : AbsContentListRecyclerViewFragment<MessagesEntri
 
     private val errorInfoKey: String = ErrorInfoStore.KEY_DIRECT_MESSAGES
 
+    private val loaderId: Int
+        get() = tabId.toInt().coerceIn(0..Int.MAX_VALUE)
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter.listener = this
         adapter.loadMoreSupportedPosition = ILoadMoreSupportAdapter.END
-        loaderManager.initLoader(0, null, this)
+        loaderManager.initLoader(loaderId, null, this)
         registerForContextMenu(recyclerView)
     }
 

@@ -54,7 +54,7 @@ class MediaStatusesSearchFragment : AbsMediaStatusesFragment() {
         args.putString(EXTRA_MAX_ID, maxId)
         args.putString(EXTRA_SINCE_ID, sinceId)
         args.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.restartLoader(0, args, this)
+        loaderManager.restartLoader(loaderId, args, this)
         return 0
     }
 

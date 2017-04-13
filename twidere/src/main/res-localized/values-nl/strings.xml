@@ -532,7 +532,7 @@
   <string name="proxy_summary">Gebruik proxy voor alle netwerkverkeer.</string>
   <string name="proxy_type">Proxy-type</string>
   <string name="proxy_username">Proxy gebruikersnaam</string>
-  <string name="public_timeline">Publieke tijdlijn</string>
+  <string name="title_public_timeline">Publieke tijdlijn</string>
   <string name="query">Vraag</string>
   <string name="quick_send">Druk op \"Enter\" om te versturen</string>
   <string name="quick_send_summary">Verstuur tweet met \"Enter\".</string>

@@ -94,6 +94,9 @@ public class TabArguments implements TwidereConstants {
                 '}';
     }
 
+    /**
+     * Remember to make this method correspond to {@code CustomTabUtils#newTabArguments(String)}
+     */
     @Nullable
     public static TabArguments parse(@NonNull @CustomTabType String type, @Nullable String json) throws IOException {
         if (json == null) return null;
@@ -101,7 +104,8 @@ public class TabArguments implements TwidereConstants {
             case CustomTabType.HOME_TIMELINE:
             case CustomTabType.NOTIFICATIONS_TIMELINE:
             case CustomTabType.DIRECT_MESSAGES:
-            case CustomTabType.TRENDS_SUGGESTIONS: {
+            case CustomTabType.TRENDS_SUGGESTIONS:
+            case CustomTabType.PUBLIC_TIMELINE: {
                 return LoganSquare.parse(json, TabArguments.class);
             }
             case CustomTabType.USER_TIMELINE:

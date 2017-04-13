@@ -768,7 +768,7 @@
   <string name="proxy_summary">Proxy für alle Netzwerkanfragen verwenden.</string>
   <string name="proxy_type">Art des Proxys</string>
   <string name="proxy_username">Proxy Benutzername</string>
-  <string name="public_timeline">Öffentliche Zeitleiste</string>
+  <string name="title_public_timeline">Öffentliche Zeitleiste</string>
   <string name="query">Abfrage</string>
   <string name="quick_send">\"Enter\" zum Abschicken antippen</string>
   <string name="quick_send_summary">Tweet mit \"Enter\" abschicken.</string>

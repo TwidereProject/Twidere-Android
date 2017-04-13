@@ -33,8 +33,7 @@ import java.util.*
  */
 class PublicTimelineFragment : ParcelableStatusesFragment() {
 
-    override fun onCreateStatusesLoader(context: Context,
-            args: Bundle,
+    override fun onCreateStatusesLoader(context: Context, args: Bundle,
             fromUser: Boolean): Loader<List<ParcelableStatus>?> {
         refreshing = true
         val data = adapterData
@@ -49,7 +48,7 @@ class PublicTimelineFragment : ParcelableStatusesFragment() {
 
     override val savedStatusesFileArgs: Array<String>?
         get() {
-            val accountKey = Utils.getAccountKey(context, arguments!!)!!
+            val accountKey = Utils.getAccountKey(context, arguments)
             val result = ArrayList<String>()
             result.add(AUTHORITY_PUBLIC_TIMELINE)
             result.add("account=$accountKey")
@@ -62,7 +61,7 @@ class PublicTimelineFragment : ParcelableStatusesFragment() {
 
     override val readPositionTagWithArguments: String?
         get() {
-            val tabPosition = arguments!!.getInt(EXTRA_TAB_POSITION, -1)
+            val tabPosition = arguments.getInt(EXTRA_TAB_POSITION, -1)
             if (tabPosition < 0) return null
             return "public_timeline"
         }

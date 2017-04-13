@@ -763,7 +763,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="proxy_summary">Usa\'l proxy pa toles solicitúes de rede.</string>
   <string name="proxy_type">Triba de proxy</string>
   <string name="proxy_username">Nome d\'usuariu de Proxy</string>
-  <string name="public_timeline">Llinia temporal pública</string>
+  <string name="title_public_timeline">Llinia temporal pública</string>
   <string name="query">Consulta</string>
   <string name="quick_send">Primir «Enter» pa unviar</string>
   <string name="quick_send_summary">Únviase\'l tuit al primir «Enter».</string>

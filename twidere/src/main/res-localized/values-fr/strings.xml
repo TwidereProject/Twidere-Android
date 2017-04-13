@@ -764,7 +764,7 @@
   <string name="proxy_summary">Utiliser le proxy pour toutes les requêtes réseau.</string>
   <string name="proxy_type">Type de proxy</string>
   <string name="proxy_username">Nom d\'utilisateur pour le proxy</string>
-  <string name="public_timeline">Fil d\'actualités public</string>
+  <string name="title_public_timeline">Fil d\'actualités public</string>
   <string name="query">Requête</string>
   <string name="quick_send">Appuyez  « Entrée » pour envoyer</string>
   <string name="quick_send_summary">Envoyer le tweet lorsqu\'on appuye sur « Entrée ».</string>

@@ -34,6 +34,8 @@ import nl.komponents.kovenant.android.startKovenant
 import nl.komponents.kovenant.android.stopKovenant
 import nl.komponents.kovenant.task
 import okhttp3.Dns
+import org.apache.commons.lang3.concurrent.ConcurrentUtils
+import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
 import org.mariotaku.kpreferences.KPreferences
 import org.mariotaku.kpreferences.get
 import org.mariotaku.kpreferences.set
@@ -61,6 +63,8 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -119,6 +123,11 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
             StrictModeUtils.detectAllVmPolicy()
         }
         super.onCreate()
+        LoganSquareMapperFinder.setDefaultExecutor(object : LoganSquareMapperFinder.FutureExecutor {
+            override fun <T> submit(callable: Callable<T>): Future<T> {
+                return ConcurrentUtils.constantFuture(callable.call())
+            }
+        })
         applyLanguageSettings()
         startKovenant()
         initializeAsyncTask()

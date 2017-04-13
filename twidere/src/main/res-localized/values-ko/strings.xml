@@ -685,7 +685,7 @@
   <string name="proxy_summary">모든 네트워크 요청에 프록시를 사용합니다.</string>
   <string name="proxy_type">프록시 유형</string>
   <string name="proxy_username">프록시 사용자 이름</string>
-  <string name="public_timeline">공개 타임라인</string>
+  <string name="title_public_timeline">공개 타임라인</string>
   <string name="query">쿼리</string>
   <string name="quick_send">\"Enter\" 키를 눌러 보내기</string>
   <string name="quick_send_summary">\"Enter\" 키를 눌러 트윗을 보내세요.</string>

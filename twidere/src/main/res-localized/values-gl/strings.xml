@@ -775,7 +775,7 @@
   <string name="proxy_summary">Usar proxy para todas as peticións de rede.</string>
   <string name="proxy_type">Tipo de proxy</string>
   <string name="proxy_username">Nome de usuario do proxy</string>
-  <string name="public_timeline">Liña de tempo pública</string>
+  <string name="title_public_timeline">Liña de tempo pública</string>
   <string name="query">Consulta</string>
   <string name="quick_send">Premer \"Enter\" para enviar</string>
   <string name="quick_send_summary">Enviar chío cando se preme o \"Enter\".</string>

@@ -517,7 +517,7 @@
   <string name="proxy_summary">Käytä välityspalvelinta kaikissa verkkoyhteyksissä.</string>
   <string name="proxy_type">Välityspalvelimen tyyppi</string>
   <string name="proxy_username">Välityspalvelimen käyttäjätunnus</string>
-  <string name="public_timeline">Julkinen aikajana</string>
+  <string name="title_public_timeline">Julkinen aikajana</string>
   <string name="query">Kysely</string>
   <string name="quick_send">Lähetä painamalla \"Enter\"</string>
   <string name="quick_send_summary">Lähetä twiitti, kun painetaan \"Enter\".</string>

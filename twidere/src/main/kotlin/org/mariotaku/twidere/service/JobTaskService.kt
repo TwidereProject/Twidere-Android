@@ -59,7 +59,7 @@ class JobTaskService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters): Boolean {
-        Log.d(LOGTAG, "LegacyTaskService received job $params")
+        Log.d(LOGTAG, "JobTaskService received job $params")
         if (kPreferences[autoRefreshCompatibilityModeKey]) return false
         val action = getTaskAction(params.jobId) ?: return false
         return taskServiceRunner.runTask(action) {

@@ -514,7 +514,7 @@
   <string name="proxy_summary">Usa un proxy per tutte le connessioni di rete.</string>
   <string name="proxy_type">Tipo di proxy</string>
   <string name="proxy_username">Proxy username</string>
-  <string name="public_timeline">Timeline pubblica</string>
+  <string name="title_public_timeline">Timeline pubblica</string>
   <string name="query">Interroga</string>
   <string name="quick_send">Premi \"Invio\" per inviare</string>
   <string name="quick_send_summary">Inviare tweet alla pressione di \"Invio\".</string>

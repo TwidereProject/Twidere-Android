@@ -130,6 +130,9 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
 
     protected open val timelineFilter: TimelineFilter? = null
 
+    protected open val loaderId: Int
+        get() = tabId.toInt().coerceIn(0..Int.MAX_VALUE)
+
     // Fragment life cycles
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -449,7 +452,7 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         if (isDetached || host == null || loaderInitialized) return
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        loaderManager.initLoader(loaderId, loaderArgs, this)
         loaderInitialized = true
     }
 

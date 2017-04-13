@@ -60,12 +60,15 @@ abstract class AbsMediaStatusesFragment : AbsContentRecyclerViewFragment<Stagger
     override final val reachingStart: Boolean
         get() = layoutManager.reachingStart
 
+    protected open val loaderId: Int
+        get() = tabId.toInt().coerceIn(0..Int.MAX_VALUE)
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         adapter.statusClickListener = this
         val loaderArgs = Bundle(arguments)
         loaderArgs.putBoolean(EXTRA_FROM_USER, true)
-        loaderManager.initLoader(0, loaderArgs, this)
+        loaderManager.initLoader(loaderId, loaderArgs, this)
         showProgress()
     }
 

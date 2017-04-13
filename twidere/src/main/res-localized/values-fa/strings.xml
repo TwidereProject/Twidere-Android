@@ -660,7 +660,7 @@
   <string name="proxy_summary">استفاده از پیشکار برای تمام درخواست‌های شبکه.</string>
   <string name="proxy_type">گونهٔ پیشکار</string>
   <string name="proxy_username">نام کاربری پیشکار</string>
-  <string name="public_timeline">خط زمانی عمومی</string>
+  <string name="title_public_timeline">خط زمانی عمومی</string>
   <string name="query">پرسش</string>
   <string name="quick_send">فشردن «ورود» برای ارسال</string>
   <string name="quick_send_summary">هنگان زدن کلید «ورود»، توییت را ارسال می‌کند.</string>

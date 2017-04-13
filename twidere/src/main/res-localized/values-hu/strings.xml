@@ -532,7 +532,7 @@
   <string name="proxy_summary">Proxy használata minden hálózati eléréshez.</string>
   <string name="proxy_type">Proxy típusa</string>
   <string name="proxy_username">Proxy felhasználó név</string>
-  <string name="public_timeline">Nyilvános idővonal</string>
+  <string name="title_public_timeline">Nyilvános idővonal</string>
   <string name="query">Lekérdezés</string>
   <string name="quick_send">Nyomj \"Enter\"-t az elküldéshez</string>
   <string name="quick_send_summary">Tweet elküldése, ha \"Enter\"-t nyomsz.</string>
