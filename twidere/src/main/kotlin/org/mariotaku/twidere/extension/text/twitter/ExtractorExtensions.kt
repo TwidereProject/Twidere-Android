@@ -20,25 +20,28 @@
 package org.mariotaku.twidere.extension.text.twitter
 
 import com.twitter.Extractor
+import org.mariotaku.twidere.extension.model.replyMentions
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUserMention
 
-fun Extractor.extractMentionsAndNonMentionStartIndex(text: String): MentionsAndNonMentionStartIndex {
+fun Extractor.extractMentionsAndNonMentionStartIndex(text: String, mentions: Array<ParcelableUserMention>?): MentionsAndNonMentionStartIndex {
     var nextExpectedPos = 0
-    val mentions = extractMentionedScreennamesWithIndices(text)
+    val entities = extractMentionedScreennamesWithIndices(text)
     @Suppress("LoopToCallChain")
-    for (entity in mentions) {
+    for (entity in entities) {
         if (entity.start != nextExpectedPos) break
+        // Break at first mention not found in `inReplyTo.mentions`
+        if (mentions?.none { entity.value.equals(it.screen_name, ignoreCase = true) } ?: false) break
         nextExpectedPos = (entity.end..text.indices.endInclusive).firstOrNull {
             !text[it].isWhitespace()
         } ?: text.indices.endInclusive + 1
     }
-    return MentionsAndNonMentionStartIndex(mentions, nextExpectedPos)
+    return MentionsAndNonMentionStartIndex(entities, nextExpectedPos)
 }
 
 fun Extractor.extractReplyTextAndMentions(text: String, inReplyTo: ParcelableStatus): ReplyTextAndMentions {
     // First extract mentions and 'real text' start index
-    val (textMentions, index) = extractMentionsAndNonMentionStartIndex(text)
+    val (textMentions, index) = extractMentionsAndNonMentionStartIndex(text, inReplyTo.replyMentions)
 
     val replyMentions = run {
         val mentions = inReplyTo.mentions?.toMutableList() ?: mutableListOf()

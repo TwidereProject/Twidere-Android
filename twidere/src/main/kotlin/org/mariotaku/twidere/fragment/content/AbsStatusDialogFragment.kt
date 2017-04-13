@@ -98,7 +98,8 @@ abstract class AbsStatusDialogFragment : BaseDialogFragment() {
                 currentDialog.itemContent.itemMenu.visibility = View.GONE
                 currentDialog.itemContent.actionButtons.visibility = View.GONE
                 val adapter = DummyItemAdapter(fragment.context, requestManager = Glide.with(fragment))
-                adapter.setShouldShowAccountsColor(true)
+                adapter.showCardActions = false
+                adapter.showAccountsColor = true
                 val holder = StatusViewHolder(adapter, currentDialog.itemContent)
                 holder.displayStatus(status = status, displayInReplyTo = false)
                 currentDialog.onStatusLoaded(details, status, savedInstanceState)

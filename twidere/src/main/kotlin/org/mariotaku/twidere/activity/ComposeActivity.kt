@@ -77,7 +77,6 @@ import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
-import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.PermissionRequestDialog.PermissionRequestCancelCallback
@@ -151,6 +150,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private var draftUniqueId: String? = null
     private var shouldSkipDraft: Boolean = false
     private var ignoreMentions: Boolean = false
+    private var replyToSelf: Boolean = false
     private var scheduleInfo: ScheduleInfo? = null
         set(value) {
             field = value
@@ -203,6 +203,23 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountSelectorButton.setOnClickListener(this)
         replyLabel.setOnClickListener(this)
 
+        hintLabel.text = HtmlSpanBuilder.fromHtml(getString(R.string.hint_status_reply_to_user_removed)).apply {
+            val dialogSpan = getSpans(0, length, URLSpan::class.java).firstOrNull {
+                "#dialog" == it.url
+            }
+            if (dialogSpan != null) {
+                val spanStart = getSpanStart(dialogSpan)
+                val spanEnd = getSpanEnd(dialogSpan)
+                removeSpan(dialogSpan)
+                setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        MessageDialogFragment.show(supportFragmentManager,
+                                message = getString(R.string.message_status_reply_to_user_removed_explanation),
+                                tag = "status_reply_to_user_removed_explanation")
+                    }
+                }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
+            }
+        }
         hintLabel.movementMethod = LinkMovementMethod.getInstance()
         hintLabel.linksClickable = true
 
@@ -1097,14 +1114,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val details = AccountUtils.getAccountDetails(am, status.account_key, false) ?: return false
         val accountUser = details.user
         val mentions = ArrayList<String>()
-        if (details.type == AccountType.TWITTER) {
-            // For Twitter, status user should always be the first
+        var selectionStart: Int = 0
+        if (accountUser.key != status.user_key) {
             editText.append("@${status.user_screen_name} ")
-        } else if (accountUser.key != status.user_key) {
-            // If replying status from current user, just exclude it's screen name from selection.
+            selectionStart = editText.length()
+        } else if (details.type == AccountType.TWITTER) {
+            // For Twitter, mention to self will be selected
             editText.append("@${status.user_screen_name} ")
         }
-        var selectionStart = editText.length()
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             mentions.add(status.retweeted_by_user_screen_name)
         }
@@ -1129,10 +1146,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
 
         mentions.distinctBy { it.toLowerCase(Locale.US) }.filterNot {
-            if (details.type == AccountType.TWITTER && it.equals(accountUser.screen_name,
-                    ignoreCase = true)) {
-                return@filterNot true
-            }
             return@filterNot it.equals(status.user_screen_name, ignoreCase = true)
         }.forEach { editText.append("@$it ") }
 
@@ -1202,6 +1215,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
         ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
+        replyToSelf = accounts.singleOrNull()?.let { it.key == inReplyToStatus?.user_key } ?: false
         setMenu()
     }
 
@@ -1455,8 +1469,28 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accountKeys = accountsAdapter.selectedAccountKeys
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
-        val tweetLength = validator.getTweetLength(text, ignoreMentions, inReplyToStatus)
+        val inReplyTo = inReplyToStatus
         val maxLength = statusTextCount.maxLength
+        val tweetLength: Int
+        val exceededStartIndex: Int
+        if (inReplyTo != null && ignoreMentions) {
+            val (replyStartIndex, replyText) = extractor.extractReplyTextAndMentions(text,
+                    inReplyTo)
+            tweetLength = validator.getTweetLength(replyText)
+            if (tweetLength > maxLength) {
+                exceededStartIndex = replyStartIndex + replyText.offsetByCodePoints(0, maxLength)
+            } else {
+                exceededStartIndex = -1
+            }
+        } else {
+            tweetLength = validator.getTweetLength(text)
+            if (tweetLength > maxLength) {
+                exceededStartIndex = text.offsetByCodePoints(0, maxLength)
+            } else {
+                exceededStartIndex = -1
+            }
+        }
+
         if (accountsAdapter.isSelectionEmpty) {
             editText.error = getString(R.string.message_toast_no_account_selected)
             return
@@ -1465,8 +1499,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return
         } else if (maxLength > 0 && !statusShortenerUsed && tweetLength > maxLength) {
             editText.error = getString(R.string.error_message_status_too_long)
-            val textLength = editText.length()
-            editText.setSelection(textLength - (tweetLength - maxLength), textLength)
+            if (exceededStartIndex >= 0) {
+                editText.setSelection(exceededStartIndex, editText.length())
+            }
             return
         }
         val attachLocation = kPreferences[attachLocationKey]
@@ -1522,30 +1557,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val mentionColor = ThemeUtils.getColorFromAttribute(this, android.R.attr.textColorSecondary, 0)
         if (inReplyTo != null && ignoreMentions) {
             val textAndMentions = extractor.extractReplyTextAndMentions(text, inReplyTo)
-            if (textAndMentions.replyToOriginalUser) {
+            if (textAndMentions.replyToOriginalUser || replyToSelf) {
                 hintLabel.visibility = View.GONE
                 editable.clearSpans(MentionColorSpan::class.java)
                 editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             } else {
                 hintLabel.visibility = View.VISIBLE
-                hintLabel.text = HtmlSpanBuilder.fromHtml(getString(R.string.hint_status_reply_to_user_removed)).apply {
-                    val dialogSpan = getSpans(0, length, URLSpan::class.java).firstOrNull {
-                        "#dialog" == it.url
-                    }
-                    if (dialogSpan != null) {
-                        val spanStart = getSpanStart(dialogSpan)
-                        val spanEnd = getSpanEnd(dialogSpan)
-                        removeSpan(dialogSpan)
-                        setSpan(object : ClickableSpan() {
-                            override fun onClick(widget: View) {
-                                MessageDialogFragment.show(supportFragmentManager,
-                                        message = getString(R.string.message_status_reply_to_user_removed_explanation),
-                                        tag = "status_reply_to_user_removed_explanation")
-                            }
-                        }, spanStart, spanEnd, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
-                    }
-                }
                 editable.clearSpans(MentionColorSpan::class.java)
             }
             statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)

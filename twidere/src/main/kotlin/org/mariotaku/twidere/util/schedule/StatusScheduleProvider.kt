@@ -61,15 +61,16 @@ interface StatusScheduleProvider {
 
         fun parseInfo(json: String): ScheduleInfo?
 
-        companion object {
-            val instance: Factory get() = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
+    }
 
-            private object NullFactory : Factory {
-                override fun newInstance(context: Context) = null
+    private object NullFactory : Factory {
+        override fun newInstance(context: Context) = null
 
-                override fun parseInfo(json: String): ScheduleInfo? = null
+        override fun parseInfo(json: String): ScheduleInfo? = null
 
-            }
-        }
+    }
+
+    companion object {
+        fun newFactory(): Factory = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
     }
 }

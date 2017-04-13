@@ -19,7 +19,7 @@ import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
-import org.mariotaku.twidere.util.sync.SyncProviderInfoFactory
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 
 /**
  * Created by mariotaku on 2017/2/3.
@@ -72,7 +72,7 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
                 button1.setText(R.string.action_purchase)
             }
         } else {
-            val providerEntry = SyncProviderInfoFactory.getProviderEntry(context, providerInfo.type)!!
+            val providerEntry = DataSyncProvider.Factory.getProviderEntry(context, providerInfo.type)!!
             messageView.text = context.getString(R.string.message_sync_data_synced_with_name, providerEntry.name)
             button1.visibility = View.GONE
             button2.visibility = View.VISIBLE
@@ -88,7 +88,7 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
 
     class ConnectNetworkStorageSelectionDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val providers = SyncProviderInfoFactory.getSupportedProviders(context)
+            val providers = DataSyncProvider.Factory.getSupportedProviders(context)
             val itemNames = providers.map { it.name }.toTypedArray()
 
             val builder = AlertDialog.Builder(context)

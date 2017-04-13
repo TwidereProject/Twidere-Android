@@ -26,18 +26,18 @@ import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.Paging
 import org.mariotaku.microblog.library.twitter.model.ResponseList
 import org.mariotaku.microblog.library.twitter.model.Status
+import org.mariotaku.twidere.annotation.ReadPositionTag
+import org.mariotaku.twidere.model.AccountDetails
+import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.provider.TwidereDataStore.Statuses
 import org.mariotaku.twidere.util.ErrorInfoStore
+import org.mariotaku.twidere.util.Utils
+import java.io.IOException
 
 /**
  * Created by mariotaku on 16/2/11.
  */
 class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
-
-    @Throws(MicroBlogException::class)
-    override fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status> {
-        return twitter.getHomeTimeline(paging)
-    }
 
     override val contentUri: Uri
         get() = Statuses.CONTENT_URI
@@ -45,4 +45,19 @@ class GetHomeTimelineTask(context: Context) : GetStatusesTask(context) {
     override val errorInfoKey: String
         get() = ErrorInfoStore.KEY_HOME_TIMELINE
 
+    @Throws(MicroBlogException::class)
+    override fun getStatuses(twitter: MicroBlog, paging: Paging): ResponseList<Status> {
+        return twitter.getHomeTimeline(paging)
+    }
+
+    override fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog) {
+        val syncManager = timelineSyncManagerFactory.get() ?: return
+        try {
+            val tag = Utils.getReadPositionTagWithAccount(ReadPositionTag.HOME_TIMELINE, accountKey)
+            val positionKey = syncManager.blockingGetPosition(ReadPositionTag.HOME_TIMELINE, tag)
+            readStateManager
+        }catch (e: IOException) {
+
+        }
+    }
 }

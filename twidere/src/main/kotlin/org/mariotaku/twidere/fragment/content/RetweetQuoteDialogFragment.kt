@@ -36,7 +36,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.twitter.Validator
 import nl.komponents.kovenant.Promise
 import nl.komponents.kovenant.task
@@ -45,7 +44,6 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.activity.content.RetweetQuoteDialogActivity
-import org.mariotaku.twidere.adapter.DummyItemAdapter
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.*
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_QUICK_SEND
@@ -65,7 +63,6 @@ import org.mariotaku.twidere.util.Utils.isMyRetweet
 import org.mariotaku.twidere.util.view.SimpleTextWatcher
 import org.mariotaku.twidere.view.ComposeEditText
 import org.mariotaku.twidere.view.StatusTextCountView
-import org.mariotaku.twidere.view.holder.StatusViewHolder
 import java.util.*
 
 /**
@@ -99,12 +96,6 @@ class RetweetQuoteDialogFragment : AbsStatusDialogFragment() {
 
     override fun AlertDialog.onStatusLoaded(details: AccountDetails, status: ParcelableStatus,
             savedInstanceState: Bundle?) {
-
-        val adapter = DummyItemAdapter(context, requestManager = Glide.with(this@RetweetQuoteDialogFragment))
-        adapter.setShouldShowAccountsColor(true)
-        val holder = StatusViewHolder(adapter, itemContent)
-        holder.displayStatus(status = status, displayInReplyTo = false)
-
         textCountView.maxLength = details.textLimit
 
         val useQuote = useQuote(!status.user_is_protected, details)

@@ -63,10 +63,7 @@ import org.mariotaku.twidere.util.refresh.AutoRefreshController
 import org.mariotaku.twidere.util.refresh.JobSchedulerAutoRefreshController
 import org.mariotaku.twidere.util.refresh.LegacyAutoRefreshController
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
-import org.mariotaku.twidere.util.sync.JobSchedulerSyncController
-import org.mariotaku.twidere.util.sync.LegacySyncController
-import org.mariotaku.twidere.util.sync.SyncController
-import org.mariotaku.twidere.util.sync.SyncPreferences
+import org.mariotaku.twidere.util.sync.*
 import java.io.File
 import javax.inject.Singleton
 
@@ -257,18 +254,6 @@ class ApplicationModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
-        return StatusScheduleProvider.Factory.instance
-    }
-
-    @Provides
-    @Singleton
-    fun gifShareProviderFactory(): GifShareProvider.Factory {
-        return GifShareProvider.Factory.instance
-    }
-
-    @Provides
-    @Singleton
     fun syncPreferences(): SyncPreferences {
         return SyncPreferences(application)
     }
@@ -353,6 +338,24 @@ class ApplicationModule(private val application: Application) {
     @Singleton
     fun fileCache(): FileCache {
         return DiskLRUFileCache(getCacheDir("media", 100 * 1048576L))
+    }
+
+    @Provides
+    @Singleton
+    fun statusScheduleProviderFactory(): StatusScheduleProvider.Factory {
+        return StatusScheduleProvider.newFactory()
+    }
+
+    @Provides
+    @Singleton
+    fun gifShareProviderFactory(): GifShareProvider.Factory {
+        return GifShareProvider.newFactory()
+    }
+
+    @Provides
+    @Singleton
+    fun timelineSyncManagerFactory(): TimelineSyncManager.Factory {
+        return TimelineSyncManager.newFactory()
     }
 
     private fun getCacheDir(dirName: String, sizeInBytes: Long): File {

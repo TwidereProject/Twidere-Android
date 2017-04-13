@@ -36,13 +36,14 @@ interface GifShareProvider {
     interface Factory {
         fun newInstance(context: Context): GifShareProvider?
 
-        companion object {
-            val instance: Factory get() = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
+    }
 
-            private object NullFactory : Factory {
-                override fun newInstance(context: Context) = null
+    companion object {
+        fun newFactory(): Factory = ServiceLoader.load(Factory::class.java)?.firstOrNull() ?: NullFactory
 
-            }
+        private object NullFactory : Factory {
+            override fun newInstance(context: Context) = null
+
         }
     }
 }

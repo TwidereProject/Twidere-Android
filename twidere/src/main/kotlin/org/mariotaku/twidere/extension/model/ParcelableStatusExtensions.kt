@@ -1,8 +1,10 @@
 package org.mariotaku.twidere.extension.model
 
+import org.mariotaku.ktextension.addAllTo
 import org.mariotaku.microblog.library.twitter.model.Status
 import org.mariotaku.twidere.model.ParcelableStatus
 import org.mariotaku.twidere.model.ParcelableUser
+import org.mariotaku.twidere.model.ParcelableUserMention
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.util.ParcelableStatusUtils
 
@@ -15,7 +17,7 @@ val ParcelableStatus.media_type: Int
 val ParcelableStatus.user: ParcelableUser
     get() = ParcelableUser(account_key, user_key, user_name, user_screen_name, user_profile_image_url)
 
-val ParcelableStatus.referenced_users: Array<ParcelableUser>
+val ParcelableStatus.referencedUsers: Array<ParcelableUser>
     get() {
         val resultList = mutableSetOf(user)
         if (quoted_user_key != null) {
@@ -33,7 +35,24 @@ val ParcelableStatus.referenced_users: Array<ParcelableUser>
         return resultList.toTypedArray()
     }
 
+val ParcelableStatus.replyMentions: Array<ParcelableUserMention>
+    get() {
+        val result = ArrayList<ParcelableUserMention>()
+        result.add(parcelableUserMention(user_key, user_name, user_screen_name))
+        if (is_retweet) retweeted_by_user_key?.let { key ->
+            result.add(parcelableUserMention(key, retweeted_by_user_name,
+                    retweeted_by_user_screen_name))
+        }
+        mentions?.addAllTo(result)
+        return result.toTypedArray()
+    }
 
 fun Array<Status>.toParcelables(accountKey: UserKey, accountType: String, profileImageSize: String) = Array(size) { i ->
     ParcelableStatusUtils.fromStatus(this[i], accountKey, accountType, false, profileImageSize)
+}
+
+private fun parcelableUserMention(key: UserKey, name: String, screenName: String) = ParcelableUserMention().also {
+    it.key = key
+    it.name = name
+    it.screen_name = screenName
 }

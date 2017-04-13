@@ -61,6 +61,7 @@ import org.mariotaku.twidere.util.media.ThumborWrapper
 import org.mariotaku.twidere.util.net.TwidereDns
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.refresh.AutoRefreshController
+import org.mariotaku.twidere.util.sync.DataSyncProvider
 import org.mariotaku.twidere.util.sync.SyncController
 import java.util.*
 import java.util.concurrent.Callable
@@ -151,6 +152,7 @@ class TwidereApplication : Application(), Constants, OnSharedPreferenceChangeLis
         loadDefaultFeatures()
 
         Analyzer.preferencesChanged(sharedPreferences)
+        DataSyncProvider.Factory.notifyUpdate(this)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {

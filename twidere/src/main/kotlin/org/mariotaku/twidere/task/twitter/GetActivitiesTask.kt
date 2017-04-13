@@ -89,7 +89,7 @@ abstract class GetActivitiesTask(
                 val storeResult = storeActivities(cr, loadItemLimit, credentials, noItemsBefore,
                         activities, sinceId, maxId, false)
                 if (saveReadPosition) {
-                    saveReadPosition(accountKey, credentials, microBlog)
+                    setLocalReadPosition(accountKey, credentials, microBlog)
                 }
                 errorInfoStore.remove(errorInfoKey, accountKey)
                 if (storeResult != 0) {
@@ -115,6 +115,16 @@ abstract class GetActivitiesTask(
         bus.post(GetActivitiesTaskEvent(contentUri, false, exception))
         handler?.invoke(true)
     }
+
+    @UiThread
+    override fun beforeExecute() {
+        bus.post(GetActivitiesTaskEvent(contentUri, true, null))
+    }
+
+    @Throws(MicroBlogException::class)
+    protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
+
+    protected abstract fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog)
 
     private fun storeActivities(cr: ContentResolver, loadItemLimit: Int, details: AccountDetails,
             noItemsBefore: Boolean, activities: ResponseList<Activity>,
@@ -196,14 +206,4 @@ abstract class GetActivitiesTask(
         }
         return 0
     }
-
-    @UiThread
-    override fun beforeExecute() {
-        bus.post(GetActivitiesTaskEvent(contentUri, true, null))
-    }
-
-    protected abstract fun saveReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog)
-
-    @Throws(MicroBlogException::class)
-    protected abstract fun getActivities(twitter: MicroBlog, details: AccountDetails, paging: Paging): ResponseList<Activity>
 }

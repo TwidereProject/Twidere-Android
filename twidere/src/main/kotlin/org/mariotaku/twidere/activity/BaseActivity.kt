@@ -71,6 +71,8 @@ import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
 import org.mariotaku.twidere.util.support.ActivitySupport
 import org.mariotaku.twidere.util.support.ActivitySupport.TaskDescriptionCompat
+import org.mariotaku.twidere.util.sync.DataSyncProvider.Factory
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import org.mariotaku.twidere.util.theme.TwidereAppearanceCreator
 import org.mariotaku.twidere.util.theme.getCurrentThemeResource
 import org.mariotaku.twidere.view.iface.IExtendedView.OnFitSystemWindowsListener
@@ -106,6 +108,8 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
     @Inject
     lateinit var statusScheduleProviderFactory: StatusScheduleProvider.Factory
     @Inject
+    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
+    @Inject
     lateinit var gifShareProviderFactory: GifShareProvider.Factory
     @Inject
     lateinit var defaultFeatures: DefaultFeatures
@@ -114,6 +118,9 @@ open class BaseActivity : ChameleonActivity(), IBaseActivity<BaseActivity>, IThe
 
     protected val statusScheduleProvider: StatusScheduleProvider?
         get() = statusScheduleProviderFactory.newInstance(this)
+
+    protected val timelineSyncManager: TimelineSyncManager?
+        get() = timelineSyncManagerFactory.get()
 
     protected val gifShareProvider: GifShareProvider?
         get() = gifShareProviderFactory.newInstance(this)

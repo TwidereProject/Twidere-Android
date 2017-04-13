@@ -159,9 +159,11 @@ class UpdateStatusTask(
                 }) return@mapNotNull null
                 return@mapNotNull mention.key.id
             }.toTypedArray()
+            val replyToSelf = details.key == inReplyTo.user_key
+            pending.replyToSelf[i] = replyToSelf
             pending.replyToOriginalUser[i] = replyToOriginalUser
             // Fix status to at least make mentioned user know what status it is
-            if (!replyToOriginalUser && update.attachment_url == null) {
+            if (!replyToOriginalUser && !replyToSelf && update.attachment_url == null) {
                 update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
                         inReplyTo.id).toString()
             }
@@ -425,9 +427,10 @@ class UpdateStatusTask(
             status.inReplyToStatusId(inReplyToStatus.id)
             if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
                 val replyToOriginalUser = pendingUpdate.replyToOriginalUser[index]
-                status.autoPopulateReplyMetadata(replyToOriginalUser)
+                val replyToSelf = pendingUpdate.replyToSelf[index]
+                status.autoPopulateReplyMetadata(replyToOriginalUser || replyToSelf)
                 val excludeReplyIds = pendingUpdate.excludeReplyUserIds[index]
-                if (replyToOriginalUser && excludeReplyIds.isNotNullOrEmpty()) {
+                if ((replyToOriginalUser || replyToSelf) && excludeReplyIds.isNotNullOrEmpty()) {
                     status.excludeReplyUserIds(excludeReplyIds)
                 }
             }
@@ -548,6 +551,7 @@ class UpdateStatusTask(
         val overrideTexts: Array<String> = Array(length) { defaultText }
         val excludeReplyUserIds: Array<Array<String>?> = arrayOfNulls(length)
         val replyToOriginalUser: BooleanArray = BooleanArray(length)
+        val replyToSelf: BooleanArray = BooleanArray(length)
         val mediaIds: Array<Array<String>?> = arrayOfNulls(length)
 
         val mediaUploadResults: Array<MediaUploadResult?> = arrayOfNulls(length)

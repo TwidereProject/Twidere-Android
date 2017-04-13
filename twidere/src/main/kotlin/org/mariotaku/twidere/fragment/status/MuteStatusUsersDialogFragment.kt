@@ -27,7 +27,7 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_STATUS
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.extension.applyTheme
-import org.mariotaku.twidere.extension.model.referenced_users
+import org.mariotaku.twidere.extension.model.referencedUsers
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.CreateUserMuteDialogFragment
 import org.mariotaku.twidere.model.ParcelableStatus
@@ -42,7 +42,7 @@ class MuteStatusUsersDialogFragment : BaseDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(context)
-        val referencedUsers = status.referenced_users
+        val referencedUsers = status.referencedUsers
         val nameFirst = preferences[nameFirstKey]
         val displayNames = referencedUsers.map {
             userColorNameManager.getDisplayName(it, nameFirst)

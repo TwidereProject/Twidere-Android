@@ -436,16 +436,17 @@ abstract class AbsActivitiesFragment protected constructor() :
         if (position == RecyclerView.NO_POSITION || adapter.getActivityCount(false) <= 0) return
         val item = adapter.getActivity(position)
         var positionUpdated = false
-        readPositionTag?.let {
-            for (accountKey in accountKeys) {
-                val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
+        readPositionTag?.let { positionTag ->
+            accountKeys.forEach { accountKey ->
+                val tag = Utils.getReadPositionTagWithAccount(positionTag, accountKey)
                 if (readStateManager.setPosition(tag, item.timestamp)) {
                     positionUpdated = true
                 }
+                timelineSyncManager?.setPosition(positionTag, tag, item.position_key)
             }
-        }
-        currentReadPositionTag?.let {
-            readStateManager.setPosition(it, item.timestamp, true)
+            currentReadPositionTag?.let { currentTag ->
+                readStateManager.setPosition(currentTag, item.timestamp, true)
+            }
         }
 
         if (positionUpdated) {

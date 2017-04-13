@@ -302,8 +302,8 @@ class HomeActivity : BaseActivity(), OnClickListener, OnPageChangeListener, Supp
         readStateManager.unregisterOnSharedPreferenceChangeListener(readStateChangeListener)
         bus.unregister(this)
         AccountManager.get(this).removeOnAccountsUpdatedListenerSafe(accountUpdatedListener)
-        preferences.edit().putInt(SharedPreferenceConstants.KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
-
+        preferences.edit().putInt(KEY_SAVED_TAB_POSITION, mainPager.currentItem).apply()
+        timelineSyncManager?.commit()
         super.onStop()
     }
 

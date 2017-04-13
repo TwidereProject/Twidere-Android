@@ -11,6 +11,7 @@ import org.mariotaku.twidere.util.dagger.GeneralComponentHelper
 import org.mariotaku.twidere.util.media.MediaPreloader
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.schedule.StatusScheduleProvider
+import org.mariotaku.twidere.util.sync.TimelineSyncManager
 import javax.inject.Inject
 
 /**
@@ -45,6 +46,8 @@ abstract class BaseAbstractTask<Params, Result, Callback>(val context: Context) 
     lateinit var scheduleProviderFactory: StatusScheduleProvider.Factory
     @Inject
     lateinit var extractor: Extractor
+    @Inject
+    lateinit var timelineSyncManagerFactory: TimelineSyncManager.Factory
 
     val scheduleProvider: StatusScheduleProvider?
         get() = scheduleProviderFactory.newInstance(context)

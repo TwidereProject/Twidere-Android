@@ -41,7 +41,10 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
     override val errorInfoKey: String
         get() = ErrorInfoStore.KEY_INTERACTIONS
 
-    override fun saveReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog) {
+    override val contentUri: Uri
+        get() = Activities.AboutMe.CONTENT_URI
+
+    override fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails, twitter: MicroBlog) {
         if (AccountType.TWITTER == details.type && details.isOfficial(context)) {
             try {
                 val response = twitter.getActivitiesAboutMeUnread(true)
@@ -72,7 +75,4 @@ class GetActivitiesAboutMeTask(context: Context) : GetActivitiesTask(context) {
         statuses.mapTo(activities) { InternalActivityCreator.status(it, details.key.id) }
         return activities
     }
-
-    override val contentUri: Uri
-        get() = Activities.AboutMe.CONTENT_URI
 }

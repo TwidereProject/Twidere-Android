@@ -60,6 +60,7 @@ abstract class GetStatusesTask(
         val sinceSortIds = param.sinceSortIds
         val result = ArrayList<TwitterWrapper.StatusListResponse>()
         val loadItemLimit = preferences[loadItemLimitKey]
+        var saveReadPosition = false
         for (i in 0 until accountKeys.size) {
             val accountKey = accountKeys[i]
             val details = AccountUtils.getAccountDetails(AccountManager.get(context),
@@ -97,12 +98,16 @@ abstract class GetStatusesTask(
                     if (maxIds == null) {
                         paging.setLatestResults(true)
                     }
+                    saveReadPosition = true
                 } else {
                     sinceId = null
                 }
                 val statuses = getStatuses(microBlog, paging)
                 val storeResult = storeStatus(accountKey, details, statuses, sinceId, maxId,
                         sinceSortId, maxSortId, loadItemLimit, false)
+                if (saveReadPosition) {
+                    setLocalReadPosition(accountKey, details, microBlog)
+                }
                 // TODO cache related data and preload
                 val cacheTask = CacheUsersStatusesTask(context, accountKey, details.type, statuses)
                 TaskStarter.execute(cacheTask)
@@ -136,6 +141,9 @@ abstract class GetStatusesTask(
     override fun beforeExecute() {
         bus.post(GetStatusesTaskEvent(contentUri, true, null))
     }
+
+    protected abstract fun setLocalReadPosition(accountKey: UserKey, details: AccountDetails,
+            twitter: MicroBlog)
 
     private fun storeStatus(accountKey: UserKey, details: AccountDetails,
             statuses: List<Status>,

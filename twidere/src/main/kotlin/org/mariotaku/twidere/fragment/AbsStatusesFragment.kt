@@ -471,9 +471,14 @@ abstract class AbsStatusesFragment : AbsContentListRecyclerViewFragment<Parcelab
         } else {
             status.position_key
         }
+        val positionTag = readPositionTag ?: ReadPositionTag.CUSTOM_TIMELINE
         readPositionTagWithArguments?.let {
-            accountKeys.map { accountKey -> Utils.getReadPositionTagWithAccount(it, accountKey) }
-                    .forEach { readStateManager.setPosition(it, readPosition) }
+            accountKeys.forEach { accountKey ->
+                val tag = Utils.getReadPositionTagWithAccount(it, accountKey)
+                readStateManager.setPosition(tag, readPosition)
+
+                timelineSyncManager?.setPosition(positionTag, tag, status.position_key)
+            }
         }
         currentReadPositionTag?.let {
             readStateManager.setPosition(it, readPosition, true)
