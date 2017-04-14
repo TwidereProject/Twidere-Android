@@ -37,10 +37,12 @@ operator fun Bundle.set(key: String, value: Array<String>?) {
     return putStringArray(key, value)
 }
 
-fun <T> Bundle.getTypedArray(key: String, creator: Parcelable.Creator<T>): Array<T> {
-    return getParcelableArray(key).toTypedArray(creator)
+inline fun <reified T> Bundle.getTypedArray(key: String): Array<T> {
+    val parcelable = getParcelableArray(key)
+    return Array(parcelable.size) { parcelable[it] as T }
 }
 
-fun <T> Bundle.getNullableTypedArray(key: String, creator: Parcelable.Creator<T>): Array<T>? {
-    return getParcelableArray(key)?.toTypedArray(creator)
+inline fun <reified T> Bundle.getNullableTypedArray(key: String): Array<T>? {
+    val parcelable = getParcelableArray(key) ?: return null
+    return Array(parcelable.size) { parcelable[it] as T }
 }

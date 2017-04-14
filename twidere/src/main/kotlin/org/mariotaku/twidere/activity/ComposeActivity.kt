@@ -33,7 +33,6 @@ import android.graphics.Rect
 import android.location.*
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
@@ -274,27 +273,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         itemTouchHelper.attachToRecyclerView(attachedMediaPreview)
         attachedMediaPreview.addItemDecoration(PreviewGridItemDecoration(resources.getDimensionPixelSize(R.dimen.element_spacing_small)))
 
-        if (savedInstanceState != null) {
-            // Restore from previous saved state
-            val selected = savedInstanceState.getTypedArray(EXTRA_ACCOUNT_KEYS, UserKey.CREATOR)
-            accountsAdapter.setSelectedAccountKeys(*selected)
-            possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
-            val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
-            if (mediaList != null) {
-                addMedia(mediaList)
-            }
-            inReplyToStatus = savedInstanceState.getParcelable(EXTRA_STATUS)
-            mentionUser = savedInstanceState.getParcelable(EXTRA_USER)
-            draft = savedInstanceState.getParcelable(EXTRA_DRAFT)
-            shouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS)
-            originalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
-            draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
-            scheduleInfo = savedInstanceState.getParcelable(EXTRA_SCHEDULE_INFO)
-            showLabelAndHint(intent)
-        } else {
+        if (savedInstanceState == null) {
             // The context was first created
             val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
-            val notificationAccount = intent.getParcelableExtra<UserKey>(EXTRA_NOTIFICATION_ACCOUNT)
+            val notificationAccount = intent.getParcelableExtra<UserKey?>(EXTRA_NOTIFICATION_ACCOUNT)
             if (notificationId != -1) {
                 twitterWrapper.clearNotificationAsync(notificationId, notificationAccount)
             }
@@ -304,13 +286,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             showLabelAndHint(intent)
             val selectedAccountKeys = accountsAdapter.selectedAccountKeys
             if (selectedAccountKeys.isNullOrEmpty()) {
-                val idsInPrefs: Array<UserKey> = kPreferences[composeAccountsKey] ?: emptyArray()
-                val intersection: Array<UserKey> = defaultAccountKeys.intersect(listOf(*idsInPrefs)).toTypedArray()
+                val idsInPrefs = kPreferences[composeAccountsKey]?.asList() ?: emptyList()
+                val intersection = defaultAccountKeys.intersect(idsInPrefs)
 
                 if (intersection.isEmpty()) {
-                    accountsAdapter.setSelectedAccountKeys(*defaultAccountKeys)
+                    accountsAdapter.selectedAccountKeys = defaultAccountKeys
                 } else {
-                    accountsAdapter.setSelectedAccountKeys(*intersection)
+                    accountsAdapter.selectedAccountKeys = intersection.toTypedArray()
                 }
             }
             originalText = ParseUtils.parseString(editText.text)
@@ -463,7 +445,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter.selectedAccountKeys)
-        outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList<Parcelable>(mediaList))
+        outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList(mediaList))
         outState.putBoolean(EXTRA_IS_POSSIBLY_SENSITIVE, possiblySensitive)
         outState.putParcelable(EXTRA_STATUS, inReplyToStatus)
         outState.putParcelable(EXTRA_USER, mentionUser)
@@ -473,6 +455,26 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         outState.putString(EXTRA_ORIGINAL_TEXT, originalText)
         outState.putString(EXTRA_DRAFT_UNIQUE_ID, draftUniqueId)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Restore from previous saved state
+        accountsAdapter.selectedAccountKeys = savedInstanceState
+                .getNullableTypedArray(EXTRA_ACCOUNT_KEYS) ?: emptyArray()
+        possiblySensitive = savedInstanceState.getBoolean(EXTRA_IS_POSSIBLY_SENSITIVE)
+        val mediaList = savedInstanceState.getParcelableArrayList<ParcelableMediaUpdate>(EXTRA_MEDIA)
+        if (mediaList != null) {
+            addMedia(mediaList)
+        }
+        inReplyToStatus = savedInstanceState.getParcelable(EXTRA_STATUS)
+        mentionUser = savedInstanceState.getParcelable(EXTRA_USER)
+        draft = savedInstanceState.getParcelable(EXTRA_DRAFT)
+        shouldSaveAccounts = savedInstanceState.getBoolean(EXTRA_SHOULD_SAVE_ACCOUNTS)
+        originalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
+        draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
+        scheduleInfo = savedInstanceState.getParcelable(EXTRA_SCHEDULE_INFO)
+        showLabelAndHint(intent)
     }
 
     override fun onClick(view: View) {
@@ -993,7 +995,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(String.format("@%s ", user.screen_name))
         val selection_end = editText.length()
         editText.setSelection(selection_end)
-        accountsAdapter.setSelectedAccountKeys(user.account_key)
+        accountsAdapter.selectedAccountKeys = arrayOf(user.account_key)
         return true
     }
 
@@ -1001,7 +1003,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         if (status == null) return false
         editText.setText(Utils.getQuoteStatus(this, status))
         editText.setSelection(0)
-        accountsAdapter.setSelectedAccountKeys(status.account_key)
+        accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showQuoteLabelAndHint(status)
         return true
     }
@@ -1051,7 +1053,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
-        accountsAdapter.setSelectedAccountKeys(status.account_key)
+        accountsAdapter.selectedAccountKeys = arrayOf(status.account_key)
         showReplyLabelAndHint(status)
         return true
     }
@@ -1062,7 +1064,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(draft.text)
         val selectionEnd = editText.length()
         editText.setSelection(selectionEnd)
-        accountsAdapter.setSelectedAccountKeys(*draft.account_keys ?: emptyArray())
+        accountsAdapter.selectedAccountKeys = draft.account_keys ?: emptyArray()
         if (draft.media != null) {
             addMedia(Arrays.asList(*draft.media))
         }
@@ -1082,11 +1084,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val hasAccountKeys: Boolean
         if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
             val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
-            accountsAdapter.setSelectedAccountKeys(*accountKeys)
+            accountsAdapter.selectedAccountKeys = accountKeys
             hasAccountKeys = true
         } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
             val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter.setSelectedAccountKeys(accountKey)
+            accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
             hasAccountKeys = true
         } else {
             hasAccountKeys = false
@@ -1207,7 +1209,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         screenNames.filterNot { it.equals(myScreenName, ignoreCase = true) }
                 .forEach { editText.append("@$it ") }
         editText.setSelection(editText.length())
-        accountsAdapter.setSelectedAccountKeys(accountKey)
+        accountsAdapter.selectedAccountKeys = arrayOf(accountKey)
         this.inReplyToStatus = inReplyToStatus
         return true
     }
@@ -1773,25 +1775,20 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             setHasStableIds(true)
         }
 
-        override fun getItemId(position: Int): Long {
-            return accounts!![position].hashCode().toLong()
-        }
-
-        val selectedAccountKeys: Array<UserKey>
+        var selectedAccountKeys: Array<UserKey>
             get() {
                 val accounts = accounts ?: return emptyArray()
                 return accounts.filter { selection[it.key] ?: false }
                         .map { it.key }
                         .toTypedArray()
             }
-
-        fun setSelectedAccountKeys(vararg accountKeys: UserKey) {
-            selection.clear()
-            for (accountKey in accountKeys) {
-                selection.put(accountKey, true)
+            set(value) {
+                selection.clear()
+                for (accountKey in value) {
+                    selection.put(accountKey, true)
+                }
+                notifyDataSetChanged()
             }
-            notifyDataSetChanged()
-        }
 
         val selectedAccounts: Array<AccountDetails>
             get() {
@@ -1812,6 +1809,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         override fun getItemCount(): Int {
             return if (accounts != null) accounts!!.size else 0
+        }
+
+        override fun getItemId(position: Int): Long {
+            return accounts!![position].hashCode().toLong()
         }
 
         fun setAccounts(accounts: Array<AccountDetails>) {

@@ -84,8 +84,7 @@ class TrendsLocationSelectorActivity : BaseActivity() {
     }
 
     class TrendsLocationDialogFragment : BaseDialogFragment() {
-        private val list: Array<LocationsMap.LocationsData> get() = arguments.getTypedArray(EXTRA_DATA,
-                LocationsMap.LocationsData.CREATOR)
+        private val list: Array<LocationsMap.LocationsData> get() = arguments.getTypedArray(EXTRA_DATA)
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val selectorBuilder = AlertDialog.Builder(context)

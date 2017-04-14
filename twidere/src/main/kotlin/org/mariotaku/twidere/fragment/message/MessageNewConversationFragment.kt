@@ -188,7 +188,7 @@ class MessageNewConversationFragment : BaseFragment(), LoaderCallbacks<List<Parc
         }
 
         if (savedInstanceState == null) {
-            val users = arguments.getNullableTypedArray(EXTRA_USERS, ParcelableUser.CREATOR)
+            val users = arguments.getNullableTypedArray<ParcelableUser>(EXTRA_USERS)
             if (users != null) {
                 selectedRecipients = users.toList()
                 editParticipants.setSelection(editParticipants.length())
