@@ -106,7 +106,11 @@ object LinkCreator {
         if (USER_TYPE_FANFOU_COM == status.account_key.host) {
             return getFanfouStatusLink(status.id)
         }
-        return getTwitterStatusLink(status.user_screen_name, status.id)
+        if (status.is_retweet) {
+            return getTwitterStatusLink(status.user_screen_name, status.retweet_id)
+        } else {
+            return getTwitterStatusLink(status.user_screen_name, status.id)
+        }
     }
 
     fun getQuotedStatusWebLink(status: ParcelableStatus): Uri {
