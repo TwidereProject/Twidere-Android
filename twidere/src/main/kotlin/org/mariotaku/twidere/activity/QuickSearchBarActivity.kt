@@ -192,6 +192,12 @@ class QuickSearchBarActivity : BaseActivity(), OnClickListener, LoaderCallbacks<
                         startActivityForResult(scanIntent, REQUEST_SCAN_QR)
                     } catch (e: ActivityNotFoundException) {
                         // Ignore
+                        Toast.makeText(this, R.string.message_toast_qr_scanner_not_supported,
+                                Toast.LENGTH_SHORT).show()
+                    } catch (e: SecurityException) {
+                        // Goddamned SAMSUNG again!!!
+                        Toast.makeText(this, R.string.message_toast_qr_scanner_not_supported,
+                                Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     doSearch()

@@ -115,7 +115,11 @@ fun ParcelableMessageConversation.getSummaryText(context: Context, manager: User
 fun ParcelableMessageConversation.addParticipants(users: Collection<ParcelableUser>) {
     val participants = this.participants
     if (participants == null) {
-        this.participants = arrayOf(user)
+        if (user != null) {
+            this.participants = arrayOf(user)
+        } else {
+            this.participants = emptyArray()
+        }
     } else {
         val addingUsers = ArrayList<ParcelableUser>()
         users.forEach { user ->

@@ -238,6 +238,7 @@ class DraftsFragment : BaseFragment(), LoaderCallbacks<Cursor?>, OnItemClickList
         val status = extras.status ?: return false
         val intent = Intent(context, RetweetQuoteDialogActivity::class.java).apply {
             putExtra(EXTRA_STATUS, status)
+            putExtra(EXTRA_STATUS_ID, status.id)
             putExtra(EXTRA_ACCOUNT_KEY, draft.account_keys?.singleOrNull())
             putExtra(EXTRA_TEXT, draft.text)
         }

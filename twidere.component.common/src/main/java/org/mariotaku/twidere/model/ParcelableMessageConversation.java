@@ -35,6 +35,7 @@ import com.hannesdorfmann.parcelableplease.annotation.ParcelableNoThanks;
 import com.hannesdorfmann.parcelableplease.annotation.ParcelablePlease;
 
 import org.mariotaku.commons.objectcursor.LoganSquareCursorFieldConverter;
+import org.mariotaku.library.objectcursor.annotation.AfterCursorObjectCreated;
 import org.mariotaku.library.objectcursor.annotation.BeforeWriteContentValues;
 import org.mariotaku.library.objectcursor.annotation.CursorField;
 import org.mariotaku.library.objectcursor.annotation.CursorObject;
@@ -189,30 +190,6 @@ public class ParcelableMessageConversation implements Parcelable {
     @ParcelableNoThanks
     InternalExtras internalConversationExtras;
 
-
-    @OnPreJsonSerialize
-    void beforeJsonSerialize() {
-        internalMessageExtras = ParcelableMessage.InternalExtras.from(message_extras);
-        internalConversationExtras = InternalExtras.from(conversation_extras);
-        prepareParticipantKeys();
-    }
-
-
-    @OnJsonParseComplete
-    void onJsonParseComplete() {
-        if (internalMessageExtras != null) {
-            message_extras = internalMessageExtras.getExtras();
-        }
-        if (internalConversationExtras != null) {
-            conversation_extras = internalConversationExtras.getExtras();
-        }
-    }
-
-    @BeforeWriteContentValues
-    void beforeWriteContentValues(ContentValues values) throws IOException {
-        prepareParticipantKeys();
-    }
-
     @Override
     public String toString() {
         return "ParcelableMessageConversation{" +
@@ -244,6 +221,64 @@ public class ParcelableMessageConversation implements Parcelable {
                 '}';
     }
 
+
+    @OnPreJsonSerialize
+    void beforeJsonSerialize() {
+        internalMessageExtras = ParcelableMessage.InternalExtras.from(message_extras);
+        internalConversationExtras = InternalExtras.from(conversation_extras);
+        prepareParticipantKeys();
+    }
+
+    @OnJsonParseComplete
+    void onJsonParseComplete() {
+        if (internalMessageExtras != null) {
+            message_extras = internalMessageExtras.getExtras();
+        }
+        if (internalConversationExtras != null) {
+            conversation_extras = internalConversationExtras.getExtras();
+        }
+        if (participants != null) {
+            participants = removeNullParticipants(participants);
+        }
+    }
+
+    @AfterCursorObjectCreated
+    void afterCursorObjectCreated() {
+        if (participants != null) {
+            participants = removeNullParticipants(participants);
+        }
+    }
+
+    @BeforeWriteContentValues
+    void beforeWriteContentValues(ContentValues values) throws IOException {
+        if (participants != null) {
+            participants = removeNullParticipants(participants);
+        }
+        prepareParticipantKeys();
+    }
+
+    private void onParcelableCreated() {
+        if (participants != null) {
+            participants = removeNullParticipants(participants);
+        }
+    }
+
+    private ParcelableUser[] removeNullParticipants(final ParcelableUser[] participants) {
+        int nullCount = 0;
+        for (final ParcelableUser user : participants) {
+            if (user == null) nullCount++;
+        }
+        if (nullCount == 0) return participants;
+        final int resultLength = participants.length - nullCount;
+        final ParcelableUser[] result = new ParcelableUser[resultLength];
+        for (int i = 0, j = 0, l = participants.length; i < l; i++) {
+            final ParcelableUser user = participants[i];
+            if (user == null) continue;
+            result[j++] = user;
+        }
+        return result;
+    }
+
     private void prepareParticipantKeys() {
         // Ensure keys are ordered
         if (participants != null && participant_keys == null) {
@@ -256,24 +291,24 @@ public class ParcelableMessageConversation implements Parcelable {
             Arrays.sort(participant_keys);
         }
     }
-
     @StringDef({ConversationType.ONE_TO_ONE, ConversationType.GROUP})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ConversationType {
         String ONE_TO_ONE = "one_to_one";
         String GROUP = "group";
-    }
 
+    }
     @StringDef({ExtrasType.DEFAULT, ExtrasType.TWITTER_OFFICIAL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ExtrasType {
         String DEFAULT = "default";
         String TWITTER_OFFICIAL = "twitter_official";
+
+
     }
-
-
     @JsonObject
     static class InternalExtras {
+
         @JsonField(name = "twitter_official")
         TwitterOfficialConversationExtras twitterOfficial;
 
@@ -287,13 +322,13 @@ public class ParcelableMessageConversation implements Parcelable {
             }
             return result;
         }
-
         public ConversationExtras getExtras() {
             if (twitterOfficial != null) {
                 return twitterOfficial;
             }
             return null;
         }
+
     }
 
     @Override
@@ -310,6 +345,7 @@ public class ParcelableMessageConversation implements Parcelable {
         public ParcelableMessageConversation createFromParcel(Parcel source) {
             ParcelableMessageConversation target = new ParcelableMessageConversation();
             ParcelableMessageConversationParcelablePlease.readFromParcel(target, source);
+            target.onParcelableCreated();
             return target;
         }
 

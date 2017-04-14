@@ -38,8 +38,13 @@ class JsonCache(val cacheDir: File) {
     }
 
     fun <T> getList(key: String, cls: Class<T>): List<T>? {
-        return cache?.get(key)?.getFile(0)?.inputStream()?.use {
-            JsonSerializer.parseList(it, cls)
+        val value = cache?.get(key) ?: return null
+        try {
+            return value.getFile(0)?.inputStream()?.use {
+                JsonSerializer.parseList(it, cls)
+            }
+        } catch (e: IOException) {
+            return null
         }
     }
 
