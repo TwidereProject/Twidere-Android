@@ -24,8 +24,10 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
+import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.constant.IntentConstants
+import org.mariotaku.twidere.constant.IntentConstants.EXTRA_USER
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.model.ParcelableUser
@@ -35,7 +37,6 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
     override fun onClick(dialog: DialogInterface, which: Int) {
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
-                val user = user ?: return
                 twitterWrapper.destroyFriendshipAsync(user.account_key, user.key)
             }
             else -> {
@@ -59,22 +60,18 @@ class DestroyFriendshipDialogFragment : BaseDialogFragment(), DialogInterface.On
         return dialog
     }
 
-    private val user: ParcelableUser?
-        get() {
-            val args = arguments
-            if (!args.containsKey(IntentConstants.EXTRA_USER)) return null
-            return args.getParcelable<ParcelableUser>(IntentConstants.EXTRA_USER)
-        }
+    private val user: ParcelableUser
+        get() = arguments.getParcelable(EXTRA_USER)
 
     companion object {
 
         val FRAGMENT_TAG = "destroy_friendship"
 
         fun show(fm: FragmentManager, user: ParcelableUser): DestroyFriendshipDialogFragment {
-            val args = Bundle()
-            args.putParcelable(IntentConstants.EXTRA_USER, user)
             val f = DestroyFriendshipDialogFragment()
-            f.arguments = args
+            f.arguments = Bundle {
+                this[EXTRA_USER] = user
+            }
             f.show(fm, FRAGMENT_TAG)
             return f
         }

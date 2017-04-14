@@ -88,8 +88,8 @@ class UserListMembersFragment : CursorUsersListFragment() {
         if (accountKey == null || accountKey != userKey) return
         val inflater = MenuInflater(context)
         val contextMenuInfo = menuInfo as ExtendedRecyclerView.ContextMenuInfo?
+        val user = adapter.getUser(contextMenuInfo!!.position) ?: return
         inflater.inflate(R.menu.action_user_list_member, menu)
-        val user = adapter.getUser(contextMenuInfo!!.position)
         menu.setHeaderTitle(userColorNameManager.getDisplayName(user, preferences[nameFirstKey]))
     }
 

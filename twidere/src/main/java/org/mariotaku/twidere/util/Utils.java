@@ -434,7 +434,7 @@ public final class Utils implements Constants {
     public static String[] getMatchedNicknameKeys(final String str, UserColorNameManager manager) {
         if (TextUtils.isEmpty(str)) return new String[0];
         final List<String> list = new ArrayList<>();
-        for (final Entry<String, ?> entry : manager.getNameEntries()) {
+        for (final Entry<String, ?> entry : manager.getNicknames().entrySet()) {
             final String value = ParseUtils.parseString(entry.getValue());
             final String key = entry.getKey();
             if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
