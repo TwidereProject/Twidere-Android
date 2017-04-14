@@ -109,12 +109,6 @@ class UpdateStatusTask(
 
         val pendingUpdate = PendingStatusUpdate(update)
 
-        /*
-         * override status text, trim existing reply mentions, and add mentions that not
-         * exists in status text into ignore list
-         */
-        regulateReplyText(update, pendingUpdate)
-
         val result: UpdateStatusResult
         try {
             uploadMedia(uploader, update, info, pendingUpdate)
@@ -152,7 +146,7 @@ class UpdateStatusTask(
             val (_, replyText, extraMentions, excludedMentions, replyToOriginalUser) =
                     extractor.extractReplyTextAndMentions(pending.overrideTexts[i], inReplyTo)
             pending.overrideTexts[i] = replyText
-            pending.excludeReplyUserIds[i] = excludedMentions.mapNotNull { mention ->
+            val excludeReplyUserIds = excludedMentions.mapNotNull { mention ->
                 // Remove account mention that is not appeared in `extraMentions`
                 if (details.key == mention.key && extraMentions.none {
                     it.value.equals(mention.screen_name, ignoreCase = true)
@@ -160,8 +154,6 @@ class UpdateStatusTask(
                 return@mapNotNull mention.key.id
             }.toTypedArray()
             val replyToSelf = details.key == inReplyTo.user_key
-            pending.replyToSelf[i] = replyToSelf
-            pending.replyToOriginalUser[i] = replyToOriginalUser
             // Fix status to at least make mentioned user know what status it is
             if (!replyToOriginalUser && !replyToSelf && update.attachment_url == null) {
                 update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
@@ -423,16 +415,14 @@ class UpdateStatusTask(
         val overrideText = pendingUpdate.overrideTexts[index]
         val status = StatusUpdate(overrideText)
         val inReplyToStatus = statusUpdate.in_reply_to_status
+
         if (inReplyToStatus != null) {
             status.inReplyToStatusId(inReplyToStatus.id)
-            if (statusUpdate.accounts[index].type == AccountType.TWITTER) {
-                val replyToOriginalUser = pendingUpdate.replyToOriginalUser[index]
-                val replyToSelf = pendingUpdate.replyToSelf[index]
-                status.autoPopulateReplyMetadata(replyToOriginalUser || replyToSelf)
-                val excludeReplyIds = pendingUpdate.excludeReplyUserIds[index]
-                if ((replyToOriginalUser || replyToSelf) && excludeReplyIds.isNotNullOrEmpty()) {
-                    status.excludeReplyUserIds(excludeReplyIds)
-                }
+
+            val details = statusUpdate.accounts[index]
+            if (details.type == AccountType.TWITTER && statusUpdate.extended_reply_mode) {
+                status.autoPopulateReplyMetadata(true)
+                status.excludeReplyUserIds(statusUpdate.excluded_reply_user_ids)
             }
         }
         if (statusUpdate.repost_status_id != null) {
@@ -549,9 +539,6 @@ class UpdateStatusTask(
         var sharedMediaOwners: Array<UserKey>? = null
 
         val overrideTexts: Array<String> = Array(length) { defaultText }
-        val excludeReplyUserIds: Array<Array<String>?> = arrayOfNulls(length)
-        val replyToOriginalUser: BooleanArray = BooleanArray(length)
-        val replyToSelf: BooleanArray = BooleanArray(length)
         val mediaIds: Array<Array<String>?> = arrayOfNulls(length)
 
         val mediaUploadResults: Array<MediaUploadResult?> = arrayOfNulls(length)

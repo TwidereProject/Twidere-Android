@@ -32,6 +32,8 @@ object ParcelableStatusUpdateUtils {
                 statusUpdate.is_possibly_sensitive = actionExtras.isPossiblySensitive
                 statusUpdate.display_coordinates = actionExtras.displayCoordinates
                 statusUpdate.attachment_url = actionExtras.attachmentUrl
+                statusUpdate.excluded_reply_user_ids = actionExtras.excludedReplyUserIds
+                statusUpdate.extended_reply_mode = actionExtras.isExtendedReplyMode
             }
             is QuoteStatusActionExtras -> {
                 val onlyAccount = statusUpdate.accounts.singleOrNull()

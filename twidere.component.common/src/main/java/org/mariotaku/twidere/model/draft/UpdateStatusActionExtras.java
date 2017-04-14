@@ -51,6 +51,12 @@ public class UpdateStatusActionExtras implements ActionExtras {
     @ParcelableThisPlease
     @JsonField(name = "attachment_url")
     String attachmentUrl;
+    @JsonField(name = "excluded_reply_user_ids")
+    @ParcelableThisPlease
+    String[] excludedReplyUserIds;
+    @JsonField(name = "extended_reply_mode")
+    @ParcelableThisPlease
+    boolean extendedReplyMode;
 
     public ParcelableStatus getInReplyToStatus() {
         return inReplyToStatus;
@@ -90,6 +96,22 @@ public class UpdateStatusActionExtras implements ActionExtras {
 
     public void setAttachmentUrl(String attachmentUrl) {
         this.attachmentUrl = attachmentUrl;
+    }
+
+    public String[] getExcludedReplyUserIds() {
+        return excludedReplyUserIds;
+    }
+
+    public void setExcludedReplyUserIds(final String[] excludedReplyUserIds) {
+        this.excludedReplyUserIds = excludedReplyUserIds;
+    }
+
+    public boolean isExtendedReplyMode() {
+        return extendedReplyMode;
+    }
+
+    public void setExtendedReplyMode(final boolean extendedReplyMode) {
+        this.extendedReplyMode = extendedReplyMode;
     }
 
     @Override

@@ -102,7 +102,7 @@ data class MentionsAndNonMentionStartIndex(val mentions: List<Extractor.Entity>,
 data class ReplyTextAndMentions(
         val replyStartIndex: Int,
         val replyText: String,
-        val extraMentions: List<Extractor.Entity>,
-        val excludedMentions: List<ParcelableUserMention>,
-        val replyToOriginalUser: Boolean
+        val extraMentions: List<Extractor.Entity> = emptyList(),
+        val excludedMentions: List<ParcelableUserMention> = emptyList(),
+        val replyToOriginalUser: Boolean = false
 )

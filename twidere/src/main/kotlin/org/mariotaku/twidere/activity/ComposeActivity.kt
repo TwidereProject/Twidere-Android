@@ -76,6 +76,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
+import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.extension.withAppendedPath
 import org.mariotaku.twidere.fragment.*
@@ -411,10 +412,14 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun hasComposingStatus(): Boolean {
-        val text = if (editText != null) ParseUtils.parseString(editText.text) else null
-        val textChanged = text != null && !text.isEmpty() && text != originalText
-        val isEditingDraft = INTENT_ACTION_EDIT_DRAFT == intent.action
-        return textChanged || hasMedia() || isEditingDraft
+        if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
+        if (hasMedia()) return true
+        val text = editText.text?.toString().orEmpty()
+        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
+        if (replyTextAndMentions != null) {
+            return replyTextAndMentions.replyText.isNotEmpty()
+        }
+        return text.isNotEmpty() && text != originalText
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -1214,8 +1219,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val accounts = accountsAdapter.selectedAccounts
         editText.accountKey = accounts.firstOrNull()?.key ?: Utils.getDefaultAccountKey(this)
         statusTextCount.maxLength = accounts.textLimit
-        ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
-        replyToSelf = accounts.singleOrNull()?.let { it.key == inReplyToStatus?.user_key } ?: false
+        val singleAccount = accounts.singleOrNull()
+        ignoreMentions = singleAccount?.type == AccountType.TWITTER
+        replyToSelf = singleAccount?.let { it.key == inReplyToStatus?.user_key } ?: false
         setMenu()
     }
 
@@ -1464,69 +1470,75 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateStatus() {
         if (isFinishing || editText == null) return
-        val hasMedia = hasMedia()
-        val text = editText.text.toString()
-        val accountKeys = accountsAdapter.selectedAccountKeys
-        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
-        val ignoreMentions = accounts.all { it.type == AccountType.TWITTER }
-        val inReplyTo = inReplyToStatus
-        val maxLength = statusTextCount.maxLength
-        val tweetLength: Int
-        val exceededStartIndex: Int
-        if (inReplyTo != null && ignoreMentions) {
-            val (replyStartIndex, replyText) = extractor.extractReplyTextAndMentions(text,
-                    inReplyTo)
-            tweetLength = validator.getTweetLength(replyText)
-            if (tweetLength > maxLength) {
-                exceededStartIndex = replyStartIndex + replyText.offsetByCodePoints(0, maxLength)
-            } else {
-                exceededStartIndex = -1
-            }
-        } else {
-            tweetLength = validator.getTweetLength(text)
-            if (tweetLength > maxLength) {
-                exceededStartIndex = text.offsetByCodePoints(0, maxLength)
-            } else {
-                exceededStartIndex = -1
-            }
-        }
 
-        if (accountsAdapter.isSelectionEmpty) {
+        val update = try {
+            getStatusUpdate()
+        } catch(e: NoAccountException) {
             editText.error = getString(R.string.message_toast_no_account_selected)
             return
-        } else if (!hasMedia && (tweetLength <= 0 || noReplyContent(text))) {
+        } catch(e: NoContentException) {
             editText.error = getString(R.string.error_message_no_content)
             return
-        } else if (maxLength > 0 && !statusShortenerUsed && tweetLength > maxLength) {
+        } catch(e: StatusTooLongException) {
             editText.error = getString(R.string.error_message_status_too_long)
-            if (exceededStartIndex >= 0) {
-                editText.setSelection(exceededStartIndex, editText.length())
-            }
+            editText.setSelection(e.exceededStartIndex, editText.length())
             return
         }
+
+        LengthyOperationsService.updateStatusesAsync(this, update.draft_action, statuses = update,
+                scheduleInfo = scheduleInfo)
+        finishComposing()
+    }
+
+    private fun getStatusUpdate(): ParcelableStatusUpdate {
+        val accountKeys = accountsAdapter.selectedAccountKeys
+        if (accountKeys.isEmpty()) throw NoAccountException()
+        val update = ParcelableStatusUpdate()
+        val media = this.media
+        val text = editText.text?.toString().orEmpty()
+        val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
+        val maxLength = statusTextCount.maxLength
+        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
+        if (replyTextAndMentions != null) {
+            val (replyStartIndex, replyText, _, excludedMentions) = replyTextAndMentions
+            if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
+            if (!statusShortenerUsed && validator.getTweetLength(replyText) > maxLength) {
+                throw StatusTooLongException(replyStartIndex + replyText.offsetByCodePoints(0, maxLength))
+            }
+            update.text = replyText
+            update.extended_reply_mode = true
+            update.excluded_reply_user_ids = excludedMentions.map { it.key.id }.toTypedArray()
+        } else {
+            if (text.isEmpty() && media.isEmpty()) throw NoContentException()
+            if (!statusShortenerUsed && validator.getTweetLength(text) > maxLength) {
+                throw StatusTooLongException(text.offsetByCodePoints(0, maxLength))
+            }
+            update.text = text
+            update.extended_reply_mode = false
+        }
+
         val attachLocation = kPreferences[attachLocationKey]
         val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
-        val isPossiblySensitive = hasMedia && possiblySensitive
-        val update = ParcelableStatusUpdate()
-        @Draft.Action val action = draft?.action_type ?: getDraftAction(intent.action)
+        update.draft_action = draft?.action_type ?: getDraftAction(intent.action)
         update.accounts = accounts
-        update.text = text
         if (attachLocation) {
             update.location = recentLocation
             update.display_coordinates = attachPreciseLocation
         }
         update.media = media
         update.in_reply_to_status = inReplyToStatus
-        update.is_possibly_sensitive = isPossiblySensitive
+        update.is_possibly_sensitive = possiblySensitive
         update.draft_extras = UpdateStatusActionExtras().also {
-            it.inReplyToStatus = inReplyToStatus
-            it.isPossiblySensitive = isPossiblySensitive
-            it.displayCoordinates = attachPreciseLocation
+            it.inReplyToStatus = update.in_reply_to_status
+            it.isPossiblySensitive = update.is_possibly_sensitive
+            it.displayCoordinates = update.display_coordinates
+            it.excludedReplyUserIds = update.excluded_reply_user_ids
+            it.isExtendedReplyMode = update.extended_reply_mode
         }
+        return update
+    }
 
-
-        LengthyOperationsService.updateStatusesAsync(this, action, statuses = update,
-                scheduleInfo = scheduleInfo)
+    private fun finishComposing() {
         if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
             possiblySensitive = false
             shouldSaveAccounts = true
@@ -1552,26 +1564,32 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private fun updateTextCount() {
         val editable = editText.editableText ?: return
-        val inReplyTo = inReplyToStatus
         val text = editable.toString()
-        val mentionColor = ThemeUtils.getColorFromAttribute(this, android.R.attr.textColorSecondary, 0)
-        if (inReplyTo != null && ignoreMentions) {
-            val textAndMentions = extractor.extractReplyTextAndMentions(text, inReplyTo)
-            if (textAndMentions.replyToOriginalUser || replyToSelf) {
-                hintLabel.visibility = View.GONE
-                editable.clearSpans(MentionColorSpan::class.java)
-                editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            } else {
-                hintLabel.visibility = View.VISIBLE
-                editable.clearSpans(MentionColorSpan::class.java)
-            }
-            statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)
-        } else {
-            statusTextCount.textCount = validator.getTweetLength(text)
+        val textAndMentions = getTwitterReplyTextAndMentions(text)
+        if (textAndMentions == null) {
             hintLabel.visibility = View.GONE
             editable.clearSpans(MentionColorSpan::class.java)
+            statusTextCount.textCount = validator.getTweetLength(text)
+        } else if (textAndMentions.replyToOriginalUser || replyToSelf) {
+            hintLabel.visibility = View.GONE
+            val mentionColor = ThemeUtils.getColorFromAttribute(this,
+                    android.R.attr.textColorSecondary, 0)
+            editable.clearSpans(MentionColorSpan::class.java)
+            editable.setSpan(MentionColorSpan(mentionColor), 0, textAndMentions.replyStartIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)
+        } else {
+            hintLabel.visibility = View.VISIBLE
+            editable.clearSpans(MentionColorSpan::class.java)
+            statusTextCount.textCount = validator.getTweetLength(textAndMentions.replyText)
         }
+    }
+
+    private fun getTwitterReplyTextAndMentions(text: String = editText.text?.toString().orEmpty()):
+            ReplyTextAndMentions? {
+        val inReplyTo = inReplyToStatus ?: return null
+        if (!ignoreMentions) return null
+        return extractor.extractReplyTextAndMentions(text, inReplyTo)
     }
 
     private fun updateUpdateStatusIcon() {
@@ -2052,6 +2070,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private class MentionColorSpan(color: Int) : ForegroundColorSpan(color)
+
+    private class StatusTooLongException(val exceededStartIndex: Int) : Exception()
+    private class NoContentException() : Exception()
+    private class NoAccountException() : Exception()
 
     companion object {
 
