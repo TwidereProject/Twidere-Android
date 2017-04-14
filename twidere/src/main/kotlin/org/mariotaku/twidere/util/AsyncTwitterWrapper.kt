@@ -29,6 +29,7 @@ import org.apache.commons.collections.primitives.ArrayLongList
 import org.apache.commons.collections.primitives.IntList
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.microblog.library.twitter.model.*
@@ -553,7 +554,7 @@ class AsyncTwitterWrapper(
         override fun doInBackground(vararg params: Any): SingleResponse<ParcelableUserList> {
             val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: return SingleResponse.getInstance<ParcelableUserList>()
             try {
-                val userKeys = users.map { it.key }.toTypedArray()
+                val userKeys = users.mapToArray(ParcelableUser::key)
                 val userList = microBlog.deleteUserListMembers(userListId, UserKey.getIds(userKeys))
                 val list = ParcelableUserListUtils.from(userList, accountKey)
                 return SingleResponse.getInstance(list)

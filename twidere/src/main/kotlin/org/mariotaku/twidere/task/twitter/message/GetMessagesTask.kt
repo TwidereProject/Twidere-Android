@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import org.mariotaku.commons.logansquare.LoganSquareMapperFinder
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.ktextension.useCursor
@@ -582,7 +583,7 @@ class GetMessagesTask(
                 conversation.addParticipants(users)
             } else {
                 conversation.participants = users.toTypedArray()
-                conversation.participant_keys = users.map(ParcelableUser::key).toTypedArray()
+                conversation.participant_keys = users.mapToArray(ParcelableUser::key)
             }
             return conversation
         }

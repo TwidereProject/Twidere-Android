@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog
 import android.view.View
 import org.mariotaku.kpreferences.get
 import org.mariotaku.ktextension.Bundle
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.set
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.REQUEST_PURCHASE_EXTRA_FEATURES
@@ -18,6 +19,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.fragment.BaseDialogFragment
 import org.mariotaku.twidere.fragment.ExtraFeaturesIntroductionDialogFragment
 import org.mariotaku.twidere.fragment.sync.SyncSettingsFragment
+import org.mariotaku.twidere.model.sync.SyncProviderEntry
 import org.mariotaku.twidere.util.premium.ExtraFeaturesService
 import org.mariotaku.twidere.util.sync.DataSyncProvider
 
@@ -89,11 +91,11 @@ class SyncStatusViewController : PremiumDashboardActivity.ExtraFeatureViewContro
     class ConnectNetworkStorageSelectionDialogFragment : BaseDialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             val providers = DataSyncProvider.Factory.getSupportedProviders(context)
-            val itemNames = providers.map { it.name }.toTypedArray()
+            val itemNames = providers.mapToArray(SyncProviderEntry::name)
 
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.title_dialog_sync_connect_to)
-            builder.setItems(itemNames) { dialog, which ->
+            builder.setItems(itemNames) { _, which ->
                 val activity = activity as PremiumDashboardActivity
                 activity.startActivityForControllerResult(providers[which].authIntent,
                         arguments.getInt(EXTRA_POSITION), REQUEST_CONNECT_NETWORK_STORAGE)

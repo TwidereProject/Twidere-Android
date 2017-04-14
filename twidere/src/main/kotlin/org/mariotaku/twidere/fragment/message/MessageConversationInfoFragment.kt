@@ -55,6 +55,7 @@ import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.setItemAvailability
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -723,7 +724,7 @@ class MessageConversationInfoFragment : BaseFragment(), IToolBarSupportFragment,
             val actions = arrayOf(Action(getString(R.string.action_edit_conversation_name), "name"),
                     Action(getString(R.string.action_edit_conversation_avatar), "avatar"))
             val builder = AlertDialog.Builder(context)
-            builder.setItems(actions.map(Action::title).toTypedArray()) { _, which ->
+            builder.setItems(actions.mapToArray(Action::title)) { _, which ->
                 val action = actions[which]
                 (parentFragment as MessageConversationInfoFragment).openEditAction(action.type)
             }

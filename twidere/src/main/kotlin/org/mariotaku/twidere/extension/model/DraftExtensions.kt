@@ -14,6 +14,7 @@ import org.apache.james.mime4j.stream.BodyDescriptor
 import org.apache.james.mime4j.stream.MimeConfig
 import org.apache.james.mime4j.stream.RawField
 import org.apache.james.mime4j.util.MimeUtil
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toIntOr
 import org.mariotaku.ktextension.toString
 import org.mariotaku.twidere.R
@@ -130,7 +131,7 @@ fun Draft.getActionName(context: Context): String? {
 
 fun Draft.applyUpdateStatus(statusUpdate: ParcelableStatusUpdate) {
     this.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
-    this.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
+    this.account_keys = statusUpdate.accounts.mapToArray { it.key }
     this.text = statusUpdate.text
     this.location = statusUpdate.location
     this.media = statusUpdate.media
@@ -154,7 +155,7 @@ private class DraftContentHandler(private val context: Context, private val draf
                         return@let arrayOf(field.mailbox.let { UserKey(it.localPart, it.domain) })
                     }
                     is MailboxListField -> {
-                        return@let field.mailboxList.map { UserKey(it.localPart, it.domain) }.toTypedArray()
+                        return@let field.mailboxList.mapToArray { UserKey(it.localPart, it.domain) }
                     }
                     else -> {
                         return@let null

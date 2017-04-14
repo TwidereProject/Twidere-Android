@@ -48,3 +48,11 @@ inline fun <reified T> List<T>.subArray(range: IntRange): Array<T> {
 fun <T> T.addTo(collection: MutableCollection<T>): Boolean {
     return collection.add(this)
 }
+
+inline fun <T : Any, reified R : Any> Collection<T>.mapToArray(transform: (T) -> R): Array<R> {
+    return map(transform).toTypedArray()
+}
+
+inline fun <T : Any, reified R : Any> List<T>.mapToArray(transform: (T) -> R): Array<R> {
+    return Array(size) { transform(this[it]) }
+}

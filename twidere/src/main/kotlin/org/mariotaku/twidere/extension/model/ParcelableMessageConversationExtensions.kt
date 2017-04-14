@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.extension.model
 
 import android.content.Context
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.model.AccountDetails
 import org.mariotaku.twidere.model.ParcelableMessage
@@ -127,6 +128,6 @@ fun ParcelableMessageConversation.addParticipants(users: Collection<ParcelableUs
         }
         this.participants += addingUsers
     }
-    this.participant_keys = this.participants.map(ParcelableUser::key).toTypedArray()
+    this.participant_keys = this.participants.mapToArray(ParcelableUser::key)
     this.participants.sortBy(ParcelableUser::screen_name)
 }

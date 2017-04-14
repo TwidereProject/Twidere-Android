@@ -20,6 +20,7 @@
 package org.mariotaku.twidere.util
 
 import android.content.ContentValues
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.twitter.model.SavedSearch
 import org.mariotaku.microblog.library.twitter.model.Status
@@ -73,7 +74,7 @@ object ContentValuesCreator {
     }
 
     fun createSavedSearches(savedSearches: List<SavedSearch>, accountKey: UserKey): Array<ContentValues> {
-        return savedSearches.map { createSavedSearch(it, accountKey) }.toTypedArray()
+        return savedSearches.mapToArray { createSavedSearch(it, accountKey) }
     }
 
     fun createStatus(orig: Status, accountKey: UserKey, accountType: String,

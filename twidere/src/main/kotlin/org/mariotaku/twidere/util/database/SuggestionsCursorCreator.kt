@@ -24,6 +24,7 @@ import android.database.MatrixCursor
 import android.database.MergeCursor
 import android.net.Uri
 import android.text.TextUtils
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.sqliteqb.library.*
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.model.UserKey
@@ -133,7 +134,7 @@ object SuggestionsCursorCreator {
                 val whereArgs = nicknameKeys + queryEscaped + queryEscaped
                 val orderBy = arrayOf(CachedUsers.SCORE, CachedUsers.LAST_SEEN, CachedUsers.SCREEN_NAME, CachedUsers.NAME)
                 val ascending = booleanArrayOf(false, false, true, true)
-                val mappedProjection = nonNullProjection.map { autoCompleteUsersProjectionMap[it] }.toTypedArray()
+                val mappedProjection = nonNullProjection.mapToArray { autoCompleteUsersProjectionMap[it] }
                 val (sql, bindingArgs) = CachedUsersQueryBuilder.withScore(mappedProjection,
                         where.sql, whereArgs, OrderBy(orderBy, ascending).sql, accountKey, 0)
                 return db.rawQuery(sql.sql, bindingArgs)
@@ -141,7 +142,7 @@ object SuggestionsCursorCreator {
             Suggestions.AutoComplete.TYPE_HASHTAGS -> {
                 val where = Expression.likeRaw(Columns.Column(CachedHashtags.NAME), "?||'%'", "^")
                 val whereArgs = arrayOf(queryEscaped)
-                val mappedProjection = nonNullProjection.map { hashtagsProjectionMap[it] }.toTypedArray()
+                val mappedProjection = nonNullProjection.mapToArray { hashtagsProjectionMap[it] }
                 return db.query(CachedHashtags.TABLE_NAME, mappedProjection, where.sql, whereArgs, null,
                         null, null)
             }
@@ -161,7 +162,7 @@ object SuggestionsCursorCreator {
         val order = arrayOf(CachedUsers.LAST_SEEN, CachedUsers.SCORE, CachedUsers.SCREEN_NAME, CachedUsers.NAME)
         val ascending = booleanArrayOf(false, false, true, true)
         val orderBy = OrderBy(order, ascending)
-        val usersProjection = selection.map { suggestionUsersProjectionMap[it] }.toTypedArray()
+        val usersProjection = selection.mapToArray { suggestionUsersProjectionMap[it] }
         val usersQuery = CachedUsersQueryBuilder.withScore(usersProjection,
                 usersSelection.sql, selectionArgs, orderBy.sql, accountKey, 0)
         return db.rawQuery(usersQuery.first.sql, usersQuery.second)
@@ -170,7 +171,7 @@ object SuggestionsCursorCreator {
     private fun getSavedSearchCursor(db: SQLiteDatabaseWrapper, projection: Array<String>, accountKey: UserKey): Cursor {
         val savedSearchesWhere = Expression.equalsArgs(SavedSearches.ACCOUNT_KEY)
         val whereArgs = arrayOf(accountKey.toString())
-        val savedSearchesProjection = projection.map { savedSearchesProjectionMap[it] }.toTypedArray()
+        val savedSearchesProjection = projection.mapToArray { savedSearchesProjectionMap[it] }
         return db.query(true, SavedSearches.TABLE_NAME, savedSearchesProjection, savedSearchesWhere.sql,
                 whereArgs, null, null, SavedSearches.DEFAULT_SORT_ORDER, null)
     }
@@ -179,7 +180,7 @@ object SuggestionsCursorCreator {
         val queryEscaped = query.replace("_", "^_")
         val historySelection = Expression.likeRaw(Columns.Column(SearchHistory.QUERY), "?||'%'", "^")
         val historySelectionArgs = arrayOf(queryEscaped)
-        val historyProjection = projection.map { historyProjectionMap[it] }.toTypedArray()
+        val historyProjection = projection.mapToArray { historyProjectionMap[it] }
         val cursorLimit = if (TextUtils.isEmpty(query)) "3" else "2"
         return db.query(true, SearchHistory.TABLE_NAME, historyProjection, historySelection.sql,
                 historySelectionArgs, null, null, SearchHistory.DEFAULT_SORT_ORDER, cursorLimit)

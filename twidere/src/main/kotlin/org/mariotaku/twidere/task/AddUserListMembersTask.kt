@@ -1,6 +1,7 @@
 package org.mariotaku.twidere.task
 
 import android.content.Context
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_NAME_FIRST
@@ -27,7 +28,7 @@ class AddUserListMembersTask(
         try {
             val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?:
                     throw MicroBlogException("No account")
-            val userIds = users.map(ParcelableUser::key).toTypedArray()
+            val userIds = users.mapToArray(ParcelableUser::key)
             val result = microBlog.addUserListMembers(listId, UserKey.getIds(userIds))
             val list = ParcelableUserListUtils.from(result, accountKey)
             return SingleResponse(list)

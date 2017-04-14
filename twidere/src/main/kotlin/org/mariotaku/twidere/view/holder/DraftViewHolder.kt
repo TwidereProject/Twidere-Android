@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.bumptech.glide.RequestManager
 import kotlinx.android.synthetic.main.list_item_draft.view.*
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.extension.model.getActionName
 import org.mariotaku.twidere.model.Draft
@@ -48,7 +49,7 @@ class DraftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             Draft.Action.SEND_DIRECT_MESSAGE, Draft.Action.SEND_DIRECT_MESSAGE_COMPAT,
             Draft.Action.UPDATE_STATUS, Draft.Action.UPDATE_STATUS_COMPAT_1,
             Draft.Action.UPDATE_STATUS_COMPAT_2, Draft.Action.REPLY, Draft.Action.QUOTE -> {
-                val media = draft.media?.map(::ParcelableMedia)?.toTypedArray()
+                val media = draft.media?.mapToArray(::ParcelableMedia)
                 mediaPreviewContainer.visibility = View.VISIBLE
                 mediaPreviewContainer.displayMedia(requestManager = requestManager,
                         media = media)

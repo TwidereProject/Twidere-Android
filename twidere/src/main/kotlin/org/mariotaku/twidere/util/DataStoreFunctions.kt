@@ -10,6 +10,7 @@ import android.net.Uri
 import android.support.annotation.WorkerThread
 import android.support.v4.util.LongSparseArray
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toStringArray
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
@@ -98,7 +99,7 @@ fun buildStatusFilterWhereClause(preferences: SharedPreferences, table: String,
 @SuppressLint("Recycle")
 fun deleteDrafts(context: Context, draftIds: LongArray): Int {
     val where = Expression.inArgs(Drafts._ID, draftIds.size).sql
-    val whereArgs = draftIds.map(Long::toString).toTypedArray()
+    val whereArgs = draftIds.mapToArray(Long::toString)
 
     context.contentResolver.query(Drafts.CONTENT_URI, Drafts.COLUMNS, where, whereArgs,
             null).useCursor { cursor ->

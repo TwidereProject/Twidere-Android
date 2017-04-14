@@ -21,6 +21,7 @@ package org.mariotaku.twidere.task.twitter.message
 
 import android.accounts.AccountManager
 import android.content.Context
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.microblog.library.MicroBlog
 import org.mariotaku.microblog.library.MicroBlogException
 import org.mariotaku.twidere.R
@@ -78,7 +79,7 @@ class AddParticipantsTask(
         when (account.type) {
             AccountType.TWITTER -> {
                 if (account.isOfficial(context)) {
-                    val ids = participants.map { it.key.id }.toTypedArray()
+                    val ids = participants.mapToArray { it.key.id }
                     val response = microBlog.addParticipants(conversationId, ids)
                     if (conversation != null) {
                         conversation.addParticipants(participants)

@@ -7,6 +7,7 @@ import com.squareup.otto.Bus
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.KPreferences
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.toNulls
 import org.mariotaku.twidere.TwidereConstants.LOGTAG
 import org.mariotaku.twidere.constant.IntentConstants.INTENT_PACKAGE_PREFIX
@@ -77,7 +78,7 @@ class TaskServiceRunner(
                     override val accountKeys: Array<UserKey> by lazy {
                         AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context)).filter {
                             it.isAutoRefreshEnabled && it.isAutoRefreshDirectMessagesEnabled
-                        }.map(AccountPreferences::accountKey).toTypedArray()
+                        }.mapToArray(AccountPreferences::accountKey)
                     }
                 }
                 return task
@@ -103,7 +104,7 @@ class TaskServiceRunner(
         override val accountKeys: Array<UserKey> by lazy {
             return@lazy AccountPreferences.getAccountPreferences(context, DataStoreUtils.getAccountKeys(context)).filter {
                 it.isAutoRefreshEnabled && refreshable(it)
-            }.map(AccountPreferences::accountKey).toTypedArray()
+            }.mapToArray(AccountPreferences::accountKey)
         }
 
         override val sinceIds: Array<String?>?

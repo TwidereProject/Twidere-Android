@@ -230,7 +230,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             return
         }
         val accountDetails = AccountUtils.getAllAccountDetails(am, accounts, true)
-        val defaultAccountKeys = accountDetails.map(AccountDetails::key).toTypedArray()
+        val defaultAccountKeys = accountDetails.mapToArray(AccountDetails::key)
         menuBar.setOnMenuItemClickListener(this)
         setupEditText()
         accountSelectorButton.setOnClickListener(this)
@@ -1467,7 +1467,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             }
             update.text = replyText
             update.extended_reply_mode = true
-            update.excluded_reply_user_ids = excludedMentions.map { it.key.id }.toTypedArray()
+            update.excluded_reply_user_ids = excludedMentions.mapToArray { it.key.id }
             val replyToSelf = accounts.singleOrNull()?.key == inReplyTo.user_key
             // Fix status to at least make mentioned user know what status it is
             if (!replyToOriginalUser && !replyToSelf) {

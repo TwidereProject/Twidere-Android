@@ -94,7 +94,7 @@ class MultiSelectEventHandler(
                 val am = AccountManager.get(activity)
                 val intent = Intent(INTENT_ACTION_REPLY_MULTIPLE)
                 val bundle = Bundle()
-                val accountScreenNames = AccountUtils.getAccounts(am).map { it.getAccountUser(am).name }.toTypedArray()
+                val accountScreenNames = AccountUtils.getAccounts(am).map { it.getAccountUser(am).screen_name }
                 val allMentions = TreeSet(String.CASE_INSENSITIVE_ORDER)
                 for (selected in selectedItems) {
                     if (selected is ParcelableStatus) {
@@ -104,7 +104,7 @@ class MultiSelectEventHandler(
                         allMentions.add(selected.screen_name)
                     }
                 }
-                allMentions.removeAll(Arrays.asList(*accountScreenNames))
+                allMentions.removeAll(accountScreenNames)
                 val firstObj = selectedItems[0]
                 if (firstObj is ParcelableStatus) {
                     bundle.putString(EXTRA_IN_REPLY_TO_ID, firstObj.id)

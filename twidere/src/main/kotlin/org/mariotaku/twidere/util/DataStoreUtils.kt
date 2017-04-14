@@ -30,6 +30,7 @@ import android.provider.BaseColumns
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
 import org.mariotaku.kpreferences.get
+import org.mariotaku.ktextension.mapToArray
 import org.mariotaku.ktextension.useCursor
 import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.microblog.library.MicroBlog
@@ -369,7 +370,7 @@ object DataStoreUtils {
             extraWhere: Expression?, extraWhereArgs: Array<String>?,
             sinceColumn: String, since: Long, followingOnly: Boolean,
             accountKeys: Array<UserKey>?): Int {
-        val keys = (accountKeys ?: getActivatedAccountKeys(context)).map { it.toString() }.toTypedArray()
+        val keys = (accountKeys ?: getActivatedAccountKeys(context)).mapToArray { it.toString() }
         val expressions = ArrayList<Expression>()
         expressions.add(Expression.inArgs(Column(Activities.ACCOUNT_KEY), keys.size))
         expressions.add(Expression.greaterThan(sinceColumn, since))
