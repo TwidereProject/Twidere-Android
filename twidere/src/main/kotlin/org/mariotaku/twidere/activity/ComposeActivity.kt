@@ -32,7 +32,6 @@ import android.graphics.PorterDuff.Mode
 import android.graphics.Rect
 import android.location.*
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.ActivityCompat
@@ -58,6 +57,7 @@ import com.bumptech.glide.Glide
 import com.twitter.Extractor
 import com.twitter.Validator
 import kotlinx.android.synthetic.main.activity_compose.*
+import nl.komponents.kovenant.task
 import org.mariotaku.abstask.library.AbstractTask
 import org.mariotaku.abstask.library.TaskStarter
 import org.mariotaku.kpreferences.get
@@ -74,6 +74,7 @@ import org.mariotaku.twidere.constant.*
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_SCREEN_NAME
 import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
+import org.mariotaku.twidere.extension.model.applyUpdateStatus
 import org.mariotaku.twidere.extension.model.textLimit
 import org.mariotaku.twidere.extension.model.unique_id_non_null
 import org.mariotaku.twidere.extension.text.twitter.ReplyTextAndMentions
@@ -92,6 +93,7 @@ import org.mariotaku.twidere.provider.TwidereDataStore.Drafts
 import org.mariotaku.twidere.service.LengthyOperationsService
 import org.mariotaku.twidere.task.compose.AbsAddMediaTask
 import org.mariotaku.twidere.task.compose.AbsDeleteMediaTask
+import org.mariotaku.twidere.task.twitter.UpdateStatusTask
 import org.mariotaku.twidere.text.MarkForDeleteSpan
 import org.mariotaku.twidere.text.style.EmojiSpan
 import org.mariotaku.twidere.util.*
@@ -126,7 +128,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private lateinit var itemTouchHelper: ItemTouchHelper
     private lateinit var bottomMenuAnimator: ViewAnimator
     private val supportMenuInflater by lazy { SupportMenuInflater(this) }
-    private var currentTask: AsyncTask<Any, Any, *>? = null
 
     private val backTimeoutRunnable = Runnable { navigateBackPressed = false }
 
@@ -160,6 +161,38 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     // Listeners
     private var locationListener: LocationListener? = null
+
+    private val draftAction: String get() = draft?.action_type ?: when (intent.action) {
+        INTENT_ACTION_REPLY -> Draft.Action.REPLY
+        INTENT_ACTION_QUOTE -> Draft.Action.QUOTE
+        else -> Draft.Action.UPDATE_STATUS
+    }
+
+    private val media: Array<ParcelableMediaUpdate>
+        get() = mediaList.toTypedArray()
+
+    private val mediaList: List<ParcelableMediaUpdate>
+        get() = mediaPreviewAdapter.asList()
+
+    private var isAccountSelectorVisible: Boolean
+        get() = bottomMenuAnimator.currentChild == accountSelector
+        set(visible) {
+            bottomMenuAnimator.showView(if (visible) accountSelector else composeMenu, true)
+            displaySelectedAccountsIcon()
+        }
+
+    private val hasMedia: Boolean
+        get() = mediaPreviewAdapter.itemCount > 0
+
+    private val isQuote: Boolean
+        get() = INTENT_ACTION_QUOTE == intent.action
+
+    private val isQuotingProtectedStatus: Boolean
+        get() {
+            val status = inReplyToStatus
+            if (!isQuote || status == null) return false
+            return status.user_is_protected && status.account_key != status.user_key
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -313,6 +346,49 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         updateAttachedMediaView()
     }
 
+    override fun onDestroy() {
+        if (!shouldSkipDraft && hasComposingStatus() && isFinishing) {
+            saveToDrafts()
+            Toast.makeText(this, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
+        } else {
+            discardTweet()
+        }
+        super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        imageUploaderUsed = !ServicePickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
+        statusShortenerUsed = !ServicePickerPreference.isNoneValue(kPreferences[statusShortenerKey])
+        if (kPreferences[attachLocationKey]) {
+            if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION,
+                    AndroidPermission.ACCESS_FINE_LOCATION)) {
+                try {
+                    startLocationUpdateIfEnabled()
+                } catch (e: SecurityException) {
+                }
+            }
+        }
+        setMenu()
+        updateTextCount()
+        val textSize = preferences[textSizeKey]
+        editText.textSize = textSize * 1.25f
+    }
+
+    override fun onStop() {
+        saveAccountSelection()
+        try {
+            if (locationListener != null) {
+                locationManager.removeUpdates(locationListener)
+                locationListener = null
+            }
+        } catch (ignore: SecurityException) {
+            // That should not happen
+        }
+
+        super.onStop()
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
@@ -385,43 +461,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     }
 
-    override fun onBackPressed() {
-        if (currentTask?.status == AsyncTask.Status.RUNNING) return
-        if (!shouldSkipDraft && hasComposingStatus()) {
-            saveToDrafts()
-            Toast.makeText(this, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
-            shouldSkipDraft = true
-            finish()
-        } else {
-            shouldSkipDraft = true
-            discardTweet()
-        }
-    }
-
-    override fun onDestroy() {
-        if (!shouldSkipDraft && hasComposingStatus() && isFinishing) {
-            saveToDrafts()
-            Toast.makeText(this, R.string.message_toast_status_saved_to_draft, Toast.LENGTH_SHORT).show()
-        }
-        super.onDestroy()
-    }
-
-    private fun discardTweet() {
-        if (isFinishing || currentTask?.status == AsyncTask.Status.RUNNING) return
-        currentTask = AsyncTaskUtils.executeTask(DiscardTweetTask(this))
-    }
-
-    private fun hasComposingStatus(): Boolean {
-        if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
-        if (hasMedia()) return true
-        val text = editText.text?.toString().orEmpty()
-        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
-        if (replyTextAndMentions != null) {
-            return replyTextAndMentions.replyText.isNotEmpty()
-        }
-        return text.isNotEmpty() && text != originalText
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelableArray(EXTRA_ACCOUNT_KEYS, accountsAdapter.selectedAccountKeys)
         outState.putParcelableArrayList(EXTRA_MEDIA, ArrayList<Parcelable>(mediaList))
@@ -436,40 +475,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         super.onSaveInstanceState(outState)
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        imageUploaderUsed = !ServicePickerPreference.isNoneValue(kPreferences[mediaUploaderKey])
-        statusShortenerUsed = !ServicePickerPreference.isNoneValue(kPreferences[statusShortenerKey])
-        if (kPreferences[attachLocationKey]) {
-            if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_COARSE_LOCATION, AndroidPermission.ACCESS_FINE_LOCATION)) {
-                try {
-                    startLocationUpdateIfEnabled()
-                } catch (e: SecurityException) {
-                }
-            } else {
-            }
-        }
-        setMenu()
-        updateTextCount()
-        val textSize = preferences[textSizeKey]
-        editText.textSize = textSize * 1.25f
-    }
-
-    override fun onStop() {
-        saveAccountSelection()
-        try {
-            if (locationListener != null) {
-                locationManager.removeUpdates(locationListener)
-                locationListener = null
-            }
-        } catch (ignore: SecurityException) {
-            // That should not happen
-        }
-
-        super.onStop()
-    }
-
     override fun onClick(view: View) {
         when (view) {
             updateStatus -> {
@@ -482,35 +487,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 if (replyLabel.visibility != View.VISIBLE) return
                 replyLabel.setSingleLine(replyLabel.lineCount > 1)
             }
-        }
-    }
-
-    private var isAccountSelectorVisible: Boolean
-        get() = bottomMenuAnimator.currentChild == accountSelector
-        set(visible) {
-            bottomMenuAnimator.showView(if (visible) accountSelector else composeMenu, true)
-            displaySelectedAccountsIcon()
-        }
-
-    private fun confirmAndUpdateStatus() {
-        val matchResult = Regex("[DM] +([a-z0-9_]{1,20}) +[^ ]+").matchEntire(editText.text)
-        if (matchResult != null) {
-            val screenName = matchResult.groupValues[1]
-            val df = DirectMessageConfirmFragment()
-            df.arguments = Bundle {
-                this[EXTRA_SCREEN_NAME] = screenName
-            }
-            df.show(supportFragmentManager, "send_direct_message_confirm")
-        } else if (isQuotingProtectedStatus) {
-            val df = RetweetProtectedStatusWarnFragment()
-            df.show(supportFragmentManager,
-                    "retweet_protected_status_warning_message")
-        } else if (scheduleInfo != null && !extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
-            ExtraFeaturesIntroductionDialogFragment.show(supportFragmentManager,
-                    feature = ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
-                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
-        } else {
-            updateStatus()
         }
     }
 
@@ -561,7 +537,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 TaskStarter.execute(DeleteMediaTask(this, media))
             }
             R.id.toggle_sensitive -> {
-                if (!hasMedia()) return true
+                if (!hasMedia) return true
                 possiblySensitive = !possiblySensitive
                 setMenu()
                 updateTextCount()
@@ -622,34 +598,170 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         return supportMenuInflater
     }
 
-    fun removeAllMedia(list: List<ParcelableMediaUpdate>) {
-        mediaPreviewAdapter.removeAll(list)
-    }
-
-    fun saveToDrafts(): Uri {
-        val text = editText.text.toString()
-        val draft = Draft()
-        draft.unique_id = this.draftUniqueId ?: UUID.randomUUID().toString()
-        draft.action_type = getDraftAction(intent.action)
-        draft.account_keys = accountsAdapter.selectedAccountKeys
-        draft.text = text
-        draft.media = media
-        draft.location = recentLocation
-        draft.timestamp = System.currentTimeMillis()
-        draft.action_extras = UpdateStatusActionExtras().apply {
-            this.inReplyToStatus = this@ComposeActivity.inReplyToStatus
-            this.isPossiblySensitive = this@ComposeActivity.possiblySensitive
-        }
-        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
-        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
-        displayNewDraftNotification(draftUri)
-        return draftUri
-    }
-
     override fun onActionModeStarted(mode: ActionMode) {
         super.onActionModeStarted(mode)
-        ThemeUtils.applyColorFilterToMenuIcon(mode.menu, ThemeUtils.getContrastActionBarItemColor(this),
-                0, 0, Mode.MULTIPLY)
+        ThemeUtils.applyColorFilterToMenuIcon(mode.menu,
+                ThemeUtils.getContrastActionBarItemColor(this), 0, 0, Mode.MULTIPLY)
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+        if (KeyEvent.isModifierKey(keyCode)) {
+            val action = event.action
+            if (action == MotionEvent.ACTION_DOWN) {
+                composeKeyMetaState = composeKeyMetaState or KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode)
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                composeKeyMetaState = composeKeyMetaState and KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode).inv()
+            }
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
+        if (menuInfo !is ExtendedRecyclerView.ContextMenuInfo) return
+        when (menuInfo.recyclerViewId) {
+            R.id.attachedMediaPreview -> {
+                menu.setHeaderTitle(R.string.edit_media)
+                supportMenuInflater.inflate(R.menu.menu_attached_media_edit, menu)
+            }
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: run {
+            return super.onContextItemSelected(item)
+        }
+        when (menuInfo.recyclerViewId) {
+            R.id.attachedMediaPreview -> {
+                when (item.itemId) {
+                    R.id.edit_description -> {
+                        val position = menuInfo.position
+                        val altText = mediaPreviewAdapter.getItem(position).alt_text
+                        executeAfterFragmentResumed { activity ->
+                            EditAltTextDialogFragment.show(activity.supportFragmentManager, position,
+                                    altText)
+                        }
+                    }
+                }
+                return true
+            }
+        }
+        return super.onContextItemSelected(item)
+    }
+
+    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
+        val action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
+        if (KeyboardShortcutConstants.ACTION_NAVIGATION_BACK == action) {
+            if (editText.length() == 0 && !textChanged) {
+                if (!navigateBackPressed) {
+                    Toast.makeText(this, getString(R.string.message_toast_press_again_to_close), Toast.LENGTH_SHORT).show()
+                    editText.removeCallbacks(backTimeoutRunnable)
+                    editText.postDelayed(backTimeoutRunnable, 2000)
+                } else {
+                    onBackPressed()
+                }
+                navigateBackPressed = true
+            } else {
+                textChanged = false
+            }
+            return true
+        }
+        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
+    }
+
+    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
+            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
+        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_ATTACH_LOCATION_PERMISSION -> {
+                if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_FINE_LOCATION, AndroidPermission.ACCESS_COARSE_LOCATION)) {
+                    try {
+                        startLocationUpdateIfEnabled()
+                    } catch (e: SecurityException) {
+                        // That should not happen
+                    }
+                } else {
+                    Toast.makeText(this, R.string.message_toast_cannot_get_location, Toast.LENGTH_SHORT).show()
+                    kPreferences.edit {
+                        this[attachLocationKey] = false
+                        this[attachPreciseLocationKey] = false
+                    }
+                }
+            }
+            REQUEST_TAKE_PHOTO_PERMISSION -> {
+                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
+                }
+                takePhoto()
+            }
+            REQUEST_CAPTURE_VIDEO_PERMISSION -> {
+                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
+                }
+                captureVideo()
+            }
+            REQUEST_PICK_MEDIA_PERMISSION -> {
+                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
+                }
+                pickMedia()
+            }
+        }
+    }
+
+    override fun onPermissionRequestCancelled(requestCode: Int) {
+        when (requestCode) {
+            REQUEST_ATTACH_LOCATION_PERMISSION -> {
+            }
+        }
+    }
+
+
+    override fun onSetAltText(position: Int, altText: String?) {
+        mediaPreviewAdapter.setAltText(position, altText)
+    }
+
+
+    private fun discardTweet() {
+        val context = applicationContext
+        val media = mediaList
+        task { media.forEach { media -> Utils.deleteMedia(context, Uri.parse(media.uri)) } }
+    }
+
+    private fun hasComposingStatus(): Boolean {
+        if (intent.action == INTENT_ACTION_EDIT_DRAFT) return true
+        if (hasMedia) return true
+        val text = editText.text?.toString().orEmpty()
+        val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
+        if (replyTextAndMentions != null) {
+            return replyTextAndMentions.replyText.isNotEmpty()
+        }
+        return text.isNotEmpty() && text != originalText
+    }
+
+    private fun confirmAndUpdateStatus() {
+        val matchResult = Regex("[DM] +([a-z0-9_]{1,20}) +[^ ]+").matchEntire(editText.text)
+        if (matchResult != null) {
+            val screenName = matchResult.groupValues[1]
+            val df = DirectMessageConfirmFragment()
+            df.arguments = Bundle {
+                this[EXTRA_SCREEN_NAME] = screenName
+            }
+            df.show(supportFragmentManager, "send_direct_message_confirm")
+        } else if (isQuotingProtectedStatus) {
+            val df = RetweetProtectedStatusWarnFragment()
+            df.show(supportFragmentManager,
+                    "retweet_protected_status_warning_message")
+        } else if (scheduleInfo != null && !extraFeaturesService.isEnabled(ExtraFeaturesService.FEATURE_SCHEDULE_STATUS)) {
+            ExtraFeaturesIntroductionDialogFragment.show(supportFragmentManager,
+                    feature = ExtraFeaturesService.FEATURE_SCHEDULE_STATUS,
+                    requestCode = REQUEST_PURCHASE_EXTRA_FEATURES)
+        } else {
+            updateStatus()
+        }
     }
 
     private fun displaySelectedAccountsIcon() {
@@ -763,51 +875,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountProfileImage.style = preferences[profileImageStyleKey]
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val keyCode = event.keyCode
-        if (KeyEvent.isModifierKey(keyCode)) {
-            val action = event.action
-            if (action == MotionEvent.ACTION_DOWN) {
-                composeKeyMetaState = composeKeyMetaState or KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode)
-            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                composeKeyMetaState = composeKeyMetaState and KeyboardShortcutsHandler.getMetaStateForKeyCode(keyCode).inv()
-            }
-        }
-        return super.dispatchKeyEvent(event)
-    }
-
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo) {
-        if (menuInfo !is ExtendedRecyclerView.ContextMenuInfo) return
-        when (menuInfo.recyclerViewId) {
-            R.id.attachedMediaPreview -> {
-                menu.setHeaderTitle(R.string.edit_media)
-                supportMenuInflater.inflate(R.menu.menu_attached_media_edit, menu)
-            }
-        }
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        val menuInfo = item.menuInfo as? ExtendedRecyclerView.ContextMenuInfo ?: run {
-            return super.onContextItemSelected(item)
-        }
-        when (menuInfo.recyclerViewId) {
-            R.id.attachedMediaPreview -> {
-                when (item.itemId) {
-                    R.id.edit_description -> {
-                        val position = menuInfo.position
-                        val altText = mediaPreviewAdapter.getItem(position).alt_text
-                        executeAfterFragmentResumed { activity ->
-                            EditAltTextDialogFragment.show(activity.supportFragmentManager, position,
-                                    altText)
-                        }
-                    }
-                }
-                return true
-            }
-        }
-        return super.onContextItemSelected(item)
-    }
-
     private fun setupEditText() {
         val sendByEnter = preferences.getBoolean(KEY_QUICK_SEND)
         EditTextEnterHandler.attach(editText, ComposeEnterListener(this), sendByEnter)
@@ -860,32 +927,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.customSelectionActionModeCallback = this
         editTextContainer.touchDelegate = ComposeEditTextTouchDelegate(editTextContainer, editText)
     }
-
-    override fun handleKeyboardShortcutSingle(handler: KeyboardShortcutsHandler, keyCode: Int, event: KeyEvent, metaState: Int): Boolean {
-        val action = handler.getKeyAction(KeyboardShortcutConstants.CONTEXT_TAG_NAVIGATION, keyCode, event, metaState)
-        if (KeyboardShortcutConstants.ACTION_NAVIGATION_BACK == action) {
-            if (editText.length() == 0 && !textChanged) {
-                if (!navigateBackPressed) {
-                    Toast.makeText(this, getString(R.string.message_toast_press_again_to_close), Toast.LENGTH_SHORT).show()
-                    editText.removeCallbacks(backTimeoutRunnable)
-                    editText.postDelayed(backTimeoutRunnable, 2000)
-                } else {
-                    onBackPressed()
-                }
-                navigateBackPressed = true
-            } else {
-                textChanged = false
-            }
-            return true
-        }
-        return super.handleKeyboardShortcutSingle(handler, keyCode, event, metaState)
-    }
-
-    override fun handleKeyboardShortcutRepeat(handler: KeyboardShortcutsHandler, keyCode: Int,
-            repeatCount: Int, event: KeyEvent, metaState: Int): Boolean {
-        return super.handleKeyboardShortcutRepeat(handler, keyCode, repeatCount, event, metaState)
-    }
-
     private fun addMedia(media: List<ParcelableMediaUpdate>) {
         mediaPreviewAdapter.addAll(media)
         updateAttachedMediaView()
@@ -897,7 +938,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun updateAttachedMediaView() {
-        val hasMedia = hasMedia()
         attachedMediaPreview.visibility = if (hasMedia) View.VISIBLE else View.GONE
         setMenu()
     }
@@ -906,12 +946,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val notificationUri = Drafts.CONTENT_URI_NOTIFICATIONS.withAppendedPath(draftUri.lastPathSegment)
         contentResolver.insert(notificationUri, null)
     }
-
-    private val media: Array<ParcelableMediaUpdate>
-        get() = mediaList.toTypedArray()
-
-    private val mediaList: List<ParcelableMediaUpdate>
-        get() = mediaPreviewAdapter.asList()
 
     private fun handleDefaultIntent(intent: Intent?): Boolean {
         if (intent == null) return false
@@ -1119,14 +1153,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val details = AccountUtils.getAccountDetails(am, status.account_key, false) ?: return false
         val accountUser = details.user
         val mentions = ArrayList<String>()
-        var selectionStart: Int = 0
         if (accountUser.key != status.user_key) {
             editText.append("@${status.user_screen_name} ")
-            selectionStart = editText.length()
-        } else if (details.type == AccountType.TWITTER) {
-            // For Twitter, mention to self will be selected
-            editText.append("@${status.user_screen_name} ")
         }
+        var selectionStart = editText.length()
         if (status.is_retweet && !TextUtils.isEmpty(status.retweeted_by_user_screen_name)) {
             mentions.add(status.retweeted_by_user_screen_name)
         }
@@ -1191,27 +1221,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         accountsAdapter.setSelectedAccountKeys(accountKey)
         this.inReplyToStatus = inReplyToStatus
         return true
-    }
-
-    private fun hasMedia(): Boolean {
-        return mediaPreviewAdapter.itemCount > 0
-    }
-
-    private val isQuote: Boolean
-        get() = INTENT_ACTION_QUOTE == intent.action
-
-    private val isQuotingProtectedStatus: Boolean
-        get() {
-            val status = inReplyToStatus
-            if (!isQuote || status == null) return false
-            return status.user_is_protected && status.account_key != status.user_key
-        }
-
-    private fun noReplyContent(text: String?): Boolean {
-        if (text == null) return true
-        val action = intent.action
-        val is_reply = INTENT_ACTION_REPLY == action || INTENT_ACTION_REPLY_MULTIPLE == action
-        return is_reply && text == originalText
     }
 
     private fun notifyAccountSelectionChanged() {
@@ -1288,7 +1297,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     private fun setMenu() {
         if (menuBar == null) return
         val menu = menuBar.menu
-        val hasMedia = hasMedia()
+        val hasMedia = this.hasMedia
 
         /*
          * No media & Not reply: [Take photo][Add image][Attach location][Drafts]
@@ -1336,56 +1345,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 df.isCancelable = false
             }
         }
-    }
-
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_ATTACH_LOCATION_PERMISSION -> {
-                if (checkAnySelfPermissionsGranted(AndroidPermission.ACCESS_FINE_LOCATION, AndroidPermission.ACCESS_COARSE_LOCATION)) {
-                    try {
-                        startLocationUpdateIfEnabled()
-                    } catch (e: SecurityException) {
-                        // That should not happen
-                    }
-                } else {
-                    Toast.makeText(this, R.string.message_toast_cannot_get_location, Toast.LENGTH_SHORT).show()
-                    kPreferences.edit {
-                        this[attachLocationKey] = false
-                        this[attachPreciseLocationKey] = false
-                    }
-                }
-            }
-            REQUEST_TAKE_PHOTO_PERMISSION -> {
-                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
-                }
-                takePhoto()
-            }
-            REQUEST_CAPTURE_VIDEO_PERMISSION -> {
-                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
-                }
-                captureVideo()
-            }
-            REQUEST_PICK_MEDIA_PERMISSION -> {
-                if (!checkAnySelfPermissionsGranted(AndroidPermission.WRITE_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, R.string.message_toast_compose_write_storage_no_permission, Toast.LENGTH_SHORT).show()
-                }
-                pickMedia()
-            }
-        }
-    }
-
-    override fun onPermissionRequestCancelled(requestCode: Int) {
-        when (requestCode) {
-            REQUEST_ATTACH_LOCATION_PERMISSION -> {
-            }
-        }
-    }
-
-    override fun onSetAltText(position: Int, altText: String?) {
-        mediaPreviewAdapter.setAltText(position, altText)
     }
 
     private fun setRecentLocation(location: ParcelableLocation?) {
@@ -1498,9 +1457,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val text = editText.text?.toString().orEmpty()
         val accounts = AccountUtils.getAllAccountDetails(AccountManager.get(this), accountKeys, true)
         val maxLength = statusTextCount.maxLength
+        val inReplyTo = inReplyToStatus
         val replyTextAndMentions = getTwitterReplyTextAndMentions(text)
-        if (replyTextAndMentions != null) {
-            val (replyStartIndex, replyText, _, excludedMentions) = replyTextAndMentions
+        if (inReplyTo != null && replyTextAndMentions != null) {
+            val (replyStartIndex, replyText, _, excludedMentions, replyToOriginalUser) =
+                    replyTextAndMentions
             if (replyText.isEmpty() && media.isEmpty()) throw NoContentException()
             if (!statusShortenerUsed && validator.getTweetLength(replyText) > maxLength) {
                 throw StatusTooLongException(replyStartIndex + replyText.offsetByCodePoints(0, maxLength))
@@ -1508,6 +1469,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             update.text = replyText
             update.extended_reply_mode = true
             update.excluded_reply_user_ids = excludedMentions.map { it.key.id }.toTypedArray()
+            val replyToSelf = accounts.singleOrNull()?.key == inReplyTo.user_key
+            // Fix status to at least make mentioned user know what status it is
+            if (!replyToOriginalUser && !replyToSelf) {
+                update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
+                        inReplyTo.id).toString()
+            }
         } else {
             if (text.isEmpty() && media.isEmpty()) throw NoContentException()
             if (!statusShortenerUsed && validator.getTweetLength(text) > maxLength) {
@@ -1519,24 +1486,19 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
         val attachLocation = kPreferences[attachLocationKey]
         val attachPreciseLocation = kPreferences[attachPreciseLocationKey]
-        update.draft_action = draft?.action_type ?: getDraftAction(intent.action)
+        update.draft_action = draftAction
         update.accounts = accounts
         if (attachLocation) {
             update.location = recentLocation
             update.display_coordinates = attachPreciseLocation
         }
         update.media = media
-        update.in_reply_to_status = inReplyToStatus
+        update.in_reply_to_status = inReplyTo
         update.is_possibly_sensitive = possiblySensitive
-        update.draft_extras = UpdateStatusActionExtras().also {
-            it.inReplyToStatus = update.in_reply_to_status
-            it.isPossiblySensitive = update.is_possibly_sensitive
-            it.displayCoordinates = update.display_coordinates
-            it.excludedReplyUserIds = update.excluded_reply_user_ids
-            it.isExtendedReplyMode = update.extended_reply_mode
-        }
+        update.draft_extras = update.updateStatusActionExtras()
         return update
     }
+
 
     private fun finishComposing() {
         if (preferences[noCloseAfterTweetSentKey] && inReplyToStatus == null) {
@@ -1600,6 +1562,25 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+    private fun removeMedia(list: List<ParcelableMediaUpdate>) {
+        mediaPreviewAdapter.removeAll(list)
+    }
+
+    private fun saveToDrafts(): Uri? {
+        val statusUpdate = try {
+            getStatusUpdate()
+        } catch(e: ComposeException) {
+            return null
+        }
+        val draft = UpdateStatusTask.createDraft(draftAction) {
+            applyUpdateStatus(statusUpdate)
+        }
+        val values = ObjectCursor.valuesCreatorFrom(Draft::class.java).create(draft)
+        val draftUri = contentResolver.insert(Drafts.CONTENT_URI, values)
+        displayNewDraftNotification(draftUri)
+        return draftUri
+    }
+
     private fun ViewAnimator.setupViews() {
         fun AnimatorSet.setup() {
             interpolator = DecelerateInterpolator()
@@ -1638,278 +1619,6 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 set.setup()
             }
         }
-    }
-
-    internal class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
-
-        private val activityRef = WeakReference(activity)
-
-        override fun onLocationChanged(location: Location) {
-            val activity = activityRef.get() ?: return
-            activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-
-        }
-
-        override fun onProviderEnabled(provider: String) {
-        }
-
-        override fun onProviderDisabled(provider: String) {
-        }
-
-    }
-
-    internal class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView) {
-        private val iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
-
-        init {
-            itemView.setOnClickListener {
-                (itemView as CheckableLinearLayout).toggle()
-                adapter.toggleSelection(layoutPosition)
-            }
-            itemView.setOnLongClickListener {
-                (itemView as CheckableLinearLayout).toggle()
-                adapter.setSelection(layoutPosition)
-                return@setOnLongClickListener true
-            }
-        }
-
-        fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
-            itemView.alpha = if (isSelected) 1f else 0.33f
-            val context = adapter.context
-            adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
-            iconView.setBorderColor(account.color)
-        }
-
-    }
-
-    internal class AccountIconsAdapter(
-            private val activity: ComposeActivity
-    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
-        private val inflater: LayoutInflater = activity.layoutInflater
-        private val selection: MutableMap<UserKey, Boolean> = HashMap()
-
-        private var accounts: Array<AccountDetails>? = null
-
-        init {
-            setHasStableIds(true)
-        }
-
-        override fun getItemId(position: Int): Long {
-            return accounts!![position].hashCode().toLong()
-        }
-
-        val selectedAccountKeys: Array<UserKey>
-            get() {
-                val accounts = accounts ?: return emptyArray()
-                return accounts.filter { selection[it.key] ?: false }
-                        .map { it.key }
-                        .toTypedArray()
-            }
-
-        fun setSelectedAccountKeys(vararg accountKeys: UserKey) {
-            selection.clear()
-            for (accountKey in accountKeys) {
-                selection.put(accountKey, true)
-            }
-            notifyDataSetChanged()
-        }
-
-        val selectedAccounts: Array<AccountDetails>
-            get() {
-                val accounts = accounts ?: return emptyArray()
-                return accounts.filter { selection[it.key] ?: false }.toTypedArray()
-            }
-
-        val isSelectionEmpty: Boolean
-            get() = selectedAccountKeys.isEmpty()
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountIconViewHolder {
-            val view = inflater.inflate(R.layout.adapter_item_compose_account, parent, false)
-            return AccountIconViewHolder(this, view)
-        }
-
-        override fun onBindViewHolder(holder: AccountIconViewHolder, position: Int) {
-            val account = accounts!![position]
-            val isSelected = selection[account.key] ?: false
-            holder.showAccount(this, account, isSelected)
-        }
-
-        override fun getItemCount(): Int {
-            return if (accounts != null) accounts!!.size else 0
-        }
-
-        fun setAccounts(accounts: Array<AccountDetails>) {
-            this.accounts = accounts
-            notifyDataSetChanged()
-        }
-
-        internal fun toggleSelection(position: Int) {
-            if (accounts == null || position < 0) return
-            val account = accounts!![position]
-            selection.put(account.key, true != selection[account.key])
-            activity.notifyAccountSelectionChanged()
-            notifyDataSetChanged()
-        }
-
-        internal fun setSelection(position: Int) {
-            if (accounts == null || position < 0) return
-            val account = accounts!![position]
-            selection.clear()
-            selection.put(account.key, true != selection[account.key])
-            activity.notifyAccountSelectionChanged()
-            notifyDataSetChanged()
-        }
-    }
-
-    internal class AddMediaTask(
-            activity: ComposeActivity,
-            sources: Array<Uri>,
-            copySrc: Boolean,
-            deleteSrc: Boolean
-    ) : AbsAddMediaTask<ComposeActivity>(activity, sources, copySrc, deleteSrc) {
-
-        init {
-            callback = activity
-        }
-
-        override fun afterExecute(activity: ComposeActivity?, result: List<ParcelableMediaUpdate>?) {
-            if (activity == null || result == null) return
-            activity.setProgressVisible(false)
-            activity.addMedia(result)
-            activity.setMenu()
-            activity.updateTextCount()
-        }
-
-        override fun beforeExecute() {
-            val activity = this.callback ?: return
-            activity.setProgressVisible(true)
-        }
-
-    }
-
-    internal class DeleteMediaTask(
-            activity: ComposeActivity,
-            val media: Array<ParcelableMediaUpdate>
-    ) : AbsDeleteMediaTask<ComposeActivity>(activity, media.map { Uri.parse(it.uri) }.toTypedArray()) {
-
-        init {
-            this.callback = activity
-        }
-
-        override fun beforeExecute() {
-            callback?.setProgressVisible(true)
-        }
-
-        override fun afterExecute(callback: ComposeActivity?, result: BooleanArray?) {
-            if (callback == null || result == null) return
-            callback.setProgressVisible(false)
-            callback.removeAllMedia(media.filterIndexed { i, _ -> result[i] })
-            callback.setMenu()
-            if (result.any { false }) {
-                Toast.makeText(callback, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    internal class DiscardTweetTask(activity: ComposeActivity) : AsyncTask<Any, Any, Unit>() {
-
-        private val activityRef = WeakReference(activity)
-        private val media = activity.mediaList
-
-        override fun doInBackground(vararg params: Any) {
-            val activity = activityRef.get() ?: return
-            media.map { Uri.parse(it.uri) }.forEach { uri ->
-                Utils.deleteMedia(activity, uri)
-            }
-        }
-
-        override fun onPostExecute(result: Unit) {
-            val activity = activityRef.get() ?: return
-            activity.setProgressVisible(false)
-            activity.shouldSkipDraft = true
-            activity.finish()
-        }
-
-        override fun onPreExecute() {
-            val activity = activityRef.get() ?: return
-            activity.setProgressVisible(true)
-        }
-    }
-
-    internal class DisplayPlaceNameTask : AbstractTask<ParcelableLocation, List<Address>,
-            ComposeActivity>() {
-
-        override fun doLongOperation(location: ParcelableLocation): List<Address>? {
-            try {
-                val activity = callback ?: throw IOException("Interrupted")
-                val gcd = Geocoder(activity, Locale.getDefault())
-                return gcd.getFromLocation(location.latitude, location.longitude, 1)
-            } catch (e: IOException) {
-                return null
-            }
-
-        }
-
-        override fun beforeExecute() {
-            val location = params
-            val activity = callback ?: return
-            val textView = activity.locationLabel ?: return
-
-            val preferences = activity.preferences
-            val attachLocation = preferences[attachLocationKey]
-            val attachPreciseLocation = preferences[attachPreciseLocationKey]
-            if (attachLocation) {
-                if (attachPreciseLocation) {
-                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
-                    textView.tag = location
-                } else {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.text = tag.locality
-                    } else if (tag is NoAddress) {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                    } else {
-                        textView.setText(R.string.getting_location)
-                    }
-                }
-            } else {
-                textView.setText(R.string.no_location)
-            }
-        }
-
-        override fun afterExecute(activity: ComposeActivity?, addresses: List<Address>?) {
-            if (activity == null) return
-            val textView = activity.locationLabel ?: return
-            val preferences = activity.preferences
-            val attachLocation = preferences[attachLocationKey]
-            val attachPreciseLocation = preferences[attachPreciseLocationKey]
-            if (attachLocation) {
-                if (attachPreciseLocation) {
-                    val location = params
-                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
-                    textView.tag = location
-                } else if (addresses == null || addresses.isEmpty()) {
-                    val tag = textView.tag
-                    if (tag is Address) {
-                        textView.text = tag.locality
-                    } else {
-                        textView.setText(R.string.label_location_your_coarse_location)
-                        textView.tag = NoAddress()
-                    }
-                } else {
-                    val address = addresses[0]
-                    textView.tag = address
-                    textView.text = address.locality
-                }
-            } else {
-                textView.setText(R.string.no_location)
-            }
-        }
-
-        internal class NoAddress
     }
 
     class RetweetProtectedStatusWarnFragment : BaseDialogFragment(), DialogInterface.OnClickListener {
@@ -2021,6 +1730,246 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         }
     }
 
+    private class ComposeLocationListener(activity: ComposeActivity) : LocationListener {
+
+        private val activityRef = WeakReference(activity)
+
+        override fun onLocationChanged(location: Location) {
+            val activity = activityRef.get() ?: return
+            activity.setRecentLocation(ParcelableLocationUtils.fromLocation(location))
+        }
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+
+        }
+
+        override fun onProviderEnabled(provider: String) {
+        }
+
+        override fun onProviderDisabled(provider: String) {
+        }
+
+    }
+
+    private class AccountIconViewHolder(val adapter: AccountIconsAdapter, itemView: View) : ViewHolder(itemView) {
+        private val iconView = itemView.findViewById(android.R.id.icon) as ShapedImageView
+
+        init {
+            itemView.setOnClickListener {
+                (itemView as CheckableLinearLayout).toggle()
+                adapter.toggleSelection(layoutPosition)
+            }
+            itemView.setOnLongClickListener {
+                (itemView as CheckableLinearLayout).toggle()
+                adapter.setSelection(layoutPosition)
+                return@setOnLongClickListener true
+            }
+        }
+
+        fun showAccount(adapter: AccountIconsAdapter, account: AccountDetails, isSelected: Boolean) {
+            itemView.alpha = if (isSelected) 1f else 0.33f
+            val context = adapter.context
+            adapter.requestManager.loadProfileImage(context, account, adapter.profileImageStyle).into(iconView)
+            iconView.setBorderColor(account.color)
+        }
+
+    }
+
+    private class AccountIconsAdapter(
+            private val activity: ComposeActivity
+    ) : BaseRecyclerViewAdapter<AccountIconViewHolder>(activity, Glide.with(activity)) {
+        private val inflater: LayoutInflater = activity.layoutInflater
+        private val selection: MutableMap<UserKey, Boolean> = HashMap()
+
+        private var accounts: Array<AccountDetails>? = null
+
+        init {
+            setHasStableIds(true)
+        }
+
+        override fun getItemId(position: Int): Long {
+            return accounts!![position].hashCode().toLong()
+        }
+
+        val selectedAccountKeys: Array<UserKey>
+            get() {
+                val accounts = accounts ?: return emptyArray()
+                return accounts.filter { selection[it.key] ?: false }
+                        .map { it.key }
+                        .toTypedArray()
+            }
+
+        fun setSelectedAccountKeys(vararg accountKeys: UserKey) {
+            selection.clear()
+            for (accountKey in accountKeys) {
+                selection.put(accountKey, true)
+            }
+            notifyDataSetChanged()
+        }
+
+        val selectedAccounts: Array<AccountDetails>
+            get() {
+                val accounts = accounts ?: return emptyArray()
+                return accounts.filter { selection[it.key] ?: false }.toTypedArray()
+            }
+
+        val isSelectionEmpty: Boolean
+            get() = selectedAccountKeys.isEmpty()
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AccountIconViewHolder {
+            val view = inflater.inflate(R.layout.adapter_item_compose_account, parent, false)
+            return AccountIconViewHolder(this, view)
+        }
+
+        override fun onBindViewHolder(holder: AccountIconViewHolder, position: Int) {
+            val account = accounts!![position]
+            val isSelected = selection[account.key] ?: false
+            holder.showAccount(this, account, isSelected)
+        }
+
+        override fun getItemCount(): Int {
+            return if (accounts != null) accounts!!.size else 0
+        }
+
+        fun setAccounts(accounts: Array<AccountDetails>) {
+            this.accounts = accounts
+            notifyDataSetChanged()
+        }
+
+        fun toggleSelection(position: Int) {
+            if (accounts == null || position < 0) return
+            val account = accounts!![position]
+            selection.put(account.key, true != selection[account.key])
+            activity.notifyAccountSelectionChanged()
+            notifyDataSetChanged()
+        }
+
+        fun setSelection(position: Int) {
+            if (accounts == null || position < 0) return
+            val account = accounts!![position]
+            selection.clear()
+            selection.put(account.key, true != selection[account.key])
+            activity.notifyAccountSelectionChanged()
+            notifyDataSetChanged()
+        }
+    }
+
+    private class AddMediaTask(activity: ComposeActivity, sources: Array<Uri>, copySrc: Boolean,
+            deleteSrc: Boolean) : AbsAddMediaTask<ComposeActivity>(activity, sources, copySrc, deleteSrc) {
+
+        init {
+            callback = activity
+        }
+
+        override fun afterExecute(activity: ComposeActivity?, result: List<ParcelableMediaUpdate>?) {
+            if (activity == null || result == null) return
+            activity.setProgressVisible(false)
+            activity.addMedia(result)
+            activity.setMenu()
+            activity.updateTextCount()
+        }
+
+        override fun beforeExecute() {
+            val activity = this.callback ?: return
+            activity.setProgressVisible(true)
+        }
+
+    }
+
+    private class DeleteMediaTask(activity: ComposeActivity, val media: Array<ParcelableMediaUpdate>) :
+            AbsDeleteMediaTask<ComposeActivity>(activity, media.mapToArray { Uri.parse(it.uri) }) {
+
+        init {
+            this.callback = activity
+        }
+
+        override fun beforeExecute() {
+            callback?.setProgressVisible(true)
+        }
+
+        override fun afterExecute(callback: ComposeActivity?, result: BooleanArray?) {
+            if (callback == null || result == null) return
+            callback.setProgressVisible(false)
+            callback.removeMedia(media.filterIndexed { i, _ -> result[i] })
+            callback.setMenu()
+            if (result.any { false }) {
+                Toast.makeText(callback, R.string.message_toast_error_occurred, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private class DisplayPlaceNameTask : AbstractTask<ParcelableLocation, List<Address>, ComposeActivity>() {
+
+        override fun doLongOperation(location: ParcelableLocation): List<Address>? {
+            try {
+                val activity = callback ?: throw IOException("Interrupted")
+                val gcd = Geocoder(activity, Locale.getDefault())
+                return gcd.getFromLocation(location.latitude, location.longitude, 1)
+            } catch (e: IOException) {
+                return null
+            }
+
+        }
+
+        override fun beforeExecute() {
+            val location = params
+            val activity = callback ?: return
+            val textView = activity.locationLabel ?: return
+
+            val preferences = activity.preferences
+            val attachLocation = preferences[attachLocationKey]
+            val attachPreciseLocation = preferences[attachPreciseLocationKey]
+            if (attachLocation) {
+                if (attachPreciseLocation) {
+                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                    textView.tag = location
+                } else {
+                    val tag = textView.tag
+                    if (tag is Address) {
+                        textView.text = tag.locality
+                    } else if (tag is NoAddress) {
+                        textView.setText(R.string.label_location_your_coarse_location)
+                    } else {
+                        textView.setText(R.string.getting_location)
+                    }
+                }
+            } else {
+                textView.setText(R.string.no_location)
+            }
+        }
+
+        override fun afterExecute(activity: ComposeActivity?, addresses: List<Address>?) {
+            if (activity == null) return
+            val textView = activity.locationLabel ?: return
+            val preferences = activity.preferences
+            val attachLocation = preferences[attachLocationKey]
+            val attachPreciseLocation = preferences[attachPreciseLocationKey]
+            if (attachLocation) {
+                if (attachPreciseLocation) {
+                    val location = params
+                    textView.text = ParcelableLocationUtils.getHumanReadableString(location, 3)
+                    textView.tag = location
+                } else if (addresses == null || addresses.isEmpty()) {
+                    val tag = textView.tag
+                    if (tag is Address) {
+                        textView.text = tag.locality
+                    } else {
+                        textView.setText(R.string.label_location_your_coarse_location)
+                        textView.tag = NoAddress()
+                    }
+                } else {
+                    val address = addresses[0]
+                    textView.tag = address
+                    textView.text = address.locality
+                }
+            } else {
+                textView.setText(R.string.no_location)
+            }
+        }
+
+        internal class NoAddress
+    }
+
     private class ComposeEnterListener(private val activity: ComposeActivity?) : EnterListener {
 
         override fun shouldCallListener(): Boolean {
@@ -2071,9 +2020,11 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     private class MentionColorSpan(color: Int) : ForegroundColorSpan(color)
 
-    private class StatusTooLongException(val exceededStartIndex: Int) : Exception()
-    private class NoContentException() : Exception()
-    private class NoAccountException() : Exception()
+    private open class ComposeException : Exception()
+
+    private class StatusTooLongException(val exceededStartIndex: Int) : ComposeException()
+    private class NoContentException : ComposeException()
+    private class NoAccountException : ComposeException()
 
     companion object {
 
@@ -2090,19 +2041,12 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         private const val REQUEST_SET_SCHEDULE = 305
         private const val REQUEST_ADD_GIF = 306
 
-        internal fun getDraftAction(intentAction: String?): String {
-            if (intentAction == null) {
-                return Draft.Action.UPDATE_STATUS
-            }
-            when (intentAction) {
-                INTENT_ACTION_REPLY -> {
-                    return Draft.Action.REPLY
-                }
-                INTENT_ACTION_QUOTE -> {
-                    return Draft.Action.QUOTE
-                }
-            }
-            return Draft.Action.UPDATE_STATUS
+        private fun ParcelableStatusUpdate.updateStatusActionExtras() = UpdateStatusActionExtras().also {
+            it.inReplyToStatus = in_reply_to_status
+            it.isPossiblySensitive = is_possibly_sensitive
+            it.displayCoordinates = display_coordinates
+            it.excludedReplyUserIds = excluded_reply_user_ids
+            it.isExtendedReplyMode = extended_reply_mode
         }
     }
 }

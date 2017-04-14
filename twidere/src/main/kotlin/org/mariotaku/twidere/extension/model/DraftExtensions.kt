@@ -31,9 +31,11 @@ import java.nio.charset.Charset
 import java.util.*
 
 
-/**
- * Created by mariotaku on 2016/12/7.
- */
+val Draft.filename: String get() = "$unique_id_non_null.eml"
+
+val Draft.unique_id_non_null: String
+    get() = unique_id ?: UUID.nameUUIDFromBytes(("$_id:$timestamp").toByteArray()).toString()
+
 fun Draft.writeMimeMessageTo(context: Context, st: OutputStream) {
     val bodyFactory = StorageBodyFactory()
     val storageProvider = bodyFactory.storageProvider
@@ -126,10 +128,15 @@ fun Draft.getActionName(context: Context): String? {
     return null
 }
 
-val Draft.filename: String get() = "$unique_id_non_null.eml"
-
-val Draft.unique_id_non_null: String
-    get() = unique_id ?: UUID.nameUUIDFromBytes(("$_id:$timestamp").toByteArray()).toString()
+fun Draft.applyUpdateStatus(statusUpdate: ParcelableStatusUpdate) {
+    this.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
+    this.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
+    this.text = statusUpdate.text
+    this.location = statusUpdate.location
+    this.media = statusUpdate.media
+    this.timestamp = System.currentTimeMillis()
+    this.action_extras = statusUpdate.draft_extras
+}
 
 private class DraftContentHandler(private val context: Context, private val draft: Draft) : SimpleContentHandler() {
     private val processingStack = Stack<SimpleContentHandler>()

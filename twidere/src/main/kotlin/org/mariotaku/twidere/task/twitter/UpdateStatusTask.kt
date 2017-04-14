@@ -33,10 +33,10 @@ import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.app.TwidereApplication
+import org.mariotaku.twidere.extension.model.applyUpdateStatus
 import org.mariotaku.twidere.extension.model.mediaSizeLimit
 import org.mariotaku.twidere.extension.model.newMicroBlogInstance
 import org.mariotaku.twidere.extension.model.textLimit
-import org.mariotaku.twidere.extension.text.twitter.extractReplyTextAndMentions
 import org.mariotaku.twidere.extension.text.twitter.getTweetLength
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.account.AccountExtras
@@ -135,31 +135,6 @@ class UpdateStatusTask(
             shortener?.unbindService()
         }
         return result
-    }
-
-    private fun regulateReplyText(update: ParcelableStatusUpdate, pending: PendingStatusUpdate) {
-        if (update.draft_action != Draft.Action.REPLY) return
-        val inReplyTo = update.in_reply_to_status ?: return
-        for (i in 0 until pending.length) {
-            val details = update.accounts[i]
-            if (details.type != AccountType.TWITTER) continue
-            val (_, replyText, extraMentions, excludedMentions, replyToOriginalUser) =
-                    extractor.extractReplyTextAndMentions(pending.overrideTexts[i], inReplyTo)
-            pending.overrideTexts[i] = replyText
-            val excludeReplyUserIds = excludedMentions.mapNotNull { mention ->
-                // Remove account mention that is not appeared in `extraMentions`
-                if (details.key == mention.key && extraMentions.none {
-                    it.value.equals(mention.screen_name, ignoreCase = true)
-                }) return@mapNotNull null
-                return@mapNotNull mention.key.id
-            }.toTypedArray()
-            val replyToSelf = details.key == inReplyTo.user_key
-            // Fix status to at least make mentioned user know what status it is
-            if (!replyToOriginalUser && !replyToSelf && update.attachment_url == null) {
-                update.attachment_url = LinkCreator.getTwitterStatusLink(inReplyTo.user_screen_name,
-                        inReplyTo.id).toString()
-            }
-        }
     }
 
     private fun deleteOrUpdateDraft(update: ParcelableStatusUpdate, result: UpdateStatusResult,
@@ -520,15 +495,10 @@ class UpdateStatusTask(
 
     private fun saveDraft(statusUpdate: ParcelableStatusUpdate): Long {
         return saveDraft(context, statusUpdate.draft_action ?: Draft.Action.UPDATE_STATUS) {
-            this.unique_id = statusUpdate.draft_unique_id ?: UUID.randomUUID().toString()
-            this.account_keys = statusUpdate.accounts.map { it.key }.toTypedArray()
-            this.text = statusUpdate.text
-            this.location = statusUpdate.location
-            this.media = statusUpdate.media
-            this.timestamp = System.currentTimeMillis()
-            this.action_extras = statusUpdate.draft_extras
+            applyUpdateStatus(statusUpdate)
         }
     }
+
 
     class PendingStatusUpdate internal constructor(val length: Int, defaultText: String) {
 
@@ -996,16 +966,22 @@ class UpdateStatusTask(
                 val deleteAlways: List<MediaDeletionItem>?
         )
 
-        fun saveDraft(context: Context, @Draft.Action action: String, config: Draft.() -> Unit): Long {
+        inline fun createDraft(@Draft.Action action: String, config: Draft.() -> Unit): Draft {
             val draft = Draft()
             draft.action_type = action
             draft.timestamp = System.currentTimeMillis()
             config(draft)
+            return draft
+        }
+
+        fun saveDraft(context: Context, @Draft.Action action: String, config: Draft.() -> Unit): Long {
+            val draft = createDraft(action, config)
             val resolver = context.contentResolver
             val creator = ObjectCursor.valuesCreatorFrom(Draft::class.java)
             val draftUri = resolver.insert(Drafts.CONTENT_URI, creator.create(draft)) ?: return -1
             return draftUri.lastPathSegment.toLongOr(-1)
         }
+
 
         fun deleteDraft(context: Context, id: Long) {
             val where = Expression.equals(Drafts._ID, id).sql

@@ -21,3 +21,7 @@ fun <T : Any> Array<T>.toNulls(): Array<T?> {
 fun <T : Any> Array<T>.toStringArray(): Array<String> {
     return Array(size) { this[it].toString() }
 }
+
+inline fun <T : Any, reified R : Any> Array<T>.mapToArray(transform: (T) -> R): Array<R> {
+    return map(transform).toTypedArray()
+}
