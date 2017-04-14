@@ -196,7 +196,7 @@ public class UserColorNameManager {
     }
 
     public interface UserNicknameChangedListener {
-        void onUserNicknameChanged(@NonNull UserKey userKey, String nick);
+        void onUserNicknameChanged(@NonNull UserKey userKey, @Nullable String nick);
     }
 
     private static final class OnColorPreferenceChangeListener implements OnSharedPreferenceChangeListener {

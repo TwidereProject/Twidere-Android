@@ -1304,7 +1304,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         return false
     }
 
-    override fun onUserNicknameChanged(userKey: UserKey, nick: String) {
+    override fun onUserNicknameChanged(userKey: UserKey, nick: String?) {
         if (user?.key != userKey) return
         displayUser(user, account)
     }
