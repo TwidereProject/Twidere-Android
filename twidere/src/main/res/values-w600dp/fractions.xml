@@ -20,6 +20,6 @@
 
 <resources>
 
-    <fraction name="aspect_ratio_profile_banner">200%p</fraction>
+    <fraction name="aspect_ratio_profile_banner">300%p</fraction>
 
 </resources>

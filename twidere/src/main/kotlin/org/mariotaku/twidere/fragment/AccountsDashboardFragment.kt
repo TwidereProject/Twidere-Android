@@ -329,7 +329,7 @@ class AccountsDashboardFragment : BaseFragment(), LoaderCallbacks<AccountsInfo>,
     }
 
     internal fun updateAccountActions() {
-        val activity = activity as HomeActivity
+        val activity = activity as? HomeActivity ?: return
         val tabs = activity.tabs
         val account = accountsAdapter.selectedAccount ?: return
         var hasDmTab = false
