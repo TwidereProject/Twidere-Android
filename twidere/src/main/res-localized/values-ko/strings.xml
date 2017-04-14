@@ -691,7 +691,7 @@
   <string name="quick_send_summary">\"Enter\" 키를 눌러 트윗을 보내세요.</string>
   <string name="quote_format">인용 양식</string>
   <string name="quote_format_summary">\"[TEXT]\" = 인용할 트윗 내용\n\"[NAME]\" = 트윗 작성자</string>
-  <string name="quote_name_text"><xliff:g id="name">%1$s</xliff:g>님의 트윗 인용:<xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>님의 트윗 인용:<xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">원본 트윗 인용</string>
   <string name="quote_protected_status_warning_message">이 트윗은 비공개입니다.\n\n보호된 계정의 트윗은 공개되지 않습니다.</string>
   <string name="quote_user"><xliff:g id="user_name">%s</xliff:g>님을 인용하기</string>
@@ -716,8 +716,8 @@
   <string name="remove_from_filter">필터에서 제거</string>
   <string name="remove_sensitive_mark">민감한 콘텐츠 등록 해제</string>
   <string name="replies">답글</string>
-  <string name="reply_to"><xliff:g id="user_name">%s</xliff:g>님에게 답하기</string>
-  <string name="reply_to_name_text"><xliff:g id="name">%1$s</xliff:g>님에게 답변:<xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g>님에게 답하기</string>
+  <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g>님에게 답변:<xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">스팸으로 신고</string>
   <string name="report_usage_statistics_now">현재 사용 통계 보고</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g>님을 스팸 신고하기</string>
@@ -798,7 +798,7 @@
   <string name="state_blocking">차단 중</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">무슨 일이 일어나고 있나요?</string>
+  <string name="label_status_hint">무슨 일이 일어나고 있나요?</string>
   <string name="status_is_duplicate">중복된 트윗입니다.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>:<xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">트윗이 보내지지 않았습니다.</string>

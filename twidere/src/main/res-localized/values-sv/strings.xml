@@ -692,7 +692,7 @@
   <string name="remember_position">Kom ihåg position</string>
   <string name="remember_position_summary">Kom ihåg listan och flikens position före nedstängning av Twidere</string>
   <string name="remove_sensitive_mark">Ta bort stötande markering</string>
-  <string name="reply_to">Svara till <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Svara till <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Rapportera spam</string>
   <string name="reported_user_for_spam">Rapporterade den här användaren för skräppost.</string>
   <string name="reported_users_for_spam">Rapporterade de här användarna för skräppost.</string>
@@ -729,7 +729,7 @@
   <string name="sound">Ljud</string>
   <string name="source"><xliff:g id="source">%s</xliff:g></string>
   <string name="source_filter_name">Källa: <xliff:g id="name">%s</xliff:g></string>
-  <string name="status_hint">Vad händer?</string>
+  <string name="label_status_hint">Vad händer?</string>
   <string name="status_is_duplicate">Ditt tweet är en dubblett.</string>
   <string name="status_not_updated">Tweetet skickades inte.</string>
   <string name="status_not_updated_summary">Tweetet kunde inte skickas och har sparats i utkastet.</string>

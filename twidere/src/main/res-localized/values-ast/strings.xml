@@ -769,7 +769,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="quick_send_summary">Únviase\'l tuit al primir «Enter».</string>
   <string name="quote_format">Formatu de cita</string>
   <string name="quote_format_summary">\"[TEXT]\" = Testu\'l tuit\n\"[NAME]\" = Nome d\'usuariu Twitter</string>
-  <string name="quote_name_text">Citar a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">Citar a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citar tuit orixinal</string>
   <string name="quote_protected_status_warning_message">Esti tuit ta protexíu.\n\nDavezu los usuarios protexíos nun quieren compartir públicamente los sos tuits.</string>
   <string name="quote_user">Citar a <xliff:g id="user_name">%s</xliff:g></string>
@@ -794,8 +794,8 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="remove_from_filter">Desaniciar de Peñeres</string>
   <string name="remove_sensitive_mark">Desaniciar marca sensible</string>
   <string name="replies">Rempuestes</string>
-  <string name="reply_to">Rempuesta a <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">Rempuesta a <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Informar de spam</string>
   <string name="report_usage_statistics_now">Reportar agora les estadístiques d\'usu</string>
   <string name="report_user">Informar de <xliff:g id="name">%s</xliff:g></string>
@@ -876,7 +876,7 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="state_blocking">Bloquiando</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">¿Qué ta asocediendo?</string>
+  <string name="label_status_hint">¿Qué ta asocediendo?</string>
   <string name="status_is_duplicate">El to tuit ye ún duplicáu.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Nun s\'unvió\'l tuit.</string>

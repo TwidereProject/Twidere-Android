@@ -66,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="top"
-                        android:hint="@string/status_hint"
+                        android:hint="@string/label_status_hint"
                         android:inputType="textMultiLine|textLongMessage|textCapSentences"
                         android:padding="@dimen/element_spacing_normal"/>
 

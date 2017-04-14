@@ -577,7 +577,7 @@
   <string name="quick_send_summary">Enviar tweet ao apertar \"Enter\".</string>
   <string name="quote_format">Formato das citações</string>
   <string name="quote_format_summary">\"[TEXT]\" = Texto do tweet\n\"[NAME]\" = Nome no Twitter</string>
-  <string name="quote_name_text">Citar <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">Citar <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citar tweet original</string>
   <string name="quote_protected_status_warning_message">Este tweet é protegido.\n\n Protegido. Usuários protegidos normalmente não querem que seus tweets sejam compartilhados publicamente.</string>
   <string name="quote_user">Citar <xliff:g id="user_name">%s</xliff:g></string>
@@ -602,8 +602,8 @@
   <string name="remove_from_filter">Remover dos filtros</string>
   <string name="remove_sensitive_mark">Remover marca sensível</string>
   <string name="replies">Respostas</string>
-  <string name="reply_to">Responder para <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">Responder para <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">Responder para <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Responder para <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Denunciar como spam</string>
   <string name="report_usage_statistics_now">Reportar estatísticas de uso agora</string>
   <string name="report_user">Denunciar <xliff:g id="name">%s</xliff:g></string>
@@ -681,7 +681,7 @@
   <string name="sponsored_by">Patrocinado por</string>
   <string name="square">Quadrado</string>
   <string name="state_blocking">Bloqueando</string>
-  <string name="status_hint">O que está acontecendo?</string>
+  <string name="label_status_hint">O que está acontecendo?</string>
   <string name="status_is_duplicate">Seu tweet está duplicado.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet não enviado.</string>

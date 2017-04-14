@@ -547,8 +547,8 @@
   <string name="remove_from_filter">Poista suodattimesta</string>
   <string name="remove_sensitive_mark">Älä merkitse arkaluontoiseksi</string>
   <string name="replies">Vastaukset</string>
-  <string name="reply_to">Vastaa käyttäjälle <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">Vastaa <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">Vastaa käyttäjälle <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Vastaa <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Ilmoita roskapostista</string>
   <string name="report_usage_statistics_now">Raportoi käyttötilastot nyt</string>
   <string name="report_user">Ilmianna <xliff:g id="name">%s</xliff:g></string>
@@ -623,7 +623,7 @@
   <string name="sponsored_by">Sponsoroijat</string>
   <string name="square">Neliö</string>
   <string name="state_blocking">Estetään</string>
-  <string name="status_hint">Mitä tapahtuu?</string>
+  <string name="label_status_hint">Mitä tapahtuu?</string>
   <string name="status_is_duplicate">Twiittisi on kaksoiskappale.</string>
   <string name="status_not_updated">Twiittiä ei lähetetty.</string>
   <string name="status_not_updated_summary">Twiittiä ei lähetetty, vaan se tallennettiin luonnoksiin.</string>

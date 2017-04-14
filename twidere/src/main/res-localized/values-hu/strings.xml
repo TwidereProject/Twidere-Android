@@ -562,7 +562,7 @@
   <string name="remove_from_filter">Eltávolítás a szűrőből</string>
   <string name="remove_sensitive_mark">Érzékeny státusz visszavonása</string>
   <string name="replies">Válaszok</string>
-  <string name="reply_to">Válasz neki: <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Válasz neki: <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Spam jelentése</string>
   <string name="report_usage_statistics_now">Használati statisztikák küldése most</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g> jelentése</string>
@@ -638,7 +638,7 @@
   <string name="sponsored_by">Támogató:</string>
   <string name="square">Négyzetes</string>
   <string name="state_blocking">Blokkolva</string>
-  <string name="status_hint">Mi történik?</string>
+  <string name="label_status_hint">Mi történik?</string>
   <string name="status_is_duplicate">A tweeted duplikátum.</string>
   <string name="status_not_updated">Tweet nincs elküldve.</string>
   <string name="status_not_updated_summary">Tweet nincs elküldve, de mentve van a piszkozatok közé.</string>

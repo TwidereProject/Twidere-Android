@@ -472,7 +472,7 @@
   <string name="remove_from_filter">Ukloni s filtera</string>
   <string name="remove_sensitive_mark">Ukloni oznaku osjetljivosti</string>
   <string name="replies">Odgovori</string>
-  <string name="reply_to">Odgovori <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Odgovori <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Prijavi spam</string>
   <string name="report_usage_statistics_now">Podnesi sada statistiku o korištenju</string>
   <string name="report_user">Prijavi <xliff:g id="name">%s</xliff:g></string>
@@ -540,7 +540,7 @@
   <string name="sponsored_by">Sponzorira</string>
   <string name="square">Četvrtasto</string>
   <string name="state_blocking">Blokiram</string>
-  <string name="status_hint">Što se događa?</string>
+  <string name="label_status_hint">Što se događa?</string>
   <string name="status_is_duplicate">Vaš tweet je duplikat.</string>
   <string name="status_not_updated">Tweet nije poslan.</string>
   <string name="status_not_updated_summary">Tweet nije poslan, spremljen u skice.</string>

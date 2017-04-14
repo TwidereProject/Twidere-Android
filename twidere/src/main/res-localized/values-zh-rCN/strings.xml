@@ -781,7 +781,7 @@
   <string name="quick_send_summary">按“回车”发送推文</string>
   <string name="quote_format">引用格式</string>
   <string name="quote_format_summary">\"[TEXT]\"：推文原文\n\"[NAME]\"：用户名</string>
-  <string name="quote_name_text">引用 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">引用 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">引用原推文</string>
   <string name="quote_protected_status_warning_message">这条推文受保护。\n\n受保护的用户通常不希望他们的推文被公开分享。</string>
   <string name="quote_user">引用 <xliff:g id="user_name">%s</xliff:g></string>
@@ -806,8 +806,8 @@
   <string name="remove_from_filter">从过滤器中删除</string>
   <string name="remove_sensitive_mark">删除敏感标记</string>
   <string name="replies">回复</string>
-  <string name="reply_to">回复 <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">回复 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">回复 <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">回复 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">报告垃圾信息</string>
   <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="report_user">报告 <xliff:g id="name">%s</xliff:g></string>
@@ -889,7 +889,7 @@
   <string name="state_blocking">正在阻止</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">您在做什么？</string>
+  <string name="label_status_hint">您在做什么？</string>
   <string name="status_is_duplicate">您发送了重复的推文</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">推文未发送</string>

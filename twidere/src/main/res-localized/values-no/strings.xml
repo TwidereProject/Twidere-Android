@@ -492,7 +492,7 @@
   <string name="remove_from_filter">Fjern fra filter</string>
   <string name="remove_sensitive_mark">Fjern sensitivmarkering</string>
   <string name="replies">Svar</string>
-  <string name="reply_to">Svar til <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Svar til <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Rapporter spam</string>
   <string name="report_usage_statistics_now">Rapporter bruksstatistikk nå</string>
   <string name="report_user">Rapporter <xliff:g id="name">%s</xliff:g></string>
@@ -560,7 +560,7 @@
   <string name="sponsored_by">Sponset av</string>
   <string name="square">Firkantet</string>
   <string name="state_blocking">Blokkerer</string>
-  <string name="status_hint">Hva skjer?</string>
+  <string name="label_status_hint">Hva skjer?</string>
   <string name="status_is_duplicate">Tweeten din er et duplikat.</string>
   <string name="status_not_updated">Tweet ikke sendt.</string>
   <string name="status_not_updated_summary">Tweet ikke sendt, og lagret i utkast.</string>

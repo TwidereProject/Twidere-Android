@@ -66,7 +66,6 @@ import org.mariotaku.library.objectcursor.ObjectCursor
 import org.mariotaku.pickncrop.library.MediaPickerActivity
 import org.mariotaku.twidere.Constants.*
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.adapter.BaseRecyclerViewAdapter
 import org.mariotaku.twidere.adapter.MediaPreviewAdapter
 import org.mariotaku.twidere.annotation.AccountType
@@ -290,7 +289,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             originalText = savedInstanceState.getString(EXTRA_ORIGINAL_TEXT)
             draftUniqueId = savedInstanceState.getString(EXTRA_DRAFT_UNIQUE_ID)
             scheduleInfo = savedInstanceState.getParcelable(EXTRA_SCHEDULE_INFO)
-            setLabel(intent)
+            showLabelAndHint(intent)
         } else {
             // The context was first created
             val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1)
@@ -301,7 +300,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (!handleIntent(intent)) {
                 handleDefaultIntent(intent)
             }
-            setLabel(intent)
+            showLabelAndHint(intent)
             val selectedAccountKeys = accountsAdapter.selectedAccountKeys
             if (selectedAccountKeys.isNullOrEmpty()) {
                 val idsInPrefs: Array<UserKey> = kPreferences[composeAccountsKey] ?: emptyArray()
@@ -947,130 +946,13 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         contentResolver.insert(notificationUri, null)
     }
 
-    private fun handleDefaultIntent(intent: Intent?): Boolean {
-        if (intent == null) return false
-        val action = intent.action
-        val hasAccountKeys: Boolean
-        if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
-            val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
-            accountsAdapter.setSelectedAccountKeys(*accountKeys)
-            hasAccountKeys = true
-        } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
-            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
-            accountsAdapter.setSelectedAccountKeys(accountKey)
-            hasAccountKeys = true
-        } else {
-            hasAccountKeys = false
-        }
-        if (Intent.ACTION_SEND == action) {
-            shouldSaveAccounts = false
-            val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            if (stream != null) {
-                val src = arrayOf(stream)
-                TaskStarter.execute(AddMediaTask(this, src, true, false))
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
-            shouldSaveAccounts = false
-            val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-            if (extraStream != null) {
-                val src = extraStream.toTypedArray()
-                TaskStarter.execute(AddMediaTask(this, src, true, false))
-            }
-        } else {
-            shouldSaveAccounts = !hasAccountKeys
-            val data = intent.data
-            if (data != null) {
-                val src = arrayOf(data)
-                TaskStarter.execute(AddMediaTask(this, src, true, false))
-            }
-        }
-        val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
-        val extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
-        editText.setText(Utils.getShareStatus(this, extraSubject, extraText))
-        val selectionEnd = editText.length()
-        editText.setSelection(selectionEnd)
-        return true
-    }
-
-    private fun handleEditDraftIntent(draft: Draft?): Boolean {
-        if (draft == null) return false
-        draftUniqueId = draft.unique_id_non_null
-        editText.setText(draft.text)
-        val selectionEnd = editText.length()
-        editText.setSelection(selectionEnd)
-        accountsAdapter.setSelectedAccountKeys(*draft.account_keys ?: emptyArray())
-        if (draft.media != null) {
-            addMedia(Arrays.asList(*draft.media))
-        }
-        recentLocation = draft.location
-        (draft.action_extras as? UpdateStatusActionExtras)?.let {
-            possiblySensitive = it.isPossiblySensitive
-            inReplyToStatus = it.inReplyToStatus
-        }
-        val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, draft._id.toString()).toString()
-        notificationManager.cancel(tag, TwidereConstants.NOTIFICATION_ID_DRAFTS)
-        return true
-    }
-
-    private fun setLabel(intent: Intent): Boolean {
-        val action = intent.action
-        if (action == null) {
-            hideLabel()
-            return false
-        }
-        when (action) {
-            INTENT_ACTION_REPLY -> {
-                showReplyLabel(intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS))
-                return true
-            }
-            INTENT_ACTION_QUOTE -> {
-                showQuoteLabel(intent.getParcelableExtra<ParcelableStatus>(EXTRA_STATUS))
-                return true
-            }
-            INTENT_ACTION_EDIT_DRAFT -> {
-                val draft = intent.getParcelableExtra<Draft>(EXTRA_DRAFT)
-                if (draft == null) {
-                    hideLabel()
-                    return false
-                }
-                if (draft.action_type == null) {
-                    draft.action_type = Draft.Action.UPDATE_STATUS
-                }
-                when (draft.action_type) {
-                    Draft.Action.REPLY -> {
-                        if (draft.action_extras is UpdateStatusActionExtras) {
-                            showReplyLabel((draft.action_extras as UpdateStatusActionExtras).inReplyToStatus)
-                        } else {
-                            hideLabel()
-                            return false
-                        }
-                    }
-                    Draft.Action.QUOTE -> {
-                        if (draft.action_extras is UpdateStatusActionExtras) {
-                            showQuoteLabel((draft.action_extras as UpdateStatusActionExtras).inReplyToStatus)
-                        } else {
-                            hideLabel()
-                            return false
-                        }
-                    }
-                    else -> {
-                        hideLabel()
-                        return false
-                    }
-                }
-                return true
-            }
-        }
-        hideLabel()
-        return false
-    }
+    // MARK: Begin intent handling
 
     private fun handleIntent(intent: Intent): Boolean {
-        val action = intent.action ?: return false
         shouldSaveAccounts = false
         mentionUser = intent.getParcelableExtra(EXTRA_USER)
         inReplyToStatus = intent.getParcelableExtra(EXTRA_STATUS)
-        when (action) {
+        when (intent.action) {
             INTENT_ACTION_REPLY -> {
                 return handleReplyIntent(inReplyToStatus)
             }
@@ -1085,9 +967,9 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
                 return handleMentionIntent(mentionUser)
             }
             INTENT_ACTION_REPLY_MULTIPLE -> {
-                val screenNames = intent.getStringArrayExtra(EXTRA_SCREEN_NAMES)
-                val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEYS)
-                val inReplyToStatus = intent.getParcelableExtra<ParcelableStatus>(EXTRA_IN_REPLY_TO_STATUS)
+                val screenNames: Array<String>? = intent.getStringArrayExtra(EXTRA_SCREEN_NAMES)
+                val accountKey: UserKey? = intent.getParcelableExtra(EXTRA_ACCOUNT_KEYS)
+                val inReplyToStatus: ParcelableStatus? = intent.getParcelableExtra(EXTRA_IN_REPLY_TO_STATUS)
                 return handleReplyMultipleIntent(screenNames, accountKey, inReplyToStatus)
             }
             INTENT_ACTION_COMPOSE_TAKE_PHOTO -> {
@@ -1119,32 +1001,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         editText.setText(Utils.getQuoteStatus(this, status))
         editText.setSelection(0)
         accountsAdapter.setSelectedAccountKeys(status.account_key)
-        showQuoteLabel(status)
+        showQuoteLabelAndHint(status)
         return true
-    }
-
-    private fun showQuoteLabel(status: ParcelableStatus?) {
-        if (status == null) {
-            hideLabel()
-            return
-        }
-        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
-        replyLabel.text = getString(R.string.quote_name_text, replyToName, status.text_unescaped)
-        replyLabel.visibility = View.VISIBLE
-    }
-
-    private fun showReplyLabel(status: ParcelableStatus?) {
-        if (status == null) {
-            hideLabel()
-            return
-        }
-        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
-        replyLabel.text = getString(R.string.reply_to_name_text, replyToName, status.text_unescaped)
-        replyLabel.visibility = View.VISIBLE
-    }
-
-    private fun hideLabel() {
-        replyLabel.visibility = View.GONE
     }
 
     private fun handleReplyIntent(status: ParcelableStatus?): Boolean {
@@ -1193,9 +1051,139 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
         val selectionEnd = editText.length()
         editText.setSelection(selectionStart, selectionEnd)
         accountsAdapter.setSelectedAccountKeys(status.account_key)
-        showReplyLabel(status)
+        showReplyLabelAndHint(status)
         return true
     }
+
+    private fun handleEditDraftIntent(draft: Draft?): Boolean {
+        if (draft == null) return false
+        draftUniqueId = draft.unique_id_non_null
+        editText.setText(draft.text)
+        val selectionEnd = editText.length()
+        editText.setSelection(selectionEnd)
+        accountsAdapter.setSelectedAccountKeys(*draft.account_keys ?: emptyArray())
+        if (draft.media != null) {
+            addMedia(Arrays.asList(*draft.media))
+        }
+        recentLocation = draft.location
+        (draft.action_extras as? UpdateStatusActionExtras)?.let {
+            possiblySensitive = it.isPossiblySensitive
+            inReplyToStatus = it.inReplyToStatus
+        }
+        val tag = Uri.withAppendedPath(Drafts.CONTENT_URI, draft._id.toString()).toString()
+        notificationManager.cancel(tag, NOTIFICATION_ID_DRAFTS)
+        return true
+    }
+
+    private fun handleDefaultIntent(intent: Intent?): Boolean {
+        if (intent == null) return false
+        val action = intent.action
+        val hasAccountKeys: Boolean
+        if (intent.hasExtra(EXTRA_ACCOUNT_KEYS)) {
+            val accountKeys = intent.getParcelableArrayExtra(EXTRA_ACCOUNT_KEYS).toTypedArray(UserKey.CREATOR)
+            accountsAdapter.setSelectedAccountKeys(*accountKeys)
+            hasAccountKeys = true
+        } else if (intent.hasExtra(EXTRA_ACCOUNT_KEY)) {
+            val accountKey = intent.getParcelableExtra<UserKey>(EXTRA_ACCOUNT_KEY)
+            accountsAdapter.setSelectedAccountKeys(accountKey)
+            hasAccountKeys = true
+        } else {
+            hasAccountKeys = false
+        }
+        if (Intent.ACTION_SEND == action) {
+            shouldSaveAccounts = false
+            val stream = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+            if (stream != null) {
+                val src = arrayOf(stream)
+                TaskStarter.execute(AddMediaTask(this, src, true, false))
+            }
+        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
+            shouldSaveAccounts = false
+            val extraStream = intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+            if (extraStream != null) {
+                val src = extraStream.toTypedArray()
+                TaskStarter.execute(AddMediaTask(this, src, true, false))
+            }
+        } else {
+            shouldSaveAccounts = !hasAccountKeys
+            val data = intent.data
+            if (data != null) {
+                val src = arrayOf(data)
+                TaskStarter.execute(AddMediaTask(this, src, true, false))
+            }
+        }
+        val extraSubject = intent.getCharSequenceExtra(Intent.EXTRA_SUBJECT)
+        val extraText = intent.getCharSequenceExtra(Intent.EXTRA_TEXT)
+        editText.setText(Utils.getShareStatus(this, extraSubject, extraText))
+        val selectionEnd = editText.length()
+        editText.setSelection(selectionEnd)
+        return true
+    }
+
+    // MARK: End intent handling
+
+    // MARK: Begin label and hint handling
+
+    private fun showLabelAndHint(intent: Intent): Boolean {
+        when (intent.action) {
+            INTENT_ACTION_REPLY -> {
+                return showReplyLabelAndHint(intent.getParcelableExtra(EXTRA_STATUS))
+            }
+            INTENT_ACTION_QUOTE -> {
+                return showQuoteLabelAndHint(intent.getParcelableExtra(EXTRA_STATUS))
+            }
+            INTENT_ACTION_EDIT_DRAFT -> {
+                val draft: Draft? = intent.getParcelableExtra(EXTRA_DRAFT)
+                when (draft?.action_type) {
+                    Draft.Action.REPLY -> {
+                        return showReplyLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                    }
+                    Draft.Action.QUOTE -> {
+                        return showQuoteLabelAndHint((draft.action_extras as? UpdateStatusActionExtras)?.inReplyToStatus)
+                    }
+                    else -> {
+                        showDefaultLabelAndHint()
+                        return false
+                    }
+                }
+            }
+            else -> {
+                showDefaultLabelAndHint()
+                return false
+            }
+        }
+    }
+
+    private fun showQuoteLabelAndHint(status: ParcelableStatus?): Boolean {
+        if (status == null) {
+            showDefaultLabelAndHint()
+            return false
+        }
+        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
+        replyLabel.text = getString(R.string.label_quote_name_text, replyToName, status.text_unescaped)
+        replyLabel.visibility = View.VISIBLE
+        editText.hint = getString(R.string.label_quote_name, replyToName)
+        return true
+    }
+
+    private fun showReplyLabelAndHint(status: ParcelableStatus?): Boolean {
+        if (status == null) {
+            showDefaultLabelAndHint()
+            return false
+        }
+        val replyToName = userColorNameManager.getDisplayName(status, nameFirst)
+        replyLabel.text = getString(R.string.label_reply_name_text, replyToName, status.text_unescaped)
+        replyLabel.visibility = View.VISIBLE
+        editText.hint = getString(R.string.label_reply_name, replyToName)
+        return true
+    }
+
+    private fun showDefaultLabelAndHint() {
+        replyLabel.visibility = View.GONE
+        editText.setHint(R.string.label_status_hint)
+    }
+
+    // MARK: End label and hint handling
 
     private fun addFanfouHtmlToMentions(text: String, spans: Array<SpanItem>?, mentions: MutableCollection<String>) {
         if (spans == null) return
@@ -1211,10 +1199,10 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     }
 
     private fun handleReplyMultipleIntent(screenNames: Array<String>?, accountKey: UserKey?,
-            inReplyToStatus: ParcelableStatus): Boolean {
-        if (screenNames == null || screenNames.isEmpty() || accountKey == null) return false
-        val myScreenName = DataStoreUtils.getAccountScreenName(this, accountKey)
-        if (TextUtils.isEmpty(myScreenName)) return false
+            inReplyToStatus: ParcelableStatus?): Boolean {
+        if (screenNames == null || screenNames.isEmpty() || accountKey == null ||
+                inReplyToStatus == null) return false
+        val myScreenName = DataStoreUtils.getAccountScreenName(this, accountKey) ?: return false
         screenNames.filterNot { it.equals(myScreenName, ignoreCase = true) }
                 .forEach { editText.append("@$it ") }
         editText.setSelection(editText.length())
@@ -1513,7 +1501,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             val intent = Intent(INTENT_ACTION_COMPOSE)
             setIntent(intent)
             handleIntent(intent)
-            setLabel(intent)
+            showLabelAndHint(intent)
             setMenu()
             updateTextCount()
             shouldSkipDraft = false

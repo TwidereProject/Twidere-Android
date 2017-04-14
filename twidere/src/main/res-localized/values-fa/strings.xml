@@ -666,7 +666,7 @@
   <string name="quick_send_summary">هنگان زدن کلید «ورود»، توییت را ارسال می‌کند.</string>
   <string name="quote_format">قالب نقل قول</string>
   <string name="quote_format_summary">«[TEXT]» = متن توییت\n«[NAME]» = نام‌کاربری توییتر</string>
-  <string name="quote_name_text">نقل‌قول <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">نقل‌قول <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">نقل قول توییت اصلی</string>
   <string name="quote_protected_status_warning_message">این توییت محافظت‌شده است.\n\nکاربراین محافظت‌شده معمولاً نمی‌خواهند توییت‌هایشان به صورت عمومی هم‌رسانی شود.</string>
   <string name="quote_user">نقل قول از <xliff:g id="user_name">%s</xliff:g></string>
@@ -691,8 +691,8 @@
   <string name="remove_from_filter">برداشتن از پالایه</string>
   <string name="remove_sensitive_mark">حذف علامت حساس</string>
   <string name="replies">پاسخ‌ها</string>
-  <string name="reply_to">پاسخ به <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">پاسخ به <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">پاسخ به <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">پاسخ به <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">گزارش هرزنامه</string>
   <string name="report_usage_statistics_now">اکنون آمار استفاده را گزارش کن</string>
   <string name="report_user">گزارش <xliff:g id="name">%s</xliff:g></string>
@@ -773,7 +773,7 @@
   <string name="state_blocking">مسدود کردن</string>
   <string name="status_format_source">‫<xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source">‫<xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> . <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">چه خبر؟</string>
+  <string name="label_status_hint">چه خبر؟</string>
   <string name="status_is_duplicate">توییتتان تکراری است.</string>
   <string name="status_menu_title_format">‫<xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">توییت فرستاده نشد.</string>

@@ -531,7 +531,7 @@
   <string name="quick_send_summary">Envia la piulada quan es premi «Retorn».</string>
   <string name="quote_format">Format de la cita</string>
   <string name="quote_format_summary">\"[TEXT]\" = Text del tweet\n\"[NAME]\" = Nom d\'usuari de Twitter</string>
-  <string name="quote_name_text">Cita <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">Cita <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Cita la piulada original</string>
   <string name="quote_protected_status_warning_message">Aquesta piulada és protegida.\n\nEls usuaris protegits normalment no volen compartir públicament llurs piulades.</string>
   <string name="quote_user">Cita a <xliff:g id="user_name">%s</xliff:g></string>
@@ -556,8 +556,8 @@
   <string name="remove_from_filter">Elimina del filtre</string>
   <string name="remove_sensitive_mark">Elimina la marca de sensible</string>
   <string name="replies">Respostes</string>
-  <string name="reply_to">Respon a <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">Respon a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">Respon a <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Respon a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Informa d\'abús</string>
   <string name="report_usage_statistics_now">Informa ara d\'estadístiques d\'ús</string>
   <string name="report_user">Informa d\'abús l\'usuari <xliff:g id="name">%s</xliff:g></string>
@@ -635,7 +635,7 @@
   <string name="sponsored_by">Patrocinat per</string>
   <string name="square">Quadrat</string>
   <string name="state_blocking">Blocatge</string>
-  <string name="status_hint">Què està passant?</string>
+  <string name="label_status_hint">Què està passant?</string>
   <string name="status_is_duplicate">La vostra piulada està duplicada.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">No s\'ha enviat la piulada</string>

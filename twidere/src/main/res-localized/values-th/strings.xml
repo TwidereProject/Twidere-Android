@@ -780,7 +780,7 @@
   <string name="quick_send_summary">ส่งทวีตเมื่อกด Enter</string>
   <string name="quote_format">รูปแบบการอ้างอิง</string>
   <string name="quote_format_summary">\"[TEXT]\" = ข้อความทวีต\n\"[NAME]\" = ชื่อผู้ใช้ใน Twitter</string>
-  <string name="quote_name_text">อ้างอิง <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">อ้างอิง <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">อ้างอิงทวีตปัจจุบัน</string>
   <string name="quote_protected_status_warning_message">ทวีตนี้ได้รับการป้องกัน\n\nผู้ใช้ที่ป้องกันไว้ไม่อยากให้ทวีตของเขาถูกแชร์ไปอย่างกว้างขวาง</string>
   <string name="quote_user">อ้างอิง <xliff:g id="user_name">%s</xliff:g></string>
@@ -805,8 +805,8 @@
   <string name="remove_from_filter">ลบออกจากตัวกรอง</string>
   <string name="remove_sensitive_mark">เลิกระบุว่าเป็นเนื้อหาที่อ่อนไหว</string>
   <string name="replies">การตอบกลับ</string>
-  <string name="reply_to">ตอบกลับหา <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">ตอบกลับ <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">ตอบกลับหา <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">ตอบกลับ <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">รายงานสแปม</string>
   <string name="report_usage_statistics_now">รายงานสถิติการใช้งาน</string>
   <string name="report_user">รายงาน <xliff:g id="name">%s</xliff:g></string>
@@ -887,7 +887,7 @@
   <string name="state_blocking">กำลังบล็อค</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">มีอะไรเกิดขึ้นบ้าง?</string>
+  <string name="label_status_hint">มีอะไรเกิดขึ้นบ้าง?</string>
   <string name="status_is_duplicate">คุณทวีตข้อความซ้ำกัน</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">ข้อความไม่ถูกส่ง</string>

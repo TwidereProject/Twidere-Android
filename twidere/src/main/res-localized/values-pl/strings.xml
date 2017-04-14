@@ -555,7 +555,7 @@
   <string name="remove_from_filter">Usuń z filtra</string>
   <string name="remove_sensitive_mark">Usuń oznaczenie jako wrażliwe</string>
   <string name="replies">Odpowiedzi</string>
-  <string name="reply_to">Odpowiedz do <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Odpowiedz do <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Zgłoś spam</string>
   <string name="report_user">Zgłoś <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">Zgłoś <xliff:g id="name">%s</xliff:g> za spam? Użytkownik zostanie także zablokowany.</string>
@@ -616,7 +616,7 @@
   <string name="special_thanks_to">Specjalne podziękowania dla</string>
   <string name="sponsored_by">Sponsorowana przez</string>
   <string name="square">Kwadrat</string>
-  <string name="status_hint">Co się dzieje?</string>
+  <string name="label_status_hint">Co się dzieje?</string>
   <string name="status_is_duplicate">Twój tweet jest duplikatem.</string>
   <string name="status_not_updated">Tweet nie został wysłany.</string>
   <string name="status_not_updated_summary">Tweet nie został wysłany, zapisano w szkicach.</string>

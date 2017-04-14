@@ -770,7 +770,7 @@
   <string name="quick_send_summary">Envoyer le tweet lorsqu\'on appuye sur « Entrée ».</string>
   <string name="quote_format">Format de citation</string>
   <string name="quote_format_summary">\"[TEXT]\" = Texte du Tweet\n\"[NAME]\" = Nom de compte Twitter</string>
-  <string name="quote_name_text">Citer <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text">Citer <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citer le tweet original</string>
   <string name="quote_protected_status_warning_message">Ce tweet est protégé.\n\nLes utilisateurs protégés ne souhaitent généralement pas que leurs tweets soient partagés publiquement.</string>
   <string name="quote_user">Citer <xliff:g id="user_name">%s</xliff:g></string>
@@ -795,8 +795,8 @@
   <string name="remove_from_filter">Enlever du filtre</string>
   <string name="remove_sensitive_mark">Ne plus marquer comme sensible</string>
   <string name="replies">Réponses</string>
-  <string name="reply_to">Répondre à <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to_name_text">Répondre à <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name">Répondre à <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Répondre à <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Signaler comme spam</string>
   <string name="report_usage_statistics_now">Rapporter les statistiques d\'utilisation maintenant</string>
   <string name="report_user">Signaler <xliff:g id="name">%s</xliff:g></string>
@@ -877,7 +877,7 @@
   <string name="state_blocking">Bloquant</string>
   <string name="status_format_source"><xliff:g example="Twidere pour Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere pour Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">Quoi de neuf ?</string>
+  <string name="label_status_hint">Quoi de neuf ?</string>
   <string name="status_is_duplicate">Vous avez déjà tweeté ça.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet non envoyé.</string>

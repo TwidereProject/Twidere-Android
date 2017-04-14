@@ -329,7 +329,7 @@
   <string name="remember_position_summary">זכור מיקום ברשימה/כרטיסיות לפני סגירת Twidere</string>
   <string name="remove">הסר</string>
   <string name="remove_sensitive_mark">הסר סימון כתוכן רגיש</string>
-  <string name="reply_to">השב ל<xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">השב ל<xliff:g id="user_name">%s</xliff:g></string>
   <string name="reported_user_for_spam">דיווחת על משתמש זה כמפיץ ספאם.</string>
   <string name="reported_users_for_spam">דיווחת על משתמשים אלה כמפיצים ספאם.</string>
   <string name="retry_on_network_issue_summary">נסה להתאושש מבעיית רשת באופן אוטומטי</string>
@@ -370,7 +370,7 @@
   <string name="special_thanks_to">תודה מיחדת ל</string>
   <string name="sponsored_by">בחסות</string>
   <string name="square">מרובע</string>
-  <string name="status_hint">מה קורה?</string>
+  <string name="label_status_hint">מה קורה?</string>
   <string name="status_not_updated">ציוץ לא נשלח.</string>
   <string name="status_not_updated_summary">הציוץ לא נשלח, ונשמר לטיוטות.</string>
   <string name="status_shortener">מקצר ציוצים</string>

@@ -787,7 +787,7 @@
   <string name="quick_send_summary">エンターキーを押すと送信します。</string>
   <string name="quote_format">引用形式</string>
   <string name="quote_format_summary">\"[TEXT]\" = ツイート内容\n\"[NAME]\" = ユーザー名</string>
-  <string name="quote_name_text"><xliff:g id="name">%1$s</xliff:g>さんのツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>さんのツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">ツイートを引用</string>
   <string name="quote_protected_status_warning_message">このツイートは非公開にされています。\n\n非公開ユーザーのツイートを公開しないでください。</string>
   <string name="quote_user"><xliff:g id="user_name">%s</xliff:g>さんのツイートを引用</string>
@@ -812,8 +812,8 @@
   <string name="remove_from_filter">フィルタから削除</string>
   <string name="remove_sensitive_mark">不適切な内容のマークを消去</string>
   <string name="replies">返信</string>
-  <string name="reply_to"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
-  <string name="reply_to_name_text"><xliff:g id="name">%1$s</xliff:g>さんへの返信: <xliff:g id="text">%2$s</xliff:g></string>
+  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
+  <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g>さんへの返信: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">スパム報告</string>
   <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g>さんをスパム報告する</string>
@@ -895,7 +895,7 @@
   <string name="state_blocking">ブロックしています</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="status_hint">いまどうしてる？</string>
+  <string name="label_status_hint">いまどうしてる？</string>
   <string name="status_is_duplicate">既にあなたは同じツイートを送信済みです。</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">ツイートは送信されませんでした。</string>

@@ -551,11 +551,16 @@
     <string name="label_photos">Photos</string>
     <string name="label_poll">Poll</string>
     <string name="label_powered_by_giphy">Powered by GIPHY</string>
+    <string name="label_quote_name">Quote <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_quote_name_text">Quote <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="label_refresh_and_sync_service">Refresh &amp; Sync service</string>
     <string name="label_refresh_service">Refresh service</string>
+    <string name="label_reply_name">Reply to <xliff:g id="user_name">%s</xliff:g></string>
+    <string name="label_reply_name_text">Reply to <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="label_schedule_time_buffer_default">Buffer default</string>
     <string name="label_send_at">Send at</string>
     <string name="label_sensitive_content">Sensitive content</string>
+    <string name="label_status_hint">What\'s happening?</string>
     <string name="label_status_not_available">Tweet not available</string>
     <string name="label_statuses">Tweets</string>
     <string name="label_statuses_replies">Tweets and replies</string>
@@ -941,7 +946,6 @@
 
     <string name="quote_format">Quote format</string>
     <string name="quote_format_summary">\"[TEXT]\" = Tweet text\n\"[NAME]\" = Twitter username</string>
-    <string name="quote_name_text">Quote <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="quote_original_status">Quote original tweet</string>
     <string name="quote_protected_status_warning_message">This tweet is protected.\n\nProtected users usually don\'t want their tweets to be shared publicly.</string>
     <string name="quote_user">Quote <xliff:g id="user_name">%s</xliff:g></string>
@@ -974,9 +978,6 @@
     <string name="remove_sensitive_mark">Remove sensitive mark</string>
 
     <string name="replies">Replies</string>
-
-    <string name="reply_to">Reply to <xliff:g id="user_name">%s</xliff:g></string>
-    <string name="reply_to_name_text">Reply to <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
 
     <string name="report_for_spam">Report spam</string>
     <string name="report_usage_statistics_now">Report usage statistics now</string>
@@ -1096,7 +1097,6 @@
 
     <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
     <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-    <string name="status_hint">What\'s happening?</string>
     <string name="status_is_duplicate">Your tweet is a duplicate.</string>
     <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
     <string name="status_not_updated">Tweet not sent.</string>

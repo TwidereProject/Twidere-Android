@@ -118,7 +118,7 @@
   <string name="provider_default">Twidere</string>
   <!-- Fanfou is a Chinese micro blogging website http://fanfou.com/ -->
   <string name="quote_user">Παράθεση <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="reply_to">Σε απάντηση του <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Σε απάντηση του <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_count">Έγινε ρετουϊτ από <xliff:g id="retweet_count">%d</xliff:g> χρήστες</string>
   <string name="retweeted_by_name">Έγινε ρετουϊτ από <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Έγινε ρετουϊτ από <xliff:g id="user_name">%1$s</xliff:g> και <xliff:g id="retweet_count">%2$d</xliff:g> άλλους</string>
@@ -130,7 +130,7 @@
   <string name="show_absolute_time">Εμφάνιση απόλυτου χρόνου</string>
   <string name="sign_in">Σύνδεση</string>
   <string name="sign_up">Εγγραφή</string>
-  <string name="status_hint">Τι συμβαίνει;</string>
+  <string name="label_status_hint">Τι συμβαίνει;</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Ρετουϊτ</string>
   <!-- Dark theme -->

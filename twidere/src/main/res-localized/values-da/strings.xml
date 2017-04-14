@@ -220,7 +220,7 @@
   <string name="refresh_type_trends">Trends</string>
   <string name="remember_position">Husk placering</string>
   <string name="remember_position_summary">Husk liste/fane position før Twidere lukkes</string>
-  <string name="reply_to">Som svar på <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Som svar på <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Rapporter spam</string>
   <string name="reported_user_for_spam">Rapporterede denne bruger for spam.</string>
   <string name="reported_users_for_spam">Rapporterede disse brugere for spam.</string>
@@ -245,7 +245,7 @@
   <string name="sign_up">Tilmeld</string>
   <string name="sound">Lyd</string>
   <string name="source"><xliff:g id="source">%s</xliff:g></string>
-  <string name="status_hint">Hvad sker der?</string>
+  <string name="label_status_hint">Hvad sker der?</string>
   <string name="status_is_duplicate">Din tweet er et duplikat.</string>
   <string name="status_shortener">Tweetforkorter</string>
   <string name="status_shortener_default">Ingen (Annuller afsendelse)</string>

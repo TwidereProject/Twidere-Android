@@ -296,7 +296,7 @@
   <string name="remember_position">Zapamatovat si pozici</string>
   <string name="remove">Odstranit</string>
   <string name="replies">Odpovědi</string>
-  <string name="reply_to">Odpovědět uživateli <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name">Odpovědět uživateli <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Nahlásit spam</string>
   <string name="reported_user_for_spam">Uživatel nahlášen kvůli spamu.</string>
   <string name="reported_users_for_spam">Uživatelé nahlášení kvůli spamu.</string>
@@ -344,7 +344,7 @@
   <string name="special_thanks_to">Zvláštní poděkování</string>
   <string name="sponsored_by">Sponzorováno</string>
   <string name="square">Hranaté</string>
-  <string name="status_hint">Co se děje?</string>
+  <string name="label_status_hint">Co se děje?</string>
   <string name="status_not_updated">Tweet nebyl odeslán.</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweetovat</string>
