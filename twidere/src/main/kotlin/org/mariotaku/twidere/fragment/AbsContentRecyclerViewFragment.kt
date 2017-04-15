@@ -177,7 +177,7 @@ abstract class AbsContentRecyclerViewFragment<A : LoadMoreSupportAdapter<Recycle
         super.onActivityCreated(savedInstanceState)
         drawerCallback = SimpleDrawerCallback(recyclerView)
 
-        val backgroundColor = ThemeUtils.getThemeBackgroundColor(context)
+        val backgroundColor = ThemeUtils.getColorBackground(context)
         val colorRes = TwidereColorUtils.getContrastYIQ(backgroundColor,
                 R.color.bg_refresh_progress_color_light, R.color.bg_refresh_progress_color_dark)
         swipeLayout.setOnRefreshListener(this)

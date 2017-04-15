@@ -603,7 +603,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
     override fun onActionModeStarted(mode: ActionMode) {
         super.onActionModeStarted(mode)
         ThemeUtils.applyColorFilterToMenuIcon(mode.menu,
-                ThemeUtils.getContrastActionBarItemColor(this), 0, 0, Mode.MULTIPLY)
+                ThemeUtils.getColorForeground(this), 0, 0, Mode.MULTIPLY)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -778,7 +778,7 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
             if (displayDoneIcon) {
                 Glide.clear(accountProfileImage)
                 accountProfileImage.setColorFilter(ThemeUtils.getColorFromAttribute(this,
-                        android.R.attr.colorForeground, 0))
+                        android.R.attr.colorForeground))
                 accountProfileImage.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 accountProfileImage.setImageResource(R.drawable.ic_action_confirm)
             } else {

@@ -79,7 +79,7 @@ class SettingsActivity : BaseActivity(), OnItemClickListener, OnPreferenceStartF
         val backgroundOption = currentThemeBackgroundOption
         val backgroundAlpha = currentThemeBackgroundAlpha
 
-        detailFragmentContainer.setBackgroundColor(ThemeUtils.getThemeBackgroundColor(this,
+        detailFragmentContainer.setBackgroundColor(ThemeUtils.getColorBackground(this,
                 backgroundOption, backgroundAlpha))
 
         slidingPane.setShadowResourceLeft(R.drawable.sliding_pane_shadow_left)

@@ -28,7 +28,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorInt
-import android.support.annotation.FloatRange
 import android.support.annotation.StyleRes
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.ColorUtils
@@ -45,7 +44,6 @@ import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.chameleon.ChameleonUtils
 import org.mariotaku.kpreferences.get
 import org.mariotaku.twidere.R
-import org.mariotaku.twidere.TwidereConstants
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_SOLID
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.VALUE_THEME_BACKGROUND_TRANSPARENT
 import org.mariotaku.twidere.constant.themeBackgroundAlphaKey
@@ -59,11 +57,8 @@ import org.mariotaku.twidere.preference.ThemeBackgroundPreference.MIN_ALPHA
 import org.mariotaku.twidere.util.menu.TwidereMenuInfo
 import org.mariotaku.twidere.util.support.ViewSupport
 
-/**
- * Created by mariotaku on 2017/4/15.
- */
-
 object ThemeUtils {
+
     const val ACCENT_COLOR_THRESHOLD = 192
     const val DARK_COLOR_THRESHOLD = 128
 
@@ -75,8 +70,8 @@ object ThemeUtils {
         val backgroundOption = preferences[themeBackgroundOptionKey]
         if (theme.isToolbarColored) {
             theme.colorToolbar = theme.colorPrimary
-        } else if (backgroundOption == TwidereConstants.VALUE_THEME_BACKGROUND_SOLID) {
-            theme.colorToolbar = if (ThemeUtils.isLightTheme(context)) {
+        } else if (backgroundOption == VALUE_THEME_BACKGROUND_SOLID) {
+            theme.colorToolbar = if (isLightTheme(context)) {
                 Color.WHITE
             } else {
                 Color.BLACK
@@ -85,11 +80,11 @@ object ThemeUtils {
 
         if (isTransparentBackground(backgroundOption)) {
             theme.colorToolbar = ColorUtils.setAlphaComponent(theme.colorToolbar,
-                    ThemeUtils.getActionBarAlpha(preferences[themeBackgroundAlphaKey]))
+                    getActionBarAlpha(preferences[themeBackgroundAlphaKey]))
         }
         theme.statusBarColor = ChameleonUtils.darkenColor(theme.colorToolbar)
         theme.lightStatusBarMode = Chameleon.Theme.LightStatusBarMode.AUTO
-        theme.textColorLink = ThemeUtils.getOptimalAccentColor(theme.colorAccent, theme.colorForeground)
+        theme.textColorLink = getOptimalAccentColor(theme.colorAccent, theme.colorForeground)
 
         return theme
     }
@@ -101,19 +96,26 @@ object ThemeUtils {
     }
 
     fun getTextColorPrimary(context: Context): Int {
-        return getColorFromAttribute(context, android.R.attr.textColorPrimary, 0)
+        return getColorFromAttribute(context, android.R.attr.textColorPrimary)
     }
 
     fun getTextColorSecondary(context: Context): Int {
-        return getColorFromAttribute(context, android.R.attr.textColorSecondary, 0)
+        return getColorFromAttribute(context, android.R.attr.textColorSecondary)
     }
 
+    fun getColorBackground(context: Context, styleRes: Int = 0): Int {
+        return getColorFromAttribute(context, android.R.attr.colorBackground, styleRes)
+    }
+
+    fun getColorForeground(context: Context, styleRes: Int = 0): Int {
+        return getColorFromAttribute(context, android.R.attr.colorForeground, styleRes)
+    }
+
+
     fun getCardBackgroundColor(context: Context, backgroundOption: String, themeAlpha: Int): Int {
-        val a = context.obtainStyledAttributes(intArrayOf(R.attr.cardItemBackgroundColor))
-        val color = a.getColor(0, Color.TRANSPARENT)
-        a.recycle()
+        val color = getColorFromAttribute(context, R.attr.cardItemBackgroundColor)
         if (isTransparentBackground(backgroundOption)) {
-            return themeAlpha shl 24 or (0x00FFFFFF and color)
+            return ColorUtils.setAlphaComponent(color, themeAlpha)
         } else if (isSolidBackground(backgroundOption)) {
             return TwidereColorUtils.getContrastYIQ(color, Color.WHITE, Color.BLACK)
         } else {
@@ -121,23 +123,9 @@ object ThemeUtils {
         }
     }
 
-    fun getColorBackground(context: Context): Int {
-        val a = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorBackground))
-        try {
-            return a.getColor(0, Color.TRANSPARENT)
-        } finally {
-            a.recycle()
-        }
-    }
-
-    fun computeDarkColor(color: Int): Int {
-        return shiftColor(color, 0.9f)
-    }
-
     fun isLightColor(color: Int): Boolean {
         return ChameleonUtils.isColorLight(color)
     }
-
 
     fun getColorDependent(color: Int): Int {
         return ChameleonUtils.getColorDependent(color)
@@ -160,38 +148,15 @@ object ThemeUtils {
         return VALUE_THEME_BACKGROUND_TRANSPARENT == option
     }
 
-    fun getThemeBackgroundColor(context: Context, backgroundOption: String, alpha: Int): Int {
+    fun getColorBackground(context: Context, backgroundOption: String, alpha: Int): Int {
         if (isWindowFloating(context)) {
-            return getThemeBackgroundColor(context)
+            return getColorBackground(context)
         } else if (backgroundOption == VALUE_THEME_BACKGROUND_TRANSPARENT) {
-            return ColorUtils.setAlphaComponent(getThemeBackgroundColor(context), alpha)
+            return ColorUtils.setAlphaComponent(getColorBackground(context), alpha)
         } else if (backgroundOption == VALUE_THEME_BACKGROUND_SOLID) {
             return if (isLightTheme(context)) Color.WHITE else Color.BLACK
         } else {
-            return getThemeBackgroundColor(context)
-        }
-    }
-
-
-    fun getThemeBackgroundColor(context: Context): Int {
-        val a = context.obtainStyledAttributes(intArrayOf(android.R.attr.colorBackground))
-        try {
-            return a.getColor(0, 0)
-        } finally {
-            a.recycle()
-        }
-    }
-
-    fun getThemeBackgroundColor(context: Context, themeRes: Int): Int {
-        if (themeRes == 0) {
-            return getThemeBackgroundColor(context)
-        }
-        val a = context.obtainStyledAttributes(null, intArrayOf(android.R.attr.colorBackground),
-                0, themeRes)
-        try {
-            return a.getColor(0, 0)
-        } finally {
-            a.recycle()
+            return getColorBackground(context)
         }
     }
 
@@ -208,14 +173,6 @@ object ThemeUtils {
         }
     }
 
-    fun getDrawableFromThemeAttribute(context: Context, attr: Int): Drawable {
-        val a = TintTypedArray.obtainStyledAttributes(context, null, intArrayOf(attr))
-        try {
-            return a.getDrawable(0)
-        } finally {
-            a.recycle()
-        }
-    }
 
     fun wrapMenuIcon(menu: Menu, itemColor: Int, subItemColor: Int, vararg excludeGroups: Int) {
         for (i in 0 until menu.size()) {
@@ -232,12 +189,11 @@ object ThemeUtils {
             colorLight: Int = ContextCompat.getColor(view.context, R.color.action_icon_light),
             vararg excludeGroups: Int) {
         val context = view.context
-        val itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context)
-        val popupItemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context, view.popupTheme)
+        val itemBackgroundColor = getColorBackground(context)
+        val popupItemBackgroundColor = getColorBackground(context, view.popupTheme)
         val itemColor = TwidereColorUtils.getContrastYIQ(itemBackgroundColor, colorDark, colorLight)
         val popupItemColor = TwidereColorUtils.getContrastYIQ(popupItemBackgroundColor, colorDark, colorLight)
         val menu = view.menu
-        val childCount = view.childCount
         var k = 0
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
@@ -255,7 +211,6 @@ object ThemeUtils {
     fun wrapToolbarMenuIcon(view: ActionMenuView?, itemColor: Int, popupItemColor: Int, vararg excludeGroups: Int) {
         if (view == null) return
         val menu = view.menu
-        val childCount = view.childCount
         var k = 0
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)
@@ -284,28 +239,15 @@ object ThemeUtils {
         item.icon = newIcon
     }
 
-    fun getColorFromAttribute(context: Context, attr: Int, def: Int = 0): Int {
-        val a = context.obtainStyledAttributes(intArrayOf(attr))
-        try {
-            return a.getColor(0, def)
-        } finally {
-            a.recycle()
-        }
-    }
-
     fun getActionIconColor(context: Context): Int {
-        val itemBackgroundColor = ThemeUtils.getThemeBackgroundColor(context)
+        val itemBackgroundColor = getColorBackground(context)
         return getActionIconColor(context, itemBackgroundColor)
     }
 
     fun getActionIconColor(context: Context, backgroundColor: Int): Int {
         val colorDark = ContextCompat.getColor(context, R.color.action_icon_dark)
         val colorLight = ContextCompat.getColor(context, R.color.action_icon_light)
-        return if (ThemeUtils.isLightColor(backgroundColor)) colorDark else colorLight
-    }
-
-    fun getContrastActionBarItemColor(context: Context): Int {
-        return ThemeUtils.getColorFromAttribute(context, android.R.attr.colorForeground, 0)
+        return if (isLightColor(backgroundColor)) colorDark else colorLight
     }
 
     fun getSelectableItemBackgroundDrawable(context: Context): Drawable? {
@@ -335,7 +277,6 @@ object ThemeUtils {
         } else {
             backgroundColor = getColorBackground(context)
         }
-        backgroundColor = backgroundColor and 0x00FFFFFF
         backgroundColor = ColorUtils.setAlphaComponent(backgroundColor,
                 alpha.coerceIn(MIN_ALPHA..MAX_ALPHA))
         return WindowBackgroundDrawable(backgroundColor)
@@ -484,7 +425,7 @@ object ThemeUtils {
     }
 
     fun applyToolbarItemColor(context: Context, toolbar: Toolbar, toolbarColor: Int) {
-        val contrastForegroundColor = ThemeUtils.getColorDependent(toolbarColor)
+        val contrastForegroundColor = getColorDependent(toolbarColor)
         toolbar.setTitleTextColor(contrastForegroundColor)
         toolbar.setSubtitleTextColor(contrastForegroundColor)
         val popupItemColor: Int
@@ -508,15 +449,21 @@ object ThemeUtils {
         }
     }
 
-    @ColorInt
-    private fun shiftColor(@ColorInt color: Int, @FloatRange(from = 0.0, to = 2.0) by: Float): Int {
-        if (by == 1.0f) {
-            return color
-        } else {
-            val hsv = FloatArray(3)
-            Color.colorToHSV(color, hsv)
-            hsv[2] *= by
-            return Color.HSVToColor(hsv)
+    fun getColorFromAttribute(context: Context, attr: Int, styleRes: Int = 0, def: Int = 0): Int {
+        val a = context.obtainStyledAttributes(null, intArrayOf(attr), 0, styleRes)
+        try {
+            return a.getColor(0, def)
+        } finally {
+            a.recycle()
+        }
+    }
+
+    fun getDrawableFromThemeAttribute(context: Context, attr: Int): Drawable {
+        val a = TintTypedArray.obtainStyledAttributes(context, null, intArrayOf(attr))
+        try {
+            return a.getDrawable(0)
+        } finally {
+            a.recycle()
         }
     }
 
