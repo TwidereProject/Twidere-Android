@@ -145,12 +145,12 @@ class UserColorNameManager(context: Context) {
     }
 
     fun unregisterColorChangedListener(listener: UserColorChangedListener) {
-        val preferenceChangeListener = colorChangedListeners[listener] ?: return
+        val preferenceChangeListener = colorChangedListeners.remove(listener) ?: return
         colorPreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
     fun unregisterNicknameChangedListener(listener: UserNicknameChangedListener) {
-        val preferenceChangeListener = nicknameChangedListeners[listener] ?: return
+        val preferenceChangeListener = nicknameChangedListeners.remove(listener) ?: return
         nicknamePreferences.unregisterOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 
