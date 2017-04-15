@@ -263,7 +263,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/quotedText"
-                android:layout_marginTop="@dimen/element_spacing_small"
+                android:layout_marginTop="@dimen/element_spacing_xsmall"
                 android:drawableLeft="@drawable/ic_label_gallery"
                 android:drawableStart="@drawable/ic_label_gallery"
                 android:gravity="center_vertical"
