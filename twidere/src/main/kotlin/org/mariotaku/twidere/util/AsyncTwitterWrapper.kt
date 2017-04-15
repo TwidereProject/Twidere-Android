@@ -40,6 +40,7 @@ import org.mariotaku.twidere.constant.SharedPreferenceConstants
 import org.mariotaku.twidere.constant.nameFirstKey
 import org.mariotaku.twidere.model.*
 import org.mariotaku.twidere.model.event.*
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.model.util.ParcelableRelationshipUtils
 import org.mariotaku.twidere.model.util.ParcelableUserListUtils
 import org.mariotaku.twidere.provider.TwidereDataStore.*
@@ -379,7 +380,7 @@ class AsyncTwitterWrapper(
             override fun onExecute(params: Any?) {
                 for (accountKey in accountKeys) {
                     val microBlog = MicroBlogAPIFactory.getInstance(context, accountKey) ?: continue
-                    if (!Utils.isOfficialCredentials(context, accountKey)) continue
+                    if (!AccountUtils.isOfficial(context, accountKey)) continue
                     microBlog.setActivitiesAboutMeUnread(cursor)
                 }
             }

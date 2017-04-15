@@ -962,15 +962,15 @@ object DataStoreUtils {
     private fun <T> getOfficialSeparatedIds(context: Context, getFromDatabase: (Array<UserKey?>, Boolean) -> T,
             mergeResult: (T, T) -> T, accountKeys: Array<UserKey?>): T {
         val officialKeys = Array(accountKeys.size) {
-            val key = accountKeys[it]
-            if (Utils.isOfficialCredentials(context, key)) {
+            val key = accountKeys[it] ?: return@Array null
+            if (AccountUtils.isOfficial(context, key)) {
                 return@Array key
             }
             return@Array null
         }
         val notOfficialKeys = Array(accountKeys.size) {
-            val key = accountKeys[it]
-            if (Utils.isOfficialCredentials(context, key)) {
+            val key = accountKeys[it] ?: return@Array null
+            if (AccountUtils.isOfficial(context, key)) {
                 return@Array null
             }
             return@Array key

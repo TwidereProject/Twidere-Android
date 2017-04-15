@@ -87,7 +87,6 @@ import org.mariotaku.twidere.Constants;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.CustomTabType;
 import org.mariotaku.twidere.annotation.ProfileImageSize;
-import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.ParcelableStatus;
 import org.mariotaku.twidere.model.ParcelableUserMention;
@@ -291,18 +290,6 @@ public final class Utils implements Constants {
     public static boolean isComposeNowSupported(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN || context == null) return false;
         return hasNavBar(context);
-    }
-
-    public static boolean isOfficialCredentials(@NonNull final Context context, final UserKey accountKey) {
-        final AccountDetails details = AccountUtils.getAccountDetails(AccountManager.get(context), accountKey, true);
-        if (details == null) return false;
-        return AccountDetailsExtensionsKt.isOfficial(details, context);
-    }
-
-
-    public static boolean isOfficialCredentials(@NonNull final Context context,
-            @NonNull final AccountDetails account) {
-        return AccountDetailsExtensionsKt.isOfficial(account, context);
     }
 
     public static boolean setLastSeen(Context context, ParcelableUserMention[] entities, long time) {

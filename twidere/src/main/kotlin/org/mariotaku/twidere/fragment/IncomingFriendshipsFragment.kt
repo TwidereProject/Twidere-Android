@@ -30,7 +30,7 @@ import org.mariotaku.twidere.loader.CursorSupportUsersLoader
 import org.mariotaku.twidere.loader.IncomingFriendshipsLoader
 import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.model.event.FriendshipTaskEvent
-import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.model.util.AccountUtils
 import org.mariotaku.twidere.view.holder.UserViewHolder
 
 class IncomingFriendshipsFragment : CursorUsersListFragment(), IUsersAdapter.RequestClickListener {
@@ -38,7 +38,7 @@ class IncomingFriendshipsFragment : CursorUsersListFragment(), IUsersAdapter.Req
 
     override fun onCreateUsersLoader(context: Context, args: Bundle,
             fromUser: Boolean): CursorSupportUsersLoader {
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
+        val accountKey = args.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY)
         val loader = IncomingFriendshipsLoader(context, accountKey, adapter.getData(), fromUser)
         loader.cursor = nextCursor
         loader.page = nextPage
@@ -47,14 +47,11 @@ class IncomingFriendshipsFragment : CursorUsersListFragment(), IUsersAdapter.Req
 
     override fun onCreateAdapter(context: Context): ParcelableUsersAdapter {
         val adapter = super.onCreateAdapter(context)
-        val args = arguments
-        val accountKey = args.getParcelable<UserKey>(EXTRA_ACCOUNT_KEY)
-        if (accountKey == null) {
-            adapter.requestClickListener = null
-        } else if (USER_TYPE_FANFOU_COM == accountKey.host || Utils.isOfficialCredentials(context, accountKey)) {
+        val accountKey = arguments.getParcelable<UserKey?>(EXTRA_ACCOUNT_KEY) ?: return adapter
+        if (USER_TYPE_FANFOU_COM == accountKey.host) {
             adapter.requestClickListener = this
-        } else {
-            adapter.requestClickListener = null
+        } else if (AccountUtils.isOfficial(context, accountKey)) {
+            adapter.requestClickListener = this
         }
         return adapter
     }

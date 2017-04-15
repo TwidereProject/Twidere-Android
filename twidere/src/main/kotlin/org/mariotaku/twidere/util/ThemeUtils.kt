@@ -208,8 +208,7 @@ object ThemeUtils {
     }
 
 
-    fun wrapToolbarMenuIcon(view: ActionMenuView?, itemColor: Int, popupItemColor: Int, vararg excludeGroups: Int) {
-        if (view == null) return
+    fun wrapToolbarMenuIcon(view: ActionMenuView, itemColor: Int, popupItemColor: Int, vararg excludeGroups: Int) {
         val menu = view.menu
         var k = 0
         for (i in 0 until menu.size()) {

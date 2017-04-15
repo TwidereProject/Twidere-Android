@@ -92,6 +92,7 @@ import org.mariotaku.twidere.extension.applyTheme
 import org.mariotaku.twidere.extension.loadProfileImage
 import org.mariotaku.twidere.extension.model.applyTo
 import org.mariotaku.twidere.extension.model.getAccountType
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.extension.model.media_type
 import org.mariotaku.twidere.extension.view.calculateSpaceItemHeight
 import org.mariotaku.twidere.fragment.AbsStatusesFragment.Companion.handleActionClick
@@ -1004,10 +1005,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
 
 
             val lang = status.lang
-            if (!Utils.isOfficialCredentials(context, account) || !CheckUtils.isValidLocale(lang)) {
-                itemView.translateLabel.setText(R.string.unknown_language)
-                itemView.translateContainer.visibility = View.GONE
-            } else {
+            if (CheckUtils.isValidLocale(lang) && account.isOfficial(context)) {
                 val locale = Locale(lang)
                 itemView.translateContainer.visibility = View.VISIBLE
                 if (translation != null) {
@@ -1019,6 +1017,9 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                             locale.displayLanguage)
                     itemView.translateResult.visibility = View.GONE
                 }
+            } else {
+                itemView.translateLabel.setText(R.string.unknown_language)
+                itemView.translateContainer.visibility = View.GONE
             }
 
             itemView.text.setTextIsSelectable(true)
@@ -1108,7 +1109,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                 provider.setUseStar(useStar)
                 provider.init(itemView.menuBar, favoriteItem)
             }
-            ThemeUtils.wrapMenuIcon(itemView.menuBar, MENU_GROUP_STATUS_SHARE)
+            ThemeUtils.wrapMenuIcon(itemView.menuBar, excludeGroups = MENU_GROUP_STATUS_SHARE)
             itemView.mediaPreviewLoad.setOnClickListener(this)
             itemView.profileContainer.setOnClickListener(this)
             retweetedByView.setOnClickListener(this)

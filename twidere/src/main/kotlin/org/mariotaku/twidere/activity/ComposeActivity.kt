@@ -602,8 +602,8 @@ class ComposeActivity : BaseActivity(), OnMenuItemClickListener, OnClickListener
 
     override fun onActionModeStarted(mode: ActionMode) {
         super.onActionModeStarted(mode)
-        ThemeUtils.applyColorFilterToMenuIcon(mode.menu,
-                ThemeUtils.getColorForeground(this), 0, 0, Mode.MULTIPLY)
+        ThemeUtils.applyColorFilterToMenuIcon(mode.menu, ThemeUtils.getColorForeground(this), 0, 0,
+                Mode.MULTIPLY)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {

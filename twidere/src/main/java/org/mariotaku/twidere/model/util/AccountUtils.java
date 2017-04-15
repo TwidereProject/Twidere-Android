@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import org.mariotaku.twidere.R;
 import org.mariotaku.twidere.annotation.AccountType;
 import org.mariotaku.twidere.annotation.AuthTypeInt;
-import org.mariotaku.twidere.extension.model.AccountDetailsExtensionsKt;
 import org.mariotaku.twidere.extension.model.AccountExtensionsKt;
 import org.mariotaku.twidere.model.AccountDetails;
 import org.mariotaku.twidere.model.UserKey;
@@ -118,9 +117,17 @@ public class AccountUtils {
         return null;
     }
 
+    public static boolean isOfficial(@NonNull final Context context, @NonNull final UserKey accountKey) {
+        AccountManager am = AccountManager.get(context);
+        Account account = AccountUtils.findByAccountKey(am, accountKey);
+        if (account == null) return false;
+        return AccountExtensionsKt.isOfficial(account, am, context);
+    }
+
     public static boolean hasOfficialKeyAccount(Context context) {
-        for (AccountDetails details : getAllAccountDetails(AccountManager.get(context), true)) {
-            if (AccountDetailsExtensionsKt.isOfficial(details, context)) {
+        final AccountManager am = AccountManager.get(context);
+        for (Account account : getAccounts(am)) {
+            if (AccountExtensionsKt.isOfficial(account, am, context)) {
                 return true;
             }
         }

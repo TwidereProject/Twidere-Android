@@ -50,6 +50,7 @@ import org.mariotaku.twidere.activity.ColorPickerDialogActivity
 import org.mariotaku.twidere.constant.favoriteConfirmationKey
 import org.mariotaku.twidere.constant.iWantMyStarsBackKey
 import org.mariotaku.twidere.constant.nameFirstKey
+import org.mariotaku.twidere.extension.model.isOfficial
 import org.mariotaku.twidere.fragment.*
 import org.mariotaku.twidere.fragment.content.FavoriteConfirmDialogFragment
 import org.mariotaku.twidere.fragment.content.RetweetQuoteDialogFragment
@@ -171,7 +172,7 @@ object MenuUtils {
         }
         val translate = menu.findItem(R.id.translate)
         if (translate != null) {
-            val isOfficialKey = Utils.isOfficialCredentials(context, details)
+            val isOfficialKey = details.isOfficial(context)
             menu.setItemAvailability(R.id.translate, isOfficialKey)
         }
         menu.removeGroup(MENU_GROUP_STATUS_EXTENSION)
