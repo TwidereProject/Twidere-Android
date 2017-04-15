@@ -533,13 +533,11 @@
   <string name="proxy_summary">Tüm ağ istekleri için proxy kullanır.</string>
   <string name="proxy_type">Proxy türü</string>
   <string name="proxy_username">Proxy kullanıcı adı</string>
-  <string name="title_public_timeline">Genel zaman çizelgesi</string>
   <string name="query">Sorgu</string>
   <string name="quick_send">Göndermek İçin \"Enter\"a Basın</string>
   <string name="quick_send_summary">\"Enter\"a basıldığında tweet\'i gönder.</string>
   <string name="quote_format">Alıntı şekli</string>
   <string name="quote_format_summary">\"[TEXT]\" = Tweet metni\n\"[NAME]\" = Twitter kullanıcı adı</string>
-  <string name="label_quote_name_text">Alıntı <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Özgün tweeti alıntıla</string>
   <string name="quote_protected_status_warning_message">Bu tweet korumalı.\n\nKorumalı kullanıcılar genellikle herkese açık tweet atmak istemez.</string>
   <string name="quote_user">Alıntı yap <xliff:g id="user_name">%s</xliff:g></string>
@@ -564,8 +562,6 @@
   <string name="remove_from_filter">Filtreden kaldır</string>
   <string name="remove_sensitive_mark">Hassas işaretini kaldır</string>
   <string name="replies">Yanıtlar</string>
-  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g> adlı kişiye cevap ver</string>
-  <string name="label_reply_name_text">Cevap <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Spam bildir</string>
   <string name="report_usage_statistics_now">Kullanım istatistiklerini şimdi gönder</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g> Şikayet Et</string>
@@ -577,7 +573,6 @@
   <string name="reset_to_default">Varsayılana dön</string>
   <string name="retry_on_network_issue">Ağ sorunu üzerinde yeniden deneyin</string>
   <string name="retry_on_network_issue_summary">Ağ sorununu otomatik kurtarmayı yeniden deneyin</string>
-  <string name="title_retweet_quote_confirm">Takipçilerine retweetle?</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> kullanıcı bunu retweet etti</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> bunu retweet etti</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ve <xliff:g id="retweet_count">%2$d</xliff:g> kişi daha bunu retweet etti</string>
@@ -643,7 +638,6 @@
   <string name="sponsored_by">Sponsor</string>
   <string name="square">Kare</string>
   <string name="state_blocking">Engelleniyor</string>
-  <string name="label_status_hint">Neler oluyor?</string>
   <string name="status_is_duplicate">Aynı tweet daha önce gönderilmiş.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet gönderilmedi.</string>

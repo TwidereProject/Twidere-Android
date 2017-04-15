@@ -42,14 +42,14 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>พร็อกซีย้อนกลับ</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
     <item>3 นาที</item>
     <item>5 นาที</item>
     <item>10 นาที</item>
-    <item>10 นาที</item>
+    <item>15 นาที</item>
     <item>30 นาที</item>
     <item>1 ชั่วโมง</item>
     <item>2 ชั่วโมง</item>
@@ -81,5 +81,9 @@
     <item>รายการโปรดของผู้ใช้</item>
     <item>รายการ</item>
     <item>ไทม์ไลน์ของรายการ</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>การตอบกลับ</item>
+    <item>รีทวีต</item>
   </string-array>
 </resources>

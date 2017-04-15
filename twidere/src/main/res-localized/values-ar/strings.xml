@@ -507,7 +507,6 @@
   <string name="remove">ازالة</string>
   <string name="remove_sensitive_mark">حذف إشارة الحساسية</string>
   <string name="replies">الردود</string>
-  <string name="label_reply_name">الرد على <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">بلغ على أنه بريد مزعج ورسائل احتيال</string>
   <string name="report_user">تقرير <xliff:g id="name">%s</xliff:g></string>
   <string name="report_user_confirm_message">الإبلاغ عن المستخدم <xliff:g id="name">%s</xliff:g> لإرساله سبام؟
@@ -569,7 +568,6 @@
   <string name="special_thanks_to">شكر خاص لـ</string>
   <string name="sponsored_by">يدعمه</string>
   <string name="square">مربعة</string>
-  <string name="label_status_hint">ما الذي يحدث؟</string>
   <string name="status_is_duplicate">غردت هذا مسبقا.</string>
   <string name="status_not_updated">لم تُرسل التغريدة.</string>
   <string name="status_not_updated_summary">لم تُرسل التغريدة لكنها حُفظت مسودة.</string>

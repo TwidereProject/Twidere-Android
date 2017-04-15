@@ -443,9 +443,13 @@
   <string name="label_photos">Semeyes</string>
   <string name="label_poll">Encuesta</string>
   <string name="label_powered_by_giphy">Cola potencia de GIPHY</string>
+  <string name="label_quote_name_text">Citar a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">Refrescu y sincronización</string>
   <string name="label_refresh_service">Refrescar serviciu</string>
+  <string name="label_reply_name">Rempuesta a <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_sensitive_content">Conteníu sensible</string>
+  <string name="label_status_hint">¿Qué ta asocediendo?</string>
   <string name="label_status_not_available">Tuit non disponible</string>
   <string name="label_statuses">Tuits</string>
   <string name="label_statuses_replies">Tuits y rempuestes</string>
@@ -763,13 +767,11 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="proxy_summary">Usa\'l proxy pa toles solicitúes de rede.</string>
   <string name="proxy_type">Triba de proxy</string>
   <string name="proxy_username">Nome d\'usuariu de Proxy</string>
-  <string name="title_public_timeline">Llinia temporal pública</string>
   <string name="query">Consulta</string>
   <string name="quick_send">Primir «Enter» pa unviar</string>
   <string name="quick_send_summary">Únviase\'l tuit al primir «Enter».</string>
   <string name="quote_format">Formatu de cita</string>
   <string name="quote_format_summary">\"[TEXT]\" = Testu\'l tuit\n\"[NAME]\" = Nome d\'usuariu Twitter</string>
-  <string name="label_quote_name_text">Citar a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citar tuit orixinal</string>
   <string name="quote_protected_status_warning_message">Esti tuit ta protexíu.\n\nDavezu los usuarios protexíos nun quieren compartir públicamente los sos tuits.</string>
   <string name="quote_user">Citar a <xliff:g id="user_name">%s</xliff:g></string>
@@ -794,8 +796,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="remove_from_filter">Desaniciar de Peñeres</string>
   <string name="remove_sensitive_mark">Desaniciar marca sensible</string>
   <string name="replies">Rempuestes</string>
-  <string name="label_reply_name">Rempuesta a <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Responder a <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Informar de spam</string>
   <string name="report_usage_statistics_now">Reportar agora les estadístiques d\'usu</string>
   <string name="report_user">Informar de <xliff:g id="name">%s</xliff:g></string>
@@ -807,7 +807,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="reset_to_default">Reafitar</string>
   <string name="retry_on_network_issue">Reintentar nos fallos de rede</string>
   <string name="retry_on_network_issue_summary">Intenta recuperase automáticamente d\'un fallu de rede</string>
-  <string name="title_retweet_quote_confirm">¿Retuitiar a los tos siguidores?</string>
   <string name="retweeted_by_count">Retuitiáu por <xliff:g id="retweet_count">%d</xliff:g> usuarios</string>
   <string name="retweeted_by_name">Retuitiáu por <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retuitiáu por <xliff:g id="user_name">%1$s</xliff:g> y <xliff:g id="retweet_count">%2$d</xliff:g> más</string>
@@ -876,7 +875,6 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="state_blocking">Bloquiando</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">¿Qué ta asocediendo?</string>
   <string name="status_is_duplicate">El to tuit ye ún duplicáu.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Nun s\'unvió\'l tuit.</string>
@@ -968,7 +966,9 @@ Convertilu a un tuit normal amiesta una caráuter estra.</string>
   <string name="title_nicknames">Nomatos</string>
   <string name="title_open_source_license">Llicencia</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_public_timeline">Llinia temporal pública</string>
   <string name="title_quick_action">Aición rápida</string>
+  <string name="title_retweet_quote_confirm">¿Retuitiar a los tos siguidores?</string>
   <string name="title_scheduled_statuses">Tuits planificaos</string>
   <string name="title_search">Guetar</string>
   <string name="title_search_gif">Gueta de GIFs</string>

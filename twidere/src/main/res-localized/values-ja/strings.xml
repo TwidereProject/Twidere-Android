@@ -394,6 +394,7 @@
   <string name="hint_message_select_user">ユーザー検索</string>
   <string name="hint_no_account">アカウント無し</string>
   <string name="hint_search_gif">Gifアニメーションを検索</string>
+  <string name="hint_status_reply_to_user_removed">ツイートしたユーザーのIDが取り除かれているため、引用ツイートとして送信されます。 &lt;a href=\"#dialog\";&gt;詳細&lt;/a&gt;</string>
   <string name="hints">ヒント</string>
   <string name="home_refresh">ホームTLの更新</string>
   <string name="host_mapping_address">アドレス (他のホストアドレスも可)</string>
@@ -436,6 +437,7 @@
   <string name="label_content_rating_r">R</string>
   <string name="label_data_provider">Twidere データベースプロバイダ</string>
   <string name="label_filters_subscription">購読</string>
+  <string name="label_follow_request_sent">フォローリクエストを送信しました。</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> via <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">大まかな位置情報 (市町村)</string>
   <string name="label_location_no_location">なし</string>
@@ -449,11 +451,15 @@
   <string name="label_photos">画像</string>
   <string name="label_poll">投票</string>
   <string name="label_powered_by_giphy">Powered by GIPHY</string>
+  <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>さんのツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">更新＆同期サービス</string>
   <string name="label_refresh_service">サービスをリフレッシュ</string>
+  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
+  <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g>さんへの返信: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">Buffer のデフォルト</string>
   <string name="label_send_at">送信時刻</string>
   <string name="label_sensitive_content">不適切なコンテンツ</string>
+  <string name="label_status_hint">いまどうしてる？</string>
   <string name="label_status_not_available">このツイートは利用できません</string>
   <string name="label_statuses">ツイート</string>
   <string name="label_statuses_replies">ツイートとリプライ</string>
@@ -543,6 +549,7 @@
   <string name="message_permission_request_save_media">ストレージの権限は、Twidere がメディアを保存するために必要です。</string>
   <string name="message_permission_request_share_media">ストレージの権限は、Twidere がメディアを他のアプリに共有するために必要です。</string>
   <string name="message_please_wait">しばらくお待ちください…</string>
+  <string name="message_status_reply_to_user_removed_explanation">TwitterはツイートしたユーザーのIDを常にリプライに記載します。ユーザーIDを取り除いた場合、Twidereはこのリプライを引用として送信し、コンテキストを保持します。</string>
   <string name="message_status_scheduling_connect_buffer_hint">Buffer に接続すると、指定時刻のときにオフラインでも予約ツイートが行えるようになります。</string>
   <string name="message_status_scheduling_connected_to_buffer">Twidere は Buffer に接続できるようになりました</string>
   <string name="message_summary_type_sticker">[Sticker]</string>
@@ -781,13 +788,11 @@
   <string name="proxy_summary">すべてのネットワーク要件においてプロキシを使用します。</string>
   <string name="proxy_type">プロキシの種類</string>
   <string name="proxy_username">プロキシのユーザー名</string>
-  <string name="title_public_timeline">公開タイムライン</string>
   <string name="query">クエリ</string>
   <string name="quick_send">エンターキーで送信</string>
   <string name="quick_send_summary">エンターキーを押すと送信します。</string>
   <string name="quote_format">引用形式</string>
   <string name="quote_format_summary">\"[TEXT]\" = ツイート内容\n\"[NAME]\" = ユーザー名</string>
-  <string name="label_quote_name_text"><xliff:g id="name">%1$s</xliff:g>さんのツイートを引用: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">ツイートを引用</string>
   <string name="quote_protected_status_warning_message">このツイートは非公開にされています。\n\n非公開ユーザーのツイートを公開しないでください。</string>
   <string name="quote_user"><xliff:g id="user_name">%s</xliff:g>さんのツイートを引用</string>
@@ -812,8 +817,6 @@
   <string name="remove_from_filter">フィルタから削除</string>
   <string name="remove_sensitive_mark">不適切な内容のマークを消去</string>
   <string name="replies">返信</string>
-  <string name="label_reply_name"><xliff:g id="user_name">%s</xliff:g>さんへの返信</string>
-  <string name="label_reply_name_text"><xliff:g id="name">%1$s</xliff:g>さんへの返信: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">スパム報告</string>
   <string name="report_usage_statistics_now">現在の使用状況を報告する。</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g>さんをスパム報告する</string>
@@ -825,7 +828,6 @@
   <string name="reset_to_default">初期化する</string>
   <string name="retry_on_network_issue">ネットワークに問題がある場合に再接続</string>
   <string name="retry_on_network_issue_summary">ネットワークに問題が生じている場合に、自動的に接続を回復しようと試みます</string>
-  <string name="title_retweet_quote_confirm">フォロワーにリツイートしますか？</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g>人のリツイート</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g>さんのリツイート</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g>さんと他<xliff:g id="retweet_count">%2$d</xliff:g>人のリツイート</string>
@@ -842,8 +844,8 @@
   <string name="search_hint">ツイートかユーザーの検索</string>
   <string name="search_hint_users">ユーザー検索</string>
   <string name="search_statuses">ツイートの検索</string>
-  <string name="search_type_statuses">ツイート</string>
   <string name="search_type_media">メディア</string>
+  <string name="search_type_statuses">ツイート</string>
   <string name="search_type_users">ユーザー</string>
   <string name="security_key">セキュリティーキー</string>
   <string name="select_account">アカウントを選択</string>
@@ -895,7 +897,6 @@
   <string name="state_blocking">ブロックしています</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">いまどうしてる？</string>
   <string name="status_is_duplicate">既にあなたは同じツイートを送信済みです。</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">ツイートは送信されませんでした。</string>
@@ -987,7 +988,9 @@
   <string name="title_nicknames">ニックネーム</string>
   <string name="title_open_source_license">オープンソースライセンス</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_public_timeline">公開タイムライン</string>
   <string name="title_quick_action">クイック アクション</string>
+  <string name="title_retweet_quote_confirm">フォロワーにリツイートしますか？</string>
   <string name="title_scheduled_statuses">予約ツイート</string>
   <string name="title_search">検索</string>
   <string name="title_search_gif">Gifアニメーション検索</string>

@@ -24,7 +24,7 @@
     <item>Portapapeis</item>
   </string-array>
   <string-array name="entries_media_preload">
-    <item>Wi-Fi</item>
+    <item>Wifi</item>
   </string-array>
   <string-array name="entries_media_preview_style">
     <item>Recortar</item>

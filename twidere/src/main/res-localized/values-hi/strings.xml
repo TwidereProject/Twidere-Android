@@ -139,7 +139,6 @@
   <string name="refresh_type_trends">रुझान</string>
   <string name="remember_position">स्थिति याद रखें</string>
   <string name="remember_position_summary">ट्विदेर बंद करने से पहले सूची/स्थिति टैब याद रखे</string>
-  <string name="label_reply_name">को उत्तर दें <xliff:g id="user_name">%s</xliff:g></string>
   <string name="reported_user_for_spam">स्पैम के लिए इस उपयोगकर्ता का शिकायत किया |</string>
   <string name="same_oauth_signing_url">ोऔथ हस्ताक्षर करने के लिए एक ही यूआरएल का उपयोग करे</string>
   <string name="search_hint">उपयोगकर्ताओं या ट्वीट्स खोजे</string>
@@ -154,7 +153,6 @@
   <string name="sign_in">साइन इन करें</string>
   <string name="sign_up">साइन अप करें</string>
   <string name="sound">आवाज़</string>
-  <string name="label_status_hint">क्या हो रहा है</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">रीट्वीट</string>
   <string name="stream_type_home">घर</string>

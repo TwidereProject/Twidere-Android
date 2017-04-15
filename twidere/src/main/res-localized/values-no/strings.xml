@@ -492,7 +492,6 @@
   <string name="remove_from_filter">Fjern fra filter</string>
   <string name="remove_sensitive_mark">Fjern sensitivmarkering</string>
   <string name="replies">Svar</string>
-  <string name="label_reply_name">Svar til <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Rapporter spam</string>
   <string name="report_usage_statistics_now">Rapporter bruksstatistikk nå</string>
   <string name="report_user">Rapporter <xliff:g id="name">%s</xliff:g></string>
@@ -502,7 +501,6 @@
   <string name="requested">Forespurt</string>
   <string name="reset_keyboard_shortcuts_confirm">Tilbakestill hurtigtaster til standard?</string>
   <string name="reset_to_default">Tilbakestill til standard</string>
-  <string name="title_retweet_quote_confirm">Retweet til følgerne dine?</string>
   <string name="retweeted_by_count">Retweetet av <xliff:g id="retweet_count">%d</xliff:g> brukere</string>
   <string name="retweeted_by_name">Retweetet av <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetet av <xliff:g id="user_name">%1$s</xliff:g> og <xliff:g id="retweet_count">%2$d</xliff:g> andre</string>
@@ -560,7 +558,6 @@
   <string name="sponsored_by">Sponset av</string>
   <string name="square">Firkantet</string>
   <string name="state_blocking">Blokkerer</string>
-  <string name="label_status_hint">Hva skjer?</string>
   <string name="status_is_duplicate">Tweeten din er et duplikat.</string>
   <string name="status_not_updated">Tweet ikke sendt.</string>
   <string name="status_not_updated_summary">Tweet ikke sendt, og lagret i utkast.</string>

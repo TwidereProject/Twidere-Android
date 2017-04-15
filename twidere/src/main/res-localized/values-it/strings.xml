@@ -514,13 +514,11 @@
   <string name="proxy_summary">Usa un proxy per tutte le connessioni di rete.</string>
   <string name="proxy_type">Tipo di proxy</string>
   <string name="proxy_username">Proxy username</string>
-  <string name="title_public_timeline">Timeline pubblica</string>
   <string name="query">Interroga</string>
   <string name="quick_send">Premi \"Invio\" per inviare</string>
   <string name="quick_send_summary">Inviare tweet alla pressione di \"Invio\".</string>
   <string name="quote_format">Formato citazione</string>
   <string name="quote_format_summary">\"[TEXT]\" = Testo del tweet\n\"[NAME]\" = Twitter username</string>
-  <string name="label_quote_name_text">Cita <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Cita il tweet originale</string>
   <string name="quote_protected_status_warning_message">Questo tweet è protetto.\n\nDi solito gli utenti protetti non vogliono vedere i propri tweet condivisi pubblicamente.</string>
   <string name="quote_user">Citazione di <xliff:g id="user_name">%s</xliff:g></string>
@@ -545,8 +543,6 @@
   <string name="remove_from_filter">Rimuovi da filtro</string>
   <string name="remove_sensitive_mark">Rimuovi indicatore sensibilità</string>
   <string name="replies">Risposte</string>
-  <string name="label_reply_name">Risposta a <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Rispondik a <xliff:g id="name">%1$s</xliff:g>:<xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Segnala spam</string>
   <string name="report_usage_statistics_now">Invia ora rapporto sulle statistiche dell\'uso</string>
   <string name="report_user">Segnala <xliff:g id="name">%s</xliff:g></string>
@@ -557,7 +553,6 @@
   <string name="reset_keyboard_shortcuts_confirm">Resettare le scorciatoie da tastiera ai valori di default?</string>
   <string name="reset_to_default">Ripristina come da default</string>
   <string name="retry_on_network_issue">Riprova se si verifica un errore di rete</string>
-  <string name="title_retweet_quote_confirm">Retweet ai tuoi followers?</string>
   <string name="retweeted_by_count">ReTweettato da <xliff:g id="retweet_count">%d</xliff:g> utenti</string>
   <string name="retweeted_by_name">ReTweettato da <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">ReTweettato da <xliff:g id="user_name">%1$s</xliff:g> e altri <xliff:g id="retweet_count">%2$d</xliff:g></string>
@@ -619,7 +614,6 @@
   <string name="sponsored_by">Sponsorizzato da</string>
   <string name="square">Quadrata</string>
   <string name="state_blocking">Bloccato</string>
-  <string name="label_status_hint">Che sta succedendo?</string>
   <string name="status_is_duplicate">Tweet doppio.</string>
   <string name="status_not_updated">Tweet non inviato.</string>
   <string name="status_not_updated_summary">Tweet non inviato, salvato in bozze.</string>

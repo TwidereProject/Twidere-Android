@@ -602,13 +602,11 @@
   <string name="proxy_summary">Проксировать все сетевые запросы.</string>
   <string name="proxy_type">Тип прокси</string>
   <string name="proxy_username">Логин прокси</string>
-  <string name="title_public_timeline">Публичная лента</string>
   <string name="query">Запрос</string>
   <string name="quick_send">Нажмите «Enter» для отправки</string>
   <string name="quick_send_summary">Отправлять твит по нажатию «Enter».</string>
   <string name="quote_format">Формат цитаты</string>
   <string name="quote_format_summary">\"[TEXT]\" = Текст твита\n\"[NAME]\" = Имя пользователя</string>
-  <string name="label_quote_name_text">Цитировать <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Цитировать оригинальный твит</string>
   <string name="quote_protected_status_warning_message">Этот твит закрыт.\n\nЗакрытые пользователи обычно не хотят, чтобы их твиты становились общедоступны.</string>
   <string name="quote_user">Цитата <xliff:g id="user_name">%s</xliff:g></string>
@@ -633,8 +631,6 @@
   <string name="remove_from_filter">Удалить из фильтра</string>
   <string name="remove_sensitive_mark">Удалить отметку особого контента</string>
   <string name="replies">Ответы</string>
-  <string name="label_reply_name">Ответ на <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Ответить <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Сообщить о спаме</string>
   <string name="report_usage_statistics_now">Сообщить статистику использования</string>
   <string name="report_user">Пожаловаться на <xliff:g id="name">%s</xliff:g></string>
@@ -646,7 +642,6 @@
   <string name="reset_to_default">Сбросить до исходного состояния</string>
   <string name="retry_on_network_issue">Повторить по сети</string>
   <string name="retry_on_network_issue_summary">Попытаться восстановить из сети автоматически</string>
-  <string name="title_retweet_quote_confirm">Ретвитнуть вашим читателям?</string>
   <string name="retweeted_by_count">Ретвитнули <xliff:g id="retweet_count">%d</xliff:g> пользователей</string>
   <string name="retweeted_by_name">Ретвитнуто <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Ретвитнул <xliff:g id="user_name">%1$s</xliff:g> и <xliff:g id="retweet_count">%2$d</xliff:g> других</string>
@@ -714,7 +709,6 @@
   <string name="state_blocking">Блокировка</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s </xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s </xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s </xliff:g></string>
-  <string name="label_status_hint">Что происходит?</string>
   <string name="status_is_duplicate">Этот твит уже опубликован</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Твит не отправлен</string>

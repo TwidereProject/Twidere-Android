@@ -451,11 +451,16 @@
   <string name="label_photos">照片</string>
   <string name="label_poll">投票</string>
   <string name="label_powered_by_giphy">由 GIPHY 强力驱动</string>
+  <string name="label_quote_name">引用 <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_quote_name_text">引用 <xliff:g id="name">%1$s</xliff:g>：<xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">刷新和同步服务</string>
   <string name="label_refresh_service">刷新服务</string>
+  <string name="label_reply_name">回复 <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">引用 <xliff:g id="name">%1$s</xliff:g>：<xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">Buffer 默认</string>
   <string name="label_send_at">发送于</string>
   <string name="label_sensitive_content">敏感内容</string>
+  <string name="label_status_hint">眼见何事，情系何处，身在何方，心思何人？</string>
   <string name="label_status_not_available">推文不可用</string>
   <string name="label_statuses">推文</string>
   <string name="label_statuses_replies">推文和回复</string>
@@ -703,6 +708,8 @@
   <string name="preference_summary_background_streaming">按 HOME 键而不是 BACK 键使实时流保持开启</string>
   <string name="preference_summary_chrome_custom_tab">在内置浏览器中打开链接（由 Chrome 提供技术支持）</string>
   <string name="preference_summary_database_item_limit">每个帐号在数据库中保存的推文/信息条目上限，降低数值可以节省更多存储空间以及加快载入的速度</string>
+  <string name="preference_summary_favorite_confirmation">在收藏一条推文前确认</string>
+  <string name="preference_summary_like_confirmation">在喜欢一条推文前确认</string>
   <string name="preference_summary_media_preload_non_metered_network">只在使用免费网络（比如Wi-Fi）时预加载媒体</string>
   <string name="preference_summary_streaming_non_metered_network">只在使用免费网络（比如 Wi-Fi ）时开启实时流</string>
   <string name="preference_summary_streaming_power_saving">仅在充电的时候使用实时流</string>
@@ -714,11 +721,13 @@
   <string name="preference_title_background_streaming">后台实时流</string>
   <string name="preference_title_chrome_custom_tab">内置浏览器</string>
   <string name="preference_title_database_item_limit">数据库条目上限</string>
+  <string name="preference_title_favorite_confirmation">“收藏”前确认</string>
   <string name="preference_title_filter_manage_subscriptions">管理</string>
   <string name="preference_title_filter_subscriptions">过滤器订阅</string>
   <string name="preference_title_floating_detailed_view">浮动详细视图</string>
   <string name="preference_title_landscape">横向模式</string>
   <string name="preference_title_light_font">细字体</string>
+  <string name="preference_title_like_confirmation">“喜欢”前确认</string>
   <string name="preference_title_media_preload_non_metered_network">在免费网络下预加载</string>
   <string name="preference_title_multi_column_tab_width">多栏标签页宽度</string>
   <string name="preference_title_multi_column_tabs">多栏标签页</string>
@@ -775,13 +784,11 @@
   <string name="proxy_summary">为所有网络请求使用代理</string>
   <string name="proxy_type">代理服务器类型</string>
   <string name="proxy_username">代理服务器用户名</string>
-  <string name="title_public_timeline">公共时间线</string>
   <string name="query">查询</string>
   <string name="quick_send">按“回车”发送</string>
   <string name="quick_send_summary">按“回车”发送推文</string>
   <string name="quote_format">引用格式</string>
   <string name="quote_format_summary">\"[TEXT]\"：推文原文\n\"[NAME]\"：用户名</string>
-  <string name="label_quote_name_text">引用 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">引用原推文</string>
   <string name="quote_protected_status_warning_message">这条推文受保护。\n\n受保护的用户通常不希望他们的推文被公开分享。</string>
   <string name="quote_user">引用 <xliff:g id="user_name">%s</xliff:g></string>
@@ -806,8 +813,6 @@
   <string name="remove_from_filter">从过滤器中删除</string>
   <string name="remove_sensitive_mark">删除敏感标记</string>
   <string name="replies">回复</string>
-  <string name="label_reply_name">回复 <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">回复 <xliff:g id="name">%1$s</xliff:g>： <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">报告垃圾信息</string>
   <string name="report_usage_statistics_now">立即汇报使用情况</string>
   <string name="report_user">报告 <xliff:g id="name">%s</xliff:g></string>
@@ -819,7 +824,6 @@
   <string name="reset_to_default">重置</string>
   <string name="retry_on_network_issue">遇到网络错误时重试</string>
   <string name="retry_on_network_issue_summary">尝试自动从网络错误中恢复</string>
-  <string name="title_retweet_quote_confirm">转推给您的关注者？</string>
   <string name="retweeted_by_count">由 <xliff:g id="retweet_count">%d</xliff:g> 人转推</string>
   <string name="retweeted_by_name">由 <xliff:g id="user_name">%s</xliff:g> 转推</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> 和其他 <xliff:g id="retweet_count">%2$d</xliff:g> 人已转推</string>
@@ -836,8 +840,8 @@
   <string name="search_hint">搜索推文或用户</string>
   <string name="search_hint_users">搜索用户</string>
   <string name="search_statuses">搜索推文</string>
-  <string name="search_type_statuses">推文</string>
   <string name="search_type_media">媒体</string>
+  <string name="search_type_statuses">推文</string>
   <string name="search_type_users">用户</string>
   <string name="security_key">密钥</string>
   <string name="select_account">选择帐号</string>
@@ -889,7 +893,6 @@
   <string name="state_blocking">正在阻止</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">您在做什么？</string>
   <string name="status_is_duplicate">您发送了重复的推文</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">推文未发送</string>
@@ -964,6 +967,7 @@
   <string name="title_error_invalid_account">帐号无效</string>
   <!-- Enhanced (paid) features title -->
   <string name="title_extra_features">增强功能</string>
+  <string name="title_favorite_confirm">收藏这条推文吗？</string>
   <!-- [noun] Twitter's favorite, in the plural -->
   <string name="title_favorites">收藏</string>
   <string name="title_filters">过滤</string>
@@ -973,15 +977,19 @@
   <string name="title_following">正在关注</string>
   <string name="title_gif_sharing">GIF 分享</string>
   <string name="title_home">主页</string>
+  <string name="title_like_confirm">喜欢这条推文吗？</string>
   <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
   <string name="title_likes">喜欢</string>
   <string name="title_manage_filter_subscriptions">过滤器订阅</string>
+  <string name="title_media_timeline">媒体时间线</string>
   <string name="title_mentions">提及</string>
   <string name="title_message_conversation_info">对话信息</string>
   <string name="title_nicknames">昵称</string>
   <string name="title_open_source_license">开源许可</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_public_timeline">公共时间线</string>
   <string name="title_quick_action">快捷操作</string>
+  <string name="title_retweet_quote_confirm">转推给您的关注者吗？</string>
   <string name="title_scheduled_statuses">排期的推文</string>
   <string name="title_search">搜索</string>
   <string name="title_search_gif">搜索 GIF</string>

@@ -588,13 +588,11 @@
   <string name="proxy_summary">Gunakan proxy untuk semua permintaan jaringan.</string>
   <string name="proxy_type">Tipe proxy</string>
   <string name="proxy_username">Nama pengguna proxy</string>
-  <string name="title_public_timeline">Linimasa publik</string>
   <string name="query">Menanyakan</string>
   <string name="quick_send">Tekan \"Enter\" untuk Mengirim</string>
   <string name="quick_send_summary">Kirim tweet saat menekan \"Enter\".</string>
   <string name="quote_format">Format kutipan</string>
   <string name="quote_format_summary">\"[TEXT]\" = Tweet teks\n\"[NAME]\" = Nama akun Twitter</string>
-  <string name="label_quote_name_text">Mengutip <xliff:g id="name">%1$s </xliff:g>: <xliff:g id="text">%2$s </xliff:g></string>
   <string name="quote_original_status">Kutip tweet asli</string>
   <string name="quote_protected_status_warning_message">Tweet ini dilindungi.\n\nPengguna yang dilindungi biasanya tidak ingin tweet mereka dipublikasikan.</string>
   <string name="quote_user">Mengutip <xliff:g id="user_name">%s</xliff:g></string>
@@ -617,8 +615,6 @@
   <string name="remove_from_filter">Hapus dari filter</string>
   <string name="remove_sensitive_mark">Hilangkan tanda konten sensitif</string>
   <string name="replies">Balasan</string>
-  <string name="label_reply_name">Balasan untuk <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Balas ke <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Laporkan sebagai spam</string>
   <string name="report_usage_statistics_now">Laporkan statistik penggunaan sekarang</string>
   <string name="report_user">Laporkan <xliff:g id="name">%s</xliff:g></string>
@@ -630,7 +626,6 @@
   <string name="reset_to_default">Reset ke default</string>
   <string name="retry_on_network_issue">Coba lagi untuk masalah jaringan</string>
   <string name="retry_on_network_issue_summary">Mencoba memulihkan masalah jaringan secara otomatis</string>
-  <string name="title_retweet_quote_confirm">Retweet ke follower anda?</string>
   <string name="retweeted_by_count">Di-retweet oleh <xliff:g id="retweet_count">%d</xliff:g> pengguna</string>
   <string name="retweeted_by_name">Di-retweet oleh <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Di-retweet oleh <xliff:g id="user_name">%1$s</xliff:g> dan <xliff:g id="retweet_count">%2$d</xliff:g> lainnya</string>
@@ -697,7 +692,6 @@
   <string name="state_blocking">Memblokir</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">Apa yang terjadi?</string>
   <string name="status_is_duplicate">Kicauan Anda duplikat.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet tidak terkirim.</string>

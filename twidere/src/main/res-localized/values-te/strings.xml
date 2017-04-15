@@ -97,7 +97,6 @@
   <string name="sign_in_service_twitter">ట్విట్టర్</string>
   <string name="size">పరిమాణం</string>
   <string name="small">చిన్న</string>
-  <string name="label_status_hint">ఏం జరుగుతోంది?</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="stream_type_home">ముంగిలి</string>
   <string name="stream_type_messages">సందేశాలు</string>

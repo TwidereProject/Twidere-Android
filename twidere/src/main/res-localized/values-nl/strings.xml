@@ -532,13 +532,11 @@
   <string name="proxy_summary">Gebruik proxy voor alle netwerkverkeer.</string>
   <string name="proxy_type">Proxy-type</string>
   <string name="proxy_username">Proxy gebruikersnaam</string>
-  <string name="title_public_timeline">Publieke tijdlijn</string>
   <string name="query">Vraag</string>
   <string name="quick_send">Druk op \"Enter\" om te versturen</string>
   <string name="quick_send_summary">Verstuur tweet met \"Enter\".</string>
   <string name="quote_format">Citaat formaat</string>
   <string name="quote_format_summary">\"[TEXT]\" = Tweet text\n\"[NAME]\" = Twitter gebruikersnaam</string>
-  <string name="label_quote_name_text">Citeer <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citeer originele tweet</string>
   <string name="quote_protected_status_warning_message">Deze tweet is afgeschermd.\n\nAfgeschermde gebruikers willen hun tweets liever niet openbaar gedeeld hebben.</string>
   <string name="quote_user">Quote <xliff:g id="user_name">%s</xliff:g>;</string>
@@ -562,8 +560,6 @@
   <string name="remove_from_filter">Verwijder van filter</string>
   <string name="remove_sensitive_mark">Verwijder gevoelige markering</string>
   <string name="replies">Reacties</string>
-  <string name="label_reply_name">Antwoord aan <xliff:g id="user_name">%s</xliff:g>;</string>
-  <string name="label_reply_name_text">Antwoord aan <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Rapporteer spam</string>
   <string name="report_usage_statistics_now">Gebruiksstatistieken nu rapporteren</string>
   <string name="report_user">Rapporteer <xliff:g id="name">%s</xliff:g></string>
@@ -575,7 +571,6 @@
   <string name="reset_to_default">Standaardinstellingen herstellen</string>
   <string name="retry_on_network_issue">Opnieuw proberen bij netwerkproblemen</string>
   <string name="retry_on_network_issue_summary">Probeer automatisch te herstellen na netwerkproblemen</string>
-  <string name="title_retweet_quote_confirm">Retweeten naar je volgers?</string>
   <string name="retweeted_by_count">Geretweet door <xliff:g id="retweet_count">%d</xliff:g> gebruikers</string>
   <string name="retweeted_by_name">Geretweet door <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Geretweet door <xliff:g id="user_name">%1$s</xliff:g> en <xliff:g id="retweet_count">%2$d</xliff:g> anderen</string>
@@ -641,7 +636,6 @@
   <string name="sponsored_by">Gesponsord door</string>
   <string name="square">Vierkant</string>
   <string name="state_blocking">Geblokkeerd</string>
-  <string name="label_status_hint">Wat gebeurt er?</string>
   <string name="status_is_duplicate">Jouw tweet is dubbel.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet niet verzonden.</string>

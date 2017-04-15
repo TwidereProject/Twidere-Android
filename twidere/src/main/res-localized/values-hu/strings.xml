@@ -532,7 +532,6 @@
   <string name="proxy_summary">Proxy használata minden hálózati eléréshez.</string>
   <string name="proxy_type">Proxy típusa</string>
   <string name="proxy_username">Proxy felhasználó név</string>
-  <string name="title_public_timeline">Nyilvános idővonal</string>
   <string name="query">Lekérdezés</string>
   <string name="quick_send">Nyomj \"Enter\"-t az elküldéshez</string>
   <string name="quick_send_summary">Tweet elküldése, ha \"Enter\"-t nyomsz.</string>
@@ -562,7 +561,6 @@
   <string name="remove_from_filter">Eltávolítás a szűrőből</string>
   <string name="remove_sensitive_mark">Érzékeny státusz visszavonása</string>
   <string name="replies">Válaszok</string>
-  <string name="label_reply_name">Válasz neki: <xliff:g id="user_name">%s</xliff:g></string>
   <string name="report_for_spam">Spam jelentése</string>
   <string name="report_usage_statistics_now">Használati statisztikák küldése most</string>
   <string name="report_user"><xliff:g id="name">%s</xliff:g> jelentése</string>
@@ -574,7 +572,6 @@
   <string name="reset_to_default">Beállítás alapértelmezettre</string>
   <string name="retry_on_network_issue">Újraindítás hálózati hiba esetén</string>
   <string name="retry_on_network_issue_summary">Automatikus helyreállítási kísérlet hálózati hiba esetén</string>
-  <string name="title_retweet_quote_confirm">Retweeteled a követőidnek?</string>
   <string name="retweeted_by_count">Retweetelte <xliff:g id="retweet_count">%d</xliff:g> felhasználó</string>
   <string name="retweeted_by_name">Retweetelte <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweetelte <xliff:g id="user_name">%1$s</xliff:g> és még <xliff:g id="retweet_count">%2$d</xliff:g> felhasználó</string>
@@ -638,7 +635,6 @@
   <string name="sponsored_by">Támogató:</string>
   <string name="square">Négyzetes</string>
   <string name="state_blocking">Blokkolva</string>
-  <string name="label_status_hint">Mi történik?</string>
   <string name="status_is_duplicate">A tweeted duplikátum.</string>
   <string name="status_not_updated">Tweet nincs elküldve.</string>
   <string name="status_not_updated_summary">Tweet nincs elküldve, de mentve van a piszkozatok közé.</string>

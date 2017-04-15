@@ -126,7 +126,6 @@
   <string name="settings_refresh">Refresh</string>
   <string name="sign_in">Sign in</string>
   <string name="sign_up">Sign up</string>
-  <string name="label_status_hint">What\'s happening?</string>
   <!-- [noun] Accessibility label for retweet icon -->
   <string name="status_type_retweet">Retweet</string>
   <string name="stream_type_home">Home</string>

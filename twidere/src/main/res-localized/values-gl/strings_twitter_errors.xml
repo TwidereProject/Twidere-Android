@@ -12,7 +12,7 @@
   <!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->
   <string name="error_twitter_64">A túa conta está suspendida e non se lle permite acceder a esta característica.</string>
   <!-- 130 Over capacity: Corresponds with HTTP 503 - Twitter is temporarily over capacity. -->
-  <string name="error_twitter_130">Twitter está temporalmente por encima da súa capacidade.</string>
+  <string name="error_twitter_130">Twitter está temporalmente sobrecargado.</string>
   <!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
   <string name="error_twitter_131">O servidor de Twitter pode estar temporalmente caído. Por favor, téntao máis tarde.</string>
   <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
@@ -31,7 +31,7 @@
   <string name="error_twitter_179">Non podes ver este chío, é dun usuario protexido.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
   <string name="error_twitter_187">Xa enviaches este chío.</string>
-  <string name="error_twitter_193">A foto subida é grande de máis.</string>
+  <string name="error_twitter_193">A foto que queres subir é grande de máis.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
   <string name="error_twitter_215">Se cadra precisas entrar de novo.</string>
 </resources>

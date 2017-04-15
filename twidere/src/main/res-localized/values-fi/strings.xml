@@ -517,7 +517,6 @@
   <string name="proxy_summary">Käytä välityspalvelinta kaikissa verkkoyhteyksissä.</string>
   <string name="proxy_type">Välityspalvelimen tyyppi</string>
   <string name="proxy_username">Välityspalvelimen käyttäjätunnus</string>
-  <string name="title_public_timeline">Julkinen aikajana</string>
   <string name="query">Kysely</string>
   <string name="quick_send">Lähetä painamalla \"Enter\"</string>
   <string name="quick_send_summary">Lähetä twiitti, kun painetaan \"Enter\".</string>
@@ -547,8 +546,6 @@
   <string name="remove_from_filter">Poista suodattimesta</string>
   <string name="remove_sensitive_mark">Älä merkitse arkaluontoiseksi</string>
   <string name="replies">Vastaukset</string>
-  <string name="label_reply_name">Vastaa käyttäjälle <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Vastaa <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Ilmoita roskapostista</string>
   <string name="report_usage_statistics_now">Raportoi käyttötilastot nyt</string>
   <string name="report_user">Ilmianna <xliff:g id="name">%s</xliff:g></string>
@@ -559,7 +556,6 @@
   <string name="reset_keyboard_shortcuts_confirm">Resetoidaanko näppäimistöoikotiet oletuksiin?</string>
   <string name="reset_to_default">Resetoi oletuksiin</string>
   <string name="retry_on_network_issue">Yritä uudelleen kohdatessa verkko-ongelmia</string>
-  <string name="title_retweet_quote_confirm">Haluatko uudelleentwiitata seuraajillesi?</string>
   <string name="retweeted_by_count"><xliff:g id="retweet_count">%d</xliff:g> käyttäjää uudelleentwiittasivat</string>
   <string name="retweeted_by_name"><xliff:g id="user_name">%s</xliff:g> uudelleentwiittasi</string>
   <string name="retweeted_by_name_with_count"><xliff:g id="user_name">%1$s</xliff:g> ja <xliff:g id="retweet_count">%2$d</xliff:g> muuta uudelleentwiittasivat</string>
@@ -623,7 +619,6 @@
   <string name="sponsored_by">Sponsoroijat</string>
   <string name="square">Neliö</string>
   <string name="state_blocking">Estetään</string>
-  <string name="label_status_hint">Mitä tapahtuu?</string>
   <string name="status_is_duplicate">Twiittisi on kaksoiskappale.</string>
   <string name="status_not_updated">Twiittiä ei lähetetty.</string>
   <string name="status_not_updated_summary">Twiittiä ei lähetetty, vaan se tallennettiin luonnoksiin.</string>

@@ -42,7 +42,7 @@
   </string-array>
   <string-array name="entries_proxy_type">
     <item>HTTP</item>
-    <item>Reverse proxy</item>
+    <item>Omvänd proxy</item>
     <!--<item>SOCKS</item>-->
   </string-array>
   <string-array name="entries_refresh_interval">
@@ -81,5 +81,9 @@
     <item>Användarfavoriter</item>
     <item>Lista</item>
     <item>Lista tidslinjen</item>
+  </string-array>
+  <string-array name="entries_user_timeline_filter">
+    <item>Svar</item>
+    <item>Retweets</item>
   </string-array>
 </resources>

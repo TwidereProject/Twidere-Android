@@ -444,11 +444,15 @@
   <string name="label_photos">Photos</string>
   <string name="label_poll">Sondage</string>
   <string name="label_powered_by_giphy">Propulsé par GIPHY</string>
+  <string name="label_quote_name_text">Citer <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">Service de Rafraichissement &amp; Synchronisation</string>
   <string name="label_refresh_service">Refraîcher le service</string>
+  <string name="label_reply_name">Répondre à <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">Répondre à <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">Comme configuré par défaut dans Buffer</string>
   <string name="label_send_at">Envoyer à</string>
   <string name="label_sensitive_content">Contenu sensible</string>
+  <string name="label_status_hint">Quoi de neuf ?</string>
   <string name="label_status_not_available">Tweet non disponible</string>
   <string name="label_statuses">Tweets</string>
   <string name="label_statuses_replies">Tweets et réponses</string>
@@ -764,13 +768,11 @@
   <string name="proxy_summary">Utiliser le proxy pour toutes les requêtes réseau.</string>
   <string name="proxy_type">Type de proxy</string>
   <string name="proxy_username">Nom d\'utilisateur pour le proxy</string>
-  <string name="title_public_timeline">Fil d\'actualités public</string>
   <string name="query">Requête</string>
   <string name="quick_send">Appuyez  « Entrée » pour envoyer</string>
   <string name="quick_send_summary">Envoyer le tweet lorsqu\'on appuye sur « Entrée ».</string>
   <string name="quote_format">Format de citation</string>
   <string name="quote_format_summary">\"[TEXT]\" = Texte du Tweet\n\"[NAME]\" = Nom de compte Twitter</string>
-  <string name="label_quote_name_text">Citer <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Citer le tweet original</string>
   <string name="quote_protected_status_warning_message">Ce tweet est protégé.\n\nLes utilisateurs protégés ne souhaitent généralement pas que leurs tweets soient partagés publiquement.</string>
   <string name="quote_user">Citer <xliff:g id="user_name">%s</xliff:g></string>
@@ -795,8 +797,6 @@
   <string name="remove_from_filter">Enlever du filtre</string>
   <string name="remove_sensitive_mark">Ne plus marquer comme sensible</string>
   <string name="replies">Réponses</string>
-  <string name="label_reply_name">Répondre à <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Répondre à <xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Signaler comme spam</string>
   <string name="report_usage_statistics_now">Rapporter les statistiques d\'utilisation maintenant</string>
   <string name="report_user">Signaler <xliff:g id="name">%s</xliff:g></string>
@@ -808,7 +808,6 @@
   <string name="reset_to_default">Réinitialiser par défaut</string>
   <string name="retry_on_network_issue">Ré-essayer en cas de problème réseau</string>
   <string name="retry_on_network_issue_summary">Récupérer automatiquement en cas d\'erreur réseau</string>
-  <string name="title_retweet_quote_confirm">Retweeter à vos followers ?</string>
   <string name="retweeted_by_count">Retweeté par <xliff:g id="retweet_count">%d</xliff:g> utilisateurs</string>
   <string name="retweeted_by_name">Retweeté par <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Retweeté par <xliff:g id="user_name">%1$s</xliff:g> et <xliff:g id="retweet_count">%2$d</xliff:g> autres</string>
@@ -877,7 +876,6 @@
   <string name="state_blocking">Bloquant</string>
   <string name="status_format_source"><xliff:g example="Twidere pour Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere pour Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">Quoi de neuf ?</string>
   <string name="status_is_duplicate">Vous avez déjà tweeté ça.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g> : <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Tweet non envoyé.</string>
@@ -966,7 +964,9 @@
   <string name="title_nicknames">Surnoms</string>
   <string name="title_open_source_license">Licence open source</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_public_timeline">Fil d\'actualités public</string>
   <string name="title_quick_action">Action rapide</string>
+  <string name="title_retweet_quote_confirm">Retweeter à vos followers ?</string>
   <string name="title_scheduled_statuses">Tweets programmés</string>
   <string name="title_search">Rechercher</string>
   <string name="title_search_gif">Chercher un GIF</string>

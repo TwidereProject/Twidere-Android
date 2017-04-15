@@ -534,13 +534,11 @@
   <string name="proxy_summary">Використовувати Http проксі для всіх мережевих запитів.</string>
   <string name="proxy_type">Тип проксі</string>
   <string name="proxy_username">Ім\'я користувача проксі</string>
-  <string name="title_public_timeline">Публічна стрічка</string>
   <string name="query">Запит</string>
   <string name="quick_send">Натисніть Enter для надсилання</string>
   <string name="quick_send_summary">Надсилати твіт натисканням Enter.</string>
   <string name="quote_format">Формат цитати</string>
   <string name="quote_format_summary">\"[TEXT]\" = текст твіту\n\"[NAME]\" = ім\'я користувача</string>
-  <string name="label_quote_name_text">Цитувати <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">Цитувати первісний твіт</string>
   <string name="quote_protected_status_warning_message">Цей твіт захищено.\n\nЗахищені користувачі зазвичай не дають згоду на вільне розповсюдження своїх твітів.</string>
   <string name="quote_user">Цитата <xliff:g id="user_name">%s</xliff:g></string>
@@ -565,8 +563,6 @@
   <string name="remove_from_filter">Виключити з фільтру</string>
   <string name="remove_sensitive_mark">Вилучити мітку делікатного вмісту</string>
   <string name="replies">Відповіді</string>
-  <string name="label_reply_name">Відповідь до <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">Відповідь <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">Повідомити про спам</string>
   <string name="report_usage_statistics_now">Надіслати звіт про використання</string>
   <string name="report_user">Повідомлення про <xliff:g id="name">%s</xliff:g></string>
@@ -578,7 +574,6 @@
   <string name="reset_to_default">Скидання налаштувань до усталених</string>
   <string name="retry_on_network_issue">Повторити спробу при мережевій проблемі</string>
   <string name="retry_on_network_issue_summary">Спробувати автоматично відновитися після мережевих проблем</string>
-  <string name="title_retweet_quote_confirm">Ретвітнути вашим читачам?</string>
   <string name="retweeted_by_count">Ретвітнули <xliff:g id="retweet_count">%d</xliff:g> користувачі</string>
   <string name="retweeted_by_name">Ретвітнув(ла) <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">Ретвітнув(ла) <xliff:g id="user_name">%1$s</xliff:g> і ще <xliff:g id="retweet_count">%2$d</xliff:g> інших</string>
@@ -644,7 +639,6 @@
   <string name="sponsored_by">Спонсоровано</string>
   <string name="square">Квадрат</string>
   <string name="state_blocking">Блокування</string>
-  <string name="label_status_hint">Що трапилося?</string>
   <string name="status_is_duplicate">Цей твіт вже надіслано.</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">Твіт не надіслано.</string>

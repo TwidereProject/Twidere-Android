@@ -11,13 +11,25 @@
   <string name="error_twitter_89">Dina inloggningsuppgifter är felaktiga eller utgått, var god logga in på nytt.</string>
   <!-- 64 Your account is suspended and is not permitted to access this feature: Corresponds with an HTTP 403 - the access token being used belongs to a suspended user and they can't complete the action you're trying to take -->
   <!-- 130 Over capacity: Corresponds with HTTP 503 - Twitter is temporarily over capacity. -->
+  <string name="error_twitter_130">Twitter är för tillfället överbelastat.</string>
   <!-- 131 Internal error: Corresponds with HTTP 500 - An unknown internal error occurred. -->
   <!-- 135 Could not authenticate you: Corresponds with HTTP 401 - it means that your oauth_timestamp is either ahead or behind our acceptable range -->
+  <string name="error_twitter_135">Kontrollera din systemklocka.</string>
   <!-- 136 Blocked by user while retweeting: You have been blocked from retweeting this user's tweets at their request. -->
+  <string name="error_twitter_136">Du har blivit blockerad av denna användare.</string>
+  <string name="error_twitter_139">Denna tweet är redan din favorit.</string>
   <!-- 144 No status found with that ID. -->
+  <string name="error_twitter_144">Tweet hittades inte, kanske har det tagits bort.</string>
+  <string name="error_twitter_161">Du har redan begärt att följa denna användare.</string>
   <!-- 172 You have been blocked from following this account at the request of the user. -->
+  <string name="error_twitter_162">Du har blockerats av denna användare.</string>
   <!-- 172 There was an error creating your search: Corresponds with HTTP 403 - The saved search already exists. -->
+  <string name="error_twitter_172">Du har redan sparat denna sökning.</string>
   <!-- 179 Sorry, you are not authorized to see this status: Corresponds with HTTP 403 - thrown when a Tweet cannot be viewed by the authenticating user, usually due to the tweet's author having protected their tweets. -->
+  <string name="error_twitter_179">Du kan inte se denna skyddade användares tweet.</string>
   <!-- 187 Status is a duplicate: The status text has been Tweeted already by the authenticated account. -->
+  <string name="error_twitter_187">Du har redan skickat detta tweet.</string>
+  <string name="error_twitter_193">Fotot du laddade upp är för stort.</string>
   <!-- 215 Bad authentication data: Typically sent with 1.1 responses with HTTP code 400. The method requires authentication but it was not presented or was wholly invalid -->
+  <string name="error_twitter_215">Du kan behöva logga in på nytt.</string>
 </resources>

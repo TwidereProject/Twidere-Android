@@ -437,6 +437,7 @@
   <string name="label_content_rating_r">น18+</string>
   <string name="label_data_provider">ผู้ให้บริการญานข้อมูล Twidere</string>
   <string name="label_filters_subscription">การติดตาม</string>
+  <string name="label_follow_request_sent">ส่งคำขอติดตามแล้ว</string>
   <string name="label_format_buffer_time_source"><xliff:g example="12:00, April 1" id="time">%1$s</xliff:g> โดย <xliff:g example="api" id="source">%2$s</xliff:g></string>
   <string name="label_location_coarse">หยาบ (เมือง)</string>
   <string name="label_location_no_location">ไม่ระบุ</string>
@@ -450,11 +451,15 @@
   <string name="label_photos">รูปภาพ</string>
   <string name="label_poll">โพล</string>
   <string name="label_powered_by_giphy">บริหารงานโดย GIPHY</string>
+  <string name="label_quote_name_text">อ้างอิง <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_refresh_and_sync_service">ฟื้นฟูและบริการซิงค์</string>
   <string name="label_refresh_service">เรียกบริการอีกครั้ง</string>
+  <string name="label_reply_name">ตอบกลับหา <xliff:g id="user_name">%s</xliff:g></string>
+  <string name="label_reply_name_text">ตอบกลับ <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="label_schedule_time_buffer_default">บัฟเฟอร์ดั้งเดิม</string>
   <string name="label_send_at">ส่งไปที่</string>
   <string name="label_sensitive_content">เนื้อหาล่อแหลม</string>
+  <string name="label_status_hint">มีอะไรเกิดขึ้นบ้าง?</string>
   <string name="label_status_not_available">ทวิตไม่พร้อมใช้งาน</string>
   <string name="label_statuses">ทวีต</string>
   <string name="label_statuses_replies">ทวีตและการตอบกลับ</string>
@@ -774,13 +779,11 @@
   <string name="proxy_summary">ใช้ Proxy กับทุกการเชื่อมต่อ</string>
   <string name="proxy_type">รูปแบบ Proxy</string>
   <string name="proxy_username">Proxy username</string>
-  <string name="title_public_timeline">หน้าหลักสาธารณะ</string>
   <string name="query">สอบถาม</string>
   <string name="quick_send">ใช้ปุ่ม Enter เพื่อส่งทวีต</string>
   <string name="quick_send_summary">ส่งทวีตเมื่อกด Enter</string>
   <string name="quote_format">รูปแบบการอ้างอิง</string>
   <string name="quote_format_summary">\"[TEXT]\" = ข้อความทวีต\n\"[NAME]\" = ชื่อผู้ใช้ใน Twitter</string>
-  <string name="label_quote_name_text">อ้างอิง <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="quote_original_status">อ้างอิงทวีตปัจจุบัน</string>
   <string name="quote_protected_status_warning_message">ทวีตนี้ได้รับการป้องกัน\n\nผู้ใช้ที่ป้องกันไว้ไม่อยากให้ทวีตของเขาถูกแชร์ไปอย่างกว้างขวาง</string>
   <string name="quote_user">อ้างอิง <xliff:g id="user_name">%s</xliff:g></string>
@@ -805,8 +808,6 @@
   <string name="remove_from_filter">ลบออกจากตัวกรอง</string>
   <string name="remove_sensitive_mark">เลิกระบุว่าเป็นเนื้อหาที่อ่อนไหว</string>
   <string name="replies">การตอบกลับ</string>
-  <string name="label_reply_name">ตอบกลับหา <xliff:g id="user_name">%s</xliff:g></string>
-  <string name="label_reply_name_text">ตอบกลับ <xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="report_for_spam">รายงานสแปม</string>
   <string name="report_usage_statistics_now">รายงานสถิติการใช้งาน</string>
   <string name="report_user">รายงาน <xliff:g id="name">%s</xliff:g></string>
@@ -818,7 +819,6 @@
   <string name="reset_to_default">เรียกคืนค่าเริ่มต้น</string>
   <string name="retry_on_network_issue">แก้ปัญหาเครือข่ายอีกครั้ง</string>
   <string name="retry_on_network_issue_summary">พยายามแก้ปัญหาเครือข่ายอัตโนมัติ</string>
-  <string name="title_retweet_quote_confirm">รีทวีตหรือไม่</string>
   <string name="retweeted_by_count">รีทวีตโดยผู้ใช้ <xliff:g id="retweet_count">%d</xliff:g> คน</string>
   <string name="retweeted_by_name">รีทวีตโดย <xliff:g id="user_name">%s</xliff:g></string>
   <string name="retweeted_by_name_with_count">รีทวีตโดย <xliff:g id="user_name">%1$s</xliff:g> และอีก <xliff:g id="retweet_count">%2$d</xliff:g> คน</string>
@@ -835,6 +835,7 @@
   <string name="search_hint">ค้นหาทวีตหรือผู้ใช้</string>
   <string name="search_hint_users">ค้นหาผู้ใช้</string>
   <string name="search_statuses">ค้นหาทวีต</string>
+  <string name="search_type_media">รูปภาพ</string>
   <string name="search_type_statuses">ทวีต</string>
   <string name="search_type_users">ผู้ใช้</string>
   <string name="security_key">Security key</string>
@@ -887,7 +888,6 @@
   <string name="state_blocking">กำลังบล็อค</string>
   <string name="status_format_source"><xliff:g example="Twidere for Android" id="source">%s</xliff:g></string>
   <string name="status_format_time_source"><xliff:g example="0:00, Jan 1 2017" id="time">%1$s</xliff:g> · <xliff:g example="Twidere for Android" id="source">%2$s</xliff:g></string>
-  <string name="label_status_hint">มีอะไรเกิดขึ้นบ้าง?</string>
   <string name="status_is_duplicate">คุณทวีตข้อความซ้ำกัน</string>
   <string name="status_menu_title_format"><xliff:g id="name">%1$s</xliff:g>: <xliff:g id="text">%2$s</xliff:g></string>
   <string name="status_not_updated">ข้อความไม่ถูกส่ง</string>
@@ -979,7 +979,9 @@
   <string name="title_nicknames">ชื่อเล่น</string>
   <string name="title_open_source_license">ลิขสิทธิ์ซอฟต์แวร์เปิด</string>
   <string name="title_premium_features_name">Twidere ∞</string>
+  <string name="title_public_timeline">หน้าหลักสาธารณะ</string>
   <string name="title_quick_action">การดำเนินการด่วน</string>
+  <string name="title_retweet_quote_confirm">รีทวีตหรือไม่</string>
   <string name="title_scheduled_statuses">ทวีตที่ตั้งเวลา</string>
   <string name="title_search">ค้นหา</string>
   <string name="title_search_gif">ค้นหา GIF</string>
