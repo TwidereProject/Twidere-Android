@@ -48,7 +48,11 @@ class FavoriteConfirmDialogFragment : AbsStatusDialogFragment() {
     override val Dialog.itemContent: View get() = findViewById(R.id.itemContent)
 
     override fun AlertDialog.Builder.setupAlertDialog() {
-        setTitle(R.string.title_favorite_confirm)
+        if (preferences[iWantMyStarsBackKey]) {
+            setTitle(R.string.title_favorite_confirm)
+        } else {
+            setTitle(R.string.title_like_confirm)
+        }
         setView(R.layout.dialog_status_favorite_confirm)
         setPositiveButton(R.string.action_favorite, null)
         setNegativeButton(android.R.string.cancel, null)

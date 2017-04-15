@@ -1199,6 +1199,7 @@
     <string name="title_following">Following</string>
     <string name="title_gif_sharing">GIF sharing</string>
     <string name="title_home">Home</string>
+    <string name="title_like_confirm">Like this tweet?</string>
     <!-- [noun] Like, Formerly Twitter's favorite, in the plural -->
     <string name="title_likes">Likes</string>
     <string name="title_manage_filter_subscriptions">Filter subscriptions</string>
