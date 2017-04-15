@@ -185,6 +185,7 @@
                     android:gravity="center"
                     android:minWidth="@dimen/element_size_small"
                     android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="?android:textColorSecondary"
                     tools:text="140"/>
 
                 <org.mariotaku.twidere.view.IconActionView

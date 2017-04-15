@@ -828,7 +828,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                         itemView.quotedView.drawStart(quotedUserColor)
                     } else {
                         itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
-                                R.attr.quoteIndicatorBackgroundColor, 0))
+                                R.attr.quoteIndicatorBackgroundColor))
                     }
 
                     val quotedMedia = status.quoted_media
@@ -860,7 +860,7 @@ class StatusFragment : BaseFragment(), LoaderCallbacks<SingleResponse<Parcelable
                     itemView.quotedText.text = string
 
                     itemView.quotedView.drawStart(ThemeUtils.getColorFromAttribute(context,
-                            R.attr.quoteIndicatorBackgroundColor, 0))
+                            R.attr.quoteIndicatorBackgroundColor))
                 }
             } else {
                 itemView.quotedView.visibility = View.GONE

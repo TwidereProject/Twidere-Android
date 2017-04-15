@@ -56,8 +56,8 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
     private int mHorizontalPadding, mVerticalPadding;
     private int mColumns;
 
-    public TabPagerIndicator(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public TabPagerIndicator(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
         ViewCompat.setLayoutDirection(this, ViewCompat.LAYOUT_DIRECTION_LTR);
         final Resources res = getResources();
         mIndicatorAdapter = new TabPagerIndicatorAdapter(this);
@@ -75,7 +75,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         setVerticalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabVerticalPadding, 0));
         setStripColor(a.getColor(R.styleable.TabPagerIndicator_tabStripColor, 0));
         setIconColor(a.getColor(R.styleable.TabPagerIndicator_tabIconColor, 0));
-        setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.getTextColorPrimary(context)));
+        setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.INSTANCE.getTextColorPrimary(context)));
         //noinspection WrongConstant
         setTabDisplayOption(a.getInt(R.styleable.TabPagerIndicator_tabDisplayOption, DisplayOption.ICON));
         setTabShowDivider(a.getBoolean(R.styleable.TabPagerIndicator_tabShowDivider, false));
@@ -86,15 +86,6 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
         mItemDecoration.setDecorationStart(0);
         mItemDecoration.setDecorationEndOffset(1);
         a.recycle();
-    }
-
-    public TabPagerIndicator(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-
-    public TabPagerIndicator(Context context) {
-        this(context, null);
     }
 
     public int getCount() {
@@ -381,7 +372,7 @@ public class TabPagerIndicator extends RecyclerView implements PagerIndicator, C
             this.setVerticalPadding(a.getDimensionPixelSize(R.styleable.TabPagerIndicator_tabVerticalPadding, 0));
             this.setStripColor(a.getColor(R.styleable.TabPagerIndicator_tabStripColor, 0));
             this.setIconColor(a.getColor(R.styleable.TabPagerIndicator_tabIconColor, 0));
-            this.setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.getTextColorPrimary(context)));
+            this.setLabelColor(a.getColor(R.styleable.TabPagerIndicator_tabLabelColor, ThemeUtils.INSTANCE.getTextColorPrimary(context)));
             this.setTabDisplayOption(a.getInt(R.styleable.TabPagerIndicator_tabDisplayOption, DisplayOption.ICON));
             this.setTabShowDivider(a.getBoolean(R.styleable.TabPagerIndicator_tabShowDivider, false));
             a.recycle();

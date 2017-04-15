@@ -14,6 +14,7 @@ import org.mariotaku.twidere.TwidereConstants.KEY_MEDIA_PRELOAD
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.annotation.ImageShapeStyle
 import org.mariotaku.twidere.annotation.PreviewStyle
+import org.mariotaku.twidere.constant.SharedPreferenceConstants.*
 import org.mariotaku.twidere.extension.getNonEmptyString
 import org.mariotaku.twidere.model.CustomAPIConfig
 import org.mariotaku.twidere.model.UserKey
@@ -26,7 +27,6 @@ import java.util.*
 /**
  * Created by mariotaku on 16/8/25.
  */
-
 val textSizeKey = KIntKey(KEY_TEXT_SIZE, 15)
 val nameFirstKey = KBooleanKey(KEY_NAME_FIRST, true)
 val displayProfileImageKey = KBooleanKey(KEY_DISPLAY_PROFILE_IMAGE, true)

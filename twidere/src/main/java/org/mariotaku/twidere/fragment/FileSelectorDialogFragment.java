@@ -220,7 +220,7 @@ public class FileSelectorDialogFragment extends BaseDialogFragment implements Lo
         public FilesAdapter(final Context context) {
             super(context, android.R.layout.simple_list_item_1);
             mResources = context.getResources();
-            mActionIconColor = !ThemeUtils.isLightTheme(context) ? 0xffffffff : 0xc0333333;
+            mActionIconColor = !ThemeUtils.INSTANCE.isLightTheme(context) ? 0xffffffff : 0xc0333333;
             mPadding = (int) (4 * mResources.getDisplayMetrics().density);
         }
 

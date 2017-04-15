@@ -1258,8 +1258,8 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 IntentUtils.openProfileEditor(getActivity(), user.account_key)
             }
             R.id.urlContainer -> {
-                val url = user.urlPreferred ?: return
-                OnLinkClickHandler.openLink(context, preferences, url)
+                val uri = user.urlPreferred?.let(Uri::parse) ?: return
+                OnLinkClickHandler.openLink(context, preferences, uri)
             }
             R.id.profileBirthdayBanner -> {
                 hideBirthdayView = true
@@ -1414,7 +1414,6 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
         val activity = activity as? LinkHandlerActivity ?: return
         val actionBar = activity.supportActionBar ?: return
         if (!ThemeUtils.isWindowFloating(activity) && ThemeUtils.isTransparentBackground(activity.currentThemeBackgroundOption)) {
-            //            mActionBarBackground.setAlpha(ThemeUtils.getActionBarAlpha(linkHandler.getCurrentThemeBackgroundAlpha()));
             profileBanner.alpha = activity.currentThemeBackgroundAlpha / 255f
         }
         actionBar.setBackgroundDrawable(actionBarBackground)
@@ -1486,7 +1485,7 @@ class UserFragment : BaseFragment(), OnClickListener, OnLinkClickListener,
                 ThemeUtils.computeDarkColor(primaryColorDark)) as Int
         val window = activity.window
         userFragmentView.setStatusBarColor(statusBarColor)
-        ThemeUtils.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor))
+        WindowSupport.setLightStatusBar(window, ThemeUtils.isLightColor(statusBarColor))
         val stackedTabColor = primaryColor
 
 

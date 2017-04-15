@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import org.mariotaku.chameleon.Chameleon
 import org.mariotaku.ktextension.toLongOr
 import org.mariotaku.twidere.R
 import org.mariotaku.twidere.TwidereConstants.*
@@ -15,9 +16,16 @@ import org.mariotaku.twidere.model.UserKey
 import org.mariotaku.twidere.util.Analyzer
 import org.mariotaku.twidere.util.IntentUtils
 import org.mariotaku.twidere.util.Utils
+import org.mariotaku.twidere.util.dagger.DependencyHolder
+import org.mariotaku.twidere.util.ThemeUtils
 import java.util.*
 
 class WebLinkHandlerActivity : Activity() {
+
+    private val userTheme: Chameleon.Theme by lazy {
+        val preferences = DependencyHolder.get(this).preferences
+        return@lazy ThemeUtils.getUserTheme(this, preferences)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -175,7 +183,8 @@ class WebLinkHandlerActivity : Activity() {
                 }
             }
         }
-        return Pair(null, false)
+        val homeIntent = Intent(this, HomeActivity::class.java)
+        return Pair(homeIntent, true)
     }
 
     private fun handleUserSpecificPageIntent(uri: Uri, pathSegments: List<String>, screenName: String): Pair<Intent?, Boolean> {
@@ -305,6 +314,28 @@ class WebLinkHandlerActivity : Activity() {
     }
 
     private fun getIUriIntent(uri: Uri, pathSegments: List<String>): Pair<Intent?, Boolean> {
+        if (pathSegments.size < 2) return Pair(null, false)
+        when (pathSegments[1]) {
+            "moments" -> {
+                val preferences = DependencyHolder.get(this).preferences
+                val (intent, _) = IntentUtils.browse(this, preferences, userTheme, uri, true)
+                return Pair(intent, true)
+            }
+            "web" -> {
+                if (pathSegments.size < 3) return Pair(null, false)
+                when (pathSegments[2]) {
+                    "status" -> {
+                        if (pathSegments.size < 4) return Pair(null, false)
+                        val builder = Uri.Builder()
+                        builder.scheme(SCHEME_TWIDERE)
+                        builder.authority(AUTHORITY_STATUS)
+                        builder.appendQueryParameter(QUERY_PARAM_ACCOUNT_HOST, USER_TYPE_TWITTER_COM)
+                        builder.appendQueryParameter(QUERY_PARAM_STATUS_ID, pathSegments[3])
+                        return Pair(Intent(Intent.ACTION_VIEW, builder.build()), true)
+                    }
+                }
+            }
+        }
         return Pair(null, false)
     }
 

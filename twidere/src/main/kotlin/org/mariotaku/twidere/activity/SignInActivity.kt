@@ -24,7 +24,6 @@ import android.accounts.AccountAuthenticatorResponse
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -32,7 +31,6 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.util.ArraySet
@@ -71,7 +69,6 @@ import org.mariotaku.twidere.TwidereConstants.*
 import org.mariotaku.twidere.annotation.AccountType
 import org.mariotaku.twidere.constant.IntentConstants.EXTRA_API_CONFIG
 import org.mariotaku.twidere.constant.SharedPreferenceConstants.KEY_CREDENTIALS_TYPE
-import org.mariotaku.twidere.constant.chromeCustomTabKey
 import org.mariotaku.twidere.constant.defaultAPIConfigKey
 import org.mariotaku.twidere.constant.randomizeAccountNameKey
 import org.mariotaku.twidere.extension.applyTheme
@@ -204,25 +201,8 @@ class SignInActivity : BaseActivity(), OnClickListener, TextWatcher,
     override fun onClick(v: View) {
         when (v) {
             signUp -> {
-                val signUpUrl = apiConfig.signUpUrl ?: return
-                val uri = Uri.parse(signUpUrl)
-                if (preferences[chromeCustomTabKey]) {
-                    val builder = CustomTabsIntent.Builder()
-                    builder.setToolbarColor(overrideTheme.colorToolbar)
-                    val intent = builder.build()
-                    try {
-                        intent.launchUrl(this, uri)
-                    } catch (e: ActivityNotFoundException) {
-                        // Ignore
-                    }
-                } else {
-                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                    try {
-                        startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        // Ignore
-                    }
-                }
+                val uri = apiConfig.signUpUrl?.let(Uri::parse) ?: return
+                OnLinkClickHandler.openLink(this, preferences, uri)
             }
             signIn -> {
                 if (usernamePasswordContainer.visibility != View.VISIBLE) {

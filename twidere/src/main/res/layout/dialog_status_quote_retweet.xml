@@ -69,6 +69,7 @@
                 android:gravity="center_vertical|start"
                 android:paddingLeft="@dimen/element_spacing_normal"
                 android:paddingRight="@dimen/element_spacing_normal"
+                android:textColor="?android:textColorSecondary"
                 tools:text="140"/>
 
             <org.mariotaku.twidere.view.IconActionButton

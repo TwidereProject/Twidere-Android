@@ -23,7 +23,7 @@ fun getCurrentThemeResource(context: Context, theme: String, fromThemeResource: 
         val darkTheme = a.getResourceId(R.styleable.TwidereTheme_darkThemeResource, 0)
         if (lightTheme == 0 || darkTheme == 0) return 0
         return when (theme) {
-            VALUE_THEME_NAME_AUTO -> ThemeUtils.getCurrentTheme(context, lightTheme, darkTheme)
+            VALUE_THEME_NAME_AUTO -> ThemeUtils.getCurrentThemeResource(context, lightTheme, darkTheme)
             VALUE_THEME_NAME_DARK -> darkTheme
             else -> lightTheme
         }
